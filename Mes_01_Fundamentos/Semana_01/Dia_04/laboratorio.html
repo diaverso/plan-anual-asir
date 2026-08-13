@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: dónde acaba tu LAN y empieza la WAN</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 4</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Tipo:</strong> exploración guiada</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Localizar en tu propia conexión la <strong>frontera exacta entre tu LAN y la WAN</strong>: verás que
+            tienes dos direcciones distintas, descubrirás en qué salto concreto dejas de estar en tu casa y
+            clasificarás todas las redes que tu equipo está usando ahora mismo sin que te des cuenta.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — Tienes dos direcciones, no una</h3>
+            <p>La primera es la que te identifica <strong>dentro</strong> de tu LAN. La segunda es con la que te ve
+            <strong>Internet</strong>, y no está en tu ordenador: está en tu router.</p>
+
+            <div class="so-tabs" data-grupo="ip">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="ip" data-so="win">
+                <div class="comando"><pre><code>ipconfig | findstr /i "IPv4"
+nslookup myip.opendns.com resolver1.opendns.com</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="ip" data-so="nix">
+                <div class="comando"><pre><code>ip -4 addr show | grep inet
+dig +short myip.opendns.com @resolver1.opendns.com</code></pre></div>
+            </div>
+
+            <p>El segundo comando pregunta a un servidor de OpenDNS «¿con qué dirección me ves?». La respuesta
+            que dé <strong>no será la de tu ordenador</strong>.</p>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — Todas las redes que estás usando ahora mismo</h3>
+            <p>Tu equipo participa en varias redes distintas a la vez, de tipos distintos.</p>
+
+            <div class="so-tabs" data-grupo="ad">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="ad" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Format-Table Name,InterfaceDescription,Status,LinkSpeed</code></pre></div>
+                <p>En PowerShell. Fíjate en cuáles son reales y cuáles son virtuales.</p>
+            </div>
+
+            <div class="so-panel" data-grupo="ad" data-so="nix">
+                <div class="comando"><pre><code>ip -br link show</code></pre></div>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — ¿En qué salto exacto sales de tu casa?</h3>
+            <p>Traza el camino y observa <strong>dónde cambian las direcciones</strong>: mientras sean privadas
+            sigues dentro de tu red; en cuanto aparece una pública, ya estás en la del operador.</p>
+            <div class="comando"><pre><code>tracert -d 8.8.8.8</code></pre></div>
+            <p>La opción <code>-d</code> evita resolver nombres y hace la traza mucho más rápida.
+            En Linux: <code>traceroute -n 8.8.8.8</code>.</p>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sé cuál es mi dirección privada y cuál mi dirección pública, y por qué son distintas.</li>
+                <li>Entiendo por qué millones de casas comparten la misma dirección privada sin conflicto.</li>
+                <li>Sé identificar en qué salto de la traza dejo mi LAN y entro en la WAN del operador.</li>
+                <li>Sé clasificar cada red que usa mi equipo como PAN, LAN o WAN.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_03/laboratorio.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 4',
+    subtitulo: 'Privada frente a pública · Tus redes · La frontera LAN/WAN',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'LAB 1 — Tus dos direcciones',
+            tiempo: '20 min',
+            enunciado: '<p>Con los dos comandos del Paso 1 ejecutados, compara los resultados.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'ipv4_privada',
+                    ancho: '260px',
+                    placeholder: '192.168.1.70',
+                    pregunta: '<strong>a)</strong> Tu dirección <strong>privada</strong> (la de tu equipo dentro de la LAN)',
+                    explicacion: 'Tiene que estar en un rango privado: 10.x.x.x, de 172.16 a 172.31, o 192.168.x.x. Si el validador te la rechaza, probablemente estés copiando la de un adaptador virtual.',
+                    pistas: [
+                        'Es la que da <code>ipconfig</code> en el adaptador que usas de verdad.',
+                        'Empieza casi seguro por 192.168. Descarta las de VirtualBox (192.168.56.x) o WSL.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'ipv4',
+                    ancho: '260px',
+                    placeholder: '176.86.32.52',
+                    pregunta: '<strong>b)</strong> Tu dirección <strong>pública</strong> (la que ve Internet)',
+                    explicacion: 'Es la dirección de tu router en el lado del operador. Todo tu hogar sale a Internet con ella: el móvil, la tele y tu ordenador comparten esa única dirección pública.',
+                    pistas: [
+                        'La devuelve el segundo comando, el de <code>myip.opendns.com</code>.',
+                        'No debe empezar por 192.168, 10. ni 172.16-31: si empieza así, algo ha ido mal.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué son distintas?',
+                    opciones: {
+                        a: 'Porque el comando está mal escrito',
+                        b: 'Porque el router traduce tu dirección privada a la pública al salir (NAT)',
+                        c: 'Porque tienes dos tarjetas de red',
+                        d: 'Porque la privada es de IPv4 y la pública de IPv6'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El router aplica <strong>NAT</strong>: sustituye tu dirección privada por la suya pública al enviar, y hace lo contrario al recibir. Lo estudiarás en detalle en el <strong>Mes 11</strong>, pero acabas de verlo funcionando.',
+                    pistas: [
+                        'Piensa qué equipo está en medio entre tu ordenador e Internet.',
+                        'Ese equipo tiene un pie en cada red: uno privado y otro público.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>d)</strong> Tu vecino ejecuta los mismos comandos y le sale <strong>la misma dirección
+                               privada</strong> que a ti, pero una pública distinta. ¿Es un problema?`,
+                    opciones: {
+                        a: 'Sí, hay un conflicto de direcciones y uno de los dos se quedará sin red',
+                        b: 'No: las privadas solo son únicas dentro de cada LAN, y las dos LAN están separadas',
+                        c: 'Sí, hay que cambiar el rango de una de las dos redes',
+                        d: 'No, porque las direcciones privadas no se usan realmente'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Las direcciones privadas <strong>no son enrutables en Internet</strong>: solo tienen sentido dentro de su propia LAN. Millones de hogares usan 192.168.1.1 simultáneamente sin ningún conflicto, porque esas direcciones nunca salen al exterior.',
+                    pistas: [
+                        '¿Cuántas casas crees que tienen ahora mismo un router en 192.168.1.1?',
+                        'Si eso fuera un conflicto, Internet no funcionaría.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>e)</strong> Completa la conclusión.',
+                    frase: `Dentro de mi casa uso una dirección {{0}} que no es visible desde Internet. Mi router la
+                            traduce a una dirección {{1}} mediante una técnica llamada {{2}}, de modo que todos los
+                            dispositivos de mi hogar salen al exterior compartiendo una sola.`,
+                    respuestas: [
+                        ['privada', 'interna'],
+                        ['publica'],
+                        ['nat', 'network address translation', 'traduccion de direcciones']
+                    ],
+                    explicacion: 'Esta es exactamente la frontera entre tu LAN y la WAN: ocurre dentro del router, y es la razón de que el mundo no se haya quedado sin direcciones IPv4.',
+                    pistas: [
+                        'Las dos primeras son los adjetivos que has usado en los apartados (a) y (b).',
+                        'La tercera son tres letras que aparecen en la explicación del apartado (c).'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 2 — Clasifica todas tus redes',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Mira la lista de adaptadores del Paso 2 y piensa también en lo que tienes conectado sin cable.
+                Estás participando en varias redes de tipos distintos a la vez.</p>`,
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    debe: [['ethernet', 'wi-fi', 'wifi', 'wlan', 'eth'], ['up', 'status', 'state', 'conectado']],
+                    placeholder: 'Pega aquí la lista de adaptadores',
+                    pregunta: '<strong>a)</strong> Pega la salida del Paso 2.',
+                    explicacion: 'Casi seguro verás más adaptadores de los que esperabas: además del real, los que crean WSL, Docker, VirtualBox o las VPN instaladas.',
+                    pistas: [
+                        'En Windows tiene que ser PowerShell.',
+                        'Copia la tabla entera, aunque tenga muchas filas.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Clasifica cada conexión según su alcance.',
+                    izquierda: [
+                        'Auriculares o ratón Bluetooth conectados al equipo',
+                        'Tu equipo hablando con tu router y con la impresora',
+                        'La red de fibra de tu operador que llega al barrio',
+                        'La conexión hasta el servidor de Google que has trazado'
+                    ],
+                    derecha: ['PAN', 'LAN', 'MAN', 'WAN'],
+                    pares: {
+                        'Auriculares o ratón Bluetooth conectados al equipo': 'PAN',
+                        'Tu equipo hablando con tu router y con la impresora': 'LAN',
+                        'La red de fibra de tu operador que llega al barrio': 'MAN',
+                        'La conexión hasta el servidor de Google que has trazado': 'WAN'
+                    },
+                    explicacion: 'Sin moverte de la silla estás usando cuatro escalas distintas a la vez. La clasificación no es teórica: cada una usa una tecnología y un propietario del medio diferentes.',
+                    pistas: [
+                        'Ordénalas mentalmente de menor a mayor alcance: metros, edificio, ciudad, mundo.',
+                        'El Bluetooth llega a unos pocos metros; la traza a Google cruza países.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: `<strong>c)</strong> De los adaptadores que te han salido, marca los que
+                               <strong>NO</strong> corresponden a una red física real.`,
+                    opciones: {
+                        a: 'Ethernet',
+                        b: 'vEthernet (WSL)',
+                        c: 'Wi-Fi',
+                        d: 'VirtualBox Host-Only Network',
+                        e: 'Adaptador de red de Docker'
+                    },
+                    respuesta: ['b', 'd', 'e'],
+                    explicacion: 'Los adaptadores virtuales crean redes internas del propio sistema para comunicar máquinas virtuales o contenedores. Son redes de verdad en cuanto a funcionamiento, pero <strong>no tienen enlace físico</strong> ni salen al exterior.',
+                    pistas: [
+                        'Los virtuales suelen llevar en el nombre la marca del programa que los crea.',
+                        'Solo dos de los cinco corresponden a hardware real.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: `<strong>d)</strong> Tu casa tiene una LAN. Tu operador tiene una red que cubre tu ciudad.
+                               Y accedes a servidores de otro continente. Explica <strong>quién es el propietario del
+                               medio</strong> en cada tramo y por qué eso, y no solo la distancia, es lo que separa
+                               una LAN de una WAN (5-6 líneas).`,
+                    modelo: `<p>En tu <strong>LAN</strong> el medio es <strong>tuyo</strong>: el cable, el router y el switch
+                             los has comprado tú y puedes hacer con ellos lo que quieras, cambiar la velocidad o tirar cable
+                             nuevo sin pedir permiso a nadie. Por eso la LAN es rápida y barata.</p>
+                             <p>En cuanto el tráfico sale de tu casa, el medio pertenece al <strong>operador</strong>: la fibra
+                             del barrio y de la ciudad es suya, y tú solo contratas un servicio sobre ella. No decides la
+                             velocidad ni la ruta, y pagas una cuota recurrente.</p>
+                             <p>Más allá, la conexión hasta otro continente atraviesa <strong>infraestructura de terceros</strong>
+                             —cables submarinos, operadores de tránsito— sobre la que ni tú ni tu operador tenéis control
+                             directo. Esa es la clave: lo que distingue LAN de WAN no es solo cuántos kilómetros hay, sino
+                             que al cruzar terreno público <strong>dejas de ser el dueño del medio</strong> y tienes que
+                             contratarlo, lo que condiciona coste, velocidad y garantías.</p>`,
+                    rubrica: [
+                        'En la LAN el medio es propiedad del usuario y su uso es libre',
+                        'En la red metropolitana el medio es del operador y se contrata',
+                        'A escala mundial intervienen terceros sin control directo',
+                        'Concluye que el criterio decisivo es la propiedad del medio, no solo la distancia',
+                        'Relaciona la propiedad con el coste, la velocidad o las garantías'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 3 — Localiza la frontera de tu LAN',
+            tiempo: '20 min',
+            enunciado: '<p>Con la traza del Paso 3 delante, identifica exactamente dónde acaba tu red.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 10,
+                    debe: [['ms', 'tiempo'], ['1', '2']],
+                    placeholder: 'Pega aquí la traza completa',
+                    pregunta: '<strong>a)</strong> Pega la salida de <code>tracert -d 8.8.8.8</code>.',
+                    explicacion: 'Cada línea es un router. Lo interesante no son los tiempos, sino <strong>cómo cambian las direcciones</strong> de una línea a otra.',
+                    pistas: [
+                        'Copia desde la primera línea numerada hasta la última.',
+                        'Si algún salto muestra <code>* * *</code>, déjalo igual: forma parte del resultado.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    ancho: '160px',
+                    ayuda: 'nº de salto',
+                    placeholder: '1',
+                    pregunta: '<strong>b)</strong> ¿En qué número de salto aparece la <strong>última dirección privada</strong>?',
+                    explicacion: 'Casi siempre es el <strong>salto 1</strong>: tu propio router. A partir de ahí ya estás en la red del operador. Algunas operadoras usan direcciones privadas en sus primeros saltos, así que puede ser el 2 o el 3.',
+                    pistas: [
+                        'Busca la última línea cuya dirección empiece por 192.168, 10. o 172.16-31.',
+                        'Recuerda cuál era tu puerta de enlace: ese es el salto 1.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Ese salto marca la frontera entre:',
+                    opciones: {
+                        a: 'Tu PAN y tu LAN',
+                        b: 'Tu LAN y la red del operador (WAN)',
+                        c: 'Dos LAN distintas',
+                        d: 'IPv4 e IPv6'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El router tiene un pie en cada red: una interfaz con dirección privada hacia tu LAN y otra con dirección pública hacia el operador. Es el punto exacto donde acaba lo tuyo y empieza lo contratado.',
+                    pistas: [
+                        'Piensa qué hay a un lado y a otro de tu router.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>d)</strong> Una empresa quiere unir dos sedes con una <strong>VPN</strong> sobre
+                               Internet en lugar de contratar una línea dedicada. ¿Qué es lo que NO obtiene con la VPN?`,
+                    opciones: {
+                        a: 'Cifrado del tráfico entre las sedes',
+                        b: 'Ahorro frente a la línea dedicada',
+                        c: 'Ancho de banda y latencia garantizados por contrato',
+                        d: 'Rapidez de despliegue'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'La VPN cifra, es barata y se levanta en horas, pero viaja por Internet en modo <em>best effort</em>: nadie garantiza capacidad ni latencia. Eso es exactamente lo que se paga en una línea dedicada con SLA.',
+                    pistas: [
+                        'Tres de las cuatro opciones son ventajas reales de la VPN.',
+                        'Piensa qué tiene una línea dedicada que Internet no puede darte.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: `<strong>e)</strong> Con lo que has medido hoy, explica por qué una VPN se describe como
+                               «una red privada que viaja por una pública» y qué parte de tu traza recorrería
+                               cifrada (4-5 líneas).`,
+                    modelo: `<p>Una VPN no tiende ningún cable nuevo: usa <strong>exactamente el mismo camino</strong> que
+                             acabas de trazar, saltando de router en router por la red del operador y de terceros. Lo que
+                             añade es un <strong>túnel cifrado</strong> entre los dos extremos.</p>
+                             <p>Todo el tramo que va desde tu salida a Internet hasta el otro extremo del túnel viajaría
+                             <strong>cifrado</strong>: los routers intermedios seguirían encaminando los paquetes, pero no
+                             podrían leer su contenido, solo ver que van de un extremo del túnel al otro.</p>
+                             <p>Por eso es «privada» sin ser física: la privacidad no la da un medio propio, sino la
+                             criptografía. Y por eso hereda las limitaciones de Internet: si un salto intermedio se congestiona,
+                             la VPN se degrada igual, porque no ha reservado nada.</p>`,
+                    rubrica: [
+                        'Aclara que la VPN no tiende cable propio: usa la misma ruta',
+                        'Identifica el túnel cifrado entre los dos extremos',
+                        'Explica que los routers intermedios encaminan pero no leen',
+                        'Concluye que la privacidad la da el cifrado, no el medio',
+                        'Señala que hereda la congestión y falta de garantías de Internet'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

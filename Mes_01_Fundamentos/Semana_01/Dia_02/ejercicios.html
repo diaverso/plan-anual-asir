@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">55 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 5</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Cómo trabajar estos ejercicios</strong>
+            Responde <strong>sin volver a la teoría</strong>. Si te bloqueas, usa el botón de
+            <strong>pista</strong> antes de mirar la solución: las pistas te dan el camino, no el resultado.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/ejercicios.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Ejercicios',
+    subtitulo: 'Sistema de comunicación · Modos de transmisión · Serie y paralelo',
+    tiempo: '55 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Identificar los cinco componentes',
+            tiempo: '20 min',
+            enunciado: `
+                <p><strong>Escenario:</strong> María, desde su casa en Madrid, hace una videollamada por el móvil
+                a Juan, que está en la oficina conectado por Wi-Fi al portátil.</p>
+                <p>Analiza el sentido <strong>María → Juan</strong>.</p>`,
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Asigna a cada elemento del escenario el componente que le corresponde.',
+                    izquierda: [
+                        'María hablando y gesticulando ante la cámara',
+                        'Micrófono, cámara y circuitos del smartphone',
+                        'Ondas 5G, fibra del operador y Wi-Fi de la oficina',
+                        'Tarjeta de red Wi-Fi del portátil de Juan',
+                        'Juan viendo y escuchando la videollamada'
+                    ],
+                    derecha: ['Fuente', 'Transmisor', 'Medio', 'Receptor', 'Destino'],
+                    pares: {
+                        'María hablando y gesticulando ante la cámara': 'Fuente',
+                        'Micrófono, cámara y circuitos del smartphone': 'Transmisor',
+                        'Ondas 5G, fibra del operador y Wi-Fi de la oficina': 'Medio',
+                        'Tarjeta de red Wi-Fi del portátil de Juan': 'Receptor',
+                        'Juan viendo y escuchando la videollamada': 'Destino'
+                    },
+                    explicacion: 'La fuente genera la información; el transmisor la codifica; el medio la transporta (aquí son varios encadenados); el receptor la decodifica y el destino la consume.',
+                    pistas: [
+                        'Ve en orden: ¿quién crea la información? ¿quién la convierte en señal? ¿por dónde viaja?',
+                        'María es la fuente: ella genera el contenido. El móvil no crea nada, solo lo transforma.',
+                        'El medio puede ser varios encadenados: radio, fibra y Wi-Fi forman un único trayecto.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Si ahora analizamos el sentido <strong>Juan → María</strong>, ¿qué papel pasa a tener el smartphone de María?',
+                    opciones: {
+                        a: 'Sigue siendo el transmisor',
+                        b: 'Pasa a ser el receptor',
+                        c: 'Pasa a ser el medio',
+                        d: 'Pasa a ser la fuente'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los papeles no son fijos: dependen del sentido de cada transmisión. Por eso los dispositivos incorporan transmisor y receptor a la vez, y se llaman <strong>transceptores</strong>.',
+                    pistas: [
+                        'Ahora la información nace en Juan y termina en María. ¿Qué hace el móvil de María con esa señal?',
+                        'Si antes convertía voz en señal para enviarla, ahora hace justo lo contrario.'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    ancho: '300px',
+                    pregunta: '<strong>c)</strong> ¿Cómo se denomina el dispositivo que incorpora transmisor y receptor en un mismo equipo?',
+                    respuestas: ['transceptor', 'transceiver', 'transceptor (transceiver)'],
+                    explicacion: 'Transceptor (en inglés <em>transceiver</em>) es la contracción de transmisor y receptor. Prácticamente todo el equipamiento de red lo es.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>d)</strong> Explica con tus palabras la diferencia entre <strong>fuente</strong> y <strong>transmisor</strong>, y por qué se confunden tan a menudo (3-4 líneas).',
+                    modelo: `
+                        <p>La <strong>fuente</strong> es quien <em>genera</em> la información original: la persona que habla,
+                        la aplicación que produce el dato, el sensor que mide. El <strong>transmisor</strong> no crea nada nuevo:
+                        <em>transforma</em> esa información en una señal apta para viajar por el medio (la codifica, la modula,
+                        la convierte en impulsos eléctricos u ópticos).</p>
+                        <p>Se confunden porque en el lenguaje corriente decimos que «el móvil transmite» o «yo envío un mensaje»,
+                        mezclando ambos papeles en la misma frase. La regla práctica es: si genera contenido nuevo, es fuente;
+                        si adapta contenido existente al medio, es transmisor.</p>`,
+                    rubrica: [
+                        'Define fuente como generadora de la información original',
+                        'Define transmisor como codificador/adaptador al medio',
+                        'Deja claro que el transmisor no crea información nueva',
+                        'Explica el motivo de la confusión o aporta una regla práctica'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Clasificación de modos de transmisión',
+            tiempo: '20 min',
+            enunciado: '<p>Clasifica cada sistema según su modo de transmisión y justifica los casos dudosos.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica el modo de cada sistema: escribe <em>simplex</em>, <em>half-duplex</em> o <em>full-duplex</em>.',
+                    esquina: 'Sistema',
+                    cabecera: ['Modo'],
+                    filas: [
+                        { etiqueta: 'Televisión digital terrestre (TDT)', celdas: [{ respuestas: ['simplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Walkie-talkie de la policía', celdas: [{ respuestas: ['half-duplex', 'half duplex', 'halfduplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Ethernet entre dos PCs por switch', celdas: [{ respuestas: ['full-duplex', 'full duplex', 'fullduplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Radio FM', celdas: [{ respuestas: ['simplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Conversación telefónica', celdas: [{ respuestas: ['full-duplex', 'full duplex', 'fullduplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Teclado USB conectado al PC', celdas: [{ respuestas: ['simplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Red Wi-Fi doméstica', celdas: [{ respuestas: ['half-duplex', 'half duplex', 'halfduplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Ethernet a través de un hub', celdas: [{ respuestas: ['half-duplex', 'half duplex', 'halfduplex'], placeholder: 'modo' }] }
+                    ],
+                    explicacion: 'Los dos que más fallan: el <strong>Wi-Fi es half-duplex</strong> (la antena no puede emitir y recibir a la vez en la misma frecuencia) y <strong>Ethernet con hub también</strong> (medio compartido con CSMA/CD).',
+                    pistas: [
+                        'Pregúntate en cada caso: ¿pueden los dos extremos hablar exactamente a la vez, o hay que turnarse?',
+                        'Si solo transmite uno y el otro nunca responde, es simplex. Si se turnan, half. Si hablan a la vez, full.',
+                        'Cuidado con el Wi-Fi y con el hub: aunque parezcan simultáneos, comparten medio y se turnan.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál es la diferencia esencial entre half-duplex y full-duplex?',
+                    opciones: {
+                        a: 'El número de sentidos posibles: uno frente a dos',
+                        b: 'La simultaneidad: por turnos frente a a la vez',
+                        c: 'La velocidad máxima del enlace',
+                        d: 'Que half-duplex usa cobre y full-duplex fibra'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Ambos son bidireccionales. Quien dice que half-duplex es «un solo sentido» está describiendo en realidad el modo <strong>simplex</strong>.',
+                    pistas: [
+                        'Los dos permiten que la información vaya en ambos sentidos: descarta la opción que hable del número de sentidos.',
+                        'Piensa en el walkie-talkie frente al teléfono: en ambos hablan los dos, la diferencia es <em>cuándo</em>.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> Justifica por qué el <strong>Wi-Fi</strong> es half-duplex a pesar de que parezca que transmites y recibes a la vez al navegar.',
+                    modelo: `
+                        <p>La antena de un dispositivo Wi-Fi usa <strong>la misma frecuencia</strong> para transmitir y para recibir.
+                        Si emitiera y escuchara simultáneamente, su propia señal —que sale con una potencia enormemente superior—
+                        taparía por completo la señal ajena, mucho más débil tras recorrer la distancia hasta el punto de acceso.</p>
+                        <p>Por eso los dispositivos se <strong>turnan</strong> mediante el mecanismo CSMA/CA: escuchan antes de
+                        hablar y esperan si el canal está ocupado. La sensación de simultaneidad es una ilusión: los turnos se
+                        alternan en milisegundos, demasiado rápido para percibirlo.</p>`,
+                    rubrica: [
+                        'Menciona que se usa la misma frecuencia para emitir y recibir',
+                        'Explica que la propia emisión taparía la señal ajena, mucho más débil',
+                        'Cita el turnado mediante CSMA/CA o equivalente',
+                        'Aclara que la simultaneidad aparente se debe a la rapidez de los turnos'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Colisiones y rendimiento',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Una oficina tiene <strong>8 PCs</strong> conectados a un dispositivo de <strong>100 Mbps</strong>.
+                Compara qué ocurre según se use un hub o un switch.</p>`,
+            items: [
+                {
+                    tipo: 'numero',
+                    unidad: 'Mbps',
+                    tolerancia: 0.5,
+                    respuesta: 12.5,
+                    pregunta: '<strong>a)</strong> Con un <strong>HUB</strong>, si los 8 PCs se reparten el medio por igual, ¿cuántos Mbps corresponden a cada uno?',
+                    explicacion: '100 Mbps / 8 = <strong>12,5 Mbps</strong>. El hub comparte un único medio, así que el ancho de banda se divide entre todos los equipos activos.',
+                    pistas: [
+                        'En un hub hay un único medio para todos: no existen caminos separados.',
+                        'Divide la capacidad total entre el número de equipos que compiten por ella.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 1,
+                    pregunta: '<strong>b)</strong> ¿Cuántos <strong>dominios de colisión</strong> crea ese hub con los 8 PCs conectados?',
+                    explicacion: 'El hub no segmenta: los 8 equipos comparten <strong>un único</strong> dominio de colisión, con CSMA/CD y retransmisiones.'
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 8,
+                    pregunta: '<strong>c)</strong> Sustituimos el hub por un <strong>switch</strong>. ¿Cuántos dominios de colisión hay ahora?',
+                    explicacion: 'El switch crea <strong>un dominio de colisión por puerto</strong>: 8 puertos ocupados, 8 dominios. Al ser enlaces punto a punto full-duplex, las colisiones desaparecen.',
+                    pistas: [
+                        'Cada cable del switch conecta exactamente dos cosas: el puerto y el equipo.',
+                        'Si cada enlace es independiente, ¿cuántos grupos de equipos pueden chocar entre sí?'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'Mbps',
+                    tolerancia: 0.5,
+                    respuesta: 100,
+                    pregunta: '<strong>d)</strong> Con el switch, ¿de cuántos Mbps dispone cada PC <strong>en cada sentido</strong>?',
+                    explicacion: 'Cada puerto ofrece <strong>100 Mbps dedicados</strong> en cada sentido. Sumando ambos sentidos en full-duplex, los fabricantes lo anuncian como 200 Mbps.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> Con el switch, cuatro parejas de PCs transfieren ficheros a la vez. ¿Cuál es el throughput agregado (contando un solo sentido por pareja)?',
+                    opciones: {
+                        a: '100 Mbps, porque el switch es de 100 Mbps',
+                        b: '200 Mbps',
+                        c: '400 Mbps, porque cada pareja tiene su propio camino dedicado',
+                        d: '12,5 Mbps por pareja'
+                    },
+                    respuesta: 'c',
+                    explicacion: '4 parejas × 100 Mbps = <strong>400 Mbps</strong>. El switch conmuta en paralelo: los caminos son independientes y no compiten por el medio.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>f)</strong> Explica por qué en un enlace conmutado full-duplex <strong>desaparecen las colisiones</strong> y CSMA/CD deja de ser necesario.',
+                    modelo: `
+                        <p>En un switch, cada puerto forma un enlace <strong>punto a punto</strong> con un único dispositivo:
+                        el medio ya no está compartido por varios equipos. Además, en full-duplex se emplean
+                        <strong>pares de hilos distintos</strong> para transmitir y para recibir.</p>
+                        <p>Como consecuencia, la señal que sale nunca puede superponerse con la que entra ni con la de un tercero:
+                        <strong>la colisión es físicamente imposible</strong>. Al no haber colisiones, el mecanismo CSMA/CD
+                        —que existía únicamente para detectarlas y reintentar— pierde su razón de ser y se desactiva.</p>`,
+                    rubrica: [
+                        'Indica que cada puerto es un enlace punto a punto, no un medio compartido',
+                        'Menciona los pares separados para transmisión y recepción',
+                        'Concluye que la superposición de señales es imposible',
+                        'Explica que CSMA/CD existía solo para gestionar colisiones y deja de aplicarse'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Transmisión serie y paralelo',
+            tiempo: '10 min',
+            enunciado: '<p>Compara ambas formas de transmitir y razona por qué las redes eligieron una de ellas.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la comparativa con respuestas cortas.',
+                    esquina: 'Característica',
+                    cabecera: ['Serie', 'Paralelo'],
+                    filas: [
+                        {
+                            etiqueta: 'Número de hilos necesarios',
+                            celdas: [
+                                { respuestas: ['pocos', 'poco'], placeholder: 'pocos / muchos' },
+                                { respuestas: ['muchos', 'mucho'], placeholder: 'pocos / muchos' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Distancia alcanzable',
+                            celdas: [
+                                { respuestas: ['larga', 'alta', 'grande'], placeholder: 'larga / corta' },
+                                { respuestas: ['corta', 'muy corta', 'baja'], placeholder: 'larga / corta' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Coste del cableado',
+                            celdas: [
+                                { respuestas: ['bajo', 'barato'], placeholder: 'alto / bajo' },
+                                { respuestas: ['alto', 'caro'], placeholder: 'alto / bajo' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'El serie necesita pocos hilos, llega lejos y es barato; el paralelo exige un hilo por bit, solo funciona a distancias muy cortas y encarece la instalación.',
+                    pistas: [
+                        'El paralelo necesita un hilo por cada bit que envía a la vez: piensa cuántos hilos harían falta para 32 bits.',
+                        'Más hilos significa más cable, más grosor, más coste y más problemas de sincronismo.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca las tecnologías que utilizan transmisión <strong>en serie</strong>.',
+                    opciones: {
+                        a: 'Ethernet',
+                        b: 'Bus interno de la CPU',
+                        c: 'USB',
+                        d: 'Antiguo puerto de impresora (Centronics)',
+                        e: 'Fibra óptica',
+                        f: 'SATA'
+                    },
+                    respuesta: ['a', 'c', 'e', 'f'],
+                    explicacion: 'Ethernet, USB, la fibra y SATA son serie. El bus interno de la CPU y el viejo puerto Centronics son paralelo, y solo funcionan en distancias de centímetros.'
+                },
+                {
+                    tipo: 'texto',
+                    ancho: '340px',
+                    pregunta: '<strong>c)</strong> ¿Cómo se llama el fenómeno por el que, en transmisión paralela a alta velocidad, los bits que salen juntos no llegan a la vez?',
+                    respuestas: ['skew', 'sesgo', 'sesgo de sincronismo', 'skew (sesgo de sincronismo)', 'desfase'],
+                    explicacion: 'El <strong>skew</strong> o sesgo de sincronismo hace imposible reconstruir el dato a partir de cierta distancia. Es la razón de que las redes modernas sean todas en serie.',
+                    pistas: [
+                        'Es un término inglés de cuatro letras que también significa «sesgo» o «desviación».',
+                        'Describe que los bits salen a la vez pero no llegan a la vez.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5 (ampliación): Diagnóstico por componentes',
+            tiempo: '35 min',
+            enunciado: `
+                <p>El modelo de cinco componentes sirve como <strong>método de diagnóstico</strong>: ante una avería,
+                se localiza cuál de los cinco falla.</p>
+                <p>Aplícalo a los casos siguientes. Este bloque es la ampliación del día e incluye además
+                repaso acumulativo del Día 1.</p>`,
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada avería con el componente que probablemente falla.',
+                    izquierda: [
+                        'El cable de red está aplastado por la pata de una mesa',
+                        'La aplicación se cierra antes de terminar de enviar el fichero',
+                        'La tarjeta de red del PC emisor está averiada',
+                        'El servidor recibe los datos pero la base de datos los rechaza',
+                        'La tarjeta de red del equipo remoto no negocia velocidad'
+                    ],
+                    derecha: ['Fuente', 'Transmisor', 'Medio', 'Receptor', 'Destino'],
+                    pares: {
+                        'El cable de red está aplastado por la pata de una mesa': 'Medio',
+                        'La aplicación se cierra antes de terminar de enviar el fichero': 'Fuente',
+                        'La tarjeta de red del PC emisor está averiada': 'Transmisor',
+                        'El servidor recibe los datos pero la base de datos los rechaza': 'Destino',
+                        'La tarjeta de red del equipo remoto no negocia velocidad': 'Receptor'
+                    },
+                    explicacion: 'Aislar el componente que falla reduce drásticamente el tiempo de diagnóstico: no es lo mismo cambiar un latiguillo que revisar la aplicación.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>b)</strong> Una oficina tiene la red muy lenta. Al revisar el switch se observan
+                               <strong>miles de colisiones</strong> en un puerto concreto. ¿Cuál es la causa más probable?`,
+                    opciones: {
+                        a: 'El cable de ese puerto es demasiado corto',
+                        b: 'Hay un desajuste de dúplex: un extremo en full y el otro en half',
+                        c: 'El switch tiene demasiados puertos libres',
+                        d: 'La fuente de alimentación es insuficiente'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El <em>duplex mismatch</em> es un clásico: si un extremo está en full-duplex y el otro en half, el que está en half detecta como colisiones las transmisiones simultáneas legítimas del otro. La red funciona, pero lentísima.'
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'segundos',
+                    tolerancia: 1,
+                    respuesta: 40,
+                    pregunta: `<strong>c)</strong> Un fichero de <strong>500 MB</strong> se transfiere por un enlace
+                               conmutado de <strong>100 Mbps</strong>. Ignorando la sobrecarga de protocolo,
+                               ¿cuántos segundos tarda? <em>(1 byte = 8 bits)</em>`,
+                    explicacion: '500 MB × 8 = 4.000 Mb. 4.000 Mb / 100 Mbps = <strong>40 segundos</strong>. Con un hub compartido entre 8 equipos rondaría los 5 minutos.'
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>d) Repaso del Día 1.</strong> Marca las afirmaciones <strong>correctas</strong>.',
+                    opciones: {
+                        a: 'La World Wide Web es un servicio que funciona sobre Internet',
+                        b: 'ARPANET introdujo la conmutación de paquetes',
+                        c: 'Internet se inventó en 1989',
+                        d: 'La conmutación de circuitos reserva un camino aunque no se transmita nada',
+                        e: 'Ethernet e Internet son sinónimos'
+                    },
+                    respuesta: ['a', 'b', 'd'],
+                    explicacion: 'En 1989 nació la Web, no Internet (ARPANET, 1969; TCP/IP, 1983). Y Ethernet es una tecnología LAN, no la red global.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: `<strong>e)</strong> Un usuario se queja de que «la red no funciona». Describe, usando el modelo
+                               de los cinco componentes, <strong>qué comprobarías y en qué orden</strong> para localizar el fallo.`,
+                    modelo: `
+                        <p>Conviene ir de lo más simple y probable a lo más complejo:</p>
+                        <ol>
+                            <li><strong>Medio</strong>: ¿está el cable conectado? ¿Se enciende el LED del puerto? Probar otro
+                            latiguillo y otro puerto del switch. Es el fallo más frecuente y el más rápido de descartar.</li>
+                            <li><strong>Transmisor / receptor</strong>: ¿reconoce el sistema la tarjeta de red? ¿Negocia velocidad
+                            y dúplex correctamente? Revisar contadores de errores.</li>
+                            <li><strong>Fuente</strong>: ¿falla solo una aplicación o todas? Si el resto de servicios funcionan,
+                            el problema no es de red sino del programa.</li>
+                            <li><strong>Destino</strong>: ¿está el servidor remoto encendido y aceptando conexiones? Probar desde
+                            otro equipo para saber si el problema es local o del destino.</li>
+                        </ol>
+                        <p>La clave del método es que cada comprobación <strong>descarta un componente completo</strong>, en lugar
+                        de probar cosas al azar.</p>`,
+                    rubrica: [
+                        'Empieza por el medio (cable, LED, puerto), que es lo más probable y rápido',
+                        'Comprueba transmisor y receptor: NIC reconocida, negociación, errores',
+                        'Distingue si falla una sola aplicación (fuente) o toda la conectividad',
+                        'Verifica el destino probando desde otro equipo',
+                        'Justifica que el método descarta componentes en lugar de probar al azar'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

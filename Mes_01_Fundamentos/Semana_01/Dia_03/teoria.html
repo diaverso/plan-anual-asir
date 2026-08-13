@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Señales, ancho de banda y velocidad</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 3 — Señales y velocidad</h1>
+        <p>Analógico frente a digital, ancho de banda, throughput y latencia</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 42 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 22 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> en las que tienes que escribir tu propia respuesta antes de ver
+            la del profesor, y hoy además el laboratorio te hace <strong>medir tu propia conexión</strong>:
+            su MTU real, su latencia a cuatro distancias y su velocidad de verdad en MB/s.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#senales">Señales analógicas y digitales</a></li>
+                <li><a href="#ruido">Por qué ganó lo digital: la regeneración</a></li>
+                <li><a href="#digitalizacion">De analógico a digital: muestreo y cuantificación</a></li>
+                <li><a href="#unidades">Unidades: bits, bytes y prefijos</a></li>
+                <li><a href="#velocidad">Ancho de banda, throughput y goodput</a></li>
+                <li><a href="#latencia">Latencia, jitter y sus componentes</a></li>
+                <li><a href="#calculos">Cálculos de transferencia</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="senales">1. Señales analógicas y digitales</h2>
+
+            <p>La información, para viajar, tiene que convertirse en una <strong>señal</strong>: una magnitud física
+            (tensión eléctrica, intensidad luminosa, onda de radio) que varía en el tiempo.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Característica</th><th>Señal analógica</th><th>Señal digital</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Valores posibles</th><td>Infinitos (varía de forma continua)</td><td>Finitos y discretos (típicamente 0 y 1)</td></tr>
+                    <tr><th scope="row">Resistencia al ruido</th><td>Baja: el ruido se acumula y no se puede separar</td><td>Alta: se regenera la señal original</td></tr>
+                    <tr><th scope="row">Procesamiento</th><td>Difícil, requiere conversión previa</td><td>Directo por sistemas informáticos</td></tr>
+                    <tr><th scope="row">Ejemplos naturales</th><td>Voz humana, temperatura, luz</td><td>Código Morse, semáforo, datos de red</td></tr>
+                    <tr><th scope="row">Ejemplos técnicos</th><td>Radio AM/FM, vinilo, telefonía antigua</td><td>Ethernet, CD, HDMI, fibra óptica</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<pre><code>Analógica:     ∿∿∿∿∿∿∿∿      valores continuos, cualquier altura
+
+Digital:       ‾‾|__|‾‾|_|‾   solo dos niveles: alto (1) y bajo (0)</code></pre>
+
+            <h2 id="ruido">2. Por qué ganó lo digital: la regeneración</h2>
+
+            <p>Esta es la idea central del día, y explica por qué prácticamente toda la tecnología actual es digital.</p>
+
+            <p>Ambas señales se degradan al viajar: pierden potencia (atenuación) y se les suma ruido. La diferencia está
+            en <strong>qué se puede hacer al llegar</strong>.</p>
+
+            <h3>Señal analógica: se amplifica el ruido junto con la señal</h3>
+
+            <p>Un amplificador no sabe distinguir qué parte de lo que le llega es señal original y qué parte es ruido:
+            lo amplifica todo por igual. Tras varios tramos, el ruido acumulado puede superar a la información.</p>
+
+<pre><code>Original  →  degradada  →  AMPLIFICADA  →  degradada  →  AMPLIFICADA
+  ∿∿∿          ∿≈∿≈           ∿≈∿≈≈            ≈∿≈≈≈         ≈≈≈≈≈≈
+                                                       (irrecuperable)</code></pre>
+
+            <h3>Señal digital: se regenera limpia</h3>
+
+            <p>El receptor solo tiene que decidir <strong>una cosa</strong>: ¿este valor está más cerca del nivel alto o
+            del bajo? Tomada esa decisión, emite una señal <strong>completamente nueva y perfecta</strong>. El ruido
+            acumulado hasta ese punto desaparece por completo.</p>
+
+<pre><code>Original  →  degradada  →  REGENERADA  →  degradada  →  REGENERADA
+ ‾|_|‾        ⌐|_|⌐          ‾|_|‾          ⌐|_|⌐          ‾|_|‾
+                          (limpia otra vez)            (limpia otra vez)</code></pre>
+
+            <div class="dato">
+                <strong>Consecuencia práctica</strong>
+                Una señal digital puede recorrer miles de kilómetros con regeneradores intermedios y llegar
+                <strong>idéntica</strong> a la original. Una llamada analógica de larga distancia se oía con ruido;
+                una llamada digital se oye igual de bien a 10 km que a 10.000 km.
+            </div>
+
+            <div class="aviso">
+                <strong>Matiz importante</strong>
+                Digital no significa «inmune al ruido». Si el ruido es tan grande que el receptor confunde un 1 con un 0,
+                el error se produce igualmente. Lo que ocurre es que hay un <strong>margen de tolerancia</strong>: mientras
+                el ruido se mantenga por debajo de cierto umbral, la recuperación es perfecta.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="digitalizacion">3. De analógico a digital: muestreo y cuantificación</h2>
+
+            <p>La voz humana es analógica, pero la telefonía actual es digital. La conversión tiene dos pasos:</p>
+
+            <ol>
+                <li><strong>Muestreo</strong>: se mide el valor de la señal a intervalos regulares. La frecuencia con que
+                se mide es la <em>frecuencia de muestreo</em>.</li>
+                <li><strong>Cuantificación</strong>: cada medida se redondea a uno de los valores disponibles. El número de
+                valores depende de los <em>bits por muestra</em>.</li>
+            </ol>
+
+            <h3>Teorema de Nyquist</h3>
+
+            <div class="destacado">
+                <strong>Para reconstruir una señal sin perder información, hay que muestrearla al menos al doble
+                de su frecuencia máxima.</strong>
+                <p style="margin-top:8px">frecuencia de muestreo ≥ 2 × frecuencia máxima de la señal</p>
+            </div>
+
+            <p>Ejemplos que conviene recordar:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Aplicación</th><th>Frecuencia máxima</th><th>Muestreo</th><th>Bits/muestra</th><th>Caudal resultante</th></tr></thead>
+                <tbody>
+                    <tr><td>Telefonía digital</td><td>4 kHz</td><td>8.000 muestras/s</td><td>8 bits</td><td><strong>64 Kbps</strong></td></tr>
+                    <tr><td>CD de audio</td><td>~20 kHz</td><td>44.100 muestras/s</td><td>16 bits × 2 canales</td><td>~1,4 Mbps</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Fíjate en el caso de la telefonía: <strong>8.000 × 8 = 64.000 bps = 64 Kbps</strong>. Ese es el origen del
+            canal de 64 Kbps que apareció en el Día 1 al hablar de conmutación de circuitos.</p>
+
+            <h2 id="unidades">4. Unidades: bits, bytes y prefijos</h2>
+
+            <p>Aquí se concentran la mitad de los errores de cálculo. Conviene fijarlo bien.</p>
+
+            <h3>Bit y byte</h3>
+
+            <ul>
+                <li><strong>bit (b)</strong>: unidad mínima de información, un 0 o un 1.</li>
+                <li><strong>byte (B)</strong>: agrupación de <strong>8 bits</strong>.</li>
+            </ul>
+
+            <div class="aviso">
+                <strong>Regla que evita la mitad de los fallos</strong>
+                Las <strong>velocidades</strong> de red se expresan en <strong>bits</strong> por segundo (Mbps, con «b» minúscula).
+                Los <strong>tamaños</strong> de fichero se expresan en <strong>bytes</strong> (MB, con «B» mayúscula).
+                Por eso una fibra de 600 Mbps descarga como mucho a unos 75 MB/s: 600 / 8.
+            </div>
+
+            <h3>Los dos convenios de prefijos</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Prefijo decimal (SI)</th><th>Valor</th><th>Prefijo binario (IEC)</th><th>Valor</th></tr></thead>
+                <tbody>
+                    <tr><td>kilo (k)</td><td>10³ = 1.000</td><td>kibi (Ki)</td><td>2¹⁰ = 1.024</td></tr>
+                    <tr><td>mega (M)</td><td>10⁶ = 1.000.000</td><td>mebi (Mi)</td><td>2²⁰ = 1.048.576</td></tr>
+                    <tr><td>giga (G)</td><td>10⁹</td><td>gibi (Gi)</td><td>2³⁰</td></tr>
+                    <tr><td>tera (T)</td><td>10¹²</td><td>tebi (Ti)</td><td>2⁴⁰</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>En <strong>redes y telecomunicaciones se usa siempre el convenio decimal</strong>: 1 Mbps son exactamente
+            1.000.000 de bits por segundo. En cambio, los sistemas operativos suelen mostrar el tamaño de los ficheros en
+            unidades binarias, aunque los etiqueten como «MB».</p>
+
+            <div class="dato">
+                <strong>El disco duro «que viene con menos capacidad»</strong>
+                Un disco de 1 TB tiene 10¹² bytes (convenio del fabricante, decimal). Windows lo divide entre 2⁴⁰ y muestra
+                «931 GB». No falta nada: son dos formas distintas de contar lo mismo.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="velocidad">5. Ancho de banda, throughput y goodput</h2>
+
+            <p>Tres términos que se usan como sinónimos en el lenguaje corriente, pero que significan cosas distintas:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Término</th><th>Qué mide</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ancho de banda</strong></td>
+                        <td>Capacidad <em>máxima teórica</em> del enlace</td>
+                        <td>Un puerto Gigabit Ethernet: 1.000 Mbps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Throughput</strong></td>
+                        <td>Caudal <em>real</em> que se consigue, cabeceras incluidas</td>
+                        <td>En ese puerto quizá 940 Mbps reales</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Goodput</strong></td>
+                        <td>Solo los <em>datos útiles</em>, sin cabeceras ni retransmisiones</td>
+                        <td>Unos 900 Mbps de datos de aplicación</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>La diferencia entre ancho de banda y throughput se debe a la <strong>sobrecarga</strong>: cabeceras de los
+            protocolos, confirmaciones, retransmisiones y espacios entre tramas. Nunca se aprovecha el 100 % nominal.</p>
+
+            <div class="destacado">
+                <strong>Analogía útil</strong>
+                El ancho de banda es el número de carriles de la autopista. El throughput son los coches que realmente
+                pasan. El goodput son las <em>personas</em> transportadas, descontando el peso de los propios vehículos.
+            </div>
+
+            <h2 id="latencia">6. Latencia, jitter y sus componentes</h2>
+
+            <p>Ancho de banda y latencia son <strong>independientes</strong>: un enlace puede tener mucha capacidad y
+            aun así ser lento en responder.</p>
+
+            <h3>Latencia</h3>
+
+            <p>Tiempo que tarda un dato en ir del origen al destino. Se compone de cuatro retardos:</p>
+
+            <ul>
+                <li><strong>Propagación</strong>: tiempo físico de viaje por el medio. Depende de la distancia y no se puede reducir: está limitado por la velocidad de la luz.</li>
+                <li><strong>Transmisión</strong>: tiempo en «meter» todos los bits en el cable. Depende del tamaño del dato y del ancho de banda.</li>
+                <li><strong>Procesamiento</strong>: lo que tardan routers y switches en analizar cada paquete.</li>
+                <li><strong>Encolado</strong>: espera en las colas de los equipos cuando hay congestión. Es el más variable.</li>
+            </ul>
+
+            <p>El <strong>RTT</strong> (<em>Round Trip Time</em>) es el tiempo de ida y vuelta, que es lo que mide el comando <code>ping</code>.</p>
+
+            <h3>Jitter</h3>
+
+            <p>Es la <strong>variación</strong> de la latencia entre paquetes consecutivos. Para descargar un fichero es
+            irrelevante; para voz y vídeo en tiempo real es crítico, porque provoca cortes y saltos aunque la latencia
+            media sea baja.</p>
+
+            <div class="dato">
+                <strong>Por qué la latencia no se arregla contratando más megas</strong>
+                Un enlace por satélite geoestacionario puede ofrecer 100 Mbps, pero la señal tiene que subir 36.000 km
+                y bajar otros tantos: el retardo de propagación ronda los 250 ms de ida. Aumentar el ancho de banda no
+                acorta esa distancia. Por eso el satélite sirve para descargar y es incómodo para videojuegos o
+                videollamadas.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="calculos">7. Cálculos de transferencia</h2>
+
+            <p>El cálculo que más se repite en el curso:</p>
+
+            <div class="destacado">
+                <strong>tiempo (s) = tamaño (bits) ÷ velocidad (bits por segundo)</strong>
+                <p style="margin-top:8px">Antes de dividir, comprueba que ambas magnitudes están en la misma unidad: si el
+                tamaño está en bytes, multiplícalo por 8.</p>
+            </div>
+
+            <h3>Ejemplo resuelto</h3>
+
+            <p>¿Cuánto tarda un fichero de <strong>500 MB</strong> por un enlace de <strong>100 Mbps</strong>?</p>
+
+<pre><code>1) Pasar el tamaño a bits:
+   500 MB × 8 = 4.000 Mb
+
+2) Dividir por la velocidad:
+   4.000 Mb ÷ 100 Mbps = 40 segundos
+
+Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
+
+            <h3>Segundo ejemplo</h3>
+
+            <p>¿Cuánto tarda <strong>1 GB</strong> por una fibra de <strong>600 Mbps</strong>?</p>
+
+<pre><code>1 GB = 1.000 MB × 8 = 8.000 Mb
+8.000 Mb ÷ 600 Mbps = 13,3 segundos</code></pre>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <h3>Resumen</h3>
+
+            <ul>
+                <li>La señal <strong>analógica</strong> toma infinitos valores; la <strong>digital</strong>, valores discretos.</li>
+                <li>Lo digital se impuso porque se puede <strong>regenerar</strong>: el ruido acumulado se elimina, no se amplifica.</li>
+                <li>Digitalizar exige <strong>muestrear</strong> (Nyquist: al menos el doble de la frecuencia máxima) y <strong>cuantificar</strong>.</li>
+                <li>La telefonía digital usa 8.000 muestras/s × 8 bits = <strong>64 Kbps</strong>.</li>
+                <li>Velocidades en <strong>bits</strong> (Mbps); tamaños en <strong>bytes</strong> (MB). Factor 8 entre ambos.</li>
+                <li>En redes los prefijos son <strong>decimales</strong>: 1 Mbps = 1.000.000 bps.</li>
+                <li><strong>Ancho de banda</strong> es capacidad teórica; <strong>throughput</strong>, caudal real; <strong>goodput</strong>, datos útiles.</li>
+                <li><strong>Latencia</strong> y ancho de banda son independientes. El <strong>jitter</strong> es la variación de la latencia.</li>
+                <li>tiempo = tamaño en bits ÷ velocidad en bps.</li>
+            </ul>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error</th><th>Corrección</th></tr></thead>
+                <tbody>
+                    <tr><td>«Contrato 600 Mbps, así que descargo a 600 MB/s»</td><td>600 Mbps ÷ 8 = <strong>75 MB/s</strong> como máximo teórico</td></tr>
+                    <tr><td>«La señal digital no sufre ruido»</td><td>Sí lo sufre; lo que ocurre es que se puede <strong>regenerar</strong> mientras el ruido no supere el umbral</td></tr>
+                    <tr><td>«Más ancho de banda equivale a menos latencia»</td><td>Son <strong>independientes</strong>: el satélite tiene mucha capacidad y una latencia enorme</td></tr>
+                    <tr><td>«1 Mbps son 1.048.576 bps»</td><td>En redes el prefijo es <strong>decimal</strong>: 1.000.000 bps</td></tr>
+                    <tr><td>«El disco de 1 TB viene con menos capacidad»</td><td>Son dos convenios distintos: 10¹² bytes mostrados en unidades binarias dan 931 GiB</td></tr>
+                    <tr><td>«Jitter y latencia son lo mismo»</td><td>La latencia es el retardo; el <strong>jitter</strong> es su variación entre paquetes</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar cada tarjeta: el esfuerzo de recordar es lo que
+            consolida, no volver a leerla.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a medir el <strong>MTU real</strong> de tu conexión, comprobar cómo crece la latencia con la
+            distancia hasta Australia y traducir tus megas contratados a MB/s de verdad.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 3</strong></a> (48 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 4</strong>
+            <p>Verás <strong>hasta dónde llega</strong> una red: PAN, LAN, MAN y WAN, y qué es realmente una VPN.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> piensa cuántas redes distintas has usado hoy sin darte cuenta,
+            desde los auriculares Bluetooth hasta la web que estás leyendo.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/teoria.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/teoria.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Explica <strong>con tus palabras</strong> por qué una señal digital puede recorrer miles de kilómetros sin degradarse y una analógica no, si ambas sufren exactamente el mismo ruido.',
+                modelo: `<p>Las dos se degradan igual por el camino: pierden potencia y se les suma ruido. La diferencia
+                         está en <strong>qué se puede hacer al llegar a un punto intermedio</strong>.</p>
+                         <p>Un amplificador analógico no sabe qué parte de lo que recibe es señal y qué parte es ruido, así
+                         que lo <strong>amplifica todo por igual</strong>. Tras varios tramos el ruido acumulado puede
+                         superar a la información y ya no hay forma de separarlos.</p>
+                         <p>Un regenerador digital solo tiene que decidir <strong>una cosa</strong>: si el valor recibido está
+                         más cerca del nivel alto o del bajo. Tomada esa decisión, emite una señal <strong>completamente
+                         nueva y perfecta</strong>, y el ruido acumulado hasta ahí desaparece. Por eso una llamada digital
+                         suena igual a 10 km que a 10.000.</p>`,
+                puntos: [
+                    'Reconoce que ambas se degradan por igual en el medio',
+                    'Explica que el amplificador analógico amplifica también el ruido',
+                    'Explica que el regenerador digital solo decide entre dos niveles',
+                    'Concluye que la señal regenerada es nueva y limpia, no una copia amplificada',
+                    'Matiza que digital no significa inmune: hay un umbral'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Un compañero dice: «he contratado 600 megas, así que descargo a 600 MB por segundo». Corrígele y explícale de dónde sale el error.',
+                modelo: `<p>Confunde <strong>megabits</strong> con <strong>megabytes</strong>. Un byte son 8 bits, así que
+                         600 Mbps son como máximo <strong>75 MB/s</strong>: hay que dividir entre 8.</p>
+                         <p>El error viene de que ambas unidades se abrevian casi igual: <strong>Mb</strong> con «b» minúscula
+                         son megabits y <strong>MB</strong> con «B» mayúscula son megabytes. Los operadores anuncian siempre
+                         en bits porque el número sale ocho veces mayor, y los sistemas operativos muestran las descargas en
+                         bytes, que es como se miden los ficheros.</p>
+                         <p>Además, en la práctica ni siquiera llegará a esos 75 MB/s: entre un 5 y un 10 % del caudal se va
+                         en cabeceras de protocolo y confirmaciones. Eso es la diferencia entre <em>throughput</em> y
+                         <em>goodput</em>.</p>`,
+                puntos: [
+                    'Identifica la confusión entre bits y bytes',
+                    'Aplica correctamente el factor 8: 600 ÷ 8 = 75 MB/s',
+                    'Explica la notación Mb frente a MB',
+                    'Añade que la sobrecarga de protocolo reduce algo más la cifra real'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Un enlace por satélite ofrece 100 Mbps pero tiene 600 ms de ida y vuelta. ¿Para qué sirve bien y para qué no? Justifica usando los conceptos de hoy.',
+                modelo: `<p>Sirve bien para todo lo que sea <strong>transferencia masiva</strong> sin interacción: descargar
+                         ficheros grandes, copias de seguridad, actualizaciones, vídeo bajo demanda con búfer. En esos casos
+                         lo que importa es el <strong>caudal</strong>, y 100 Mbps son perfectamente respetables.</p>
+                         <p>Sirve mal para todo lo <strong>interactivo</strong>: videollamadas, juegos en línea, escritorio
+                         remoto o incluso navegar, porque abrir una web exige muchas idas y vueltas y cada una arrastra esos
+                         600 ms. La conversación se hace incómoda y el juego, injugable.</p>
+                         <p>La razón es que <strong>ancho de banda y latencia son independientes</strong>. Los 600 ms vienen
+                         de la distancia: subir 36.000 km hasta el satélite geoestacionario y bajar otros tantos. Ninguna
+                         mejora de capacidad acorta esa distancia.</p>`,
+                puntos: [
+                    'Sirve para transferencias masivas donde manda el caudal',
+                    'No sirve para tráfico interactivo por el retardo',
+                    'Explica que navegar exige muchas idas y vueltas',
+                    'Atribuye los 600 ms a la distancia al satélite geoestacionario',
+                    'Concluye que ancho de banda y latencia son independientes'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Dos conexiones tienen la misma latencia media de 40 ms. En la primera todos los paquetes llegan entre 38 y 42 ms; en la segunda, entre 5 y 300 ms. ¿Cuál es mejor para una videollamada y por qué?',
+                modelo: `<p>Es mucho mejor la <strong>primera</strong>, aunque su latencia media sea idéntica e incluso aunque
+                         nunca baje de 38 ms.</p>
+                         <p>Lo que arruina una videollamada no es el retardo en sí, sino su <strong>variación</strong>, que se
+                         llama <strong>jitter</strong>. El reproductor necesita entregar el audio a un ritmo constante, así que
+                         mantiene un pequeño búfer. Si los paquetes llegan siempre con un retardo parecido, ese búfer puede ser
+                         mínimo y la conversación fluye.</p>
+                         <p>En la segunda conexión el búfer tendría que dimensionarse para el peor caso (300 ms) o los paquetes
+                         que llegan tarde se descartarían, produciendo cortes y voz robótica. Una latencia alta pero
+                         <strong>estable</strong> es preferible a una baja pero errática.</p>`,
+                puntos: [
+                    'Elige la primera conexión',
+                    'Identifica la variación como jitter',
+                    'Explica que el reproductor necesita un ritmo constante y usa un búfer',
+                    'Señala que el jitter alto obliga a un búfer grande o produce cortes',
+                    'Concluye que estable es mejor que baja pero errática'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: 'Diferencia esencial entre señal <strong>analógica</strong> y <strong>digital</strong>', dorso: 'La analógica toma <strong>infinitos valores</strong> de forma continua; la digital, <strong>valores discretos</strong> (típicamente 0 y 1).' },
+            { frente: '¿Por qué se impuso lo digital?', dorso: 'Porque se puede <strong>regenerar</strong>: el receptor decide si es 0 o 1 y emite una señal nueva y perfecta, eliminando el ruido acumulado. El amplificador analógico amplifica también el ruido.' },
+            { frente: '¿Es la señal digital <strong>inmune</strong> al ruido?', dorso: 'No: es <strong>tolerante</strong>. Existe un umbral; si el ruido impide distinguir un 0 de un 1, hay error igualmente.' },
+            { frente: 'Enuncia el <strong>teorema de Nyquist</strong>', dorso: 'Hay que muestrear al menos al <strong>doble de la frecuencia máxima</strong> de la señal para poder reconstruirla sin pérdida.' },
+            { frente: '¿De dónde salen los <strong>64 Kbps</strong> del canal telefónico?', dorso: '4 kHz de voz → 8.000 muestras/s (Nyquist) × 8 bits por muestra = <strong>64.000 bps</strong>.' },
+            { frente: '¿Cuántos bits tiene un byte? ¿Y qué implica?', dorso: '<strong>8 bits</strong>. Las velocidades van en bits (Mbps) y los tamaños en bytes (MB): para pasar de una a otra se multiplica o divide por 8.' },
+            { frente: 'Contratas <strong>600 Mbps</strong>. ¿Cuántos MB/s como máximo?', dorso: '600 ÷ 8 = <strong>75 MB/s</strong>.' },
+            { frente: 'En redes, ¿cuánto vale exactamente <strong>1 Mbps</strong>?', dorso: '<strong>1.000.000 bps</strong>. En telecomunicaciones los prefijos son <strong>decimales</strong> (SI); los binarios (mebi = 1.048.576) se reservan para memoria y almacenamiento.' },
+            { frente: '¿Por qué un disco de 1 TB muestra 931 GB?', dorso: 'El fabricante cuenta en <strong>decimal</strong> (10¹² bytes) y el sistema lo divide en <strong>binario</strong> (2³⁰). No falta capacidad: son dos formas de contar lo mismo.' },
+            { frente: 'Distingue <strong>ancho de banda</strong>, <strong>throughput</strong> y <strong>goodput</strong>', dorso: '<strong>Ancho de banda</strong>: capacidad máxima teórica. <strong>Throughput</strong>: caudal real, cabeceras incluidas. <strong>Goodput</strong>: solo los datos útiles de aplicación.' },
+            { frente: '¿Son <strong>ancho de banda</strong> y <strong>latencia</strong> lo mismo?', dorso: 'No, son <strong>independientes</strong>. El satélite tiene mucha capacidad y una latencia enorme: contratar más megas no acorta la distancia.' },
+            { frente: 'Los cuatro componentes de la <strong>latencia</strong>', dorso: '<strong>Propagación</strong> (distancia, irreducible), <strong>transmisión</strong> (tamaño ÷ velocidad), <strong>procesamiento</strong> (routers) y <strong>encolado</strong> (congestión, el más variable).' },
+            { frente: '¿Qué es el <strong>jitter</strong> y cuándo importa?', dorso: 'La <strong>variación</strong> de la latencia entre paquetes. Crítico en voz y vídeo en tiempo real; irrelevante al descargar un fichero.' },
+            { frente: 'Fórmula del <strong>tiempo de transferencia</strong>', dorso: '<strong>tiempo (s) = tamaño (bits) ÷ velocidad (bps)</strong>. Pasa siempre el tamaño a bits antes de dividir.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 3 — Señales y velocidad',
+        subtitulo: 'Analógico y digital · Unidades · Ancho de banda y latencia',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Señales',
+                repaso: '#senales',
+                text: '¿Cuál es la característica que define a una señal digital?',
+                options: {
+                    a: 'Varía de forma continua y toma infinitos valores',
+                    b: 'Toma valores discretos, típicamente 0 y 1',
+                    c: 'Solo puede viajar por fibra óptica',
+                    d: 'No se ve afectada por la distancia'
+                },
+                answer: 'b',
+                feedback: 'La señal digital usa un número finito de niveles. Esa discretización es lo que permite decidir sin ambigüedad qué valor se transmitió y regenerar la señal.'
+            },
+            {
+                topic: 'Señales',
+                repaso: '#senales',
+                text: '¿Por qué la señal digital resiste mejor las largas distancias?',
+                options: {
+                    a: 'Porque viaja más rápido que la analógica',
+                    b: 'Porque no sufre atenuación',
+                    c: 'Porque se puede regenerar limpia, eliminando el ruido acumulado',
+                    d: 'Porque usa menos ancho de banda'
+                },
+                answer: 'c',
+                feedback: 'Un regenerador decide si el valor recibido es un 0 o un 1 y emite una señal nueva y perfecta. El amplificador analógico, en cambio, amplifica también el ruido.'
+            },
+            {
+                topic: 'Señales',
+                repaso: '#senales',
+                text: '¿Es cierto que una señal digital es inmune al ruido?',
+                options: {
+                    a: 'Sí, el ruido no le afecta en absoluto',
+                    b: 'No: si el ruido supera cierto umbral, se confunde un 1 con un 0',
+                    c: 'Solo es inmune si viaja por cobre',
+                    d: 'Solo es inmune por debajo de 100 metros'
+                },
+                answer: 'b',
+                feedback: 'Digital no significa inmune, sino tolerante: existe un margen dentro del cual la recuperación es perfecta. Superado ese umbral se producen errores igualmente.'
+            },
+            {
+                topic: 'Digitalización',
+                repaso: '#digitalizacion',
+                text: 'Según el teorema de Nyquist, para digitalizar una señal de 4 kHz sin pérdida hay que muestrear a:',
+                options: {
+                    a: '2.000 muestras por segundo',
+                    b: '4.000 muestras por segundo',
+                    c: '8.000 muestras por segundo',
+                    d: '16.000 muestras por segundo'
+                },
+                answer: 'c',
+                feedback: 'Nyquist exige al menos el doble de la frecuencia máxima: 2 × 4 kHz = 8.000 muestras/s. Es exactamente lo que hace la telefonía digital.'
+            },
+            {
+                topic: 'Digitalización',
+                repaso: '#digitalizacion',
+                text: 'La telefonía digital muestrea a 8.000 muestras/s con 8 bits por muestra. ¿Qué caudal genera?',
+                options: {
+                    a: '8 Kbps',
+                    b: '64 Kbps',
+                    c: '128 Kbps',
+                    d: '1 Mbps'
+                },
+                answer: 'b',
+                feedback: '8.000 × 8 = 64.000 bps = 64 Kbps. Ese es el origen del canal telefónico de 64 Kbps que se reserva en la conmutación de circuitos.'
+            },
+            {
+                topic: 'Unidades',
+                repaso: '#unidades',
+                text: '¿Cuántos bits contiene un byte?',
+                options: {
+                    a: '4 bits',
+                    b: '8 bits',
+                    c: '16 bits',
+                    d: '1.024 bits'
+                },
+                answer: 'b',
+                feedback: 'Un byte son 8 bits. Este factor 8 es la fuente más habitual de errores al convertir entre tamaños de fichero y velocidades de enlace.'
+            },
+            {
+                topic: 'Unidades',
+                repaso: '#unidades',
+                text: 'Una fibra de 600 Mbps, ¿a cuántos MB/s puede descargar como máximo teórico?',
+                options: {
+                    a: '600 MB/s',
+                    b: '75 MB/s',
+                    c: '4.800 MB/s',
+                    d: '60 MB/s'
+                },
+                answer: 'b',
+                feedback: '600 Mbps ÷ 8 = 75 MB/s. Las velocidades de red se expresan en bits (b minúscula) y los tamaños de fichero en bytes (B mayúscula).'
+            },
+            {
+                topic: 'Unidades',
+                repaso: '#unidades',
+                text: 'En redes y telecomunicaciones, 1 Mbps equivale exactamente a:',
+                options: {
+                    a: '1.048.576 bits por segundo',
+                    b: '1.000.000 bits por segundo',
+                    c: '1.024.000 bits por segundo',
+                    d: '1.000.000 bytes por segundo'
+                },
+                answer: 'b',
+                feedback: 'En redes se usa siempre el convenio decimal del SI: mega = 10⁶. Los prefijos binarios (mebi = 2²⁰) se reservan para memoria y almacenamiento.'
+            },
+            {
+                topic: 'Velocidad',
+                repaso: '#velocidad',
+                text: '¿Qué diferencia hay entre ancho de banda y throughput?',
+                options: {
+                    a: 'Son sinónimos exactos',
+                    b: 'El ancho de banda es la capacidad máxima teórica; el throughput, el caudal real conseguido',
+                    c: 'El throughput es siempre mayor que el ancho de banda',
+                    d: 'El ancho de banda se mide en bytes y el throughput en bits'
+                },
+                answer: 'b',
+                feedback: 'Un puerto Gigabit tiene 1.000 Mbps de ancho de banda, pero por la sobrecarga de cabeceras y confirmaciones el throughput real ronda los 940 Mbps.'
+            },
+            {
+                topic: 'Velocidad',
+                repaso: '#velocidad',
+                text: '¿Qué mide el goodput?',
+                options: {
+                    a: 'La capacidad máxima del enlace',
+                    b: 'El caudal total transmitido, cabeceras incluidas',
+                    c: 'Solo los datos útiles de aplicación, sin cabeceras ni retransmisiones',
+                    d: 'La variación del retardo entre paquetes'
+                },
+                answer: 'c',
+                feedback: 'Siguiendo la analogía de la autopista: el ancho de banda son los carriles, el throughput los coches que pasan y el goodput las personas transportadas.'
+            },
+            {
+                topic: 'Latencia',
+                repaso: '#latencia',
+                text: 'Un enlace por satélite ofrece 100 Mbps pero tiene 250 ms de latencia. ¿Qué demuestra?',
+                options: {
+                    a: 'Que el ancho de banda y la latencia son independientes',
+                    b: 'Que el enlace está mal configurado',
+                    c: 'Que a más ancho de banda, más latencia',
+                    d: 'Que el satélite no puede superar los 10 Mbps'
+                },
+                answer: 'a',
+                feedback: 'La latencia depende sobre todo de la distancia física (36.000 km de subida y otros tantos de bajada). Contratar más megas no acorta esa distancia.'
+            },
+            {
+                topic: 'Latencia',
+                repaso: '#latencia',
+                text: '¿Cuál de estos componentes de la latencia NO se puede reducir por más que se mejore el equipamiento?',
+                options: {
+                    a: 'El retardo de encolado',
+                    b: 'El retardo de procesamiento',
+                    c: 'El retardo de propagación',
+                    d: 'El retardo de transmisión'
+                },
+                answer: 'c',
+                feedback: 'La propagación depende de la distancia y está limitada por la velocidad de la luz en el medio. Los demás retardos sí se reducen con mejor hardware o menos congestión.'
+            },
+            {
+                topic: 'Latencia',
+                repaso: '#latencia',
+                text: '¿Qué es el jitter y por qué importa?',
+                options: {
+                    a: 'El retardo medio de ida y vuelta; importa en las descargas',
+                    b: 'La variación de la latencia entre paquetes; es crítico en voz y vídeo en tiempo real',
+                    c: 'La pérdida de paquetes por congestión',
+                    d: 'La capacidad máxima del enlace'
+                },
+                answer: 'b',
+                feedback: 'Aunque la latencia media sea baja, si unos paquetes llegan a 20 ms y otros a 200 ms la conversación se entrecorta. Para descargar un fichero, en cambio, es irrelevante.'
+            },
+            {
+                topic: 'Cálculos',
+                repaso: '#calculos',
+                text: '¿Cuánto tarda en transferirse un fichero de 250 MB por un enlace de 100 Mbps, sin contar sobrecarga?',
+                options: {
+                    a: '2,5 segundos',
+                    b: '10 segundos',
+                    c: '20 segundos',
+                    d: '25 segundos'
+                },
+                answer: 'c',
+                feedback: '250 MB × 8 = 2.000 Mb. 2.000 ÷ 100 = 20 segundos. Recuerda pasar siempre el tamaño a bits antes de dividir por la velocidad.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 7 — Recuperación de errores</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 7 — Recuperación de errores</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">80 min</span></div>
+        <div class="info-item"><strong>Bloques:</strong> 6 (uno por día)</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Trabaja solo lo que falla</strong>
+            Esta página tiene un bloque por cada día de la semana. Mira el <strong>desglose por día</strong> del
+            test que acabas de hacer y trabaja únicamente los bloques donde hayas fallado.
+            Si has sacado más del 90 %, haz solo el bloque 6 (integración) y termina antes.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Síntesis y test semanal</a></span>
+        <span><a href="../Dia_06/ejercicios.html">← Día 6</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 7 — Recuperación de errores',
+    subtitulo: 'Un bloque por cada día de la Semana 1',
+    tiempo: '80 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1 — Concepto de red e historia (Día 1)',
+            tiempo: '10 min',
+            enunciado: '<p>Trabaja este bloque si fallaste preguntas del Día 1 en el test.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena cronológicamente los hitos (1 = más antiguo).',
+                    elementos: ['Wi-Fi (802.11)', 'Telégrafo', 'World Wide Web', 'ARPANET', 'Teléfono', 'TCP/IP como estándar', 'Ethernet'],
+                    orden: ['Telégrafo', 'Teléfono', 'ARPANET', 'Ethernet', 'TCP/IP como estándar', 'World Wide Web', 'Wi-Fi (802.11)'],
+                    explicacion: '1837 → 1876 → 1969 → 1973 → 1983 → 1989 → 1997. Memoriza el orden y las décadas, no el dígito exacto.',
+                    pistas: [
+                        'Separa primero el bloque del siglo XIX (telégrafo, teléfono) del resto.',
+                        'ARPANET es anterior a Ethernet: primero se conectaron centros lejanos y después los equipos de un edificio.',
+                        'La Web es de las últimas: necesitaba que TCP/IP ya existiera.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca las afirmaciones <strong>correctas</strong>.',
+                    opciones: {
+                        a: 'La Web es un servicio que funciona sobre Internet',
+                        b: 'Internet se inventó en 1989',
+                        c: 'ARPANET introdujo la conmutación de paquetes',
+                        d: 'Ethernet e Internet son sinónimos',
+                        e: 'La conmutación de circuitos reserva un camino aunque no se transmita nada'
+                    },
+                    respuesta: ['a', 'c', 'e'],
+                    explicacion: 'En 1989 nació la Web (Internet arranca en 1969 y se consolida en 1983), y Ethernet es una tecnología LAN, no la red global.',
+                    pistas: [
+                        'Dos de las cinco afirmaciones son mitos muy extendidos.',
+                        'Cuidado con la fecha de 1989 y con confundir una tecnología local con la red mundial.'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    ancho: '340px',
+                    pregunta: '<strong>c)</strong> ¿Qué técnica de conmutación introdujo ARPANET?',
+                    respuestas: ['conmutacion de paquetes', 'paquetes', 'la conmutacion de paquetes', 'packet switching'],
+                    explicacion: 'La <strong>conmutación de paquetes</strong>: la información se trocea en paquetes independientes que pueden seguir rutas distintas y se reensamblan en destino.',
+                    pistas: [
+                        'Son dos palabras: un verbo sustantivado y el nombre de lo que se trocea.',
+                        'Es lo contrario de reservar un circuito fijo.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2 — Sistema de comunicación (Día 2)',
+            tiempo: '10 min',
+            enunciado: '<p>Trabaja este bloque si fallaste preguntas del Día 2 en el test.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los cinco componentes según el recorrido de la información.',
+                    elementos: ['Medio', 'Destino', 'Fuente', 'Receptor', 'Transmisor'],
+                    orden: ['Fuente', 'Transmisor', 'Medio', 'Receptor', 'Destino'],
+                    explicacion: 'La fuente genera, el transmisor adapta al medio, el medio transporta, el receptor decodifica y el destino consume.',
+                    pistas: [
+                        'Sigue el recorrido de la información desde que nace hasta que se consume.',
+                        'El medio va justo en el centro: tres antes de él no, solo dos.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Indica el modo de transmisión de cada sistema.',
+                    esquina: 'Sistema',
+                    cabecera: ['Modo'],
+                    filas: [
+                        { etiqueta: 'Radio FM', celdas: [{ respuestas: ['simplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Walkie-talkie', celdas: [{ respuestas: ['half-duplex', 'half duplex', 'halfduplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Wi-Fi', celdas: [{ respuestas: ['half-duplex', 'half duplex', 'halfduplex'], placeholder: 'modo' }] },
+                        { etiqueta: 'Ethernet con switch', celdas: [{ respuestas: ['full-duplex', 'full duplex', 'fullduplex'], placeholder: 'modo' }] }
+                    ],
+                    explicacion: 'El que más se falla es el <strong>Wi-Fi</strong>: es half-duplex porque la antena no puede emitir y recibir a la vez en la misma frecuencia.',
+                    pistas: [
+                        'Pregúntate en cada caso si los dos extremos pueden hablar exactamente a la vez.',
+                        'Radio FM no tiene canal de vuelta. El Wi-Fi lo tiene, pero por turnos.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál es la diferencia esencial entre half-duplex y full-duplex?',
+                    opciones: {
+                        a: 'El número de sentidos: uno frente a dos',
+                        b: 'La simultaneidad: por turnos frente a a la vez',
+                        c: 'La velocidad del enlace',
+                        d: 'El tipo de cable utilizado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Ambos son bidireccionales. Quien dice que half-duplex es «un solo sentido» está describiendo simplex.',
+                    pistas: [
+                        'Descarta la opción que hable del número de sentidos: ambos son bidireccionales.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3 — Señales y velocidad (Día 3)',
+            tiempo: '12 min',
+            enunciado: '<p>Trabaja este bloque si fallaste cálculos o unidades. Es lo que más se arrastra durante el curso.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    unidad: 'MB/s',
+                    tolerancia: 0.1,
+                    respuesta: 12.5,
+                    pregunta: '<strong>a)</strong> Un enlace de <strong>100 Mbps</strong>, ¿a cuántos MB/s equivale?',
+                    explicacion: '100 ÷ 8 = <strong>12,5 MB/s</strong>. Velocidades en bits, tamaños en bytes.',
+                    pistas: [
+                        'Fíjate en las unidades: Mbps son megabits, MB/s son megabytes.',
+                        'Un byte son 8 bits: divide.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'segundos',
+                    tolerancia: 0.5,
+                    respuesta: 64,
+                    pregunta: '<strong>b)</strong> ¿Cuánto tarda un fichero de <strong>800 MB</strong> por un enlace de <strong>100 Mbps</strong>?',
+                    explicacion: '800 × 8 = 6.400 Mb. 6.400 ÷ 100 = <strong>64 segundos</strong>.',
+                    pistas: [
+                        'Pasa el tamaño a bits multiplicando por 8, y después divide entre la velocidad.',
+                        '800 MB son 6.400 megabits.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'Kbps',
+                    tolerancia: 0,
+                    respuesta: 64,
+                    pregunta: '<strong>c)</strong> Telefonía digital: 8.000 muestras/s con 8 bits por muestra. ¿Qué caudal genera?',
+                    explicacion: '8.000 × 8 = 64.000 bps = <strong>64 Kbps</strong>. Es el origen del canal telefónico estándar.',
+                    pistas: [
+                        'Multiplica las muestras por segundo por los bits de cada muestra.',
+                        'El resultado en bps, dividido entre 1.000, da los Kbps.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>d)</strong> Relaciona cada término con lo que mide.',
+                    izquierda: ['Ancho de banda', 'Throughput', 'Latencia', 'Jitter'],
+                    derecha: [
+                        'Capacidad máxima teórica del enlace',
+                        'Caudal real conseguido',
+                        'Retardo en llegar del origen al destino',
+                        'Variación del retardo entre paquetes'
+                    ],
+                    pares: {
+                        'Ancho de banda': 'Capacidad máxima teórica del enlace',
+                        'Throughput': 'Caudal real conseguido',
+                        'Latencia': 'Retardo en llegar del origen al destino',
+                        'Jitter': 'Variación del retardo entre paquetes'
+                    },
+                    explicacion: 'Los dos primeros miden cantidad por unidad de tiempo; los dos últimos miden tiempo. Son independientes entre sí.',
+                    pistas: [
+                        'Separa los que responden a «cuánto cabe» de los que responden a «cuánto tarda».',
+                        'De los de tiempo, uno es el retardo y el otro su variación.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4 — Clasificación de redes (Día 4)',
+            tiempo: '10 min',
+            enunciado: '<p>Trabaja este bloque si fallaste preguntas del Día 4 en el test.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa el alcance aproximado y una tecnología de cada tipo de red.',
+                    esquina: 'Tipo',
+                    cabecera: ['Tecnología representativa'],
+                    filas: [
+                        { etiqueta: 'PAN', celdas: [{ respuestas: ['bluetooth', 'nfc', 'zigbee', 'usb'], placeholder: 'tecnología' }] },
+                        { etiqueta: 'LAN', celdas: [{ respuestas: ['ethernet', 'wi-fi', 'wifi', 'ethernet (802.3)', '802.3'], placeholder: 'tecnología' }] },
+                        { etiqueta: 'MAN', celdas: [{ respuestas: ['fibra optica', 'fibra', 'metro ethernet'], placeholder: 'tecnología' }] },
+                        { etiqueta: 'WAN', celdas: [{ respuestas: ['mpls', 'satelite', 'fibra de larga distancia', 'enlaces submarinos'], placeholder: 'tecnología' }] }
+                    ],
+                    explicacion: 'A mayor alcance, tecnologías más complejas y caras, y menor control sobre el medio.',
+                    pistas: [
+                        'Empareja por alcance: la tecnología de menos metros con la red más pequeña.',
+                        'Bluetooth llega a metros; MPLS y los cables submarinos, a continentes.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca las afirmaciones <strong>correctas</strong>.',
+                    opciones: {
+                        a: 'Internet es una WAN',
+                        b: 'Toda WAN es Internet',
+                        c: 'Una WLAN es una LAN inalámbrica',
+                        d: 'Una SAN se clasifica por su finalidad, no por su alcance',
+                        e: 'Una VPN es una línea física dedicada'
+                    },
+                    respuesta: ['a', 'c', 'd'],
+                    explicacion: 'Existen WAN privadas (MPLS) que no pasan por Internet, y la VPN es <strong>virtual</strong>: cifrado sobre infraestructura ajena, no cable propio.',
+                    pistas: [
+                        'Dos de las cinco son falsas: una confunde una parte con el todo y otra confunde virtual con físico.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuándo se justifica una línea dedicada frente a una VPN?',
+                    opciones: {
+                        a: 'Siempre: es más barata',
+                        b: 'Cuando se necesita ancho de banda y latencia garantizados por contrato',
+                        c: 'Cuando hay que desplegar en pocas horas',
+                        d: 'Cuando se prevé añadir muchas sedes'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La línea dedicada aporta SLA de capacidad y latencia estable. Para despliegue rápido o crecimiento flexible, la VPN es mejor opción.',
+                    pistas: [
+                        'Piensa qué tiene una línea dedicada que Internet nunca puede darte.',
+                        'No es velocidad: es un compromiso por contrato.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 5 — Topologías (Días 5 y 6)',
+            tiempo: '13 min',
+            enunciado: '<p>Trabaja este bloque si fallaste preguntas de topologías o de análisis de fallos.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica qué avería <strong>tumba toda la red</strong> en cada topología.',
+                    esquina: 'Topología',
+                    cabecera: ['Avería crítica'],
+                    filas: [
+                        { etiqueta: 'Bus', celdas: [{ respuestas: ['rotura del cable central', 'cable central', 'el cable central', 'rotura del bus', 'terminador'], placeholder: 'qué falla' }] },
+                        { etiqueta: 'Anillo simple', celdas: [{ respuestas: ['cualquier nodo', 'cualquier nodo o cable', 'un nodo', 'cualquiera'], placeholder: 'qué falla' }] },
+                        { etiqueta: 'Estrella', celdas: [{ respuestas: ['el nodo central', 'nodo central', 'el switch', 'switch', 'switch central'], placeholder: 'qué falla' }] }
+                    ],
+                    explicacion: 'En el anillo simple <strong>cualquier</strong> fallo abre el circuito. En bus y estrella los equipos son independientes: lo crítico es el medio o el nodo central.',
+                    pistas: [
+                        'Pregúntate en cada topología si el tráfico de los demás pasa por el equipo averiado.',
+                        'En el anillo, cada nodo recibe y reenvía: forma parte del camino.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'enlaces',
+                    tolerancia: 0,
+                    respuesta: 28,
+                    pregunta: '<strong>b)</strong> ¿Cuántos enlaces necesita una malla completa de <strong>8 nodos</strong>?',
+                    explicacion: '8 × 7 ÷ 2 = <strong>28 enlaces</strong>. Cada nodo necesitaría además 7 interfaces.',
+                    pistas: [
+                        'Aplica N × (N−1) ÷ 2.',
+                        'Se divide entre 2 porque cada enlace lo comparten dos nodos.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>c)</strong> Indica con <em>sí</em> o <em>no</em> qué segmenta cada dispositivo.',
+                    esquina: 'Dispositivo',
+                    cabecera: ['¿Colisión?', '¿Broadcast?'],
+                    filas: [
+                        {
+                            etiqueta: 'Hub',
+                            celdas: [
+                                { respuestas: ['no'], placeholder: 'sí / no' },
+                                { respuestas: ['no'], placeholder: 'sí / no' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Switch sin VLAN',
+                            celdas: [
+                                { respuestas: ['si', 'sí'], placeholder: 'sí / no' },
+                                { respuestas: ['no'], placeholder: 'sí / no' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Router',
+                            celdas: [
+                                { respuestas: ['si', 'sí'], placeholder: 'sí / no' },
+                                { respuestas: ['si', 'sí'], placeholder: 'sí / no' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La fila del <strong>switch</strong> es la clave: segmenta colisión pero NO broadcast. Es el error más repetido de toda la semana.',
+                    pistas: [
+                        'Para cada dispositivo hazte dos preguntas distintas: ¿separa medios físicos? ¿frena las difusiones?',
+                        'El hub no hace ninguna; el router hace las dos; el switch solo una.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 6 — Integración de la semana',
+            tiempo: '10 min',
+            enunciado: '<p>Haz este bloque <strong>siempre</strong>, aunque hayas aprobado con nota: comprueba que sabes conectar los conceptos entre sí.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>a)</strong> Una oficina con hub de 100 Mbps y 8 PCs cambia a switch. Señala
+                               <strong>todos</strong> los efectos correctos de ese cambio.`,
+                    opciones: {
+                        a: 'Pasa de 1 a 8 dominios de colisión y de half a full-duplex',
+                        b: 'Pasa de 1 a 8 dominios de broadcast',
+                        c: 'La topología física cambia de bus a estrella',
+                        d: 'Cada PC pierde ancho de banda dedicado'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Los dominios de broadcast siguen siendo 1 (el switch no los segmenta), la topología física ya era estrella, y cada PC <em>gana</em> ancho de banda dedicado.',
+                    pistas: [
+                        'Tres de las cuatro afirmaciones contienen un error concreto.',
+                        'Recuerda qué NO segmenta un switch, y qué topología física tenía ya la red con hub.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 8,
+                    pregunta: `<strong>b)</strong> Una empresa ha pasado de 10 a 120 empleados manteniendo un switch plano
+                               ampliado con hubs. Redacta un informe breve (6-8 líneas) explicando <strong>qué problemas
+                               tiene</strong> esa red y <strong>qué propondrías</strong>, usando los conceptos de toda la semana.`,
+                    modelo: `
+                        <p><strong>Problemas actuales:</strong></p>
+                        <ul>
+                            <li>Los <strong>hubs</strong> crean dominios de colisión compartidos: los equipos que cuelgan de ellos
+                            funcionan en half-duplex, con colisiones y ancho de banda repartido.</li>
+                            <li>Existe un <strong>único dominio de broadcast</strong> con 120 equipos: el tráfico de difusión
+                            (ARP, DHCP, descubrimiento) consume ancho de banda y CPU en todos ellos, con riesgo de
+                            <strong>tormenta de broadcast</strong>.</li>
+                            <li>La red es <strong>plana</strong>: no hay segmentación, así que cualquier equipo puede alcanzar
+                            a cualquier otro, incluidos los servidores.</li>
+                            <li>Un fallo del switch central deja sin red a toda la empresa: <strong>punto único de fallo</strong>.</li>
+                        </ul>
+                        <p><strong>Propuesta:</strong> migrar a una topología <strong>jerárquica en árbol</strong> con switches
+                        gestionables. Sustituir todos los hubs por switches para obtener full-duplex y un dominio de colisión
+                        por puerto. Crear <strong>VLAN</strong> por departamento para dividir el dominio de broadcast y aislar
+                        los servidores. Añadir un nivel de <strong>distribución</strong> que agregue el acceso y aplique el
+                        enrutamiento inter-VLAN y las políticas de seguridad. Por último, introducir <strong>redundancia</strong>
+                        en los niveles superiores (apilamiento, enlaces dobles con STP y SAI) para eliminar el punto único de fallo.</p>`,
+                    rubrica: [
+                        'Identifica los hubs como causa de colisiones y half-duplex',
+                        'Señala el dominio de broadcast único con 120 equipos y el riesgo de tormenta',
+                        'Menciona la falta de segmentación y el acceso libre a los servidores',
+                        'Identifica el punto único de fallo del switch central',
+                        'Propone sustituir hubs por switches',
+                        'Propone VLAN para segmentar el broadcast',
+                        'Propone estructura jerárquica (acceso / distribución / núcleo)',
+                        'Propone redundancia: apilamiento, enlaces dobles con STP o SAI'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

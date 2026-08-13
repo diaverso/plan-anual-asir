@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 7 — Síntesis de la Semana 1 y test semanal</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 7 — Síntesis y test semanal</h1>
+        <p>Todo lo estudiado en la Semana 1, en un solo mapa</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Síntesis:</strong> 30 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 15 min</div>
+        <div class="info-item"><strong>Test:</strong> 45 min · 31 preguntas</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 07 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Cómo usar esta página</strong>
+            Lee la síntesis <strong>haciendo un mapa conceptual en papel</strong> a la vez. Después haz el test
+            cronometrado (45 min) y <strong>sin volver arriba</strong>. Al corregir verás el desglose por día:
+            eso te dirá exactamente qué repasar.
+        </div>
+
+        <div class="toc">
+            <h2>Síntesis de la semana</h2>
+            <ol>
+                <li><a href="#mapa">Mapa de la semana</a></li>
+                <li><a href="#d1">Día 1 — Concepto de red e historia</a></li>
+                <li><a href="#d2">Día 2 — Sistema de comunicación</a></li>
+                <li><a href="#d3">Día 3 — Señales y velocidad</a></li>
+                <li><a href="#d4">Día 4 — Clasificación de redes</a></li>
+                <li><a href="#d5">Día 5 — Topologías básicas</a></li>
+                <li><a href="#d6">Día 6 — Topologías avanzadas y dominios</a></li>
+                <li><a href="#errores">Los 10 errores que más se repiten</a></li>
+                <li><a href="#formulas">Fórmulas y datos que hay que saber de memoria</a></li>
+                <li><a href="#repaso">Repaso con flashcards de toda la semana</a></li>
+                <li><a href="#quiz-inicio">Test semanal</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="mapa">1. Mapa de la semana</h2>
+
+            <p>Los seis días no son temas sueltos: forman una cadena que va de lo general a lo concreto.</p>
+
+<pre><code>  ¿QUÉ ES UNA RED?  (Día 1)
+          ↓
+  ¿CÓMO SE COMUNICAN?  (Día 2)
+   componentes · simplex/half/full · colisiones
+          ↓
+  ¿QUÉ VIAJA Y A QUÉ VELOCIDAD?  (Día 3)
+   analógico/digital · bits y bytes · ancho de banda y latencia
+          ↓
+  ¿HASTA DÓNDE LLEGA?  (Día 4)
+   PAN · LAN · MAN · WAN · pública/privada/VPN
+          ↓
+  ¿CÓMO SE DISPONEN LOS EQUIPOS?  (Días 5 y 6)
+   bus · anillo · estrella · malla · árbol · híbrida
+          ↓
+  ¿HASTA DÓNDE LLEGA CADA SEÑAL?  (Día 6)
+   dominios de colisión y de broadcast</code></pre>
+
+            <h2 id="d1">2. Día 1 — Concepto de red e historia</h2>
+
+            <ul>
+                <li>Red = dispositivos <strong>interconectados</strong> que comparten <strong>recursos y servicios</strong> mediante <strong>protocolos</strong> comunes.</li>
+                <li>Ventajas: compartición, comunicación, centralización, fiabilidad, escalabilidad, ahorro, seguridad centralizada.</li>
+                <li>Contrapartidas: punto único de fallo, propagación de amenazas, necesidad de administración, dependencia.</li>
+                <li>Orden histórico: <strong>telégrafo 1837 → teléfono 1876 → radio 1895 → ARPANET 1969 → Ethernet 1973 → TCP/IP 1983 → WWW 1989 → Wi-Fi 1997</strong>.</li>
+                <li>ARPANET aportó la <strong>conmutación de paquetes</strong> y la descentralización. Primer mensaje: <strong>«LO»</strong>.</li>
+                <li><strong>Internet ≠ Web</strong>: la Web es un servicio sobre Internet.</li>
+            </ul>
+
+            <h2 id="d2">3. Día 2 — Sistema de comunicación</h2>
+
+            <ul>
+                <li>Cinco componentes: <strong>fuente → transmisor → medio → receptor → destino</strong>.</li>
+                <li>La fuente <strong>genera</strong>; el transmisor <strong>adapta al medio</strong>. Los papeles se invierten según el sentido.</li>
+                <li>El medio introduce <strong>atenuación, ruido y distorsión</strong>.</li>
+                <li>Modos: <strong>simplex</strong> (un sentido), <strong>half-duplex</strong> (dos sentidos por turnos), <strong>full-duplex</strong> (simultáneo).</li>
+                <li>Wi-Fi y Ethernet con hub son <strong>half-duplex</strong>; Ethernet con switch es <strong>full-duplex</strong>.</li>
+                <li>El hub provoca <strong>colisiones</strong> (CSMA/CD); el switch en full-duplex las <strong>elimina</strong>.</li>
+                <li>Las redes modernas transmiten en <strong>serie</strong>, por el <em>skew</em> del paralelo.</li>
+            </ul>
+
+            <h2 id="d3">4. Día 3 — Señales y velocidad</h2>
+
+            <ul>
+                <li>Analógica = infinitos valores; digital = valores discretos.</li>
+                <li>Lo digital ganó porque se <strong>regenera</strong>: el ruido acumulado se elimina en lugar de amplificarse.</li>
+                <li><strong>Nyquist</strong>: muestrear al menos al doble de la frecuencia máxima.</li>
+                <li>Telefonía digital: 8.000 muestras/s × 8 bits = <strong>64 Kbps</strong>.</li>
+                <li>Velocidades en <strong>bits</strong> (Mbps); tamaños en <strong>bytes</strong> (MB). <strong>Factor 8</strong>.</li>
+                <li>En redes los prefijos son <strong>decimales</strong>: 1 Mbps = 1.000.000 bps.</li>
+                <li><strong>Ancho de banda</strong> (capacidad) ≠ <strong>throughput</strong> (real) ≠ <strong>goodput</strong> (útil).</li>
+                <li><strong>Latencia</strong> y ancho de banda son <strong>independientes</strong>. El <strong>jitter</strong> es la variación de la latencia.</li>
+            </ul>
+
+            <h2 id="d4">5. Día 4 — Clasificación de redes</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tipo</th><th>Alcance</th><th>Tecnología</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>PAN</strong></td><td>1-10 m</td><td>Bluetooth, NFC</td></tr>
+                    <tr><td><strong>LAN</strong></td><td>10 m - 1 km</td><td>Ethernet, Wi-Fi</td></tr>
+                    <tr><td><strong>MAN</strong></td><td>1-50 km</td><td>Fibra, Metro Ethernet</td></tr>
+                    <tr><td><strong>WAN</strong></td><td>Sin límite</td><td>MPLS, satélite, submarinos</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <ul>
+                <li>El criterio decisivo LAN/WAN es <strong>quién posee el medio</strong>, no solo la distancia.</li>
+                <li><strong>WLAN</strong> = LAN inalámbrica. <strong>SAN</strong> se clasifica por finalidad, no por alcance.</li>
+                <li><strong>VPN</strong>: túnel cifrado sobre red pública. Barata y flexible, pero sin garantía de ancho de banda.</li>
+            </ul>
+
+            <h2 id="d5">6. Día 5 — Topologías básicas</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Topología</th><th>Acceso al medio</th><th>Qué tumba la red</th><th>Estado</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Bus</strong></td><td>CSMA/CD</td><td>Rotura del cable central o terminador suelto</td><td>Obsoleta</td></tr>
+                    <tr><td><strong>Anillo</strong></td><td>Paso de testigo</td><td><strong>Cualquier</strong> nodo o cable</td><td>Obsoleta</td></tr>
+                    <tr><td><strong>Estrella</strong></td><td>Ninguno (conmutado)</td><td>Caída del nodo central</td><td><strong>Estándar</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <ul>
+                <li>Ethernet con hub: <strong>estrella física, bus lógico</strong>.</li>
+                <li>Token Ring con MAU: <strong>estrella física, anillo lógico</strong>.</li>
+                <li>La estrella ganó porque <strong>aísla fallos</strong> y el diagnóstico es inmediato, aunque gaste más cable.</li>
+            </ul>
+
+            <h2 id="d6">7. Día 6 — Topologías avanzadas y dominios</h2>
+
+            <ul>
+                <li><strong>Malla</strong>: enlaces = <strong>N × (N−1) ÷ 2</strong>; interfaces por nodo = <strong>N−1</strong>. Crecimiento cuadrático → se usa <strong>parcial</strong>.</li>
+                <li><strong>Árbol</strong>: modelo jerárquico de <strong>acceso, distribución y núcleo</strong>.</li>
+                <li><strong>Híbrida</strong>: es lo que existe en las redes reales.</li>
+            </ul>
+
+            <div class="destacado">
+                <strong>La tabla que hay que saber de memoria</strong>
+                <div class="tabla-wrap" style="margin-top:10px">
+                <table>
+                    <thead><tr><th>Dispositivo</th><th>¿Segmenta colisión?</th><th>¿Segmenta broadcast?</th></tr></thead>
+                    <tbody>
+                        <tr><td>Hub / repetidor / AP Wi-Fi</td><td>No</td><td>No</td></tr>
+                        <tr><td>Switch sin VLAN</td><td><strong>Sí</strong> (uno por puerto)</td><td><strong>No</strong></td></tr>
+                        <tr><td>Switch con VLAN</td><td>Sí</td><td><strong>Sí</strong> (uno por VLAN)</td></tr>
+                        <tr><td>Router</td><td>Sí</td><td><strong>Sí</strong> (uno por interfaz)</td></tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <h2 id="errores">8. Los 10 errores que más se repiten</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Error</th><th>Corrección</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>«El switch segmenta broadcast»</td><td>Solo segmenta <strong>colisión</strong>. Para broadcast: VLAN o router</td></tr>
+                    <tr><td>2</td><td>«Internet se inventó en 1989»</td><td>En 1989 nació <strong>la Web</strong></td></tr>
+                    <tr><td>3</td><td>«Half-duplex es un solo sentido»</td><td>Eso es <strong>simplex</strong>; half-duplex es bidireccional por turnos</td></tr>
+                    <tr><td>4</td><td>«600 Mbps = 600 MB/s»</td><td>÷ 8 = <strong>75 MB/s</strong></td></tr>
+                    <tr><td>5</td><td>«Más ancho de banda = menos latencia»</td><td>Son <strong>independientes</strong></td></tr>
+                    <tr><td>6</td><td>«En el anillo, si falla un PC solo se aísla él»</td><td><strong>Cae toda la red</strong>: el circuito queda abierto</td></tr>
+                    <tr><td>7</td><td>«En el bus, si falla un PC cae la red»</td><td>Cae <strong>solo ese PC</strong>; lo crítico es el cable central</td></tr>
+                    <tr><td>8</td><td>«El Wi-Fi es full-duplex»</td><td>Es <strong>half-duplex</strong></td></tr>
+                    <tr><td>9</td><td>«Un hub crea un dominio de colisión por puerto»</td><td>Crea <strong>uno solo</strong> para todos</td></tr>
+                    <tr><td>10</td><td>«WAN es sinónimo de Internet»</td><td>Internet es <em>una</em> WAN; existen WAN privadas</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="formulas">9. Fórmulas y datos de memoria</h2>
+
+<pre><code>MALLA COMPLETA
+  enlaces           = N × (N − 1) ÷ 2
+  interfaces/nodo   = N − 1
+
+TIEMPO DE TRANSFERENCIA
+  tiempo (s)        = tamaño (bits) ÷ velocidad (bps)
+  bytes → bits      = × 8
+
+NYQUIST
+  frec. muestreo   ≥ 2 × frecuencia máxima
+
+DATOS CLAVE
+  1 byte            = 8 bits
+  1 Mbps            = 1.000.000 bps  (decimal, en redes)
+  Telefonía digital = 8.000 muestras/s × 8 bits = 64 Kbps
+  UTP               = 100 m máximo
+  Broadcast MAC     = FF:FF:FF:FF:FF:FF</code></pre>
+
+            <h2 id="repaso">10. Repaso con flashcards de toda la semana</h2>
+
+            <p>Un mazo con lo esencial de los seis días. Piensa la respuesta <strong>antes</strong> de girar
+            cada tarjeta y sé honesto al marcar si la sabías: las que falles son exactamente lo que debes
+            repasar antes del test.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Test semanal</h2>
+            <p>31 preguntas · 45 minutos · <strong>Sin apuntes y cronometrado</strong></p>
+            <p style="margin-top:6px; font-size:0.95em">Al corregir verás el desglose por día para saber qué repasar.</p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees la
+            síntesis</strong>: arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Test</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados del test semanal</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por día</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Recuperación de errores</a></span>
+        <span><a href="../Dia_06/teoria.html">← Día 6</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        flashcards: [
+            // --- Día 1 ---
+            { frente: '<em>Día 1.</em> ¿Qué tres cosas necesita algo para ser una <strong>red</strong>?', dorso: '<strong>Dispositivos</strong> interconectados, un <strong>medio</strong> con protocolos comunes, y la <strong>finalidad</strong> de compartir recursos o servicios.' },
+            { frente: '<em>Día 1.</em> ¿Cuándo UDP y cuándo TCP?', dorso: '<strong>UDP</strong> si el dato caduca y prima la velocidad (voz, posición). <strong>TCP</strong> si no se puede perder ni un byte (ficheros, web).' },
+            { frente: '<em>Día 1.</em> ¿Qué aportó <strong>ARPANET</strong>?', dorso: 'La <strong>conmutación de paquetes</strong> y una arquitectura <strong>descentralizada</strong>. No fue la primera red: fue la primera de paquetes.' },
+            { frente: '<em>Día 1.</em> Ordena: Ethernet · WWW · ARPANET · TCP/IP', dorso: '<strong>ARPANET 1969 → Ethernet 1973 → TCP/IP 1983 → WWW 1989</strong>.' },
+            { frente: '<em>Día 1.</em> Relación entre <strong>Internet</strong> y la <strong>Web</strong>', dorso: 'Internet es la <strong>infraestructura</strong>; la Web es <strong>un servicio</strong> sobre ella, como el correo, el DNS o el streaming.' },
+
+            // --- Día 2 ---
+            { frente: '<em>Día 2.</em> Los <strong>5 componentes</strong> de un sistema de comunicación', dorso: '<strong>Fuente → Transmisor → Medio → Receptor → Destino</strong>. La fuente genera; el transmisor adapta al medio.' },
+            { frente: '<em>Día 2.</em> Diferencia entre <strong>half</strong> y <strong>full-duplex</strong>', dorso: 'Los dos son bidireccionales. Lo que cambia es la <strong>simultaneidad</strong>: half por turnos, full a la vez.' },
+            { frente: '<em>Día 2.</em> ¿Es el Wi-Fi half o full-duplex?', dorso: '<strong>Half-duplex</strong>: la antena usa la misma frecuencia para emitir y recibir. Se turnan con CSMA/CA.' },
+            { frente: '<em>Día 2.</em> ¿Por qué el switch elimina las colisiones?', dorso: 'Cada puerto es un enlace <strong>punto a punto</strong> con pares separados para transmitir y recibir: la superposición es imposible.' },
+            { frente: '<em>Día 2.</em> ¿Qué es un <strong>desajuste de dúplex</strong>?', dorso: 'Un extremo en full y otro en half. La red funciona pero lentísima; se detecta por <strong>colisiones tardías</strong> en un solo lado.' },
+
+            // --- Día 3 ---
+            { frente: '<em>Día 3.</em> ¿Por qué se impuso lo <strong>digital</strong>?', dorso: 'Porque se puede <strong>regenerar</strong>: se decide si es 0 o 1 y se emite una señal nueva y limpia. El amplificador analógico amplifica también el ruido.' },
+            { frente: '<em>Día 3.</em> Teorema de <strong>Nyquist</strong>', dorso: 'Muestrear al menos al <strong>doble</strong> de la frecuencia máxima. Telefonía: 4 kHz → 8.000 muestras/s × 8 bits = <strong>64 Kbps</strong>.' },
+            { frente: '<em>Día 3.</em> Contratas 600 Mbps. ¿Cuántos MB/s?', dorso: '600 ÷ 8 = <strong>75 MB/s</strong>. Velocidades en bits, tamaños en bytes.' },
+            { frente: '<em>Día 3.</em> ¿Son <strong>ancho de banda</strong> y <strong>latencia</strong> lo mismo?', dorso: 'No: son <strong>independientes</strong>. El satélite tiene mucha capacidad y una latencia enorme. Más megas no acortan la distancia.' },
+            { frente: '<em>Día 3.</em> ¿Qué es el <strong>jitter</strong>?', dorso: 'La <strong>variación</strong> de la latencia entre paquetes. Crítico en voz y vídeo; irrelevante al descargar un fichero.' },
+            { frente: '<em>Día 3.</em> Fórmula del tiempo de transferencia', dorso: '<strong>tiempo = tamaño en bits ÷ velocidad en bps</strong>. Pasa siempre el tamaño a bits antes de dividir.' },
+
+            // --- Día 4 ---
+            { frente: '<em>Día 4.</em> Ordena por alcance: MAN · PAN · WAN · LAN', dorso: '<strong>PAN</strong> (10 m) → <strong>LAN</strong> (edificio) → <strong>MAN</strong> (ciudad) → <strong>WAN</strong> (sin límite).' },
+            { frente: '<em>Día 4.</em> Además de la distancia, ¿qué separa LAN de WAN?', dorso: '<strong>Quién posee el medio</strong>. En la LAN es propio; en la WAN se atraviesa terreno público y hay que contratarlo.' },
+            { frente: '<em>Día 4.</em> ¿Qué es una <strong>WLAN</strong>? ¿Y una <strong>SAN</strong>?', dorso: 'WLAN = LAN <strong>inalámbrica</strong> (mismo alcance). SAN se clasifica por <strong>finalidad</strong>: almacenamiento.' },
+            { frente: '<em>Día 4.</em> Principal desventaja de la <strong>VPN</strong>', dorso: 'No garantiza <strong>ancho de banda ni latencia</strong>: es <em>best effort</em>. Lo que se paga en la línea dedicada es el <strong>SLA</strong>.' },
+            { frente: '<em>Día 4.</em> ¿Por qué millones de casas usan 192.168.1.1?', dorso: 'Son direcciones <strong>privadas</strong>, no enrutables en Internet. El router traduce con <strong>NAT</strong> al salir.' },
+
+            // --- Día 5 ---
+            { frente: '<em>Día 5.</em> Topología <strong>física</strong> frente a <strong>lógica</strong>', dorso: 'Física = cómo está <strong>cableado</strong>. Lógica = cómo <strong>circulan los datos</strong>. Ethernet con hub: estrella física, <strong>bus lógico</strong>.' },
+            { frente: '<em>Día 5.</em> ¿Qué avería tumba un <strong>bus</strong>?', dorso: 'La <strong>rotura del cable central</strong> o un terminador suelto. El fallo de un equipo solo le afecta a él.' },
+            { frente: '<em>Día 5.</em> ¿Qué avería tumba un <strong>anillo simple</strong>?', dorso: '<strong>Cualquiera</strong>: cada nodo forma parte del camino, así que al fallar se abre el circuito.' },
+            { frente: '<em>Día 5.</em> Punto débil de la <strong>estrella</strong> y cómo se resuelve', dorso: 'El <strong>nodo central</strong>. Se mitiga con apilamiento, enlaces redundantes con STP y SAI.' },
+            { frente: '<em>Día 5.</em> ¿Por qué ganó la estrella pese a gastar más cable?', dorso: 'Porque <strong>aísla los fallos</strong> y el diagnóstico es inmediato. El cable es barato; las horas de técnico, no.' },
+
+            // --- Día 6 ---
+            { frente: '<em>Día 6.</em> Enlaces de una <strong>malla completa</strong>', dorso: '<strong>N × (N−1) ÷ 2</strong>, e <strong>N−1</strong> interfaces por nodo. Con 10 nodos: 45 enlaces.' },
+            { frente: '<em>Día 6.</em> Las tres capas del <strong>modelo jerárquico</strong>', dorso: '<strong>Acceso</strong> (usuarios), <strong>distribución</strong> (VLAN, enrutamiento, seguridad) y <strong>núcleo</strong> (velocidad).' },
+            { frente: '<em>Día 6.</em> ¿Qué segmenta un <strong>switch</strong> sin VLAN?', dorso: 'Segmenta <strong>colisión</strong> (uno por puerto) pero <strong>NO broadcast</strong>. Es el error más repetido del tema.' },
+            { frente: '<em>Día 6.</em> ¿Qué segmenta un <strong>router</strong>?', dorso: '<strong>Ambos</strong>: un dominio de colisión y uno de broadcast por interfaz. No reenvía difusiones de capa 2.' },
+            { frente: '<em>Día 6.</em> Un hub con 4 PCs colgado de un switch: ¿cuántos dominios de colisión aporta?', dorso: '<strong>Uno solo</strong>. Todo lo que cuelga de un hub comparte medio. Con un switch serían 4.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Test semanal — Semana 1',
+        subtitulo: 'Fundamentos de redes: días 1 a 6',
+        tiempo: '45 minutos',
+        minutos: 45,
+        questions: [
+
+            // ---- Día 1 ----
+            {
+                topic: 'Día 1 — Concepto e historia',
+                repaso: '../Dia_01/teoria.html',
+                text: '¿Qué define mejor a una red de computadoras?',
+                options: {
+                    a: 'Ordenadores situados en la misma sala',
+                    b: 'Dispositivos interconectados que comparten recursos y servicios',
+                    c: 'Un cable que une dos equipos',
+                    d: 'Un programa para navegar por Internet'
+                },
+                answer: 'b',
+                feedback: 'Lo esencial es la interconexión mediante protocolos comunes y la finalidad de compartir, no la proximidad física.'
+            },
+            {
+                topic: 'Día 1 — Concepto e historia',
+                repaso: '../Dia_01/teoria.html',
+                text: 'Ordena cronológicamente: Ethernet, ARPANET, WWW, TCP/IP como estándar.',
+                options: {
+                    a: 'ARPANET → Ethernet → TCP/IP → WWW',
+                    b: 'Ethernet → ARPANET → WWW → TCP/IP',
+                    c: 'TCP/IP → ARPANET → Ethernet → WWW',
+                    d: 'ARPANET → TCP/IP → Ethernet → WWW'
+                },
+                answer: 'a',
+                feedback: 'ARPANET (1969) → Ethernet (1973) → TCP/IP (1983) → WWW (1989).'
+            },
+            {
+                topic: 'Día 1 — Concepto e historia',
+                repaso: '../Dia_01/teoria.html',
+                text: '¿Cuál fue la aportación decisiva de ARPANET?',
+                options: {
+                    a: 'Fue la primera red que conectó dos ordenadores',
+                    b: 'La conmutación de paquetes y una arquitectura descentralizada',
+                    c: 'La creación de la primera página web',
+                    d: 'La transmisión de voz digitalizada'
+                },
+                answer: 'b',
+                feedback: 'Trocear la información en paquetes independientes que pueden seguir rutas distintas, sin nodo central, es la base de la robustez de Internet.'
+            },
+            {
+                topic: 'Día 1 — Concepto e historia',
+                repaso: '../Dia_01/teoria.html',
+                text: '¿Cuál es la relación entre Internet y la World Wide Web?',
+                options: {
+                    a: 'Son lo mismo',
+                    b: 'Internet es un servicio que funciona sobre la Web',
+                    c: 'La Web es un servicio que funciona sobre Internet',
+                    d: 'La Web sustituyó a Internet en 1989'
+                },
+                answer: 'c',
+                feedback: 'Internet es la infraestructura. La Web (HTTP, HTML, URL) es solo uno de sus servicios, junto al correo, FTP, DNS o el streaming.'
+            },
+            {
+                topic: 'Día 1 — Concepto e historia',
+                repaso: '../Dia_01/teoria.html',
+                text: '¿Cuál de estas NO es una ventaja de una red, sino una contrapartida?',
+                options: {
+                    a: 'Centralización de los datos',
+                    b: 'Ahorro en licencias',
+                    c: 'Un equipo infectado puede alcanzar a los demás',
+                    d: 'Facilidad para añadir puestos'
+                },
+                answer: 'c',
+                feedback: 'La misma interconexión que permite compartir facilita la propagación de amenazas. Por eso existen firewalls y segmentación.'
+            },
+
+            // ---- Día 2 ----
+            {
+                topic: 'Día 2 — Sistema de comunicación',
+                repaso: '../Dia_02/teoria.html',
+                text: '¿Cuáles son los 5 componentes de un sistema de comunicación, en orden?',
+                options: {
+                    a: 'Emisor, Receptor, Canal, Código, Contexto',
+                    b: 'Fuente, Transmisor, Medio, Receptor, Destino',
+                    c: 'CPU, Memoria, Entrada, Salida, Almacenamiento',
+                    d: 'Router, Switch, Cable, PC, Servidor'
+                },
+                answer: 'b',
+                feedback: 'La fuente genera, el transmisor codifica, el medio transporta, el receptor decodifica y el destino consume.'
+            },
+            {
+                topic: 'Día 2 — Sistema de comunicación',
+                repaso: '../Dia_02/teoria.html',
+                text: 'En una llamada de móvil, ¿qué actúa como transmisor?',
+                options: {
+                    a: 'La persona que habla',
+                    b: 'El micrófono y los circuitos del smartphone',
+                    c: 'Las ondas de radio',
+                    d: 'La persona que escucha'
+                },
+                answer: 'b',
+                feedback: 'La persona es la fuente. El transmisor es el hardware que transforma la voz en señal apta para el medio.'
+            },
+            {
+                topic: 'Día 2 — Sistema de comunicación',
+                repaso: '../Dia_02/teoria.html',
+                text: 'Un walkie-talkie permite hablar en ambos sentidos pero no a la vez. ¿Qué modo usa?',
+                options: {
+                    a: 'Simplex',
+                    b: 'Half-duplex',
+                    c: 'Full-duplex',
+                    d: 'Multiplex'
+                },
+                answer: 'b',
+                feedback: 'Half-duplex: bidireccional pero alternado. Hay que soltar el botón para que hable el otro.'
+            },
+            {
+                topic: 'Día 2 — Sistema de comunicación',
+                repaso: '../Dia_02/teoria.html',
+                text: '¿Por qué el Wi-Fi es half-duplex?',
+                options: {
+                    a: 'Porque es más lento que Ethernet',
+                    b: 'Porque la antena no puede transmitir y recibir a la vez en la misma frecuencia',
+                    c: 'Porque el estándar lo prohíbe por seguridad',
+                    d: 'No lo es: es full-duplex'
+                },
+                answer: 'b',
+                feedback: 'Su propia emisión taparía la señal ajena, mucho más débil. Por eso los dispositivos se turnan mediante CSMA/CA.'
+            },
+            {
+                topic: 'Día 2 — Sistema de comunicación',
+                repaso: '../Dia_02/teoria.html',
+                text: 'En un enlace conmutado full-duplex, ¿qué ocurre con las colisiones?',
+                options: {
+                    a: 'Aumentan respecto al hub',
+                    b: 'Se mantienen igual',
+                    c: 'Desaparecen: cada puerto es un enlace dedicado con pares separados',
+                    d: 'Solo desaparecen con fibra óptica'
+                },
+                answer: 'c',
+                feedback: 'Al no compartirse el medio, la superposición de señales es imposible y CSMA/CD deja de ser necesario.'
+            },
+
+            // ---- Día 3 ----
+            {
+                topic: 'Día 3 — Señales y velocidad',
+                repaso: '../Dia_03/teoria.html',
+                text: '¿Por qué la señal digital resiste mejor las largas distancias?',
+                options: {
+                    a: 'Porque viaja más rápido',
+                    b: 'Porque no sufre atenuación',
+                    c: 'Porque se puede regenerar limpia, eliminando el ruido acumulado',
+                    d: 'Porque usa menos ancho de banda'
+                },
+                answer: 'c',
+                feedback: 'El regenerador decide si el valor es 0 o 1 y emite una señal nueva y perfecta. El amplificador analógico amplifica también el ruido.'
+            },
+            {
+                topic: 'Día 3 — Señales y velocidad',
+                repaso: '../Dia_03/teoria.html',
+                text: 'Según Nyquist, para digitalizar una señal de 4 kHz hay que muestrear a:',
+                options: {
+                    a: '2.000 muestras/s',
+                    b: '4.000 muestras/s',
+                    c: '8.000 muestras/s',
+                    d: '16.000 muestras/s'
+                },
+                answer: 'c',
+                feedback: 'Al menos el doble de la frecuencia máxima. Es exactamente lo que hace la telefonía digital.'
+            },
+            {
+                topic: 'Día 3 — Señales y velocidad',
+                repaso: '../Dia_03/teoria.html',
+                text: 'Una fibra de 600 Mbps, ¿a cuántos MB/s descarga como máximo teórico?',
+                options: {
+                    a: '600 MB/s',
+                    b: '75 MB/s',
+                    c: '4.800 MB/s',
+                    d: '60 MB/s'
+                },
+                answer: 'b',
+                feedback: '600 ÷ 8 = 75 MB/s. Velocidades en bits (b), tamaños en bytes (B).'
+            },
+            {
+                topic: 'Día 3 — Señales y velocidad',
+                repaso: '../Dia_03/teoria.html',
+                text: '¿Cuánto tarda un fichero de 250 MB por un enlace de 100 Mbps, sin sobrecarga?',
+                options: {
+                    a: '2,5 segundos',
+                    b: '10 segundos',
+                    c: '20 segundos',
+                    d: '25 segundos'
+                },
+                answer: 'c',
+                feedback: '250 MB × 8 = 2.000 Mb. 2.000 ÷ 100 = 20 s.'
+            },
+            {
+                topic: 'Día 3 — Señales y velocidad',
+                repaso: '../Dia_03/teoria.html',
+                text: 'Un enlace satelital ofrece 100 Mbps con 250 ms de latencia. ¿Qué demuestra?',
+                options: {
+                    a: 'Que ancho de banda y latencia son independientes',
+                    b: 'Que está mal configurado',
+                    c: 'Que a más ancho de banda, más latencia',
+                    d: 'Que el satélite no supera los 10 Mbps'
+                },
+                answer: 'a',
+                feedback: 'La latencia depende de la distancia física. Contratar más megas no acorta los 36.000 km hasta el satélite.'
+            },
+            {
+                topic: 'Día 3 — Señales y velocidad',
+                repaso: '../Dia_03/teoria.html',
+                text: '¿Qué es el jitter?',
+                options: {
+                    a: 'El retardo medio de ida y vuelta',
+                    b: 'La variación de la latencia entre paquetes',
+                    c: 'La pérdida de paquetes por congestión',
+                    d: 'La capacidad máxima del enlace'
+                },
+                answer: 'b',
+                feedback: 'Es crítico en voz y vídeo en tiempo real: aunque la latencia media sea baja, la variación entrecorta la comunicación.'
+            },
+
+            // ---- Día 4 ----
+            {
+                topic: 'Día 4 — Clasificación de redes',
+                repaso: '../Dia_04/teoria.html',
+                text: 'Una empresa une 8 sedes dentro de una misma ciudad. ¿Qué tipo de red es?',
+                options: {
+                    a: 'LAN',
+                    b: 'PAN',
+                    c: 'MAN',
+                    d: 'WAN'
+                },
+                answer: 'c',
+                feedback: 'La MAN cubre el área de una ciudad, entre 1 y 50 km, interconectando varias LAN.'
+            },
+            {
+                topic: 'Día 4 — Clasificación de redes',
+                repaso: '../Dia_04/teoria.html',
+                text: 'Además de la distancia, ¿qué distingue realmente una LAN de una WAN?',
+                options: {
+                    a: 'La velocidad del enlace',
+                    b: 'Quién posee el medio de transmisión',
+                    c: 'El número de equipos',
+                    d: 'El sistema operativo'
+                },
+                answer: 'b',
+                feedback: 'En la LAN el medio es propio; en la WAN se atraviesa terreno público y hay que contratar a un operador.'
+            },
+            {
+                topic: 'Día 4 — Clasificación de redes',
+                repaso: '../Dia_04/teoria.html',
+                text: '¿Qué es exactamente una WLAN?',
+                options: {
+                    a: 'Una categoría entre LAN y MAN',
+                    b: 'Una LAN que usa tecnología inalámbrica',
+                    c: 'Una WAN de baja velocidad',
+                    d: 'Una red de almacenamiento'
+                },
+                answer: 'b',
+                feedback: 'Es una LAN cuyo medio es inalámbrico. El alcance es el mismo: lo único que cambia es la tecnología.'
+            },
+            {
+                topic: 'Día 4 — Clasificación de redes',
+                repaso: '../Dia_04/teoria.html',
+                text: '¿Cuál es la principal desventaja de una VPN sobre Internet frente a una línea dedicada?',
+                options: {
+                    a: 'Es mucho más cara',
+                    b: 'Tarda meses en desplegarse',
+                    c: 'No garantiza ancho de banda ni latencia: funciona en best effort',
+                    d: 'No permite cifrar el tráfico'
+                },
+                answer: 'c',
+                feedback: 'La VPN es barata, rápida y escalable, pero comparte infraestructura pública: no hay SLA de capacidad ni latencia.'
+            },
+            {
+                topic: 'Día 4 — Clasificación de redes',
+                repaso: '../Dia_04/teoria.html',
+                text: 'La Wi-Fi abierta de una cafetería se clasifica como:',
+                options: {
+                    a: 'Red privada, porque el local es privado',
+                    b: 'Red pública, porque cualquier cliente accede',
+                    c: 'VPN',
+                    d: 'SAN'
+                },
+                answer: 'b',
+                feedback: 'Se clasifica el acceso, no la titularidad del inmueble. Por eso conviene usar VPN al conectarse a ella.'
+            },
+
+            // ---- Día 5 ----
+            {
+                topic: 'Día 5 — Topologías básicas',
+                repaso: '../Dia_05/teoria.html',
+                text: 'Una red Ethernet con hub tiene topología física de estrella. ¿Cuál es su topología lógica?',
+                options: {
+                    a: 'Estrella',
+                    b: 'Anillo',
+                    c: 'Bus',
+                    d: 'Malla'
+                },
+                answer: 'c',
+                feedback: 'El hub repite cada bit por todos los puertos: medio compartido, un dominio de colisión y CSMA/CD. Eso es un bus.'
+            },
+            {
+                topic: 'Día 5 — Topologías básicas',
+                repaso: '../Dia_05/teoria.html',
+                text: 'En una topología de bus, ¿qué avería tumba toda la red?',
+                options: {
+                    a: 'El fallo de la NIC de un equipo',
+                    b: 'La rotura del cable central o un terminador suelto',
+                    c: 'La caída del switch central',
+                    d: 'Que un equipo transmita demasiado'
+                },
+                answer: 'b',
+                feedback: 'Al romperse el bus aparecen reflexiones que corrompen todo el tráfico. El fallo de un equipo solo lo afecta a él.'
+            },
+            {
+                topic: 'Día 5 — Topologías básicas',
+                repaso: '../Dia_05/teoria.html',
+                text: 'En un anillo simple, ¿qué ocurre si falla un nodo intermedio?',
+                options: {
+                    a: 'Solo se aísla ese nodo',
+                    b: 'El token toma la ruta contraria',
+                    c: 'Se rompe el anillo y cae toda la red',
+                    d: 'Aumentan las colisiones pero funciona'
+                },
+                answer: 'c',
+                feedback: 'Cada nodo forma parte del camino: si falla, el circuito queda abierto. Se mitiga con doble anillo o bypass automático.'
+            },
+            {
+                topic: 'Día 5 — Topologías básicas',
+                repaso: '../Dia_05/teoria.html',
+                text: '¿Cuál es la principal desventaja de la topología en estrella?',
+                options: {
+                    a: 'Genera muchas colisiones',
+                    b: 'El nodo central es un punto único de fallo',
+                    c: 'Es imposible localizar averías',
+                    d: 'No permite añadir equipos'
+                },
+                answer: 'b',
+                feedback: 'Se mitiga con apilamiento de switches, enlaces redundantes con STP y alimentación protegida por SAI.'
+            },
+            {
+                topic: 'Día 5 — Topologías básicas',
+                repaso: '../Dia_05/teoria.html',
+                text: '¿Qué topología NO sufre colisiones por diseño?',
+                options: {
+                    a: 'Bus con CSMA/CD',
+                    b: 'Anillo con paso de testigo',
+                    c: 'Ethernet con hub',
+                    d: 'Wi-Fi en modo infraestructura'
+                },
+                answer: 'b',
+                feedback: 'El testigo garantiza que solo transmita uno cada vez. Las demás comparten medio y sí sufren contención.'
+            },
+
+            // ---- Día 6 ----
+            {
+                topic: 'Día 6 — Topologías y dominios',
+                repaso: '../Dia_06/teoria.html',
+                text: '¿Cuántos enlaces necesita una malla completa de 10 nodos?',
+                options: {
+                    a: '20',
+                    b: '45',
+                    c: '90',
+                    d: '100'
+                },
+                answer: 'b',
+                feedback: '10 × 9 ÷ 2 = 45 enlaces. El crecimiento es cuadrático, por eso en la práctica se usa malla parcial.'
+            },
+            {
+                topic: 'Día 6 — Topologías y dominios',
+                repaso: '../Dia_06/teoria.html',
+                text: '¿Cuáles son las tres capas del modelo jerárquico?',
+                options: {
+                    a: 'Física, enlace y red',
+                    b: 'Acceso, distribución y núcleo',
+                    c: 'Cliente, servidor y base de datos',
+                    d: 'Local, metropolitana y extensa'
+                },
+                answer: 'b',
+                feedback: 'Acceso conecta usuarios, distribución agrega y aplica políticas, y núcleo conmuta a máxima velocidad entre bloques.'
+            },
+            {
+                topic: 'Día 6 — Topologías y dominios',
+                repaso: '../Dia_06/teoria.html',
+                text: '¿Es cierto que un switch normal segmenta dominios de broadcast?',
+                options: {
+                    a: 'Sí, uno por puerto',
+                    b: 'No: reenvía los broadcasts por todos sus puertos',
+                    c: 'Sí, si tiene 24 puertos o más',
+                    d: 'Solo si está conectado a un hub'
+                },
+                answer: 'b',
+                feedback: 'Es el error más repetido del tema. El switch segmenta colisión pero NO broadcast: para eso hacen falta VLAN o un router.'
+            },
+            {
+                topic: 'Día 6 — Topologías y dominios',
+                repaso: '../Dia_06/teoria.html',
+                text: 'A un puerto de switch se conecta un hub con 4 PCs. ¿Cuántos dominios de colisión aporta ese conjunto?',
+                options: {
+                    a: '4, uno por PC',
+                    b: '1 compartido por los 4',
+                    c: '5',
+                    d: 'Ninguno'
+                },
+                answer: 'b',
+                feedback: 'Todo lo que cuelga de un hub forma un solo dominio de colisión. Con un switch en su lugar serían 4 independientes.'
+            },
+            {
+                topic: 'Día 6 — Topologías y dominios',
+                repaso: '../Dia_06/teoria.html',
+                text: 'Un router con 2 interfaces activas, cada una hacia un switch. ¿Cuántos dominios de broadcast hay?',
+                options: {
+                    a: '1',
+                    b: '2',
+                    c: '4',
+                    d: 'Depende del número de PCs'
+                },
+                answer: 'b',
+                feedback: 'Uno por interfaz de router activa. El número de PCs no influye, porque los switches no segmentan el broadcast.'
+            }
+
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

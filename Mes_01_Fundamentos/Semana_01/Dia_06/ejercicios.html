@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 6 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 6 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 5</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 4 (contar dominios) es el más importante de toda la semana: aparece en el examen mensual
+            y se seguirá usando en los meses 3 y 9. Asegúrate de dominar el método, no solo el resultado.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_05/ejercicios.html">← Día 5</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_07/teoria.html">Día 7 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 6 — Ejercicios',
+    subtitulo: 'Malla · Árbol · Híbrida · Dominios de colisión y broadcast',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Cálculo de enlaces en malla',
+            tiempo: '15 min',
+            enunciado: `
+                <p>Recuerda la fórmula de la malla completa:</p>
+                <pre><code>enlaces = N × (N − 1) ÷ 2
+interfaces por nodo = N − 1</code></pre>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Calcula los enlaces necesarios en cada caso.',
+                    esquina: 'Nodos',
+                    cabecera: ['Enlaces'],
+                    filas: [
+                        { etiqueta: '4 dispositivos', celdas: [{ respuestas: ['6'], placeholder: 'nº' }] },
+                        { etiqueta: '6 dispositivos', celdas: [{ respuestas: ['15'], placeholder: 'nº' }] },
+                        { etiqueta: '10 dispositivos', celdas: [{ respuestas: ['45'], placeholder: 'nº' }] },
+                        { etiqueta: '15 dispositivos', celdas: [{ respuestas: ['105'], placeholder: 'nº' }] },
+                        { etiqueta: '20 dispositivos', celdas: [{ respuestas: ['190'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'N × (N−1) ÷ 2. Fíjate en el salto: de 10 a 20 nodos los enlaces pasan de 45 a 190, más del cuádruple. El crecimiento es cuadrático.',
+                    pistas: [
+                        'Cada nodo se conecta con todos los demás, pero cada enlace lo comparten dos nodos.',
+                        'Multiplica N por (N−1) y divide entre 2 para no contar cada enlace dos veces.',
+                        'Con 4 nodos: 4 × 3 ÷ 2 = 6.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'interfaces',
+                    tolerancia: 0,
+                    respuesta: 11,
+                    pregunta: '<strong>b)</strong> En una malla completa de <strong>12 nodos</strong>, ¿cuántas interfaces necesita cada nodo?',
+                    explicacion: 'N − 1 = <strong>11 interfaces</strong> por nodo. No confundas con el total de enlaces de la red, que sería 66.',
+                    pistas: [
+                        'Un nodo se conecta con todos <em>menos consigo mismo</em>.',
+                        'No apliques la fórmula de los enlaces: aquí solo cuentas los cables que salen de UN nodo.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'EUR/año',
+                    tolerancia: 0,
+                    respuesta: 870000,
+                    pregunta: `<strong>c)</strong> Una empresa con <strong>30 sedes</strong> quiere malla completa.
+                               Si cada enlace de fibra cuesta <strong>2.000 EUR/año</strong>, ¿cuál sería el coste anual?`,
+                    explicacion: '30 × 29 ÷ 2 = 435 enlaces. 435 × 2.000 = <strong>870.000 EUR/año</strong>. Este cálculo justifica por sí solo el uso de malla parcial.',
+                    pistas: [
+                        'Primero calcula cuántos enlaces hacen falta con la fórmula.',
+                        'Después multiplica ese número por el coste anual de cada uno.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>d)</strong> Marca las razones por las que se usa <strong>malla parcial</strong> en lugar de completa.',
+                    opciones: {
+                        a: 'El coste crece de forma cuadrática con el número de nodos',
+                        b: 'La malla completa no aporta redundancia',
+                        c: 'Cada nodo necesitaría demasiadas interfaces',
+                        d: 'La administración y el cableado se vuelven inmanejables',
+                        e: 'Unos pocos enlaces bien elegidos ya aportan casi toda la tolerancia a fallos'
+                    },
+                    respuesta: ['a', 'c', 'd', 'e'],
+                    explicacion: 'La malla completa sí aporta redundancia máxima: el problema es que su coste y complejidad crecen mucho más rápido que el beneficio adicional.',
+                    pistas: [
+                        'Una de las opciones dice algo falso sobre la redundancia: descártala.',
+                        'Piensa en coste, número de interfaces, complejidad y en si el beneficio extra compensa.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Modelo jerárquico',
+            tiempo: '12 min',
+            enunciado: '<p>El modelo de tres capas es el estándar de diseño empresarial y reaparecerá durante todo el curso.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada capa con su función principal.',
+                    izquierda: ['Acceso', 'Distribución', 'Núcleo'],
+                    derecha: [
+                        'Conectar a los usuarios finales y sus dispositivos',
+                        'Agregar el acceso y aplicar políticas: VLAN, enrutamiento y seguridad',
+                        'Conmutar a máxima velocidad entre bloques de la red'
+                    ],
+                    pares: {
+                        'Acceso': 'Conectar a los usuarios finales y sus dispositivos',
+                        'Distribución': 'Agregar el acceso y aplicar políticas: VLAN, enrutamiento y seguridad',
+                        'Núcleo': 'Conmutar a máxima velocidad entre bloques de la red'
+                    },
+                    explicacion: 'La inteligencia (políticas, VLAN, filtrado) se concentra en distribución. El núcleo debe ser rápido y sencillo; el acceso, barato y numeroso.',
+                    pistas: [
+                        'Ordénalas pensando dónde se enchufa el usuario y dónde pasa el tráfico de toda la empresa.',
+                        'La capa intermedia es la que toma decisiones: VLAN, enrutamiento y seguridad.'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>b)</strong> Ordena las capas desde el usuario hasta la salida de la red (1 = más cercana al usuario).',
+                    elementos: ['Núcleo', 'Acceso', 'Distribución'],
+                    orden: ['Acceso', 'Distribución', 'Núcleo'],
+                    explicacion: 'El tráfico de un usuario sube del switch de acceso al de distribución y, si debe cruzar a otro bloque o salir a Internet, llega al núcleo.',
+                    pistas: [
+                        'Empieza por donde está enchufado el cable del usuario.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> En una topología de árbol, si falla un switch de <strong>distribución</strong>:',
+                    opciones: {
+                        a: 'No pasa nada, hay rutas alternativas automáticas',
+                        b: 'Cae únicamente ese switch',
+                        c: 'Cae toda la rama que cuelga de él, pero el resto sigue',
+                        d: 'Cae toda la red de la empresa'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'El fallo queda contenido en su bloque. Cuanto más arriba en la jerarquía, mayor alcance tiene la avería: por eso los niveles superiores se duplican.',
+                    pistas: [
+                        'Piensa qué cuelga por debajo de un switch de distribución.',
+                        '¿Afecta a la empresa entera o solo a lo que depende de él?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Segmentación por dispositivo',
+            tiempo: '13 min',
+            enunciado: '<p>Antes de contar dominios hay que tener claro qué segmenta cada dispositivo.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica con <em>sí</em> o <em>no</em> si cada dispositivo segmenta cada tipo de dominio.',
+                    esquina: 'Dispositivo',
+                    cabecera: ['¿Segmenta colisión?', '¿Segmenta broadcast?'],
+                    filas: [
+                        {
+                            etiqueta: 'Hub / repetidor',
+                            celdas: [
+                                { respuestas: ['no'], placeholder: 'sí / no' },
+                                { respuestas: ['no'], placeholder: 'sí / no' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Switch sin VLAN',
+                            celdas: [
+                                { respuestas: ['si', 'sí'], placeholder: 'sí / no' },
+                                { respuestas: ['no'], placeholder: 'sí / no' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Router',
+                            celdas: [
+                                { respuestas: ['si', 'sí'], placeholder: 'sí / no' },
+                                { respuestas: ['si', 'sí'], placeholder: 'sí / no' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Punto de acceso Wi-Fi',
+                            celdas: [
+                                { respuestas: ['no'], placeholder: 'sí / no' },
+                                { respuestas: ['no'], placeholder: 'sí / no' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La fila crítica es la del <strong>switch</strong>: segmenta colisión pero <strong>no</strong> broadcast. Es el error más repetido del tema.',
+                    pistas: [
+                        'Para cada dispositivo pregúntate dos cosas distintas: ¿separa medios físicos? ¿frena las difusiones?',
+                        'El hub no hace ninguna de las dos. El router hace las dos.',
+                        'El switch hace una sí y otra no: ahí está la trampa.'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    ancho: '300px',
+                    pregunta: '<strong>b)</strong> ¿Qué hay que configurar en un switch gestionable para que segmente dominios de broadcast?',
+                    respuestas: ['vlan', 'vlans', 'las vlan', 'crear vlan', 'vlan (redes virtuales)'],
+                    explicacion: 'Cada <strong>VLAN</strong> constituye un dominio de broadcast independiente. Para comunicar unas con otras sigue haciendo falta enrutamiento inter-VLAN.',
+                    pistas: [
+                        'Son cuatro letras y se configuran en switches gestionables.',
+                        'Permiten dividir lógicamente un switch como si fueran varios.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿A qué dirección MAC se envía una trama de broadcast?',
+                    opciones: {
+                        a: '00:00:00:00:00:00',
+                        b: 'FF:FF:FF:FF:FF:FF',
+                        c: '01:00:5E:00:00:01',
+                        d: 'A la del router'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'FF:FF:FF:FF:FF:FF es la dirección de difusión: todos los equipos del dominio deben procesarla. La usan ARP, DHCP y el descubrimiento de servicios.',
+                    pistas: [
+                        'Es la dirección con todos los bits a uno.',
+                        'En hexadecimal, «todo unos» se escribe con la letra F.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Contar dominios (clave del examen)',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Analiza esta topología:</p>
+<pre><code>                    [ROUTER R1]
+                    /          \\
+             [SWITCH SW1]   [SWITCH SW2]
+              /    |    \\        |     \\
+           PC1   PC2   [HUB]    PC5   PC6
+                       /   \\
+                     PC3   PC4</code></pre>
+                <p>Cuenta <strong>todos</strong> los enlaces, incluidos los que unen equipos de red entre sí.</p>`,
+            items: [
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 7,
+                    pregunta: '<strong>a)</strong> ¿Cuántos <strong>dominios de colisión</strong> hay en total?',
+                    explicacion: '<strong>7</strong>: SW1–PC1, SW1–PC2, SW1–HUB (con PC3 y PC4 dentro), SW2–PC5, SW2–PC6, R1–SW1 y R1–SW2. Todo lo que cuelga del hub cuenta como uno solo.',
+                    pistas: [
+                        'Cuenta cables, no equipos, y no olvides los dos que unen el router con los switches.',
+                        'Todo lo que cuelga del hub va junto: es un único dominio compartido.',
+                        'Son 5 enlaces con equipos finales más 2 entre router y switches.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 2,
+                    pregunta: '<strong>b)</strong> ¿Cuántos <strong>dominios de broadcast</strong> hay?',
+                    explicacion: '<strong>2</strong>, uno por interfaz activa del router: el de SW1 (PC1 a PC4) y el de SW2 (PC5 y PC6). Los switches no segmentan el broadcast.',
+                    pistas: [
+                        'Solo el router frena las difusiones: cuenta sus interfaces activas.',
+                        'El número de PCs y de switches no influye.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Si <strong>PC3 transmite</strong> una trama, ¿qué equipos detectan la señal en el medio?',
+                    opciones: {
+                        a: 'Todos los equipos de la red',
+                        b: 'PC4 y el hub, que la repite hacia el puerto de SW1',
+                        c: 'Solo el destinatario de la trama',
+                        d: 'PC1, PC2, PC3 y PC4'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El hub repite por todos sus puertos, así que PC4 y el enlace hacia SW1 reciben la señal. PC1 y PC2 no la ven: el switch solo reenvía si es necesario.',
+                    pistas: [
+                        'El hub no distingue destinatarios: repite a todos sus puertos.',
+                        'Pero el switch al que se conecta sí decide: ¿reenviaría hacia PC1 y PC2?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Si <strong>PC1 envía un broadcast ARP</strong>, ¿quién lo recibe?',
+                    opciones: {
+                        a: 'Todos los equipos de la red, incluidos PC5 y PC6',
+                        b: 'PC2, PC3 y PC4',
+                        c: 'Solo PC2',
+                        d: 'Nadie: el switch descarta los broadcasts'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Llega a todo su dominio de broadcast (PC2, PC3, PC4). El router NO lo reenvía a la otra interfaz, así que PC5 y PC6 quedan fuera.'
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 8,
+                    pregunta: '<strong>e)</strong> Se sustituye el <strong>HUB por un switch</strong>. ¿Cuántos dominios de colisión hay ahora?',
+                    explicacion: '<strong>8</strong>: PC3 y PC4 pasan a tener cada uno su propio dominio. Los de broadcast siguen siendo 2: cambiar el hub por un switch no los afecta.',
+                    pistas: [
+                        'Antes PC3 y PC4 compartían un dominio: ¿qué pasa al separarlos?',
+                        'Suma uno al total anterior.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 3,
+                    pregunta: `<strong>f)</strong> Se configuran <strong>VLAN en SW1</strong>: PC1 y PC2 en la VLAN 10,
+                               y el HUB (con PC3 y PC4) en la VLAN 20. ¿Cuántos dominios de <strong>broadcast</strong> hay?`,
+                    explicacion: '<strong>3</strong>: VLAN 10, VLAN 20 y el segmento de SW2. Cada VLAN es un dominio de broadcast independiente, aunque compartan el mismo switch físico.',
+                    pistas: [
+                        'Cada VLAN cuenta como un dominio de broadcast propio.',
+                        'SW1 se parte en dos, y SW2 sigue siendo uno.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Aplicación y razonamiento',
+            tiempo: '10 min',
+            enunciado: '<p>Casos reales donde estos conceptos determinan una decisión de diseño.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>a)</strong> Una empresa ha crecido de 10 a 120 empleados manteniendo un único switch
+                               plano de 24 puertos ampliado con hubs. ¿Cuál es el problema más grave que aparecerá?`,
+                    opciones: {
+                        a: 'Que el cable de red se calentará',
+                        b: 'Un dominio de broadcast enorme, con riesgo de tormenta y degradación general',
+                        c: 'Que las direcciones MAC se agotarán',
+                        d: 'Que habrá demasiados routers'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con 120 equipos en un solo dominio de broadcast, el tráfico de difusión consume ancho de banda y CPU en todos ellos. La solución es segmentar con VLAN y pasar a un diseño jerárquico.',
+                    pistas: [
+                        'Piensa qué pasa cuando 120 equipos comparten el mismo dominio de difusión.',
+                        'Cada ARP o DHCP de cualquiera de ellos molesta a los otros 119.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un centro de datos bancario elige <strong>malla parcial</strong> pese al sobrecoste. ¿Por qué?',
+                    opciones: {
+                        a: 'Porque es la opción más barata',
+                        b: 'Porque necesita menos cableado que la estrella',
+                        c: 'Porque aporta rutas alternativas y alta disponibilidad',
+                        d: 'Porque es más fácil de administrar'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Con una disponibilidad exigida del 99,99 % (unos 52 min de caída al año) no puede existir un punto único de fallo. El coste de una hora de caída supera con creces el de los enlaces extra.',
+                    pistas: [
+                        'No busques la opción más barata: piensa qué le cuesta a un banco estar una hora sin red.',
+                        'La malla aporta algo que ninguna otra topología: caminos alternativos.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: `<strong>c)</strong> Explica la diferencia entre <strong>dominio de colisión</strong> y
+                               <strong>dominio de broadcast</strong>, e indica qué dispositivo segmenta cada uno y por qué
+                               un switch no sirve para los dos (5-6 líneas).`,
+                    modelo: `
+                        <p>Un <strong>dominio de colisión</strong> es el conjunto de dispositivos que comparten el mismo medio
+                        físico: si dos transmiten a la vez, sus señales se superponen y ambas tramas se destruyen. Un
+                        <strong>dominio de broadcast</strong> es el conjunto de dispositivos que reciben una trama de difusión
+                        (destino <code>FF:FF:FF:FF:FF:FF</code>) enviada por cualquiera de ellos.</p>
+                        <p>El <strong>switch segmenta colisión</strong> porque cada puerto es un enlace punto a punto
+                        independiente: el medio deja de compartirse. Pero <strong>no segmenta broadcast</strong> porque, al
+                        trabajar en capa 2, su cometido es precisamente entregar las difusiones a todo el segmento: reenvía
+                        la trama por todos sus puertos.</p>
+                        <p>Para segmentar broadcast hace falta subir a <strong>capa 3</strong> con un <strong>router</strong>
+                        (que no reenvía difusiones entre interfaces) o crear <strong>VLAN</strong> en un switch gestionable,
+                        que dividen lógicamente el switch en varios dominios independientes.</p>`,
+                    rubrica: [
+                        'Define dominio de colisión como medio compartido con superposición de señales',
+                        'Define dominio de broadcast como alcance de las tramas de difusión',
+                        'Explica que el switch segmenta colisión por ser enlaces punto a punto',
+                        'Explica que el switch NO segmenta broadcast por trabajar en capa 2',
+                        'Indica que el router segmenta broadcast al operar en capa 3',
+                        'Menciona las VLAN como alternativa dentro del propio switch'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

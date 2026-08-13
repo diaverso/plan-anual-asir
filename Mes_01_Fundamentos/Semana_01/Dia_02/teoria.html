@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Sistema de comunicación y modos de transmisión</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 2 — El sistema de comunicación</h1>
+        <p>Componentes, modos de transmisión y por qué existen las colisiones</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 45 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> en las que tienes que escribir tu propia respuesta antes de ver la
+            del profesor, y una <strong>simulación</strong> de colisiones con la que vas a entender de un vistazo
+            por qué el hub desapareció.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#modelo">El modelo general de comunicación</a></li>
+                <li><a href="#componentes">Los cinco componentes</a></li>
+                <li><a href="#perturbaciones">Lo que el medio le hace a la señal</a></li>
+                <li><a href="#ejemplos">Identificar los componentes en casos reales</a></li>
+                <li><a href="#modos">Modos: simplex, half-duplex y full-duplex</a></li>
+                <li><a href="#colisiones">Por qué el dúplex importa: las colisiones</a></li>
+                <li><a href="#serie">Transmisión serie y paralelo</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="modelo">1. El modelo general de comunicación</h2>
+
+            <p>Ayer definimos qué es una red. Hoy bajamos un nivel: <strong>¿qué ocurre exactamente cuando un dispositivo envía información a otro?</strong></p>
+
+            <p>Toda comunicación —una llamada, un correo, un vídeo— sigue siempre el mismo esquema de cinco elementos:</p>
+
+<pre><code>[FUENTE] → [TRANSMISOR] → [MEDIO] → [RECEPTOR] → [DESTINO]
+                              ↑
+                         perturbaciones
+                       (ruido, atenuación)</code></pre>
+
+            <div class="destacado">
+                <strong>Por qué este modelo es importante</strong>
+                Es la base del diagnóstico de averías. Cuando algo no funciona, la pregunta siempre es la misma:
+                ¿falla la fuente, el transmisor, el medio, el receptor o el destino? Reducir el problema a uno de
+                esos cinco puntos resuelve la mayoría de incidencias sin tocar nada al azar.
+            </div>
+
+            <h2 id="componentes">2. Los cinco componentes</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Componente</th><th>Función</th><th>Ejemplo en un PC enviando datos</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. Fuente</strong></td><td>Genera la información original</td><td>La aplicación o el usuario que escribe</td></tr>
+                    <tr><td><strong>2. Transmisor</strong></td><td>Codifica y adapta la señal al medio</td><td>La tarjeta de red (NIC): convierte datos en señales eléctricas</td></tr>
+                    <tr><td><strong>3. Medio</strong></td><td>Canal por el que viaja la señal</td><td>Cable UTP, fibra óptica, ondas de radio</td></tr>
+                    <tr><td><strong>4. Receptor</strong></td><td>Recibe y decodifica la señal</td><td>La tarjeta de red del equipo destino</td></tr>
+                    <tr><td><strong>5. Destino</strong></td><td>Consume la información</td><td>La aplicación del equipo remoto</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>La distinción que más se confunde: fuente ≠ transmisor</h3>
+
+            <p>La <strong>fuente</strong> <em>produce</em> la información; el <strong>transmisor</strong> la <em>transforma</em> para que pueda viajar.</p>
+
+            <ul>
+                <li>En una llamada: la <strong>fuente</strong> es la persona que habla; el <strong>transmisor</strong> es el micrófono más los circuitos del móvil que digitalizan y modulan la voz.</li>
+                <li>En un correo: la <strong>fuente</strong> es el usuario que redacta; el <strong>transmisor</strong> es la tarjeta de red que convierte los bits en señal eléctrica.</li>
+            </ul>
+
+            <div class="aviso">
+                <strong>Regla práctica</strong>
+                Si el elemento <em>genera contenido nuevo</em>, es fuente. Si <em>transforma contenido ya existente</em> para adaptarlo al medio, es transmisor.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="perturbaciones">3. Lo que el medio le hace a la señal</h2>
+
+            <p>El medio nunca es perfecto. Tres fenómenos degradan la señal:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Fenómeno</th><th>Qué ocurre</th><th>Dónde lo has visto</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Atenuación</strong></td>
+                        <td>La señal pierde potencia con la distancia</td>
+                        <td>Es la razón del límite de <strong>100 m</strong> en cable UTP, y de que el Wi-Fi baje al alejarte del router</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ruido</strong></td>
+                        <td>Interferencias externas que se suman a la señal</td>
+                        <td>Un cable de red junto a un fluorescente o un motor; el microondas afectando al Wi-Fi de 2,4 GHz</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Distorsión</strong></td>
+                        <td>Las distintas frecuencias viajan a velocidades ligeramente distintas y llegan desordenadas</td>
+                        <td>Limita la longitud útil de la fibra sin regeneración</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <details class="ampliacion">
+                <summary>Ampliación: por qué el par trenzado va trenzado</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>El cable UTP lleva los hilos <strong>trenzados por parejas</strong>, y no es decorativo. Una
+                    interferencia externa afecta prácticamente igual a los dos hilos de un par, porque están pegados
+                    y trenzados entre sí.</p>
+                    <p>Como la señal se transmite como la <strong>diferencia de tensión</strong> entre ambos hilos
+                    (señalización diferencial), el receptor resta uno del otro: la señal útil se conserva y el ruido,
+                    al ser idéntico en ambos, <strong>se cancela</strong>. Cuanto más apretado el trenzado, mejor
+                    la cancelación, y por eso las categorías superiores de cable llevan más vueltas por metro.</p>
+                </div>
+            </details>
+
+            <h2 id="ejemplos">4. Identificar los componentes en casos reales</h2>
+
+            <h3>Caso 1: llamada de móvil entre Madrid y Barcelona</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Componente</th><th>Elemento concreto</th></tr></thead>
+                <tbody>
+                    <tr><td>Fuente</td><td>La persona que habla</td></tr>
+                    <tr><td>Transmisor</td><td>Micrófono y circuitos del smartphone emisor</td></tr>
+                    <tr><td>Medio</td><td>Ondas de radio (4G/5G) hasta la antena + fibra óptica en el troncal</td></tr>
+                    <tr><td>Receptor</td><td>Smartphone del interlocutor</td></tr>
+                    <tr><td>Destino</td><td>La persona que escucha</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Caso 2: acceso a una página web</h3>
+
+            <p>Un mismo dispositivo puede desempeñar <strong>varios papeles a la vez</strong>, y los papeles se <strong>invierten</strong> en la respuesta:</p>
+
+<pre><code>PETICIÓN:
+Usuario/navegador → NIC del PC → red → NIC del servidor → servidor web
+   (fuente)         (transmisor)  (medio)  (receptor)      (destino)
+
+RESPUESTA:
+Servidor web → NIC del servidor → red → NIC del PC → navegador
+  (fuente)      (transmisor)     (medio) (receptor)  (destino)</code></pre>
+
+            <div class="dato">
+                <strong>Conclusión importante</strong>
+                Los papeles no son propiedades fijas de los equipos: dependen del <strong>sentido</strong> de cada
+                transmisión concreta. Por eso casi todos los dispositivos incorporan a la vez transmisor y receptor
+                (lo que se denomina <em>transceptor</em> o <em>transceiver</em>).
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="modos">5. Modos de transmisión</h2>
+
+            <p>Según el <strong>sentido</strong> en que puede circular la información, se distinguen tres modos:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Modo</th><th>Sentido</th><th>¿Simultáneo?</th><th>Ejemplos</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Simplex</strong></td>
+                        <td>Unidireccional (solo A → B)</td>
+                        <td>No aplica: solo transmite uno</td>
+                        <td>Radio FM, TDT, teclado → PC, sensor de temperatura</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Half-duplex</strong></td>
+                        <td>Bidireccional alternado (A ↔ B)</td>
+                        <td><strong>No</strong>: por turnos</td>
+                        <td>Walkie-talkie, Ethernet con hub, Wi-Fi</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Full-duplex</strong></td>
+                        <td>Bidireccional simultáneo (A ↔ B)</td>
+                        <td><strong>Sí</strong>: a la vez</td>
+                        <td>Teléfono, Ethernet con switch, fibra</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+<pre><code>SIMPLEX        A ──────────────▶ B      (siempre en un sentido)
+
+HALF-DUPLEX    A ──────────────▶ B      (turno 1)
+               A ◀────────────── B      (turno 2, nunca a la vez)
+
+FULL-DUPLEX    A ══════════════▶ B      (ambos a la vez)
+               A ◀══════════════ B</code></pre>
+
+            <div class="aviso">
+                <strong>Error clásico en exámenes</strong>
+                Half-duplex <strong>sí</strong> es bidireccional. La diferencia con full-duplex no es el sentido,
+                sino la <strong>simultaneidad</strong>. Quien responde «half-duplex = un solo sentido» está describiendo simplex.
+            </div>
+
+            <h3>El caso del Wi-Fi</h3>
+
+            <p>El Wi-Fi es <strong>half-duplex</strong> aunque no lo parezca. La razón es física: la antena usa la misma
+            frecuencia para transmitir y recibir, y si hiciera ambas cosas a la vez su propia emisión taparía por completo
+            la señal ajena, mucho más débil. Por eso los dispositivos se turnan mediante el mecanismo <strong>CSMA/CA</strong>
+            (escuchar antes de hablar y evitar colisiones), que estudiarás en el Mes 3.</p>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="colisiones">6. Por qué el dúplex importa: las colisiones</h2>
+
+            <p>Esta es la razón práctica de que el tema no sea solo terminología.</p>
+
+            <h3>Ethernet con hub (half-duplex)</h3>
+
+            <ul>
+                <li>Todos los equipos comparten el mismo medio.</li>
+                <li>Si dos transmiten a la vez, las señales se superponen: se produce una <strong>colisión</strong> y ambas tramas se destruyen.</li>
+                <li>El mecanismo <strong>CSMA/CD</strong> detecta la colisión, ambos esperan un tiempo aleatorio y reintentan.</li>
+                <li>El ancho de banda se <strong>reparte</strong> entre todos y se desperdicia en retransmisiones.</li>
+            </ul>
+
+            <h3>Ethernet con switch (full-duplex)</h3>
+
+            <ul>
+                <li>Cada puerto es un enlace <strong>punto a punto</strong> dedicado.</li>
+                <li>Se usan pares de hilos distintos para transmitir y para recibir: no hay superposición posible.</li>
+                <li><strong>Las colisiones desaparecen</strong>, y con ellas CSMA/CD.</li>
+                <li>Cada equipo dispone de su ancho de banda completo <em>en cada sentido</em>.</li>
+            </ul>
+
+            <h3>Míralo funcionando</h3>
+
+            <p>En la simulación, los cuatro equipos intentan transmitir a la vez. Déjala correr en modo <strong>HUB</strong>
+            y fíjate en el porcentaje de colisiones; después cambia a <strong>SWITCH</strong> y compáralo.</p>
+
+            <div id="simulacion"></div>
+
+            <div class="dato">
+                <strong>Ejemplo numérico</strong>
+                En un enlace de 100 Mbps full-duplex se pueden enviar 100 Mbps <em>y</em> recibir 100 Mbps
+                simultáneamente: por eso los fabricantes anuncian «200 Mbps». No es que el cable vaya al doble;
+                es que hay dos caminos independientes.
+            </div>
+
+            <details class="ampliacion">
+                <summary>Ampliación: el desajuste de dúplex, la avería que más despista</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>Si un extremo del enlace queda en <strong>full-duplex</strong> y el otro en
+                    <strong>half-duplex</strong> —típicamente por fijar la velocidad a mano en un lado y dejar
+                    autonegociación en el otro— ocurre algo desconcertante: <strong>la red funciona, pero lentísima</strong>.</p>
+                    <p>El extremo en half interpreta como colisiones las transmisiones simultáneas perfectamente
+                    legítimas del extremo en full. Cada «colisión» dispara una retransmisión, y el rendimiento se
+                    desploma a una fracción del nominal. Un enlace Gigabit puede quedarse en pocos Mbps útiles.</p>
+                    <p>La pista para diagnosticarlo son los <strong>contadores de colisiones tardías</strong>
+                    (<em>late collisions</em>) en un solo lado del enlace. La solución es dejar
+                    <strong>autonegociación en ambos extremos</strong> o fijarlo a mano en los dos.</p>
+                </div>
+            </details>
+
+            <h2 id="serie">7. Transmisión serie y paralelo</h2>
+
+            <p>Otra clasificación, según <strong>cuántos bits</strong> viajan a la vez:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Serie</th><th>Paralelo</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Bits simultáneos</th><td>Uno detrás de otro</td><td>Varios a la vez, un hilo por bit</td></tr>
+                    <tr><th scope="row">Número de hilos</th><td>Pocos</td><td>Muchos</td></tr>
+                    <tr><th scope="row">Distancia</th><td>Larga</td><td>Muy corta</td></tr>
+                    <tr><th scope="row">Coste</th><td>Bajo</td><td>Alto</td></tr>
+                    <tr><th scope="row">Ejemplos</th><td>Ethernet, USB, SATA, fibra</td><td>Bus interno de la CPU, antiguo puerto de impresora</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Puede parecer contradictorio que el paralelo, que envía más bits a la vez, se use solo en distancias
+            cortas. El motivo es el <strong>sesgo de sincronismo</strong> (<em>skew</em>): a alta velocidad los bits que
+            salen juntos por hilos distintos no llegan exactamente a la vez, y a partir de cierta distancia resulta
+            imposible reconstruir el dato. Por eso <strong>todas las comunicaciones de red modernas son en serie</strong>.</p>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <h3>Resumen</h3>
+
+            <ul>
+                <li>Todo sistema de comunicación tiene 5 componentes: <strong>fuente, transmisor, medio, receptor y destino</strong>.</li>
+                <li>La <strong>fuente genera</strong> información; el <strong>transmisor la transforma</strong> para adaptarla al medio.</li>
+                <li>Los papeles dependen del <strong>sentido</strong> de la transmisión y se invierten en la respuesta.</li>
+                <li>El medio introduce <strong>atenuación, ruido y distorsión</strong>.</li>
+                <li>Modos: <strong>simplex</strong> (un sentido), <strong>half-duplex</strong> (dos sentidos por turnos), <strong>full-duplex</strong> (dos sentidos a la vez).</li>
+                <li>El hub impone half-duplex y provoca <strong>colisiones</strong>; el switch permite full-duplex y las <strong>elimina</strong>.</li>
+                <li>Las redes modernas transmiten en <strong>serie</strong>, no en paralelo.</li>
+            </ul>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error</th><th>Corrección</th></tr></thead>
+                <tbody>
+                    <tr><td>«Half-duplex es un solo sentido»</td><td>Eso es <strong>simplex</strong>. Half-duplex es bidireccional, pero por turnos</td></tr>
+                    <tr><td>«El transmisor es quien crea la información»</td><td>Eso es la <strong>fuente</strong>. El transmisor solo la codifica y adapta al medio</td></tr>
+                    <tr><td>«El Wi-Fi es full-duplex»</td><td>Es <strong>half-duplex</strong>: la antena no puede transmitir y recibir a la vez en la misma frecuencia</td></tr>
+                    <tr><td>«El paralelo siempre es más rápido»</td><td>Solo en distancias muy cortas; el <em>skew</em> lo hace inviable a distancia</td></tr>
+                    <tr><td>«Con switch sigue habiendo colisiones»</td><td>En full-duplex conmutado <strong>no hay colisiones</strong>: cada puerto es un enlace dedicado</td></tr>
+                    <tr><td>«Si hay colisiones es que la red está rota»</td><td>En un medio compartido son <strong>normales y esperadas</strong>; CSMA/CD las gestiona. Lo anómalo es que aparezcan en un enlace conmutado full-duplex</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar cada tarjeta: el esfuerzo de recordar es lo que consolida.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a comprobar en tu propio equipo a qué velocidad y en qué modo dúplex está negociado tu enlace,
+            y a medir la diferencia real entre cable y Wi-Fi.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 2</strong></a> (55 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 3</strong>
+            <p>Verás <strong>qué viaja exactamente</strong> por el medio: señales analógicas y digitales, y por qué
+            600 Mbps no son 600 MB/s.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> mira la velocidad que tienes contratada y calcula, sin buscarlo,
+            cuántos <strong>megabytes por segundo</strong> deberías poder descargar como máximo.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        simulacion: 'colisiones',
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Explica <strong>con tus palabras</strong> la diferencia entre <em>fuente</em> y <em>transmisor</em>, y por qué se confunden tanto.',
+                modelo: `<p>La <strong>fuente</strong> es quien <em>genera</em> la información original: la persona que habla,
+                         la aplicación que produce el dato, el sensor que mide. El <strong>transmisor</strong> no crea nada nuevo:
+                         <em>transforma</em> esa información en una señal apta para viajar por el medio, codificándola o
+                         convirtiéndola en impulsos eléctricos u ópticos.</p>
+                         <p>Se confunden porque en el lenguaje corriente decimos «el móvil transmite» o «yo envío un mensaje»,
+                         mezclando ambos papeles en la misma frase. La regla práctica es: si genera contenido nuevo, es fuente;
+                         si adapta contenido existente al medio, es transmisor.</p>`,
+                puntos: [
+                    'Define fuente como generadora de la información original',
+                    'Define transmisor como codificador o adaptador al medio',
+                    'Deja claro que el transmisor no crea información nueva',
+                    'Explica el motivo de la confusión o aporta una regla práctica'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Un PC descarga un fichero de un servidor. Explica qué papel tiene el PC <strong>durante la descarga</strong> y cuál tenía <strong>al pedir el fichero</strong>. ¿Qué conclusión general se saca de eso?',
+                modelo: `<p>Al <strong>pedir</strong> el fichero, el PC es la <strong>fuente</strong> (genera la petición) y el
+                         servidor es el <strong>destino</strong>. Durante la <strong>descarga</strong> los papeles se invierten:
+                         el servidor pasa a ser la fuente y el PC, el destino.</p>
+                         <p>La conclusión general es que <strong>los papeles no son propiedades fijas de los equipos</strong>,
+                         sino de cada transmisión concreta y su sentido. Por eso casi todo el equipamiento de red incorpora a la
+                         vez transmisor y receptor, y se denomina <strong>transceptor</strong>.</p>`,
+                puntos: [
+                    'Identifica al PC como fuente en la petición',
+                    'Identifica al PC como destino en la descarga',
+                    'Concluye que los papeles dependen del sentido de cada transmisión',
+                    'Menciona el concepto de transceptor'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Justifica por qué el <strong>Wi-Fi es half-duplex</strong> pese a que, navegando, parece que envías y recibes a la vez.',
+                modelo: `<p>La antena de un dispositivo Wi-Fi usa <strong>la misma frecuencia</strong> para transmitir y para
+                         recibir. Si emitiera y escuchara simultáneamente, su propia señal —que sale con una potencia
+                         enormemente superior— taparía por completo la señal ajena, mucho más débil tras recorrer la distancia
+                         hasta el punto de acceso.</p>
+                         <p>Por eso los dispositivos se <strong>turnan</strong> mediante CSMA/CA: escuchan antes de hablar y
+                         esperan si el canal está ocupado. La sensación de simultaneidad es una ilusión: los turnos se alternan
+                         en milisegundos, demasiado rápido para percibirlo.</p>`,
+                puntos: [
+                    'Menciona que se usa la misma frecuencia para emitir y recibir',
+                    'Explica que la propia emisión taparía la señal ajena, mucho más débil',
+                    'Cita el turnado mediante CSMA/CA o equivalente',
+                    'Aclara que la simultaneidad aparente se debe a la rapidez de los turnos'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Acabas de ver la simulación. Explica por qué en un enlace conmutado full-duplex <strong>desaparecen las colisiones</strong> y CSMA/CD deja de hacer falta.',
+                modelo: `<p>En un switch, cada puerto forma un enlace <strong>punto a punto</strong> con un único dispositivo:
+                         el medio deja de estar compartido por varios equipos. Además, en full-duplex se emplean
+                         <strong>pares de hilos distintos</strong> para transmitir y para recibir.</p>
+                         <p>Como consecuencia, la señal que sale nunca puede superponerse con la que entra ni con la de un
+                         tercero: <strong>la colisión es físicamente imposible</strong>. Al no haber colisiones, el mecanismo
+                         CSMA/CD —que existía únicamente para detectarlas y reintentar— pierde su razón de ser y se desactiva.</p>
+                         <p>De hecho, si en un enlace conmutado full-duplex aparecen colisiones en los contadores, no es
+                         normal: apunta a un <strong>desajuste de dúplex</strong> entre los dos extremos.</p>`,
+                puntos: [
+                    'Indica que cada puerto es un enlace punto a punto, no un medio compartido',
+                    'Menciona los pares separados para transmisión y recepción',
+                    'Concluye que la superposición de señales es imposible',
+                    'Explica que CSMA/CD existía solo para gestionar colisiones',
+                    'Añade que ver colisiones en full-duplex indica un desajuste de dúplex'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: 'Enumera los <strong>5 componentes</strong> de un sistema de comunicación, en orden', dorso: '<strong>Fuente → Transmisor → Medio → Receptor → Destino</strong>' },
+            { frente: 'Diferencia entre <strong>fuente</strong> y <strong>transmisor</strong>', dorso: 'La fuente <strong>genera</strong> la información; el transmisor la <strong>transforma</strong> para adaptarla al medio. El transmisor no crea nada nuevo.' },
+            { frente: '¿Cómo se llama el equipo que incorpora transmisor y receptor a la vez?', dorso: '<strong>Transceptor</strong> (<em>transceiver</em>). Casi todo el equipamiento de red lo es, porque los papeles se invierten según el sentido.' },
+            { frente: 'Las tres perturbaciones que introduce el medio', dorso: '<strong>Atenuación</strong> (pierde potencia con la distancia), <strong>ruido</strong> (interferencias externas) y <strong>distorsión</strong> (las frecuencias llegan desordenadas).' },
+            { frente: '¿Por qué el UTP tiene un límite de 100 m?', dorso: 'Por la <strong>atenuación</strong>: más allá la señal llega tan débil que el receptor no la distingue del ruido de fondo.' },
+            { frente: 'Define <strong>simplex</strong> y pon un ejemplo', dorso: 'Un solo sentido, siempre A → B. Radio FM, TDT, un teclado hacia el PC, un sensor de temperatura.' },
+            { frente: 'Diferencia esencial entre <strong>half</strong> y <strong>full-duplex</strong>', dorso: 'No es el número de sentidos: <strong>los dos son bidireccionales</strong>. Es la <strong>simultaneidad</strong>: half va por turnos, full a la vez.' },
+            { frente: '¿Es el Wi-Fi half o full-duplex? ¿Por qué?', dorso: '<strong>Half-duplex</strong>: la antena usa la misma frecuencia para emitir y recibir, y su propia señal taparía la ajena. Se turnan con CSMA/CA.' },
+            { frente: '¿Qué ocurre si dos equipos transmiten a la vez por un <strong>hub</strong>?', dorso: 'Una <strong>colisión</strong>: las señales se superponen y ambas tramas se destruyen. CSMA/CD la detecta y ambos reintentan tras una espera aleatoria.' },
+            { frente: '¿Por qué no hay colisiones con un <strong>switch</strong> en full-duplex?', dorso: 'Cada puerto es un enlace <strong>punto a punto</strong> con pares separados para transmitir y recibir: la superposición es físicamente imposible.' },
+            { frente: 'Un puerto de 100 Mbps anunciado como «200 Mbps», ¿qué significa?', dorso: 'Full-duplex: <strong>100 de subida + 100 de bajada simultáneos</strong>. No es que un sentido vaya al doble; son dos caminos independientes.' },
+            { frente: '¿Por qué las redes transmiten en <strong>serie</strong> y no en paralelo?', dorso: 'Por el <strong>skew</strong> o sesgo de sincronismo: a alta velocidad los bits que salen juntos por hilos distintos no llegan a la vez, y pasada cierta distancia el dato es irrecuperable.' },
+            { frente: '¿Qué es un <strong>desajuste de dúplex</strong> y cómo se detecta?', dorso: 'Un extremo en full y el otro en half. La red funciona pero lentísima. Se detecta por <strong>colisiones tardías</strong> en un solo lado del enlace.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 2 — El sistema de comunicación',
+        subtitulo: 'Componentes · Modos de transmisión · Colisiones',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Componentes',
+                repaso: '#componentes',
+                text: '¿Cuáles son los 5 componentes básicos de un sistema de comunicación, en orden?',
+                options: {
+                    a: 'Emisor, Receptor, Canal, Código, Contexto',
+                    b: 'Fuente, Transmisor, Medio, Receptor, Destino',
+                    c: 'CPU, Memoria, Entrada, Salida, Almacenamiento',
+                    d: 'Router, Switch, Cable, PC, Servidor'
+                },
+                answer: 'b',
+                feedback: 'La fuente genera la información, el transmisor la codifica, el medio la transporta, el receptor la decodifica y el destino la consume.'
+            },
+            {
+                topic: 'Componentes',
+                repaso: '#componentes',
+                text: 'En una llamada telefónica, ¿qué elemento actúa como TRANSMISOR?',
+                options: {
+                    a: 'La persona que habla',
+                    b: 'El micrófono y los circuitos del móvil que digitalizan la voz',
+                    c: 'Las ondas de radio',
+                    d: 'La persona que escucha'
+                },
+                answer: 'b',
+                feedback: 'La persona que habla es la fuente (genera la información). El transmisor es el hardware que transforma esa voz en una señal apta para viajar por el medio.'
+            },
+            {
+                topic: 'Componentes',
+                repaso: '#ejemplos',
+                text: 'Un PC descarga un archivo de un servidor. En el sentido servidor → PC, ¿qué papel desempeña el PC?',
+                options: {
+                    a: 'Fuente',
+                    b: 'Transmisor',
+                    c: 'Medio',
+                    d: 'Destino'
+                },
+                answer: 'd',
+                feedback: 'Los papeles dependen del sentido de la transmisión. En la descarga el servidor es la fuente y el PC el destino; en la petición previa era al revés.'
+            },
+            {
+                topic: 'Perturbaciones',
+                repaso: '#perturbaciones',
+                text: '¿Qué perturbación explica que el cable UTP tenga un límite de 100 metros?',
+                options: {
+                    a: 'La atenuación: la señal pierde potencia con la distancia',
+                    b: 'El ruido de los fluorescentes',
+                    c: 'La distorsión de fase',
+                    d: 'Las colisiones entre tramas'
+                },
+                answer: 'a',
+                feedback: 'La atenuación es la pérdida progresiva de potencia. Más allá de 100 m la señal llega tan débil que el receptor no la distingue del ruido de fondo.'
+            },
+            {
+                topic: 'Perturbaciones',
+                repaso: '#perturbaciones',
+                text: 'Un cable de red pasa pegado durante varios metros al cable de alimentación de un motor industrial. ¿Qué problema es el más probable?',
+                options: {
+                    a: 'Atenuación excesiva',
+                    b: 'Ruido electromagnético que corrompe las tramas',
+                    c: 'Skew entre los pares',
+                    d: 'Colisiones en el switch'
+                },
+                answer: 'b',
+                feedback: 'Un motor genera interferencia electromagnética que se acopla al cable. El trenzado del par la cancela en buena medida, pero con una fuente potente y muchos metros en paralelo aparecen errores de CRC y retransmisiones.'
+            },
+            {
+                topic: 'Modos',
+                repaso: '#modos',
+                text: 'Un walkie-talkie permite hablar en ambos sentidos, pero no a la vez. ¿Qué modo usa?',
+                options: {
+                    a: 'Simplex',
+                    b: 'Half-duplex',
+                    c: 'Full-duplex',
+                    d: 'Multiplex'
+                },
+                answer: 'b',
+                feedback: 'Half-duplex: la comunicación es bidireccional pero alternada. Hay que soltar el botón para que el otro pueda hablar.'
+            },
+            {
+                topic: 'Modos',
+                repaso: '#modos',
+                text: '¿Qué modo de transmisión utiliza una emisora de radio FM?',
+                options: {
+                    a: 'Simplex',
+                    b: 'Half-duplex',
+                    c: 'Full-duplex',
+                    d: 'Depende de la frecuencia'
+                },
+                answer: 'a',
+                feedback: 'Simplex: la emisora solo transmite y el receptor solo recibe. El oyente no tiene ningún canal de retorno hacia la emisora.'
+            },
+            {
+                topic: 'Modos',
+                repaso: '#modos',
+                text: '¿Cuál es la diferencia real entre half-duplex y full-duplex?',
+                options: {
+                    a: 'El número de sentidos: uno frente a dos',
+                    b: 'La simultaneidad: por turnos frente a a la vez',
+                    c: 'La velocidad del enlace',
+                    d: 'El tipo de cable que utilizan'
+                },
+                answer: 'b',
+                feedback: 'Ambos son bidireccionales. Lo que los distingue es que en half-duplex hay que turnarse y en full-duplex se puede transmitir y recibir simultáneamente.'
+            },
+            {
+                topic: 'Modos',
+                repaso: '#modos',
+                text: 'Marca TODOS los sistemas que funcionan en half-duplex.',
+                options: {
+                    a: 'Wi-Fi',
+                    b: 'Ethernet a través de un hub',
+                    c: 'Ethernet a través de un switch',
+                    d: 'Walkie-talkie',
+                    e: 'Conversación telefónica'
+                },
+                answer: ['a', 'b', 'd'],
+                feedback: 'Los dos que más se fallan son el Wi-Fi y el hub: ambos comparten medio y se turnan. El switch en full-duplex y el teléfono sí permiten simultaneidad.'
+            },
+            {
+                topic: 'Colisiones',
+                repaso: '#colisiones',
+                text: '¿Qué ocurre cuando dos equipos conectados a un hub transmiten simultáneamente?',
+                options: {
+                    a: 'El hub almacena una trama y envía la otra',
+                    b: 'Se produce una colisión y ambas tramas se destruyen',
+                    c: 'El hub las envía por puertos distintos sin problema',
+                    d: 'La trama con mayor prioridad pasa primero'
+                },
+                answer: 'b',
+                feedback: 'El hub no conmuta ni almacena: las señales se superponen físicamente. CSMA/CD detecta la colisión y ambos equipos reintentan tras un tiempo aleatorio.'
+            },
+            {
+                topic: 'Colisiones',
+                repaso: '#colisiones',
+                text: 'En un enlace conmutado full-duplex, ¿qué ocurre con las colisiones?',
+                options: {
+                    a: 'Aumentan respecto al hub',
+                    b: 'Se mantienen igual',
+                    c: 'Desaparecen, porque cada puerto es un enlace dedicado',
+                    d: 'Solo desaparecen si se usa fibra óptica'
+                },
+                answer: 'c',
+                feedback: 'Cada puerto del switch es un enlace punto a punto con pares distintos para transmitir y recibir. Al no compartirse el medio, no hay superposición ni CSMA/CD.'
+            },
+            {
+                topic: 'Colisiones',
+                repaso: '#colisiones',
+                text: 'Un switch muestra miles de colisiones en un puerto concreto y ese equipo va lentísimo, aunque funciona. ¿Cuál es la causa más probable?',
+                options: {
+                    a: 'El cable es demasiado corto',
+                    b: 'Un desajuste de dúplex: un extremo en full y el otro en half',
+                    c: 'El switch tiene demasiados puertos libres',
+                    d: 'El equipo tiene un virus'
+                },
+                answer: 'b',
+                feedback: 'En un enlace conmutado full-duplex NO debería haber colisiones. Si aparecen, el extremo en half está interpretando como colisiones las transmisiones simultáneas legítimas del otro. Se corrige dejando autonegociación en ambos lados.'
+            },
+            {
+                topic: 'Colisiones',
+                repaso: '#colisiones',
+                text: 'Un fabricante anuncia un enlace Ethernet de «200 Mbps» sobre un puerto de 100 Mbps. ¿Qué significa?',
+                options: {
+                    a: 'Que el cable transmite realmente al doble de velocidad',
+                    b: 'Que suma 100 Mbps de transmisión más 100 Mbps de recepción en full-duplex',
+                    c: 'Que utiliza dos cables en paralelo',
+                    d: 'Que es un dato de marketing sin ningún fundamento'
+                },
+                answer: 'b',
+                feedback: 'En full-duplex hay dos caminos independientes: se pueden enviar 100 Mbps y recibir otros 100 Mbps a la vez. No es que un sentido vaya al doble.'
+            },
+            {
+                topic: 'Serie y paralelo',
+                repaso: '#serie',
+                text: '¿Por qué las redes modernas transmiten en serie y no en paralelo?',
+                options: {
+                    a: 'Porque el serie envía más bits a la vez',
+                    b: 'Porque en paralelo el sesgo de sincronismo impide reconstruir el dato a distancia',
+                    c: 'Porque el cable paralelo no existe comercialmente',
+                    d: 'Porque el serie es incompatible con la fibra óptica'
+                },
+                answer: 'b',
+                feedback: 'A alta velocidad, los bits que salen juntos por hilos distintos no llegan exactamente a la vez (skew). Pasada cierta distancia el dato es irrecuperable, por eso el paralelo queda relegado a buses internos.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Semana 3 - Arquitecturas y Modelos de Red</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .info-bar {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item strong {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .question.correct {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .question.incorrect {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .options {
+            margin-top: 15px;
+        }
+
+        .option {
+            background: white;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            background: #f1f3f5;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-details {
+            font-size: 1.3em;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .info-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test Semana 3</h1>
+            <p>Arquitecturas y Modelos de Red - Planificación y Administración de Redes</p>
+        </div>
+
+        <div class="info-bar">
+            <div class="info-item">
+                <strong>Preguntas:</strong> <span id="totalQuestions">15</span>
+            </div>
+            <div class="info-item">
+                <strong>Tiempo:</strong> <span id="timer">Sin límite</span>
+            </div>
+            <div class="info-item">
+                <strong>Nota mínima:</strong> 50%
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+            </div>
+
+            <div id="quiz"></div>
+
+            <div class="buttons">
+                <button onclick="checkAnswers()">Corregir Examen</button>
+                <button onclick="resetQuiz()">Reiniciar Test</button>
+            </div>
+
+            <div class="results" id="results">
+                <h2>Resultados del Test</h2>
+                <div class="score" id="score">0%</div>
+                <div class="score-details">
+                    <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">15</span></p>
+                    <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                    <p id="verdict"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Banco de preguntas: texto, opciones (a-d), respuesta correcta y explicación
+        const questions = [
+            {
+                text: '¿Cuántas capas tiene el modelo OSI y quién lo desarrolló?',
+                options: {
+                    a: '4 capas, desarrollado por el IETF',
+                    b: '7 capas, desarrollado por la ISO',
+                    c: '5 capas, desarrollado por el IEEE',
+                    d: '7 capas, desarrollado por Cisco'
+                },
+                answer: 'b',
+                feedback: 'El modelo OSI (Open Systems Interconnection) fue publicado por la ISO en 1984 y consta de 7 capas, desde Física (1) hasta Aplicación (7).'
+            },
+            {
+                text: '¿En qué capa del modelo OSI opera un router?',
+                options: {
+                    a: 'Capa 1 - Física',
+                    b: 'Capa 2 - Enlace',
+                    c: 'Capa 3 - Red',
+                    d: 'Capa 4 - Transporte'
+                },
+                answer: 'c',
+                feedback: 'El router trabaja en la capa 3 (Red): usa direcciones IP para tomar decisiones de enrutamiento entre redes distintas y delimita dominios de broadcast.'
+            },
+            {
+                text: '¿Cuál es la PDU (unidad de datos) de la capa de Transporte?',
+                options: {
+                    a: 'Trama',
+                    b: 'Paquete',
+                    c: 'Bit',
+                    d: 'Segmento'
+                },
+                answer: 'd',
+                feedback: 'Las PDU por capa son: Datos (7-5), Segmento (4), Paquete (3), Trama (2) y Bits (1).'
+            },
+            {
+                text: 'Las capas 5, 6 y 7 del modelo OSI se corresponden en TCP/IP con:',
+                options: {
+                    a: 'La capa de Aplicación',
+                    b: 'La capa de Transporte',
+                    c: 'La capa de Internet',
+                    d: 'La capa de Acceso a Red'
+                },
+                answer: 'a',
+                feedback: 'TCP/IP fusiona Sesión, Presentación y Aplicación en una única capa de Aplicación, y también fusiona Enlace y Física en Acceso a Red.'
+            },
+            {
+                text: '¿Qué protocolo se encarga de resolver una dirección IP en su correspondiente dirección MAC?',
+                options: {
+                    a: 'DNS',
+                    b: 'ARP',
+                    c: 'ICMP',
+                    d: 'DHCP'
+                },
+                answer: 'b',
+                feedback: 'ARP (Address Resolution Protocol) traduce direcciones IP (capa 3) a direcciones MAC (capa 2) dentro del mismo segmento de red.'
+            },
+            {
+                text: 'En el proceso de encapsulación, ¿en qué orden se añaden las cabeceras?',
+                options: {
+                    a: 'Ethernet → IP → TCP → Datos',
+                    b: 'IP → Ethernet → TCP → Datos',
+                    c: 'Datos → TCP → IP → Ethernet',
+                    d: 'TCP → Datos → Ethernet → IP'
+                },
+                answer: 'c',
+                feedback: 'La encapsulación va de arriba abajo: los datos de aplicación reciben la cabecera TCP (segmento), luego la IP (paquete) y finalmente la Ethernet (trama).'
+            },
+            {
+                text: 'Si la MTU de una red Ethernet es de 1500 bytes, ¿cuántos bytes de datos útiles caben en un paquete IP con cabecera de 20 bytes?',
+                options: {
+                    a: '1500 bytes',
+                    b: '1520 bytes',
+                    c: '1480 bytes',
+                    d: '1460 bytes'
+                },
+                answer: 'c',
+                feedback: 'La MTU limita el paquete IP completo. Restando los 20 bytes de cabecera IP quedan 1480 bytes de carga útil. Si además hay cabecera TCP (20 B), el MSS sería 1460.'
+            },
+            {
+                text: '¿Qué organismo publica los estándares de la serie 802 (Ethernet, Wi-Fi, VLAN)?',
+                options: {
+                    a: 'ISO',
+                    b: 'IETF',
+                    c: 'ITU-T',
+                    d: 'IEEE'
+                },
+                answer: 'd',
+                feedback: 'El IEEE publica la familia 802: 802.3 (Ethernet), 802.11 (Wi-Fi), 802.1Q (VLAN), 802.1D (STP), entre otros.'
+            },
+            {
+                text: 'Un documento RFC 791 corresponde al estándar de:',
+                options: {
+                    a: 'IPv4',
+                    b: 'TCP',
+                    c: 'IPv6',
+                    d: 'Ethernet'
+                },
+                answer: 'a',
+                feedback: 'La RFC 791 (1981, editada por Jon Postel) define el protocolo IPv4. La RFC 793 define TCP y la RFC 2460 definió IPv6.'
+            },
+            {
+                text: 'El campo TTL de la cabecera IP se decrementa cada vez que el paquete:',
+                options: {
+                    a: 'Atraviesa un switch',
+                    b: 'Atraviesa un router',
+                    c: 'Cambia de cable',
+                    d: 'Se fragmenta'
+                },
+                answer: 'b',
+                feedback: 'Cada router decrementa el TTL en 1 y descarta el paquete si llega a 0. Evita que los paquetes circulen indefinidamente en caso de bucle de enrutamiento.'
+            },
+            {
+                text: 'Un PC hace ping correcto a 8.8.8.8 pero falla al hacer ping a google.com. ¿Dónde está el problema?',
+                options: {
+                    a: 'En la capa física: el cable está roto',
+                    b: 'En la capa de enlace: la MAC es incorrecta',
+                    c: 'En la resolución de nombres (DNS)',
+                    d: 'En la capa de transporte: el puerto está cerrado'
+                },
+                answer: 'c',
+                feedback: 'Si la conectividad IP funciona pero falla la resolución por nombre, el problema está en el servicio DNS (capa de aplicación). Se comprueba con nslookup o dig.'
+            },
+            {
+                text: '¿Qué información añade la capa de Transporte que NO existe en la capa de Red?',
+                options: {
+                    a: 'Las direcciones IP',
+                    b: 'Los números de puerto',
+                    c: 'Las direcciones MAC',
+                    d: 'El código de detección de errores FCS'
+                },
+                answer: 'b',
+                feedback: 'Los puertos permiten la multiplexación: identifican a qué aplicación concreta pertenece cada segmento dentro del mismo host.'
+            },
+            {
+                text: 'Cuando un paquete atraviesa un router, ¿qué elementos se modifican?',
+                options: {
+                    a: 'Las direcciones IP de origen y destino',
+                    b: 'Los puertos TCP de origen y destino',
+                    c: 'Las direcciones MAC y el TTL',
+                    d: 'No se modifica nada'
+                },
+                answer: 'c',
+                feedback: 'Las direcciones MAC se reescriben para cada enlace y el TTL se decrementa. Las IP y los puertos son extremo a extremo y se mantienen, salvo que exista NAT.'
+            },
+            {
+                text: '¿Cuál es el puerto estándar del servicio HTTPS?',
+                options: {
+                    a: '80',
+                    b: '21',
+                    c: '25',
+                    d: '443'
+                },
+                answer: 'd',
+                feedback: 'HTTPS usa el puerto 443/TCP. HTTP usa el 80, FTP el 21 (control), SSH el 22 y SMTP el 25.'
+            },
+            {
+                text: '¿Por qué el modelo TCP/IP se impuso frente al modelo OSI en la práctica?',
+                options: {
+                    a: 'Porque tiene más capas y es más detallado',
+                    b: 'Porque ya estaba implementado, era libre y funcionaba',
+                    c: 'Porque lo desarrolló la ISO',
+                    d: 'Porque es más seguro por diseño'
+                },
+                answer: 'b',
+                feedback: 'TCP/IP ya funcionaba en ARPANET y venía incluido gratuitamente en UNIX BSD mientras OSI aún se debatía. La implementación real y sencilla ganó al diseño teórico y complejo.'
+            }
+        ];
+
+        // Respuestas correctas indexadas como q1, q2, ... para la corrección
+        const correctAnswers = {};
+        questions.forEach((q, i) => {
+            correctAnswers['q' + (i + 1)] = q.answer;
+        });
+
+        // Generar el HTML de las preguntas
+        function renderQuiz() {
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = questions.map((q, i) => {
+                const n = i + 1;
+                const opciones = Object.keys(q.options).map(letra => `
+                    <div class="option">
+                        <input type="radio" id="q${n}${letra}" name="q${n}" value="${letra}">
+                        <label for="q${n}${letra}">${q.options[letra]}</label>
+                    </div>`).join('');
+
+                return `
+            <div class="question" data-question="${n}">
+                <div class="question-header">
+                    <span class="question-number">Pregunta ${n}</span>
+                </div>
+                <div class="question-text">${q.text}</div>
+                <div class="options">${opciones}</div>
+                <div class="feedback">
+                    <strong>Respuesta correcta: ${q.answer.toUpperCase()}</strong><br>
+                    ${q.feedback}
+                </div>
+            </div>`;
+            }).join('');
+
+            document.getElementById('totalQuestions').textContent = questions.length;
+            document.getElementById('total').textContent = questions.length;
+
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            let total = Object.keys(correctAnswers).length;
+            let unanswered = [];
+
+            // Verificar cada pregunta
+            for (let qNum in correctAnswers) {
+                const selected = document.querySelector(`input[name="${qNum}"]:checked`);
+                const questionDiv = document.querySelector(`[data-question="${qNum.substring(1)}"]`);
+                const feedback = questionDiv.querySelector('.feedback');
+                const options = questionDiv.querySelectorAll('.option');
+
+                if (!selected) {
+                    unanswered.push(qNum.substring(1));
+                    continue;
+                }
+
+                // Limpiar clases previas
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+
+                if (selected.value === correctAnswers[qNum]) {
+                    correct++;
+                    questionDiv.classList.add('correct');
+                    questionDiv.classList.remove('incorrect');
+                    feedback.classList.add('show', 'correct');
+                    feedback.classList.remove('incorrect');
+                    selected.parentElement.classList.add('correct');
+                } else {
+                    questionDiv.classList.add('incorrect');
+                    questionDiv.classList.remove('correct');
+                    feedback.classList.add('show', 'incorrect');
+                    feedback.classList.remove('correct');
+                    selected.parentElement.classList.add('incorrect');
+
+                    // Marcar la respuesta correcta
+                    const correctOption = questionDiv.querySelector(`input[value="${correctAnswers[qNum]}"]`).parentElement;
+                    correctOption.classList.add('correct');
+                }
+            }
+
+            if (unanswered.length > 0) {
+                alert(`Por favor, responde todas las preguntas. Faltan: ${unanswered.join(', ')}`);
+                return;
+            }
+
+            // Mostrar resultados
+            const percentage = Math.round((correct / total) * 100);
+            const incorrect = total - correct;
+
+            document.getElementById('score').textContent = percentage + '%';
+            document.getElementById('correct').textContent = correct;
+            document.getElementById('total').textContent = total;
+            document.getElementById('incorrect').textContent = incorrect;
+
+            const verdict = document.getElementById('verdict');
+            if (percentage >= 90) {
+                verdict.innerHTML = '<strong style="color: #28a745;">EXCELENTE</strong> - Dominas completamente el tema';
+            } else if (percentage >= 70) {
+                verdict.innerHTML = '<strong style="color: #20c997;">MUY BIEN</strong> - Buen nivel de comprensión';
+            } else if (percentage >= 50) {
+                verdict.innerHTML = '<strong style="color: #ffc107;">APROBADO</strong> - Revisa los errores';
+            } else {
+                verdict.innerHTML = '<strong style="color: #dc3545;">SUSPENSO</strong> - Debes repasar el tema';
+            }
+
+            document.getElementById('results').classList.add('show');
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            // Limpiar selecciones
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+
+            // Limpiar clases
+            document.querySelectorAll('.question').forEach(q => {
+                q.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.classList.remove('show', 'correct', 'incorrect');
+            });
+
+            // Ocultar resultados
+            document.getElementById('results').classList.remove('show');
+
+            // Reset progress bar
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressBar').textContent = '0%';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const total = Object.keys(correctAnswers).length;
+            let answered = 0;
+
+            for (let qNum in correctAnswers) {
+                if (document.querySelector(`input[name="${qNum}"]:checked`)) {
+                    answered++;
+                }
+            }
+
+            const percentage = Math.round((answered / total) * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>

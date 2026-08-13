@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio: explora tu propia red</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 1</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">55 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Tipo:</strong> práctica guiada</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Dejar de leer sobre redes y <strong>mirar la tuya</strong>. Vas a averiguar qué dirección tiene tu
+            equipo, quién le da salida a Internet, cuántos saltos hay hasta Google y qué ocurre cuando dos máquinas
+            no comparten infraestructura.</p>
+            <p>Los datos que anotes son <strong>los de tu equipo</strong>, así que no hay una respuesta única. Lo que
+            se comprueba es que tengan la <strong>forma correcta</strong> y que sepas interpretarlos.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <p>Abre una terminal: en Windows, <code>Win + R</code> → <code>cmd</code>. En Linux o macOS, tu terminal
+            habitual. Todos los comandos de este laboratorio son de <strong>solo lectura</strong>: no modifican nada
+            de tu sistema.</p>
+            <p><strong>Ojo con los adaptadores virtuales.</strong> Si tienes VirtualBox, VMware, WSL o Docker
+            instalados, <code>ipconfig</code> mostrará varios adaptadores con direcciones como
+            <code>192.168.56.1</code> o <code>172.x.x.x</code>. <strong>No son tu red</strong>: son redes internas
+            de esos programas. Fíjate solo en el adaptador <em>Ethernet</em> o <em>Wi-Fi</em> que tenga
+            <strong>puerta de enlace</strong>, porque es el único que da salida a Internet.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <!-- ------------------------- Guion de comandos ------------------------- -->
+
+        <div class="paso-lab">
+            <h3>Paso 1 — Tu configuración de red</h3>
+            <p>Este comando muestra toda la configuración de tus interfaces de red.</p>
+
+            <div class="so-tabs" data-grupo="cfg">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="cfg" data-so="win">
+                <div class="comando"><pre><code>ipconfig /all</code></pre></div>
+                <p>Busca el adaptador que estés usando de verdad (Ethernet o Wi-Fi) y localiza:
+                <em>Dirección IPv4</em>, <em>Máscara de subred</em>, <em>Puerta de enlace predeterminada</em>,
+                <em>Servidores DNS</em> y <em>Dirección física</em>.</p>
+            </div>
+
+            <div class="so-panel" data-grupo="cfg" data-so="nix">
+                <div class="comando"><pre><code>ip addr
+ip route | grep default
+cat /etc/resolv.conf</code></pre></div>
+                <p><code>ip addr</code> da la dirección y la MAC, <code>ip route</code> la puerta de enlace y
+                <code>resolv.conf</code> los servidores DNS.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — ¿Llego a Internet?</h3>
+            <p>Primero por dirección IP, después por nombre. El orden importa: si el primero funciona y el
+            segundo no, el problema está en la resolución de nombres y no en la conectividad.</p>
+            <div class="comando"><pre><code>ping 8.8.8.8
+ping google.com</code></pre></div>
+            <p>Anota el tiempo de respuesta medio que aparece al final. En Linux añade <code>-c 4</code> para que
+            se detenga solo: <code>ping -c 4 8.8.8.8</code>.</p>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — ¿Por dónde pasa mi tráfico?</h3>
+            <p>Traza el camino salto a salto hasta el destino. Cada línea es un router por el que pasa tu paquete.</p>
+
+            <div class="so-tabs" data-grupo="trace">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="trace" data-so="win">
+                <div class="comando"><pre><code>tracert google.com</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="trace" data-so="nix">
+                <div class="comando"><pre><code>traceroute google.com</code></pre></div>
+                <p>Si no lo tienes: <code>sudo apt install traceroute</code></p>
+            </div>
+
+            <p>Fíjate en que <strong>el primer salto es tu router</strong> y en que los tiempos crecen conforme te
+            alejas. Los saltos con <code>* * *</code> son equipos configurados para no responder: es normal.</p>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <p>Has completado el laboratorio si puedes responder que sí a todo esto:</p>
+            <ul>
+                <li>Sé cuál es mi dirección IP, mi máscara, mi puerta de enlace y mi DNS.</li>
+                <li>Entiendo por qué mi IP es privada y no la ve Internet directamente.</li>
+                <li>Sé cuántos saltos hay hasta Google y cuál de ellos es mi router.</li>
+                <li>Sé distinguir un fallo de conectividad de un fallo de DNS.</li>
+                <li>He comprobado que dos máquinas sin infraestructura común no se comunican.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 1',
+    subtitulo: 'Explora tu propia red · Dos nodos aislados',
+    tiempo: '55 min',
+    ejercicios: [
+
+        {
+            titulo: 'LAB 1 — Anota los datos de tu equipo',
+            tiempo: '15 min',
+            enunciado: `
+                <p>Con la salida de <code>ipconfig /all</code> o <code>ip addr</code> delante, rellena tus datos
+                reales. Se comprueba que tengan el <strong>formato correcto</strong>, no un valor concreto.</p>`,
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'ipv4',
+                    ancho: '260px',
+                    placeholder: '192.168.1.34',
+                    pregunta: '<strong>a)</strong> Tu <strong>dirección IPv4</strong>',
+                    explicacion: 'Es la dirección que identifica a tu equipo <em>dentro</em> de tu red local.',
+                    pistas: [
+                        'En Windows aparece como «Dirección IPv4». En Linux, tras <code>inet</code> en la interfaz activa.',
+                        'Ignora la que aparezca bajo <code>lo</code> o <code>Loopback</code> (127.0.0.1): esa es interna del propio equipo.',
+                        'Son cuatro números de 0 a 255 separados por puntos. Si ves algo con dos puntos y letras, eso es IPv6.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'mascara',
+                    ancho: '260px',
+                    placeholder: '255.255.255.0',
+                    pregunta: '<strong>b)</strong> Tu <strong>máscara de subred</strong>',
+                    explicacion: 'La máscara indica qué parte de la IP identifica a la red y qué parte al equipo. La estudiarás a fondo en el Mes 4.',
+                    pistas: [
+                        'En Windows es «Máscara de subred». En Linux va tras la IP como <code>/24</code>.',
+                        'Lo más habitual en casa es 255.255.255.0, equivalente a /24.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'ip',
+                    ancho: '320px',
+                    placeholder: '192.168.1.1',
+                    pregunta: '<strong>c)</strong> Tu <strong>puerta de enlace</strong> (gateway)',
+                    explicacion: 'Es tu router: la salida obligatoria hacia cualquier destino fuera de tu red local. Si te aparece una dirección larga con dos puntos (fe80::...) es igual de válida: es IPv6, y significa que tu router se anuncia por IPv6 en la red local.',
+                    pistas: [
+                        'En Windows, «Puerta de enlace predeterminada». En Linux, <code>ip route | grep default</code>.',
+                        'Puede ser IPv4 (suele acabar en .1) o IPv6 (empieza por <code>fe80::</code>). Ambas se admiten.',
+                        'Coincide con el primer salto de tu <code>tracert</code>.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'ip',
+                    ancho: '320px',
+                    placeholder: '8.8.8.8',
+                    pregunta: '<strong>d)</strong> Uno de tus <strong>servidores DNS</strong>',
+                    explicacion: 'Es quien traduce nombres como google.com a direcciones IP. Sin él navegarías solo por IP.',
+                    pistas: [
+                        'En Windows, «Servidores DNS». En Linux, <code>cat /etc/resolv.conf</code>.',
+                        'Muchas veces coincide con la puerta de enlace: el router hace de DNS para la red.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'mac',
+                    ancho: '280px',
+                    placeholder: '00:1B:44:11:3A:B7',
+                    pregunta: '<strong>e)</strong> La <strong>dirección MAC</strong> de tu interfaz',
+                    explicacion: 'Identificador físico grabado en la tarjeta de red. Los 3 primeros pares identifican al fabricante.',
+                    pistas: [
+                        'En Windows es «Dirección física» y usa guiones: 00-1B-44-11-3A-B7. Se admite con guiones o con dos puntos.',
+                        'Son 6 pares de dígitos hexadecimales (0-9 y A-F).'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    ancho: '160px',
+                    ayuda: 'ms',
+                    placeholder: '12',
+                    pregunta: '<strong>f)</strong> Tiempo medio de respuesta de <code>ping 8.8.8.8</code>',
+                    explicacion: 'Esto es la <strong>latencia</strong>, el concepto que estudiarás el Día 3. Por fibra suele estar entre 5 y 30 ms; por 4G, entre 30 y 80; por satélite puede pasar de 500.',
+                    pistas: [
+                        'Aparece al final, en la línea de estadísticas: «Media = 12ms» o «avg».',
+                        'Escribe solo el número, sin la unidad.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    ancho: '160px',
+                    ayuda: 'saltos',
+                    placeholder: '11',
+                    pregunta: '<strong>g)</strong> Número de saltos hasta google.com según <code>tracert</code>',
+                    explicacion: 'Cada salto es un router. Lo habitual son entre 8 y 15: menos de los que la gente imagina para cruzar medio mundo.',
+                    pistas: [
+                        'Es el número de la última línea de la traza.',
+                        'Cuenta también los saltos que aparecen como <code>* * *</code>: existen, solo que no responden.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 1 — Interpreta lo que has obtenido',
+            tiempo: '20 min',
+            enunciado: '<p>Los datos por sí solos no valen nada. Lo que importa es saber leerlos.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>a)</strong> Tu IP casi con seguridad empieza por <code>192.168</code>,
+                               <code>10.</code> o <code>172.16-31</code>. ¿Por qué?`,
+                    opciones: {
+                        a: 'Porque son las únicas direcciones que existen',
+                        b: 'Porque son rangos privados: se usan dentro de redes locales y no son enrutables en Internet',
+                        c: 'Porque las asigna Google',
+                        d: 'Porque tu equipo es antiguo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Son <strong>rangos privados</strong> reservados para uso interno. Millones de casas usan 192.168.1.1 a la vez sin conflicto, porque esas direcciones nunca salen a Internet: el router las traduce mediante NAT (Mes 11).',
+                    pistas: [
+                        'Piensa: ¿cuántas casas crees que tienen ahora mismo un router con la dirección 192.168.1.1?',
+                        'Si millones de equipos comparten la misma dirección, es que esa dirección no puede ser única en Internet.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> En tu <code>tracert</code>, ¿qué es el <strong>primer salto</strong>?',
+                    opciones: {
+                        a: 'Un servidor de Google',
+                        b: 'Tu proveedor de Internet',
+                        c: 'Tu router: la puerta de enlace que anotaste antes',
+                        d: 'Tu servidor DNS'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Todo paquete dirigido fuera de tu red local pasa obligatoriamente por la puerta de enlace. Por eso el primer salto coincide con la IP que anotaste en el apartado (c).',
+                    pistas: [
+                        'Compara la primera línea de la traza con el dato que anotaste como puerta de enlace.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>c)</strong> <code>ping 8.8.8.8</code> responde correctamente, pero
+                               <code>ping google.com</code> falla. ¿Qué está pasando?`,
+                    opciones: {
+                        a: 'No hay conexión a Internet',
+                        b: 'El cable de red está roto',
+                        c: 'Hay conectividad, pero falla la resolución de nombres (DNS)',
+                        d: 'Google está caído'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Si los paquetes llegan a una IP, la conectividad funciona. Lo que falla es la traducción de nombre a dirección: es un problema de <strong>DNS</strong>. Este es uno de los diagnósticos más frecuentes en soporte real.',
+                    pistas: [
+                        'Si el problema fuera el cable, ¿habría respondido el primer ping?',
+                        '¿Qué diferencia hay entre las dos órdenes? Una lleva un número y la otra un nombre.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>d)</strong> Completa la frase con lo que has comprobado.',
+                    frase: `Mi equipo tiene una dirección {{0}} que no es visible desde Internet. Para salir al exterior
+                            envía todo su tráfico a la {{1}}, que es mi router. Para traducir nombres como google.com
+                            en direcciones numéricas consulta a un servidor {{2}}. El tiempo que tarda un paquete en
+                            ir y volver se llama {{3}}.`,
+                    respuestas: [
+                        ['privada', 'ip privada', 'interna'],
+                        ['puerta de enlace', 'pasarela', 'gateway', 'puerta de enlace predeterminada'],
+                        ['dns'],
+                        ['latencia', 'rtt', 'tiempo de ida y vuelta']
+                    ],
+                    explicacion: 'Estos cuatro conceptos —dirección privada, puerta de enlace, DNS y latencia— son la base sobre la que se construye todo el resto del curso.',
+                    pistas: [
+                        'El primer hueco es lo contrario de «pública».',
+                        'El último se estudiará formalmente el Día 3 y se mide en milisegundos.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: `<strong>e)</strong> Mira los tiempos de tu <code>tracert</code>. ¿Entre qué dos saltos
+                               se produce el mayor aumento de latencia? ¿A qué crees que se debe? (4-5 líneas)`,
+                    modelo: `<p>Lo normal es que el mayor salto de latencia aparezca <strong>al salir de la red del
+                             proveedor</strong> hacia el exterior, o al cruzar un enlace de larga distancia. Los primeros
+                             saltos (tu router y el primer equipo del operador) suelen estar por debajo de 5-10 ms porque
+                             están físicamente cerca.</p>
+                             <p>Las causas habituales son dos: <strong>distancia física</strong>, porque la señal no puede
+                             viajar más rápido que la luz en la fibra, y <strong>congestión o encolado</strong> en un router
+                             muy cargado, que retiene los paquetes antes de reenviarlos.</p>
+                             <p>Conviene no alarmarse si un salto intermedio muestra un tiempo alto pero los siguientes
+                             vuelven a bajar: eso solo significa que ese router da baja prioridad a responder a la traza,
+                             no que esté ralentizando tu tráfico real.</p>`,
+                    rubrica: [
+                        'Identifica entre qué dos saltos concretos crece más el tiempo',
+                        'Menciona la distancia física como causa (límite de la velocidad de la luz)',
+                        'Menciona la congestión o el encolado en routers intermedios',
+                        'Observa que los primeros saltos son los más rápidos por cercanía',
+                        'Señala que un pico aislado que luego baja no indica un problema real'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 2 — Dos nodos aislados (ampliación)',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Aquí se ve <strong>en directo</strong> la idea central del día: sin una infraestructura común,
+                dos dispositivos no se comunican aunque estén en la misma máquina.</p>
+
+                <p>Crea un fichero <code>docker-compose.yml</code> con este contenido:</p>
+                <div class="comando"><pre><code>services:
+  nodo-a:
+    image: alpine
+    command: sleep 3600
+    networks: [lan1]
+  nodo-b:
+    image: alpine
+    command: sleep 3600
+    networks: [lan1]
+  nodo-c:
+    image: alpine
+    command: sleep 3600
+    networks: [lan2]
+
+networks:
+  lan1:
+  lan2:</code></pre></div>
+
+                <p>Levántalo y prueba la conectividad entre nodos:</p>
+                <div class="comando"><pre><code>docker compose up -d
+docker compose exec nodo-a ping -c 3 nodo-b
+docker compose exec nodo-a ping -c 3 nodo-c</code></pre></div>
+
+                <p>Al terminar, recoge todo con <code>docker compose down</code>.</p>
+
+                <div class="aviso">
+                    <strong>¿No tienes Docker?</strong>
+                    Puedes hacer lo mismo con dos máquinas virtuales en VirtualBox o Proxmox: pon ambas en
+                    <em>Red interna «lan1»</em> y comprueba que se hacen ping; después cambia una a
+                    <em>«lan2»</em> y repite. Si no puedes hacer ninguna de las dos cosas, responde igualmente
+                    razonando lo que <em>debería</em> ocurrir y marca este laboratorio como pendiente.
+                </div>`,
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué ocurre con <code>ping nodo-a → nodo-b</code>?',
+                    opciones: {
+                        a: 'Responde correctamente: comparten la red lan1',
+                        b: 'Falla: están en contenedores distintos',
+                        c: 'Falla: hace falta un router',
+                        d: 'Responde, pero solo por dirección IP y nunca por nombre'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Ambos están conectados a la misma red virtual <code>lan1</code>, que hace de switch. Además Docker les da resolución de nombres interna, así que funciona incluso usando el nombre del servicio.',
+                    pistas: [
+                        'Mira en el fichero a qué red está conectado cada nodo.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Y con <code>ping nodo-a → nodo-c</code>?',
+                    opciones: {
+                        a: 'Responde igual de bien',
+                        b: 'Falla: están en redes distintas y no hay nada que las interconecte',
+                        c: 'Responde más lento',
+                        d: 'Depende de la velocidad del disco'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Están en el mismo ordenador físico, a centímetros el uno del otro, y aun así no se comunican: <strong>no comparten infraestructura</strong>. Para unirlos haría falta un router que enrutara entre lan1 y lan2, exactamente el papel que estudiarás en la Semana 4.',
+                    pistas: [
+                        'nodo-c está en lan2, no en lan1.',
+                        'Estar cerca físicamente no es lo mismo que estar en la misma red.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: `<strong>c)</strong> Relaciona lo que acabas de ver con la definición de red del
+                               principio del día. ¿Qué le falta a <code>nodo-a</code> y <code>nodo-c</code> para
+                               formar una red entre ellos? (4-5 líneas)`,
+                    modelo: `<p>Al principio del día definimos una red como <strong>dispositivos interconectados</strong>
+                             que comparten recursos siguiendo <strong>protocolos comunes</strong>. Los tres contenedores
+                             son dispositivos y todos hablan el mismo protocolo (IP), así que esas dos condiciones se
+                             cumplen.</p>
+                             <p>Lo que falta es la <strong>interconexión</strong>: no existe ningún medio ni equipo que
+                             una <code>lan1</code> con <code>lan2</code>. Estar en la misma máquina física es irrelevante,
+                             igual que dos ordenadores en la misma sala no forman una red si no hay nada que los enlace.</p>
+                             <p>Para que se comunicasen habría que añadir un <strong>router</strong> conectado a ambas redes,
+                             o bien conectar los dos nodos a una misma red. Eso demuestra que la interconexión no es un
+                             detalle de la definición: es la condición que convierte varios dispositivos sueltos en una red.</p>`,
+                    rubrica: [
+                        'Recuerda las tres condiciones: dispositivos, interconexión y finalidad de compartir',
+                        'Identifica que lo que falla es la interconexión, no el protocolo',
+                        'Señala que la proximidad física es irrelevante',
+                        'Propone un router entre ambas redes como solución',
+                        'Concluye que sin interconexión no hay red aunque haya dispositivos'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Laboratorio: descubre y dibuja tu topología real</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 5</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">45 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal y papel</div>
+        <div class="info-item"><strong>Tipo:</strong> descubrimiento y diseño</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Dejar de estudiar topologías en abstracto y <strong>levantar el plano de la tuya</strong>: descubrir
+            qué dispositivos hay realmente conectados a tu red, dibujar su disposición y analizar qué pasaría si
+            fallara cada pieza.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Solo tu propia red</strong>
+            Los comandos de este laboratorio descubren equipos de la red a la que estás conectado. Hazlo
+            <strong>en tu casa o en una red tuya</strong>. Escanear redes ajenas sin permiso, aunque sea con un
+            simple ping, no es aceptable y en entornos corporativos puede activar alertas de seguridad.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — ¿Quién está conectado a tu red?</h3>
+            <p>La tabla ARP guarda los equipos con los que tu ordenador ha hablado recientemente. Para que salgan
+            todos, primero se les hace un ping a todos y después se consulta la tabla.</p>
+
+            <div class="so-tabs" data-grupo="arp">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="arp" data-so="win">
+                <div class="comando"><pre><code>1..254 | ForEach-Object { Start-Process -WindowStyle Hidden ping "-n 1 -w 100 192.168.1.$_" }
+Start-Sleep 20
+arp -a</code></pre></div>
+                <p>En <strong>PowerShell</strong>. Cambia <code>192.168.1</code> por los tres primeros números de
+                tu red. El barrido tarda unos 20 segundos.</p>
+            </div>
+
+            <div class="so-panel" data-grupo="arp" data-so="nix">
+                <div class="comando"><pre><code>for i in $(seq 1 254); do ping -c1 -W1 192.168.1.$i &amp;>/dev/null &amp; done; wait
+ip neigh</code></pre></div>
+            </div>
+
+            <div class="aviso" style="margin-top:14px">
+                <strong>Si el barrido no te funciona</strong>
+                Basta con <code>arp -a</code> a secas: saldrán los equipos con los que ya has hablado (al menos tu
+                router). También sirve mirar la lista de dispositivos conectados en la web de tu router.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — Dibuja tu topología</h3>
+            <p><strong>En papel</strong>, dibuja tu red: el router en el centro y, colgando de él, cada dispositivo
+            que hayas descubierto. Marca con línea continua los que van por cable y con línea discontinua los
+            inalámbricos. No sigas hasta tenerlo dibujado: el ejercicio es el dibujo.</p>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>He descubierto los dispositivos reales de mi red y sé cuántos hay.</li>
+                <li>Tengo dibujada mi topología y sé clasificarla.</li>
+                <li>Sé cuál es mi punto único de fallo y qué pasaría si cae.</li>
+                <li>Sé por qué mi red doméstica es un caso híbrido y no una estrella pura.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_04/laboratorio.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_06/teoria.html">Día 6 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 5',
+    subtitulo: 'Descubre tu red · Dibuja tu topología · Analiza sus fallos',
+    tiempo: '45 min',
+    ejercicios: [
+
+        {
+            titulo: 'LAB 1 — Inventario de tu red',
+            tiempo: '18 min',
+            enunciado: '<p>Con la tabla ARP delante, haz el inventario de lo que tienes conectado.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 9,
+                    debe: [['interfaz', 'interface', 'direccion', 'address'], ['-', ':']],
+                    placeholder: 'Pega aquí la salida de arp -a (o de ip neigh)',
+                    pregunta: '<strong>a)</strong> Pega la salida del Paso 1.',
+                    explicacion: 'Cada línea con una MAC real es un dispositivo con el que tu equipo ha hablado. Las direcciones que empiezan por 224 o 239 no son equipos: son grupos <strong>multicast</strong>, y la ff-ff-ff-ff-ff-ff es la de difusión.',
+                    pistas: [
+                        'Si tienes varias interfaces, copia el bloque de la que estés usando de verdad.',
+                        'Ignora los bloques de VirtualBox (192.168.56.x) o WSL.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    ancho: '160px',
+                    ayuda: 'dispositivos',
+                    placeholder: '6',
+                    pregunta: `<strong>b)</strong> ¿Cuántos <strong>dispositivos reales</strong> hay en tu red?
+                               (no cuentes las direcciones multicast ni la de difusión)`,
+                    explicacion: 'En una casa típica salen entre 5 y 20: router, móviles, portátiles, televisión, consola, altavoces, bombillas inteligentes... Suele haber bastantes más de los que uno cree.',
+                    pistas: [
+                        'Descarta todo lo que empiece por 224, 239 o termine en 255.',
+                        'La MAC ff-ff-ff-ff-ff-ff es la de difusión, no un equipo.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>c)</strong> En la tabla aparecen entradas como <code>224.0.0.251</code> con MAC
+                               <code>01-00-5e-00-00-fb</code>. ¿Qué son?`,
+                    opciones: {
+                        a: 'Dispositivos ocultos de tu red',
+                        b: 'Direcciones multicast: grupos de destinatarios, no equipos concretos',
+                        c: 'Intrusos conectados a tu Wi-Fi',
+                        d: 'Errores de la tabla ARP'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El rango 224.x.x.x es <strong>multicast</strong>: un envío a un grupo de interesados en lugar de a uno solo (unicast) o a todos (broadcast). Esa concreta la usa mDNS, el descubrimiento de servicios de impresoras y altavoces. Lo verás en el <strong>Mes 6</strong>.',
+                    pistas: [
+                        'Fíjate en que todas empiezan por 224 o 239 y su MAC empieza por 01-00-5e.',
+                        'No corresponden a ningún equipo físico concreto.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Qué dispositivo de tu lista es el <strong>nodo central</strong> de tu topología?',
+                    opciones: {
+                        a: 'El que tenga la dirección más baja',
+                        b: 'Tu router: es la puerta de enlace y todos pasan por él',
+                        c: 'El ordenador desde el que ejecutas los comandos',
+                        d: 'No hay ninguno: todos son iguales'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Tu router integra el switch al que se conectan todos por cable y el punto de acceso al que se asocian los inalámbricos. Todo el tráfico entre dispositivos, y toda la salida a Internet, pasa por él.',
+                    pistas: [
+                        'Es el mismo que anotaste como puerta de enlace en el laboratorio del Día 1.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 2 — Clasifica tu topología',
+            tiempo: '15 min',
+            enunciado: '<p>Con tu dibujo del Paso 2 delante, ponle nombre a lo que has dibujado.</p>',
+            items: [
+                {
+                    tipo: 'texto',
+                    ancho: '240px',
+                    pregunta: '<strong>a)</strong> ¿Qué <strong>topología física</strong> has dibujado?',
+                    respuestas: ['estrella', 'en estrella', 'topologia estrella', 'topologia en estrella'],
+                    explicacion: 'Todos los dispositivos cuelgan de un único nodo central. Es la topología estándar de cualquier LAN moderna, doméstica o de empresa.',
+                    pistas: [
+                        'Mira la forma del dibujo: un elemento en el centro y el resto alrededor.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: `<strong>b)</strong> Marca <strong>todos</strong> los papeles que desempeña tu router
+                               a la vez.`,
+                    opciones: {
+                        a: 'Switch, para los dispositivos conectados por cable',
+                        b: 'Punto de acceso, para los inalámbricos',
+                        c: 'Router, dando salida hacia Internet',
+                        d: 'Firewall, filtrando lo que entra desde fuera',
+                        e: 'Servidor de correo de tu hogar'
+                    },
+                    respuesta: ['a', 'b', 'c', 'd'],
+                    explicacion: 'Lo que llamamos «el router» son en realidad <strong>cuatro o cinco equipos en una caja</strong>: switch, punto de acceso, router, firewall y servidor DHCP. En una empresa cada función sería un aparato distinto.',
+                    pistas: [
+                        'Piensa en todo lo que dejaría de funcionar si lo desenchufas.',
+                        'Cuatro de las cinco son correctas.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>c)</strong> Los dispositivos por Wi-Fi comparten el aire; los de cable tienen su
+                               propio enlace. ¿Cómo se llama una red que combina características de varias topologías?`,
+                    opciones: {
+                        a: 'Topología de malla',
+                        b: 'Topología híbrida',
+                        c: 'Topología de bus',
+                        d: 'Topología de anillo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Tu red doméstica es <strong>híbrida</strong>: una estrella conmutada por cable, más una zona inalámbrica que funciona como medio compartido. Casi todas las redes reales lo son.',
+                    pistas: [
+                        'No es ninguna de las tres topologías básicas puras.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 3 — Análisis de fallos sobre tu red',
+            tiempo: '12 min',
+            enunciado: '<p>Aplica a tu topología real el análisis de fallos que has estudiado hoy.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> ¿A qué afecta cada avería? Responde <em>toda la red</em> o <em>solo ese equipo</em>.',
+                    esquina: 'Qué falla',
+                    cabecera: ['Alcance del fallo'],
+                    filas: [
+                        { etiqueta: 'Se estropea el cable de tu ordenador', celdas: [{ respuestas: ['solo ese equipo', 'ese equipo', 'solo el', 'solo ese'], placeholder: 'alcance' }] },
+                        { etiqueta: 'Se apaga tu router', celdas: [{ respuestas: ['toda la red', 'toda'], placeholder: 'alcance' }] },
+                        { etiqueta: 'Falla la tarjeta de red de la televisión', celdas: [{ respuestas: ['solo ese equipo', 'ese equipo', 'solo el', 'solo ese'], placeholder: 'alcance' }] }
+                    ],
+                    explicacion: 'Es el patrón de la topología en <strong>estrella</strong>: los fallos de los extremos quedan aislados, y el único punto crítico es el nodo central.',
+                    pistas: [
+                        'Pregúntate en cada caso: ¿pasa el tráfico de los demás por esa pieza?',
+                        'El cable de un equipo solo lo usa ese equipo. Por el router pasa todo.'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    ancho: '300px',
+                    pregunta: '<strong>b)</strong> ¿Cómo se llama el problema que representa tu router en esta topología?',
+                    respuestas: ['punto unico de fallo', 'punto de fallo unico', 'spof', 'single point of failure', 'punto unico de fallo (spof)'],
+                    explicacion: 'Es el precio de la estrella: a cambio de aislar los fallos de los extremos y hacer trivial el diagnóstico, se concentra todo el riesgo en un único equipo.',
+                    pistas: [
+                        'Son cuatro palabras que describen un elemento del que depende todo.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: `<strong>c)</strong> En casa se asume ese riesgo sin más. En una empresa de 200 personas
+                               no sería aceptable. Explica <strong>qué medidas concretas</strong> tomarías allí para
+                               mitigarlo, y por qué en tu casa no compensan (5-6 líneas).`,
+                    modelo: `<p>En una empresa el nodo central se <strong>duplica</strong>. Las medidas habituales son
+                             <strong>apilar switches</strong> (varios funcionando como uno solo, de modo que si cae uno los
+                             demás siguen), tender <strong>enlaces redundantes</strong> hacia un segundo switch usando STP
+                             para evitar bucles, y proteger la alimentación con <strong>fuentes redundantes y un SAI</strong>.
+                             También se mantiene un equipo de repuesto configurado y listo para sustituir al averiado.</p>
+                             <p>En casa nada de eso compensa porque el <strong>coste de la caída es muy bajo</strong>: si el
+                             router se apaga, se queda uno sin Internet un rato y se reinicia o se sustituye al día siguiente.
+                             Duplicar el equipo costaría más que el propio router y añadiría una complejidad que nadie va a
+                             administrar.</p>
+                             <p>La regla general es que la redundancia se justifica comparando <strong>lo que cuesta
+                             implantarla con lo que cuesta la caída</strong>. Para 200 personas paradas, una hora sin red
+                             vale mucho más que un switch de repuesto; para una casa, no.</p>`,
+                    rubrica: [
+                        'Propone apilamiento de switches o equipo redundante',
+                        'Menciona enlaces redundantes y STP para evitar bucles',
+                        'Incluye alimentación protegida: SAI o fuentes redundantes',
+                        'Explica que en casa el coste de la caída es bajo',
+                        'Formula el criterio: comparar coste de la redundancia con coste de la caída'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

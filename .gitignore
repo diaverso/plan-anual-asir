@@ -1,0 +1,27 @@
+# --- Material con derechos de autor: NO debe publicarse ---
+# Copias de libros de texto y apuntes de terceros usados solo como referencia
+# privada durante la elaboración del curso.
+pdf/
+pdf_markdown/
+
+# --- Ficheros de trabajo local ---
+backup/
+convertir.py
+Liink importante.txt
+
+# Instrucciones internas para el asistente que genera el material
+CLAUDE.md
+
+# Configuración local del entorno de desarrollo
+.claude/
+
+# --- Sistema operativo y editores ---
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# --- Node (solo aparece si se usan las utilidades de verificación) ---
+node_modules/
+package-lock.json

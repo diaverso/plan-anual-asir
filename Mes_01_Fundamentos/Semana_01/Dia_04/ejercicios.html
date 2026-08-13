@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">100 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 5</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Cómo trabajar estos ejercicios</strong>
+            Los ejercicios 1 a 4 son el bloque base (75 min). El <strong>ejercicio 5</strong> es el caso práctico
+            de diseño de este día de 3 h 42 min (25 min): dibuja el esquema en papel antes de responder.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/ejercicios.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Ejercicios',
+    subtitulo: 'PAN, LAN, MAN, WAN · Públicas y privadas · VPN · Diseño',
+    tiempo: '100 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Clasificación por extensión',
+            tiempo: '20 min',
+            enunciado: '<p>Clasifica cada escenario e identifica la tecnología adecuada en cada caso.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica el tipo de red de cada escenario: <em>PAN</em>, <em>LAN</em>, <em>MAN</em> o <em>WAN</em>.',
+                    esquina: 'Escenario',
+                    cabecera: ['Tipo'],
+                    filas: [
+                        { etiqueta: 'Auriculares inalámbricos conectados al móvil', celdas: [{ respuestas: ['pan', 'wpan'], placeholder: 'tipo' }] },
+                        { etiqueta: 'Red de un instituto con 3 aulas de informática', celdas: [{ respuestas: ['lan'], placeholder: 'tipo' }] },
+                        { etiqueta: 'Red que une 8 sedes municipales de una ciudad', celdas: [{ respuestas: ['man'], placeholder: 'tipo' }] },
+                        { etiqueta: 'Conexión entre la sede de Madrid y la de Tokio', celdas: [{ respuestas: ['wan'], placeholder: 'tipo' }] },
+                        { etiqueta: 'Impresora compartida en una oficina de 15 PCs', celdas: [{ respuestas: ['lan'], placeholder: 'tipo' }] },
+                        { etiqueta: 'Smartwatch sincronizando pasos con el smartphone', celdas: [{ respuestas: ['pan', 'wpan'], placeholder: 'tipo' }] },
+                        { etiqueta: 'Internet', celdas: [{ respuestas: ['wan'], placeholder: 'tipo' }] }
+                    ],
+                    explicacion: 'El orden de magnitud manda: espacio personal (PAN), edificio (LAN), ciudad (MAN), sin límite (WAN).',
+                    pistas: [
+                        'Sitúa cada escenario en una escala: ¿cabe en una mesa, en un edificio, en una ciudad o cruza países?',
+                        'Los auriculares y el smartwatch están a menos de un metro. Madrid-Tokio cruza continentes.',
+                        'Cuidado con «8 sedes de una ciudad»: no es un edificio, pero tampoco cruza países.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Relaciona cada tipo de red con su tecnología más representativa.',
+                    izquierda: ['PAN', 'LAN', 'MAN', 'WAN'],
+                    derecha: ['Bluetooth', 'Ethernet (802.3)', 'Metro Ethernet sobre fibra', 'MPLS y enlaces submarinos'],
+                    pares: {
+                        'PAN': 'Bluetooth',
+                        'LAN': 'Ethernet (802.3)',
+                        'MAN': 'Metro Ethernet sobre fibra',
+                        'WAN': 'MPLS y enlaces submarinos'
+                    },
+                    explicacion: 'A mayor alcance, tecnologías más complejas y caras, y menor control sobre el medio.',
+                    pistas: [
+                        'Empareja por alcance: la tecnología más corta con la red más pequeña.',
+                        'Bluetooth llega a metros; los enlaces submarinos, a continentes.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Además de la distancia, ¿qué criterio separa realmente una LAN de una WAN?',
+                    opciones: {
+                        a: 'El número de equipos conectados',
+                        b: 'Quién es el propietario del medio de transmisión',
+                        c: 'La marca del equipamiento utilizado',
+                        d: 'Si se usa cable o fibra'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'En la LAN el medio es propio y su uso es libre. En la WAN se atraviesa terreno público, lo que obliga a contratar a un operador y explica la diferencia de coste y velocidad.',
+                    pistas: [
+                        'La distancia no es la única respuesta: piensa en quién es el dueño del cable.',
+                        '¿Puedes tender tú un cable por debajo de una carretera pública?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Siglas menos evidentes',
+            tiempo: '15 min',
+            enunciado: '<p>WLAN, CAN y SAN aparecen constantemente en documentación técnica y se confunden con frecuencia.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada sigla con su descripción.',
+                    izquierda: ['WLAN', 'CAN', 'SAN', 'VPN'],
+                    derecha: [
+                        'Una LAN que usa tecnología inalámbrica',
+                        'Conjunto de LAN de un campus o polígono',
+                        'Red dedicada a conectar servidores con el almacenamiento',
+                        'Red privada cifrada sobre infraestructura pública'
+                    ],
+                    pares: {
+                        'WLAN': 'Una LAN que usa tecnología inalámbrica',
+                        'CAN': 'Conjunto de LAN de un campus o polígono',
+                        'SAN': 'Red dedicada a conectar servidores con el almacenamiento',
+                        'VPN': 'Red privada cifrada sobre infraestructura pública'
+                    },
+                    explicacion: 'WLAN y CAN se definen por alcance; SAN por finalidad; VPN por el modo de proteger el tráfico sobre una red ajena.',
+                    pistas: [
+                        'Tres de las cuatro siglas terminan en «AN» de <em>Area Network</em>, pero no todas clasifican por área.',
+                        'Una de ellas se define por para qué sirve, no por dónde llega.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué la SAN no encaja en la clasificación por extensión geográfica?',
+                    opciones: {
+                        a: 'Porque siempre supera los 50 km',
+                        b: 'Porque se clasifica por su finalidad, no por su alcance',
+                        c: 'Porque es inalámbrica',
+                        d: 'Porque no transporta datos, solo energía'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La SAN se define por su cometido: dar a los servidores acceso a las cabinas de discos como si fueran discos locales, con alta velocidad y latencia mínima.',
+                    pistas: [
+                        'La «S» no significa «small» ni «short»: significa <em>Storage</em>.',
+                        'Si el criterio fuera el alcance, ¿dónde la colocarías entre LAN y MAN?'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    ancho: '260px',
+                    pregunta: '<strong>c)</strong> ¿Qué sigla designa una LAN que utiliza Wi-Fi en lugar de cable?',
+                    respuestas: ['wlan'],
+                    explicacion: 'WLAN (<em>Wireless LAN</em>). No es una categoría de alcance distinta: es una LAN cuyo medio es inalámbrico.'
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Redes públicas, privadas y VPN',
+            tiempo: '20 min',
+            enunciado: '<p>Distingue el acceso (pública/privada) del mecanismo de protección (VPN).</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Clasifica cada red: escribe <em>pública</em>, <em>privada</em> o <em>VPN</em>.',
+                    esquina: 'Red',
+                    cabecera: ['Clasificación'],
+                    filas: [
+                        { etiqueta: 'Internet', celdas: [{ respuestas: ['publica'], placeholder: 'pública / privada / VPN' }] },
+                        { etiqueta: 'Red interna de un banco', celdas: [{ respuestas: ['privada'], placeholder: 'pública / privada / VPN' }] },
+                        { etiqueta: 'Teletrabajador con tráfico cifrado hacia la empresa', celdas: [{ respuestas: ['vpn'], placeholder: 'pública / privada / VPN' }] },
+                        { etiqueta: 'Wi-Fi abierta de una cafetería', celdas: [{ respuestas: ['publica'], placeholder: 'pública / privada / VPN' }] },
+                        { etiqueta: 'Túnel IPSec permanente entre dos sedes', celdas: [{ respuestas: ['vpn'], placeholder: 'pública / privada / VPN' }] },
+                        { etiqueta: 'Red de gestión de un hospital', celdas: [{ respuestas: ['privada'], placeholder: 'pública / privada / VPN' }] }
+                    ],
+                    explicacion: 'La Wi-Fi de la cafetería es <strong>pública</strong> aunque el local sea privado: lo que se clasifica es el acceso, no la titularidad del inmueble.',
+                    pistas: [
+                        'No preguntes de quién es el local, sino quién puede conectarse.',
+                        'Si cualquier cliente puede entrar sin ser de la organización, es pública.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Compara línea dedicada y VPN sobre Internet con respuestas cortas.',
+                    esquina: 'Criterio',
+                    cabecera: ['Línea dedicada', 'VPN sobre Internet'],
+                    filas: [
+                        {
+                            etiqueta: 'Coste mensual',
+                            celdas: [
+                                { respuestas: ['alto', 'caro', 'elevado'], placeholder: 'alto / bajo' },
+                                { respuestas: ['bajo', 'barato'], placeholder: 'alto / bajo' }
+                            ]
+                        },
+                        {
+                            etiqueta: '¿Ancho de banda garantizado?',
+                            celdas: [
+                                { respuestas: ['si', 'sí'], placeholder: 'sí / no' },
+                                { respuestas: ['no'], placeholder: 'sí / no' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Tiempo de despliegue',
+                            celdas: [
+                                { respuestas: ['semanas', 'meses', 'semanas o meses', 'largo', 'alto'], placeholder: 'largo / corto' },
+                                { respuestas: ['horas', 'corto', 'rapido', 'bajo'], placeholder: 'largo / corto' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La línea dedicada aporta garantías (SLA) a cambio de coste y rigidez; la VPN aporta flexibilidad y ahorro a cambio de funcionar en modo <em>best effort</em>.',
+                    pistas: [
+                        'Piensa qué estás comprando en cada caso: ¿un cable para ti solo o un servicio compartido?',
+                        'Lo que se paga de más en la línea dedicada no es velocidad, es una garantía por contrato.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál es la diferencia entre una VPN de acceso remoto y una VPN sitio a sitio?',
+                    opciones: {
+                        a: 'La de acceso remoto conecta a un usuario individual; la sitio a sitio une dos sedes completas',
+                        b: 'La de acceso remoto no cifra el tráfico',
+                        c: 'La sitio a sitio solo funciona dentro de la misma ciudad',
+                        d: 'No hay diferencia técnica, solo comercial'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'La de acceso remoto la levanta un usuario cuando la necesita; la sitio a sitio es permanente y transparente: los usuarios de ambas sedes no saben que existe.',
+                    pistas: [
+                        'Una la usa una persona; la otra une dos edificios enteros.',
+                        'En una hay que conectarse a mano; en la otra el túnel está siempre levantado.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Integración con lo estudiado',
+            tiempo: '20 min',
+            enunciado: '<p>Preguntas que combinan lo de hoy con los tres días anteriores.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    unidad: 'segundos',
+                    tolerancia: 0.5,
+                    respuesta: 80,
+                    pregunta: `<strong>a)</strong> Se replica una copia de <strong>1 GB</strong> entre dos sedes unidas
+                               por una VPN de <strong>100 Mbps</strong>. Sin contar sobrecarga, ¿cuánto tarda?`,
+                    explicacion: '1 GB = 1.000 MB × 8 = 8.000 Mb. 8.000 ÷ 100 = <strong>80 segundos</strong>. Recuerda que la VPN no garantiza esos 100 Mbps: es best effort.',
+                    pistas: [
+                        'Pasa primero el gigabyte a megabits: son dos multiplicaciones.',
+                        '1 GB = 1.000 MB, y cada MB son 8 Mb.',
+                        'Después divide entre los 100 Mbps del enlace.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>b)</strong> Una empresa une Madrid y Sídney por VPN. Los usuarios se quejan de que
+                               la aplicación «va lenta» aunque el enlace tiene capacidad de sobra. ¿Causa más probable?`,
+                    opciones: {
+                        a: 'Falta de ancho de banda; hay que ampliar el enlace',
+                        b: 'La latencia por la distancia física, que el ancho de banda no reduce',
+                        c: 'El cifrado de la VPN consume todo el caudal',
+                        d: 'La red está mal clasificada como WAN'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Madrid–Sídney son más de 17.000 km: el retardo de propagación es inevitable. Como viste el Día 3, ancho de banda y latencia son magnitudes independientes.',
+                    pistas: [
+                        'El enunciado dice que hay capacidad de sobra: descarta las opciones sobre ancho de banda.',
+                        '¿Qué magnitud depende de la distancia y no se puede comprar?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>c)</strong> Marca las afirmaciones <strong>correctas</strong>.',
+                    opciones: {
+                        a: 'Internet es una WAN',
+                        b: 'Toda WAN es Internet',
+                        c: 'Una WLAN es una LAN inalámbrica',
+                        d: 'Una VPN es una línea física dedicada',
+                        e: 'Una VPN aporta privacidad sobre una red pública'
+                    },
+                    respuesta: ['a', 'c', 'e'],
+                    explicacion: 'Existen WAN privadas (MPLS) que no pasan por Internet. Y la VPN es <strong>virtual</strong>: no hay ningún cable propio, solo cifrado sobre infraestructura ajena.'
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>d)</strong> Relaciona cada necesidad con la solución más adecuada.',
+                    izquierda: [
+                        'Conectar el ratón inalámbrico al portátil',
+                        'Conectar 40 puestos de una oficina',
+                        'Unir 6 edificios municipales de la misma ciudad',
+                        'Dar acceso a la red corporativa a un comercial que viaja',
+                        'Que un hospital garantice latencia estable con su centro de datos'
+                    ],
+                    derecha: [
+                        'PAN por Bluetooth',
+                        'LAN Ethernet con switches',
+                        'MAN de fibra óptica',
+                        'VPN de acceso remoto',
+                        'Línea dedicada con SLA'
+                    ],
+                    pares: {
+                        'Conectar el ratón inalámbrico al portátil': 'PAN por Bluetooth',
+                        'Conectar 40 puestos de una oficina': 'LAN Ethernet con switches',
+                        'Unir 6 edificios municipales de la misma ciudad': 'MAN de fibra óptica',
+                        'Dar acceso a la red corporativa a un comercial que viaja': 'VPN de acceso remoto',
+                        'Que un hospital garantice latencia estable con su centro de datos': 'Línea dedicada con SLA'
+                    },
+                    explicacion: 'La solución correcta depende del alcance, del presupuesto y de si se necesitan garantías contractuales de servicio.'
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5 (aplicación): Diseño para una clínica dental',
+            tiempo: '25 min',
+            enunciado: `
+                <p><strong>Escenario:</strong> una clínica dental ocupa <strong>una planta de 400 m²</strong> y necesita conectar:</p>
+                <ul>
+                    <li>3 PCs de recepción y 4 PCs en consultas</li>
+                    <li>1 servidor con historiales clínicos</li>
+                    <li>2 impresoras de red y 1 equipo de radiografía digital</li>
+                    <li>Wi-Fi para pacientes en la sala de espera</li>
+                    <li>Wi-Fi para el personal (tablets en consulta)</li>
+                </ul>
+                <p>Dibuja el esquema en papel antes de responder.</p>`,
+            items: [
+                {
+                    tipo: 'texto',
+                    ancho: '220px',
+                    pregunta: '<strong>a)</strong> ¿Qué clasificación por extensión corresponde a esta red?',
+                    respuestas: ['lan', 'una lan', 'red de area local'],
+                    explicacion: 'Es una <strong>LAN</strong>: todos los equipos están en un mismo edificio y planta, el medio es propiedad de la clínica y las distancias quedan muy por debajo de los 100 m del UTP.'
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'equipos cableados',
+                    tolerancia: 0,
+                    respuesta: 11,
+                    pregunta: '<strong>b)</strong> ¿Cuántos equipos requieren conexión <strong>cableada</strong>? (PCs, servidor, impresoras y radiografía)',
+                    explicacion: '3 recepción + 4 consultas + 1 servidor + 2 impresoras + 1 radiografía = <strong>11 equipos</strong>. Sumando los puntos de acceso Wi-Fi y dejando margen de crecimiento, un switch de 24 puertos es la elección razonable.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué la Wi-Fi de pacientes NO debe estar en la misma red que el servidor de historiales?',
+                    opciones: {
+                        a: 'Porque consumiría demasiado ancho de banda',
+                        b: 'Porque los historiales son datos de salud y un dispositivo ajeno no debe tener ninguna ruta hacia ellos',
+                        c: 'Porque el Wi-Fi es más lento que el cable',
+                        d: 'Porque las impresoras dejarían de funcionar'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los historiales clínicos son <strong>datos de categoría especial</strong> según el RGPD. Un móvil de paciente, potencialmente comprometido, no debe poder alcanzarlos: se separa con VLAN distintas y reglas de firewall.'
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>d)</strong> Marca el equipamiento de red <strong>imprescindible</strong> para esta instalación.',
+                    opciones: {
+                        a: 'Un switch gestionable de 24 puertos',
+                        b: 'Un router/firewall con salida a Internet',
+                        c: 'Punto(s) de acceso Wi-Fi con soporte multi-SSID',
+                        d: 'Un enlace MPLS con otra sede',
+                        e: 'Cableado UTP Cat6 con rosetas y panel de parcheo',
+                        f: 'Una cabina SAN de almacenamiento'
+                    },
+                    respuesta: ['a', 'b', 'c', 'e'],
+                    explicacion: 'MPLS no procede: hay una sola sede. Una SAN es desproporcionada para un servidor único: bastaría con discos locales y copias externas.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 8,
+                    pregunta: `<strong>e)</strong> Justifica por qué el switch debe ser <strong>gestionable</strong> y describe
+                               cómo separarías el tráfico de pacientes, personal y servidor (5-7 líneas).`,
+                    modelo: `
+                        <p>El switch debe ser <strong>gestionable</strong> porque la clínica necesita <strong>segmentar el tráfico</strong>,
+                        y un switch no gestionable no puede hacerlo: todos sus puertos formarían un único dominio de broadcast en el
+                        que cualquier dispositivo podría alcanzar al servidor de historiales.</p>
+                        <p>La separación se implementa con <strong>VLAN</strong>, una por cada grupo con necesidades distintas:</p>
+                        <ul>
+                            <li><strong>VLAN 10 — Servidor y equipos clínicos</strong>: historiales y radiografía. Acceso muy restringido.</li>
+                            <li><strong>VLAN 20 — Personal</strong>: PCs de recepción y consultas, tablets del personal e impresoras. Puede acceder al servidor.</li>
+                            <li><strong>VLAN 99 — Invitados</strong>: Wi-Fi de pacientes. <strong>Solo salida a Internet</strong>, sin ninguna ruta hacia las otras VLAN.</li>
+                        </ul>
+                        <p>Los dos SSID del punto de acceso se asocian a VLAN distintas (personal → 20, pacientes → 99), y el
+                        firewall del router aplica las reglas de tráfico <em>entre</em> VLAN. Así, aunque un móvil de paciente
+                        estuviera infectado, no tendría camino hacia los datos de salud.</p>`,
+                    rubrica: [
+                        'Explica que sin gestión no hay VLAN y todo queda en un único dominio de broadcast',
+                        'Propone al menos tres VLAN diferenciadas (servidor/clínico, personal, invitados)',
+                        'Indica que la VLAN de invitados solo debe tener salida a Internet',
+                        'Menciona que los SSID del AP se mapean a VLAN distintas',
+                        'Señala que el firewall controla el tráfico entre VLAN',
+                        'Relaciona la medida con la protección de datos de salud (RGPD)'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

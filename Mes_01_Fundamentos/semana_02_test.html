@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Semana 2 - Componentes y Tipos de Redes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .info-bar {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item strong {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .question.correct {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .question.incorrect {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .options {
+            margin-top: 15px;
+        }
+
+        .option {
+            background: white;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            background: #f1f3f5;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-details {
+            font-size: 1.3em;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .info-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test Semana 2</h1>
+            <p>Componentes y Tipos de Redes - Planificación y Administración de Redes</p>
+        </div>
+
+        <div class="info-bar">
+            <div class="info-item">
+                <strong>Preguntas:</strong> <span id="totalQuestions">15</span>
+            </div>
+            <div class="info-item">
+                <strong>Tiempo:</strong> <span id="timer">Sin límite</span>
+            </div>
+            <div class="info-item">
+                <strong>Nota mínima:</strong> 50%
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+            </div>
+
+            <div id="quiz"></div>
+
+            <div class="buttons">
+                <button onclick="checkAnswers()">Corregir Examen</button>
+                <button onclick="resetQuiz()">Reiniciar Test</button>
+            </div>
+
+            <div class="results" id="results">
+                <h2>Resultados del Test</h2>
+                <div class="score" id="score">0%</div>
+                <div class="score-details">
+                    <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">15</span></p>
+                    <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                    <p id="verdict"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Banco de preguntas: texto, opciones (a-d), respuesta correcta y explicación
+        const questions = [
+            {
+                text: '¿Cuál es el alcance típico de una red PAN?',
+                options: {
+                    a: '10 - 1000 metros',
+                    b: '1 - 10 metros',
+                    c: '10 - 50 kilómetros',
+                    d: 'Más de 50 kilómetros'
+                },
+                answer: 'b',
+                feedback: 'Una PAN (Personal Area Network) cubre el espacio personal del usuario, de 1 a 10 metros aproximadamente. Usa tecnologías como Bluetooth, NFC o USB.'
+            },
+            {
+                text: 'Una empresa interconecta 8 sedes repartidas por una misma ciudad mediante fibra óptica. ¿Qué tipo de red es?',
+                options: {
+                    a: 'LAN',
+                    b: 'PAN',
+                    c: 'MAN',
+                    d: 'WAN'
+                },
+                answer: 'c',
+                feedback: 'Una MAN (Metropolitan Area Network) cubre el área de una ciudad, típicamente entre 10 y 50 km, interconectando varias LAN.'
+            },
+            {
+                text: '¿Cuántos enlaces son necesarios para conectar 6 dispositivos en malla completa?',
+                options: {
+                    a: '12 enlaces',
+                    b: '15 enlaces',
+                    c: '30 enlaces',
+                    d: '6 enlaces'
+                },
+                answer: 'b',
+                feedback: 'La fórmula es N × (N-1) / 2. Para 6 dispositivos: 6 × 5 / 2 = 15 enlaces.'
+            },
+            {
+                text: 'En una topología de bus, ¿qué ocurre si se rompe el cable central?',
+                options: {
+                    a: 'Solo se desconecta el equipo más cercano a la rotura',
+                    b: 'La red sigue funcionando por rutas alternativas',
+                    c: 'Cae toda la red por reflexiones de señal',
+                    d: 'El switch central redirige el tráfico'
+                },
+                answer: 'c',
+                feedback: 'Al romperse el bus se pierden los terminadores efectivos y aparecen reflexiones de señal, dejando toda la red inoperativa. Es su principal desventaja.'
+            },
+            {
+                text: '¿Cuál es la topología más utilizada en las LAN modernas?',
+                options: {
+                    a: 'Bus',
+                    b: 'Anillo',
+                    c: 'Malla completa',
+                    d: 'Estrella'
+                },
+                answer: 'd',
+                feedback: 'La estrella es el estándar actual: cada equipo se conecta a un switch central, lo que facilita el diagnóstico, aísla los fallos y permite crecer fácilmente.'
+            },
+            {
+                text: '¿Cuál es la principal desventaja de la topología en estrella?',
+                options: {
+                    a: 'Genera muchas colisiones',
+                    b: 'El nodo central es un punto único de fallo',
+                    c: 'Es imposible localizar averías',
+                    d: 'Necesita menos cable que el bus'
+                },
+                answer: 'b',
+                feedback: 'Si falla el switch central, toda la red queda inoperativa. Se mitiga con switches redundantes o apilados (stacking).'
+            },
+            {
+                text: 'Una red Ethernet conectada mediante un hub tiene topología física de estrella. ¿Cuál es su topología lógica?',
+                options: {
+                    a: 'Bus',
+                    b: 'Anillo',
+                    c: 'Estrella',
+                    d: 'Malla'
+                },
+                answer: 'a',
+                feedback: 'El hub repite cada bit por todos los puertos, de modo que todos los equipos comparten el mismo medio: un único dominio de colisión con acceso CSMA/CD, es decir, un bus lógico.'
+            },
+            {
+                text: '¿Qué caracteriza a una VPN?',
+                options: {
+                    a: 'Es una red física dedicada entre dos sedes',
+                    b: 'Es una red pública sin ningún tipo de control de acceso',
+                    c: 'Es una red privada que viaja cifrada sobre infraestructura pública',
+                    d: 'Es una topología de red en malla'
+                },
+                answer: 'c',
+                feedback: 'Una VPN (Virtual Private Network) crea un túnel cifrado sobre una red pública como Internet, combinando el bajo coste de lo público con la privacidad de lo privado.'
+            },
+            {
+                text: 'En la topología de anillo simple, ¿qué sucede si falla un nodo intermedio?',
+                options: {
+                    a: 'No pasa nada, el token toma otra ruta',
+                    b: 'Se rompe el anillo y cae toda la red',
+                    c: 'Solo se aísla ese nodo',
+                    d: 'Aumentan las colisiones pero la red funciona'
+                },
+                answer: 'b',
+                feedback: 'En un anillo simple los datos circulan de nodo en nodo; si uno falla, el token no completa el circuito y la red deja de funcionar. Se mitiga con doble anillo (FDDI) o bypass automático.'
+            },
+            {
+                text: '¿Qué dispositivo segmenta dominios de broadcast?',
+                options: {
+                    a: 'Hub',
+                    b: 'Repetidor',
+                    c: 'Router',
+                    d: 'Switch no gestionable'
+                },
+                answer: 'c',
+                feedback: 'El router opera en capa 3 y no reenvía broadcasts de capa 2, por lo que cada una de sus interfaces delimita un dominio de broadcast distinto.'
+            },
+            {
+                text: '¿Cuál es la distancia máxima recomendada para un enlace de cable UTP en cableado estructurado?',
+                options: {
+                    a: '50 metros',
+                    b: '100 metros',
+                    c: '500 metros',
+                    d: '1000 metros'
+                },
+                answer: 'b',
+                feedback: 'El estándar TIA/EIA-568 fija 100 m totales: 90 m de cableado horizontal más 10 m de latiguillos. Superarlo requiere un switch intermedio o fibra óptica.'
+            },
+            {
+                text: 'Un centro de datos bancario elige topología de malla parcial. ¿Cuál es la razón principal?',
+                options: {
+                    a: 'Es la opción más barata',
+                    b: 'Necesita menos cableado que la estrella',
+                    c: 'Ofrece rutas alternativas y alta disponibilidad',
+                    d: 'Es más fácil de administrar'
+                },
+                answer: 'c',
+                feedback: 'La malla aporta redundancia de caminos: ante el fallo de un enlace o equipo, el tráfico converge por otra ruta. En servicios críticos, el coste de una caída supera con creces el del cableado extra.'
+            },
+            {
+                text: 'En una red con un switch al que se conecta un hub con 4 PCs, ¿cuántos dominios de colisión aporta ese hub?',
+                options: {
+                    a: '4 dominios (uno por PC)',
+                    b: '1 dominio compartido por los 4 PCs',
+                    c: 'Ninguno, el hub los elimina',
+                    d: '2 dominios'
+                },
+                answer: 'b',
+                feedback: 'El hub no segmenta: todos los equipos conectados a él comparten un único dominio de colisión. Un switch, en cambio, crea un dominio de colisión por puerto.'
+            },
+            {
+                text: '¿Qué ventaja principal aporta la topología en árbol frente a una estrella simple?',
+                options: {
+                    a: 'Elimina por completo los puntos de fallo',
+                    b: 'Reduce el coste del cableado',
+                    c: 'Permite escalar de forma jerárquica y gestionar por niveles',
+                    d: 'Aumenta la velocidad de cada enlace'
+                },
+                answer: 'c',
+                feedback: 'La estructura jerárquica (núcleo, distribución y acceso) permite crecer añadiendo ramas, limita los dominios de broadcast y contiene los fallos dentro de cada rama.'
+            },
+            {
+                text: 'Un teletrabajador accede a los ficheros de su empresa desde casa mediante un túnel cifrado. ¿Qué tipo de red está usando?',
+                options: {
+                    a: 'Una red pública sin protección',
+                    b: 'Una VPN',
+                    c: 'Una PAN',
+                    d: 'Una MAN'
+                },
+                answer: 'b',
+                feedback: 'Se trata de una VPN de acceso remoto: el tráfico viaja cifrado por Internet, de modo que el equipo del teletrabajador se comporta como si estuviera dentro de la red corporativa.'
+            }
+        ];
+
+        // Respuestas correctas indexadas como q1, q2, ... para la corrección
+        const correctAnswers = {};
+        questions.forEach((q, i) => {
+            correctAnswers['q' + (i + 1)] = q.answer;
+        });
+
+        // Generar el HTML de las preguntas
+        function renderQuiz() {
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = questions.map((q, i) => {
+                const n = i + 1;
+                const opciones = Object.keys(q.options).map(letra => `
+                    <div class="option">
+                        <input type="radio" id="q${n}${letra}" name="q${n}" value="${letra}">
+                        <label for="q${n}${letra}">${q.options[letra]}</label>
+                    </div>`).join('');
+
+                return `
+            <div class="question" data-question="${n}">
+                <div class="question-header">
+                    <span class="question-number">Pregunta ${n}</span>
+                </div>
+                <div class="question-text">${q.text}</div>
+                <div class="options">${opciones}</div>
+                <div class="feedback">
+                    <strong>Respuesta correcta: ${q.answer.toUpperCase()}</strong><br>
+                    ${q.feedback}
+                </div>
+            </div>`;
+            }).join('');
+
+            document.getElementById('totalQuestions').textContent = questions.length;
+            document.getElementById('total').textContent = questions.length;
+
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            let total = Object.keys(correctAnswers).length;
+            let unanswered = [];
+
+            // Verificar cada pregunta
+            for (let qNum in correctAnswers) {
+                const selected = document.querySelector(`input[name="${qNum}"]:checked`);
+                const questionDiv = document.querySelector(`[data-question="${qNum.substring(1)}"]`);
+                const feedback = questionDiv.querySelector('.feedback');
+                const options = questionDiv.querySelectorAll('.option');
+
+                if (!selected) {
+                    unanswered.push(qNum.substring(1));
+                    continue;
+                }
+
+                // Limpiar clases previas
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+
+                if (selected.value === correctAnswers[qNum]) {
+                    correct++;
+                    questionDiv.classList.add('correct');
+                    questionDiv.classList.remove('incorrect');
+                    feedback.classList.add('show', 'correct');
+                    feedback.classList.remove('incorrect');
+                    selected.parentElement.classList.add('correct');
+                } else {
+                    questionDiv.classList.add('incorrect');
+                    questionDiv.classList.remove('correct');
+                    feedback.classList.add('show', 'incorrect');
+                    feedback.classList.remove('correct');
+                    selected.parentElement.classList.add('incorrect');
+
+                    // Marcar la respuesta correcta
+                    const correctOption = questionDiv.querySelector(`input[value="${correctAnswers[qNum]}"]`).parentElement;
+                    correctOption.classList.add('correct');
+                }
+            }
+
+            if (unanswered.length > 0) {
+                alert(`Por favor, responde todas las preguntas. Faltan: ${unanswered.join(', ')}`);
+                return;
+            }
+
+            // Mostrar resultados
+            const percentage = Math.round((correct / total) * 100);
+            const incorrect = total - correct;
+
+            document.getElementById('score').textContent = percentage + '%';
+            document.getElementById('correct').textContent = correct;
+            document.getElementById('total').textContent = total;
+            document.getElementById('incorrect').textContent = incorrect;
+
+            const verdict = document.getElementById('verdict');
+            if (percentage >= 90) {
+                verdict.innerHTML = '<strong style="color: #28a745;">EXCELENTE</strong> - Dominas completamente el tema';
+            } else if (percentage >= 70) {
+                verdict.innerHTML = '<strong style="color: #20c997;">MUY BIEN</strong> - Buen nivel de comprensión';
+            } else if (percentage >= 50) {
+                verdict.innerHTML = '<strong style="color: #ffc107;">APROBADO</strong> - Revisa los errores';
+            } else {
+                verdict.innerHTML = '<strong style="color: #dc3545;">SUSPENSO</strong> - Debes repasar el tema';
+            }
+
+            document.getElementById('results').classList.add('show');
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            // Limpiar selecciones
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+
+            // Limpiar clases
+            document.querySelectorAll('.question').forEach(q => {
+                q.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.classList.remove('show', 'correct', 'incorrect');
+            });
+
+            // Ocultar resultados
+            document.getElementById('results').classList.remove('show');
+
+            // Reset progress bar
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressBar').textContent = '0%';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const total = Object.keys(correctAnswers).length;
+            let answered = 0;
+
+            for (let qNum in correctAnswers) {
+                if (document.querySelector(`input[name="${qNum}"]:checked`)) {
+                    answered++;
+                }
+            }
+
+            const percentage = Math.round((answered / total) * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>

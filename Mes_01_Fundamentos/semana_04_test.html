@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Semana 4 - Dispositivos de Red</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .info-bar {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item strong {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .question.correct {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .question.incorrect {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .options {
+            margin-top: 15px;
+        }
+
+        .option {
+            background: white;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            background: #f1f3f5;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-details {
+            font-size: 1.3em;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .info-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test Semana 4</h1>
+            <p>Dispositivos de Red - Planificación y Administración de Redes</p>
+        </div>
+
+        <div class="info-bar">
+            <div class="info-item">
+                <strong>Preguntas:</strong> <span id="totalQuestions">15</span>
+            </div>
+            <div class="info-item">
+                <strong>Tiempo:</strong> <span id="timer">Sin límite</span>
+            </div>
+            <div class="info-item">
+                <strong>Nota mínima:</strong> 50%
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+            </div>
+
+            <div id="quiz"></div>
+
+            <div class="buttons">
+                <button onclick="checkAnswers()">Corregir Examen</button>
+                <button onclick="resetQuiz()">Reiniciar Test</button>
+            </div>
+
+            <div class="results" id="results">
+                <h2>Resultados del Test</h2>
+                <div class="score" id="score">0%</div>
+                <div class="score-details">
+                    <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">15</span></p>
+                    <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                    <p id="verdict"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Banco de preguntas: texto, opciones (a-d), respuesta correcta y explicación
+        const questions = [
+            {
+                text: '¿Qué dispositivo retransmite las tramas por todos sus puertos sin analizar el destino?',
+                options: {
+                    a: 'Switch',
+                    b: 'Hub',
+                    c: 'Router',
+                    d: 'Firewall'
+                },
+                answer: 'b',
+                feedback: 'El hub opera en capa 1: repite eléctricamente cada bit por todos los puertos sin interpretar direcciones. Por eso genera colisiones y está obsoleto.'
+            },
+            {
+                text: '¿Qué nombre recibe la tabla que asocia direcciones MAC con puertos en un switch?',
+                options: {
+                    a: 'Tabla de enrutamiento',
+                    b: 'Tabla ARP',
+                    c: 'Tabla CAM',
+                    d: 'Tabla NAT'
+                },
+                answer: 'c',
+                feedback: 'La tabla CAM (Content Addressable Memory) guarda la correspondencia puerto ↔ MAC. El switch la construye aprendiendo la MAC de origen de cada trama recibida.'
+            },
+            {
+                text: 'Cuando un switch recibe una trama cuya MAC de destino NO está en su tabla CAM, ¿qué hace?',
+                options: {
+                    a: 'Descarta la trama',
+                    b: 'La envía solo al primer puerto',
+                    c: 'Hace flooding: la envía por todos los puertos menos el de origen',
+                    d: 'Consulta al router'
+                },
+                answer: 'c',
+                feedback: 'Ante un destino desconocido el switch hace flooding. Cuando el destino responde, aprende su MAC y a partir de entonces la envía en unicast.'
+            },
+            {
+                text: '¿Cuántos bits tiene una dirección MAC?',
+                options: {
+                    a: '32 bits',
+                    b: '48 bits',
+                    c: '64 bits',
+                    d: '128 bits'
+                },
+                answer: 'b',
+                feedback: 'La MAC tiene 48 bits (6 bytes, 12 dígitos hexadecimales). Los 3 primeros bytes son el OUI del fabricante y los 3 últimos identifican la tarjeta.'
+            },
+            {
+                text: '¿Qué representa la dirección MAC FF:FF:FF:FF:FF:FF?',
+                options: {
+                    a: 'Una dirección multicast',
+                    b: 'La dirección de broadcast',
+                    c: 'Una MAC no asignada',
+                    d: 'La dirección del router'
+                },
+                answer: 'b',
+                feedback: 'FF:FF:FF:FF:FF:FF es la dirección de broadcast de capa 2: la trama se entrega a todos los equipos del dominio de broadcast.'
+            },
+            {
+                text: 'Un switch de 8 puertos con todos los equipos conectados, ¿cuántos dominios de colisión crea?',
+                options: {
+                    a: '1 dominio',
+                    b: '2 dominios',
+                    c: '4 dominios',
+                    d: '8 dominios'
+                },
+                answer: 'd',
+                feedback: 'El switch crea un dominio de colisión por puerto, lo que permite full-duplex y elimina las colisiones. Sin embargo, todos siguen en el mismo dominio de broadcast.'
+            },
+            {
+                text: '¿Cuál es la principal diferencia entre un switch y un router?',
+                options: {
+                    a: 'El switch usa IP y el router usa MAC',
+                    b: 'El switch trabaja en capa 2 con MAC y el router en capa 3 con IP',
+                    c: 'El router es más rápido que el switch',
+                    d: 'No hay diferencia funcional'
+                },
+                answer: 'b',
+                feedback: 'El switch conmuta tramas dentro de una LAN usando MAC (capa 2). El router interconecta redes distintas usando IP (capa 3) y delimita dominios de broadcast.'
+            },
+            {
+                text: 'En una red con 4 PCs conectados a un hub de 100 Mbps, ¿qué ancho de banda efectivo tiene cada PC?',
+                options: {
+                    a: '100 Mbps dedicados',
+                    b: '400 Mbps en total',
+                    c: 'Unos 25 Mbps compartidos',
+                    d: '200 Mbps en full-duplex'
+                },
+                answer: 'c',
+                feedback: 'El hub reparte los 100 Mbps entre todos los equipos porque comparten el medio: 100/4 = 25 Mbps aproximados, y además en half-duplex con colisiones.'
+            },
+            {
+                text: '¿Qué dispositivo permite conectar dispositivos inalámbricos a una red cableada?',
+                options: {
+                    a: 'Bridge',
+                    b: 'Repetidor',
+                    c: 'Access Point',
+                    d: 'Gateway'
+                },
+                answer: 'c',
+                feedback: 'El Access Point actúa como puente inalámbrico: traduce entre tramas 802.11 (Wi-Fi) y 802.3 (Ethernet), integrando los clientes inalámbricos en la LAN.'
+            },
+            {
+                text: 'En una tabla de enrutamiento, ¿qué significa la entrada 0.0.0.0 con máscara 0.0.0.0?',
+                options: {
+                    a: 'Una red inalcanzable',
+                    b: 'La ruta por defecto',
+                    c: 'La red local',
+                    d: 'Una dirección de broadcast'
+                },
+                answer: 'b',
+                feedback: 'Es la ruta por defecto (gateway of last resort): coincide con cualquier destino y se usa cuando ninguna ruta más específica encaja.'
+            },
+            {
+                text: 'Cuando existen varias rutas hacia el mismo destino, ¿qué criterio aplica primero el router?',
+                options: {
+                    a: 'La ruta con menor métrica',
+                    b: 'La ruta aprendida más recientemente',
+                    c: 'El prefijo más largo (ruta más específica)',
+                    d: 'La ruta con mayor ancho de banda'
+                },
+                answer: 'c',
+                feedback: 'Se aplica el longest prefix match: gana siempre la ruta más específica. Solo si empatan se comparan la distancia administrativa y después la métrica.'
+            },
+            {
+                text: '¿Qué ventaja principal aporta un switch gestionable frente a uno no gestionable?',
+                options: {
+                    a: 'Tiene más puertos físicos',
+                    b: 'Permite crear VLANs y aplicar políticas de seguridad',
+                    c: 'Consume menos energía',
+                    d: 'No necesita configuración'
+                },
+                answer: 'b',
+                feedback: 'Los gestionables permiten VLANs, STP, QoS, port-security, 802.1X y monitorización SNMP, imprescindibles para segmentar tráfico y cumplir normativa.'
+            },
+            {
+                text: '¿Qué dispositivo se utiliza para segmentar dominios de broadcast sin usar un router?',
+                options: {
+                    a: 'Un hub adicional',
+                    b: 'Un repetidor',
+                    c: 'Un switch gestionable configurando VLANs',
+                    d: 'Un Access Point'
+                },
+                answer: 'c',
+                feedback: 'Cada VLAN configurada en un switch gestionable constituye un dominio de broadcast independiente. Para comunicar VLANs sí hace falta enrutamiento inter-VLAN.'
+            },
+            {
+                text: 'Un firewall que filtra tráfico según direcciones IP y números de puerto opera en las capas:',
+                options: {
+                    a: '1 y 2',
+                    b: '3 y 4',
+                    c: 'Solo la 7',
+                    d: 'Solo la 1'
+                },
+                answer: 'b',
+                feedback: 'Filtrar por IP corresponde a la capa 3 y por puerto a la capa 4. Los firewalls de nueva generación llegan además hasta la capa 7 inspeccionando la aplicación.'
+            },
+            {
+                text: '¿Por qué en entornos empresariales se prefieren dispositivos separados en lugar de un equipo integrado?',
+                options: {
+                    a: 'Porque son más baratos',
+                    b: 'Porque consumen menos energía',
+                    c: 'Por escalabilidad y para evitar un punto único de fallo',
+                    d: 'Porque no necesitan configuración'
+                },
+                answer: 'c',
+                feedback: 'Separar funciones permite dimensionar y actualizar cada elemento por separado, y evita que el fallo o la vulnerabilidad de un solo equipo comprometa conmutación, enrutamiento, Wi-Fi y seguridad a la vez.'
+            }
+        ];
+
+        // Respuestas correctas indexadas como q1, q2, ... para la corrección
+        const correctAnswers = {};
+        questions.forEach((q, i) => {
+            correctAnswers['q' + (i + 1)] = q.answer;
+        });
+
+        // Generar el HTML de las preguntas
+        function renderQuiz() {
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = questions.map((q, i) => {
+                const n = i + 1;
+                const opciones = Object.keys(q.options).map(letra => `
+                    <div class="option">
+                        <input type="radio" id="q${n}${letra}" name="q${n}" value="${letra}">
+                        <label for="q${n}${letra}">${q.options[letra]}</label>
+                    </div>`).join('');
+
+                return `
+            <div class="question" data-question="${n}">
+                <div class="question-header">
+                    <span class="question-number">Pregunta ${n}</span>
+                </div>
+                <div class="question-text">${q.text}</div>
+                <div class="options">${opciones}</div>
+                <div class="feedback">
+                    <strong>Respuesta correcta: ${q.answer.toUpperCase()}</strong><br>
+                    ${q.feedback}
+                </div>
+            </div>`;
+            }).join('');
+
+            document.getElementById('totalQuestions').textContent = questions.length;
+            document.getElementById('total').textContent = questions.length;
+
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            let total = Object.keys(correctAnswers).length;
+            let unanswered = [];
+
+            // Verificar cada pregunta
+            for (let qNum in correctAnswers) {
+                const selected = document.querySelector(`input[name="${qNum}"]:checked`);
+                const questionDiv = document.querySelector(`[data-question="${qNum.substring(1)}"]`);
+                const feedback = questionDiv.querySelector('.feedback');
+                const options = questionDiv.querySelectorAll('.option');
+
+                if (!selected) {
+                    unanswered.push(qNum.substring(1));
+                    continue;
+                }
+
+                // Limpiar clases previas
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+
+                if (selected.value === correctAnswers[qNum]) {
+                    correct++;
+                    questionDiv.classList.add('correct');
+                    questionDiv.classList.remove('incorrect');
+                    feedback.classList.add('show', 'correct');
+                    feedback.classList.remove('incorrect');
+                    selected.parentElement.classList.add('correct');
+                } else {
+                    questionDiv.classList.add('incorrect');
+                    questionDiv.classList.remove('correct');
+                    feedback.classList.add('show', 'incorrect');
+                    feedback.classList.remove('correct');
+                    selected.parentElement.classList.add('incorrect');
+
+                    // Marcar la respuesta correcta
+                    const correctOption = questionDiv.querySelector(`input[value="${correctAnswers[qNum]}"]`).parentElement;
+                    correctOption.classList.add('correct');
+                }
+            }
+
+            if (unanswered.length > 0) {
+                alert(`Por favor, responde todas las preguntas. Faltan: ${unanswered.join(', ')}`);
+                return;
+            }
+
+            // Mostrar resultados
+            const percentage = Math.round((correct / total) * 100);
+            const incorrect = total - correct;
+
+            document.getElementById('score').textContent = percentage + '%';
+            document.getElementById('correct').textContent = correct;
+            document.getElementById('total').textContent = total;
+            document.getElementById('incorrect').textContent = incorrect;
+
+            const verdict = document.getElementById('verdict');
+            if (percentage >= 90) {
+                verdict.innerHTML = '<strong style="color: #28a745;">EXCELENTE</strong> - Dominas completamente el tema';
+            } else if (percentage >= 70) {
+                verdict.innerHTML = '<strong style="color: #20c997;">MUY BIEN</strong> - Buen nivel de comprensión';
+            } else if (percentage >= 50) {
+                verdict.innerHTML = '<strong style="color: #ffc107;">APROBADO</strong> - Revisa los errores';
+            } else {
+                verdict.innerHTML = '<strong style="color: #dc3545;">SUSPENSO</strong> - Debes repasar el tema';
+            }
+
+            document.getElementById('results').classList.add('show');
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            // Limpiar selecciones
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+
+            // Limpiar clases
+            document.querySelectorAll('.question').forEach(q => {
+                q.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.classList.remove('show', 'correct', 'incorrect');
+            });
+
+            // Ocultar resultados
+            document.getElementById('results').classList.remove('show');
+
+            // Reset progress bar
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressBar').textContent = '0%';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const total = Object.keys(correctAnswers).length;
+            let answered = 0;
+
+            for (let qNum in correctAnswers) {
+                if (document.querySelector(`input[name="${qNum}"]:checked`)) {
+                    answered++;
+                }
+            }
+
+            const percentage = Math.round((answered / total) * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>

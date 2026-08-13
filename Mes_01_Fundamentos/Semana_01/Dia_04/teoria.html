@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Clasificación de redes: PAN, LAN, MAN, WAN y VPN</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 4 — Clasificación de redes</h1>
+        <p>Por extensión geográfica y por propietario</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 45 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 42 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> en las que tienes que escribir tu propia respuesta antes de ver la del profesor, y el laboratorio te hace <strong>encontrar la frontera exacta</strong> entre tu casa y la red de tu operador.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#extension">Clasificación por extensión geográfica</a></li>
+                <li><a href="#pan">PAN — red de área personal</a></li>
+                <li><a href="#lan">LAN — red de área local</a></li>
+                <li><a href="#man">MAN — red de área metropolitana</a></li>
+                <li><a href="#wan">WAN — red de área extensa</a></li>
+                <li><a href="#otras">Otras siglas: WLAN, SAN, CAN</a></li>
+                <li><a href="#propietario">Clasificación por propietario</a></li>
+                <li><a href="#vpn">VPN: lo mejor de ambos mundos</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="extension">1. Clasificación por extensión geográfica</h2>
+
+            <p>Es la clasificación más utilizada. El criterio es sencillo: <strong>hasta dónde llega la red</strong>.
+            Pero el alcance no es solo una cifra: condiciona la tecnología, la velocidad, el coste y quién es el propietario.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Tipo</th><th>Alcance</th><th>Velocidad típica</th><th>Propietario</th><th>Tecnologías</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>PAN</strong></td><td>1 - 10 m</td><td>1 - 50 Mbps</td><td>El usuario</td><td>Bluetooth, NFC, USB, Zigbee</td></tr>
+                    <tr><td><strong>LAN</strong></td><td>10 m - 1 km</td><td>100 Mbps - 100 Gbps</td><td>La organización</td><td>Ethernet (802.3), Wi-Fi (802.11)</td></tr>
+                    <tr><td><strong>MAN</strong></td><td>1 - 50 km</td><td>10 Mbps - 100 Gbps</td><td>Organización u operador</td><td>Fibra óptica, Metro Ethernet</td></tr>
+                    <tr><td><strong>WAN</strong></td><td>&gt; 50 km, sin límite</td><td>Muy variable</td><td>Operadores de telecomunicaciones</td><td>MPLS, fibra, satélite, 4G/5G</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<pre><code>PAN:  [Persona] ←Bluetooth→ [Dispositivos]
+       └──────── 10 m ────────┘
+
+LAN:  [Edificio completo]
+       └──────── 1 km ────────┘
+
+MAN:  [Ciudad entera]
+       └──────── 50 km ───────┘
+
+WAN:  [Países / Continentes]
+       └────── sin límite ─────┘</code></pre>
+
+            <div class="destacado">
+                <strong>El criterio decisivo no es solo la distancia</strong>
+                Lo que realmente separa una LAN de una WAN es <strong>quién posee el medio de transmisión</strong>.
+                En una LAN el cable es tuyo y puedes hacer lo que quieras con él. En una WAN atraviesas terreno público,
+                así que necesitas contratar a un operador. Eso explica la diferencia de coste y de velocidad.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="pan">2. PAN — Personal Area Network</h2>
+
+            <p>Red del espacio personal inmediato del usuario, en torno a unos <strong>10 metros</strong>.</p>
+
+            <ul>
+                <li><strong>Tecnologías</strong>: Bluetooth (la más habitual), NFC (centímetros, para pagos), USB, Zigbee (domótica).</li>
+                <li><strong>Ejemplos</strong>: auriculares inalámbricos, smartwatch sincronizando con el móvil, teclado y ratón inalámbricos, pago con el móvil.</li>
+                <li><strong>Características</strong>: bajo consumo, alcance corto, configuración sencilla, poca velocidad.</li>
+            </ul>
+
+            <p>Cuando la PAN es inalámbrica se denomina a veces <strong>WPAN</strong> (<em>Wireless PAN</em>).</p>
+
+            <h2 id="lan">3. LAN — Local Area Network</h2>
+
+            <p>Es la red que administrarás en tu trabajo diario, y a la que se dedica la mayor parte de este módulo.</p>
+
+            <ul>
+                <li><strong>Alcance</strong>: desde una vivienda hasta un edificio o un campus pequeño.</li>
+                <li><strong>Propiedad</strong>: privada. La organización posee el cableado y los equipos.</li>
+                <li><strong>Velocidad</strong>: alta (1 Gbps es hoy el mínimo habitual en puesto de trabajo).</li>
+                <li><strong>Latencia</strong>: muy baja, típicamente menos de 1 ms.</li>
+                <li><strong>Tecnologías</strong>: Ethernet cableado (IEEE 802.3) y Wi-Fi (IEEE 802.11).</li>
+            </ul>
+
+            <p>Ejemplos: la red de una oficina, la de un instituto, la de un hospital o la de tu casa.</p>
+
+            <div class="dato">
+                <strong>Por qué la LAN es rápida y barata</strong>
+                Porque el medio es propio y las distancias son cortas: no hay que pagar a nadie por el paso, la atenuación
+                es baja y se pueden usar tecnologías sencillas. En cuanto hay que cruzar la calle, todo eso cambia.
+            </div>
+
+            <h2 id="man">4. MAN — Metropolitan Area Network</h2>
+
+            <p>Interconecta varias LAN dentro del área de una ciudad, típicamente entre <strong>1 y 50 km</strong>.</p>
+
+            <ul>
+                <li><strong>Tecnología dominante</strong>: fibra óptica, por su alcance y capacidad.</li>
+                <li><strong>Propietario</strong>: puede ser la propia organización (si tiene fibra propia) o un operador que le alquila el servicio.</li>
+                <li><strong>Ejemplos</strong>: red que une las sedes municipales de un ayuntamiento, campus universitario repartido por la ciudad, red de cámaras de tráfico, interconexión de sucursales bancarias en una capital.</li>
+            </ul>
+
+            <p>Es la categoría más difusa de las cuatro: muchas redes que se llaman MAN podrían describirse igualmente
+            como WAN pequeñas. Lo relevante en un examen es el <strong>orden de magnitud</strong>: ciudad, no edificio ni país.</p>
+
+            <h2 id="wan">5. WAN — Wide Area Network</h2>
+
+            <p>Cubre grandes distancias: regiones, países o continentes. <strong>Internet es la WAN por excelencia</strong>.</p>
+
+            <ul>
+                <li><strong>Propietario</strong>: siempre operadores de telecomunicaciones. Ninguna empresa tiende cable propio entre países.</li>
+                <li><strong>Velocidad</strong>: muy variable, desde unos pocos Mbps por satélite hasta cientos de Gbps en troncales.</li>
+                <li><strong>Latencia</strong>: notable, y creciente con la distancia.</li>
+                <li><strong>Tecnologías</strong>: MPLS, fibra de larga distancia, enlaces submarinos, satélite, redes móviles.</li>
+            </ul>
+
+            <p>Ejemplos: Internet, la red que une la sede de Madrid con la de Tokio, la red de cajeros de un banco a nivel nacional.</p>
+
+            <div class="aviso">
+                <strong>Confusión habitual</strong>
+                «WAN» no significa «Internet». Internet <em>es</em> una WAN, pero una empresa puede tener su propia WAN
+                privada (por ejemplo, con MPLS contratado) que no pasa por Internet en ningún momento.
+            </div>
+
+            <h2 id="otras">6. Otras siglas que conviene conocer</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Sigla</th><th>Significado</th><th>Qué es</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>WLAN</strong></td><td>Wireless LAN</td><td>Una LAN inalámbrica. No es una categoría de alcance distinta: es una LAN que usa Wi-Fi en lugar de cable</td></tr>
+                    <tr><td><strong>CAN</strong></td><td>Campus Area Network</td><td>Conjunto de LAN de un campus (universidad, polígono). Entre LAN y MAN</td></tr>
+                    <tr><td><strong>SAN</strong></td><td>Storage Area Network</td><td>Red dedicada exclusivamente a conectar servidores con sistemas de almacenamiento</td></tr>
+                    <tr><td><strong>VPN</strong></td><td>Virtual Private Network</td><td>Red privada creada sobre una infraestructura pública mediante cifrado</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>La <strong>SAN</strong> es la que más despista: no se clasifica por alcance sino por <strong>finalidad</strong>.
+            Es una red de alta velocidad y baja latencia cuyo único cometido es que los servidores accedan a las cabinas de
+            discos como si fueran discos locales.</p>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="propietario">7. Clasificación por propietario</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Red pública</th><th>Red privada</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Acceso</th><td>Cualquier usuario que contrate el servicio</td><td>Restringido a la organización</td></tr>
+                    <tr><th scope="row">Propietario</th><td>Operador o administración</td><td>La propia empresa o institución</td></tr>
+                    <tr><th scope="row">Control</th><td>Ninguno sobre la infraestructura</td><td>Total</td></tr>
+                    <tr><th scope="row">Seguridad</th><td>Depende del cifrado que apliques tú</td><td>Alta: el medio no se comparte</td></tr>
+                    <tr><th scope="row">Coste</th><td>Cuota de servicio</td><td>Inversión inicial más mantenimiento</td></tr>
+                    <tr><th scope="row">Ejemplos</th><td>Internet, red telefónica, Wi-Fi de una cafetería</td><td>LAN corporativa, red hospitalaria</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="vpn">8. VPN: lo mejor de ambos mundos</h2>
+
+            <p>Una <strong>VPN</strong> resuelve un problema concreto: quiero la <em>privacidad</em> de una red privada,
+            pero no puedo pagar el <em>coste</em> de tender cable propio entre mis sedes.</p>
+
+            <p>La solución consiste en enviar el tráfico por una red pública (Internet) pero <strong>cifrado</strong>,
+            formando un <em>túnel</em>: aunque alguien intercepte los paquetes, no puede leer su contenido.</p>
+
+<pre><code>Sin VPN:   [Sede A] ─── tráfico legible ─── Internet ─── [Sede B]
+                          (cualquiera puede leerlo)
+
+Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede B]
+                          (ilegible para terceros)</code></pre>
+
+            <div data-checkpoint="2"></div>
+
+            <h3>Tipos de VPN</h3>
+
+            <ul>
+                <li><strong>VPN de acceso remoto</strong>: un usuario individual (teletrabajador) se conecta a la red corporativa desde cualquier lugar.</li>
+                <li><strong>VPN sitio a sitio</strong> (<em>site-to-site</em>): une permanentemente dos sedes, de forma transparente para los usuarios.</li>
+            </ul>
+
+            <h3>VPN frente a línea dedicada</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Criterio</th><th>Línea dedicada</th><th>VPN sobre Internet</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Coste mensual</th><td>Alto</td><td>Bajo</td></tr>
+                    <tr><th scope="row">Ancho de banda garantizado</th><td>Sí, con SLA</td><td>No (<em>best effort</em>)</td></tr>
+                    <tr><th scope="row">Latencia</th><td>Estable y predecible</td><td>Variable</td></tr>
+                    <tr><th scope="row">Tiempo de despliegue</th><td>Semanas o meses</td><td>Horas</td></tr>
+                    <tr><th scope="row">Añadir una sede nueva</th><td>Nuevo circuito completo</td><td>Un túnel más</td></tr>
+                    <tr><th scope="row">Seguridad</th><td>Muy alta (medio no compartido)</td><td>Alta (depende del cifrado)</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Criterio de decisión</strong>
+                Para una PYME, la VPN es casi siempre la opción correcta: coste muy inferior y seguridad suficiente con
+                IPSec o WireGuard. Para un banco o un hospital con requisitos de latencia garantizada y normativa estricta,
+                la línea dedicada o MPLS sigue justificándose.
+            </div>
+
+            <p>Verás las VPN en profundidad en el <strong>Mes 12, Semana 45</strong>, con IPSec y SSL/TLS.</p>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <h3>Resumen</h3>
+
+            <ul>
+                <li><strong>PAN</strong> (10 m, Bluetooth) → <strong>LAN</strong> (edificio, Ethernet/Wi-Fi) → <strong>MAN</strong> (ciudad, fibra) → <strong>WAN</strong> (sin límite, operadores).</li>
+                <li>El criterio decisivo entre LAN y WAN es <strong>quién posee el medio</strong>, no solo la distancia.</li>
+                <li><strong>WLAN</strong> es una LAN inalámbrica; <strong>SAN</strong> se clasifica por finalidad, no por alcance.</li>
+                <li>Las redes <strong>públicas</strong> son accesibles por contratación; las <strong>privadas</strong>, restringidas a la organización.</li>
+                <li>Una <strong>VPN</strong> crea un túnel cifrado sobre una red pública: privacidad de red privada a coste de red pública.</li>
+                <li>La VPN es barata y flexible pero no garantiza ancho de banda; la línea dedicada sí, a mayor precio.</li>
+            </ul>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error</th><th>Corrección</th></tr></thead>
+                <tbody>
+                    <tr><td>«WAN es sinónimo de Internet»</td><td>Internet es <em>una</em> WAN. Existen WAN privadas que no pasan por Internet</td></tr>
+                    <tr><td>«WLAN es una categoría entre LAN y MAN»</td><td>Es simplemente una <strong>LAN inalámbrica</strong>; el alcance es el mismo</td></tr>
+                    <tr><td>«Una VPN es una red física dedicada»</td><td>Es <strong>virtual</strong>: viaja cifrada por infraestructura pública compartida</td></tr>
+                    <tr><td>«La SAN es una red de área pequeña»</td><td>Se clasifica por <strong>finalidad</strong> (almacenamiento), no por alcance</td></tr>
+                    <tr><td>«La VPN garantiza la misma velocidad que una línea dedicada»</td><td>Va en modo <em>best effort</em>: no hay SLA de ancho de banda ni de latencia</td></tr>
+                    <tr><td>«Todo lo que ocupa un edificio es LAN»</td><td>Depende también de la propiedad del medio: si alquilas el enlace a un operador, ya no lo es</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar cada tarjeta: el esfuerzo de recordar es lo
+            que consolida, no volver a leerla.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a descubrir que tienes <strong>dos direcciones distintas</strong>, localizar en qué salto exacto dejas tu LAN y clasificar todas las redes que tu equipo usa ahora mismo.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 4</strong></a> (60 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 5</strong>
+            <p>Verás cómo se <strong>disponen</strong> los equipos dentro de una red: bus, anillo y estrella, y qué ocurre cuando falla cada pieza.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> dibuja de memoria cómo crees que están conectados los aparatos de tu casa.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/teoria.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Además de la distancia, ¿qué criterio separa realmente una LAN de una WAN? Explica <strong>con tus palabras</strong> por qué ese criterio importa más que los kilómetros.',
+                modelo: `<p>El criterio decisivo es <strong>quién posee el medio de transmisión</strong>. En una LAN el cable,
+                         el switch y el router son tuyos: puedes tenderlos, cambiarlos o mejorar su velocidad sin pedir permiso
+                         ni pagar cuota. Por eso una LAN es rápida y barata.</p>
+                         <p>En cuanto el tráfico atraviesa terreno público dejas de ser el dueño: hay que <strong>contratar</strong>
+                         el servicio a un operador, que decide la velocidad disponible, el precio y la ruta. Eso condiciona el
+                         coste, la capacidad y las garantías mucho más que la distancia en sí.</p>
+                         <p>De hecho, dos edificios separados por 200 metros pueden formar una LAN si tiendes fibra propia entre
+                         ellos, y en cambio necesitarías contratar un enlace si esos 200 metros cruzan una carretera pública.</p>`,
+                puntos: [
+                    'Identifica la propiedad del medio como criterio decisivo',
+                    'En la LAN el medio es propio y de uso libre',
+                    'En la WAN hay que contratar a un operador',
+                    'Relaciona la propiedad con coste, velocidad y garantías',
+                    'Aporta un ejemplo donde la distancia sola no decide'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Explica por qué <strong>WLAN no es una categoría de alcance</strong> como PAN, LAN, MAN o WAN, y por qué la <strong>SAN</strong> tampoco encaja en esa clasificación.',
+                modelo: `<p>Una <strong>WLAN</strong> es simplemente una <strong>LAN inalámbrica</strong>: cubre exactamente el
+                         mismo alcance que una LAN y sirve para lo mismo. Lo único que cambia es el <em>medio</em>, que pasa de
+                         cable a ondas de radio. Por eso no es una categoría nueva, sino una variante de una existente.</p>
+                         <p>La <strong>SAN</strong> queda fuera por otra razón: se define por su <strong>finalidad</strong>, no
+                         por su alcance. Es una red dedicada a que los servidores accedan a las cabinas de almacenamiento como
+                         si fueran discos locales, con altísima velocidad y latencia mínima. Puede ocupar un armario o un centro
+                         de datos entero, y seguiría siendo una SAN.</p>
+                         <p>La lección es que las siglas de redes no responden todas al mismo criterio: unas clasifican por
+                         alcance, otras por medio y otras por propósito. Conviene saber cuál se está aplicando.</p>`,
+                puntos: [
+                    'WLAN es una LAN cuyo medio es inalámbrico, mismo alcance',
+                    'La SAN se define por finalidad: almacenamiento',
+                    'La SAN puede tener cualquier tamaño y seguir siéndolo',
+                    'Concluye que las siglas responden a criterios distintos: alcance, medio o propósito'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Una VPN se describe como «una red privada sobre una infraestructura pública». Explica qué parte es «privada» y qué parte es «pública», y de dónde sale realmente la privacidad.',
+                modelo: `<p>La parte <strong>pública</strong> es la infraestructura: los paquetes viajan por Internet, saltando
+                         de router en router por equipos de operadores y de terceros, exactamente igual que cualquier otro
+                         tráfico. No se reserva ni se tiende nada.</p>
+                         <p>La parte <strong>privada</strong> es el <strong>contenido</strong>. Los extremos establecen un túnel
+                         cifrado: los routers intermedios siguen encaminando los paquetes, pero solo ven que van de un extremo
+                         del túnel al otro, sin poder leer lo que llevan dentro.</p>
+                         <p>Es decir, la privacidad no la da un medio propio sino la <strong>criptografía</strong>. De ahí
+                         vienen sus dos caras: es barata y se despliega en horas, porque no hay que tender nada, pero hereda
+                         todas las limitaciones de Internet y <strong>no garantiza ancho de banda ni latencia</strong>.</p>`,
+                puntos: [
+                    'La infraestructura es pública: viaja por Internet como el resto del tráfico',
+                    'Lo privado es el contenido, protegido por un túnel cifrado',
+                    'Los routers intermedios encaminan pero no pueden leer',
+                    'La privacidad la aporta el cifrado, no la propiedad del medio',
+                    'Concluye que por eso es barata pero sin garantías (best effort)'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Una PYME con 4 sedes y un hospital con 2 sedes te piden interconectarlas. ¿Elegirías la misma solución para ambos? Justifica.',
+                modelo: `<p>No. Para la <strong>PYME</strong> elegiría <strong>VPN sitio a sitio sobre Internet</strong>: el
+                         coste es muy inferior, se despliega en horas y añadir una quinta sede es levantar un túnel más. Con
+                         IPSec o WireGuard la seguridad es más que suficiente para su tráfico, y una degradación puntual no
+                         tiene consecuencias graves.</p>
+                         <p>Para el <strong>hospital</strong> optaría por <strong>línea dedicada o MPLS</strong>. Ahí se manejan
+                         datos de salud, que el RGPD considera de categoría especial, y hay aplicaciones que no toleran cortes
+                         ni latencia variable. Lo que se paga de más no es velocidad: es el <strong>SLA</strong>, es decir, un
+                         compromiso contractual de capacidad y disponibilidad con penalizaciones si no se cumple.</p>
+                         <p>El criterio general es cuánto cuesta que el enlace falle. Cuando una caída solo molesta, la VPN
+                         gana por precio; cuando una caída tiene consecuencias graves o legales, se paga la garantía.</p>`,
+                puntos: [
+                    'Elige VPN para la PYME por coste, rapidez y escalabilidad',
+                    'Elige línea dedicada o MPLS para el hospital',
+                    'Menciona el SLA como lo que realmente se compra',
+                    'Cita datos sensibles o requisitos normativos (RGPD)',
+                    'Formula el criterio: coste de la caída frente a coste del enlace'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: 'Ordena de menor a mayor alcance: MAN, PAN, WAN, LAN', dorso: '<strong>PAN</strong> (1-10 m) → <strong>LAN</strong> (edificio) → <strong>MAN</strong> (ciudad) → <strong>WAN</strong> (sin límite).' },
+            { frente: 'Alcance y tecnología de una <strong>PAN</strong>', dorso: '1 a 10 metros. Bluetooth, NFC, USB o Zigbee. Auriculares, smartwatch, teclado inalámbrico.' },
+            { frente: 'Alcance y tecnología de una <strong>LAN</strong>', dorso: 'De 10 m a 1 km, un edificio. <strong>Ethernet (802.3)</strong> y <strong>Wi-Fi (802.11)</strong>. Medio propiedad de la organización.' },
+            { frente: 'Alcance y tecnología de una <strong>MAN</strong>', dorso: 'De 1 a 50 km, el área de una ciudad. Fibra óptica y Metro Ethernet. Interconecta varias LAN.' },
+            { frente: '¿Qué criterio, además de la distancia, separa LAN de WAN?', dorso: '<strong>Quién posee el medio</strong>. En la LAN es propio y de uso libre; en la WAN se atraviesa terreno público y hay que contratarlo.' },
+            { frente: '¿Qué es exactamente una <strong>WLAN</strong>?', dorso: 'Una <strong>LAN inalámbrica</strong>. Mismo alcance que una LAN: lo único que cambia es el medio.' },
+            { frente: '¿Por qué la <strong>SAN</strong> no encaja en la clasificación por alcance?', dorso: 'Porque se define por su <strong>finalidad</strong>: conectar servidores con las cabinas de almacenamiento como si fueran discos locales.' },
+            { frente: '¿Es Internet una WAN? ¿Es toda WAN Internet?', dorso: 'Internet <strong>es</strong> una WAN, pero <strong>no toda WAN es Internet</strong>: una empresa puede tener su propia WAN privada con MPLS que nunca pasa por Internet.' },
+            { frente: 'Diferencia entre red <strong>pública</strong> y <strong>privada</strong>', dorso: 'Se clasifica el <strong>acceso</strong>: pública, cualquiera puede acceder contratando; privada, restringida a la organización propietaria.' },
+            { frente: 'La Wi-Fi de una cafetería, ¿pública o privada?', dorso: '<strong>Pública</strong>: se clasifica el acceso, no la titularidad del local. Por eso conviene usar VPN al conectarse.' },
+            { frente: '¿Qué es una <strong>VPN</strong> y de dónde viene su privacidad?', dorso: 'Un <strong>túnel cifrado</strong> sobre una red pública. La privacidad la da la <strong>criptografía</strong>, no un medio propio.' },
+            { frente: 'VPN de <strong>acceso remoto</strong> frente a <strong>sitio a sitio</strong>', dorso: 'La de acceso remoto conecta a <strong>un usuario</strong> (teletrabajador). La sitio a sitio une <strong>dos sedes</strong> de forma permanente y transparente.' },
+            { frente: 'Principal desventaja de la VPN frente a la línea dedicada', dorso: 'No garantiza <strong>ancho de banda ni latencia</strong>: funciona en modo <em>best effort</em>. La línea dedicada aporta <strong>SLA</strong>.' },
+            { frente: '¿Por qué millones de casas usan 192.168.1.1 sin conflicto?', dorso: 'Porque son <strong>direcciones privadas</strong>, no enrutables en Internet: solo tienen sentido dentro de cada LAN. El router traduce con <strong>NAT</strong> al salir.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 4 — Clasificación de redes',
+        subtitulo: 'PAN, LAN, MAN, WAN · Públicas y privadas · VPN',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Extensión',
+                repaso: '#extension',
+                text: '¿Cuál es el alcance típico de una red PAN?',
+                options: {
+                    a: '1 - 10 metros',
+                    b: '10 - 1000 metros',
+                    c: '1 - 50 kilómetros',
+                    d: 'Más de 50 kilómetros'
+                },
+                answer: 'a',
+                feedback: 'La PAN cubre el espacio personal inmediato del usuario, unos 10 metros. Usa Bluetooth, NFC, USB o Zigbee.'
+            },
+            {
+                topic: 'Extensión',
+                repaso: '#extension',
+                text: 'Una empresa interconecta 8 sedes repartidas por una misma ciudad mediante fibra propia. ¿Qué tipo de red es?',
+                options: {
+                    a: 'LAN',
+                    b: 'PAN',
+                    c: 'MAN',
+                    d: 'WAN'
+                },
+                answer: 'c',
+                feedback: 'La MAN cubre el área de una ciudad, entre 1 y 50 km, interconectando varias LAN. La fibra óptica es su tecnología habitual.'
+            },
+            {
+                topic: 'Extensión',
+                repaso: '#extension',
+                text: 'Además de la distancia, ¿qué criterio distingue realmente una LAN de una WAN?',
+                options: {
+                    a: 'La velocidad del enlace',
+                    b: 'Quién posee el medio de transmisión',
+                    c: 'El número de equipos conectados',
+                    d: 'El sistema operativo utilizado'
+                },
+                answer: 'b',
+                feedback: 'En una LAN el cable es propio y se puede usar libremente. En una WAN se atraviesa terreno público y hay que contratar a un operador, lo que condiciona coste y velocidad.'
+            },
+            {
+                topic: 'Extensión',
+                repaso: '#extension',
+                text: '¿Qué tecnología es propia de una LAN?',
+                options: {
+                    a: 'MPLS',
+                    b: 'Bluetooth',
+                    c: 'Ethernet (IEEE 802.3)',
+                    d: 'Enlace satelital'
+                },
+                answer: 'c',
+                feedback: 'Ethernet y Wi-Fi son las tecnologías LAN. Bluetooth corresponde a PAN, y MPLS o el satélite son tecnologías WAN.'
+            },
+            {
+                topic: 'Extensión',
+                repaso: '#extension',
+                text: 'Los auriculares Bluetooth conectados al móvil forman una:',
+                options: {
+                    a: 'LAN',
+                    b: 'PAN',
+                    c: 'MAN',
+                    d: 'SAN'
+                },
+                answer: 'b',
+                feedback: 'Es una PAN (o WPAN al ser inalámbrica): red del espacio personal, de alcance muy corto y bajo consumo.'
+            },
+            {
+                topic: 'Extensión',
+                repaso: '#extension',
+                text: '¿Cuál de estas afirmaciones sobre Internet es correcta?',
+                options: {
+                    a: 'Internet es una MAN de gran tamaño',
+                    b: 'Internet es una WAN, pero no toda WAN es Internet',
+                    c: 'WAN e Internet son exactamente sinónimos',
+                    d: 'Internet no se clasifica por extensión'
+                },
+                answer: 'b',
+                feedback: 'Internet es la WAN por excelencia, pero una empresa puede tener su propia WAN privada con MPLS que no pase por Internet en ningún momento.'
+            },
+            {
+                topic: 'Otras siglas',
+                repaso: '#otras',
+                text: '¿Qué es exactamente una WLAN?',
+                options: {
+                    a: 'Una categoría intermedia entre LAN y MAN',
+                    b: 'Una LAN que utiliza tecnología inalámbrica',
+                    c: 'Una WAN de baja velocidad',
+                    d: 'Una red de almacenamiento'
+                },
+                answer: 'b',
+                feedback: 'WLAN es simplemente una LAN inalámbrica (Wi-Fi). El alcance es el mismo que el de una LAN: lo único que cambia es el medio.'
+            },
+            {
+                topic: 'Otras siglas',
+                repaso: '#otras',
+                text: '¿Por qué la SAN no encaja en la clasificación por alcance?',
+                options: {
+                    a: 'Porque siempre ocupa más de 50 km',
+                    b: 'Porque se clasifica por su finalidad: conectar servidores con el almacenamiento',
+                    c: 'Porque es una red inalámbrica',
+                    d: 'Porque es un tipo de VPN'
+                },
+                answer: 'b',
+                feedback: 'La SAN (Storage Area Network) se define por su cometido, no por su extensión: dar a los servidores acceso a las cabinas de discos como si fueran locales.'
+            },
+            {
+                topic: 'Propietario',
+                repaso: '#propietario',
+                text: '¿Qué caracteriza a una red privada?',
+                options: {
+                    a: 'Que cualquiera puede conectarse contratando el servicio',
+                    b: 'Que el acceso está restringido a la organización propietaria',
+                    c: 'Que siempre usa cifrado',
+                    d: 'Que su alcance nunca supera un edificio'
+                },
+                answer: 'b',
+                feedback: 'La red privada pertenece a la organización, que controla totalmente la infraestructura y restringe el acceso. Eso le da alta seguridad a cambio de inversión.'
+            },
+            {
+                topic: 'VPN',
+                repaso: '#vpn',
+                text: '¿Qué es una VPN?',
+                options: {
+                    a: 'Una línea física dedicada entre dos sedes',
+                    b: 'Una topología de red en malla',
+                    c: 'Una red privada que viaja cifrada sobre infraestructura pública',
+                    d: 'Un tipo de cableado estructurado'
+                },
+                answer: 'c',
+                feedback: 'La VPN crea un túnel cifrado sobre una red pública como Internet: aporta la privacidad de una red privada al coste de una pública.'
+            },
+            {
+                topic: 'VPN',
+                repaso: '#vpn',
+                text: 'Un teletrabajador se conecta desde casa a los recursos de su empresa mediante un túnel cifrado. ¿Qué tipo de VPN es?',
+                options: {
+                    a: 'VPN de acceso remoto',
+                    b: 'VPN sitio a sitio',
+                    c: 'VPN de almacenamiento',
+                    d: 'VPN metropolitana'
+                },
+                answer: 'a',
+                feedback: 'La VPN de acceso remoto conecta a un usuario individual con la red corporativa. La sitio a sitio, en cambio, une permanentemente dos sedes completas.'
+            },
+            {
+                topic: 'VPN',
+                repaso: '#vpn',
+                text: '¿Cuál es la principal desventaja de una VPN sobre Internet frente a una línea dedicada?',
+                options: {
+                    a: 'Es mucho más cara',
+                    b: 'Tarda meses en desplegarse',
+                    c: 'No garantiza ancho de banda ni latencia: funciona en modo best effort',
+                    d: 'No permite cifrar el tráfico'
+                },
+                answer: 'c',
+                feedback: 'La VPN es barata, rápida de desplegar y escalable, pero comparte la infraestructura pública: no hay SLA de capacidad ni de latencia.'
+            },
+            {
+                topic: 'VPN',
+                repaso: '#vpn',
+                text: 'Una PYME con 4 sedes quiere interconectarlas con presupuesto ajustado. ¿Qué recomendarías?',
+                options: {
+                    a: 'Líneas dedicadas de fibra entre todas las sedes',
+                    b: 'VPN sitio a sitio sobre Internet con IPSec',
+                    c: 'Enlaces por satélite',
+                    d: 'Una PAN entre las sedes'
+                },
+                answer: 'b',
+                feedback: 'Para una PYME la VPN es casi siempre la opción correcta: coste muy inferior, despliegue en horas y seguridad suficiente con IPSec o WireGuard.'
+            },
+            {
+                topic: 'Extensión',
+                repaso: '#extension',
+                text: 'Ordenados de menor a mayor alcance, los tipos de red son:',
+                options: {
+                    a: 'LAN → PAN → MAN → WAN',
+                    b: 'PAN → LAN → MAN → WAN',
+                    c: 'PAN → MAN → LAN → WAN',
+                    d: 'WAN → MAN → LAN → PAN'
+                },
+                answer: 'b',
+                feedback: 'PAN (10 m) → LAN (edificio) → MAN (ciudad) → WAN (sin límite). Cada salto implica un cambio de tecnología y de propietario del medio.'
+            },
+            {
+                topic: 'Propietario',
+                repaso: '#propietario',
+                text: 'La red Wi-Fi abierta de una cafetería se clasifica como:',
+                options: {
+                    a: 'Red privada, porque el local es de propiedad privada',
+                    b: 'Red pública, porque cualquier cliente puede acceder a ella',
+                    c: 'VPN',
+                    d: 'SAN'
+                },
+                answer: 'b',
+                feedback: 'La clasificación se refiere al acceso, no a la titularidad del local: al ser accesible por cualquiera es una red pública, y por eso conviene usar VPN al conectarse.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

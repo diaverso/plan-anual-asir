@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: dúplex, latencia y tamaño de trama</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 2</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">55 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Tipo:</strong> medición real</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Comprobar en tu propio equipo los tres conceptos de hoy: a qué <strong>velocidad y modo dúplex</strong>
+            está negociado tu enlace, cuánto <strong>penaliza el medio compartido</strong> del Wi-Fi frente al cable,
+            y cómo el <strong>tamaño de la trama</strong> cambia el tiempo de transmisión.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Ojo con los adaptadores virtuales</strong>
+            Si tienes WSL, Docker, VirtualBox o VMware, aparecerán adaptadores como
+            <code>vEthernet</code> con velocidades irreales (10 Gbps) y el campo de dúplex vacío.
+            <strong>No son tu enlace</strong>: son interfaces internas del sistema. Fíjate solo en el adaptador
+            <em>Ethernet</em> o <em>Wi-Fi</em> que estés usando de verdad.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — ¿A qué velocidad y en qué dúplex está negociado tu enlace?</h3>
+            <p>La tarjeta y el switch <strong>negocian</strong> automáticamente velocidad y dúplex al conectarse.
+            Esto muestra el resultado de esa negociación.</p>
+
+            <div class="so-tabs" data-grupo="dup">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="dup" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Where-Object Status -eq 'Up' | Format-List Name,LinkSpeed,MediaType,FullDuplex</code></pre></div>
+                <p>Ejecútalo en <strong>PowerShell</strong>, no en <code>cmd</code>.</p>
+            </div>
+
+            <div class="so-panel" data-grupo="dup" data-so="nix">
+                <div class="comando"><pre><code>sudo ethtool eth0 | grep -E "Speed|Duplex"</code></pre></div>
+                <p>Sustituye <code>eth0</code> por tu interfaz real (la ves con <code>ip link</code>).</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — Cable frente a Wi-Fi: mide la diferencia</h3>
+            <p>Vas a lanzar 20 pings a tu propio router, primero por un medio y después por el otro. Interesa
+            tanto la media como <strong>la diferencia entre el mínimo y el máximo</strong>: esa variación es la huella
+            del medio compartido.</p>
+            <div class="comando"><pre><code>ping -n 20 192.168.1.1</code></pre></div>
+            <p>Cambia <code>192.168.1.1</code> por tu puerta de enlace (la anotaste ayer). En Linux:
+            <code>ping -c 20 192.168.1.1</code>.</p>
+            <div class="aviso" style="margin-top:14px">
+                <strong>Si no puedes cambiar de medio</strong>
+                Si solo tienes cable o solo Wi-Fi, haz la medición del que tengas y en el otro apartado
+                razona qué <em>esperarías</em> obtener y por qué. Anótalo como pendiente.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — El tamaño de la trama sí importa</h3>
+            <p>El tiempo total de un paquete tiene dos partes: la <strong>propagación</strong> (fija, depende de la
+            distancia) y la <strong>transmisión</strong> (depende del tamaño y de la velocidad del enlace). Vamos
+            a hacer visible la segunda.</p>
+            <div class="comando"><pre><code>ping -n 10 -l 32 8.8.8.8
+ping -n 10 -l 1400 8.8.8.8</code></pre></div>
+            <p>En Linux el parámetro es <code>-s</code>: <code>ping -c 10 -s 1400 8.8.8.8</code>.</p>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sé a qué velocidad y en qué dúplex está negociado mi enlace, y sé comprobarlo.</li>
+                <li>He medido la latencia y la variación por cable y/o por Wi-Fi y sé interpretar la diferencia.</li>
+                <li>Entiendo por qué un paquete grande tarda más aunque recorra la misma distancia.</li>
+                <li>Sé qué significaría ver colisiones en un enlace conmutado full-duplex.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_01/laboratorio.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 2',
+    subtitulo: 'Dúplex negociado · Cable frente a Wi-Fi · Tamaño de trama',
+    tiempo: '55 min',
+    ejercicios: [
+
+        {
+            titulo: 'LAB 1 — Velocidad y dúplex de tu enlace',
+            tiempo: '15 min',
+            enunciado: '<p>Con la salida del Paso 1 delante, anota los datos de <strong>tu adaptador real</strong>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 7,
+                    debe: [['linkspeed', 'speed'], ['mbps', 'gbps', 'mb/s']],
+                    placeholder: 'Pega aquí la salida de Get-NetAdapter (o de ethtool)',
+                    pregunta: '<strong>a)</strong> Pega la salida del comando del Paso 1.',
+                    explicacion: 'Esa negociación ocurre automáticamente al enchufar el cable: la tarjeta y el switch acuerdan la mayor velocidad y el mejor dúplex que ambos soporten.',
+                    pistas: [
+                        'En Windows tiene que ser <strong>PowerShell</strong>. Si usas <code>cmd</code>, el comando no existe.',
+                        'Copia todo el bloque, incluidas las líneas de LinkSpeed y FullDuplex.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    ancho: '220px',
+                    placeholder: '1 Gbps',
+                    pregunta: '<strong>b)</strong> ¿Qué <strong>velocidad</strong> ha negociado tu enlace?',
+                    explicacion: 'Lo normal hoy es 1 Gbps por cable. Si ves 100 Mbps en un equipo moderno, sospecha del cable: un Cat5 antiguo o un latiguillo con un par dañado limita la negociación.',
+                    pistas: [
+                        'Es el campo <code>LinkSpeed</code> en Windows o <code>Speed</code> en Linux.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué modo dúplex ha negociado?',
+                    opciones: {
+                        a: 'Full-duplex (FullDuplex: True)',
+                        b: 'Half-duplex (FullDuplex: False)',
+                        c: 'El campo aparece vacío'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Cualquier enlace conmutado moderno negocia <strong>full-duplex</strong>. Si te sale <em>False</em> en un adaptador real, hay un problema de negociación que conviene revisar. Si el campo aparece vacío, casi seguro estás mirando un adaptador <strong>virtual</strong> (WSL, Docker, VirtualBox), que no tiene enlace físico.',
+                    pistas: [
+                        'Si te aparece vacío, comprueba que no estás mirando un adaptador <code>vEthernet</code>.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>d)</strong> Tu enlace es full-duplex a 1 Gbps. ¿Cuál de estas afirmaciones es <strong>correcta</strong>?`,
+                    opciones: {
+                        a: 'Puede transmitir 2 Gbps en un solo sentido',
+                        b: 'Puede transmitir 1 Gbps y recibir 1 Gbps a la vez',
+                        c: 'Reparte 500 Mbps para subida y 500 para bajada',
+                        d: 'Solo alcanza 1 Gbps si no hay nadie más en la red'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Full-duplex significa <strong>dos caminos independientes</strong> de 1 Gbps cada uno, no un camino de 2 Gbps ni uno de 1 Gbps repartido. Y al ser un enlace dedicado punto a punto, el resto de la red no le resta capacidad.',
+                    pistas: [
+                        'Recuerda lo del puerto de 100 Mbps anunciado como «200 Mbps».'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 2 — Cable frente a Wi-Fi',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Compara los 20 pings a tu router por cada medio. La <strong>media</strong> te dice la latencia
+                típica; la diferencia entre <strong>mínimo y máximo</strong> te dice cuánto varía, que es lo que
+                delata un medio compartido.</p>`,
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    debe: [['ms', 'tiempo', 'time'], ['media', 'promedio', 'avg', 'minimo', 'mínimo', 'min']],
+                    placeholder: 'Pega aquí la salida completa del ping a tu puerta de enlace',
+                    pregunta: '<strong>a)</strong> Pega la salida del <code>ping -n 20</code> a tu router (por el medio que uses).',
+                    explicacion: 'Interesan sobre todo las tres últimas líneas: mínimo, máximo y media. Ahí está toda la información.',
+                    pistas: [
+                        'Pega el bloque final de estadísticas, aunque recortes las líneas repetidas del medio.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    ancho: '150px',
+                    ayuda: 'ms',
+                    placeholder: '2',
+                    pregunta: '<strong>b)</strong> Tiempo <strong>medio</strong> obtenido',
+                    explicacion: 'Por cable a tu propio router lo normal es 1-3 ms. Por Wi-Fi, entre 3 y 20 ms según la calidad de la señal y cuánta gente comparta el canal.',
+                    pistas: [
+                        'Es el valor «Media» de la última línea.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    ancho: '150px',
+                    ayuda: 'ms',
+                    placeholder: '9',
+                    pregunta: '<strong>c)</strong> Diferencia entre el <strong>máximo y el mínimo</strong> (máximo − mínimo)',
+                    explicacion: 'Esa dispersión es, en la práctica, el <strong>jitter</strong> que estudiarás mañana. Por cable suele ser de 1-2 ms; por Wi-Fi puede dispararse a decenas, porque hay que esperar turno para transmitir.',
+                    pistas: [
+                        'Resta los dos valores de la línea final de estadísticas.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: `<strong>d)</strong> Relaciona lo que has medido con la teoría de hoy: ¿por qué el
+                               Wi-Fi da <strong>más latencia y mucha más variación</strong> que el cable, aunque
+                               la distancia al router sea la misma? (5-6 líneas)`,
+                    modelo: `<p>La distancia es casi idéntica, así que el retardo de <strong>propagación</strong> no explica
+                             nada: la diferencia está en el <strong>acceso al medio</strong>.</p>
+                             <p>El cable es un enlace <strong>punto a punto full-duplex</strong>: tu equipo transmite cuando
+                             quiere, sin pedir permiso ni esperar a nadie. El Wi-Fi es un medio <strong>compartido y
+                             half-duplex</strong>: antes de emitir hay que escuchar si el canal está libre (CSMA/CA) y, si
+                             está ocupado, esperar un tiempo aleatorio. Cada trama compite con las del resto de dispositivos
+                             y con las redes vecinas del mismo canal.</p>
+                             <p>Esa espera de turno es <strong>impredecible</strong>: a veces el canal está libre y la trama
+                             sale al instante, y a veces hay que esperar varias veces. De ahí que no solo suba la media, sino
+                             sobre todo <strong>la diferencia entre el mínimo y el máximo</strong>. A eso se suman las
+                             retransmisiones por interferencia, que el Wi-Fi hace internamente sin que el usuario lo note.</p>`,
+                    rubrica: [
+                        'Descarta la distancia como causa: la propagación es equivalente',
+                        'Identifica el cable como enlace dedicado full-duplex sin espera',
+                        'Identifica el Wi-Fi como medio compartido half-duplex',
+                        'Menciona CSMA/CA o la espera de turno antes de transmitir',
+                        'Explica que la espera es variable y por eso crece la dispersión',
+                        'Añade interferencias o retransmisiones como factor adicional'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 3 — El tamaño de la trama y el tiempo de transmisión',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Compara los dos pings del Paso 3: uno con <strong>32 bytes</strong> y otro con
+                <strong>1400 bytes</strong> de carga, al mismo destino.</p>`,
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    ancho: '150px',
+                    ayuda: 'ms',
+                    placeholder: '9',
+                    pregunta: '<strong>a)</strong> Tiempo medio con <strong>32 bytes</strong>',
+                    explicacion: 'Este valor es prácticamente todo retardo de propagación y procesamiento: el paquete es tan pequeño que ponerlo en el cable no cuesta nada apreciable.',
+                    pistas: ['Es la media del primer ping.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    ancho: '150px',
+                    ayuda: 'ms',
+                    placeholder: '11',
+                    pregunta: '<strong>b)</strong> Tiempo medio con <strong>1400 bytes</strong>',
+                    explicacion: 'Suele ser algo mayor, pero <strong>mucho menos de lo que la gente espera</strong>: en un enlace rápido, meter 1400 bytes en el cable cuesta microsegundos. Lo que domina sigue siendo la distancia.',
+                    pistas: ['Es la media del segundo ping.']
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'microsegundos',
+                    tolerancia: 2,
+                    respuesta: 11.2,
+                    pregunta: `<strong>c)</strong> Calcula el <strong>tiempo de transmisión</strong> teórico de 1400 bytes
+                               en un enlace de <strong>1 Gbps</strong>. <em>(tiempo = bits ÷ velocidad)</em>`,
+                    explicacion: '1400 B × 8 = 11.200 bits. 11.200 ÷ 1.000.000.000 = 0,0000112 s = <strong>11,2 µs</strong>. Es decir, 0,0112 ms: despreciable frente a los milisegundos de propagación. Por eso apenas notas diferencia entre ambos pings.',
+                    pistas: [
+                        'Pasa primero los 1400 bytes a bits multiplicando por 8.',
+                        '1 Gbps son mil millones de bits por segundo.',
+                        'El resultado en segundos será muy pequeño: pásalo a microsegundos multiplicando por un millón.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>d)</strong> Repite el mismo cálculo mentalmente para un enlace de
+                               <strong>1 Mbps</strong> (un enlace WAN lento). ¿Cuánto tarda ahora en transmitirse esa trama?`,
+                    opciones: {
+                        a: 'Sigue siendo despreciable, unos 11 µs',
+                        b: 'Unos 11,2 ms, mil veces más: ya es comparable a la propagación',
+                        c: 'Exactamente lo mismo, el tamaño no influye',
+                        d: 'Menos, porque los enlaces lentos usan tramas más pequeñas'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Al dividir por una velocidad mil veces menor, el tiempo se multiplica por mil: <strong>11,2 ms</strong>. En enlaces lentos el tamaño de la trama sí pesa, y por eso ahí sí compensa comprimir cabeceras y ajustar el MTU.',
+                    pistas: [
+                        'La velocidad baja de 1.000 Mbps a 1 Mbps: es dividir por mil.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>e)</strong> Completa la conclusión del laboratorio.',
+                    frase: `El tiempo total de un paquete se compone del retardo de {{0}}, que depende de la distancia y
+                            no se puede reducir, y del retardo de {{1}}, que depende del tamaño y de la velocidad del enlace.
+                            En un enlace rápido domina el {{2}}, mientras que en uno lento el tamaño de la trama empieza a pesar.`,
+                    respuestas: [
+                        ['propagacion'],
+                        ['transmision'],
+                        ['primero', 'de propagacion', 'propagacion', 'el de propagacion']
+                    ],
+                    explicacion: 'Distinguir estos dos retardos es lo que permite responder a «¿por qué contratar más megas no me arregla el ping?», que verás formalmente mañana.',
+                    pistas: [
+                        'Los dos primeros huecos son los dos tipos de retardo que aparecen en el enunciado del Paso 3.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

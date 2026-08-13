@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: MTU, latencia y unidades reales</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 3</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">48 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Tipo:</strong> medición y cálculo</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Medir en tu propia conexión tres cosas que hoy solo has visto en teoría: el <strong>MTU real</strong>
+            de tu enlace, cómo la <strong>latencia depende de la distancia</strong> y no de los megas, y qué
+            velocidad de descarga te corresponde de verdad en <strong>MB/s</strong>.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — Descubre el MTU real de tu conexión</h3>
+            <p>La opción <code>-f</code> marca el paquete como <em>no fragmentable</em>. Si el paquete no cabe en el
+            enlace, en lugar de trocearlo el router lo <strong>descarta</strong>. Así, buscando el mayor tamaño que
+            todavía pasa, se averigua el MTU sin conocerlo de antemano.</p>
+
+            <div class="so-tabs" data-grupo="mtu">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="mtu" data-so="win">
+                <div class="comando"><pre><code>ping -n 1 -f -l 1472 8.8.8.8
+ping -n 1 -f -l 1473 8.8.8.8</code></pre></div>
+                <p>El primero debe responder y el segundo fallar. Si ambos fallan, baja el número (prueba 1400,
+                luego 1450...) hasta encontrar el límite exacto.</p>
+            </div>
+
+            <div class="so-panel" data-grupo="mtu" data-so="nix">
+                <div class="comando"><pre><code>ping -c 1 -M do -s 1472 8.8.8.8
+ping -c 1 -M do -s 1473 8.8.8.8</code></pre></div>
+            </div>
+
+            <div class="aviso" style="margin-top:14px">
+                <strong>La cuenta que hay detrás</strong>
+                El número que pones con <code>-l</code> son <strong>solo los datos</strong>. A eso hay que sumarle
+                la cabecera ICMP (8 bytes) y la cabecera IP (20 bytes). Ahí está la clave del ejercicio.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — La latencia depende de la distancia</h3>
+            <p>Vas a medir el tiempo de ida y vuelta a cuatro destinos cada vez más lejanos, con
+            <strong>la misma conexión y el mismo ancho de banda</strong>.</p>
+            <div class="comando"><pre><code>ping -n 4 192.168.1.1
+ping -n 4 8.8.8.8
+ping -n 4 www.rediris.es
+ping -n 4 139.130.4.4</code></pre></div>
+            <p>El primero es tu router; el último es una red australiana (Telstra). Cambia
+            <code>192.168.1.1</code> por tu puerta de enlace. En Linux usa <code>-c 4</code>.</p>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — Tu velocidad real en MB/s</h3>
+            <p>Mira qué velocidad tienes contratada (en la factura o en la web de tu operador) y compárala con lo
+            que realmente ves al descargar un archivo grande. No hace falta ningún programa: sirve el propio
+            gestor de descargas del navegador.</p>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>He hallado el MTU de mi enlace y sé de dónde salen los 28 bytes que faltan.</li>
+                <li>He medido la latencia a cuatro distancias y entiendo por qué crece.</li>
+                <li>Sé calcular el mínimo físico de latencia a un destino a partir de su distancia.</li>
+                <li>Sé convertir mi velocidad contratada a MB/s y explicar por qué no coinciden los números.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_02/laboratorio.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/teoria.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 3',
+    subtitulo: 'MTU real · Latencia y distancia · Unidades de verdad',
+    tiempo: '48 min',
+    ejercicios: [
+
+        {
+            titulo: 'LAB 1 — El MTU de tu conexión',
+            tiempo: '15 min',
+            enunciado: '<p>Con los dos pings del Paso 1 hechos, responde.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 6,
+                    debe: [['perdidos', 'loss', 'received'], ['paquetes', 'packets', 'estadisticas', 'statistics']],
+                    placeholder: 'Pega aquí la salida de los dos pings (1472 y 1473)',
+                    pregunta: '<strong>a)</strong> Pega la salida de ambos pings.',
+                    explicacion: 'Uno debe mostrar 0 % perdidos y el otro 100 %. Esa frontera exacta es tu MTU.',
+                    pistas: [
+                        'Copia las líneas de estadísticas de los dos comandos, una detrás de otra.',
+                        'Si los dos fallan, tu MTU es menor: prueba con 1400 y ve subiendo.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    ancho: '160px',
+                    ayuda: 'bytes',
+                    placeholder: '1472',
+                    pregunta: '<strong>b)</strong> ¿Cuál es el <strong>mayor tamaño de datos</strong> que ha pasado sin fragmentar?',
+                    explicacion: 'En la mayoría de conexiones son 1472 bytes. Si tienes PPPoE (algunos ADSL y fibras) serán 1464, porque ese encapsulado se come 8 bytes más.',
+                    pistas: [
+                        'Es el número que pusiste tras <code>-l</code> en el ping que SÍ respondió.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'bytes',
+                    tolerancia: 0,
+                    respuesta: 1500,
+                    pregunta: `<strong>c)</strong> Sabiendo que a esos datos hay que sumarles la cabecera <strong>ICMP (8 B)</strong>
+                               y la cabecera <strong>IP (20 B)</strong>, ¿cuál es el <strong>MTU</strong> de tu enlace?`,
+                    explicacion: '1472 + 8 + 20 = <strong>1500 bytes</strong>, el MTU estándar de Ethernet. Acabas de medir empíricamente una constante que aparecerá durante todo el curso.',
+                    pistas: [
+                        'Suma al dato del apartado anterior las dos cabeceras que se indican.',
+                        '8 + 20 = 28 bytes de cabeceras.',
+                        'Si tu resultado no es un número redondo conocido, revisa el apartado (b).'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Por qué el paquete de 1473 bytes no llega, en lugar de trocearse?',
+                    opciones: {
+                        a: 'Porque 1473 es un número impar',
+                        b: 'Porque la opción -f prohíbe fragmentar, así que el router lo descarta en vez de trocearlo',
+                        c: 'Porque el servidor de Google rechaza paquetes grandes',
+                        d: 'Porque se ha agotado el TTL'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La opción <code>-f</code> activa el bit <em>Don&#39;t Fragment</em> de la cabecera IP. Sin ella el paquete se trocearía y llegaría igualmente, y no podríamos localizar el límite. Es justo esa prohibición la que convierte el ping en una herramienta de medida.',
+                    pistas: [
+                        'Fíjate en qué hace exactamente la opción <code>-f</code> según el enunciado del Paso 1.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 2 — Latencia y distancia',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Anota los tiempos medios de los cuatro destinos. Todos han usado <strong>tu misma conexión</strong>,
+                con el mismo ancho de banda contratado.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Anota el tiempo medio de cada destino, <em>en milisegundos y solo el número</em>.',
+                    esquina: 'Destino',
+                    cabecera: ['Media (ms)'],
+                    filas: [
+                        { etiqueta: 'Tu router (192.168.1.1)', celdas: [{ respuestas: ['0', '1', '2', '3', '4', '5'], placeholder: 'ms' }] },
+                        { etiqueta: '8.8.8.8 (Google)', celdas: [{ respuestas: ['5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'], placeholder: 'ms' }] },
+                        { etiqueta: 'www.rediris.es (España)', celdas: [{ respuestas: ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40'], placeholder: 'ms' }] },
+                        { etiqueta: '139.130.4.4 (Australia)', celdas: [{ respuestas: ['250', '260', '270', '280', '290', '300', '305', '310', '311', '312', '313', '314', '315', '320', '325', '330', '340', '350', '360', '370', '380', '390', '400'], placeholder: 'ms' }] }
+                    ],
+                    explicacion: 'Los valores varían según tu operador, pero el <strong>patrón</strong> es siempre el mismo: unos pocos ms dentro de tu casa y de tu país, y cientos de ms al otro lado del planeta. Si alguno se sale mucho del rango esperado, comprueba que has copiado la media y no el máximo.',
+                    pistas: [
+                        'Escribe solo el número entero, sin «ms».',
+                        'Tu router debería dar entre 0 y 5 ms; Australia, entre 250 y 400.',
+                        'Si un destino no responde, prueba de nuevo: algunos filtran ICMP de forma intermitente.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'ms',
+                    tolerancia: 8,
+                    respuesta: 177,
+                    pregunta: `<strong>b)</strong> Madrid y Sídney están a unos <strong>17.700 km</strong>. La luz viaja
+                               por la fibra a unos <strong>200.000 km/s</strong>. ¿Cuál es el tiempo <strong>mínimo
+                               físicamente posible</strong> de ida y vuelta?`,
+                    explicacion: '17.700 ÷ 200.000 = 0,0885 s = 88,5 ms de ida. Ida y vuelta: <strong>177 ms</strong>. Ninguna tecnología puede bajar de ahí sin violar la física. Tu medida real será mayor porque el cable no va en línea recta y cada router añade su procesamiento.',
+                    pistas: [
+                        'Primero calcula el tiempo de ida: distancia dividida entre velocidad.',
+                        'El resultado te saldrá en segundos; pásalo a milisegundos multiplicando por 1.000.',
+                        'El ping mide ida Y vuelta: no olvides duplicar.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>c)</strong> Tu medida real a Australia es bastante mayor que ese mínimo teórico. ¿Por qué?`,
+                    opciones: {
+                        a: 'Porque tu ancho de banda es insuficiente',
+                        b: 'Porque el cable no sigue la línea recta y cada router intermedio añade procesamiento y encolado',
+                        c: 'Porque el ping mide mal las distancias largas',
+                        d: 'Porque Australia tiene Internet más lento'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los cables submarinos siguen rutas concretas, mucho más largas que la línea recta, y el tráfico atraviesa decenas de routers que procesan y a veces encolan cada paquete. El ancho de banda no interviene: los paquetes del ping son diminutos.',
+                    pistas: [
+                        'Piensa si un cable submarino puede ir en línea recta atravesando continentes.',
+                        'Recuerda los cuatro componentes de la latencia que viste en la teoría.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: `<strong>d)</strong> Un cliente con estas mismas medidas quiere «arreglar el ping a los
+                               servidores australianos» contratando 1 Gbps en vez de 300 Mbps. Redacta lo que le
+                               responderías (5-6 líneas).`,
+                    modelo: `<p>El ancho de banda y la latencia son <strong>magnitudes independientes</strong>. Los megas
+                             miden cuántos datos caben por segundo; la latencia mide cuánto tarda en llegar el primero.
+                             Un paquete de ping son unas decenas de bytes: con 300 Mbps ya sobra capacidad de sobra para
+                             enviarlo, así que triplicarla no cambia absolutamente nada.</p>
+                             <p>Los 313 ms se explican por la <strong>distancia física</strong>: la señal debe recorrer casi
+                             18.000 km de ida y otros tantos de vuelta, y ni siquiera la luz en la fibra puede hacerlo en
+                             menos de unos 177 ms. El resto lo añaden el trazado real de los cables submarinos y los routers
+                             intermedios.</p>
+                             <p>Lo que sí mejoraría la experiencia es <strong>acercar el servidor</strong>: usar un servidor
+                             europeo, una CDN o una réplica local. Es decir, no se compra latencia, se reduce distancia.
+                             Contratar más megas sí se notaría en descargas grandes o con muchos usuarios simultáneos,
+                             que es cuando la capacidad era el límite real.</p>`,
+                    rubrica: [
+                        'Distingue ancho de banda (cantidad por segundo) de latencia (tiempo del primero)',
+                        'Señala que el paquete es diminuto y la capacidad ya sobra',
+                        'Atribuye los 313 ms a la distancia física',
+                        'Menciona el límite de la velocidad de la luz en la fibra (~177 ms)',
+                        'Propone acercar el servidor: CDN, réplica o servidor europeo',
+                        'Aclara en qué caso sí serviría contratar más megas'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 3 — Tu velocidad real en MB/s',
+            tiempo: '13 min',
+            enunciado: '<p>Traduce lo que tienes contratado a lo que de verdad ves al descargar.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    ancho: '160px',
+                    ayuda: 'Mbps',
+                    placeholder: '600',
+                    pregunta: '<strong>a)</strong> ¿Qué velocidad de <strong>bajada</strong> tienes contratada?',
+                    explicacion: 'Los operadores anuncian siempre en <strong>megabits</strong> por segundo, porque el número sale ocho veces mayor y suena mejor.',
+                    pistas: [
+                        'Está en tu factura o en el área de cliente. Si no lo encuentras, usa 600 como ejemplo.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'MB/s',
+                    tolerancia: 0.5,
+                    respuesta: 75,
+                    pregunta: `<strong>b)</strong> Si esa velocidad fuera de <strong>600 Mbps</strong>, ¿cuántos
+                               <strong>MB/s</strong> deberías ver como máximo teórico en una descarga?`,
+                    explicacion: '600 ÷ 8 = <strong>75 MB/s</strong>. Es el cálculo que más se falla del curso: las velocidades van en bits y los tamaños en bytes.',
+                    pistas: [
+                        'Un byte son 8 bits.',
+                        'Para pasar de megabits por segundo a megabytes por segundo hay que dividir.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>c)</strong> Al descargar de verdad ves unos <strong>68 MB/s</strong> en lugar de 75. ¿Es normal?`,
+                    opciones: {
+                        a: 'No: el operador no está dando lo contratado y hay que reclamar',
+                        b: 'Sí: parte del caudal se va en cabeceras de protocolo y confirmaciones, así que el goodput siempre es algo menor',
+                        c: 'No: significa que el cable está defectuoso',
+                        d: 'Sí, pero solo ocurre con fibra'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la diferencia entre <strong>ancho de banda</strong> (capacidad teórica), <strong>throughput</strong> (caudal real) y <strong>goodput</strong> (datos útiles). Perder entre un 5 y un 10 % en cabeceras TCP/IP, confirmaciones y espacios entre tramas es completamente normal.',
+                    pistas: [
+                        'Recuerda los tres términos que distinguiste hoy: ancho de banda, throughput y goodput.',
+                        '¿Todo lo que viaja por el cable son datos de tu fichero?'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'segundos',
+                    tolerancia: 3,
+                    respuesta: 110,
+                    pregunta: `<strong>d)</strong> Con esos <strong>68 MB/s</strong> reales, ¿cuánto tardarías en
+                               descargar un juego de <strong>7,5 GB</strong>? <em>(1 GB = 1.000 MB)</em>`,
+                    explicacion: '7,5 GB = 7.500 MB. 7.500 ÷ 68 = <strong>110 segundos</strong>, algo menos de dos minutos. Fíjate en que aquí sí manda el ancho de banda: en descargas grandes la capacidad es el cuello de botella, al revés que en el ping.',
+                    pistas: [
+                        'Pasa primero los gigabytes a megabytes.',
+                        'Divide el tamaño total entre la velocidad real, no entre la teórica.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">55 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 4</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Día de cálculo</strong>
+            Ten papel y calculadora a mano. En los apartados numéricos escribe solo el número
+            (la unidad ya aparece al lado del campo). Usa punto o coma decimal indistintamente.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/ejercicios.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/teoria.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Ejercicios',
+    subtitulo: 'Señales · Unidades · Ancho de banda, latencia y cálculos',
+    tiempo: '55 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Señales analógicas y digitales',
+            tiempo: '15 min',
+            enunciado: '<p>Distingue ambos tipos de señal y razona por qué lo digital se impuso.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la comparativa con respuestas cortas.',
+                    esquina: 'Característica',
+                    cabecera: ['Analógica', 'Digital'],
+                    filas: [
+                        {
+                            etiqueta: 'Número de valores posibles',
+                            celdas: [
+                                { respuestas: ['infinitos', 'infinito', 'continuos'], placeholder: 'infinitos / finitos' },
+                                { respuestas: ['finitos', 'discretos', 'dos', '2'], placeholder: 'infinitos / finitos' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Resistencia al ruido',
+                            celdas: [
+                                { respuestas: ['baja', 'poca'], placeholder: 'alta / baja' },
+                                { respuestas: ['alta', 'mucha'], placeholder: 'alta / baja' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Qué se hace al degradarse',
+                            celdas: [
+                                { respuestas: ['amplificar', 'se amplifica', 'amplificacion'], placeholder: 'verbo' },
+                                { respuestas: ['regenerar', 'se regenera', 'regeneracion'], placeholder: 'verbo' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La clave está en la última fila: amplificar aumenta señal <em>y</em> ruido; regenerar reconstruye una señal nueva y limpia, eliminando el ruido acumulado.',
+                    pistas: [
+                        'Piensa qué puede hacer un equipo intermedio cuando le llega una señal debilitada y con ruido.',
+                        'Si no sabe qué parte es ruido, solo puede subirle el volumen a todo. Si sabe que solo hay dos valores posibles, puede decidir cuál era.',
+                        'Los verbos que buscas son «amplificar» y «regenerar».'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca las señales <strong>analógicas</strong>.',
+                    opciones: {
+                        a: 'Temperatura medida por un termómetro de mercurio',
+                        b: 'Datos transmitidos por cable Ethernet',
+                        c: 'Voz humana sin procesar',
+                        d: 'Señal de un vinilo reproduciéndose',
+                        e: 'Transmisión HDMI',
+                        f: 'Radio AM'
+                    },
+                    respuesta: ['a', 'c', 'd', 'f'],
+                    explicacion: 'Ethernet y HDMI son digitales. El termómetro de mercurio, la voz, el vinilo y la radio AM varían de forma continua.',
+                    pistas: [
+                        'Pregúntate si la magnitud puede tomar cualquier valor intermedio o solo unos pocos definidos.',
+                        'El mercurio sube de forma continua; un cable de red solo transmite dos niveles de tensión.',
+                        'Hay 4 analógicas entre las seis opciones.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál de estas afirmaciones sobre el ruido es <strong>correcta</strong>?',
+                    opciones: {
+                        a: 'La señal digital es completamente inmune al ruido',
+                        b: 'La señal digital tolera el ruido hasta cierto umbral; superado, se producen errores',
+                        c: 'El ruido solo afecta a las señales que viajan por fibra',
+                        d: 'Un amplificador analógico elimina el ruido acumulado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Digital no es inmune, es <strong>tolerante</strong>. Mientras el ruido no impida distinguir un 0 de un 1, la recuperación es perfecta; a partir de ahí hay errores.',
+                    pistas: [
+                        'Descarta las opciones absolutas: en redes casi nada es «completamente inmune».',
+                        'La clave está en si existe o no un límite a partir del cual sí falla.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Digitalización y teorema de Nyquist',
+            tiempo: '15 min',
+            enunciado: `
+                <p>La voz humana útil en telefonía llega hasta unos <strong>4 kHz</strong>. Vamos a reconstruir
+                el cálculo que da origen al canal telefónico de 64 Kbps.</p>`,
+            items: [
+                {
+                    tipo: 'numero',
+                    unidad: 'muestras/s',
+                    tolerancia: 0,
+                    respuesta: 8000,
+                    pregunta: '<strong>a)</strong> Según Nyquist, ¿a cuántas muestras por segundo hay que muestrear una señal de 4 kHz?',
+                    explicacion: 'Nyquist exige al menos el doble de la frecuencia máxima: 2 × 4.000 Hz = <strong>8.000 muestras/s</strong>.',
+                    pistas: [
+                        'El teorema habla de una relación con la frecuencia máxima de la señal.',
+                        'Es multiplicar por dos.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'Kbps',
+                    tolerancia: 0,
+                    respuesta: 64,
+                    pregunta: '<strong>b)</strong> Si cada muestra se codifica con <strong>8 bits</strong>, ¿qué caudal resulta en Kbps?',
+                    explicacion: '8.000 muestras/s × 8 bits = 64.000 bps = <strong>64 Kbps</strong>. Ese es el canal telefónico digital estándar.',
+                    pistas: [
+                        'Cada segundo se toman 8.000 muestras y cada una ocupa 8 bits.',
+                        'Multiplica ambas cifras y después pásalo a kilobits dividiendo entre 1.000.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'Kbps',
+                    tolerancia: 0.5,
+                    respuesta: 1411.2,
+                    pregunta: `<strong>c)</strong> Un CD de audio muestrea a <strong>44.100 muestras/s</strong> con
+                               <strong>16 bits</strong> por muestra y <strong>2 canales</strong> (estéreo).
+                               ¿Qué caudal genera, en Kbps?`,
+                    explicacion: '44.100 × 16 × 2 = 1.411.200 bps = <strong>1.411,2 Kbps</strong> (aproximadamente 1,4 Mbps). Por eso un CD de 74 minutos almacena unos 700 MB.',
+                    pistas: [
+                        'Son tres factores: muestras por segundo, bits por muestra y número de canales.',
+                        'No olvides multiplicar por 2 por el estéreo.',
+                        'El resultado en bps hay que dividirlo entre 1.000 para dar Kbps.'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>d)</strong> Ordena los pasos del proceso de digitalización de una señal analógica.',
+                    elementos: [
+                        'Cuantificar: redondear cada medida a un valor disponible',
+                        'Muestrear: medir la señal a intervalos regulares',
+                        'Codificar: representar cada valor en binario'
+                    ],
+                    orden: [
+                        'Muestrear: medir la señal a intervalos regulares',
+                        'Cuantificar: redondear cada medida a un valor disponible',
+                        'Codificar: representar cada valor en binario'
+                    ],
+                    explicacion: 'Primero se mide (muestreo), después se redondea al nivel más cercano (cuantificación) y por último se expresa en bits (codificación).'
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Unidades y conversiones',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Aquí se concentran la mayoría de errores de cálculo del curso. Recuerda:
+                <strong>velocidades en bits</strong> (Mbps), <strong>tamaños en bytes</strong> (MB), factor <strong>8</strong>
+                entre ambos, y prefijos <strong>decimales</strong> en redes.</p>`,
+            items: [
+                {
+                    tipo: 'numero',
+                    unidad: 'MB/s',
+                    tolerancia: 0.1,
+                    respuesta: 75,
+                    pregunta: '<strong>a)</strong> Una fibra de <strong>600 Mbps</strong>, ¿a cuántos MB/s descarga como máximo teórico?',
+                    explicacion: '600 Mbps ÷ 8 = <strong>75 MB/s</strong>. Es el error más común: confundir la «b» de bits con la «B» de bytes.',
+                    pistas: [
+                        'Fíjate en las unidades: una está en bits y la otra en bytes.',
+                        'Un byte son 8 bits, así que hay que dividir.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'Mb',
+                    tolerancia: 0.1,
+                    respuesta: 1200,
+                    pregunta: '<strong>b)</strong> ¿A cuántos megabits equivalen <strong>150 MB</strong>?',
+                    explicacion: '150 MB × 8 = <strong>1.200 Mb</strong>. Para pasar de bytes a bits siempre se multiplica por 8.',
+                    pistas: [
+                        'Vas de bytes (los grandes) a bits (los pequeños): el número tiene que crecer.',
+                        'Multiplica por 8.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'bps',
+                    tolerancia: 0,
+                    respuesta: 1000000,
+                    pregunta: '<strong>c)</strong> En redes, ¿a cuántos bits por segundo equivale exactamente <strong>1 Mbps</strong>?',
+                    explicacion: 'En telecomunicaciones el prefijo es decimal: 1 Mbps = 10⁶ = <strong>1.000.000 bps</strong>. Los prefijos binarios (mebi, 1.048.576) se reservan para memoria.',
+                    pistas: [
+                        'Ojo: en redes NO se usa el convenio binario de la informática.',
+                        'Es una potencia de 10, no de 2.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>d)</strong> Compras un disco de <strong>1 TB</strong> y el sistema operativo muestra
+                               «931 GB». ¿Qué ha ocurrido?`,
+                    opciones: {
+                        a: 'El fabricante ha entregado menos capacidad de la anunciada',
+                        b: 'El disco reserva espacio para el sistema de archivos, unos 69 GB',
+                        c: 'El fabricante cuenta en decimal (10¹²) y el sistema muestra en binario (2⁴⁰)',
+                        d: 'El disco está dañado y ha perdido sectores'
+                    },
+                    respuesta: 'c',
+                    explicacion: '10¹² bytes ÷ 2³⁰ = 931 GiB. No falta capacidad: son dos convenios distintos para contar lo mismo. Windows etiqueta como «GB» lo que en realidad son GiB.',
+                    pistas: [
+                        'Nadie ha robado nada: los bytes están todos ahí.',
+                        'El fabricante y el sistema operativo no cuentan igual: uno usa potencias de 10 y el otro de 2.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>e)</strong> Relaciona cada prefijo con su valor exacto.',
+                    izquierda: ['kilo (k)', 'mega (M)', 'kibi (Ki)', 'mebi (Mi)'],
+                    derecha: ['1.000', '1.000.000', '1.024', '1.048.576'],
+                    pares: {
+                        'kilo (k)': '1.000',
+                        'mega (M)': '1.000.000',
+                        'kibi (Ki)': '1.024',
+                        'mebi (Mi)': '1.048.576'
+                    },
+                    explicacion: 'Los prefijos del SI (kilo, mega) son potencias de 10; los del IEC (kibi, mebi) son potencias de 2. En redes se usan siempre los del SI.'
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Ancho de banda, latencia y tiempos de transferencia',
+            tiempo: '25 min',
+            enunciado: `
+                <p>Aplica la fórmula fundamental del curso:</p>
+                <pre><code>tiempo (s) = tamaño (bits) ÷ velocidad (bps)</code></pre>
+                <p>Pasa siempre el tamaño a bits antes de dividir.</p>`,
+            items: [
+                {
+                    tipo: 'numero',
+                    unidad: 'segundos',
+                    tolerancia: 0.5,
+                    respuesta: 40,
+                    pregunta: '<strong>a)</strong> ¿Cuánto tarda un fichero de <strong>500 MB</strong> por un enlace de <strong>100 Mbps</strong>? (sin sobrecarga)',
+                    explicacion: '500 MB × 8 = 4.000 Mb. 4.000 ÷ 100 = <strong>40 segundos</strong>.',
+                    pistas: [
+                        'Antes de dividir, comprueba que las dos magnitudes están en la misma unidad.',
+                        'El tamaño está en bytes y la velocidad en bits: pasa el tamaño a bits multiplicando por 8.',
+                        'Después divide el tamaño en bits entre la velocidad en bps.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'segundos',
+                    tolerancia: 0.5,
+                    respuesta: 13.3,
+                    pregunta: '<strong>b)</strong> ¿Cuánto tarda <strong>1 GB</strong> por una fibra de <strong>600 Mbps</strong>?',
+                    explicacion: '1 GB = 1.000 MB × 8 = 8.000 Mb. 8.000 ÷ 600 = <strong>13,3 segundos</strong>.',
+                    pistas: [
+                        'Primero pasa el gigabyte a megabytes, después a megabits.',
+                        'Divide entre los 600 Mbps del enlace.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'Mbps',
+                    tolerancia: 1,
+                    respuesta: 200,
+                    pregunta: `<strong>c)</strong> Una copia de seguridad de <strong>50 GB</strong> debe completarse en
+                               una ventana nocturna de <strong>2.000 segundos</strong>. ¿Qué velocidad mínima necesitas?`,
+                    explicacion: '50 GB = 50.000 MB × 8 = 400.000 Mb. 400.000 ÷ 2.000 = <strong>200 Mbps</strong> como mínimo teórico; en la práctica habría que contratar más por la sobrecarga.',
+                    pistas: [
+                        'Aquí despejas la velocidad en vez del tiempo: velocidad = tamaño ÷ tiempo.',
+                        'Pasa los 50 GB a megabits antes de dividir entre los segundos disponibles.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>d)</strong> Relaciona cada término con lo que mide.',
+                    izquierda: ['Ancho de banda', 'Throughput', 'Goodput', 'Latencia', 'Jitter'],
+                    derecha: [
+                        'Capacidad máxima teórica del enlace',
+                        'Caudal real conseguido, cabeceras incluidas',
+                        'Solo los datos útiles de aplicación',
+                        'Retardo en llegar del origen al destino',
+                        'Variación del retardo entre paquetes'
+                    ],
+                    pares: {
+                        'Ancho de banda': 'Capacidad máxima teórica del enlace',
+                        'Throughput': 'Caudal real conseguido, cabeceras incluidas',
+                        'Goodput': 'Solo los datos útiles de aplicación',
+                        'Latencia': 'Retardo en llegar del origen al destino',
+                        'Jitter': 'Variación del retardo entre paquetes'
+                    },
+                    explicacion: 'Los tres primeros miden <em>cantidad</em> por unidad de tiempo; los dos últimos miden <em>tiempo</em>. Son magnitudes independientes entre sí.',
+                    pistas: [
+                        'Separa primero los que miden «cuánto cabe» de los que miden «cuánto tarda».',
+                        'De los que miden cantidad, ordénalos de más optimista a más realista: teórico, real y solo datos útiles.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: `<strong>e)</strong> Un cliente se queja de que su videollamada por satélite «va lenta»
+                               pese a tener 100 Mbps contratados. ¿Qué le explicarías?`,
+                    opciones: {
+                        a: 'Que necesita contratar más ancho de banda',
+                        b: 'Que el problema es la latencia por la distancia al satélite, y más megas no la reducen',
+                        c: 'Que el satélite no admite videollamadas',
+                        d: 'Que debe cambiar el cable de red'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La señal sube 36.000 km y baja otros tantos: unos 250 ms de propagación por trayecto. La latencia depende de la distancia física, no de la capacidad contratada.',
+                    pistas: [
+                        'Fíjate en que el problema no menciona saturación ni falta de capacidad.',
+                        '¿Qué tiene de especial un satélite geoestacionario en cuanto a distancia?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: `<strong>f)</strong> Una empresa quiere sustituir su enlace de 100 Mbps por uno de 1 Gbps
+                               para «mejorar la videoconferencia», que se entrecorta. Explica por qué esa inversión
+                               probablemente no resolverá el problema y qué habría que medir antes (4-6 líneas).`,
+                    modelo: `
+                        <p>La videoconferencia consume poco ancho de banda (entre 1 y 4 Mbps por sesión en alta definición),
+                        de modo que un enlace de 100 Mbps está lejos de saturarse. Si se entrecorta, el problema casi con
+                        seguridad <strong>no es de capacidad</strong>, sino de <strong>latencia y sobre todo de jitter</strong>:
+                        los paquetes llegan con retardos irregulares y el reproductor no puede reconstruir el audio de forma continua.</p>
+                        <p>Antes de gastar en más megas habría que medir: latencia y RTT (con <code>ping</code>), jitter,
+                        porcentaje de pérdida de paquetes y ocupación real del enlace en las horas problemáticas. Si el enlace
+                        no está saturado, la solución pasa por aplicar <strong>QoS</strong> para priorizar el tráfico de voz y
+                        vídeo, o por corregir la congestión en algún punto intermedio, no por multiplicar la capacidad.</p>`,
+                    rubrica: [
+                        'Señala que la videoconferencia consume pocos Mbps y el enlace no está saturado',
+                        'Identifica jitter y latencia como causa probable, no la capacidad',
+                        'Propone medir latencia/RTT, jitter, pérdida de paquetes y ocupación real',
+                        'Sugiere QoS o resolver la congestión en lugar de ampliar el ancho de banda',
+                        'Deja claro que ancho de banda y latencia son independientes'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

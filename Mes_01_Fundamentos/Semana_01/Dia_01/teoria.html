@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — ¿Qué es una red? Historia de las telecomunicaciones</title>
+    <!-- Tema antes de pintar, para que no haya parpadeo al cargar en oscuro -->
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 1 — ¿Qué es una red?</h1>
+        <p>Concepto, ventajas e historia de las telecomunicaciones</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 45 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            A lo largo de la teoría hay <strong>cuatro paradas</strong> en las que tienes que escribir tu propia
+            respuesta antes de poder ver la del profesor. No las saltes: son el motivo de que este día ocupe
+            45 minutos y no 15.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#concepto">Concepto de red de computadoras</a></li>
+                <li><a href="#protocolo">Protocolos: el idioma común</a></li>
+                <li><a href="#ventajas">Ventajas y contrapartidas</a></li>
+                <li><a href="#historia">Historia de las telecomunicaciones</a></li>
+                <li><a href="#arpanet">ARPANET y la conmutación de paquetes</a></li>
+                <li><a href="#web">Internet no es la Web</a></li>
+                <li><a href="#velocidades">Evolución de las velocidades</a></li>
+                <li><a href="#mapa">Mapa del curso: qué verás y cuándo</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="concepto">1. Concepto de red de computadoras</h2>
+
+            <p>Una <strong>red de computadoras</strong> es un conjunto de dispositivos interconectados que pueden comunicarse entre sí para compartir recursos, información y servicios.</p>
+
+            <p>Esa definición contiene tres ideas que conviene separar:</p>
+
+            <ol>
+                <li><strong>Dispositivos</strong>: no solo ordenadores. También servidores, impresoras, cámaras, móviles, sensores, televisores o controladores industriales.</li>
+                <li><strong>Interconexión</strong>: existe un medio físico o inalámbrico que los une, y un conjunto de reglas comunes que les permite entenderse.</li>
+                <li><strong>Finalidad</strong>: compartir algo. Si dos equipos están unidos por un cable pero no intercambian nada, hay enlace pero no hay servicio de red.</li>
+            </ol>
+
+            <h2 id="protocolo">2. Protocolos: el idioma común</h2>
+
+            <p>Un <strong>protocolo</strong> es el conjunto de reglas que define <strong>cómo</strong> se comunican dos dispositivos: qué formato tienen los mensajes, en qué orden se envían y qué hacer si se pierde alguno.</p>
+
+            <div class="destacado">
+                <strong>Analogía</strong>
+                Dos personas pueden estar en la misma sala (medio físico disponible) y aun así no comunicarse si una habla español y la otra japonés. El idioma común es el protocolo.
+            </div>
+
+            <h3>Un ejemplo que probablemente ya has vivido: un servidor de Arma 3</h3>
+
+            <p>Un servidor de simulación táctica multijugador usa <strong>dos protocolos de transporte distintos a la vez</strong>, y la razón es puramente de diseño de red:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Qué se transmite</th><th>Protocolo</th><th>Por qué ese y no el otro</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Posición de los jugadores y voz en tiempo real</td>
+                        <td><strong>UDP</strong></td>
+                        <td>Si un paquete de posición se pierde, <strong>no interesa reenviarlo</strong>: cuando llegara, esa posición ya sería vieja. Es preferible descartarlo y usar el siguiente. Prima la <strong>latencia</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Descarga de la lista de mods, validación de scripts, ficheros de misión</td>
+                        <td><strong>TCP</strong></td>
+                        <td>Aquí <strong>no se puede perder ni un byte</strong>: un fichero incompleto no carga. Prima la <strong>fiabilidad absoluta</strong>, aunque haya que reenviar y esperar</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Ese «cuándo importa la velocidad y cuándo la fiabilidad» es una de las decisiones más repetidas en administración de redes. Lo estudiarás a fondo en el <strong>Mes 10</strong>, pero conviene que la idea te acompañe desde hoy.</p>
+
+            <details class="ampliacion">
+                <summary>Ampliación: por qué la voz aguanta perder paquetes y un fichero no</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>La voz digitalizada se envía en fragmentos de unos 20 ms. Si se pierde uno, el códec
+                    <strong>interpola</strong> el hueco a partir del anterior y el oído humano apenas lo nota: se percibe
+                    como una micro-aspereza. Reenviarlo sería peor, porque llegaría fuera de orden y habría que retrasar
+                    toda la reproducción para esperarlo.</p>
+                    <p>Un fichero, en cambio, es una secuencia exacta de bytes: si falta uno, el <em>hash</em> no cuadra y
+                    el archivo es inservible. No hay «interpolación» posible. Por eso TCP numera cada segmento, confirma
+                    su recepción y reenvía lo que falte, aunque eso cueste tiempo.</p>
+                </div>
+            </details>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="ventajas">3. Ventajas y contrapartidas</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Ventaja</th><th>En qué consiste</th><th>Ejemplo concreto</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Compartición de recursos</strong></td><td>Un recurso caro lo usan muchos</td><td>Una impresora láser para 20 empleados en lugar de 20 impresoras</td></tr>
+                    <tr><td><strong>Comunicación</strong></td><td>Intercambio en tiempo real o diferido</td><td>Correo interno, mensajería, videoconferencia</td></tr>
+                    <tr><td><strong>Centralización de datos</strong></td><td>La información vive en un punto controlado</td><td>Servidor de ficheros con copia de seguridad automática</td></tr>
+                    <tr><td><strong>Fiabilidad</strong></td><td>Redundancia: si algo falla, hay alternativa</td><td>Dos servidores replicados; si cae uno, sigue el otro</td></tr>
+                    <tr><td><strong>Escalabilidad</strong></td><td>Crecer sin rehacer todo</td><td>Añadir 10 puestos conectándolos al switch existente</td></tr>
+                    <tr><td><strong>Ahorro de costes</strong></td><td>Menos hardware y licencias por volumen</td><td>Una fibra de 600 Mbps compartida en vez de 20 líneas individuales</td></tr>
+                    <tr><td><strong>Seguridad centralizada</strong></td><td>Las políticas se aplican en un punto</td><td>Un firewall protege a toda la organización</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Seguridad centralizada, con un caso real: el sumidero DNS</h3>
+
+            <p>El firewall es el ejemplo clásico, pero hay uno mucho más ilustrativo de lo que significa
+            «un solo servicio protege a todos»: un <strong>sumidero DNS</strong> como <strong>Pi-hole</strong>.</p>
+
+            <p>Funciona así: en lugar de instalar un bloqueador en cada dispositivo, se monta <strong>un único
+            servidor DNS</strong> en la red. Cuando cualquier equipo pregunta «¿qué IP tiene
+            <code>telemetria.ejemplo.com</code>?», ese servidor responde con una dirección nula en vez de la real.
+            La conexión nunca llega a establecerse.</p>
+
+            <div class="dato">
+                <strong>Por qué esto es exactamente «seguridad centralizada»</strong>
+                <p>Protege a la <strong>televisión</strong>, al <strong>móvil de una visita</strong> y a la
+                <strong>bombilla inteligente</strong>: dispositivos en los que no puedes instalar absolutamente nada.
+                Se configura <em>una vez</em>, en <em>un sitio</em>, y aplica a todo lo que se conecte a la red.</p>
+                <p>Y muestra la contrapartida en la misma frase: si ese servidor DNS cae y no hay uno secundario,
+                <strong>nadie navega</strong>. Centralizar concentra el poder y también el riesgo.</p>
+            </div>
+
+            <h3>Contrapartidas</h3>
+
+            <p>Una red bien planificada aporta todo lo anterior, pero también introduce problemas que antes no existían:</p>
+
+            <ul>
+                <li><strong>Punto único de fallo</strong>: si cae el servidor de ficheros, nadie trabaja.</li>
+                <li><strong>Propagación de amenazas</strong>: un equipo infectado puede alcanzar a los demás.</li>
+                <li><strong>Necesidad de administración</strong>: alguien tiene que configurar, vigilar y actualizar.</li>
+                <li><strong>Dependencia</strong>: sin red, muchas tareas quedan bloqueadas.</li>
+            </ul>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="historia">4. Historia de las telecomunicaciones</h2>
+
+            <p>No hace falta memorizar todas las fechas al dígito, pero <strong>sí el orden y el porqué de cada hito</strong>. Cada uno resolvió un problema que el anterior no podía.</p>
+
+            <p><strong>Pulsa cada hito</strong> para ver qué aportó. Intenta adivinar el problema que resolvía antes de abrirlo.</p>
+
+            <div id="timeline"></div>
+
+            <h2 id="arpanet">5. ARPANET y la conmutación de paquetes</h2>
+
+            <p>ARPANET fue una red financiada por la agencia <strong>ARPA</strong> del Departamento de Defensa de EE. UU. Su gran aportación no fue conectar ordenadores —eso ya se hacía—, sino <strong>cómo</strong> los conectó:</p>
+
+            <ul>
+                <li><strong>Conmutación de paquetes</strong>: la información se trocea en paquetes independientes que pueden tomar rutas distintas y se reensamblan en destino.</li>
+                <li><strong>Arquitectura descentralizada</strong>: no hay un nodo central cuya caída tumbe la red.</li>
+                <li>Los <strong>4 nodos iniciales</strong> fueron UCLA, Stanford Research Institute, UC Santa Bárbara y la Universidad de Utah.</li>
+            </ul>
+
+            <div class="dato">
+                <strong>El primer mensaje de la historia de Internet</strong>
+                El 29 de octubre de 1969 se intentó enviar <code>LOGIN</code> desde UCLA al SRI, pero el sistema se cayó tras las dos primeras letras. El primer mensaje transmitido fue, literalmente, <strong>«LO»</strong>.
+            </div>
+
+            <h3>Compruébalo tú mismo</h3>
+
+            <p>En la simulación siguiente, <strong>corta el enlace B–D</strong> y observa qué ocurre. Después
+            cambia al modo de <strong>conmutación de circuitos</strong> y vuelve a cortarlo. La diferencia entre
+            ambos comportamientos es, literalmente, la razón de que Internet exista.</p>
+
+            <div id="simulacion"></div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="web">6. Internet no es la Web</h2>
+
+            <div class="aviso">
+                <strong>Error conceptual más frecuente del tema</strong>
+                La World Wide Web <strong>no es</strong> Internet.
+            </div>
+
+            <ul>
+                <li><strong>Internet</strong> es la infraestructura: las redes interconectadas y los protocolos que las unen. Existe desde los años 70-80.</li>
+                <li><strong>La Web</strong> es <strong>un servicio</strong> que funciona <strong>sobre</strong> Internet, creado por Tim Berners-Lee en el CERN, basado en HTTP, HTML y las URL.</li>
+            </ul>
+
+            <p>Otros servicios que también funcionan sobre Internet: correo electrónico, FTP, DNS, streaming, VoIP o el propio servidor de Arma del que hablábamos antes. La Web es solo uno más, aunque sea el más visible.</p>
+
+            <h2 id="velocidades">7. Evolución de las velocidades</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Época</th><th>Tecnología</th><th>Velocidad típica</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1980s</td><td>Módem telefónico</td><td>300 bps - 2.400 bps</td></tr>
+                    <tr><td>1990s</td><td>Módem 56k</td><td>56 Kbps</td></tr>
+                    <tr><td>2000s</td><td>ADSL</td><td>1 - 20 Mbps</td></tr>
+                    <tr><td>2010s</td><td>Fibra FTTH</td><td>100 - 1.000 Mbps</td></tr>
+                    <tr><td>Actualidad</td><td>Fibra / 5G</td><td>1 - 10 Gbps</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Entre un módem de 1985 y una fibra actual hay un factor de <strong>más de un millón</strong>. Esa es la razón de que el vídeo en alta definición o el cloud sean viables hoy y fueran impensables entonces.</p>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="mapa">8. Mapa del curso: qué verás y cuándo</h2>
+
+            <p>Hoy has visto el «qué» y el «por qué». Todo lo demás tiene su sitio asignado en el calendario.
+            Esta tabla es tu mapa: cuando te preguntes «¿y esto cuándo lo doy?», vuelve aquí.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Lo que te estarás preguntando</th><th>Cuándo se estudia</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>¿Cómo viajan realmente los datos por el cable?</td><td><a href="../Dia_02/teoria.html">Día 2</a> y <a href="../Dia_03/teoria.html">Día 3</a></td></tr>
+                    <tr><td>¿Qué diferencia hay entre una LAN y una WAN?</td><td><a href="../Dia_04/teoria.html">Día 4</a></td></tr>
+                    <tr><td>¿Cómo se colocan los equipos? ¿Y si falla uno?</td><td><a href="../Dia_05/teoria.html">Día 5</a> y <a href="../Dia_06/teoria.html">Día 6</a></td></tr>
+                    <tr><td>¿Qué hacen exactamente un switch y un router?</td><td>Semana 4 del Mes 1</td></tr>
+                    <tr><td>El modelo OSI y TCP/IP, las famosas «capas»</td><td>Semana 3 del Mes 1</td></tr>
+                    <tr><td>Cables, fibra óptica y Wi-Fi por dentro</td><td>Mes 2</td></tr>
+                    <tr><td>Direcciones IP, máscaras y <em>subnetting</em></td><td>Meses 4 y 5</td></tr>
+                    <tr><td>TCP frente a UDP en detalle · DNS · DHCP</td><td>Mes 10</td></tr>
+                    <tr><td>Firewalls, NAT y seguridad perimetral</td><td>Mes 11</td></tr>
+                    <tr><td>VPN, monitorización y proyecto final</td><td>Mes 12</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>No corras a estudiar el Mes 5 hoy</strong>
+                El orden del curso no es caprichoso: el <em>subnetting</em> del Mes 4 exige entender direcciones IP,
+                que exigen entender el modelo de capas, que exige entender qué es un protocolo. Saltarse pasos hace
+                que lo siguiente parezca arbitrario y haya que memorizarlo en lugar de comprenderlo.
+            </div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <h3>Resumen</h3>
+
+            <ul>
+                <li>Una red es un conjunto de dispositivos <strong>interconectados</strong> que comparten <strong>recursos y servicios</strong> siguiendo <strong>protocolos</strong> comunes.</li>
+                <li>Un protocolo define formato, orden y gestión de errores. <strong>UDP</strong> prioriza velocidad; <strong>TCP</strong>, fiabilidad.</li>
+                <li>Ventajas: compartición, comunicación, centralización, fiabilidad, escalabilidad, ahorro y seguridad centralizada.</li>
+                <li>Toda red introduce también dependencia, superficie de ataque y necesidad de administración.</li>
+                <li>Orden histórico: <strong>telégrafo (1837) → teléfono (1876) → ARPANET (1969) → Ethernet (1973) → TCP/IP (1983) → WWW (1989) → Wi-Fi (1997)</strong>.</li>
+                <li>La aportación decisiva de ARPANET fue la <strong>conmutación de paquetes</strong> y la descentralización.</li>
+                <li><strong>Internet ≠ Web</strong>: la Web es un servicio que funciona sobre Internet.</li>
+            </ul>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Error</th><th>Corrección</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>«Internet se inventó en 1989»</td><td>En 1989 nació <strong>la Web</strong>. Internet arranca con ARPANET (1969) y se consolida con TCP/IP (1983)</td></tr>
+                    <tr><td>«ARPANET fue la primera red de ordenadores»</td><td>Fue la primera red de <strong>conmutación de paquetes</strong>, que es distinto</td></tr>
+                    <tr><td>«Ethernet e Internet son lo mismo»</td><td>Ethernet es una tecnología <strong>LAN</strong>; Internet es la red global de redes</td></tr>
+                    <tr><td>«El telégrafo transmitía voz»</td><td>Transmitía <strong>código Morse</strong>; la voz llegó con el teléfono en 1876</td></tr>
+                    <tr><td>«El Wi-Fi es más rápido que el cable»</td><td>Depende del estándar y del cable. Un Wi-Fi 6 supera a un cable Cat5 antiguo, pero frente a Gigabit o 10G por cable el Wi-Fi pierde: comparte medio, sufre interferencias y es <em>half-duplex</em></td></tr>
+                    <tr><td>«Con más megas navego más rápido»</td><td>Solo si el ancho de banda era el cuello de botella. Para abrir webs o jugar manda la <strong>latencia</strong>, y esa no se compra con megas (lo verás el Día 3)</td></tr>
+                    <tr><td>«La nube es un sitio abstracto»</td><td>La nube son <strong>ordenadores de otra persona</strong> en centros de datos muy concretos, con su dirección postal, su consumo eléctrico y su jurisdicción legal</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <details class="ampliacion">
+                <summary>Ampliación: ¿dónde está «la nube» exactamente?</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>Cuando subes una foto a un servicio en la nube, esa foto acaba escrita en discos de un
+                    <strong>centro de datos físico</strong>, replicada normalmente en dos o tres ubicaciones. Esas
+                    ubicaciones se agrupan en <em>regiones</em> (por ejemplo, una región europea y otra estadounidense).</p>
+                    <p>Esto tiene tres consecuencias muy prácticas para un administrador de sistemas:</p>
+                    <ul>
+                        <li><strong>Latencia</strong>: cuanto más lejos esté la región, más tarda cada operación. No es lo mismo servir a clientes españoles desde Madrid que desde Virginia.</li>
+                        <li><strong>Legalidad</strong>: los datos personales de ciudadanos europeos están sujetos al RGPD, lo que condiciona en qué región pueden almacenarse.</li>
+                        <li><strong>Disponibilidad</strong>: si arde un centro de datos —ha pasado— se pierde lo que no estuviera replicado fuera de él.</li>
+                    </ul>
+                </div>
+            </details>
+
+            <h3>Para ampliar por tu cuenta</h3>
+
+            <ul>
+                <li><a href="https://www.youtube.com/watch?v=ZhEf7e4kopM" target="_blank" rel="noopener">Computerphile — <em>How the Internet Works</em></a></li>
+                <li><a href="https://www.youtube.com/watch?v=AEaKrq3SpW8" target="_blank" rel="noopener">Crash Course — <em>The Internet: Packets, Routing &amp; Reliability</em></a></li>
+                <li><a href="https://www.computerhistory.org/" target="_blank" rel="noopener">Computer History Museum</a> — archivo original de ARPANET</li>
+            </ul>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Antes del quiz, recupera de memoria. Piensa la respuesta <strong>antes</strong> de girar la tarjeta:
+            el esfuerzo de recordar es lo que consolida, no el hecho de leerla.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>12 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Ya sabes qué es una red. Ahora vas a <strong>mirar la tuya por dentro</strong>: qué dirección tienes,
+            quién es tu puerta de enlace y por cuántos saltos pasa un paquete hasta llegar a Google.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 1</strong></a> (55 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 2</strong>
+            <p>Verás los <strong>cinco componentes</strong> que tiene toda comunicación y por qué el Wi-Fi no puede
+            hablar y escuchar a la vez.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> busca qué significan <strong>simplex</strong>,
+            <strong>half-duplex</strong> y <strong>full-duplex</strong>, y piensa a cuál de los tres se parece
+            una conversación por walkie-talkie.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    /* ---------------- Componentes interactivos de la teoría ---------------- */
+    const interactivoData = {
+
+        simulacion: true,
+
+        timeline: [
+            {
+                anio: '1837',
+                titulo: 'Telégrafo (Samuel Morse)',
+                que: 'Primera comunicación <strong>eléctrica</strong> a distancia. La información se codifica en puntos y rayas y viaja por un hilo de cobre.',
+                problema: 'Hasta entonces un mensaje viajaba físicamente, a la velocidad de un caballo o un barco. Por primera vez la información se separa del transporte físico.'
+            },
+            {
+                anio: '1876',
+                titulo: 'Teléfono (Alexander Graham Bell)',
+                que: 'Transmisión de <strong>voz</strong> en tiempo real por el mismo tipo de hilo.',
+                problema: 'El telégrafo exigía codificar y descodificar en Morse, con operadores especializados en ambos extremos. El teléfono lo pone al alcance de cualquiera.'
+            },
+            {
+                anio: '1895',
+                titulo: 'Radio (Guglielmo Marconi)',
+                que: 'Comunicación <strong>sin cables</strong> mediante ondas electromagnéticas.',
+                problema: 'El cable no llega a un barco en alta mar ni a una zona sin infraestructura. La radio elimina la dependencia del tendido físico.'
+            },
+            {
+                anio: '1950s',
+                titulo: 'SAGE, el primer gran sistema en red',
+                que: 'Sistema estadounidense de defensa aérea que conectaba radares con centros de mando mediante <strong>conmutación de circuitos</strong> y módems telefónicos.',
+                problema: 'Demostró que varios ordenadores podían trabajar coordinados en tiempo real, pero también evidenció el coste de reservar un circuito para cada enlace.'
+            },
+            {
+                anio: '1969',
+                titulo: 'ARPANET',
+                que: 'Primera red de <strong>conmutación de paquetes</strong>, con 4 nodos universitarios y sin ningún nodo central.',
+                problema: 'La conmutación de circuitos desperdiciaba la línea durante los silencios y caía entera si se cortaba el circuito. Los paquetes comparten el medio y se reencaminan solos.'
+            },
+            {
+                anio: '1971',
+                titulo: 'ALOHAnet',
+                que: 'Red por radio entre las islas de Hawái. Inventó un método para que varios emisores compartieran una misma frecuencia y gestionaran las <strong>colisiones</strong>.',
+                problema: 'Resolvió cómo repartir un medio compartido entre muchos, la idea que Robert Metcalfe adaptaría al cable dos años después para crear Ethernet.'
+            },
+            {
+                anio: '1973',
+                titulo: 'Ethernet (Robert Metcalfe)',
+                que: 'Tecnología <strong>LAN</strong> práctica y barata sobre cable, heredera del acceso al medio de ALOHAnet.',
+                problema: 'Conectar los ordenadores de un mismo edificio con líneas dedicadas era caro e inmanejable. Ethernet lo hace con un medio compartido y sigue siendo hoy el estándar.'
+            },
+            {
+                anio: '1974-1983',
+                titulo: 'TCP/IP (Vint Cerf y Bob Kahn)',
+                que: 'Diseñado en 1974 y adoptado como <strong>estándar obligatorio</strong> de ARPANET el 1 de enero de 1983.',
+                problema: 'Cada red usaba su propio protocolo y no podían hablar entre sí. TCP/IP es el idioma común que permite interconectar redes <strong>heterogéneas</strong>: ahí nace Internet tal como la conocemos.'
+            },
+            {
+                anio: '1986',
+                titulo: 'NSFNET',
+                que: 'Red troncal (<em>backbone</em>) financiada por la National Science Foundation que interconectó los centros de supercomputación de EE. UU.',
+                problema: 'ARPANET era militar y de acceso restringido. NSFNET abrió la red al mundo académico y se convirtió en la columna vertebral sobre la que creció Internet.'
+            },
+            {
+                anio: '1989',
+                titulo: 'World Wide Web (Tim Berners-Lee)',
+                que: 'Servicio basado en <strong>HTTP, HTML y URL</strong> creado en el CERN.',
+                problema: 'Internet ya funcionaba, pero usarla exigía conocimientos técnicos. La Web aporta una interfaz de páginas y enlaces que cualquiera entiende.'
+            },
+            {
+                anio: '1993-1995',
+                titulo: 'Mosaic y Netscape',
+                que: 'Los primeros navegadores <strong>gráficos</strong> de uso masivo, capaces de mostrar imágenes junto al texto.',
+                problema: 'La Web existía desde 1989 pero se consultaba en modo texto. El navegador gráfico es lo que desencadena la explosión de Internet en los hogares.'
+            },
+            {
+                anio: '1997',
+                titulo: 'IEEE 802.11 (Wi-Fi)',
+                que: 'Estándar de red local <strong>inalámbrica</strong> asequible.',
+                problema: 'Cada puesto necesitaba su cable. El Wi-Fi libera al usuario del tendido y hace posibles el portátil y luego el móvil como equipos de red de pleno derecho.'
+            },
+            {
+                anio: '1999-2001',
+                titulo: 'Redes P2P (Napster, BitTorrent)',
+                que: 'Arquitecturas donde cada usuario es a la vez cliente y servidor, <strong>sin servidor central</strong>.',
+                problema: 'Un servidor central se satura y es un punto único de fallo. El P2P reparte la carga entre los propios usuarios; la idea sigue viva en blockchain y en la distribución de actualizaciones.'
+            },
+            {
+                anio: '2010s',
+                titulo: '4G, 5G y computación en la nube',
+                que: 'Banda ancha móvil real y traslado de los servicios a centros de datos remotos.',
+                problema: 'Ata el ordenador a una ubicación fija. Ahora la capacidad de cómputo y los datos están en la red, y el dispositivo pasa a ser un simple punto de acceso a ellos.'
+            }
+        ],
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Un servicio de videollamada y una descarga de un fichero de 2 GB usan protocolos de transporte distintos. Explica <strong>con tus palabras</strong> por qué a la videollamada le conviene perder algún paquete antes que esperarlo.',
+                modelo: `<p>En una videollamada la información <strong>caduca</strong>: un fragmento de audio de hace medio
+                         segundo ya no sirve para nada, porque la conversación ha avanzado. Pedir que se reenvíe obligaría a
+                         retrasar toda la reproducción para esperarlo, y el resultado sería una llamada con retardo creciente
+                         e imposible de mantener.</p>
+                         <p>Es preferible <strong>descartar</strong> ese fragmento: el códec rellena el hueco por interpolación y
+                         el oyente apenas percibe una micro-aspereza. En una descarga, en cambio, los datos <strong>no caducan</strong>
+                         y además deben llegar completos: un solo byte perdido inutiliza el archivo, así que sí compensa
+                         esperar y reenviar.</p>`,
+                puntos: [
+                    'La información en tiempo real caduca; los datos de un fichero no',
+                    'Reenviar añadiría retardo acumulado a la conversación',
+                    'Un fichero incompleto es inservible, un audio con un hueco sigue siendo comprensible',
+                    'Relacionarlo con UDP (velocidad) frente a TCP (fiabilidad)'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Has visto que un sumidero DNS protege a toda la red desde un único punto. Explica qué <strong>ventaja</strong> y qué <strong>riesgo</strong> tiene esa centralización, y qué harías para reducir el riesgo sin renunciar a la ventaja.',
+                modelo: `<p><strong>Ventaja:</strong> se configura una sola vez y protege a <em>todos</em> los dispositivos,
+                         incluidos aquellos en los que es imposible instalar software (televisores, bombillas inteligentes,
+                         el móvil de una visita). El mantenimiento se hace en un punto en lugar de en veinte.</p>
+                         <p><strong>Riesgo:</strong> se convierte en un <strong>punto único de fallo</strong>. Si ese servidor
+                         se apaga o falla, ningún equipo puede resolver nombres y, en la práctica, nadie navega, aunque la
+                         conexión a Internet siga perfectamente.</p>
+                         <p><strong>Mitigación:</strong> configurar un <strong>DNS secundario</strong> (un segundo sumidero, o
+                         el del router / un DNS público como respaldo), de modo que si el primario no responde los clientes
+                         usen el otro. Es exactamente el principio de redundancia que da fiabilidad a una red.</p>`,
+                puntos: [
+                    'Ventaja: una sola configuración protege a todos, incluidos dispositivos no gestionables',
+                    'Riesgo: punto único de fallo — si cae, nadie resuelve nombres',
+                    'Mitigación concreta: DNS secundario o de respaldo',
+                    'Conectarlo con la idea de redundancia y fiabilidad'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Acabas de ver la simulación. Explica por qué Internet usa <strong>conmutación de paquetes</strong> en lugar de reservar un circuito para cada comunicación, y qué le pasó al circuito cuando cortaste el enlace.',
+                modelo: `<p>Reservar un circuito significa apartar un camino completo durante toda la comunicación, se use o no.
+                         En una conversación real se habla en torno al 60 % del tiempo, así que <strong>el 40 % de la capacidad
+                         reservada se desperdicia</strong> transmitiendo silencio. Y ese camino no puede aprovecharlo nadie más.</p>
+                         <p>Con conmutación de paquetes <strong>no se reserva nada</strong>: cada paquete se envía cuando hace falta y
+                         busca su propia ruta, de modo que el medio se comparte entre muchas comunicaciones simultáneas.</p>
+                         <p>Al cortar el enlace, en la simulación se ve la diferencia decisiva: en modo paquetes los paquetes
+                         <strong>rodean</strong> el tramo roto y siguen llegando; en modo circuito la comunicación se
+                         <strong>interrumpe por completo</strong>, porque el camino reservado ya no existe y el sistema no busca
+                         alternativa. Esa supervivencia ante fallos parciales es la razón de ser del diseño de ARPANET.</p>`,
+                puntos: [
+                    'El circuito reservado desperdicia capacidad durante los silencios',
+                    'Los paquetes comparten el medio entre muchas comunicaciones',
+                    'Ante un corte, los paquetes se reencaminan por otra ruta',
+                    'El circuito se interrumpe porque no busca alternativa',
+                    'Relacionarlo con la robustez de Internet frente a fallos'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Un cliente te dice: «he contratado 1 Gbps y las páginas siguen tardando lo mismo en abrir». Antes de estudiarlo formalmente, ¿qué crees que puede estar pasando?',
+                modelo: `<p>El ancho de banda solo importa si era <strong>el cuello de botella</strong>. Abrir una página web no
+                         consume apenas capacidad: son muchos ficheros pequeños. Lo que domina ese tiempo es la
+                         <strong>latencia</strong>, es decir, cuánto tarda cada ida y vuelta hasta el servidor, más las
+                         consultas de DNS previas.</p>
+                         <p>Multiplicar los megas no acorta la distancia física hasta el servidor ni el número de idas y vueltas
+                         necesarias. Es como ensanchar una autopista para ir más rápido a una ciudad que está a 600 km: caben
+                         más coches, pero el trayecto dura lo mismo.</p>
+                         <p>Contratar más ancho de banda sí se nota en <strong>descargas grandes</strong> o con
+                         <strong>muchos usuarios simultáneos</strong>, que es cuando la capacidad era realmente el límite.</p>`,
+                puntos: [
+                    'El ancho de banda solo ayuda si era el cuello de botella',
+                    'Abrir una web depende sobre todo de la latencia y del DNS',
+                    'Más megas no reducen la distancia ni el número de idas y vueltas',
+                    'Sí se nota en descargas grandes o con muchos usuarios a la vez'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Qué tres cosas necesita algo para ser una <em>red</em>?', dorso: '<strong>Dispositivos</strong> interconectados, un <strong>medio</strong> que los una con reglas comunes (protocolos), y la <strong>finalidad</strong> de compartir recursos o servicios.' },
+            { frente: '¿Qué es un protocolo?', dorso: 'El conjunto de <strong>reglas</strong> que define cómo se comunican dos dispositivos: formato de los mensajes, orden de envío y qué hacer si se pierde alguno.' },
+            { frente: '¿Cuándo se usa <strong>UDP</strong> y cuándo <strong>TCP</strong>?', dorso: '<strong>UDP</strong> cuando prima la velocidad y los datos caducan (voz, posición en un juego). <strong>TCP</strong> cuando no se puede perder ni un byte (ficheros, descargas, web).' },
+            { frente: 'Cita 4 ventajas de tener una red', dorso: 'Compartición de recursos · Comunicación · Centralización de datos · Fiabilidad por redundancia · Escalabilidad · Ahorro de costes · Seguridad centralizada.' },
+            { frente: 'Cita 3 contrapartidas de tener una red', dorso: 'Punto único de fallo · Propagación de amenazas entre equipos · Necesidad de administración · Dependencia: sin red no se trabaja.' },
+            { frente: '¿Qué aportó <strong>ARPANET</strong>?', dorso: 'La <strong>conmutación de paquetes</strong> y una arquitectura <strong>descentralizada</strong> sin nodo central. No fue la primera red, fue la primera de paquetes.' },
+            { frente: '¿Cuál fue el primer mensaje de ARPANET?', dorso: '<strong>«LO»</strong>. Se intentaba enviar <code>LOGIN</code> desde UCLA al SRI el 29 de octubre de 1969, pero el sistema se cayó tras dos letras.' },
+            { frente: 'Ordena: Ethernet · WWW · ARPANET · TCP/IP estándar', dorso: '<strong>ARPANET (1969) → Ethernet (1973) → TCP/IP (1983) → WWW (1989)</strong>.' },
+            { frente: '¿Qué relación hay entre <strong>Internet</strong> y la <strong>Web</strong>?', dorso: 'Internet es la <strong>infraestructura</strong>; la Web es <strong>un servicio</strong> que funciona sobre ella, como el correo, el DNS o el streaming.' },
+            { frente: 'Diferencia entre conmutación de <strong>circuitos</strong> y de <strong>paquetes</strong>', dorso: 'Circuitos: reserva un camino fijo, se desperdicia en los silencios y cae si se corta. Paquetes: no reserva nada, comparte el medio y <strong>reencamina</strong> ante un fallo.' },
+            { frente: '¿Qué aportó <strong>ALOHAnet</strong> (1971)?', dorso: 'La forma de que <strong>varios emisores compartan un mismo medio</strong> gestionando colisiones. Metcalfe la adaptó al cable para crear Ethernet.' },
+            { frente: '¿Qué fue <strong>NSFNET</strong> (1986)?', dorso: 'La red troncal académica que <strong>abrió Internet más allá del ámbito militar</strong> y sirvió de columna vertebral para su crecimiento.' },
+            { frente: '¿Por qué contratar más megas no siempre acelera la navegación?', dorso: 'Porque abrir una web depende sobre todo de la <strong>latencia</strong> y del DNS, no de la capacidad. Los megas se notan en descargas grandes o con muchos usuarios.' },
+            { frente: '¿Qué es «la nube» en términos físicos?', dorso: '<strong>Ordenadores de otra persona</strong> en centros de datos concretos, con ubicación, consumo eléctrico y jurisdicción legal propios.' }
+        ]
+    };
+
+    /* ------------------------------ Quiz del día ------------------------------ */
+    const quizData = {
+        titulo: 'Día 1 — ¿Qué es una red?',
+        subtitulo: 'Concepto · Protocolos · Ventajas · Historia',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Concepto de red',
+                repaso: '#concepto',
+                text: '¿Cuál de estas afirmaciones define mejor una red de computadoras?',
+                options: {
+                    a: 'Un conjunto de ordenadores situados en la misma sala',
+                    b: 'Un conjunto de dispositivos interconectados que comparten recursos y servicios',
+                    c: 'Un cable que une dos equipos informáticos',
+                    d: 'Un programa que permite navegar por Internet'
+                },
+                answer: 'b',
+                feedback: 'Lo esencial no es la proximidad ni el cable, sino que exista interconexión mediante protocolos comunes y que se compartan recursos, información o servicios.'
+            },
+            {
+                topic: 'Protocolos',
+                repaso: '#protocolo',
+                text: '¿Qué es un protocolo de red?',
+                options: {
+                    a: 'El cable que conecta físicamente los equipos',
+                    b: 'Un programa antivirus para redes',
+                    c: 'El conjunto de reglas que define cómo se comunican los dispositivos',
+                    d: 'El nombre que se da a cada equipo de la red'
+                },
+                answer: 'c',
+                feedback: 'El protocolo define el formato de los mensajes, su orden y qué hacer ante errores. Sin un protocolo común, dos equipos conectados no pueden entenderse.'
+            },
+            {
+                topic: 'Protocolos',
+                repaso: '#protocolo',
+                text: 'Un servidor de juego envía la posición de los jugadores mediante UDP. ¿Cuál es la razón?',
+                options: {
+                    a: 'UDP cifra los datos y TCP no',
+                    b: 'Si un paquete de posición se pierde, reenviarlo llegaría tarde y ya no serviría',
+                    c: 'UDP garantiza que no se pierda ningún paquete',
+                    d: 'TCP no funciona en redes locales'
+                },
+                answer: 'b',
+                feedback: 'La información en tiempo real caduca: cuando llegara el paquete reenviado, esa posición ya sería antigua. Es preferible descartarlo y usar el siguiente. Por eso la descarga de mods, que sí exige integridad total, va por TCP.'
+            },
+            {
+                topic: 'Ventajas',
+                repaso: '#ventajas',
+                text: 'Una empresa instala una única impresora láser para sus 20 empleados en lugar de comprar 20 impresoras. ¿Qué ventaja está aprovechando?',
+                options: {
+                    a: 'Compartición de recursos',
+                    b: 'Fiabilidad',
+                    c: 'Escalabilidad',
+                    d: 'Seguridad centralizada'
+                },
+                answer: 'a',
+                feedback: 'La compartición de recursos permite que un dispositivo caro sea utilizado por muchos usuarios, reduciendo la inversión necesaria.'
+            },
+            {
+                topic: 'Ventajas',
+                repaso: '#ventajas',
+                text: 'Se instala un sumidero DNS (Pi-hole) que bloquea telemetría para todos los equipos de la casa, incluida la televisión. ¿Qué ventaja ilustra mejor este caso?',
+                options: {
+                    a: 'Escalabilidad',
+                    b: 'Ahorro de costes',
+                    c: 'Seguridad centralizada',
+                    d: 'Compartición de recursos'
+                },
+                answer: 'c',
+                feedback: 'Un único servicio aplica la política a toda la red, incluidos dispositivos donde no se puede instalar nada. Su contrapartida es que se convierte en un punto único de fallo si no hay un DNS secundario.'
+            },
+            {
+                topic: 'Ventajas',
+                repaso: '#ventajas',
+                text: 'Marca TODAS las que son contrapartidas de tener una red, no ventajas.',
+                options: {
+                    a: 'Si cae el servidor de ficheros, nadie puede trabajar',
+                    b: 'Se pueden compartir impresoras y conexión a Internet',
+                    c: 'Un equipo infectado puede propagar malware al resto',
+                    d: 'Alguien tiene que configurar, vigilar y actualizar la red'
+                },
+                answer: ['a', 'c', 'd'],
+                feedback: 'Punto único de fallo, propagación de amenazas y necesidad de administración son los costes ocultos de toda red. La opción B es una ventaja.'
+            },
+            {
+                topic: 'Historia',
+                repaso: '#historia',
+                text: '¿Cuál fue el primer hito en la historia de las telecomunicaciones?',
+                options: {
+                    a: 'El teléfono de Alexander Graham Bell (1876)',
+                    b: 'El telégrafo de Samuel Morse (1837)',
+                    c: 'La radio de Marconi (1895)',
+                    d: 'ARPANET (1969)'
+                },
+                answer: 'b',
+                feedback: 'El telégrafo (1837) fue la primera comunicación eléctrica a distancia. Hasta entonces la información viajaba físicamente, a la velocidad de un mensajero.'
+            },
+            {
+                topic: 'Historia',
+                repaso: '#historia',
+                text: 'Ordena cronológicamente: Ethernet, ARPANET, World Wide Web, TCP/IP como estándar.',
+                options: {
+                    a: 'ARPANET → Ethernet → TCP/IP → WWW',
+                    b: 'Ethernet → ARPANET → WWW → TCP/IP',
+                    c: 'TCP/IP → ARPANET → Ethernet → WWW',
+                    d: 'ARPANET → TCP/IP → Ethernet → WWW'
+                },
+                answer: 'a',
+                feedback: 'ARPANET (1969) → Ethernet (1973) → TCP/IP estándar (1983) → World Wide Web (1989).'
+            },
+            {
+                topic: 'Historia',
+                repaso: '#historia',
+                text: '¿Qué aportó ALOHAnet (1971) que resultó decisivo para Ethernet?',
+                options: {
+                    a: 'El primer navegador gráfico',
+                    b: 'El método para que varios emisores compartan un mismo medio gestionando colisiones',
+                    c: 'La conmutación de circuitos',
+                    d: 'El protocolo HTTP'
+                },
+                answer: 'b',
+                feedback: 'ALOHAnet resolvió por radio el problema del medio compartido. Robert Metcalfe adaptó esa idea al cable dos años después para crear Ethernet.'
+            },
+            {
+                topic: 'ARPANET',
+                repaso: '#arpanet',
+                text: '¿Cuál fue la aportación decisiva de ARPANET?',
+                options: {
+                    a: 'Fue la primera red que conectó dos ordenadores',
+                    b: 'Introdujo la conmutación de paquetes y una arquitectura descentralizada',
+                    c: 'Creó la primera página web',
+                    d: 'Permitió transmitir voz digitalizada'
+                },
+                answer: 'b',
+                feedback: 'La información se trocea en paquetes independientes que pueden seguir rutas distintas. Sin nodo central, el fallo de un enlace no tumba la red: es la base de la robustez de Internet.'
+            },
+            {
+                topic: 'ARPANET',
+                repaso: '#arpanet',
+                text: 'En la simulación, al cortar un enlace en modo circuito la comunicación se detiene, pero en modo paquetes continúa. ¿Por qué?',
+                options: {
+                    a: 'Porque el circuito reservado no busca rutas alternativas y los paquetes sí',
+                    b: 'Porque el modo circuito usa cables de peor calidad',
+                    c: 'Porque los paquetes viajan más rápido',
+                    d: 'Porque en modo circuito no hay destino definido'
+                },
+                answer: 'a',
+                feedback: 'El circuito se reserva de extremo a extremo antes de transmitir: si se rompe, no hay camino y la comunicación cae. Cada paquete, en cambio, decide su ruta al salir y puede rodear el tramo averiado.'
+            },
+            {
+                topic: 'Internet vs Web',
+                repaso: '#web',
+                text: '¿Cuál es la relación correcta entre Internet y la World Wide Web?',
+                options: {
+                    a: 'Son exactamente lo mismo',
+                    b: 'Internet es un servicio que funciona sobre la Web',
+                    c: 'La Web es un servicio que funciona sobre Internet',
+                    d: 'La Web sustituyó a Internet en 1989'
+                },
+                answer: 'c',
+                feedback: 'Internet es la infraestructura de redes interconectadas. La Web (HTTP, HTML, URL) es solo uno de los servicios que funcionan sobre ella, junto al correo, FTP, DNS o el streaming.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Topologías básicas: bus, anillo y estrella</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 5 — Topologías básicas</h1>
+        <p>Bus, anillo y estrella: cómo se disponen los equipos y qué ocurre cuando fallan</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 42 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 13 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> de escritura, una <strong>simulación</strong> con la que verás por qué el hub desapareció, y un laboratorio en el que <strong>levantas el plano de tu propia red</strong>.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#concepto">Qué es una topología</a></li>
+                <li><a href="#fisica-logica">Topología física y topología lógica</a></li>
+                <li><a href="#bus">Topología de bus</a></li>
+                <li><a href="#anillo">Topología de anillo</a></li>
+                <li><a href="#estrella">Topología de estrella</a></li>
+                <li><a href="#comparativa">Comparativa y análisis de fallos</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="concepto">1. Qué es una topología</h2>
+
+            <p>La <strong>topología</strong> de una red es la forma en que se disponen e interconectan sus dispositivos.</p>
+
+            <p>No es una cuestión estética: la topología elegida determina el <strong>coste</strong> del cableado, la
+            <strong>tolerancia a fallos</strong>, la <strong>facilidad para localizar averías</strong> y hasta el
+            <strong>rendimiento</strong>. Es la primera decisión de diseño de cualquier red.</p>
+
+            <h2 id="fisica-logica">2. Topología física y topología lógica</h2>
+
+            <p>Una distinción que conviene fijar desde el principio, porque explica muchas aparentes contradicciones:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Topología física</th><th>Topología lógica</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Qué describe</th><td>Cómo están cableados realmente los equipos</td><td>Cómo circulan realmente los datos entre ellos</td></tr>
+                    <tr><th scope="row">Se ve</th><td>Mirando la instalación</td><td>Analizando el tráfico</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Ambas <strong>no tienen por qué coincidir</strong>:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tecnología</th><th>Topología física</th><th>Topología lógica</th></tr></thead>
+                <tbody>
+                    <tr><td>Ethernet con <strong>hub</strong></td><td>Estrella</td><td><strong>Bus</strong></td></tr>
+                    <tr><td>Ethernet con <strong>switch</strong></td><td>Estrella</td><td>Estrella conmutada</td></tr>
+                    <tr><td>Token Ring con MAU</td><td>Estrella</td><td><strong>Anillo</strong></td></tr>
+                    <tr><td>Wi-Fi en modo infraestructura</td><td>Estrella (en torno al AP)</td><td>Bus (medio compartido)</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El caso clave: Ethernet con hub</strong>
+                El cableado dibuja una estrella, pero el hub <em>repite cada bit por todos sus puertos</em>. Eléctricamente,
+                todos los equipos comparten el mismo medio: un solo dominio de colisión y acceso CSMA/CD. Eso es,
+                exactamente, el comportamiento de un bus.
+            </div>
+
+            <h3>Compruébalo: el hub se comporta como un bus</h3>
+
+            <p>Aunque el cableado sea una estrella, con un hub todos los equipos comparten el medio y
+            <strong>chocan entre sí</strong>. Deja la simulación en modo HUB y fíjate en el porcentaje de
+            colisiones; después cámbiala a SWITCH y compara. Esa es la diferencia entre topología física y lógica,
+            vista en directo.</p>
+
+            <div id="simulacion"></div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="bus">3. Topología de bus</h2>
+
+<pre><code>  ┌──terminador                          terminador──┐
+  │                                                  │
+──┴────┬──────────┬──────────┬──────────┬────────────┴──
+       │          │          │          │
+      PC1        PC2        PC3        PC4</code></pre>
+
+            <h3>Funcionamiento</h3>
+
+            <ul>
+                <li>Un único cable central (<em>backbone</em>) recorre toda la red.</li>
+                <li>Cada equipo se conecta a él mediante una derivación.</li>
+                <li>En los <strong>dos extremos</strong> hay <strong>terminadores</strong>: resistencias que absorben la señal al llegar al final.</li>
+                <li>Cuando un equipo transmite, la señal viaja en <strong>ambos sentidos</strong> y llega a todos; solo el destinatario la procesa.</li>
+                <li>El acceso al medio se regula con <strong>CSMA/CD</strong>.</li>
+            </ul>
+
+            <div class="aviso">
+                <strong>Por qué son imprescindibles los terminadores</strong>
+                Sin ellos, la señal <em>rebota</em> al llegar al extremo del cable y vuelve, interfiriendo con las
+                transmisiones siguientes. Estas <strong>reflexiones</strong> corrompen todo el tráfico y dejan la red
+                inutilizable. Un terminador suelto era una de las averías más frecuentes en las redes coaxiales.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ventajas</th><th>Desventajas</th></tr></thead>
+                <tbody>
+                    <tr><td>Coste muy bajo: poco cable</td><td>Una rotura del bus <strong>tumba toda la red</strong></td></tr>
+                    <tr><td>Instalación sencilla</td><td>Localizar la avería es muy difícil</td></tr>
+                    <tr><td>No requiere equipamiento central</td><td>Colisiones frecuentes; rendimiento cae al crecer</td></tr>
+                    <tr><td></td><td>Ancho de banda compartido por todos</td></tr>
+                    <tr><td></td><td>Nula seguridad: todos ven todo el tráfico</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p><strong>Estado actual</strong>: obsoleta. Se usó con cable coaxial (10BASE2 y 10BASE5) hasta los años 90.</p>
+
+            <h2 id="anillo">4. Topología de anillo</h2>
+
+<pre><code>        PC1
+       ↗    ↘
+    PC4      PC2
+       ↖    ↙
+        PC3
+
+   Los datos circulan en un solo sentido</code></pre>
+
+            <h3>Funcionamiento</h3>
+
+            <ul>
+                <li>Cada equipo se conecta exactamente a <strong>dos vecinos</strong>, formando un circuito cerrado.</li>
+                <li>Los datos circulan <strong>en un solo sentido</strong>.</li>
+                <li>Cada nodo <strong>regenera</strong> la señal antes de pasarla al siguiente: no hay atenuación acumulada.</li>
+                <li>El acceso se regula por <strong>testigo</strong> (<em>token</em>): solo transmite quien lo posee.</li>
+            </ul>
+
+            <h3>El paso de testigo</h3>
+
+            <p>Un pequeño paquete llamado <strong>token</strong> circula continuamente por el anillo. Un equipo que quiere
+            transmitir espera a recibirlo, lo retiene, envía sus datos y después lo libera para el siguiente.</p>
+
+            <div class="dato">
+                <strong>La gran ventaja del token: no hay colisiones</strong>
+                Como solo puede transmitir quien tiene el testigo, dos equipos nunca emiten a la vez. El rendimiento es
+                <strong>predecible</strong> incluso con la red muy cargada, algo que el bus no consigue. Por eso Token Ring
+                se usó en entornos industriales y bancarios donde importaba la previsibilidad.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ventajas</th><th>Desventajas</th></tr></thead>
+                <tbody>
+                    <tr><td>Sin colisiones</td><td>El fallo de <strong>un solo nodo rompe el anillo</strong></td></tr>
+                    <tr><td>Rendimiento predecible con alta carga</td><td>Añadir o quitar un equipo obliga a interrumpir la red</td></tr>
+                    <tr><td>Cada nodo regenera la señal</td><td>Reconfiguración compleja</td></tr>
+                    <tr><td>Reparto equitativo del acceso</td><td>Más caro que el bus</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Solución al punto débil: doble anillo</h3>
+
+            <p>Tecnologías como <strong>FDDI</strong> usaban <strong>dos anillos en sentidos opuestos</strong>. Si se
+            rompe un enlace, el tráfico se repliega por el anillo secundario y la red sigue funcionando. También existía
+            el <em>bypass</em> automático: el equipo averiado se puentea eléctricamente y queda fuera del anillo.</p>
+
+            <p><strong>Estado actual</strong>: obsoleta (IEEE 802.5 Token Ring, FDDI). Pero el concepto de anillo
+            <strong>sigue vigente</strong> en redes de operador y backbones de fibra, precisamente por su redundancia.</p>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="estrella">5. Topología de estrella</h2>
+
+<pre><code>              PC1
+               │
+       PC4 ──[SWITCH]── PC2
+               │
+              PC3</code></pre>
+
+            <h3>Funcionamiento</h3>
+
+            <ul>
+                <li>Todos los equipos se conectan a un <strong>nodo central</strong>: switch (o antiguamente hub).</li>
+                <li>Toda comunicación pasa por ese nodo central.</li>
+                <li>Con un <strong>switch</strong>, cada enlace es punto a punto, full-duplex y sin colisiones.</li>
+                <li>Es la <strong>topología estándar de las LAN modernas</strong>.</li>
+            </ul>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ventajas</th><th>Desventajas</th></tr></thead>
+                <tbody>
+                    <tr><td>El fallo de un equipo <strong>no afecta al resto</strong></td><td>El nodo central es un <strong>punto único de fallo</strong></td></tr>
+                    <tr><td>Localizar averías es inmediato</td><td>Más cable que el bus</td></tr>
+                    <tr><td>Añadir equipos es trivial</td><td>Coste del equipamiento central</td></tr>
+                    <tr><td>Con switch: sin colisiones y ancho de banda dedicado</td><td></td></tr>
+                    <tr><td>Permite gestión, VLAN y seguridad por puerto</td><td></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h3>Cómo se resuelve el punto único de fallo</h3>
+
+            <ul>
+                <li><strong>Apilamiento</strong> (<em>stacking</em>): varios switches funcionan como uno solo; si cae uno, los demás siguen.</li>
+                <li><strong>Enlaces redundantes</strong> hacia dos switches distintos, con STP para evitar bucles.</li>
+                <li><strong>Fuentes de alimentación redundantes</strong> y SAI.</li>
+            </ul>
+
+            <div class="destacado">
+                <strong>Por qué ganó la estrella pese a gastar más cable</strong>
+                Porque el cable es barato y las <strong>horas de técnico son caras</strong>. En un bus, localizar una rotura
+                podía llevar horas revisando todo el trazado; en una estrella basta con mirar qué LED está apagado.
+                Además, el fallo queda <strong>aislado</strong> en un solo puesto en lugar de tumbar la red entera.
+            </div>
+
+            <h2 id="comparativa">6. Comparativa y análisis de fallos</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead>
+                    <tr><th>Criterio</th><th>Bus</th><th>Anillo</th><th>Estrella</th></tr>
+                </thead>
+                <tbody>
+                    <tr><th scope="row">Coste de cableado</th><td>Muy bajo</td><td>Medio</td><td>Medio-alto</td></tr>
+                    <tr><th scope="row">Tolerancia a fallos</th><td>Muy baja</td><td>Baja (alta con doble anillo)</td><td>Media</td></tr>
+                    <tr><th scope="row">Diagnóstico de averías</th><td>Muy difícil</td><td>Medio</td><td>Muy fácil</td></tr>
+                    <tr><th scope="row">Escalabilidad</th><td>Baja</td><td>Baja</td><td>Alta</td></tr>
+                    <tr><th scope="row">Colisiones</th><td>Sí, frecuentes</td><td>No (token)</td><td>No (con switch)</td></tr>
+                    <tr><th scope="row">Uso actual</th><td>Obsoleta</td><td>Obsoleta</td><td><strong>Estándar</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Qué ocurre cuando algo falla</h3>
+
+            <p>Es la pregunta más frecuente en los exámenes. Conviene tenerlo automatizado:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Elemento que falla</th><th>Bus</th><th>Anillo simple</th><th>Estrella</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Un equipo (su NIC)</th>
+                        <td>Solo ese equipo</td>
+                        <td><strong>Cae toda la red</strong></td>
+                        <td>Solo ese equipo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Su cable de conexión</th>
+                        <td>Solo ese equipo</td>
+                        <td><strong>Cae toda la red</strong></td>
+                        <td>Solo ese equipo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">El medio principal</th>
+                        <td><strong>Cae toda la red</strong> (reflexiones)</td>
+                        <td><strong>Cae toda la red</strong></td>
+                        <td>No aplica</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">El nodo central</th>
+                        <td>No existe</td>
+                        <td>No existe</td>
+                        <td><strong>Cae toda la red</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Fíjate en el patrón: en el <strong>anillo simple</strong>, cualquier fallo tumba la red, porque el circuito
+            debe estar cerrado. En el <strong>bus</strong>, los equipos son independientes pero el cable central es crítico.
+            En la <strong>estrella</strong>, los equipos son independientes y el único punto crítico es el switch, que
+            además está en el armario y es fácil de sustituir.</p>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="resumen">7. Resumen y errores frecuentes</h2>
+
+            <h3>Resumen</h3>
+
+            <ul>
+                <li>La <strong>topología física</strong> es cómo se cablea; la <strong>lógica</strong>, cómo circulan los datos. No siempre coinciden.</li>
+                <li><strong>Bus</strong>: un cable central con terminadores. Barato, pero una rotura tumba la red y el diagnóstico es muy difícil. Obsoleto.</li>
+                <li><strong>Anillo</strong>: circuito cerrado con paso de testigo. Sin colisiones y rendimiento predecible, pero el fallo de un nodo rompe el anillo. Obsoleto, salvo en backbones de fibra.</li>
+                <li><strong>Estrella</strong>: nodo central. Fallos aislados, diagnóstico inmediato y fácil de ampliar. Su punto débil es el nodo central, que se resuelve con redundancia. Es el <strong>estándar actual</strong>.</li>
+                <li>Ethernet con hub es <strong>físicamente estrella y lógicamente bus</strong>.</li>
+            </ul>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error</th><th>Corrección</th></tr></thead>
+                <tbody>
+                    <tr><td>«En el bus, si falla un PC cae la red»</td><td>Cae solo ese PC. Lo que tumba la red es la rotura del <strong>cable central</strong></td></tr>
+                    <tr><td>«En el anillo, si falla un PC solo se aísla él»</td><td>En un anillo simple <strong>cae toda la red</strong>: el circuito queda abierto</td></tr>
+                    <tr><td>«Ethernet con hub es una topología lógica de estrella»</td><td>Es físicamente estrella pero <strong>lógicamente bus</strong></td></tr>
+                    <tr><td>«La estrella no tiene ningún inconveniente»</td><td>Tiene un <strong>punto único de fallo</strong>: el nodo central</td></tr>
+                    <tr><td>«Los terminadores del bus sirven para conectar equipos»</td><td>Absorben la señal en los extremos para evitar <strong>reflexiones</strong></td></tr>
+                    <tr><td>«El anillo tiene colisiones como el bus»</td><td>No: el <strong>token</strong> garantiza que solo transmita uno cada vez</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar cada tarjeta: el esfuerzo de recordar es lo
+            que consolida, no volver a leerla.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>descubrir los dispositivos reales</strong> de tu red, dibujar su topología y analizar qué pasaría si fallara cada pieza.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 5</strong></a> (45 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 6</strong>
+            <p>Verás las topologías <strong>malla, árbol e híbrida</strong>, y aprenderás a contar <strong>dominios de colisión y de broadcast</strong>, que es lo que más cae en el examen.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> calcula cuántos cables harían falta para conectar 6 equipos <em>todos con todos</em>.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_04/teoria.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_06/teoria.html">Día 6 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        simulacion: 'colisiones',
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Explica <strong>con tus palabras</strong> la diferencia entre topología <em>física</em> y <em>lógica</em>, usando como ejemplo Ethernet con un hub.',
+                modelo: `<p>La <strong>topología física</strong> describe cómo están cableados realmente los equipos: se ve
+                         mirando la instalación. La <strong>lógica</strong> describe cómo circulan de verdad los datos entre
+                         ellos, y se descubre analizando el tráfico.</p>
+                         <p>Con un hub, el cableado forma una <strong>estrella</strong>: cada equipo tiene su propio latiguillo
+                         hasta el aparato central, exactamente igual que con un switch. Pero el hub <strong>no conmuta</strong>:
+                         cada bit que entra por un puerto se repite eléctricamente por todos los demás.</p>
+                         <p>El resultado es que todos los equipos comparten el mismo medio, con un <strong>único dominio de
+                         colisión</strong> y acceso regulado por CSMA/CD. Ese comportamiento —medio compartido, colisiones y
+                         ancho de banda repartido— es el de un <strong>bus</strong>. De ahí que sea estrella física y bus lógico.</p>`,
+                puntos: [
+                    'Define topología física como el cableado real',
+                    'Define topología lógica como el recorrido real de los datos',
+                    'Explica que el hub repite por todos los puertos sin conmutar',
+                    'Menciona el dominio de colisión único y CSMA/CD',
+                    'Concluye que ese comportamiento es el de un bus'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> En un <strong>bus</strong>, si falla la tarjeta de un PC solo cae ese PC; en un <strong>anillo simple</strong>, cae toda la red. Explica por qué la diferencia.',
+                modelo: `<p>En el <strong>anillo</strong>, cada nodo forma parte del camino: recibe la trama de su vecino
+                         anterior, la <strong>regenera</strong> y la pasa al siguiente. El equipo no es solo un usuario de la
+                         red, es un <strong>elemento de transporte</strong>. Si falla, el circuito queda abierto, el testigo no
+                         completa la vuelta y la comunicación se detiene por completo.</p>
+                         <p>En el <strong>bus</strong>, el transporte lo hace el cable central y los equipos cuelgan de él
+                         mediante derivaciones, sin participar en el reenvío. Un equipo averiado simplemente deja de escuchar
+                         y de hablar; la señal sigue recorriendo el cable con normalidad para los demás.</p>
+                         <p>Por eso en el bus lo crítico es el <strong>medio</strong> (una rotura o un terminador suelto lo
+                         tumban todo) y en el anillo lo crítico es <strong>cualquier nodo</strong>.</p>`,
+                puntos: [
+                    'En el anillo cada nodo regenera y reenvía: forma parte del camino',
+                    'Al fallar un nodo se abre el circuito y el testigo no circula',
+                    'En el bus el transporte lo hace el cable, no los equipos',
+                    'En el bus lo crítico es el medio; en el anillo, cualquier nodo'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> La estrella gasta bastante más cable que el bus y añade el coste de un equipo central. ¿Por qué se impuso igualmente?',
+                modelo: `<p>Porque el cable es <strong>barato</strong> y las <strong>horas de técnico son caras</strong>. En un
+                         bus, localizar una rotura obligaba a recorrer todo el trazado sin ninguna indicación de dónde estaba
+                         el fallo: podían ser horas con la red entera parada. En una estrella basta con mirar qué LED está
+                         apagado.</p>
+                         <p>Además, el fallo queda <strong>aislado</strong>: si se estropea un latiguillo o una tarjeta, solo
+                         pierde conectividad ese puesto, mientras el resto sigue trabajando. En un bus, una sola rotura del
+                         cable central deja sin red a todo el mundo.</p>
+                         <p>A eso se suma que la estrella <strong>escala</strong> con facilidad (añadir un puesto es enchufar
+                         un cable) y que con switch permite enlaces dedicados full-duplex sin colisiones, además de gestión,
+                         VLAN y seguridad por puerto. El sobrecoste inicial se recupera en el primer incidente.</p>`,
+                puntos: [
+                    'El cable es barato frente al coste de las horas de técnico',
+                    'Localizar averías en un bus exigía recorrer todo el trazado',
+                    'En la estrella el fallo queda aislado en un solo puesto',
+                    'Menciona la facilidad para escalar',
+                    'Añade las ventajas del switch: full-duplex, gestión, VLAN'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> La estrella tiene un <strong>punto único de fallo</strong>. Explica cuál es y qué harías para mitigarlo en una empresa, indicando por qué en una casa no compensa.',
+                modelo: `<p>El punto único de fallo es el <strong>nodo central</strong>: si cae el switch o el router, toda la
+                         red queda inoperativa por muy bien que estén los equipos de los extremos.</p>
+                         <p>En una empresa se mitiga <strong>duplicando</strong> ese elemento: apilar varios switches para que
+                         funcionen como uno solo, tender <strong>enlaces redundantes</strong> hacia un segundo switch usando
+                         <strong>STP</strong> para evitar bucles, y proteger la alimentación con fuentes redundantes y
+                         <strong>SAI</strong>. También se guarda un equipo de repuesto preconfigurado.</p>
+                         <p>En casa nada de eso compensa porque el <strong>coste de la caída es muy bajo</strong>: unas horas
+                         sin Internet y se sustituye el router. Duplicarlo costaría más que el propio equipo y añadiría una
+                         complejidad que nadie va a administrar. La regla es comparar lo que cuesta la redundancia con lo que
+                         cuesta la caída.</p>`,
+                puntos: [
+                    'Identifica el nodo central como punto único de fallo',
+                    'Propone apilamiento o switch redundante',
+                    'Menciona enlaces redundantes y STP contra bucles',
+                    'Incluye alimentación protegida: SAI o fuentes redundantes',
+                    'Justifica que en casa el coste de la caída no lo compensa'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Qué es la <strong>topología</strong> de una red y por qué importa?', dorso: 'La forma en que se disponen e interconectan los dispositivos. Determina <strong>coste, tolerancia a fallos, facilidad de diagnóstico y rendimiento</strong>.' },
+            { frente: 'Topología <strong>física</strong> frente a <strong>lógica</strong>', dorso: 'La física es cómo están <strong>cableados</strong>; la lógica, cómo <strong>circulan los datos</strong>. No tienen por qué coincidir.' },
+            { frente: 'Ethernet con <strong>hub</strong>: ¿qué topología física y lógica tiene?', dorso: 'Física <strong>estrella</strong>, lógica <strong>bus</strong>: el hub repite por todos los puertos, así que todos comparten medio.' },
+            { frente: 'Token Ring con MAU: ¿física y lógica?', dorso: 'Física <strong>estrella</strong> (todos van al MAU), lógica <strong>anillo</strong> (el testigo circula de puerto en puerto por dentro).' },
+            { frente: '¿Para qué sirven los <strong>terminadores</strong> del bus?', dorso: 'Absorben la señal en los extremos para evitar <strong>reflexiones</strong>. Sin ellos la señal rebota y corrompe todo el tráfico.' },
+            { frente: '¿Qué avería tumba una red en <strong>bus</strong>?', dorso: 'La <strong>rotura del cable central</strong> o un terminador suelto. El fallo de un equipo solo le afecta a él.' },
+            { frente: '¿Qué avería tumba un <strong>anillo simple</strong>?', dorso: '<strong>Cualquiera</strong>: un nodo o un cable. Cada nodo forma parte del camino, así que al fallar se abre el circuito.' },
+            { frente: '¿Cómo se regula el acceso al medio en el <strong>anillo</strong>?', dorso: 'Por <strong>paso de testigo</strong> (token): solo transmite quien lo posee, así que <strong>no hay colisiones</strong> y el rendimiento es predecible.' },
+            { frente: '¿Cómo evita FDDI que un corte tumbe el anillo?', dorso: 'Con <strong>doble anillo</strong> en sentidos opuestos: si se rompe un enlace, el tráfico se repliega por el secundario.' },
+            { frente: 'Principal desventaja de la <strong>estrella</strong>', dorso: 'El nodo central es un <strong>punto único de fallo</strong>. Se mitiga con apilamiento, enlaces redundantes con STP y SAI.' },
+            { frente: '¿Por qué se impuso la estrella pese a gastar más cable?', dorso: 'Porque <strong>aísla los fallos</strong> en un solo puesto y el diagnóstico es inmediato. El cable es barato; las horas de técnico, no.' },
+            { frente: '¿Qué topología NO sufre colisiones por diseño?', dorso: 'El <strong>anillo con testigo</strong>: solo transmite quien lo tiene. También la estrella conmutada full-duplex, aunque por otro motivo (enlaces dedicados).' },
+            { frente: '¿Qué topología es más difícil de diagnosticar y por qué?', dorso: 'El <strong>bus</strong>: hay que recorrer todo el trazado buscando la rotura, sin ninguna indicación del punto exacto.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 5 — Topologías básicas',
+        subtitulo: 'Bus · Anillo · Estrella · Física frente a lógica',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Concepto',
+                repaso: '#concepto',
+                text: '¿Qué describe la topología de una red?',
+                options: {
+                    a: 'La marca del equipamiento utilizado',
+                    b: 'La forma en que se disponen e interconectan los dispositivos',
+                    c: 'La velocidad máxima del enlace',
+                    d: 'El número de usuarios conectados'
+                },
+                answer: 'b',
+                feedback: 'La topología determina el coste del cableado, la tolerancia a fallos, la facilidad de diagnóstico y el rendimiento. Es la primera decisión de diseño de una red.'
+            },
+            {
+                topic: 'Física y lógica',
+                repaso: '#fisica-logica',
+                text: 'Una red Ethernet cableada con un hub central tiene topología física de estrella. ¿Cuál es su topología lógica?',
+                options: {
+                    a: 'Estrella',
+                    b: 'Anillo',
+                    c: 'Bus',
+                    d: 'Malla'
+                },
+                answer: 'c',
+                feedback: 'El hub repite cada bit por todos sus puertos: eléctricamente todos comparten el mismo medio, con un único dominio de colisión y CSMA/CD. Ese es el comportamiento de un bus.'
+            },
+            {
+                topic: 'Física y lógica',
+                repaso: '#fisica-logica',
+                text: 'Token Ring con concentrador MAU se cablea en estrella. ¿Qué topología lógica tiene?',
+                options: {
+                    a: 'Bus',
+                    b: 'Anillo',
+                    c: 'Estrella',
+                    d: 'Árbol'
+                },
+                answer: 'b',
+                feedback: 'Aunque el cableado sea una estrella hacia el MAU, internamente el testigo circula de un puerto al siguiente formando un anillo lógico.'
+            },
+            {
+                topic: 'Bus',
+                repaso: '#bus',
+                text: '¿Para qué sirven los terminadores en una topología de bus?',
+                options: {
+                    a: 'Para conectar equipos adicionales al cable',
+                    b: 'Para amplificar la señal al final del recorrido',
+                    c: 'Para absorber la señal e impedir que rebote en los extremos',
+                    d: 'Para asignar direcciones a los equipos'
+                },
+                answer: 'c',
+                feedback: 'Sin terminador la señal se refleja al llegar al extremo y vuelve interfiriendo con el resto del tráfico, dejando la red inutilizable.'
+            },
+            {
+                topic: 'Bus',
+                repaso: '#bus',
+                text: 'En una topología de bus, ¿qué ocurre si se rompe el cable central?',
+                options: {
+                    a: 'Solo se desconecta el equipo más cercano a la rotura',
+                    b: 'Cae toda la red por las reflexiones de señal',
+                    c: 'La red sigue funcionando por rutas alternativas',
+                    d: 'El switch redirige automáticamente el tráfico'
+                },
+                answer: 'b',
+                feedback: 'Al romperse el bus se pierden los terminadores efectivos, aparecen reflexiones y ambos segmentos quedan inoperativos. Es su principal desventaja.'
+            },
+            {
+                topic: 'Bus',
+                repaso: '#bus',
+                text: 'En una topología de bus, si falla la tarjeta de red de un solo PC:',
+                options: {
+                    a: 'Cae toda la red',
+                    b: 'Solo pierde conectividad ese PC',
+                    c: 'Se rompe el anillo',
+                    d: 'Los terminadores dejan de funcionar'
+                },
+                answer: 'b',
+                feedback: 'Los equipos son independientes entre sí: lo crítico en un bus es el cable central, no cada estación por separado.'
+            },
+            {
+                topic: 'Anillo',
+                repaso: '#anillo',
+                text: '¿Cómo se regula el acceso al medio en una topología de anillo?',
+                options: {
+                    a: 'Mediante CSMA/CD, detectando colisiones',
+                    b: 'Mediante el paso de un testigo (token)',
+                    c: 'El switch central asigna los turnos',
+                    d: 'No se regula: todos transmiten cuando quieren'
+                },
+                answer: 'b',
+                feedback: 'Solo transmite quien posee el testigo. Al no poder emitir dos equipos a la vez, no hay colisiones y el rendimiento resulta predecible incluso con la red muy cargada.'
+            },
+            {
+                topic: 'Anillo',
+                repaso: '#anillo',
+                text: 'En un anillo simple, ¿qué ocurre si falla un nodo intermedio?',
+                options: {
+                    a: 'Solo se aísla ese nodo',
+                    b: 'El token toma la ruta contraria',
+                    c: 'Se rompe el anillo y cae toda la red',
+                    d: 'Aumentan las colisiones pero la red funciona'
+                },
+                answer: 'c',
+                feedback: 'El circuito debe estar cerrado para que el testigo complete la vuelta. Se mitiga con doble anillo (FDDI) o con bypass automático del nodo averiado.'
+            },
+            {
+                topic: 'Anillo',
+                repaso: '#anillo',
+                text: '¿Qué solución adopta FDDI para evitar que un fallo tumbe el anillo?',
+                options: {
+                    a: 'Un switch central redundante',
+                    b: 'Dos anillos en sentidos opuestos',
+                    c: 'Terminadores en ambos extremos',
+                    d: 'Duplicar la velocidad del token'
+                },
+                answer: 'b',
+                feedback: 'Con doble anillo en sentidos contrarios, si se rompe un enlace el tráfico se repliega por el secundario y la red sigue operativa.'
+            },
+            {
+                topic: 'Estrella',
+                repaso: '#estrella',
+                text: '¿Cuál es la principal desventaja de la topología en estrella?',
+                options: {
+                    a: 'Genera muchas colisiones por diseño',
+                    b: 'El nodo central es un punto único de fallo',
+                    c: 'Es imposible localizar averías',
+                    d: 'No permite añadir nuevos equipos'
+                },
+                answer: 'b',
+                feedback: 'Si cae el switch central, toda la red queda inoperativa. Se mitiga con apilamiento, enlaces redundantes y alimentación protegida con SAI.'
+            },
+            {
+                topic: 'Estrella',
+                repaso: '#estrella',
+                text: 'En una topología en estrella, si se estropea el cable de un PC:',
+                options: {
+                    a: 'Cae toda la red',
+                    b: 'Solo ese PC queda aislado',
+                    c: 'Se rompe el anillo lógico',
+                    d: 'Aparecen reflexiones de señal'
+                },
+                answer: 'b',
+                feedback: 'Cada enlace es independiente: el fallo queda contenido en un único puesto. Ese aislamiento de averías es la razón principal de que la estrella se impusiera.'
+            },
+            {
+                topic: 'Estrella',
+                repaso: '#estrella',
+                text: '¿Por qué se impuso la estrella pese a necesitar más cable que el bus?',
+                options: {
+                    a: 'Porque el cable es caro y el técnico barato',
+                    b: 'Porque aísla los fallos y permite diagnosticar en segundos',
+                    c: 'Porque no necesita ningún equipo central',
+                    d: 'Porque elimina la necesidad de protocolos'
+                },
+                answer: 'b',
+                feedback: 'El cable es barato frente a las horas de técnico. En un bus localizar una rotura llevaba horas; en una estrella basta con ver qué LED está apagado, y el fallo afecta a un solo puesto.'
+            },
+            {
+                topic: 'Comparativa',
+                repaso: '#comparativa',
+                text: '¿En qué topología resulta MÁS difícil localizar una avería?',
+                options: {
+                    a: 'Bus',
+                    b: 'Anillo',
+                    c: 'Estrella',
+                    d: 'En todas por igual'
+                },
+                answer: 'a',
+                feedback: 'En el bus hay que recorrer todo el trazado buscando la rotura o el terminador suelto, sin ninguna indicación que señale el punto exacto.'
+            },
+            {
+                topic: 'Comparativa',
+                repaso: '#comparativa',
+                text: '¿Cuál de estas topologías NO sufre colisiones?',
+                options: {
+                    a: 'Bus con CSMA/CD',
+                    b: 'Anillo con paso de testigo',
+                    c: 'Ethernet con hub',
+                    d: 'Wi-Fi en modo infraestructura'
+                },
+                answer: 'b',
+                feedback: 'El testigo garantiza que solo transmita un equipo cada vez. El bus, el hub y el Wi-Fi comparten medio y sí pueden sufrir colisiones o contención.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

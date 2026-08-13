@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Mensual 1 - Fundamentos de Redes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .info-bar {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item strong {
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .question.correct {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .question.incorrect {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .question-topic {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .options {
+            margin-top: 15px;
+        }
+
+        .option {
+            background: white;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            background: #f1f3f5;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-details {
+            font-size: 1.3em;
+            margin-top: 15px;
+        }
+
+        .breakdown {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            text-align: left;
+            font-size: 1em;
+        }
+
+        .breakdown h3 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .info-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Examen Mensual 1</h1>
+            <p>Fundamentos de Redes (Semanas 1-4) - Planificación y Administración de Redes</p>
+        </div>
+
+        <div class="info-bar">
+            <div class="info-item">
+                <strong>Preguntas:</strong> <span id="totalQuestions">25</span>
+            </div>
+            <div class="info-item">
+                <strong>Tiempo:</strong> <span id="timer">90 minutos</span>
+            </div>
+            <div class="info-item">
+                <strong>Nota mínima:</strong> 50%
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+            </div>
+
+            <div id="quiz"></div>
+
+            <div class="buttons">
+                <button onclick="checkAnswers()">Corregir Examen</button>
+                <button onclick="resetQuiz()">Reiniciar Examen</button>
+            </div>
+
+            <div class="results" id="results">
+                <h2>Resultados del Examen</h2>
+                <div class="score" id="score">0%</div>
+                <div class="score-details">
+                    <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">25</span></p>
+                    <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                    <p id="verdict"></p>
+                </div>
+                <div class="breakdown" id="breakdown">
+                    <h3>Resultado por semana</h3>
+                    <div id="breakdownRows"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Banco de preguntas del examen mensual: cubre las 4 semanas del Mes 1.
+        // El campo "week" permite desglosar el resultado y saber qué repasar.
+        const questions = [
+            {
+                week: 1,
+                text: '¿Cuáles son los 5 componentes básicos de un sistema de comunicación?',
+                options: {
+                    a: 'Emisor, Receptor, Canal, Código, Contexto',
+                    b: 'Fuente, Transmisor, Medio, Receptor, Destino',
+                    c: 'Router, Switch, Cable, PC, Servidor',
+                    d: 'Cliente, Servidor, Red, Protocolo, Datos'
+                },
+                answer: 'b',
+                feedback: 'La fuente genera la información, el transmisor la codifica, el medio la transporta, el receptor la decodifica y el destino la consume.'
+            },
+            {
+                week: 1,
+                text: 'Un walkie-talkie permite hablar en ambos sentidos, pero no a la vez. ¿Qué modo de transmisión utiliza?',
+                options: {
+                    a: 'Simplex',
+                    b: 'Full-duplex',
+                    c: 'Half-duplex',
+                    d: 'Multiplex'
+                },
+                answer: 'c',
+                feedback: 'Half-duplex: la comunicación es bidireccional pero alternada, nunca simultánea. El teléfono, en cambio, es full-duplex.'
+            },
+            {
+                week: 1,
+                text: '¿En qué año apareció ARPANET, la primera red de conmutación de paquetes?',
+                options: {
+                    a: '1969',
+                    b: '1973',
+                    c: '1983',
+                    d: '1989'
+                },
+                answer: 'a',
+                feedback: 'ARPANET se puso en marcha en 1969. Ethernet llegó en 1973, TCP/IP se hizo estándar en 1983 y la WWW nació en 1989.'
+            },
+            {
+                week: 1,
+                text: '¿Cuál es la característica principal de una señal digital frente a una analógica?',
+                options: {
+                    a: 'Tiene infinitos valores posibles',
+                    b: 'Toma valores discretos y resiste mejor el ruido',
+                    c: 'Solo puede viajar por cable de cobre',
+                    d: 'Es siempre más lenta'
+                },
+                answer: 'b',
+                feedback: 'La señal digital usa valores discretos (0 y 1), lo que permite regenerarla sin acumular ruido y procesarla directamente con computadoras.'
+            },
+            {
+                week: 2,
+                text: 'Una red que conecta varias sedes dentro de una misma ciudad se clasifica como:',
+                options: {
+                    a: 'PAN',
+                    b: 'LAN',
+                    c: 'MAN',
+                    d: 'WAN'
+                },
+                answer: 'c',
+                feedback: 'La MAN (Metropolitan Area Network) cubre entre 10 y 50 km, el ámbito de una ciudad, interconectando varias LAN.'
+            },
+            {
+                week: 2,
+                text: '¿Cuántos enlaces se necesitan para conectar 10 dispositivos en malla completa?',
+                options: {
+                    a: '20 enlaces',
+                    b: '45 enlaces',
+                    c: '90 enlaces',
+                    d: '100 enlaces'
+                },
+                answer: 'b',
+                feedback: 'Aplicando N × (N-1) / 2: 10 × 9 / 2 = 45 enlaces. El crecimiento es cuadrático, por eso la malla completa resulta inviable a gran escala.'
+            },
+            {
+                week: 2,
+                text: '¿Cuál es la principal desventaja de la topología en estrella?',
+                options: {
+                    a: 'Es muy difícil localizar averías',
+                    b: 'El nodo central constituye un punto único de fallo',
+                    c: 'Genera muchas colisiones por diseño',
+                    d: 'No permite añadir nuevos equipos'
+                },
+                answer: 'b',
+                feedback: 'Si cae el switch central, cae toda la red. Se mitiga con switches redundantes o apilados. Aun así, es la topología dominante por su facilidad de diagnóstico.'
+            },
+            {
+                week: 2,
+                text: 'Una red Ethernet cableada en estrella pero con un hub central tiene topología lógica de:',
+                options: {
+                    a: 'Estrella',
+                    b: 'Anillo',
+                    c: 'Bus',
+                    d: 'Malla'
+                },
+                answer: 'c',
+                feedback: 'El hub repite cada bit por todos los puertos: eléctricamente todos comparten el medio, con un único dominio de colisión y acceso CSMA/CD, igual que un bus.'
+            },
+            {
+                week: 2,
+                text: '¿Qué es una VPN?',
+                options: {
+                    a: 'Una red física dedicada entre dos sedes',
+                    b: 'Una topología de red en anillo',
+                    c: 'Un tipo de cableado estructurado',
+                    d: 'Una red privada que viaja cifrada sobre infraestructura pública'
+                },
+                answer: 'd',
+                feedback: 'La VPN crea un túnel cifrado sobre una red pública como Internet, combinando el bajo coste de lo público con la privacidad de una red dedicada.'
+            },
+            {
+                week: 2,
+                text: '¿Cuál es la distancia máxima que fija el estándar para un enlace de cableado estructurado con UTP?',
+                options: {
+                    a: '50 metros',
+                    b: '100 metros',
+                    c: '300 metros',
+                    d: '1000 metros'
+                },
+                answer: 'b',
+                feedback: 'TIA/EIA-568 fija 100 m: 90 m de cableado horizontal más 10 m de latiguillos. Para distancias mayores hay que usar fibra o un switch intermedio.'
+            },
+            {
+                week: 3,
+                text: '¿Cuántas capas tiene el modelo OSI y qué organismo lo definió?',
+                options: {
+                    a: '7 capas, la ISO',
+                    b: '4 capas, el IETF',
+                    c: '5 capas, el IEEE',
+                    d: '7 capas, el IEEE'
+                },
+                answer: 'a',
+                feedback: 'El modelo OSI fue publicado por la ISO en 1984 y consta de 7 capas, de Física (1) a Aplicación (7).'
+            },
+            {
+                week: 3,
+                text: 'Ordena correctamente las capas OSI de la 1 a la 4:',
+                options: {
+                    a: 'Física, Red, Enlace, Transporte',
+                    b: 'Física, Enlace, Red, Transporte',
+                    c: 'Enlace, Física, Transporte, Red',
+                    d: 'Red, Física, Enlace, Transporte'
+                },
+                answer: 'b',
+                feedback: 'De abajo arriba: 1 Física, 2 Enlace, 3 Red, 4 Transporte, 5 Sesión, 6 Presentación, 7 Aplicación.'
+            },
+            {
+                week: 3,
+                text: '¿Cuál es la PDU de la capa de Red?',
+                options: {
+                    a: 'Trama',
+                    b: 'Segmento',
+                    c: 'Paquete',
+                    d: 'Bit'
+                },
+                answer: 'c',
+                feedback: 'Las PDU son: Datos (7-5), Segmento (4), Paquete (3), Trama (2) y Bits (1).'
+            },
+            {
+                week: 3,
+                text: 'La capa de Aplicación de TCP/IP agrupa qué capas del modelo OSI?',
+                options: {
+                    a: 'Solo la capa 7',
+                    b: 'Las capas 5, 6 y 7',
+                    c: 'Las capas 1 y 2',
+                    d: 'Las capas 3 y 4'
+                },
+                answer: 'b',
+                feedback: 'TCP/IP fusiona Sesión, Presentación y Aplicación en una sola capa, y también fusiona Enlace y Física en Acceso a Red.'
+            },
+            {
+                week: 3,
+                text: 'Si una petición HTTP de 400 bytes se encapsula con cabecera TCP (20 B) e IP (20 B), ¿qué tamaño tiene el paquete IP?',
+                options: {
+                    a: '400 bytes',
+                    b: '420 bytes',
+                    c: '440 bytes',
+                    d: '460 bytes'
+                },
+                answer: 'c',
+                feedback: 'Datos (400) + cabecera TCP (20) = segmento de 420 B. Añadiendo la cabecera IP (20) resulta un paquete de 440 bytes.'
+            },
+            {
+                week: 3,
+                text: '¿Qué protocolo traduce direcciones IP en direcciones MAC?',
+                options: {
+                    a: 'DNS',
+                    b: 'DHCP',
+                    c: 'ICMP',
+                    d: 'ARP'
+                },
+                answer: 'd',
+                feedback: 'ARP (Address Resolution Protocol) resuelve IP → MAC dentro del mismo segmento de red. DNS, en cambio, traduce nombres de dominio en direcciones IP.'
+            },
+            {
+                week: 3,
+                text: 'El estándar 802.3 (Ethernet) es publicado por:',
+                options: {
+                    a: 'IEEE',
+                    b: 'ISO',
+                    c: 'IETF',
+                    d: 'ITU-T'
+                },
+                answer: 'a',
+                feedback: 'El IEEE publica la familia 802. El IETF publica las RFC (IP, TCP), la ISO el modelo OSI y la ITU-T los estándares de telecomunicaciones.'
+            },
+            {
+                week: 3,
+                text: 'Un equipo hace ping correcto a 8.8.8.8 pero no puede resolver google.com. ¿Cuál es el problema más probable?',
+                options: {
+                    a: 'El cable de red está roto',
+                    b: 'El servicio DNS no funciona',
+                    c: 'La dirección MAC es incorrecta',
+                    d: 'El TTL ha expirado'
+                },
+                answer: 'b',
+                feedback: 'Si la conectividad IP funciona pero falla la resolución por nombre, el fallo está en el DNS. Se comprueba con nslookup o dig.'
+            },
+            {
+                week: 3,
+                text: '¿Qué puerto utiliza por defecto el servicio HTTPS?',
+                options: {
+                    a: '21',
+                    b: '80',
+                    c: '443',
+                    d: '8080'
+                },
+                answer: 'c',
+                feedback: 'HTTPS usa el puerto 443/TCP. HTTP el 80, FTP el 21 (control), SSH el 22, Telnet el 23 y SMTP el 25.'
+            },
+            {
+                week: 4,
+                text: '¿Qué dispositivo aprende direcciones MAC y las almacena en una tabla CAM?',
+                options: {
+                    a: 'Hub',
+                    b: 'Repetidor',
+                    c: 'Switch',
+                    d: 'Access Point'
+                },
+                answer: 'c',
+                feedback: 'El switch construye la tabla CAM aprendiendo la MAC de origen de cada trama que recibe, lo que le permite reenviar en unicast al puerto correcto.'
+            },
+            {
+                week: 4,
+                text: 'Un switch de 12 puertos con todos los equipos conectados crea:',
+                options: {
+                    a: '1 dominio de colisión y 12 de broadcast',
+                    b: '12 dominios de colisión y 1 de broadcast',
+                    c: '12 dominios de colisión y 12 de broadcast',
+                    d: '1 dominio de colisión y 1 de broadcast'
+                },
+                answer: 'b',
+                feedback: 'El switch crea un dominio de colisión por puerto, pero no segmenta broadcast: todos los puertos siguen en el mismo dominio salvo que se configuren VLANs.'
+            },
+            {
+                week: 4,
+                text: '¿Qué dispositivo segmenta dominios de broadcast por defecto?',
+                options: {
+                    a: 'Hub',
+                    b: 'Switch no gestionable',
+                    c: 'Repetidor',
+                    d: 'Router'
+                },
+                answer: 'd',
+                feedback: 'El router no reenvía broadcasts de capa 2, por lo que cada una de sus interfaces delimita un dominio de broadcast distinto.'
+            },
+            {
+                week: 4,
+                text: 'En la dirección MAC 00:1B:44:11:3A:B7, ¿qué representa la parte 00:1B:44?',
+                options: {
+                    a: 'El número de serie de la tarjeta',
+                    b: 'El OUI, identificador del fabricante',
+                    c: 'La dirección de broadcast',
+                    d: 'El identificador de VLAN'
+                },
+                answer: 'b',
+                feedback: 'Los 3 primeros bytes forman el OUI (Organizationally Unique Identifier) que el IEEE asigna al fabricante; los 3 últimos identifican la tarjeta concreta.'
+            },
+            {
+                week: 4,
+                text: 'En una tabla de enrutamiento, cuando varias rutas coinciden con el destino, ¿qué criterio se aplica primero?',
+                options: {
+                    a: 'La métrica más baja',
+                    b: 'La distancia administrativa',
+                    c: 'El prefijo más largo (ruta más específica)',
+                    d: 'La ruta por defecto'
+                },
+                answer: 'c',
+                feedback: 'Se aplica el longest prefix match. Solo en caso de empate se comparan la distancia administrativa y después la métrica.'
+            },
+            {
+                week: 4,
+                text: '¿Cuál es la principal ventaja de un switch gestionable frente a uno no gestionable?',
+                options: {
+                    a: 'Ofrece más puertos por el mismo precio',
+                    b: 'Funciona sin necesidad de alimentación',
+                    c: 'Permite VLANs, STP, QoS y control de acceso',
+                    d: 'Elimina la necesidad de un router'
+                },
+                answer: 'c',
+                feedback: 'Los gestionables permiten segmentar con VLANs, prevenir bucles con STP, priorizar tráfico con QoS y controlar accesos con port-security o 802.1X.'
+            }
+        ];
+
+        // Respuestas correctas indexadas como q1, q2, ... para la corrección
+        const correctAnswers = {};
+        questions.forEach((q, i) => {
+            correctAnswers['q' + (i + 1)] = q.answer;
+        });
+
+        // Temas asociados a cada semana, para el desglose de resultados
+        const weekTopics = {
+            1: 'Introducción a las Redes',
+            2: 'Componentes y Tipos de Redes',
+            3: 'Arquitecturas y Modelos',
+            4: 'Dispositivos de Red'
+        };
+
+        // Generar el HTML de las preguntas
+        function renderQuiz() {
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = questions.map((q, i) => {
+                const n = i + 1;
+                const opciones = Object.keys(q.options).map(letra => `
+                    <div class="option">
+                        <input type="radio" id="q${n}${letra}" name="q${n}" value="${letra}">
+                        <label for="q${n}${letra}">${q.options[letra]}</label>
+                    </div>`).join('');
+
+                return `
+            <div class="question" data-question="${n}">
+                <div class="question-header">
+                    <span class="question-number">Pregunta ${n}</span>
+                    <span class="question-topic">Semana ${q.week} · ${weekTopics[q.week]}</span>
+                </div>
+                <div class="question-text">${q.text}</div>
+                <div class="options">${opciones}</div>
+                <div class="feedback">
+                    <strong>Respuesta correcta: ${q.answer.toUpperCase()}</strong><br>
+                    ${q.feedback}
+                </div>
+            </div>`;
+            }).join('');
+
+            document.getElementById('totalQuestions').textContent = questions.length;
+            document.getElementById('total').textContent = questions.length;
+
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.addEventListener('change', updateProgress);
+            });
+        }
+
+        // Desglose por semana: indica qué bloques hay que repasar
+        function renderBreakdown(aciertosPorSemana) {
+            const rows = Object.keys(weekTopics).map(week => {
+                const datos = aciertosPorSemana[week];
+                const pct = Math.round((datos.correct / datos.total) * 100);
+                const aviso = pct < 50 ? ' — repasar' : '';
+                return `
+                    <div class="breakdown-row">
+                        <span>Semana ${week}: ${weekTopics[week]}</span>
+                        <span><strong>${datos.correct}/${datos.total}</strong> (${pct}%)${aviso}</span>
+                    </div>`;
+            }).join('');
+
+            document.getElementById('breakdownRows').innerHTML = rows;
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            let total = Object.keys(correctAnswers).length;
+            let unanswered = [];
+
+            // Aciertos por semana para el desglose final
+            const aciertosPorSemana = {};
+            Object.keys(weekTopics).forEach(week => {
+                aciertosPorSemana[week] = { correct: 0, total: 0 };
+            });
+            questions.forEach(q => aciertosPorSemana[q.week].total++);
+
+            // Verificar cada pregunta
+            for (let qNum in correctAnswers) {
+                const index = parseInt(qNum.substring(1), 10) - 1;
+                const selected = document.querySelector(`input[name="${qNum}"]:checked`);
+                const questionDiv = document.querySelector(`[data-question="${qNum.substring(1)}"]`);
+                const feedback = questionDiv.querySelector('.feedback');
+                const options = questionDiv.querySelectorAll('.option');
+
+                if (!selected) {
+                    unanswered.push(qNum.substring(1));
+                    continue;
+                }
+
+                // Limpiar clases previas
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                });
+
+                if (selected.value === correctAnswers[qNum]) {
+                    correct++;
+                    aciertosPorSemana[questions[index].week].correct++;
+                    questionDiv.classList.add('correct');
+                    questionDiv.classList.remove('incorrect');
+                    feedback.classList.add('show', 'correct');
+                    feedback.classList.remove('incorrect');
+                    selected.parentElement.classList.add('correct');
+                } else {
+                    questionDiv.classList.add('incorrect');
+                    questionDiv.classList.remove('correct');
+                    feedback.classList.add('show', 'incorrect');
+                    feedback.classList.remove('correct');
+                    selected.parentElement.classList.add('incorrect');
+
+                    // Marcar la respuesta correcta
+                    const correctOption = questionDiv.querySelector(`input[value="${correctAnswers[qNum]}"]`).parentElement;
+                    correctOption.classList.add('correct');
+                }
+            }
+
+            if (unanswered.length > 0) {
+                alert(`Por favor, responde todas las preguntas. Faltan: ${unanswered.join(', ')}`);
+                return;
+            }
+
+            // Mostrar resultados
+            const percentage = Math.round((correct / total) * 100);
+            const incorrect = total - correct;
+
+            document.getElementById('score').textContent = percentage + '%';
+            document.getElementById('correct').textContent = correct;
+            document.getElementById('total').textContent = total;
+            document.getElementById('incorrect').textContent = incorrect;
+
+            const verdict = document.getElementById('verdict');
+            if (percentage >= 90) {
+                verdict.innerHTML = '<strong style="color: #28a745;">EXCELENTE</strong> - Dominas completamente el mes';
+            } else if (percentage >= 70) {
+                verdict.innerHTML = '<strong style="color: #20c997;">MUY BIEN</strong> - Buen nivel de comprensión';
+            } else if (percentage >= 50) {
+                verdict.innerHTML = '<strong style="color: #ffc107;">APROBADO</strong> - Revisa los errores antes del Mes 2';
+            } else {
+                verdict.innerHTML = '<strong style="color: #dc3545;">SUSPENSO</strong> - Debes repasar el mes completo';
+            }
+
+            renderBreakdown(aciertosPorSemana);
+
+            document.getElementById('results').classList.add('show');
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            // Limpiar selecciones
+            document.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+
+            // Limpiar clases
+            document.querySelectorAll('.question').forEach(q => {
+                q.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.classList.remove('show', 'correct', 'incorrect');
+            });
+
+            // Ocultar resultados
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('breakdownRows').innerHTML = '';
+
+            // Reset progress bar
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressBar').textContent = '0%';
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const total = Object.keys(correctAnswers).length;
+            let answered = 0;
+
+            for (let qNum in correctAnswers) {
+                if (document.querySelector(`input[name="${qNum}"]:checked`)) {
+                    answered++;
+                }
+            }
+
+            const percentage = Math.round((answered / total) * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressBar').textContent = percentage + '%';
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>

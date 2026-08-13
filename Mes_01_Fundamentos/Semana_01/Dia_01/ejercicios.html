@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">50 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Cómo trabajar estos ejercicios</strong>
+            Responde <strong>sin volver a la teoría</strong>. Usa «Corregir este ejercicio» al terminar cada uno.
+            El botón «Ver solución» rellena las respuestas: úsalo solo cuando ya lo hayas intentado.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Ejercicios',
+    subtitulo: '¿Qué es una red? · Ventajas · Historia de las telecomunicaciones',
+    tiempo: '50 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Ventajas de las redes en un caso real',
+            tiempo: '20 min',
+            enunciado: `
+                <p><strong>Escenario:</strong> una gestoría con <strong>10 empleados</strong> trabaja con PCs aislados.
+                Cada empleado tiene su propia impresora, guarda los ficheros en su disco duro y dispone de su propia conexión 4G.</p>`,
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada mejora concreta que se propone en la gestoría con la ventaja de red que la explica.',
+                    izquierda: [
+                        'Una sola impresora láser para los 10 empleados',
+                        'Servidor con los expedientes accesible desde cualquier puesto',
+                        'Una única fibra de 600 Mbps en lugar de 10 líneas 4G',
+                        'Copia de seguridad automática nocturna',
+                        'Contratar un empleado es conectar un cable al switch'
+                    ],
+                    derecha: [
+                        'Compartición de recursos',
+                        'Centralización de datos',
+                        'Ahorro de costes',
+                        'Fiabilidad',
+                        'Escalabilidad'
+                    ],
+                    pares: {
+                        'Una sola impresora láser para los 10 empleados': 'Compartición de recursos',
+                        'Servidor con los expedientes accesible desde cualquier puesto': 'Centralización de datos',
+                        'Una única fibra de 600 Mbps en lugar de 10 líneas 4G': 'Ahorro de costes',
+                        'Copia de seguridad automática nocturna': 'Fiabilidad',
+                        'Contratar un empleado es conectar un cable al switch': 'Escalabilidad'
+                    },
+                    explicacion: 'Cada ventaja resuelve un problema distinto: compartir lo caro, unificar dónde vive el dato, reducir gasto recurrente, sobrevivir a fallos y poder crecer sin rehacer la instalación.',
+                    pistas: [
+                        'Pregúntate qué problema concreto resuelve cada mejora: ¿ahorra dinero?, ¿evita perder datos?, ¿permite crecer?',
+                        'La copia de seguridad no ahorra dinero ni permite crecer: sirve para que un fallo no te deje sin nada. Eso es fiabilidad.',
+                        '«Una sola impresora para muchos» y «una sola línea en vez de diez» se parecen, pero una habla de un recurso físico compartido y la otra de gasto recurrente.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca <strong>las tres contrapartidas</strong> que aparecerán al montar la red (hay exactamente 3 correctas).',
+                    opciones: {
+                        a: 'Si cae el servidor de ficheros, nadie puede trabajar',
+                        b: 'Los empleados podrán compartir la impresora',
+                        c: 'Un PC infectado puede propagar malware al resto',
+                        d: 'Alguien tendrá que configurar, vigilar y actualizar la red',
+                        e: 'Se reducirá el gasto en conexiones a Internet'
+                    },
+                    respuesta: ['a', 'c', 'd'],
+                    explicacion: 'Punto único de fallo, propagación de amenazas y necesidad de administración son los costes ocultos de toda red. Las opciones B y E son ventajas, no contrapartidas.',
+                    pistas: [
+                        'Una contrapartida es algo que ANTES no pasaba y ahora sí, por culpa de haber montado la red.',
+                        'Con PCs aislados nadie podía infectar al de al lado por la red, y no hacía falta que nadie administrase nada.',
+                        'Hay exactamente 3 correctas: descarta las dos que suenan a beneficio.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: '<strong>c)</strong> La gestoría maneja datos fiscales de clientes. Explica por qué la <strong>centralización de datos</strong> es aquí una ventaja <em>y</em> un riesgo a la vez (4-5 líneas).',
+                    modelo: `
+                        <p>La centralización es una <strong>ventaja</strong> porque permite hacer una única copia de seguridad,
+                        aplicar permisos coherentes, evitar versiones duplicadas de un mismo expediente y garantizar que
+                        todos trabajan sobre el dato correcto.</p>
+                        <p>Es simultáneamente un <strong>riesgo</strong> porque concentra todo el valor —y toda la responsabilidad
+                        legal— en un único punto: una avería sin copia, un cifrado por ransomware o un acceso no autorizado
+                        comprometen de golpe <strong>todos</strong> los datos fiscales de todos los clientes. Al tratarse de datos
+                        personales sujetos al RGPD, la gestoría respondería legalmente de esa brecha. Por eso la centralización
+                        solo es aceptable acompañada de copias, control de accesos y cifrado.</p>`,
+                    rubrica: [
+                        'Menciona al menos dos ventajas concretas de centralizar (copia única, permisos, dato único)',
+                        'Identifica la concentración de riesgo en un solo punto',
+                        'Cita un escenario de pérdida real: avería, ransomware o acceso no autorizado',
+                        'Relaciona el riesgo con la responsabilidad legal (RGPD / datos personales)',
+                        'Propone alguna medida compensatoria: copias, control de accesos o cifrado'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Línea temporal',
+            tiempo: '15 min',
+            enunciado: '<p>Sitúa cronológicamente los hitos de las telecomunicaciones y razona qué aportó cada uno.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Asigna a cada hito su posición cronológica (1 = el más antiguo).',
+                    elementos: [
+                        'World Wide Web',
+                        'Telégrafo',
+                        'ARPANET',
+                        'Teléfono',
+                        'Ethernet',
+                        'Wi-Fi (802.11)',
+                        'TCP/IP como estándar',
+                        'Radio (Marconi)'
+                    ],
+                    orden: [
+                        'Telégrafo',
+                        'Teléfono',
+                        'Radio (Marconi)',
+                        'ARPANET',
+                        'Ethernet',
+                        'TCP/IP como estándar',
+                        'World Wide Web',
+                        'Wi-Fi (802.11)'
+                    ],
+                    explicacion: 'Telégrafo (1837) → Teléfono (1876) → Radio (1895) → ARPANET (1969) → Ethernet (1973) → TCP/IP (1983) → WWW (1989) → Wi-Fi (1997).',
+                    pistas: [
+                        'Empieza por el bloque del siglo XIX: telégrafo, teléfono y radio, en ese orden.',
+                        'ARPANET (1969) es anterior a Ethernet (1973): primero se conectaron centros lejanos y después los equipos de un mismo edificio.',
+                        'La Web (1989) es POSTERIOR a TCP/IP (1983): primero la infraestructura, después el servicio que la hizo popular.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Escribe el año de cada hito.',
+                    esquina: 'Hito',
+                    cabecera: ['Año'],
+                    filas: [
+                        { etiqueta: 'Telégrafo', celdas: [{ respuestas: ['1837'], placeholder: 'año' }] },
+                        { etiqueta: 'Teléfono', celdas: [{ respuestas: ['1876'], placeholder: 'año' }] },
+                        { etiqueta: 'ARPANET', celdas: [{ respuestas: ['1969'], placeholder: 'año' }] },
+                        { etiqueta: 'Ethernet', celdas: [{ respuestas: ['1973'], placeholder: 'año' }] },
+                        { etiqueta: 'TCP/IP como estándar', celdas: [{ respuestas: ['1983'], placeholder: 'año' }] },
+                        { etiqueta: 'World Wide Web', celdas: [{ respuestas: ['1989'], placeholder: 'año' }] },
+                        { etiqueta: 'Wi-Fi (802.11)', celdas: [{ respuestas: ['1997'], placeholder: 'año' }] }
+                    ],
+                    explicacion: 'No hace falta memorizar el dígito exacto de todos, pero sí el orden y las décadas: 1837, 1876, 1969, 1973, 1983, 1989 y 1997.',
+                    pistas: [
+                        'Los dos primeros son del siglo XIX; los demás, de la segunda mitad del XX.',
+                        'ARPANET coincide con la llegada a la Luna: 1969.',
+                        'TCP/IP se hizo obligatorio el 1 de enero de 1983, y la Web nació 6 años después.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>c)</strong> Para cada hito, escribe en una frase <strong>qué problema resolvió</strong> que el anterior no podía: teléfono, ARPANET, TCP/IP y World Wide Web.',
+                    modelo: `
+                        <ol>
+                            <li><strong>Teléfono</strong>: permitió transmitir <strong>voz directamente</strong>, sin codificar y descodificar en Morse ni necesitar operadores especializados.</li>
+                            <li><strong>ARPANET</strong>: introdujo la <strong>conmutación de paquetes</strong> y una red descentralizada, frente a los enlaces punto a punto dedicados anteriores.</li>
+                            <li><strong>TCP/IP</strong>: aportó un <strong>protocolo común</strong> capaz de interconectar redes <strong>heterogéneas</strong> entre sí, no solo nodos de una misma red.</li>
+                            <li><strong>World Wide Web</strong>: dio una <strong>interfaz sencilla y gráfica</strong> a una infraestructura que hasta entonces solo sabían usar los técnicos.</li>
+                        </ol>`,
+                    rubrica: [
+                        'Teléfono: voz directa frente a código Morse',
+                        'ARPANET: conmutación de paquetes y descentralización',
+                        'TCP/IP: interconexión de redes heterogéneas, no solo de nodos',
+                        'WWW: usabilidad y acceso para no técnicos'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Conmutación de circuitos vs paquetes',
+            tiempo: '20 min',
+            enunciado: '<p>Compara ambos modelos de conmutación y cuantifica el desperdicio que genera reservar un circuito.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la comparativa. Usa respuestas cortas (<em>sí</em> / <em>no</em>, <em>alta</em> / <em>baja</em>...).',
+                    esquina: 'Característica',
+                    cabecera: ['Circuitos', 'Paquetes'],
+                    filas: [
+                        {
+                            etiqueta: '¿Reserva camino previo?',
+                            celdas: [
+                                { respuestas: ['si', 'sí'], placeholder: 'sí / no' },
+                                { respuestas: ['no'], placeholder: 'sí / no' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Eficiencia del ancho de banda',
+                            celdas: [
+                                { respuestas: ['baja'], placeholder: 'alta / baja' },
+                                { respuestas: ['alta'], placeholder: 'alta / baja' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Ejemplo de sistema',
+                            celdas: [
+                                { respuestas: ['telefonia tradicional', 'telefono', 'rtc', 'telefonia clasica', 'red telefonica conmutada'], placeholder: 'sistema' },
+                                { respuestas: ['internet'], placeholder: 'sistema' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La conmutación de circuitos reserva un camino fijo durante toda la comunicación (ineficiente pero predecible); la de paquetes comparte el medio y reencamina si un enlace cae.',
+                    pistas: [
+                        'Piensa en una llamada de teléfono antigua frente a enviar cartas numeradas por correo.',
+                        'Si reservas un carril para ti solo durante toda la conversación, ¿qué pasa con ese carril mientras callas?',
+                        'El ejemplo de circuitos es la telefonía tradicional (RTC); el de paquetes, Internet.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'Mb',
+                    tolerancia: 0.1,
+                    respuesta: 38.4,
+                    pregunta: `<strong>b1)</strong> Una llamada reserva un circuito de <strong>64 Kbps</strong> durante <strong>10 minutos</strong>.
+                               ¿Cuántos megabits se reservan en total?`,
+                    explicacion: '64 Kbps × 600 s = 38.400 Kb = <strong>38,4 Mb</strong>.',
+                    pistas: [
+                        'Primero pasa los 10 minutos a segundos.',
+                        '64 Kbps significa 64 kilobits CADA segundo: multiplica por el número de segundos.',
+                        'El resultado te saldrá en kilobits; divide entre 1.000 para pasarlo a megabits.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'Mb',
+                    tolerancia: 0.1,
+                    respuesta: 23.04,
+                    pregunta: '<strong>b2)</strong> Si solo se habla el <strong>60 %</strong> del tiempo, ¿cuántos megabits transportan información real?',
+                    explicacion: '38,4 Mb × 0,60 = <strong>23,04 Mb</strong>. El resto del circuito está reservado transmitiendo silencio.'
+                },
+                {
+                    tipo: 'numero',
+                    unidad: '%',
+                    tolerancia: 0.5,
+                    respuesta: 40,
+                    pregunta: '<strong>b3)</strong> ¿Qué porcentaje del recurso reservado se desperdicia?',
+                    explicacion: 'Se desperdicia el <strong>40 %</strong>, es decir, 15,36 Mb. La conmutación de paquetes evita ese gasto porque solo envía datos cuando hay voz: es lo que hace la telefonía IP con la supresión de silencios.',
+                    pistas: [
+                        'Si se aprovecha el 60 % del tiempo, el resto se desperdicia.',
+                        'No hace falta calcular nada: es el complementario del porcentaje de uso.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>c)</strong> ARPANET se diseñó en plena Guerra Fría. Explica por qué una arquitectura <strong>descentralizada con conmutación de paquetes</strong> resultaba estratégicamente interesante para el Departamento de Defensa (4-5 líneas).',
+                    modelo: `
+                        <p>En un escenario de conflicto, una red con nodos centrales sería un objetivo militar evidente:
+                        destruir unos pocos puntos dejaría incomunicado todo el sistema. Una arquitectura
+                        <strong>descentralizada</strong> carece de ese punto crítico, y la <strong>conmutación de paquetes</strong>
+                        permite que, si un enlace o un nodo desaparece, los paquetes se reencaminen automáticamente por rutas
+                        alternativas. La comunicación se degrada, pero <strong>no se interrumpe</strong>.</p>
+                        <p>Esa supervivencia ante fallos parciales es la razón por la que hoy Internet resiste caídas de
+                        operadores, cortes de cables submarinos o fallos regionales.</p>`,
+                    rubrica: [
+                        'Identifica que un nodo central sería un objetivo militar',
+                        'Explica que la descentralización elimina el punto único de fallo',
+                        'Menciona el reencaminamiento automático por rutas alternativas',
+                        'Concluye que el servicio se degrada pero no se interrumpe',
+                        'Relaciona el diseño con la robustez actual de Internet'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Internet vs Web',
+            tiempo: '15 min',
+            enunciado: '<p>El error más frecuente del tema es confundir la infraestructura con uno de sus servicios. Comprueba que lo tienes claro.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>a)</strong> Marca <strong>únicamente</strong> los elementos que forman parte de la <strong>infraestructura</strong> de Internet (no servicios que funcionan sobre ella).',
+                    opciones: {
+                        a: 'Los cables submarinos de fibra óptica',
+                        b: 'HTTP',
+                        c: 'El protocolo IP',
+                        d: 'El correo electrónico',
+                        e: 'Los routers de los operadores',
+                        f: 'El protocolo TCP',
+                        g: 'Netflix'
+                    },
+                    respuesta: ['a', 'c', 'e', 'f'],
+                    explicacion: 'Cables, routers, IP y TCP son la infraestructura física y lógica. HTTP, el correo y Netflix son <strong>servicios</strong> que la utilizan.',
+                    pistas: [
+                        'Pregúntate: si esto desapareciera, ¿dejaría de funcionar TODO Internet o solo una cosa concreta?',
+                        'Si quitas los cables o el protocolo IP no funciona nada. Si quitas Netflix, el correo sigue yendo.',
+                        'Hay 4 correctas.'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    ancho: '420px',
+                    pregunta: '<strong>b)</strong> Completa: «La World Wide Web es un ______ que funciona sobre Internet».',
+                    respuestas: ['servicio', 'un servicio'],
+                    explicacion: 'Internet es la infraestructura; la Web (HTTP + HTML + URL) es solo uno de los servicios que funcionan sobre ella, junto al correo, FTP, DNS o el streaming.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál de estas afirmaciones es <strong>correcta</strong>?',
+                    opciones: {
+                        a: 'Internet se inventó en 1989 gracias a Tim Berners-Lee',
+                        b: 'Si la Web dejara de existir, Internet desaparecería',
+                        c: 'Navegar por Internet y usar la Web son exactamente lo mismo',
+                        d: 'Si la Web desapareciera, seguirían funcionando el correo, el DNS y el streaming'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Internet existía desde ARPANET (1969) y se consolidó con TCP/IP (1983). La Web nació en 1989 y es solo un servicio: sin ella, el resto seguiría operativo.'
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>d)</strong> Relaciona cada servicio de Internet con su protocolo principal.',
+                    izquierda: [
+                        'Envío de correo electrónico',
+                        'Transferencia de ficheros',
+                        'Resolución de nombres de dominio',
+                        'Navegación web segura',
+                        'Acceso remoto a un servidor'
+                    ],
+                    derecha: ['SMTP', 'FTP', 'DNS', 'HTTPS', 'SSH'],
+                    pares: {
+                        'Envío de correo electrónico': 'SMTP',
+                        'Transferencia de ficheros': 'FTP',
+                        'Resolución de nombres de dominio': 'DNS',
+                        'Navegación web segura': 'HTTPS',
+                        'Acceso remoto a un servidor': 'SSH'
+                    },
+                    explicacion: 'Todos son servicios distintos sobre la misma infraestructura. Volverás a verlos en detalle en el Mes 10 (Capa de Transporte y Servicios).'
+                }
+            ]
+        }
+
+,
+
+        {
+            titulo: 'EJERCICIO 5: Protocolos en la práctica',
+            tiempo: '12 min',
+            enunciado: `
+                <p>Un servidor de simulación táctica multijugador mueve dos clases de tráfico muy distintas.
+                Decide cuál va por <strong>UDP</strong> y cuál por <strong>TCP</strong>, y por qué.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica el protocolo adecuado en cada caso: escribe <em>TCP</em> o <em>UDP</em>.',
+                    esquina: 'Qué se transmite',
+                    cabecera: ['Protocolo'],
+                    filas: [
+                        { etiqueta: 'Posición de los jugadores 20 veces por segundo', celdas: [{ respuestas: ['udp'], placeholder: 'TCP / UDP' }] },
+                        { etiqueta: 'Voz del chat táctico en directo', celdas: [{ respuestas: ['udp'], placeholder: 'TCP / UDP' }] },
+                        { etiqueta: 'Descarga de la lista de mods al entrar', celdas: [{ respuestas: ['tcp'], placeholder: 'TCP / UDP' }] },
+                        { etiqueta: 'Envío del fichero de misión al servidor', celdas: [{ respuestas: ['tcp'], placeholder: 'TCP / UDP' }] },
+                        { etiqueta: 'Consulta del navegador a la web del clan', celdas: [{ respuestas: ['tcp'], placeholder: 'TCP / UDP' }] }
+                    ],
+                    explicacion: 'La regla es simple: si el dato <strong>caduca</strong> (posición, voz), UDP; si debe llegar <strong>completo y exacto</strong> (ficheros, web), TCP.',
+                    pistas: [
+                        'Pregúntate: si este dato concreto se pierde, ¿me sirve de algo recibirlo medio segundo después?',
+                        'La posición de hace medio segundo ya no vale: el jugador se ha movido. Un fichero de hace medio segundo sigue valiendo igual.',
+                        'Todo lo que sea transferencia de ficheros o navegación web va por TCP.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué NO se usa TCP para la voz, si es más fiable?',
+                    opciones: {
+                        a: 'Porque TCP no admite audio',
+                        b: 'Porque reenviar un fragmento perdido añadiría retardo y llegaría cuando ya no sirve',
+                        c: 'Porque TCP consume más ancho de banda que la voz',
+                        d: 'Porque la voz no necesita red'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'TCP garantiza la entrega <em>en orden y completa</em>, y para lograrlo retiene lo que llega después de un hueco hasta poder rellenarlo. En una conversación eso se traduce en retardo acumulado y cortes. Es preferible perder 20 ms de audio que retrasar toda la llamada.',
+                    pistas: [
+                        'TCP no entrega nada fuera de orden: si falta un trozo, espera a tenerlo.',
+                        'Piensa qué le pasa a una conversación si cada pérdida obliga a esperar una retransmisión.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa la regla general.',
+                    frase: `Cuando la información <strong>caduca</strong> y prima la velocidad se elige {{0}};
+                            cuando no se puede perder ni un byte y prima la fiabilidad se elige {{1}}.
+                            El retardo de ida y vuelta de un paquete se llama {{2}}.`,
+                    respuestas: [
+                        ['udp'],
+                        ['tcp'],
+                        ['latencia', 'rtt', 'retardo']
+                    ],
+                    explicacion: 'Esta disyuntiva entre velocidad y fiabilidad reaparecerá en el Mes 10 al estudiar la capa de transporte en detalle.',
+                    pistas: [
+                        'Los dos primeros huecos son siglas de tres letras que ya has usado en el apartado (a).'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Verdadero o falso',
+            tiempo: '8 min',
+            enunciado: '<p>Repaso rápido de los errores más frecuentes del tema.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>a)</strong> Marca todas las afirmaciones <strong>verdaderas</strong> (hay 4).',
+                    opciones: {
+                        a: 'La Web es un servicio que funciona sobre Internet',
+                        b: 'Internet se inventó en 1989',
+                        c: 'ARPANET fue la primera red de conmutación de paquetes',
+                        d: 'Un sumidero DNS protege también a dispositivos donde no se puede instalar software',
+                        e: 'El Wi-Fi siempre es más rápido que el cable',
+                        f: 'La conmutación de circuitos desperdicia capacidad durante los silencios',
+                        g: 'La nube es un concepto abstracto sin ubicación física'
+                    },
+                    respuesta: ['a', 'c', 'd', 'f'],
+                    explicacion: 'Falsas: en 1989 nació <strong>la Web</strong>, no Internet; el Wi-Fi comparte medio y es half-duplex, así que frente a Gigabit por cable pierde; y la nube son ordenadores físicos en centros de datos concretos, con su dirección postal y su jurisdicción legal.',
+                    pistas: [
+                        'Repasa la tabla de errores frecuentes del final de la teoría.',
+                        'Tres de las siete son mitos muy extendidos. Hay exactamente 4 verdaderas.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: `<strong>b)</strong> Un amigo te dice: «he pasado de 300 a 1000 megas y el juego online
+                               me sigue yendo igual de mal». Explícale qué está pasando (4-5 líneas).`,
+                    modelo: `<p>Un juego online consume <strong>muy poco ancho de banda</strong>: son paquetes pequeños de
+                             posición enviados muchas veces por segundo, del orden de unos pocos cientos de kbps. Con 300 megas
+                             ya le sobraba capacidad, así que multiplicarla por tres no cambia nada.</p>
+                             <p>Lo que determina la experiencia en un juego es la <strong>latencia</strong> (el <em>ping</em>):
+                             cuánto tarda en ir y volver cada paquete hasta el servidor. Eso depende de la distancia al
+                             servidor, de la calidad del enlace y de la congestión, no de los megas contratados.</p>
+                             <p>Para mejorarlo tendría que elegir servidores más cercanos, conectarse <strong>por cable en vez de
+                             Wi-Fi</strong> —que añade latencia y variabilidad— y comprobar que nadie esté saturando la línea
+                             con descargas mientras juega.</p>`,
+                    rubrica: [
+                        'Explica que un juego consume poco ancho de banda',
+                        'Identifica la latencia (ping) como el factor determinante',
+                        'Aclara que la latencia depende de la distancia y la congestión, no de los megas',
+                        'Propone alguna medida real: servidor cercano, cable en vez de Wi-Fi, no saturar la línea',
+                        'Distingue claramente ancho de banda de latencia'
+                    ]
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

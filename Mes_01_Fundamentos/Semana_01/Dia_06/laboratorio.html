@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 6 — Laboratorio: dominios de colisión y broadcast en Packet Tracer</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 6</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 1</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> Packet Tracer</div>
+        <div class="info-item"><strong>Tipo:</strong> construcción y análisis</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Ver con tus propios ojos la diferencia entre <strong>hub, switch y router</strong>: a quién llega cada
+            trama, cómo el switch aprende direcciones y dónde se detienen los broadcasts. Al terminar sabrás contar
+            dominios porque los habrás visto, no porque los hayas memorizado.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Necesitas Cisco Packet Tracer</strong>
+            <p>Descarga gratuita registrándote en
+            <a href="https://www.netacad.com/courses/packet-tracer" target="_blank" rel="noopener">Cisco NetAcad</a>.</p>
+            <p><strong>Si hoy no puedes instalarlo</strong>, haz el laboratorio en papel: dibuja cada topología y
+            razona las respuestas. Están todas deducibles de la teoría. Anótalo como pendiente y móntalo cuando
+            dispongas de la herramienta.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — Topología con HUB</h3>
+            <ol>
+                <li>Añade un <strong>Hub</strong> (categoría <em>Hubs</em> → <code>Hub-PT</code>) y <strong>4 PCs</strong>.</li>
+                <li>Conéctalos con cable de cobre directo (<em>Copper Straight-Through</em>).</li>
+                <li>Asigna direcciones en cada PC: <em>Desktop → IP Configuration</em>.</li>
+            </ol>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Equipo</th><th>Dirección IP</th><th>Máscara</th></tr></thead>
+                <tbody>
+                    <tr><td>PC0</td><td>192.168.1.10</td><td>255.255.255.0</td></tr>
+                    <tr><td>PC1</td><td>192.168.1.11</td><td>255.255.255.0</td></tr>
+                    <tr><td>PC2</td><td>192.168.1.12</td><td>255.255.255.0</td></tr>
+                    <tr><td>PC3</td><td>192.168.1.13</td><td>255.255.255.0</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Pasa a modo <strong>Simulation</strong> (esquina inferior derecha), deja en
+            <em>Event List Filters</em> solo <strong>ICMP</strong> y <strong>ARP</strong>, y envía un ping de
+            <strong>PC0 a PC1</strong> con el sobre cerrado (<em>Add Simple PDU</em>). Pulsa <em>Play</em> y observa.</p>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — La misma topología con SWITCH</h3>
+            <p>Repite el montaje sustituyendo el hub por un <strong>Switch 2960</strong>, con las mismas direcciones.
+            Envía el ping de PC0 a PC1 <strong>dos veces seguidas</strong> y compara ambos envíos.</p>
+            <p>Después, en modo <em>Realtime</em>, haz clic en el switch → pestaña <strong>CLI</strong>:</p>
+            <div class="comando"><pre><code>enable
+show mac-address-table</code></pre></div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — Añade un router</h3>
+            <p>Monta esta topología con un <strong>Router 2911</strong> y dos switches:</p>
+<pre><code>              [Router 2911]
+             /             \
+      [Switch0]          [Switch1]
+      /  |  |  \           |    \
+   PC0 PC1 PC2 PC3       PC4   PC5
+   192.168.1.x          192.168.2.x</code></pre>
+
+            <p>Configura las interfaces del router por CLI:</p>
+            <div class="comando"><pre><code>enable
+configure terminal
+interface gigabitEthernet 0/0
+ ip address 192.168.1.1 255.255.255.0
+ no shutdown
+ exit
+interface gigabitEthernet 0/1
+ ip address 192.168.2.1 255.255.255.0
+ no shutdown
+ end</code></pre></div>
+
+            <p>Pon como puerta de enlace <code>192.168.1.1</code> en los PC0-PC3 y <code>192.168.2.1</code> en
+            PC4 y PC5. Comprueba con <code>ping 192.168.2.10</code> desde PC0 y, en modo Simulation, envía un
+            ping desde PC0 a una IP inexistente de su red (<code>192.168.1.99</code>) para ver el ARP.</p>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis observaciones</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>He visto que con hub la trama llega a todos y con switch solo al destinatario.</li>
+                <li>Entiendo por qué el primer ping con switch se comporta distinto del segundo.</li>
+                <li>He consultado la tabla CAM y sé qué guarda.</li>
+                <li>He comprobado que el broadcast no atraviesa el router.</li>
+                <li>Sé contar los dominios de colisión y de broadcast de la topología final.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_05/laboratorio.html">← Día 5</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_07/teoria.html">Día 7 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 6',
+    subtitulo: 'Hub, switch y router en Packet Tracer · Dominios en directo',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'LAB 1 — Qué hace realmente un HUB',
+            tiempo: '20 min',
+            enunciado: '<p>Con la simulación del Paso 1 ejecutada, responde a lo que has <strong>visto</strong>.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Al enviar el ping de PC0 a PC1, ¿a cuántos equipos llegó la trama?',
+                    opciones: {
+                        a: 'Solo a PC1, el destinatario',
+                        b: 'A los tres PCs restantes: PC1, PC2 y PC3',
+                        c: 'A ninguno, hizo falta configurar antes el hub',
+                        d: 'Solo a PC0, rebotó'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El hub repite eléctricamente por todos los puertos menos el de entrada. No mira direcciones porque no sabe leerlas: trabaja en <strong>capa 1</strong>.',
+                    pistas: [
+                        'Mira los sobres que aparecen en la animación: ¿se dirigen a uno o se reparten?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué hicieron PC2 y PC3 con esa trama?',
+                    opciones: {
+                        a: 'La reenviaron a PC1',
+                        b: 'La procesaron y respondieron',
+                        c: 'Comprobaron que la MAC de destino no era la suya y la descartaron',
+                        d: 'La almacenaron por si acaso'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Cada tarjeta compara la MAC de destino con la suya y descarta lo que no le corresponde. Han gastado ancho de banda y procesamiento <strong>para nada</strong>: eso es exactamente el coste de compartir el medio.',
+                    pistas: [
+                        'En la simulación verás una cruz roja sobre los equipos que descartan la trama.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 1,
+                    pregunta: '<strong>c)</strong> ¿Cuántos <strong>dominios de colisión</strong> tiene esta topología con hub?',
+                    explicacion: 'Uno solo: los cuatro equipos comparten el mismo medio. Si dos transmiten a la vez, colisionan.',
+                    pistas: [
+                        'Un dominio de colisión es el conjunto de equipos cuyas señales pueden superponerse.',
+                        'Con un hub, ¿hay algo que separe unas señales de otras?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 2 — Qué cambia con un SWITCH',
+            tiempo: '25 min',
+            enunciado: '<p>Compara los <strong>dos</strong> pings del Paso 2. La diferencia entre ambos es el concepto clave.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> En el <strong>primer</strong> ping, ¿a cuántos equipos llegó la trama?',
+                    opciones: {
+                        a: 'Solo a PC1',
+                        b: 'A todos: el switch aún no sabía dónde estaba PC1',
+                        c: 'A ninguno',
+                        d: 'Solo al router'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con la tabla CAM vacía, el switch desconoce por qué puerto está PC1 y hace <strong>flooding</strong>: reenvía por todos los puertos menos el de origen. Además el ARP previo es un broadcast legítimo.',
+                    pistas: [
+                        '¿Qué sabe el switch de la red justo después de encenderlo?',
+                        'Un switch aprende observando el tráfico: al principio no ha observado nada.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> En el <strong>segundo</strong> ping, ¿qué cambió?',
+                    opciones: {
+                        a: 'Nada, se comportó igual',
+                        b: 'Llegó solo a PC1: el switch ya había aprendido su ubicación',
+                        c: 'Llegó a más equipos que la primera vez',
+                        d: 'Falló porque la tabla estaba llena'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Al pasar la primera trama, el switch anotó la MAC de origen de cada equipo junto al puerto por el que llegó. Con esa información ya puede hacer envío <strong>unicast</strong> directo.',
+                    pistas: [
+                        'Entre el primer ping y el segundo, el switch ha visto tráfico. ¿Qué habrá aprendido?'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    debe: [['mac', 'address'], ['fa0', 'gig', 'port', 'puerto', '/']],
+                    placeholder: 'Pega aquí la salida de show mac-address-table',
+                    pregunta: '<strong>c)</strong> Pega la salida de <code>show mac-address-table</code>.',
+                    explicacion: 'Esa es la <strong>tabla CAM</strong>: la correspondencia entre cada dirección MAC y el puerto donde vive. Es lo que permite al switch dejar de hacer flooding.',
+                    pistas: [
+                        'Recuerda ejecutar antes <code>enable</code>.',
+                        'Si la tabla sale vacía, envía algún ping primero para que el switch aprenda.'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    ancho: '260px',
+                    pregunta: '<strong>d)</strong> ¿De qué dirección aprende el switch al recibir una trama: la de origen o la de destino?',
+                    respuestas: ['origen', 'la de origen', 'mac de origen', 'la mac de origen', 'origen (mac)'],
+                    explicacion: 'Aprende de la de <strong>origen</strong>: si una trama de la MAC X llega por el puerto 3, entonces X está en el puerto 3. La de destino solo la usa para decidir a dónde reenviar.',
+                    pistas: [
+                        'Piensa qué información le confirma con certeza dónde está un equipo.',
+                        'Si una carta llega por una puerta, sabes dónde vive el remitente, no el destinatario.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 4,
+                    pregunta: '<strong>e)</strong> ¿Cuántos <strong>dominios de colisión</strong> hay ahora con el switch y 4 PCs?',
+                    explicacion: 'Cuatro: <strong>uno por puerto</strong>. Cada enlace es punto a punto, así que las señales de un puesto no pueden superponerse con las de otro.',
+                    pistas: [
+                        'El switch separa cada enlace del resto: cuenta cuántos enlaces hay.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'LAB 3 — Dónde se detiene el broadcast',
+            tiempo: '25 min',
+            enunciado: '<p>Con la topología del Paso 3 montada y funcionando, analiza los límites.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Al enviar el ARP desde PC0 hacia <code>192.168.1.99</code>, ¿hasta dónde llegó?',
+                    opciones: {
+                        a: 'A todos los equipos, incluidos PC4 y PC5',
+                        b: 'Solo a PC1, PC2 y PC3: el router no lo reenvió',
+                        c: 'Solo al router',
+                        d: 'A ninguno, porque esa dirección no existe'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El router trabaja en <strong>capa 3</strong> y no reenvía broadcasts de capa 2. Ahí está la frontera: cada interfaz suya delimita un dominio de broadcast distinto.',
+                    pistas: [
+                        'Sigue la animación: ¿en qué equipo se detienen los sobres?',
+                        'El switch reparte los broadcasts; el router es otra historia.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 2,
+                    pregunta: '<strong>b)</strong> ¿Cuántos <strong>dominios de broadcast</strong> tiene la topología del Paso 3?',
+                    explicacion: 'Dos: uno por cada interfaz activa del router. Da igual cuántos PCs o switches cuelguen de cada lado, porque los switches no segmentan el broadcast.',
+                    pistas: [
+                        'Cuenta las interfaces del router que has configurado y activado.',
+                        'El número de PCs no influye.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    unidad: 'dominios',
+                    tolerancia: 0,
+                    respuesta: 8,
+                    pregunta: `<strong>c)</strong> ¿Cuántos <strong>dominios de colisión</strong> hay en total?
+                               Cuenta también los dos enlaces router-switch.`,
+                    explicacion: '6 enlaces switch-PC + 2 enlaces router-switch = <strong>8</strong>. Cada enlace punto a punto es su propio dominio de colisión.',
+                    pistas: [
+                        'Cuenta cables, no equipos.',
+                        'Hay 6 PCs, y además cada switch tiene un cable hacia el router.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>d)</strong> Completa la regla que acabas de comprobar.',
+                    frase: `El {{0}} no segmenta nada: todos sus puertos forman un único dominio de colisión.
+                            El {{1}} crea un dominio de colisión por puerto, pero <strong>no</strong> segmenta el
+                            broadcast. Solo el {{2}}, o la creación de {{3}} en un switch gestionable, separa
+                            dominios de broadcast.`,
+                    respuestas: [
+                        ['hub'],
+                        ['switch'],
+                        ['router'],
+                        ['vlan', 'vlans']
+                    ],
+                    explicacion: 'Esta es la tabla que hay que saber de memoria para el examen, y acabas de verla funcionar en los tres montajes.',
+                    pistas: [
+                        'Los tres primeros huecos son los tres dispositivos que has usado hoy, en orden de menos a más inteligente.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: `<strong>e)</strong> Si en la topología del Paso 3 sustituyeras <strong>Switch0 por un hub</strong>,
+                               ¿cómo cambiarían los dominios de colisión y los de broadcast? Explica por qué (5-6 líneas).`,
+                    modelo: `<p>Los <strong>dominios de colisión</strong> bajarían de 8 a <strong>5</strong>. Los cuatro
+                             enlaces de PC0-PC3 con Switch0 dejarían de ser independientes: al colgar todos de un hub,
+                             pasarían a formar <strong>un único dominio compartido</strong> junto con el enlace hacia el
+                             router. Los tres restantes (PC4, PC5 y el enlace de Switch1 al router) no cambiarían.</p>
+                             <p>Los <strong>dominios de broadcast</strong> seguirían siendo <strong>2</strong>, exactamente
+                             los mismos. El hub no tiene nada que ver con el broadcast: quien lo delimita es el router, y
+                             sus dos interfaces siguen ahí.</p>
+                             <p>La consecuencia práctica es que PC0-PC3 volverían a competir por el medio, con colisiones,
+                             CSMA/CD y ancho de banda repartido, mientras que PC4 y PC5 conservarían su enlace dedicado
+                             full-duplex. Es exactamente el motivo por el que los hubs desaparecieron.</p>`,
+                    rubrica: [
+                        'Los dominios de colisión bajan de 8 a 5',
+                        'Explica que los cuatro PCs del hub pasan a compartir un solo dominio',
+                        'Los dominios de broadcast siguen siendo 2',
+                        'Justifica que el broadcast lo delimita el router, no el hub',
+                        'Menciona la consecuencia práctica: colisiones y ancho de banda compartido'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

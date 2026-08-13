@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Aprendizaje PAR - ASIR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .tool-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tool-card h2 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .tool-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tool-card button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .features {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-top: 40px;
+        }
+
+        .features h2 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .feature-item h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .progress-section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        /* ---------- Curso: días de la semana en curso ---------- */
+
+        .curso {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .curso h2 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .curso > p {
+            color: #666;
+            margin-bottom: 22px;
+        }
+
+        .dias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .dia-card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 18px 20px;
+            transition: all 0.25s ease;
+        }
+
+        .dia-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .dia-card.repaso {
+            border-color: #ffc107;
+            background: #fffdf5;
+        }
+
+        .dia-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .dia-num {
+            font-weight: bold;
+            color: #1e3c72;
+            font-size: 1.1em;
+        }
+
+        .dia-dur {
+            background: #f1f3f5;
+            color: #495057;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.82em;
+            white-space: nowrap;
+        }
+
+        .dia-tema {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.45;
+            margin-bottom: 14px;
+            min-height: 42px;
+        }
+
+        .dia-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .dia-links a {
+            flex: 1;
+            min-width: 110px;
+            text-align: center;
+            text-decoration: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: all 0.25s ease;
+        }
+
+        .dia-links a:hover {
+            transform: scale(1.04);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .dia-links a.sec {
+            background: #6c757d;
+        }
+
+        .dia-links a.lab {
+            background: #20c997;
+        }
+
+        .curso-footer {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 2px solid #e9ecef;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .curso-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .curso-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Herramientas aún no desarrolladas */
+
+        .tool-card.pendiente {
+            opacity: 0.55;
+        }
+
+        .tool-card.pendiente button {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        .tool-card.pendiente button:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .badge-pendiente {
+            display: inline-block;
+            background: #f1f3f5;
+            color: #868e96;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.78em;
+            margin-bottom: 10px;
+        }
+
+        /* Resultados guardados en cada tarjeta de día */
+
+        .dia-resultados {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+            min-height: 22px;
+        }
+
+        .resultado {
+            font-size: 0.8em;
+            padding: 2px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .resultado.bien {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .resultado.regular {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .resultado.mal {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .dia-card.hecho {
+            border-color: #28a745;
+        }
+
+        .progreso-acciones {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progreso-acciones small {
+            color: #868e96;
+        }
+
+        .btn-reset {
+            background: none;
+            border: 1px solid #dee2e6;
+            color: #868e96;
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-reset:hover {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Centro de Aprendizaje PAR</h1>
+            <p>Planificación y Administración de Redes - ASIR</p>
+            <p>Punto de entrada al curso: teoría, quizzes, ejercicios y herramientas</p>
+        </div>
+
+        <div class="progress-section">
+            <h2>Tu Progreso General</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="generalProgress" style="width: 0%">0%</div>
+            </div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number" id="exercisesDone">0</div>
+                    <div class="stat-label">Ejercicios Completados</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="correctRate">0%</div>
+                    <div class="stat-label">Tasa de Aciertos</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="timeSpent">0h</div>
+                    <div class="stat-label">Tiempo de Estudio</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="currentWeek">1</div>
+                    <div class="stat-label">Semana Actual</div>
+                </div>
+            </div>
+
+            <div class="progreso-acciones">
+                <small id="ultimaActividad">Aún no has corregido ningún quiz ni ejercicio.</small>
+                <button class="btn-reset" onclick="reiniciarProgreso()">Reiniciar progreso</button>
+            </div>
+        </div>
+
+        <div class="curso">
+            <h2>📅 Semana 1 — Introducción a las Redes</h2>
+            <p>Mes 1: Fundamentos de Redes · 7 días · 23 h 46 min. Cada día incluye teoría con paradas de escritura, quiz cronometrado y ejercicios interactivos con pistas.</p>
+
+            <div class="dias-grid">
+
+                <div class="dia-card" data-dia="Dia_01">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 1</span>
+                        <span class="dia-dur">3 h 17 min</span>
+                    </div>
+                    <p class="dia-tema">Qué es una red, ventajas e historia. Con línea de tiempo interactiva y simulación de paquetes.</p>
+                    <div class="dia-resultados" data-resultados="Dia_01"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_01/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_01/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_01/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-dia="Dia_02">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 2</span>
+                        <span class="dia-dur">3 h 32 min</span>
+                    </div>
+                    <p class="dia-tema">Sistema de comunicación y modos de transmisión (simplex, half y full-duplex).</p>
+                    <div class="dia-resultados" data-resultados="Dia_02"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_02/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_02/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_02/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-dia="Dia_03">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 3</span>
+                        <span class="dia-dur">3 h 22 min</span>
+                    </div>
+                    <p class="dia-tema">Señales analógicas y digitales, unidades, ancho de banda y latencia.</p>
+                    <div class="dia-resultados" data-resultados="Dia_03"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_03/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_03/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_03/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-dia="Dia_04">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 4</span>
+                        <span class="dia-dur">3 h 42 min</span>
+                    </div>
+                    <p class="dia-tema">Clasificación de redes: PAN, LAN, MAN, WAN · públicas, privadas y VPN.</p>
+                    <div class="dia-resultados" data-resultados="Dia_04"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_04/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_04/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_04/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-dia="Dia_05">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 5</span>
+                        <span class="dia-dur">3 h 13 min</span>
+                    </div>
+                    <p class="dia-tema">Topologías básicas: bus, anillo y estrella. Análisis de fallos.</p>
+                    <div class="dia-resultados" data-resultados="Dia_05"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_05/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_05/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_05/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-dia="Dia_06">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 6</span>
+                        <span class="dia-dur">3 h 53 min</span>
+                    </div>
+                    <p class="dia-tema">Malla, árbol e híbrida. Dominios de colisión y broadcast, con laboratorio en Packet Tracer.</p>
+                    <div class="dia-resultados" data-resultados="Dia_06"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_06/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_06/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_06/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card repaso" data-dia="Dia_07">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 7 · Evaluación</span>
+                        <span class="dia-dur">3 h 07 min</span>
+                    </div>
+                    <p class="dia-tema">Síntesis, mazo de 31 flashcards y <strong>test semanal de 31 preguntas</strong> cronometrado, con desglose por día.</p>
+                    <div class="dia-resultados" data-resultados="Dia_07"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_07/teoria.html">Síntesis + Test</a>
+                        <a href="../Mes_01_Fundamentos/Semana_01/Dia_07/ejercicios.html" class="sec">Recuperación</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="curso-footer">
+                <span>📋 <a href="../Mes_01_Fundamentos/Semana_01/README.md">Índice de la semana</a> · <a href="../Mes_01_Fundamentos/README.md">Mes 1 completo</a></span>
+                <span>📝 <a href="../Mes_01_Fundamentos/examen_mensual.html">Examen mensual del Mes 1</a></span>
+            </div>
+        </div>
+
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">🧮</div>
+                <h2>Calculadora de Subredes</h2>
+                <p>Calcula automáticamente redes, broadcast, rango de hosts y más. Ideal para verificar tus cálculos manuales.</p>
+                <button onclick="window.location.href='calculadora.html'">Abrir Calculadora</button>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">📝</div>
+                <h2>Test Semanal</h2>
+                <p>Evaluación de la Semana 1 con 31 preguntas autocorregibles y desglose de resultados por día para saber qué repasar.</p>
+                <button onclick="window.location.href='../Mes_01_Fundamentos/Semana_01/Dia_07/teoria.html#quiz-inicio'">Hacer el Test</button>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">🏆</div>
+                <h2>Examen Mensual</h2>
+                <p>Evaluación integrada de las 4 semanas del Mes 1: 25 preguntas con desglose por semana.</p>
+                <button onclick="window.location.href='../Mes_01_Fundamentos/examen_mensual.html'">Abrir Examen</button>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">📚</div>
+                <h2>Índice del Curso</h2>
+                <p>Calendario completo de las 48 semanas, organización por meses y criterios de evaluación.</p>
+                <button onclick="window.location.href='../README.md'">Ver Índice</button>
+            </div>
+
+            <div class="tool-card pendiente">
+                <div class="tool-icon">📊</div>
+                <span class="badge-pendiente">Mes 5 · Semana 17</span>
+                <h2>Ejercicios de VLSM</h2>
+                <p>Practica diseño de redes con VLSM (Variable Length Subnet Mask). Ejercicios progresivos con corrección automática.</p>
+                <button disabled>Aún no disponible</button>
+            </div>
+
+            <div class="tool-card pendiente">
+                <div class="tool-icon">🎯</div>
+                <span class="badge-pendiente">Mes 5 · Semana 18</span>
+                <h2>Ejercicios de CIDR</h2>
+                <p>Domina la notación CIDR y el supernetting. Aprende a agregar rutas y optimizar tablas de enrutamiento.</p>
+                <button disabled>Aún no disponible</button>
+            </div>
+
+            <div class="tool-card pendiente">
+                <div class="tool-icon">🔢</div>
+                <span class="badge-pendiente">Mes 4 · Semana 13</span>
+                <h2>Conversor Binario</h2>
+                <p>Convierte entre binario, decimal y hexadecimal. Herramienta esencial para cálculos de direccionamiento IP.</p>
+                <button disabled>Aún no disponible</button>
+            </div>
+
+            <div class="tool-card pendiente">
+                <div class="tool-icon">🎮</div>
+                <span class="badge-pendiente">Mes 4</span>
+                <h2>Juego de Subnetting</h2>
+                <p>Aprende jugando. Modo competitivo con puntuación y niveles de dificultad.</p>
+                <button disabled>Aún no disponible</button>
+            </div>
+        </div>
+
+        <div class="features">
+            <h2>Características del Sistema de Aprendizaje</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>✅ Auto-Corrección</h3>
+                    <p>Todos los ejercicios se corrigen automáticamente con explicaciones detalladas.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📈 Seguimiento de Progreso</h3>
+                    <p>Estadísticas completas de tu evolución y rendimiento.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🎓 Contenido ASIR Oficial</h3>
+                    <p>Basado en el temario oficial del ciclo formativo de grado superior.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>💡 Explicaciones Paso a Paso</h3>
+                    <p>Cada ejercicio incluye solución detallada para aprender de los errores.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔄 Ejercicios Ilimitados</h3>
+                    <p>Generador aleatorio para practicar sin límites.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📱 Responsive Design</h3>
+                    <p>Funciona perfectamente en móviles, tablets y ordenadores.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Plan de Estudios PAR - ASIR | Material educativo de código abierto</p>
+            <p>Desarrollado con Claude Code para estudiantes de Administración de Sistemas Informáticos en Red</p>
+        </footer>
+    </div>
+
+    <script src="../assets/progreso.js"></script>
+    <script>
+        // Actividades evaluables de la Semana 1: 7 quizzes + 7 hojas de
+        // ejercicios + los 6 laboratorios (días 1 a 6). Barra de progreso.
+        const ACTIVIDADES_SEMANA_1 = 20;
+
+        function etiquetaResultado(pct) {
+            if (pct >= 70) return 'bien';
+            if (pct >= 50) return 'regular';
+            return 'mal';
+        }
+
+        // Panel superior: cifras agregadas
+        function pintarResumen() {
+            const p = PARProgreso.resumen();
+
+            document.getElementById('exercisesDone').textContent = p.exercisesDone;
+
+            const tasa = p.totalAnswers > 0
+                ? Math.round((p.correctAnswers / p.totalAnswers) * 100)
+                : 0;
+            document.getElementById('correctRate').textContent = tasa + '%';
+
+            // Mostramos minutos por debajo de una hora: "0h" desanima
+            document.getElementById('timeSpent').textContent = p.timeSpent < 60
+                ? p.timeSpent + 'min'
+                : (p.timeSpent / 60).toFixed(1) + 'h';
+
+            document.getElementById('currentWeek').textContent = p.currentWeek;
+
+            // La barra mide lo completado de la Semana 1, no la semana del calendario:
+            // así avanza a medida que se trabaja, no solo al cambiar de semana.
+            const hechas = Math.min(p.exercisesDone, ACTIVIDADES_SEMANA_1);
+            const pct = Math.round((hechas / ACTIVIDADES_SEMANA_1) * 100);
+            const barra = document.getElementById('generalProgress');
+            barra.style.width = pct + '%';
+            barra.textContent = pct + '% de la Semana 1';
+        }
+
+        // Marca cada tarjeta de día con el resultado guardado de su quiz y
+        // de sus ejercicios
+        function pintarDias() {
+            const detalle = PARProgreso.detalle();
+            let ultima = null;
+
+            document.querySelectorAll('.dia-card').forEach(card => {
+                const dia = card.dataset.dia;
+                const cont = card.querySelector('.dia-resultados');
+                if (!cont) return;
+
+                const partes = [];
+                let algunaHecha = false;
+
+                [['teoria', 'Quiz'], ['ejercicios', 'Ejercicios'], ['laboratorio', 'Laboratorio']].forEach(([archivo, titulo]) => {
+                    const clave = Object.keys(detalle).find(k =>
+                        k.includes('/' + dia + '/') && k.endsWith('/' + archivo));
+                    if (!clave) return;
+
+                    const act = detalle[clave];
+                    if (!act.total) return;
+
+                    algunaHecha = true;
+                    const pct = Math.round((act.correctas / act.total) * 100);
+                    partes.push(`<span class="resultado ${etiquetaResultado(pct)}">`
+                        + `${titulo}: ${act.correctas}/${act.total} · ${pct}%</span>`);
+
+                    if (!ultima || act.fecha > ultima.fecha) {
+                        ultima = { fecha: act.fecha, dia: dia, titulo: titulo, pct: pct };
+                    }
+                });
+
+                cont.innerHTML = partes.join('');
+                card.classList.toggle('hecho', algunaHecha);
+            });
+
+            const aviso = document.getElementById('ultimaActividad');
+            if (ultima) {
+                const f = new Date(ultima.fecha);
+                const cuando = f.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+                    + ' ' + f.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                aviso.textContent = `Última actividad: ${ultima.titulo} del `
+                    + `${ultima.dia.replace('_', ' ')} — ${ultima.pct}% (${cuando})`;
+            } else {
+                aviso.textContent = 'Aún no has corregido ningún quiz ni ejercicio.';
+            }
+        }
+
+        function cargarProgreso() {
+            pintarResumen();
+            pintarDias();
+        }
+
+        function reiniciarProgreso() {
+            if (!confirm('¿Seguro que quieres borrar todo tu progreso guardado?\n\nSe perderán los resultados de todos los quizzes y ejercicios. Esta acción no se puede deshacer.')) {
+                return;
+            }
+            PARProgreso.reiniciar();
+            cargarProgreso();
+        }
+
+        cargarProgreso();
+
+        // Refrescar si se corrige algo en otra pestaña
+        window.addEventListener('storage', cargarProgreso);
+        window.addEventListener('focus', cargarProgreso);
+    </script>
+</body>
+</html>
