@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">58 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 5</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 3 son <strong>cálculos</strong>: capacidad útil de un RAID y minutos de caída al año. Son los
+            que más caen en examen porque tienen respuesta única y se corrigen solos. Hazlos con lápiz y papel antes
+            de escribir el resultado.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/ejercicios.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Ejercicios',
+    subtitulo: 'Hardware · RAID · disponibilidad · virtualización',
+    tiempo: '58 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Qué hace distinto a un servidor',
+            tiempo: '10 min',
+            enunciado: '<p>Fija para qué sirve cada característica antes de entrar en cálculos.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada característica con el problema que resuelve.',
+                    izquierda: [
+                        'Memoria ECC',
+                        'Fuentes redundantes',
+                        'Intercambio en caliente',
+                        'Gestión remota (iLO/iDRAC)'
+                    ],
+                    derecha: [
+                        'Evitar que un bit alterado corrompa datos en silencio',
+                        'Seguir funcionando si muere una de las alimentaciones',
+                        'Sustituir un disco averiado sin apagar la máquina',
+                        'Reiniciar y ver la pantalla aunque el sistema esté muerto'
+                    ],
+                    pares: {
+                        'Memoria ECC': 'Evitar que un bit alterado corrompa datos en silencio',
+                        'Fuentes redundantes': 'Seguir funcionando si muere una de las alimentaciones',
+                        'Intercambio en caliente': 'Sustituir un disco averiado sin apagar la máquina',
+                        'Gestión remota (iLO/iDRAC)': 'Reiniciar y ver la pantalla aunque el sistema esté muerto'
+                    },
+                    explicacion: 'Ninguna de las cuatro aporta velocidad: todas aportan <strong>fiabilidad o capacidad de reparación</strong>. Eso es exactamente lo que se paga en un servidor.',
+                    pistas: [
+                        'Ninguna de las cuatro sirve para ir más rápido: descarta esa idea de entrada.',
+                        'Dos evitan que el fallo ocurra; dos permiten arreglarlo sin parar el servicio.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>b)</strong> Completa la idea central del día.',
+                    frase: 'Un PC está diseñado para ser {{0}}; un servidor, para ser {{1}}. Por eso hay servidores con menos potencia bruta que un PC de juegos: lo que se paga es la capacidad de {{2}}.',
+                    respuestas: [
+                        ['rapido', 'rápido', 'veloz', 'potente'],
+                        ['fiable', 'estable', 'seguro', 'resistente'],
+                        ['no parar', 'no pararse', 'no caerse', 'seguir funcionando', 'estar siempre disponible']
+                    ],
+                    explicacion: 'Es la frase que hay que recordar cuando alguien proponga usar un PC de tienda como servidor.',
+                    pistas: [
+                        'Piensa en qué le pides a tu ordenador cuando juegas, y qué le pides a la máquina que guarda los datos de la empresa.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un armario de 42U tiene ocupadas 2U de patch panel, 3U de switches, 3U de SAI y cuatro servidores de 2U. ¿Cuántas U quedan libres?',
+                    opciones: {
+                        a: '34 U',
+                        b: '26 U',
+                        c: '30 U',
+                        d: '24 U'
+                    },
+                    respuesta: 'b',
+                    explicacion: '2 + 3 + 3 + (4 × 2) = 16 U ocupadas. 42 − 16 = <strong>26 U</strong> libres. Ojo con los cuatro servidores: son 8 U, no 4.',
+                    pistas: [
+                        'Cuidado con los servidores: son cuatro, pero cada uno ocupa 2U.',
+                        'Suma primero todo lo ocupado y réstalo de 42.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: RAID',
+            tiempo: '13 min',
+            enunciado: '<p>Los niveles de RAID, lo que toleran y lo que no.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa cuántos <strong>fallos de disco</strong> tolera cada nivel.',
+                    esquina: 'Nivel',
+                    cabecera: ['Discos mínimos', 'Fallos que tolera'],
+                    filas: [
+                        {
+                            etiqueta: '<strong>RAID 0</strong>',
+                            celdas: [
+                                { respuestas: ['2', 'dos'], placeholder: 'nº' },
+                                { respuestas: ['0', 'ninguno', 'cero', 'ninguna'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>RAID 1</strong>',
+                            celdas: [
+                                { respuestas: ['2', 'dos'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>RAID 5</strong>',
+                            celdas: [
+                                { respuestas: ['3', 'tres'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>RAID 6</strong>',
+                            celdas: [
+                                { respuestas: ['4', 'cuatro'], placeholder: 'nº' },
+                                { respuestas: ['2', 'dos'], placeholder: 'nº' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La lógica es sencilla: cada disco de paridad permite tolerar un fallo. RAID 5 tiene una paridad, RAID 6 tiene dos. RAID 0 no tiene ninguna, y por eso no tolera nada.',
+                    pistas: [
+                        'Para los discos mínimos, piensa cuántos hacen falta para que el mecanismo tenga sentido.',
+                        'Para los fallos: cuenta cuántas paridades tiene cada nivel.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un servidor con RAID 1 sufre un ataque de <em>ransomware</em> que cifra todos los ficheros. ¿Qué ocurre?',
+                    opciones: {
+                        a: 'El espejo mantiene una copia sin cifrar',
+                        b: 'Los dos discos quedan cifrados: el RAID replica todas las escrituras',
+                        c: 'El RAID detecta el cifrado y lo bloquea',
+                        d: 'Se puede recuperar rompiendo el espejo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El RAID trabaja por debajo del sistema de ficheros y no distingue una escritura legítima de una maliciosa: replica ambas con la misma diligencia. Queda una copia perfectamente redundante de datos inservibles.',
+                    pistas: [
+                        '¿Sabe el RAID qué contienen los datos que escribe?',
+                        'Piensa en qué momento actúa el espejo: ¿antes o después de decidir si la escritura es legítima?'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Seis discos de 8 TB en <strong>RAID 6</strong>. ¿Cuánta capacidad útil queda, en TB?',
+                    respuesta: 32,
+                    tolerancia: 0.5,
+                    unidad: 'TB',
+                    explicacion: 'RAID 6 dedica el equivalente a <strong>dos</strong> discos a la doble paridad: (6 − 2) × 8 TB = <strong>32 TB</strong>.',
+                    pistas: [
+                        'La fórmula es (N − paridades) × tamaño.',
+                        '¿Cuántas paridades tiene RAID 6?',
+                        'Son 4 discos útiles de 8 TB.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>d)</strong> Completa la distinción que hay que tener siempre clara.',
+                    frase: 'El RAID aporta {{0}}: permite <em>seguir funcionando</em> pese a la avería de un disco. La copia de seguridad aporta {{1}}: permite <em>volver a un estado anterior</em>. Resuelven problemas distintos, así que hacen falta las {{2}}.',
+                    respuestas: [
+                        ['disponibilidad'],
+                        ['recuperacion', 'recuperación'],
+                        ['dos', 'las dos', '2', 'ambas']
+                    ],
+                    explicacion: 'Es la confusión más cara del tema. RAID = <strong>disponibilidad</strong>; copia = <strong>recuperación</strong>. Tener RAID y creer que ya hay copia de seguridad es la forma habitual de perder los datos de una empresa.',
+                    pistas: [
+                        'La primera palabra tiene que ver con no parar; la segunda, con volver atrás en el tiempo.',
+                        'Las dos aparecen en el resumen del día.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Cálculos de disponibilidad',
+            tiempo: '15 min',
+            enunciado: `
+                <p>Recuerda: un año tiene <strong>525 600 minutos</strong>, y
+                <strong>disponibilidad = MTBF ÷ (MTBF + MTTR)</strong>.</p>`,
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> ¿Cuántos <strong>minutos</strong> al año puede estar caído un servicio con un 99,99 % de disponibilidad?',
+                    respuesta: 52.56,
+                    tolerancia: 1.5,
+                    unidad: 'minutos',
+                    explicacion: '525 600 × 0,0001 = <strong>52,56 minutos</strong>, algo menos de una hora <em>en todo el año</em>. Ahí tienen que caber los reinicios por actualización.',
+                    pistas: [
+                        'Calcula primero la fracción de tiempo no disponible: 100 % − 99,99 %.',
+                        'Esa fracción, en tanto por uno, es 0,0001.',
+                        'Multiplícala por los 525 600 minutos del año.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un sistema ha estado caído <strong>3 horas</strong> durante todo el año. ¿Qué disponibilidad ha tenido, en porcentaje? Da tres decimales.',
+                    respuesta: 99.966,
+                    tolerancia: 0.005,
+                    unidad: '%',
+                    explicacion: '3 h = 180 min. 180 ÷ 525 600 = 0,000342. Disponibilidad = 1 − 0,000342 = <strong>99,966 %</strong>: entre tres y cuatro nueves.',
+                    pistas: [
+                        'Pasa las 3 horas a minutos.',
+                        'Divide esos minutos entre los 525 600 del año: eso es la <em>in</em>disponibilidad.',
+                        'Réstalo de 1 y pásalo a porcentaje.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>c)</strong> Completa la caída máxima anual de cada nivel, en las unidades que indica cada fila.',
+                    esquina: 'Disponibilidad',
+                    cabecera: ['Caída máxima al año'],
+                    filas: [
+                        { etiqueta: '<strong>99 %</strong> (en días, aprox.)', celdas: [{ respuestas: ['3.65', '3,65', '3', '3.6', '3,6'], placeholder: 'días' }] },
+                        { etiqueta: '<strong>99,9 %</strong> (en horas, aprox.)', celdas: [{ respuestas: ['8.76', '8,76', '8', '9', '8.7', '8,7'], placeholder: 'horas' }] },
+                        { etiqueta: '<strong>99,999 %</strong> (en minutos, aprox.)', celdas: [{ respuestas: ['5.26', '5,26', '5', '5.25', '5,25'], placeholder: 'minutos' }] }
+                    ],
+                    explicacion: 'Cada nueve adicional divide la caída <strong>entre diez</strong>. Se ve muy bien en la progresión: 3,65 días → 8,76 horas → 52 min → 5,26 min.',
+                    pistas: [
+                        'Aplica siempre 525 600 × (1 − disponibilidad) y después convierte a la unidad que se pide.',
+                        'Cada nueve que añades divide el resultado entre 10.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Servidor A: MTBF 30 000 h, MTTR 12 h. Servidor B: MTBF 15 000 h, MTTR 1 h. ¿Cuál tiene mayor disponibilidad?',
+                    opciones: {
+                        a: 'A, porque falla la mitad de veces',
+                        b: 'B, porque se repara doce veces más rápido',
+                        c: 'Son prácticamente iguales',
+                        d: 'Faltan datos para saberlo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'A: 30 000 ÷ 30 012 = 99,960 %. B: 15 000 ÷ 15 001 = <strong>99,993 %</strong>. Fallar el doble pero repararse doce veces más rápido sale claramente ganando.',
+                    pistas: [
+                        'No te fíes de la intuición: aplica la fórmula a los dos.',
+                        'Fíjate en cuánto pesa el MTTR frente al MTBF en el denominador.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Puntos únicos de fallo',
+            tiempo: '12 min',
+            enunciado: `
+                <p><strong>Escenario.</strong> Una empresa presume de su nueva sala técnica:</p>
+                <ul>
+                    <li>Dos servidores idénticos en clúster.</li>
+                    <li>Cada uno con dos fuentes de alimentación y RAID 6.</li>
+                    <li>Ambos conectados al mismo switch de 24 puertos.</li>
+                    <li>Las cuatro fuentes van a la misma regleta, conectada a un SAI.</li>
+                    <li>Las copias de seguridad se guardan en un disco dentro del servidor 1.</li>
+                    <li>Todo lo montó y configuró un único técnico, sin documentar nada.</li>
+                </ul>`,
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Cuál de estos elementos <strong>no</strong> es un punto único de fallo en este montaje?',
+                    opciones: {
+                        a: 'El switch de 24 puertos',
+                        b: 'La regleta a la que van las cuatro fuentes',
+                        c: 'Los servidores, que están en clúster',
+                        d: 'El técnico que lo montó todo'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Lo único correctamente duplicado son los servidores. Todo lo demás —switch, regleta, copias, conocimiento— depende de un solo elemento cuya avería tumba el conjunto.',
+                    pistas: [
+                        'Busca el único elemento del que hay realmente dos, y que además está preparado para relevarse.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué problema tiene guardar las copias de seguridad en un disco dentro del servidor 1?',
+                    opciones: {
+                        a: 'Ninguno, si ese disco no forma parte del RAID',
+                        b: 'Que un incendio, un robo o un cifrado se lleva a la vez los datos y su copia',
+                        c: 'Que las copias serán más lentas',
+                        d: 'Que ocupa espacio del RAID 6'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Una copia sirve para recuperarse de aquello que destruye el original. Si comparte máquina, sala y red con lo que protege, todo lo que afecte al original afecta también a la copia.',
+                    pistas: [
+                        'Pregúntate de qué escenarios quiere protegerte una copia de seguridad.',
+                        '¿Sobrevive esa copia a un incendio en la sala técnica?'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>c)</strong> Ordena las correcciones de mayor a menor urgencia, considerando cuánto reduce el riesgo cada una frente a lo que cuesta.',
+                    elementos: [
+                        'Sacar una copia de seguridad fuera del edificio',
+                        'Documentar la instalación y las contraseñas',
+                        'Repartir las fuentes entre dos circuitos eléctricos distintos',
+                        'Añadir un segundo switch con enlaces redundantes'
+                    ],
+                    orden: [
+                        'Sacar una copia de seguridad fuera del edificio',
+                        'Documentar la instalación y las contraseñas',
+                        'Repartir las fuentes entre dos circuitos eléctricos distintos',
+                        'Añadir un segundo switch con enlaces redundantes'
+                    ],
+                    explicacion: 'Las dos primeras son casi gratis y protegen frente a la pérdida <strong>irreversible</strong>: sin copia externa y sin documentación, un desastre no tiene vuelta atrás. Las dos siguientes evitan <em>paradas</em>, que son graves pero recuperables, y cuestan dinero.',
+                    pistas: [
+                        'Distingue entre lo que causa una parada y lo que causa una pérdida irrecuperable.',
+                        'Ordena también por coste: hay dos medidas que no cuestan casi nada.',
+                        'La más cara es la que exige comprar equipamiento nuevo.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>d)</strong> El responsable dice: «tenemos clúster y RAID 6, estamos cubiertos». Explícale por qué su montaje puede caer entero por un solo fallo.',
+                    modelo: `<p>El clúster y el RAID resuelven bien dos riesgos concretos —que muera un servidor y que
+                             muera un disco— pero el montaje tiene al menos <strong>cuatro puntos únicos de
+                             fallo</strong> que ninguno de los dos cubre.</p>
+                             <p><strong>El switch.</strong> Los dos servidores del clúster están conectados al mismo
+                             switch. Si ese switch se estropea, ambos quedan incomunicados a la vez: el clúster sigue
+                             vivo pero es inalcanzable, que a efectos del usuario es lo mismo que estar caído.</p>
+                             <p><strong>La regleta.</strong> Se han pagado cuatro fuentes de alimentación para acabar
+                             enchufándolas todas al mismo sitio. La redundancia solo sirve si llega hasta el final de
+                             la cadena: aquí el punto único no se ha eliminado, solo se ha movido de las fuentes a la
+                             regleta.</p>
+                             <p><strong>Las copias.</strong> Están dentro de la máquina que deberían proteger. Un
+                             incendio, un robo o un cifrado se llevan el original y la copia en el mismo acto, y
+                             entonces la pérdida es <strong>irreversible</strong>: no es una parada, es no volver.</p>
+                             <p><strong>El técnico.</strong> Es el punto único de fallo más peligroso, porque no se ve
+                             en ningún diagrama. Si se va de vacaciones el día que ocurre el problema, el MTTR se
+                             dispara: nadie sabe las contraseñas, ni cómo está configurado el clúster, ni en qué orden
+                             hay que arrancar las cosas.</p>
+                             <p>El razonamiento general: la redundancia hay que analizarla <strong>por caminos
+                             completos</strong>, no por componentes sueltos. La pregunta correcta no es «¿qué tengo
+                             duplicado?», sino <strong>«¿qué elemento, si desaparece ahora mismo, deja el servicio
+                             inaccesible?»</strong>. Y hay que hacérsela también a la electricidad, a la red y a las
+                             personas.</p>`,
+                    rubrica: [
+                        'Identifica el switch como punto único de fallo',
+                        'Explica que la regleta anula la redundancia de las fuentes',
+                        'Señala que la copia dentro del servidor no protege de nada grave',
+                        'Menciona la dependencia de una sola persona',
+                        'Concluye que la redundancia se analiza por caminos completos, no por piezas'
+                    ],
+                    pistas: [
+                        'Recorre mentalmente el camino desde el usuario hasta los datos y busca dónde hay una sola pieza.',
+                        'No te quedes en lo informático: mira también la electricidad.',
+                        'Distingue entre los fallos que causan una parada y los que causan pérdida definitiva.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Virtualización y nube',
+            tiempo: '8 min',
+            enunciado: '<p>Elegir la tecnología adecuada y saber hasta dónde llega la responsabilidad de cada uno.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Clasifica cada producto como hipervisor de <em>tipo 1</em> o <em>tipo 2</em>.',
+                    esquina: 'Producto',
+                    cabecera: ['Tipo'],
+                    filas: [
+                        { etiqueta: 'Proxmox VE', celdas: [{ respuestas: ['1', 'tipo 1', 'bare metal'], placeholder: '1 o 2' }] },
+                        { etiqueta: 'VirtualBox', celdas: [{ respuestas: ['2', 'tipo 2', 'alojado'], placeholder: '1 o 2' }] },
+                        { etiqueta: 'VMware ESXi', celdas: [{ respuestas: ['1', 'tipo 1', 'bare metal'], placeholder: '1 o 2' }] }
+                    ],
+                    explicacion: 'La pregunta que lo decide es: ¿se instala <strong>sobre el hardware</strong> o <strong>dentro de un sistema operativo</strong>? Proxmox y ESXi son sistemas en sí mismos; VirtualBox es un programa que instalas en tu Windows o tu Linux.',
+                    pistas: [
+                        'Pregúntate qué necesitas tener instalado antes de poder instalar cada uno.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Necesitas desplegar la misma aplicación web 40 veces, de forma idéntica y en segundos. ¿Qué eliges?',
+                    opciones: {
+                        a: 'Cuarenta máquinas virtuales, por el aislamiento',
+                        b: 'Contenedores: arrancan en menos de un segundo y pesan megabytes',
+                        c: 'Cuarenta servidores físicos',
+                        d: 'Da igual: el rendimiento es el mismo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es el caso de uso para el que se inventaron los contenedores: desplegar una aplicación muchas veces y siempre igual. Las máquinas virtuales se reservan para cuando hace falta otro sistema operativo o un aislamiento fuerte.',
+                    pistas: [
+                        'Fíjate en las dos palabras clave del enunciado: «idéntica» y «en segundos».'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>c)</strong> Relaciona cada modelo de nube con lo que sigue siendo responsabilidad tuya.',
+                    izquierda: ['IaaS', 'PaaS', 'SaaS'],
+                    derecha: [
+                        'El sistema operativo, sus parches y la aplicación',
+                        'Solo la aplicación que despliegas',
+                        'Solo tus datos y la gestión de usuarios'
+                    ],
+                    pares: {
+                        'IaaS': 'El sistema operativo, sus parches y la aplicación',
+                        'PaaS': 'Solo la aplicación que despliegas',
+                        'SaaS': 'Solo tus datos y la gestión de usuarios'
+                    },
+                    explicacion: 'Cuanto más arriba en la lista, más responsabilidad conservas. El error caro es suponer que en IaaS el proveedor actualiza tu sistema operativo: no lo hace.',
+                    pistas: [
+                        'Ordénalos de menos a más «hecho»: infraestructura, plataforma, software terminado.',
+                        'Cuanto menos te dan hecho, más te queda por gestionar.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

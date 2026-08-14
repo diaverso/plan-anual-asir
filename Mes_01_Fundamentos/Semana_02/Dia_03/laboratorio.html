@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: qué está escuchando en tu equipo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 3</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">45 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Tipo:</strong> inventario de servicios</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Hacer el inventario que todo administrador debería tener de sus máquinas: <strong>qué programas están
+            esperando conexiones</strong>, en qué puertos, y si escuchan solo en local o están expuestos a la red.</p>
+            <p>Casi nadie lo ha mirado nunca en su propio equipo. Prepárate para llevarte alguna sorpresa.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Solo tu equipo</strong>
+            Todo lo de hoy consulta el <strong>estado de tu propia máquina</strong>: no se envía nada por la red ni se
+            analiza ningún equipo ajeno. Escanear puertos de máquinas que no son tuyas, sin autorización expresa por
+            escrito, es otra cosa muy distinta y no forma parte de este laboratorio.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — Lista lo que está a la escucha</h3>
+
+            <div class="so-tabs" data-grupo="listen">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="listen" data-so="win">
+                <p>La versión clásica, que funciona en cualquier Windows:</p>
+                <div class="comando"><pre><code>netstat -ano -p TCP | findstr LISTENING</code></pre></div>
+                <p>La columna final es el <strong>PID</strong>, el identificador del proceso. Para ver directamente el
+                nombre del programa, en <strong>PowerShell</strong>:</p>
+                <div class="comando"><pre><code>Get-NetTCPConnection -State Listen |
+    Select-Object LocalAddress, LocalPort,
+        @{n='Proceso'; e={ (Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).ProcessName }} |
+    Sort-Object LocalPort | Format-Table -AutoSize</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="listen" data-so="nix">
+                <div class="comando"><pre><code>ss -tulpn</code></pre></div>
+                <p>Las opciones significan: <code>-t</code> TCP, <code>-u</code> UDP, <code>-l</code> solo los que
+                escuchan, <code>-p</code> el proceso y <code>-n</code> números en lugar de nombres. Para ver el proceso
+                de servicios del sistema hace falta <code>sudo</code>.</p>
+                <p>En macOS:</p>
+                <div class="comando"><pre><code>lsof -iTCP -sTCP:LISTEN -P -n</code></pre></div>
+            </div>
+
+            <div class="dato" style="margin-top:14px">
+                <strong>Ejemplo de salida real en Windows</strong>
+<pre><code>LocalAddress LocalPort Proceso
+------------ --------- -------
+0.0.0.0            135 svchost
+0.0.0.0            445 System
+0.0.0.0           3389 svchost
+0.0.0.0           5040 svchost
+::               49665 wininit
+::               49802 nearby_share</code></pre>
+                <p>Fíjate en la mezcla: puertos bajos y conocidos (135, 445, 3389) junto a puertos altos del rango
+                efímero que también están escuchando. Eso último es normal en Windows: son servicios internos del
+                sistema (RPC) a los que se les asigna un puerto dinámico al arrancar.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — Distingue lo local de lo expuesto</h3>
+
+            <p>La <strong>dirección local</strong> de cada línea es tan importante como el puerto:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Dirección</th><th>Qué significa</th><th>Riesgo</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>127.0.0.1</code> o <code>::1</code></td>
+                        <td>Solo escucha en el <strong>bucle local</strong>: únicamente alcanzable desde la propia máquina</td>
+                        <td><strong>Bajo</strong></td>
+                    </tr>
+                    <tr>
+                        <td><code>0.0.0.0</code> o <code>::</code></td>
+                        <td>Escucha en <strong>todas</strong> las interfaces: alcanzable desde la red</td>
+                        <td><strong>Hay que justificarlo</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Una IP concreta<br>(<code>192.168.1.70</code>)</td>
+                        <td>Escucha solo por esa interfaz</td>
+                        <td>Medio: depende de la red</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Es la distinción más útil de todo el laboratorio</strong>
+                Un servicio en <code>127.0.0.1</code> puede tener la peor vulnerabilidad del mundo: nadie de fuera
+                puede alcanzarlo. El mismo servicio en <code>0.0.0.0</code> está expuesto a toda la red.
+                <br><br>
+                Por eso una buena práctica universal es <strong>atar cada servicio a la interfaz mínima
+                necesaria</strong>. Una base de datos que solo usa la aplicación web de la misma máquina debe escuchar
+                en local, nunca en todas las interfaces.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — Identifica qué es cada cosa</h3>
+
+            <p>Ahora viene el trabajo de verdad: <strong>saber qué es cada línea</strong>. Para cada puerto que no
+            reconozcas, busca su número junto al nombre del proceso.</p>
+
+            <p>Algunos que verás casi seguro en Windows y conviene que reconozcas:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Puerto</th><th>Qué suele ser</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>135</strong></td><td>RPC de Windows: el mecanismo interno de llamadas entre servicios</td></tr>
+                    <tr><td><strong>139 / 445</strong></td><td>Compartir ficheros e impresoras (SMB)</td></tr>
+                    <tr><td><strong>3389</strong></td><td>Escritorio remoto (RDP)</td></tr>
+                    <tr><td><strong>5040</strong></td><td>Servicio de conexión de dispositivos de Windows</td></tr>
+                    <tr><td><strong>5353</strong></td><td>mDNS: descubrimiento de impresoras y dispositivos en la red local</td></tr>
+                    <tr><td><strong>27036</strong></td><td>Steam, para su función de red local</td></tr>
+                    <tr><td>49152 en adelante</td><td>Servicios internos del sistema con puerto dinámico</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Antes de alarmarte</strong>
+                Es normal encontrar entre diez y treinta servicios a la escucha en un Windows de escritorio. Que haya
+                muchos no significa que estés comprometido: significa que el sistema trae muchas funciones activadas
+                por omisión.
+                <br><br>
+                El objetivo del laboratorio <strong>no es apagar cosas</strong> —hacerlo a ciegas rompe el sistema—
+                sino <strong>saber qué hay</strong>. Cambiar configuración de servicios sin entenderla es la forma más
+                rápida de dejar un equipo inservible.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 4 — Mira el otro lado: tus conexiones como cliente</h3>
+
+            <p>Hasta ahora has visto tu equipo como servidor. Ahora míralo como cliente:</p>
+
+            <div class="so-tabs" data-grupo="conn">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="conn" data-so="win">
+                <div class="comando"><pre><code>Get-NetTCPConnection -State Established |
+    Select-Object LocalPort, RemoteAddress, RemotePort,
+        @{n='Proceso'; e={ (Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).ProcessName }} |
+    Format-Table -AutoSize</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="conn" data-so="nix">
+                <div class="comando"><pre><code>ss -tnp state established</code></pre></div>
+            </div>
+
+            <p>Abre unas cuantas pestañas del navegador y vuelve a ejecutarlo. Fíjate en tres cosas:</p>
+
+            <ul>
+                <li>Los <strong>puertos remotos</strong> son casi todos <strong>443</strong>: casi toda la web va
+                cifrada.</li>
+                <li>Los <strong>puertos locales</strong> son altos y distintos en cada conexión: son
+                <strong>efímeros</strong>.</li>
+                <li>Varias conexiones pueden ir <strong>al mismo destino</strong> y no se mezclan, porque la cuaterna
+                es distinta.</li>
+            </ul>
+
+            <div class="dato">
+                <strong>Ahí tienes la teoría en directo</strong>
+                <p>Esto es exactamente lo que explicaba el checkpoint de las cinco pestañas: mismo destino, mismo
+                puerto de destino, distinto puerto de origen. Y ahora lo estás viendo con tus propios datos.</p>
+            </div>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:24px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Tienes la lista de servicios a la escucha de tu equipo.</li>
+                <li>Sabes cuáles escuchan solo en local y cuáles están expuestos a la red.</li>
+                <li>Has identificado qué es al menos la mitad de ellos.</li>
+                <li>Has visto en tus propias conexiones la diferencia entre un puerto de servidor y uno efímero.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_02/laboratorio.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 3 — Servicios y conexiones de tu equipo',
+    subtitulo: 'A la escucha · local frente a expuesto · puertos efímeros',
+    tiempo: '45 min',
+    ejercicios: [
+
+        {
+            titulo: 'PARTE A: Tu inventario de servicios',
+            tiempo: '15 min',
+            enunciado: '<p>Datos reales del Paso 1. Se comprueba la <strong>forma</strong> del dato, no un valor concreto.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 12,
+                    pregunta: '<strong>1.</strong> Pega la salida del comando que lista los servicios a la escucha.',
+                    placeholder: 'Pega la salida de Get-NetTCPConnection, netstat o ss -tulpn',
+                    minimo: 80,
+                    debe: [[':', '.'], ['listen', 'listening', '0.0.0.0', '127.0.0.1', '::']],
+                    explicacion: 'Este listado es el punto de partida de cualquier revisión de seguridad de una máquina, y lo primero que pide un auditor.',
+                    pistas: [
+                        'Copia varias líneas, no solo una: se trata de tener el inventario completo.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>2.</strong> ¿Cuántos servicios TCP a la escucha te ha listado en total?',
+                    ayuda: 'servicios',
+                    ancho: '110px',
+                    explicacion: 'Entre 10 y 30 es lo normal en un Windows de escritorio; en un Linux recién instalado suelen ser muchos menos, a veces solo dos o tres.',
+                    pistas: [
+                        'Cuenta las líneas del resultado, sin la cabecera.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>3.</strong> ¿Cuántos de ellos escuchan en <code>0.0.0.0</code> o <code>::</code>, es decir, están <strong>expuestos a la red</strong>?',
+                    ayuda: 'expuestos',
+                    ancho: '110px',
+                    explicacion: 'Este es el número que de verdad importa desde el punto de vista de seguridad. Los que escuchan en 127.0.0.1 no son alcanzables desde fuera.',
+                    pistas: [
+                        'Filtra por la columna de dirección local, no por el puerto.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>4.</strong> Escribe el <strong>puerto más bajo</strong> que estés escuchando y el nombre del proceso al que pertenece.',
+                    placeholder: '135 — svchost',
+                    ancho: '340px',
+                    explicacion: 'Los puertos bajos son los bien conocidos, así que suelen corresponder a servicios estándar del sistema. En Windows lo habitual es el 135 (RPC) o el 445 (SMB).',
+                    pistas: [
+                        'Ordena la salida por el número de puerto para verlo de un vistazo.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE B: Identifica qué son',
+            tiempo: '13 min',
+            enunciado: '<p>Coge <strong>tres</strong> de tus servicios a la escucha y averigua qué son realmente.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>5.</strong> <strong>Servicio 1:</strong> puerto, proceso y para qué sirve.',
+                    placeholder: '445 — System — compartir ficheros e impresoras (SMB)',
+                    ancho: '520px',
+                    explicacion: 'Empieza por los que aparecen en la tabla de referencia del Paso 3: son los más habituales y los que conviene reconocer de memoria.',
+                    pistas: [
+                        'Si no reconoces el proceso, busca su nombre exacto junto a la palabra «puerto».'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>6.</strong> <strong>Servicio 2:</strong> puerto, proceso y para qué sirve.',
+                    placeholder: '5353 — mDNS — descubrimiento de dispositivos en la red local',
+                    ancho: '520px',
+                    explicacion: 'Los servicios de descubrimiento (mDNS, SSDP, LLMNR) aparecen casi siempre y explican buena parte del tráfico multicast que viste en el laboratorio del Día 1.',
+                    pistas: [
+                        'Elige uno distinto del anterior, a ser posible con un puerto alto.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>7.</strong> <strong>Servicio 3:</strong> puerto, proceso y para qué sirve.',
+                    placeholder: '27036 — steam — función de red local de Steam',
+                    ancho: '520px',
+                    explicacion: 'Los servicios de aplicaciones instaladas por el usuario —juegos, sincronización en la nube, impresoras— son los que más sorprenden en este inventario.',
+                    pistas: [
+                        'Busca alguno cuyo proceso reconozcas como un programa que tú instalaste.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>8.</strong> ¿Hay alguno que <strong>no esperabas</strong> encontrar? Descríbelo, o escribe «ninguno» si los reconoces todos.',
+                    placeholder: 'no esperaba que ... estuviera escuchando en todas las interfaces',
+                    ancho: '520px',
+                    explicacion: 'La respuesta más frecuente es «sí»: casi todos los equipos tienen servicios de aplicaciones que el usuario no sabía que quedaban a la escucha. Detectarlo ya es el objetivo del ejercicio.',
+                    pistas: [
+                        'Fíjate sobre todo en los que escuchan en 0.0.0.0 y pertenecen a programas que instalaste tú.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE C: Tú como cliente',
+            tiempo: '8 min',
+            enunciado: '<p>Ahora los datos del Paso 4, con varias pestañas del navegador abiertas.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>9.</strong> ¿Cuántas conexiones en estado ESTABLISHED tienes ahora mismo?',
+                    ayuda: 'conexiones',
+                    ancho: '110px',
+                    explicacion: 'Con el navegador abierto es fácil pasar de cincuenta: cada página moderna abre conexiones a decenas de servidores distintos.',
+                    pistas: [
+                        'Cuenta las líneas del resultado del Paso 4.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>10.</strong> ¿Cuál es el <strong>puerto remoto</strong> que más se repite? ¿Qué servicio es?',
+                    placeholder: '443 — HTTPS',
+                    ancho: '300px',
+                    explicacion: 'Casi con total seguridad es el 443. Hace quince años habría sido el 80: el paso de HTTP a HTTPS es uno de los cambios más grandes de la última década en Internet.',
+                    pistas: [
+                        'Mira la columna RemotePort y busca el valor dominante.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>11.</strong> Escribe dos de tus <strong>puertos locales</strong> de esa lista. ¿En qué rango caen?',
+                    placeholder: '51423 y 51427 — rango efímero',
+                    ancho: '400px',
+                    explicacion: 'Deben caer en el rango dinámico (49152–65535 según el estándar; algunos sistemas empiezan un poco más abajo). Son los puertos que el sistema te asigna como cliente.',
+                    pistas: [
+                        'Compara esos números con los tres rangos de la teoría.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE D: Interpretación',
+            tiempo: '9 min',
+            enunciado: '<p>Lo importante es lo que concluyas del inventario.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>12.</strong> Con tu inventario delante, ¿qué le dirías a alguien que afirma «yo no tengo ningún servidor en casa, solo uso el ordenador para navegar»?',
+                    modelo: `<p>Que casi con toda seguridad está ejecutando <strong>una decena o más de servicios a la
+                             escucha</strong> sin saberlo, y que por tanto su equipo actúa de servidor de muchas cosas
+                             aunque él solo lo use como cliente.</p>
+                             <p>La confusión viene de identificar «servidor» con una máquina grande en un armario.
+                             Servidor es un <strong>papel</strong>: cualquier programa que espera conexiones lo está
+                             desempeñando. Y un sistema operativo de escritorio trae muchos activados por omisión:
+                             compartir ficheros e impresoras, descubrimiento de dispositivos de la red local, llamadas
+                             internas del sistema, escritorio remoto si está habilitado, además de lo que añaden los
+                             programas instalados —plataformas de juegos, sincronización en la nube, software de
+                             impresora—.</p>
+                             <p>Ahora bien, conviene matizar para no caer en el alarmismo. La mayoría de esos servicios
+                             escuchan solo en <strong>127.0.0.1</strong>, y esos no son alcanzables desde fuera. De los
+                             que escuchan en <code>0.0.0.0</code>, casi todos quedan además protegidos por dos
+                             barreras: el <strong>cortafuegos del sistema</strong>, que en Windows bloquea por omisión
+                             las conexiones entrantes en redes clasificadas como públicas, y el <strong>NAT del
+                             router</strong>, que impide que nadie de Internet alcance directamente un equipo de la red
+                             doméstica.</p>
+                             <p>La conclusión correcta no es «estoy en peligro», sino <strong>«tengo una superficie de
+                             exposición que no conocía»</strong>. Y eso importa porque esas barreras desaparecen en
+                             cuanto el equipo se conecta a una red que no controlas —el wifi de un hotel, de una
+                             cafetería o de un aeropuerto—, donde los demás equipos están en tu misma red local y el
+                             NAT ya no te separa de ellos.</p>`,
+                    rubrica: [
+                        'Explica que servidor es un papel, no un tipo de máquina',
+                        'Señala que el sistema trae servicios activados por omisión',
+                        'Distingue entre los que escuchan en local y los expuestos',
+                        'Menciona el cortafuegos y el NAT como barreras existentes',
+                        'Concluye sin alarmismo, y señala el riesgo real en redes ajenas'
+                    ],
+                    pistas: [
+                        'Empieza aclarando qué significa realmente «servidor».',
+                        'No te quedes en la alarma: pregúntate qué protege hoy a ese equipo.',
+                        'Termina con el caso en que esas protecciones no están: ¿qué red sería esa?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>13.</strong> Un compañero, tras hacer este laboratorio, decide «apagar todos los servicios que no reconozca». Explica por qué es mala idea y qué haría un administrador.',
+                    modelo: `<p>Es mala idea porque <strong>no reconocer algo no significa que sobre</strong>: significa
+                             que aún no se sabe qué hace. Muchos de esos servicios son piezas internas del sistema
+                             operativo de las que dependen otras. Apagar el RPC de Windows, por ejemplo, deja el equipo
+                             prácticamente inservible, y el efecto no siempre es inmediato: puede manifestarse días
+                             después en forma de fallos aparentemente inconexos, cuando ya nadie relaciona la causa
+                             con el cambio.</p>
+                             <p>Lo que haría un administrador es seguir un método:</p>
+                             <ul>
+                               <li><strong>Primero identificar, no tocar.</strong> Averiguar qué es cada servicio y de
+                               qué depende. Este laboratorio termina justo aquí, y con razón.</li>
+                               <li><strong>Después priorizar por exposición.</strong> Lo urgente no es lo desconocido,
+                               sino lo que escucha en <code>0.0.0.0</code> y no debería. Un servicio en
+                               <code>127.0.0.1</code> puede esperar.</li>
+                               <li><strong>Preferir limitar antes que apagar.</strong> Muchas veces la solución no es
+                               desactivar el servicio, sino <strong>atarlo a la interfaz local</strong> o restringirlo
+                               en el cortafuegos. Se conserva la funcionalidad y se elimina la exposición.</li>
+                               <li><strong>Cambiar de uno en uno y documentarlo.</strong> Así se sabe qué revertir
+                               cuando algo se rompe, y se puede volver atrás.</li>
+                               <li><strong>Probar antes en una máquina que no sea crítica</strong>, y disponer de una
+                               forma de recuperación.</li>
+                             </ul>
+                             <p>El principio general: en administración de sistemas, <strong>los cambios se hacen
+                             pequeños, reversibles y documentados</strong>. Apagar diez cosas a la vez garantiza que,
+                             si algo falla, no se sepa cuál fue.</p>`,
+                    rubrica: [
+                        'Explica que no reconocer un servicio no implica que sea prescindible',
+                        'Da un ejemplo de dependencia interna del sistema',
+                        'Propone identificar antes de tocar nada',
+                        'Prioriza por exposición y prefiere limitar antes que apagar',
+                        'Defiende cambios de uno en uno, documentados y reversibles'
+                    ],
+                    pistas: [
+                        'Piensa qué pasa si apagas algo de lo que dependen otros componentes del sistema.',
+                        '¿Hay alguna alternativa entre «dejarlo como está» y «apagarlo»?',
+                        'Si haces diez cambios y algo se rompe, ¿cómo sabrás cuál fue?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

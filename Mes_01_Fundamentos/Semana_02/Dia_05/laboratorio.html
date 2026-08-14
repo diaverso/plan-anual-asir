@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Laboratorio: quién presta cada servicio en tu red</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 5</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Tipo:</strong> descubrimiento y diagnóstico</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Averiguar <strong>quién presta cada servicio</strong> en tu propia red: quién te da la dirección, quién
+            resuelve los nombres, cuánto dura tu concesión y cuánto tarda una consulta según esté o no en caché.</p>
+            <p>Y sobre todo, comprobar en directo la <strong>prueba de los dos ping</strong>, que es la herramienta de
+            diagnóstico que más vas a usar en toda tu vida profesional.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Solo tu red</strong>
+            Todos los comandos consultan <strong>tu configuración</strong> o hacen consultas DNS normales, como las
+            que hace tu navegador continuamente. Ninguno modifica nada, salvo el vaciado de la caché DNS del Paso 4,
+            que es una operación inofensiva y reversible: la caché se vuelve a llenar sola.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — ¿Quién te da la dirección?</h3>
+
+            <div class="so-tabs" data-grupo="dhcp">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="dhcp" data-so="win">
+                <p>Lo más completo sigue siendo el clásico:</p>
+                <div class="comando"><pre><code>ipconfig /all</code></pre></div>
+                <p>Busca las líneas <strong>Servidor DHCP</strong>, <strong>Concesión obtenida</strong> y
+                <strong>La concesión expira</strong>. En <strong>PowerShell</strong>, para verlo más limpio:</p>
+                <div class="comando"><pre><code>Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp |
+    Format-Table InterfaceAlias, IPAddress, PrefixLength, PrefixOrigin -AutoSize</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="dhcp" data-so="nix">
+                <div class="comando"><pre><code>ip addr show
+cat /var/lib/dhcp/dhclient.leases 2>/dev/null | tail -20</code></pre></div>
+                <p>Con NetworkManager, más directo:</p>
+                <div class="comando"><pre><code>nmcli device show | grep -i -E "DHCP4|IP4"</code></pre></div>
+            </div>
+
+            <div class="dato" style="margin-top:14px">
+                <strong>Lo que suele sorprender</strong>
+                <p>En la mayoría de casas el servidor DHCP es el propio router, y su dirección coincide con la puerta
+                de enlace: <code>192.168.1.1</code>.</p>
+                <p>Pero <strong>no siempre</strong>. Si en tu red hay un servidor doméstico, un NAS, una Raspberry Pi
+                con Pi-hole o una máquina virtual haciendo de servidor, es muy posible que el DHCP sea
+                <em>esa</em> máquina y no el router. Salida real de un equipo así:</p>
+<pre><code>Servidor DHCP . . . . . . . . . . : 192.168.1.2
+Puerta de enlace predeterminada . : 192.168.1.1</code></pre>
+                <p>Dos direcciones distintas: una máquina reparte las direcciones y otra da salida a Internet. En una
+                empresa esto es lo <strong>normal</strong>, no la excepción.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — ¿Quién resuelve tus nombres?</h3>
+
+            <div class="so-tabs" data-grupo="dns">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="dns" data-so="win">
+                <div class="comando"><pre><code>Get-DnsClientServerAddress -AddressFamily IPv4 |
+    Where-Object ServerAddresses |
+    Format-Table InterfaceAlias, ServerAddresses -AutoSize</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="dns" data-so="nix">
+                <div class="comando"><pre><code>resolvectl status | grep -A2 "DNS Servers"</code></pre></div>
+                <p>O, en sistemas sin systemd-resolved:</p>
+                <div class="comando"><pre><code>cat /etc/resolv.conf</code></pre></div>
+            </div>
+
+            <div class="destacado" style="margin-top:14px">
+                <strong>Compara las tres direcciones que ya tienes</strong>
+                Puerta de enlace, servidor DHCP y servidor DNS. En una casa sencilla las tres coinciden: todo lo hace
+                el router. En cuanto aparece un servidor propio, empiezan a separarse.
+                <br><br>
+                Saber <strong>qué máquina hace qué papel</strong> es exactamente lo que se hace al llegar nuevo a una
+                empresa, y es la información que nadie tiene documentada.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — La prueba de los dos ping</h3>
+
+            <p>La herramienta de diagnóstico más rentable que existe. Dos comandos, quince segundos:</p>
+
+            <div class="comando"><pre><code>ping 8.8.8.8
+ping www.google.com</code></pre></div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ping a IP</th><th>Ping a nombre</th><th>Conclusión</th></tr></thead>
+                <tbody>
+                    <tr><td>✅ Funciona</td><td>✅ Funciona</td><td>La red está bien: el problema es de la aplicación</td></tr>
+                    <tr><td>✅ Funciona</td><td>❌ Falla</td><td><strong>Es el DNS</strong>, y solo el DNS</td></tr>
+                    <tr><td>❌ Falla</td><td>❌ Falla</td><td><strong>Conectividad</strong>: cable, IP, puerta de enlace</td></tr>
+                    <tr><td>❌ Falla</td><td>✅ Funciona</td><td>Raro: alguien bloquea esa IP concreta</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Un matiz que confunde a mucha gente</strong>
+                Algunas redes <strong>bloquean el ICMP</strong>, que es el protocolo que usa <code>ping</code>. En esas
+                redes el ping falla aunque todo funcione perfectamente.
+                <br><br>
+                Si sospechas que es tu caso, sustituye la prueba por una que use TCP:
+                <div class="comando" style="margin-top:8px"><pre><code>Test-NetConnection 8.8.8.8 -Port 53
+Test-NetConnection www.google.com -Port 443</code></pre></div>
+                La lógica de la tabla es la misma: lo que se compara es <strong>por IP frente a por nombre</strong>.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 4 — La caché, en directo</h3>
+
+            <p>Ahora vas a <strong>medir</strong> la diferencia entre una consulta que hay que preguntar por ahí fuera
+            y una que ya está guardada.</p>
+
+            <div class="so-tabs" data-grupo="cache">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="cache" data-so="win">
+                <p>En <strong>PowerShell</strong>, mide un nombre que casi seguro nadie ha consultado y después uno
+                muy común:</p>
+                <div class="comando"><pre><code>Measure-Command { Resolve-DnsName ejemplo-que-nadie-consulta-1234.es -ErrorAction SilentlyContinue } |
+    Select-Object TotalMilliseconds
+
+Measure-Command { Resolve-DnsName www.google.com -ErrorAction SilentlyContinue } |
+    Select-Object TotalMilliseconds</code></pre></div>
+                <p>Para ver y vaciar la caché:</p>
+                <div class="comando"><pre><code>ipconfig /displaydns | Select-String "Nombre de registro" | Select-Object -First 15
+ipconfig /flushdns</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="cache" data-so="nix">
+                <div class="comando"><pre><code>time dig ejemplo-que-nadie-consulta-1234.es
+time dig www.google.com</code></pre></div>
+                <p><code>dig</code> muestra además el tiempo de consulta en su propia salida, en la línea
+                <code>Query time</code>.</p>
+            </div>
+
+            <div class="dato" style="margin-top:14px">
+                <strong>Lo que vas a ver</strong>
+                <p>Una medición real hecha al preparar este laboratorio:</p>
+<pre><code>sin caché : 616 ms
+con caché :   5 ms</code></pre>
+                <p>Más de <strong>cien veces</strong> más rápido. Y esa diferencia se multiplica por las decenas de
+                nombres distintos que resuelve una sola página web moderna.</p>
+                <p>Ahora entiendes por qué un DNS lento hace que «Internet vaya lento» aunque el ancho de banda esté
+                intacto: no falta capacidad, sobra <strong>espera</strong>. Es el mismo fenómeno de latencia frente a
+                ancho de banda que estudiaste en el Día 3 de la Semana 1.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 5 — Pregunta a otro DNS</h3>
+
+            <p>Puedes consultar un servidor DNS concreto sin cambiar tu configuración, lo que resulta utilísimo para
+            saber si el problema es <em>tuyo</em> o del servidor:</p>
+
+            <div class="comando"><pre><code>nslookup www.google.com 1.1.1.1</code></pre></div>
+
+            <p>Compara el resultado con el que da tu DNS habitual. Si tu servidor no resuelve algo y otro público sí,
+            el problema está localizado.</p>
+
+            <div class="destacado">
+                <strong>Esto es lo que hace un filtro de dominios</strong>
+                Si en tu red hay un bloqueador tipo Pi-hole, prueba a resolver un dominio de publicidad conocido con
+                tu DNS y después con uno público. Verás que <strong>tu servidor devuelve una dirección falsa o
+                ninguna</strong>, mientras que el público devuelve la real.
+                <br><br>
+                Ese es todo el mecanismo: el bloqueo no ocurre en el navegador ni en la red, ocurre en la
+                <strong>resolución del nombre</strong>. Y por eso funciona para todos los dispositivos de la casa a la
+                vez, sin instalar nada en ninguno.
+            </div>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:24px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sabes qué máquina hace de DHCP, cuál de DNS y cuál de puerta de enlace en tu red.</li>
+                <li>Has hecho la prueba de los dos ping y sabes interpretar las cuatro combinaciones.</li>
+                <li>Has medido la diferencia entre una consulta con caché y una sin ella.</li>
+                <li>Sabes consultar un servidor DNS distinto del tuyo para localizar un problema.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_04/laboratorio.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_06/teoria.html">Día 6 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 5 — Los servicios de tu red',
+    subtitulo: 'DHCP · DNS · prueba de los dos ping · caché',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'PARTE A: Quién es quién en tu red',
+            tiempo: '15 min',
+            enunciado: '<p>Los tres papeles básicos, con las direcciones reales de tu instalación.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'ip',
+                    pregunta: '<strong>1.</strong> ¿Cuál es tu <strong>puerta de enlace</strong>?',
+                    placeholder: '192.168.1.1',
+                    explicacion: 'Recuerda del Día 1 de la Semana 1: en muchos equipos Windows aparece aquí una dirección IPv6 de enlace local (<code>fe80::…</code>). Es correcto, no un error.',
+                    pistas: [
+                        'En ipconfig /all es la línea «Puerta de enlace predeterminada».'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'ip',
+                    pregunta: '<strong>2.</strong> ¿Cuál es tu <strong>servidor DHCP</strong>?',
+                    placeholder: '192.168.1.1',
+                    explicacion: 'Si tu equipo tiene IP fija en lugar de DHCP, este dato no aparecerá: anótalo como tal en el apartado 4.',
+                    pistas: [
+                        'Busca la línea «Servidor DHCP» en la salida de ipconfig /all.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'ip',
+                    pregunta: '<strong>3.</strong> ¿Cuál es tu <strong>servidor DNS</strong> principal?',
+                    placeholder: '192.168.1.1',
+                    explicacion: 'Si te aparecen dos, anota el primero. Tener dos es lo correcto: es el servicio que más conviene duplicar.',
+                    pistas: [
+                        'Get-DnsClientServerAddress lo muestra por interfaz.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>4.</strong> ¿Coinciden las tres direcciones? Responde <em>sí</em> o <em>no</em> y explica en una línea qué significa en tu caso.',
+                    placeholder: 'sí, las tres son el router; o: no, el DNS es un servidor aparte',
+                    ancho: '520px',
+                    explicacion: 'Que coincidan significa que <strong>una sola caja hace todos los papeles</strong>, algo típico doméstico y que la convierte en un punto único de fallo enorme. Que no coincidan significa que hay más máquinas prestando servicios: interesante, y algo que conviene documentar.',
+                    pistas: [
+                        'Compara los tres valores que acabas de anotar.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>5.</strong> ¿Cuándo expira tu concesión DHCP? Copia la fecha y hora tal cual aparece.',
+                    placeholder: '15 de agosto de 2026 9:41:22',
+                    ancho: '380px',
+                    explicacion: 'La duración habitual va de 8 horas a 8 días. Cuanto más corta, antes se reutilizan las direcciones de quien se va, pero más tráfico de renovación genera. En redes con muchos visitantes se usan concesiones cortas.',
+                    pistas: [
+                        'En ipconfig /all busca «La concesión expira».',
+                        'Si tienes IP fija, escribe «IP fija, sin concesión».'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE B: La prueba de los dos ping',
+            tiempo: '13 min',
+            enunciado: '<p>El diagnóstico del Paso 3, ejecutado de verdad.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    pregunta: '<strong>6.</strong> Pega el resultado de <code>ping 8.8.8.8</code>.',
+                    placeholder: 'Pega la salida completa del ping por IP',
+                    minimo: 50,
+                    debe: [['8.8.8.8'], ['ms', 'tiempo', 'time', 'ttl', 'perdidos', 'lost']],
+                    explicacion: 'Esta prueba confirma que hay conectividad completa hasta Internet <strong>sin usar el DNS para nada</strong>: por eso se hace con una dirección numérica.',
+                    pistas: [
+                        'Copia también la línea de estadísticas del final.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    pregunta: '<strong>7.</strong> Pega el resultado de <code>ping www.google.com</code>.',
+                    placeholder: 'Pega la salida completa del ping por nombre',
+                    minimo: 50,
+                    debe: [['google'], ['ms', 'tiempo', 'time', 'ttl', 'perdidos', 'lost', 'no se puede', 'unknown']],
+                    explicacion: 'Fíjate en que la primera línea muestra <strong>la dirección IP a la que se ha resuelto el nombre</strong>. Ese dato ya te confirma que el DNS ha funcionado, antes incluso de ver si el ping responde.',
+                    pistas: [
+                        'La primera línea contiene la IP resuelta: no la recortes.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>8.</strong> Según tus dos resultados, ¿en qué situación estás?',
+                    opciones: {
+                        a: 'Las dos funcionan: red correcta',
+                        b: 'Funciona la IP y falla el nombre: problema de DNS',
+                        c: 'Fallan las dos: problema de conectividad',
+                        d: 'Falla la IP y funciona el nombre: alguien bloquea esa dirección'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Si estás leyendo esta página con normalidad, lo esperable es la <strong>a</strong>. Las otras tres son las que encontrarás en una incidencia real: memoriza la tabla, porque cada combinación apunta a un sitio distinto.',
+                    pistas: [
+                        'Compara tus dos salidas con la tabla del Paso 3.',
+                        'Si tienes conexión suficiente para haber abierto esta página, ya sabes por dónde van los tiros.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>9.</strong> Imagina que el segundo ping hubiera fallado y el primero no. Describe qué comprobarías después, en orden.',
+                    modelo: `<p>Ese resultado deja el problema muy acotado: hay conectividad completa hasta Internet y lo
+                             único que falla es <strong>traducir nombres a direcciones</strong>. Todo lo demás —cable,
+                             IP, máscara, puerta de enlace, ruta— queda descartado por el primer ping.</p>
+                             <p>Comprobaría, de lo más rápido a lo más lento:</p>
+                             <ol>
+                               <li><strong>Qué servidores DNS tengo configurados.</strong> Si están vacíos, o
+                               apuntan a una dirección que no existe, el problema es de configuración del cliente y
+                               probablemente venga de un DHCP mal configurado.</li>
+                               <li><strong>Si respondo al ping a mi propio servidor DNS.</strong> Si ni siquiera
+                               responde, no es un problema del servicio DNS: es que esa máquina está apagada o
+                               inalcanzable.</li>
+                               <li><strong>Consultar a un DNS público</strong> con <code>nslookup nombre 1.1.1.1</code>.
+                               Si el público resuelve y el mío no, el fallo está confirmado en <em>mi</em> servidor. Si
+                               tampoco resuelve el público, algo bloquea el tráfico DNS de salida: un cortafuegos, o
+                               un portal de acceso de una red pública.</li>
+                               <li><strong>Vaciar la caché local</strong> por si hay una respuesta negativa guardada de
+                               un fallo anterior. Es rápido y a veces basta.</li>
+                               <li><strong>¿Le pasa solo a mí o a todos?</strong> Si es general, hay que ir al
+                               servidor: comprobar que el servicio está arrancado y que él mismo puede resolver hacia
+                               fuera.</li>
+                             </ol>
+                             <p>El principio que guía el orden es siempre el mismo: <strong>cada prueba debe descartar
+                             la mayor cantidad posible de hipótesis</strong>, y las baratas van primero. Consultar a un
+                             DNS público separa en un solo comando «mi servidor» de «la red».</p>`,
+                    rubrica: [
+                        'Reconoce que el primer ping descarta toda la conectividad',
+                        'Comprueba qué servidores DNS tiene configurados',
+                        'Prueba a consultar un DNS público para aislar el problema',
+                        'Menciona vaciar la caché local',
+                        'Pregunta si el fallo es general o solo suyo'
+                    ],
+                    pistas: [
+                        'Empieza por lo que el primer ping ya te ha descartado: no lo vuelvas a mirar.',
+                        '¿Cómo distinguirías si falla tu servidor DNS o si falla el tráfico DNS en general?',
+                        'No olvides preguntar si le pasa a más gente.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE C: La caché medida',
+            tiempo: '14 min',
+            enunciado: '<p>Los tiempos del Paso 4, con tus propios números.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>10.</strong> Tiempo de resolución de un nombre <strong>que nadie consulta</strong>, en milisegundos.',
+                    ayuda: 'ms',
+                    ancho: '130px',
+                    explicacion: 'Lo habitual está entre 100 y 800 ms: la consulta ha tenido que salir de tu red y recorrer varios servidores hasta encontrar quién sabe la respuesta.',
+                    pistas: [
+                        'Es el valor TotalMilliseconds de la primera medición, o «Query time» en dig.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>11.</strong> Tiempo de resolución de un nombre <strong>muy común</strong>, en milisegundos.',
+                    ayuda: 'ms',
+                    ancho: '130px',
+                    explicacion: 'Suele bajar a unos pocos milisegundos, o incluso a menos de uno: la respuesta ya estaba guardada, en tu equipo o en tu servidor DNS.',
+                    pistas: [
+                        'Si te sale un valor alto, prueba a repetir la consulta: la primera vez puede no estar aún en caché.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>12.</strong> ¿Cuántas veces más rápida ha sido la consulta en caché? Divide el primer tiempo entre el segundo y redondea.',
+                    ayuda: 'veces',
+                    ancho: '120px',
+                    explicacion: 'En la medición de referencia de este laboratorio fueron 616 ms frente a 5 ms: unas <strong>123 veces</strong>. Cualquier resultado por encima de 10 demuestra el efecto.',
+                    pistas: [
+                        'Divide el valor del apartado 10 entre el del 11.',
+                        'Si te sale menos de 2, es que la primera consulta ya estaba en caché: prueba con otro nombre inventado.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>13.</strong> Con esos números, explica por qué un DNS lento hace que «Internet vaya lento» aunque el ancho de banda esté intacto.',
+                    modelo: `<p>Porque abrir una página moderna no es <em>una</em> consulta DNS: son
+                             <strong>decenas</strong>. La página principal, el servidor de imágenes, las fuentes
+                             tipográficas, los vídeos incrustados, la analítica, la publicidad, los recursos de terceros…
+                             cada dominio distinto exige su propia resolución.</p>
+                             <p>Y esas resoluciones ocurren <strong>antes</strong> de que empiece a descargarse nada:
+                             el navegador no puede pedir una imagen hasta saber a qué dirección pedirla. Son tiempo
+                             muerto en el que el ancho de banda está completamente ocioso.</p>
+                             <p>Con los números medidos, la diferencia es brutal. A 5 ms por consulta, treinta dominios
+                             suman 150 ms: imperceptible. A 600 ms por consulta, los mismos treinta dominios suman
+                             <strong>18 segundos</strong> antes de que se vea nada en pantalla. El usuario dirá que
+                             «Internet va lentísimo», y tendrá toda la razón desde su punto de vista.</p>
+                             <p>Lo importante es que <strong>el ancho de banda no tiene nada que ver</strong>. Es el
+                             mismo fenómeno que se estudió en el Día 3 de la Semana 1: ancho de banda y latencia son
+                             magnitudes independientes. Contratar más megas no arregla esto en absoluto, igual que
+                             ensanchar una carretera no acorta la distancia.</p>
+                             <p>De ahí una conclusión práctica: ante una queja de lentitud generalizada,
+                             <strong>medir el tiempo de resolución DNS</strong> es una de las primeras comprobaciones,
+                             y de las más rentables. Y explica por qué un DNS local con buena caché mejora la
+                             sensación de velocidad de toda una oficina.</p>`,
+                    rubrica: [
+                        'Explica que una página web resuelve decenas de dominios distintos',
+                        'Señala que la resolución ocurre antes de descargar nada',
+                        'Multiplica sus propios tiempos por el número de consultas',
+                        'Distingue latencia de ancho de banda, enlazando con la Semana 1',
+                        'Concluye que contratar más velocidad no lo arregla'
+                    ],
+                    pistas: [
+                        '¿Cuántos dominios distintos crees que carga una página de periódico?',
+                        'Multiplica tus dos tiempos por ese número y compara los totales.',
+                        'Recuerda la distinción entre ancho de banda y latencia del Día 3 de la Semana 1.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE D: Interpretación',
+            tiempo: '12 min',
+            enunciado: '<p>Aplica lo descubierto a tu propia instalación.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>14.</strong> Consulta un nombre con tu DNS y con <code>1.1.1.1</code>. ¿Dan el mismo resultado? Anota lo que observes.',
+                    placeholder: 'sí, la misma IP / no: el mío no resuelve ese dominio',
+                    ancho: '520px',
+                    explicacion: 'Diferencias legítimas: los servicios grandes devuelven direcciones <strong>distintas según desde dónde preguntes</strong>, para dirigirte al servidor más cercano. Diferencia sospechosa: que el tuyo no resuelva algo que el público sí, lo que indica filtrado o avería.',
+                    pistas: [
+                        'Usa nslookup nombre 1.1.1.1 y compara con nslookup nombre a secas.',
+                        'Que las IP no coincidan no significa necesariamente que algo vaya mal.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>15.</strong> Analiza tu red doméstica como si fuera una empresa pequeña: ¿qué servicios de los del día existen, cuáles faltan y cuál sería el efecto de que cayera cada uno?',
+                    modelo: `<p>La respuesta depende de tu instalación, pero el análisis debe seguir esta estructura.</p>
+                             <p><strong>Los que existen.</strong> En una casa típica hay <strong>DHCP</strong>,
+                             <strong>DNS</strong> y <strong>puerta de enlace</strong>, casi siempre los tres dentro del
+                             router del operador. También hay <strong>NTP</strong>, aunque nadie lo administre: cada
+                             dispositivo lo sincroniza por su cuenta contra servidores públicos.</p>
+                             <p><strong>Los que faltan.</strong> No hay <strong>directorio</strong>: cada equipo tiene
+                             sus propias cuentas locales, exactamente el modelo P2P del Día 3, con todos sus problemas
+                             a pequeña escala. Normalmente tampoco hay un <strong>servidor de ficheros</strong> real:
+                             los datos viven dispersos en cada dispositivo. Y las <strong>copias de seguridad</strong>
+                             suelen ser el gran ausente, o existen solo para el móvil.</p>
+                             <p><strong>Efecto de cada caída:</strong></p>
+                             <ul>
+                               <li><strong>DHCP:</strong> nada inmediato. Los dispositivos encendidos conservan su
+                               concesión durante horas. El problema aparece al reiniciar algo.</li>
+                               <li><strong>DNS:</strong> aparentemente se cae Internet entero, aunque la conexión siga
+                               perfecta. Es el fallo que más alarma genera.</li>
+                               <li><strong>Puerta de enlace:</strong> se pierde Internet, pero los dispositivos de casa
+                               siguen viéndose entre sí… <em>si</em> el equipo que hace de switch no es el mismo que ha
+                               caído.</li>
+                             </ul>
+                             <p>Y ahí está la conclusión interesante: como los tres papeles los desempeña
+                             <strong>una sola caja</strong>, en la práctica no hay tres fallos posibles sino uno solo,
+                             que se lo lleva todo por delante. Es el punto único de fallo del Día 4, ilustrado en el
+                             salón de casa.</p>
+                             <p>La diferencia con una empresa no es que allí no haya puntos únicos de fallo, sino que
+                             allí <strong>se han identificado y se ha decidido conscientemente</strong> cuáles se
+                             asumen y cuáles se corrigen.</p>`,
+                    rubrica: [
+                        'Identifica DHCP, DNS y puerta de enlace en su red, y dónde residen',
+                        'Señala la ausencia de directorio, servidor de ficheros o copias',
+                        'Describe el efecto diferenciado de cada caída',
+                        'Observa que una sola caja concentra todos los papeles',
+                        'Concluye enlazando con el concepto de punto único de fallo'
+                    ],
+                    pistas: [
+                        'Repasa la lista de servicios del día y ve marcando cuáles tienes.',
+                        'Para los que faltan, pregúntate cómo resuelves tú ese problema en casa.',
+                        'Fíjate en cuántos de esos servicios están en el mismo aparato.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

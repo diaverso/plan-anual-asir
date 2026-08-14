@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: disponibilidad, virtualización y puntos únicos de fallo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 4</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">55 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal y calculadora</div>
+        <div class="info-item"><strong>Tipo:</strong> cálculo y análisis de riesgo</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Tres cosas: convertir los «nueves» en <strong>minutos reales</strong>, comprobar si tu equipo puede
+            virtualizar y si ya lo está haciendo, y hacer el <strong>análisis de puntos únicos de fallo de tu propia
+            red doméstica</strong>, que es el mismo ejercicio que se hace en una empresa pero a escala manejable.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            Los comandos son de <strong>solo lectura</strong>: consultan capacidades del equipo, no activan ni
+            desactivan nada. La parte de análisis se hace con papel y cabeza, no con la terminal.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — Los nueves, en minutos</h3>
+
+            <p>La tabla de la teoría se olvida enseguida. La fórmula, no:</p>
+
+<pre><code>minutos de caída al año = 525 600 × (1 − disponibilidad)
+
+    525 600 = 365 × 24 × 60</code></pre>
+
+            <p>Comprueba que sabes usarla en las dos direcciones: de porcentaje a minutos, y de minutos a porcentaje.
+            En la parte A del cuestionario harás varios cálculos.</p>
+
+            <div class="destacado">
+                <strong>Truco para el examen</strong>
+                Cada nueve que añades <strong>divide la caída entre diez</strong>. Si te acuerdas de un solo valor
+                —99,9 % ≈ 8,76 horas al año— puedes deducir todos los demás multiplicando o dividiendo por 10.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — ¿Puede virtualizar tu equipo? ¿Ya lo hace?</h3>
+
+            <div class="so-tabs" data-grupo="virt">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="virt" data-so="win">
+                <p>La comprobación más fiable, en <strong>PowerShell</strong>:</p>
+                <div class="comando"><pre><code>Get-CimInstance Win32_ComputerSystem |
+    Select-Object HypervisorPresent, Manufacturer, Model, NumberOfLogicalProcessors</code></pre></div>
+                <p>Y para ver memoria y procesadores con más detalle:</p>
+                <div class="comando"><pre><code>Get-ComputerInfo -Property OsName, CsNumberOfLogicalProcessors, CsTotalPhysicalMemory</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="virt" data-so="nix">
+                <div class="comando"><pre><code>lscpu | grep -i -E "virtualization|hypervisor"
+grep -c -E "vmx|svm" /proc/cpuinfo</code></pre></div>
+                <p><code>vmx</code> es la extensión de virtualización de Intel y <code>svm</code> la de AMD. Si el
+                contador devuelve 0, o el procesador no las tiene o están desactivadas en la BIOS.</p>
+            </div>
+
+            <div class="aviso" style="margin-top:14px">
+                <strong>Cuidado al interpretar <code>HypervisorPresent</code></strong>
+                <p>Si devuelve <strong>True</strong> no significa necesariamente que tengas máquinas virtuales
+                funcionando. En Windows 11, funciones como la seguridad basada en virtualización o WSL activan el
+                hipervisor <strong>de forma permanente</strong>, así que sale <em>True</em> aunque nunca hayas abierto
+                una máquina virtual.</p>
+                <p>Hay un efecto secundario que despista mucho: <strong>cuando el hipervisor ya está activo, las
+                propiedades <code>HyperVRequirement*</code> aparecen vacías</strong>. No es un error ni significa que
+                el equipo no pueda virtualizar: significa justo lo contrario, que ya lo está haciendo. Lo comprobé al
+                preparar este laboratorio y estuvo a punto de colarse como una pregunta imposible de responder.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — El análisis de puntos únicos de fallo de tu casa</h3>
+
+            <p>Este es el ejercicio profesional más útil del día, y se hace igual en una casa que en un centro de
+            datos. Consiste en <strong>recorrer el camino completo</strong> desde el usuario hasta el dato y
+            preguntarse, en cada pieza:</p>
+
+            <div class="destacado">
+                <strong>La pregunta que hay que hacerse</strong>
+                «Si <strong>esto</strong> desaparece ahora mismo, ¿sigue funcionando el servicio?»
+                <br><br>
+                Si la respuesta es no, es un punto único de fallo. Sin excepciones y sin matices.
+            </div>
+
+            <p>Recorre tu instalación pieza a pieza. Un camino típico:</p>
+
+<pre><code>  TU PC ── latiguillo ── ROUTER ── línea del operador ── INTERNET
+    │                       │
+    │                       └── ¿es también tu switch? ¿tu Wi-Fi?
+    │
+    └── ¿dónde están tus datos? ¿solo aquí?</code></pre>
+
+            <p>No te limites a lo informático. Incluye también:</p>
+
+            <ul>
+                <li><strong>La electricidad.</strong> ¿Cuántos de tus equipos caen si salta el diferencial?</li>
+                <li><strong>La línea del operador.</strong> ¿Tienes alguna alternativa si se corta?</li>
+                <li><strong>Tus datos.</strong> ¿Existen en más de un sitio físico?</li>
+                <li><strong>El conocimiento.</strong> Si tú no estuvieras, ¿alguien de tu casa sabría reiniciar lo que
+                haya que reiniciar?</li>
+            </ul>
+
+            <div class="dato">
+                <strong>Lo que vas a descubrir</strong>
+                <p>Que en una casa normal <strong>casi todo</strong> es punto único de fallo, y que eso está bien: no
+                se justifica duplicar nada por unas horas sin Internet.</p>
+                <p>Pero hay una excepción que sí importa, y es la misma que en una empresa: <strong>tus datos</strong>.
+                La diferencia entre una parada y una pérdida es que de la primera te recuperas.</p>
+            </div>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:24px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sabes convertir un porcentaje de disponibilidad en minutos de caída, y al revés.</li>
+                <li>Conoces si tu equipo puede virtualizar y si el hipervisor está activo.</li>
+                <li>Tienes escrita la lista de puntos únicos de fallo de tu propia red.</li>
+                <li>Has decidido cuál de ellos merece la pena corregir y por qué.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_03/laboratorio.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 4 — Disponibilidad y riesgo',
+    subtitulo: 'Cálculo de nueves · virtualización · análisis de SPOF',
+    tiempo: '55 min',
+    ejercicios: [
+
+        {
+            titulo: 'PARTE A: Los nueves en minutos',
+            tiempo: '15 min',
+            enunciado: '<p>Cálculos con la fórmula del Paso 1. Estos <strong>sí</strong> tienen respuesta única.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>1.</strong> Un servicio garantiza el <strong>99,95 %</strong>. ¿Cuántos minutos puede estar caído al año?',
+                    respuesta: 262.8,
+                    tolerancia: 3,
+                    unidad: 'minutos',
+                    explicacion: '525 600 × 0,0005 = <strong>262,8 minutos</strong>, unas 4 horas y 23 minutos. Es un nivel muy común en contratos de alojamiento web.',
+                    pistas: [
+                        'La indisponibilidad es 100 % − 99,95 % = 0,05 %.',
+                        'En tanto por uno, 0,05 % es 0,0005.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>2.</strong> Tu red doméstica estuvo sin Internet <strong>6 horas</strong> el año pasado. ¿Qué disponibilidad tuviste, en porcentaje? Da dos decimales.',
+                    respuesta: 99.93,
+                    tolerancia: 0.02,
+                    unidad: '%',
+                    explicacion: '6 h = 360 min. 360 ÷ 525 600 = 0,000685. Disponibilidad = <strong>99,93 %</strong>. Sorprende, pero una conexión doméstica normal ronda los tres nueves.',
+                    pistas: [
+                        'Pasa las 6 horas a minutos.',
+                        'Divide entre 525 600 para obtener la fracción de tiempo caído.',
+                        'Réstalo de 1 y multiplica por 100.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>3.</strong> Un servidor tiene MTBF de 12 000 h y MTTR de 4 h. ¿Qué disponibilidad tiene, en porcentaje? Da tres decimales.',
+                    respuesta: 99.967,
+                    tolerancia: 0.005,
+                    unidad: '%',
+                    explicacion: '12 000 ÷ (12 000 + 4) = 12 000 ÷ 12 004 = 0,99967 → <strong>99,967 %</strong>.',
+                    pistas: [
+                        'Aplica disponibilidad = MTBF ÷ (MTBF + MTTR).',
+                        'El denominador es 12 004, no 12 000.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>4.</strong> Al mismo servidor le compras un repuesto y bajas el MTTR a <strong>0,5 h</strong>. ¿Cuál es ahora su disponibilidad? Tres decimales.',
+                    respuesta: 99.996,
+                    tolerancia: 0.005,
+                    unidad: '%',
+                    explicacion: '12 000 ÷ 12 000,5 = <strong>99,996 %</strong>. Sin tocar el hardware, solo teniendo el repuesto a mano, la caída anual pasa de unas 2,9 horas a menos de 22 minutos.',
+                    pistas: [
+                        'Mismo MTBF, distinto MTTR.',
+                        'Compara el resultado con el del apartado anterior: esa diferencia es lo que compra un repuesto.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>5.</strong> Compara los apartados 3 y 4. ¿Qué conclusión práctica sacas para gastar un presupuesto limitado?',
+                    modelo: `<p>Que con presupuesto limitado conviene gastarlo en <strong>reducir el tiempo de
+                             reparación</strong> antes que en comprar hardware más fiable.</p>
+                             <p>Los números lo dicen: sin tocar el servidor, solo por tener un repuesto disponible, la
+                             disponibilidad ha pasado de 99,967 % a 99,996 %. En caída anual, de unas 2 horas y 55
+                             minutos a menos de 22 minutos. Conseguir esa misma mejora subiendo el MTBF habría exigido
+                             multiplicar por ocho la fiabilidad del hardware, que ni se vende ni se puede pagar.</p>
+                             <p>Hay una razón adicional que no aparece en la fórmula: el MTBF es una <strong>media
+                             estadística</strong>. Que un servidor tenga un MTBF de 100 000 horas no impide que se
+                             rompa mañana; solo dice que, en promedio y sobre muchas unidades, aguanta mucho. En
+                             cambio, un MTTR bajo mejora la respuesta ante <strong>cualquier</strong> incidencia:
+                             hardware, software, error humano o configuración.</p>
+                             <p>La traducción práctica es poco glamurosa pero eficaz: repuestos en el armario,
+                             documentación al día, procedimientos de recuperación escritos <em>y probados</em>, y
+                             copias que alguien haya restaurado alguna vez de verdad. Todo eso cuesta poco dinero y
+                             mucha disciplina, y es lo que separa una parada de media hora de una de dos días.</p>`,
+                    rubrica: [
+                        'Concluye que conviene invertir en bajar el MTTR',
+                        'Se apoya en los números de los apartados 3 y 4',
+                        'Señala que subir el MTBF equivalente sería carísimo',
+                        'Explica que el MTBF es una media y no evita el fallo de mañana',
+                        'Traduce la conclusión a medidas concretas: repuestos, documentación, procedimientos probados'
+                    ],
+                    pistas: [
+                        'Mira cuánto ha mejorado la disponibilidad y qué ha costado esa mejora.',
+                        'Pregúntate qué habría costado obtener lo mismo comprando un servidor mejor.',
+                        'Termina con medidas concretas, no solo con el principio general.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE B: Tu equipo y la virtualización',
+            tiempo: '12 min',
+            enunciado: '<p>Datos reales del Paso 2.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    pregunta: '<strong>6.</strong> Pega la salida del comando de comprobación de virtualización.',
+                    placeholder: 'Pega la salida de Get-CimInstance Win32_ComputerSystem o de lscpu',
+                    minimo: 30,
+                    debe: [['hypervisor', 'virtualization', 'virtualizacion', 'vmx', 'svm', 'true', 'false']],
+                    explicacion: 'Guardar la salida permite comparar si algún día cambia, por ejemplo tras activar o desactivar Hyper-V o WSL.',
+                    pistas: [
+                        'Copia el bloque completo, con los nombres de las propiedades.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>7.</strong> ¿Está el hipervisor activo en tu equipo? Responde <em>sí</em> o <em>no</em> e indica en qué te basas.',
+                    placeholder: 'sí, HypervisorPresent devuelve True',
+                    ancho: '440px',
+                    explicacion: 'En Windows 11 es muy frecuente que salga <em>True</em> aunque nunca hayas creado una máquina virtual: lo activan la seguridad basada en virtualización y WSL.',
+                    pistas: [
+                        'Busca la propiedad HypervisorPresent, o la línea de virtualización de lscpu.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>8.</strong> ¿Cuántos <strong>procesadores lógicos</strong> tiene tu equipo?',
+                    ayuda: 'procesadores',
+                    ancho: '120px',
+                    explicacion: 'Es el dato que limita cuántas máquinas virtuales puedes ejecutar con soltura. Como referencia práctica: una VM de escritorio suele ir cómoda con 2, y conviene dejar al menos 2 para el anfitrión.',
+                    pistas: [
+                        'La propiedad se llama NumberOfLogicalProcessors o CsNumberOfLogicalProcessors.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>9.</strong> ¿Cuánta memoria RAM tiene? Indícala en GB.',
+                    placeholder: '32 GB',
+                    ancho: '180px',
+                    explicacion: 'El comando la devuelve en bytes: divide entre 1 073 741 824 para obtener GB. Por ejemplo, 34 084 458 496 bytes ≈ 31,7 GB, que es lo que se vende como «32 GB».',
+                    pistas: [
+                        'CsTotalPhysicalMemory viene en bytes.',
+                        'Divide entre 1024 tres veces, o entre 1 073 741 824 de una vez.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>10.</strong> Con esos recursos, ¿cuántas máquinas virtuales de un servidor Linux ligero (1 vCPU, 2 GB) podrías ejecutar razonablemente? Justifícalo.',
+                    modelo: `<p>La respuesta depende de tu equipo, pero el razonamiento debe considerar
+                             <strong>tres límites</strong>, no uno.</p>
+                             <p><strong>La memoria</strong> suele ser el límite real, porque no se puede sobrecomprometer
+                             con alegría: si una máquina virtual necesita sus 2 GB, los necesita. Hay que reservar
+                             antes lo que consume el anfitrión —con Windows 11 y un navegador abierto, cuenta entre 8
+                             y 12 GB— y repartir el resto. Con 32 GB totales quedarían unos 20-24 GB útiles, es decir,
+                             <strong>unas 10 o 12 máquinas</strong> de 2 GB.</p>
+                             <p><strong>Los procesadores lógicos</strong> son más flexibles, porque las máquinas
+                             virtuales rara vez usan la CPU a la vez: se puede asignar más vCPU de las que hay
+                             físicamente (<em>overcommit</em>), y en servidores ligeros e inactivos una proporción de
+                             2 a 1 o 3 a 1 es normal. Con 24 procesadores lógicos, la CPU no sería el límite.</p>
+                             <p><strong>El disco</strong> es el que más se olvida y el que más molesta en la práctica:
+                             cada máquina ocupa espacio, y si el almacenamiento es mecánico, diez sistemas escribiendo
+                             a la vez lo saturan mucho antes de que se acaben la RAM o la CPU. Con SSD deja de ser un
+                             problema serio.</p>
+                             <p>Conclusión típica: <strong>el límite práctico lo marca la memoria</strong>, y conviene
+                             quedarse por debajo del máximo teórico para que el equipo siga siendo usable. Ejecutar 12
+                             máquinas es posible; hacerlo mientras trabajas con el mismo ordenador, no tanto.</p>`,
+                    rubrica: [
+                        'Reserva primero recursos para el sistema anfitrión',
+                        'Calcula el límite por memoria con sus propios datos',
+                        'Explica que la CPU admite sobrecompromiso y rara vez es el límite',
+                        'Menciona el disco como límite olvidado',
+                        'Concluye que la memoria suele ser el límite práctico'
+                    ],
+                    pistas: [
+                        'No repartas toda la RAM: el sistema anfitrión también necesita la suya.',
+                        '¿Es la CPU tan rígida como la memoria? Piensa si todas las VM la usarán a la vez.',
+                        'Hay un tercer recurso que casi nadie cuenta y que se satura antes de lo que parece.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE C: Puntos únicos de fallo de tu red',
+            tiempo: '18 min',
+            enunciado: '<p>El análisis del Paso 3, aplicado a tu instalación real.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>11.</strong> ¿Cuántos dispositivos de tu casa se quedan sin red si apagas <strong>el router</strong>?',
+                    ayuda: 'dispositivos',
+                    ancho: '120px',
+                    explicacion: 'En la mayoría de casas la respuesta es «todos»: el router hace de módem, de switch, de punto de acceso Wi-Fi, de servidor DHCP y de puerta de enlace, todo en una caja. Es el punto único de fallo más evidente de cualquier red doméstica.',
+                    pistas: [
+                        'Cuenta también los que van por Wi-Fi, no solo los de cable.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>12.</strong> Enumera <strong>tres funciones distintas</strong> que cumple ese único router.',
+                    placeholder: 'puerta de enlace, switch, punto de acceso Wi-Fi...',
+                    ancho: '520px',
+                    explicacion: 'Un router doméstico típico reúne al menos cinco papeles: módem del operador, router, switch de cuatro puertos, punto de acceso Wi-Fi, servidor DHCP y a menudo también resolvedor DNS y cortafuegos. En una empresa, cada uno de esos papeles sería un equipo distinto.',
+                    pistas: [
+                        'Piensa en qué dejarías de tener: ¿solo Internet, o también la red entre tus propios equipos?'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>13.</strong> Tus ficheros importantes, ¿en cuántos <strong>sitios físicos distintos</strong> existen ahora mismo? Descríbelo.',
+                    placeholder: 'solo en el disco de mi PC / en el PC y en un disco externo / ...',
+                    ancho: '520px',
+                    explicacion: 'La regla clásica es <strong>3-2-1</strong>: tres copias, en dos soportes distintos, y al menos una <strong>fuera del edificio</strong>. Si tus datos están solo en un sitio, no tienes copia de seguridad: tienes un original.',
+                    pistas: [
+                        'Un disco externo que vive junto al ordenador cuenta como un solo sitio físico frente a un incendio o un robo.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>14.</strong> Escribe el punto único de fallo que consideras <strong>más grave</strong> de tu instalación y por qué.',
+                    placeholder: 'mis fotos solo están en un disco, porque si se estropea no hay vuelta atrás',
+                    ancho: '520px',
+                    explicacion: 'El criterio para ordenar la gravedad no es la probabilidad de que ocurra, sino <strong>si tiene vuelta atrás</strong>. Quedarse sin Internet una tarde es molesto; perder diez años de fotos es definitivo.',
+                    pistas: [
+                        'Separa los fallos que causan una parada de los que causan una pérdida irrecuperable.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>15.</strong> Tienes 100 € para reducir el riesgo de tu instalación. ¿En qué te los gastas y por qué? Justifícalo con los criterios del día.',
+                    modelo: `<p>La respuesta correcta casi siempre es la misma, y no es un router mejor: es
+                             <strong>una copia de seguridad fuera de casa</strong>.</p>
+                             <p>El razonamiento parte de distinguir dos tipos de riesgo. Los fallos de
+                             <strong>disponibilidad</strong> —se cae la línea, muere el router, salta el
+                             diferencial— son molestos pero <em>reversibles</em>: se arreglan con tiempo, con dinero o
+                             esperando. Los fallos de <strong>integridad de los datos</strong> —muere el disco, entra
+                             un cifrador, hay un robo o un incendio— son <em>irreversibles</em>: no hay presupuesto
+                             que recupere lo que ya no existe.</p>
+                             <p>Con presupuesto limitado se cubre primero lo irreversible. Cien euros dan para un
+                             disco externo de buen tamaño, o para un par de años de almacenamiento en línea, y
+                             cualquiera de las dos opciones cambia el escenario por completo.</p>
+                             <p>Lo importante es <strong>cómo</strong> se hace, porque una copia mal planteada da una
+                             falsa sensación de seguridad:</p>
+                             <ul>
+                               <li><strong>Que esté fuera del edificio</strong>, o al menos que no viva permanentemente
+                               enchufada junto al ordenador. Un disco externo conectado las 24 horas lo cifra el mismo
+                               programa malicioso que cifra el original, y arde en el mismo incendio.</li>
+                               <li><strong>Que sea automática</strong>. Una copia que depende de acordarse cada
+                               domingo no se hace. La que se hace sola, sí.</li>
+                               <li><strong>Que se haya restaurado alguna vez</strong>. Una copia que nunca se ha
+                               probado no es una copia: es una suposición. Este es el paso que todo el mundo se salta.</li>
+                             </ul>
+                             <p>El resto de mejoras —un segundo router, una línea alternativa, un SAI— resuelven
+                             paradas, y una parada doméstica cuesta una tarde de fastidio. Tienen sentido después, no
+                             antes.</p>`,
+                    rubrica: [
+                        'Distingue entre riesgos reversibles e irreversibles',
+                        'Prioriza la copia de seguridad de los datos',
+                        'Exige que la copia esté fuera o desconectada del equipo',
+                        'Señala que debe ser automática',
+                        'Insiste en probar la restauración alguna vez'
+                    ],
+                    pistas: [
+                        'Clasifica primero tus riesgos: ¿de cuáles te recuperas y de cuáles no?',
+                        'Piensa qué le pasa a un disco externo permanentemente enchufado si entra un cifrador.',
+                        'Una copia que nunca se ha restaurado, ¿es realmente una copia?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

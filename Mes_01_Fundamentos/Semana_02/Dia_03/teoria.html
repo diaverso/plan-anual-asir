@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — El software de red: cliente-servidor y P2P</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 3 — El software de red</h1>
+        <p>Servicios, puertos y los dos modelos con los que se organiza cualquier aplicación en red</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 45 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 18 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 19 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> de escritura y un laboratorio en el que vas a
+            <strong>listar los programas de tu equipo que están esperando conexiones</strong> ahora mismo, e
+            identificar qué son y si deberían estar ahí.
+        </div>
+
+        <div class="destacado">
+            <strong>Cerramos los componentes</strong>
+            El Día 1 fue el componente que <em>pone</em> los bits en el medio. El Día 2, el <em>medio</em>. Hoy toca
+            lo único que queda y que nadie ve: el <strong>software</strong>. Sin él, todo lo anterior es un montón de
+            cobre caro moviendo electricidad sin sentido.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#software">Qué se entiende por software de red</a></li>
+                <li><a href="#servicios">Servicios: programas que esperan</a></li>
+                <li><a href="#puertos">Puertos: la dirección dentro del equipo</a></li>
+                <li><a href="#cliservidor">El modelo cliente-servidor</a></li>
+                <li><a href="#p2p">El modelo P2P</a></li>
+                <li><a href="#comparativa">Comparativa y casos reales</a></li>
+                <li><a href="#hibridos">Modelos híbridos: casi todo lo que usas</a></li>
+                <li><a href="#so">Sistemas operativos de red</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="software">1. Qué se entiende por software de red</h2>
+
+            <p>Con «software de red» se agrupan tres cosas distintas que conviene no mezclar:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Nivel</th><th>Qué es</th><th>Ejemplos</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Controladores</strong></td>
+                        <td>El código que permite al sistema operativo manejar la NIC</td>
+                        <td>El <em>driver</em> de tu tarjeta Ethernet o Wi-Fi</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pila de protocolos</strong></td>
+                        <td>La implementación de TCP/IP dentro del sistema operativo</td>
+                        <td>La pila de red de Windows, de Linux, de Android</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aplicaciones y servicios</strong></td>
+                        <td>Los programas que <em>usan</em> la red para hacer algo útil</td>
+                        <td>Navegador, servidor web, cliente de correo, juego</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Dónde ponemos hoy el foco</strong>
+                En el <strong>tercer nivel</strong>. Los controladores no dan mucho juego, y la pila de protocolos
+                —cómo se implementan TCP e IP— es el contenido de las Semanas 3, 21 y 37.
+                <br><br>
+                Hoy interesa una pregunta muy concreta: cuando dos programas hablan por la red, <strong>¿quién
+                empieza la conversación y quién espera?</strong> De ahí salen los dos modelos del día.
+            </div>
+
+            <h2 id="servicios">2. Servicios: programas que esperan</h2>
+
+            <p>Un <strong>servicio</strong> (o <em>demonio</em> en el mundo Unix) es un programa que se ejecuta en
+            segundo plano y <strong>queda a la espera</strong> de que alguien le pida algo.</p>
+
+            <p>Ese estado de espera tiene nombre técnico: se dice que el programa está <strong>a la escucha</strong>
+            (<em>listening</em>) en un puerto.</p>
+
+<pre><code>  SERVICIO (servidor web)                  CLIENTE (navegador)
+
+  1. Arranca
+  2. Se pone a la escucha en el puerto 443
+  3. ⏳ espera... espera... espera...
+                                             4. Decide conectarse
+  5. ← recibe la petición
+  6. → responde                              7. Recibe la respuesta
+  8. ⏳ vuelve a esperar</code></pre>
+
+            <p>La asimetría es total y es lo que define todo el modelo:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>El servidor</th><th>El cliente</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Quién empieza</th><td>Nunca: <strong>espera</strong></td><td><strong>Siempre</strong>: él inicia</td></tr>
+                    <tr><th scope="row">Cuándo funciona</th><td>Permanentemente encendido</td><td>Solo cuando el usuario lo abre</td></tr>
+                    <tr><th scope="row">Necesita dirección conocida</th><td><strong>Sí</strong>: hay que saber dónde encontrarlo</td><td>No</td></tr>
+                    <tr><th scope="row">Cuántos hay</th><td>Uno (o unos pocos)</td><td>Muchos</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Todo servicio a la escucha es una puerta abierta</strong>
+                Un programa que espera conexiones es, por definición, un punto por el que se puede entrar a tu equipo.
+                No es malo en sí —sin servicios no habría redes—, pero cada uno debe estar ahí
+                <strong>a propósito</strong>.
+                <br><br>
+                De ahí una de las reglas básicas de administración: <strong>saber qué hay a la escucha en tus
+                máquinas y por qué</strong>. Un servicio olvidado, sin actualizar, es de las formas más habituales de
+                que alguien entre en una red. En el laboratorio de hoy vas a hacer justamente ese inventario en tu
+                propio equipo.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="puertos">3. Puertos: la dirección dentro del equipo</h2>
+
+            <p>Tu equipo tiene una sola dirección IP, pero puede estar navegando, descargando correo y actualizando
+            el sistema <strong>a la vez</strong>. ¿Cómo sabe a qué programa entregar cada respuesta que llega?</p>
+
+            <p>Con el <strong>número de puerto</strong>: un número de <strong>16 bits</strong> (de 0 a 65535) que
+            identifica al programa concreto dentro de la máquina.</p>
+
+            <div class="destacado">
+                <strong>La analogía que funciona</strong>
+                La <strong>IP</strong> es la dirección del edificio. El <strong>puerto</strong> es el número de piso.
+                <br><br>
+                El cartero necesita las dos cosas: sin la calle no llega al edificio, y sin el piso no sabe en qué
+                puerta dejar el paquete.
+            </div>
+
+            <h3>Los tres rangos</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Rango</th><th>Nombre</th><th>Para qué</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>0 – 1023</strong></td>
+                        <td>Bien conocidos<br>(<em>well-known</em>)</td>
+                        <td>Servicios estándar. En Linux hace falta ser root para usarlos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>1024 – 49151</strong></td>
+                        <td>Registrados</td>
+                        <td>Aplicaciones concretas que han pedido su número a la IANA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>49152 – 65535</strong></td>
+                        <td>Dinámicos o efímeros</td>
+                        <td>Los que el sistema asigna <strong>al cliente</strong>, temporalmente</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Los puertos que hay que saberse</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Puerto</th><th>Servicio</th><th>Protocolo</th><th>Nota</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>20 / 21</strong></td><td>FTP (datos / control)</td><td>TCP</td><td>Sin cifrar</td></tr>
+                    <tr><td><strong>22</strong></td><td>SSH</td><td>TCP</td><td>También SFTP y SCP</td></tr>
+                    <tr><td><strong>23</strong></td><td>Telnet</td><td>TCP</td><td><strong>En claro</strong>: obsoleto</td></tr>
+                    <tr><td><strong>25</strong></td><td>SMTP</td><td>TCP</td><td>Envío de correo</td></tr>
+                    <tr><td><strong>53</strong></td><td>DNS</td><td><strong>UDP</strong> y TCP</td><td>UDP para consultas, TCP para transferencias de zona</td></tr>
+                    <tr><td><strong>67 / 68</strong></td><td>DHCP</td><td>UDP</td><td>Servidor / cliente</td></tr>
+                    <tr><td><strong>80</strong></td><td>HTTP</td><td>TCP</td><td>Web sin cifrar</td></tr>
+                    <tr><td><strong>123</strong></td><td>NTP</td><td>UDP</td><td>Sincronización horaria</td></tr>
+                    <tr><td><strong>443</strong></td><td>HTTPS</td><td>TCP</td><td>Web cifrada: el más usado hoy</td></tr>
+                    <tr><td><strong>445</strong></td><td>SMB</td><td>TCP</td><td>Compartir ficheros en Windows</td></tr>
+                    <tr><td><strong>3389</strong></td><td>RDP</td><td>TCP</td><td>Escritorio remoto de Windows</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Cómo se identifica una conexión</strong>
+                <p>Una conexión de red no se identifica por una dirección, sino por <strong>cuatro datos</strong>, lo
+                que se llama el <em>socket</em> o la cuaterna:</p>
+<pre><code>IP origen : puerto origen  ←→  IP destino : puerto destino
+192.168.1.70 : 51423       ←→  93.184.216.34 : 443</code></pre>
+                <p>Por eso puedes tener <strong>diez pestañas abiertas en la misma web</strong> sin que se mezclen:
+                todas van al mismo destino, pero cada una sale por un <strong>puerto de origen distinto</strong>,
+                asignado del rango efímero.</p>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="cliservidor">4. El modelo cliente-servidor</h2>
+
+            <p>Es el modelo dominante y el que estructura casi todo Internet. Los papeles están
+            <strong>fijos</strong>: unos equipos ofrecen servicios y otros los consumen.</p>
+
+<pre><code>            ┌──────────┐
+            │ SERVIDOR │   ← centraliza datos, control y responsabilidad
+            └────┬─────┘
+       ┌─────────┼─────────┐
+   ┌───┴──┐  ┌───┴──┐  ┌───┴──┐
+   │ Cli. │  │ Cli. │  │ Cli. │
+   └──────┘  └──────┘  └──────┘</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ventajas</th><th>Inconvenientes</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Control centralizado</strong>: los permisos, las cuentas y las políticas se gestionan en un sitio</td>
+                        <td><strong>Punto único de fallo</strong>: si cae el servidor, caen todos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Copias de seguridad sencillas</strong>: los datos están en un lugar</td>
+                        <td><strong>Coste</strong>: hardware dedicado, licencias, mantenimiento</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Seguridad más manejable</strong>: se protege un perímetro conocido</td>
+                        <td><strong>Cuello de botella</strong>: todos los clientes compiten por el mismo recurso</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Escalabilidad predecible</strong>: se amplía el servidor</td>
+                        <td>Requiere <strong>administración especializada</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Por qué domina, pese a los inconvenientes</strong>
+                Porque en un entorno profesional la ventaja decisiva no es técnica, sino de <strong>gestión</strong>.
+                <br><br>
+                Cuando un empleado se va de la empresa, se desactiva <strong>una cuenta</strong> y pierde el acceso a
+                todo. Si los datos estuvieran repartidos por los equipos de cada trabajador, habría que ir máquina por
+                máquina, y siempre quedaría algo. Lo mismo vale para las copias de seguridad, las auditorías o el
+                cumplimiento normativo.
+            </div>
+
+            <h2 id="p2p">5. El modelo P2P</h2>
+
+            <p>En una red <strong>entre iguales</strong> (<em>peer-to-peer</em>) no hay papeles fijos: cada equipo es
+            <strong>a la vez cliente y servidor</strong>. Pide recursos a los demás y ofrece los suyos.</p>
+
+<pre><code>   ┌──────┐ ←──────→ ┌──────┐
+   │ Par  │          │ Par  │
+   └───┬──┘          └──┬───┘
+       │  ╲          ╱  │        cada uno pide Y ofrece
+       │   ╲        ╱   │
+   ┌───┴──┐ ╲      ╱ ┌──┴───┐
+   │ Par  │ ←──────→ │ Par  │
+   └──────┘          └──────┘</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ventajas</th><th>Inconvenientes</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sin punto único de fallo</strong>: si cae un nodo, el resto sigue</td>
+                        <td><strong>Sin control centralizado</strong>: nadie gestiona permisos globales</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Coste bajo</strong>: no hace falta hardware dedicado</td>
+                        <td><strong>Copias de seguridad difíciles</strong>: los datos están dispersos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Escala sola</strong>: cada nuevo nodo aporta capacidad</td>
+                        <td><strong>Seguridad débil</strong>: cada equipo se defiende solo</td>
+                    </tr>
+                    <tr>
+                        <td>Instalación inmediata</td>
+                        <td>Difícil de auditar y de localizar información</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>La propiedad más interesante del P2P</strong>
+                <p>En cliente-servidor, <strong>cada cliente nuevo empeora el servicio</strong>: hay que repartir el
+                mismo ancho de banda entre más gente.</p>
+                <p>En P2P ocurre lo contrario: <strong>cada nodo nuevo aporta la capacidad que consume</strong>. Un
+                fichero muy popular se descarga <em>más rápido</em> cuanta más gente lo esté descargando, porque todos
+                ellos son también fuentes.</p>
+                <p>Es exactamente lo que hace BitTorrent, y por eso se usa para distribuir imágenes de sistemas
+                operativos y actualizaciones de videojuegos: cuanto mayor es el pico de demanda, mejor funciona.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="comparativa">6. Comparativa y casos reales</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Criterio</th><th>Cliente-servidor</th><th>P2P</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Papeles</th><td>Fijos</td><td>Intercambiables</td></tr>
+                    <tr><th scope="row">Administración</th><td>Centralizada</td><td>Cada nodo el suyo</td></tr>
+                    <tr><th scope="row">Coste inicial</th><td>Alto</td><td>Bajo</td></tr>
+                    <tr><th scope="row">Tolerancia a fallos</th><td>Baja: punto único</td><td><strong>Alta</strong></td></tr>
+                    <tr><th scope="row">Al crecer</th><td>Se degrada</td><td><strong>Mejora</strong></td></tr>
+                    <tr><th scope="row">Copias de seguridad</th><td>Sencillas</td><td>Difíciles</td></tr>
+                    <tr><th scope="row">Tamaño ideal</th><td>Desde 10 equipos en adelante</td><td>Menos de 10, o Internet a gran escala</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Dónde encaja cada uno</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Escenario</th><th>Modelo</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>Oficina de 40 personas con datos comunes</td>
+                        <td><strong>Cliente-servidor</strong></td>
+                        <td>Control de accesos, copias, cumplimiento normativo</td>
+                    </tr>
+                    <tr>
+                        <td>Tres equipos en una casa compartiendo una carpeta</td>
+                        <td><strong>P2P</strong></td>
+                        <td>Montar un servidor no compensa</td>
+                    </tr>
+                    <tr>
+                        <td>Distribuir una ISO de Linux a millones de personas</td>
+                        <td><strong>P2P</strong></td>
+                        <td>Cada descarga aporta capacidad en lugar de restarla</td>
+                    </tr>
+                    <tr>
+                        <td>La web, el correo, el DNS</td>
+                        <td><strong>Cliente-servidor</strong></td>
+                        <td>Hace falta una dirección conocida y estable</td>
+                    </tr>
+                    <tr>
+                        <td>Blockchain, redes de criptomonedas</td>
+                        <td><strong>P2P</strong></td>
+                        <td>El objetivo explícito es que <em>no</em> haya autoridad central</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Un caso que ya conoces: los videojuegos</strong>
+                Aquí se ve la diferencia con toda claridad, y explica cosas que habrás sufrido:
+                <br><br>
+                · <strong>Servidor dedicado</strong> (cliente-servidor): una máquina neutral arbitra la partida. Todos
+                los jugadores tienen una latencia parecida, nadie tiene ventaja y la partida sigue aunque alguien se
+                desconecte. Es lo que usan los juegos competitivos.
+                <br>
+                · <strong>Host entre jugadores</strong> (P2P con anfitrión): uno de los jugadores hace de servidor.
+                Sale gratis, pero ese jugador tiene <strong>ventaja de latencia</strong>, y si se va se corta la
+                partida para todos. De ahí las «migraciones de anfitrión» y esas partidas que se caen al salir una
+                persona.
+            </div>
+
+            <h2 id="hibridos">7. Modelos híbridos: casi todo lo que usas</h2>
+
+            <p>En la práctica, los sistemas reales combinan los dos modelos: usan un servidor para
+            <strong>coordinar</strong> y P2P para <strong>transferir</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Sistema</th><th>Parte cliente-servidor</th><th>Parte P2P</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>BitTorrent</strong></td>
+                        <td>El <em>tracker</em> dice quién tiene el fichero</td>
+                        <td>Los trozos se intercambian entre pares</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Videollamadas</strong></td>
+                        <td>El servidor conecta a los participantes</td>
+                        <td>El audio y el vídeo van directos entre ellos si se puede</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mensajería</strong></td>
+                        <td>El servidor entrega los mensajes y guarda las claves públicas</td>
+                        <td>Las llamadas suelen ir punto a punto</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Por qué se combinan</strong>
+                Porque cada modelo resuelve bien un problema distinto.
+                <br><br>
+                El P2P puro tiene un problema de arranque: <strong>¿cómo encuentras a los demás si no hay ninguna
+                dirección conocida?</strong> Alguien tiene que hacer las presentaciones, y eso pide un servidor.
+                <br><br>
+                El cliente-servidor puro tiene un problema de coste: <strong>todo el tráfico pasa por el
+                servidor</strong>, y en vídeo o ficheros grandes eso es carísimo. Una vez presentados los
+                participantes, es mucho mejor que hablen directamente.
+                <br><br>
+                Resultado: <strong>servidor para descubrirse, P2P para transferir</strong>. Es el patrón más común de
+                Internet actual.
+            </div>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="so">8. Sistemas operativos de red</h2>
+
+            <p>Históricamente se distinguía entre sistemas operativos «normales» y <strong>sistemas operativos de
+            red</strong> (NOS), pensados para dar servicio a muchos clientes. Hoy la frontera se ha difuminado,
+            porque cualquier sistema moderno trae la pila de red integrada.</p>
+
+            <p>Lo que sí sigue existiendo es una diferencia entre <strong>ediciones</strong>:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Edición de escritorio</th><th>Edición de servidor</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Prioridad</th><td>Respuesta al usuario</td><td>Rendimiento sostenido y estabilidad</td></tr>
+                    <tr><th scope="row">Interfaz gráfica</th><td>Siempre</td><td>Opcional o inexistente</td></tr>
+                    <tr><th scope="row">Conexiones simultáneas</th><td><strong>Limitadas por licencia</strong></td><td>Según licencia contratada</td></tr>
+                    <tr><th scope="row">Servicios incluidos</th><td>Pocos</td><td>Directorio, DNS, DHCP, ficheros, web…</td></tr>
+                    <tr><th scope="row">Ejemplos</th><td>Windows 11, Ubuntu Desktop</td><td>Windows Server, Ubuntu Server, Debian</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>El límite de conexiones no es técnico, es de licencia</strong>
+                Windows en edición de escritorio limita a <strong>20 conexiones simultáneas</strong> a sus recursos
+                compartidos. No es que no pueda: es que la licencia lo prohíbe y el sistema lo aplica.
+                <br><br>
+                Es un tope con el que se topan muchas pymes que intentan usar un PC normal como servidor de ficheros:
+                funciona hasta que la empresa crece, y entonces empiezan errores de conexión difíciles de diagnosticar
+                si no se conoce este detalle.
+            </div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Un <strong>servicio</strong> es un programa que espera conexiones: está <em>a la escucha</em>
+                    en un puerto.</li>
+                    <li>El <strong>puerto</strong> tiene 16 bits (0–65535) e identifica al programa dentro del equipo.
+                    IP = edificio, puerto = piso.</li>
+                    <li>Una conexión se identifica por <strong>cuatro datos</strong>: IP y puerto de origen, IP y
+                    puerto de destino.</li>
+                    <li><strong>Cliente-servidor</strong>: papeles fijos, control centralizado, punto único de fallo.</li>
+                    <li><strong>P2P</strong>: papeles intercambiables, sin punto único de fallo y
+                    <strong>mejora al crecer</strong>.</li>
+                    <li>Casi todo lo real es <strong>híbrido</strong>: servidor para descubrirse, P2P para transferir.</li>
+                    <li>Cada servicio a la escucha es una <strong>puerta abierta</strong> que debe estar ahí a
+                    propósito.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>«Servidor es un ordenador potente»</td>
+                        <td>Servidor es un <strong>papel</strong>, no un hardware. Una Raspberry Pi puede serlo.</td>
+                    </tr>
+                    <tr>
+                        <td>«P2P es sinónimo de descargas ilegales»</td>
+                        <td>Es una <strong>arquitectura</strong>. La usan Linux, Windows Update, la blockchain y las videollamadas.</td>
+                    </tr>
+                    <tr>
+                        <td>«El puerto lo elige el usuario»</td>
+                        <td>El del <strong>servidor</strong> es fijo y conocido. El del cliente lo asigna el sistema del rango efímero.</td>
+                    </tr>
+                    <tr>
+                        <td>«Con una IP basta para identificar una conexión»</td>
+                        <td>Hacen falta <strong>cuatro datos</strong>. Por eso puedes tener varias pestañas a la misma web.</td>
+                    </tr>
+                    <tr>
+                        <td>«Cliente-servidor es mejor que P2P»</td>
+                        <td>Depende del <strong>tamaño y el objetivo</strong>. Para tres equipos, montar un servidor es absurdo.</td>
+                    </tr>
+                    <tr>
+                        <td>«Si tengo un puerto abierto ya me pueden entrar»</td>
+                        <td>Pueden <strong>llegar al servicio</strong>. Entrar depende de que ese servicio sea vulnerable o esté mal configurado.</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>13 preguntas · 18 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>listar todos los programas de tu equipo que están esperando conexiones</strong> ahora
+            mismo, identificar qué son, distinguir los que escuchan solo en local de los que están expuestos a la red,
+            y ver la diferencia entre un puerto de servidor y uno efímero de cliente.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 3</strong></a> (45 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 4</strong>
+            <p>Con los componentes ya vistos —tarjeta, medio y software— toca juntarlos: <strong>servidores y roles de
+            red</strong>, qué servicios concretos sostiene una red de empresa y cómo se reparten entre máquinas.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> anota tres servicios que creas que necesita una oficina de 40
+            personas para funcionar un lunes por la mañana.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/teoria.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Explica con tus palabras qué significa que un programa esté <strong>a la escucha</strong>, y por qué cada servicio a la escucha es una responsabilidad para el administrador.',
+                modelo: `<p>Estar a la escucha significa que el programa se ha registrado en el sistema operativo
+                         pidiendo que <strong>le entregue todo lo que llegue a un puerto concreto</strong>, y ha
+                         quedado esperando en segundo plano. No hace nada hasta que alguien se conecta; entonces
+                         atiende la petición, responde y vuelve a esperar.</p>
+                         <p>La consecuencia es que ese programa es un <strong>punto de entrada al equipo desde la
+                         red</strong>. Alguien externo puede alcanzarlo y hacer que ejecute código, aunque solo sea
+                         el código de atender una petición.</p>
+                         <p>Eso convierte cada servicio en una responsabilidad por tres motivos:</p>
+                         <ul>
+                           <li>Si tiene una <strong>vulnerabilidad</strong>, es explotable desde fuera. Por eso hay que
+                           mantenerlo actualizado.</li>
+                           <li>Si está <strong>mal configurado</strong> —sin contraseña, con la de fábrica, con
+                           permisos excesivos— la entrada es directa.</li>
+                           <li>Si <strong>nadie sabe que está ahí</strong>, no se actualiza ni se vigila. Los servicios
+                           olvidados son de las vías de entrada más habituales.</li>
+                         </ul>
+                         <p>De ahí la regla práctica: <strong>lo que no se usa, se apaga</strong>, y de lo que queda
+                         encendido hay que saber qué es, por qué está y quién lo mantiene.</p>`,
+                puntos: [
+                    'El programa pide al sistema todo lo que llegue a un puerto',
+                    'Queda esperando en segundo plano sin consumir apenas',
+                    'Es un punto de entrada alcanzable desde la red',
+                    'El riesgo viene de vulnerabilidades, mala configuración u olvido',
+                    'Regla: apagar lo que no se usa y conocer lo que queda'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Tienes cinco pestañas abiertas en la misma página web, en el mismo equipo. Todas hablan con la misma IP y el mismo puerto 443. <strong>¿Cómo distingue tu equipo las respuestas de cada una?</strong>',
+                modelo: `<p>Porque una conexión no se identifica por una dirección, sino por <strong>cuatro
+                         datos</strong>: IP de origen, puerto de origen, IP de destino y puerto de destino. Es lo que
+                         se llama la cuaterna o <em>socket</em>.</p>
+                         <p>En este caso, tres de los cuatro datos son idénticos en las cinco pestañas: mi IP es la
+                         misma, la IP del servidor es la misma y su puerto es el 443 en todas. El que cambia es el
+                         <strong>puerto de origen</strong>: cuando cada pestaña abre su conexión, el sistema operativo
+                         le asigna un puerto libre distinto del <strong>rango efímero</strong> (49152–65535). Una
+                         puede salir por el 51423, otra por el 51424, y así.</p>
+                         <p>Cuando llega una respuesta, el sistema mira a qué puerto de destino viene dirigida y se la
+                         entrega a la conexión —y por tanto a la pestaña— correspondiente. Nunca se mezclan.</p>
+                         <p>De aquí se entiende también el reparto de papeles: el puerto del <strong>servidor tiene que
+                         ser conocido y fijo</strong>, porque si no nadie sabría dónde llamar; el del
+                         <strong>cliente da igual cuál sea</strong>, porque solo tiene que ser único y temporal
+                         mientras dure la conversación.</p>`,
+                puntos: [
+                    'Una conexión se identifica por cuatro datos, no por uno',
+                    'Tres de los cuatro coinciden en las cinco pestañas',
+                    'Lo que cambia es el puerto de origen',
+                    'Lo asigna el sistema del rango efímero 49152–65535',
+                    'El puerto del servidor debe ser fijo; el del cliente, solo único'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> «Cuantos más usuarios, peor funciona» vale para cliente-servidor pero no para P2P. Explica por qué, y pon un ejemplo real donde eso se aprovecha a propósito.',
+                modelo: `<p>La diferencia está en <strong>qué aporta cada participante nuevo</strong>.</p>
+                         <p>En <strong>cliente-servidor</strong>, un cliente nuevo solo <em>consume</em>: pide ancho de
+                         banda, CPU y disco al servidor, sin dar nada a cambio. La capacidad total es fija —la del
+                         servidor— y hay que repartirla entre más gente, así que cada uno recibe menos. Si la demanda
+                         crece mucho, el servidor se satura y el servicio se degrada para todos. La única solución es
+                         ampliar el servidor, lo que cuesta dinero y llega siempre con retraso.</p>
+                         <p>En <strong>P2P</strong>, cada nodo nuevo <em>consume pero también aporta</em>: en cuanto ha
+                         descargado un trozo del contenido, se convierte en fuente de ese trozo para los demás. La
+                         capacidad total del sistema <strong>crece con el número de participantes</strong>, y suele
+                         hacerlo más deprisa que la demanda. Un contenido muy popular se descarga <em>más
+                         rápido</em> cuanta más gente lo esté descargando.</p>
+                         <p>El ejemplo claro es <strong>BitTorrent</strong>. Cuando sale una nueva versión de Ubuntu,
+                         millones de personas la descargan a la vez: por HTTP haría falta una infraestructura enorme
+                         para un pico de unas horas, mientras que por torrent el sistema aguanta mejor cuanto mayor es
+                         el pico.</p>
+                         <p>Por eso lo usan también las <strong>plataformas de videojuegos</strong> para repartir
+                         parches el día del lanzamiento, y algunos sistemas de actualización de empresa para que los
+                         equipos de una oficina se pasen los parches entre ellos en lugar de descargarlos todos de
+                         Internet.</p>`,
+                puntos: [
+                    'En cliente-servidor el cliente solo consume: la capacidad es fija',
+                    'En P2P cada nodo aporta lo que consume',
+                    'La capacidad total crece con el número de participantes',
+                    'Un contenido popular se descarga más rápido cuanta más demanda hay',
+                    'Ejemplo real: distribución de ISO, parches de juegos o actualizaciones'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Una videollamada usa un servidor <em>y</em> conexiones directas entre participantes. Explica <strong>qué parte hace cada modelo y por qué</strong> no se usa uno solo.',
+                modelo: `<p>El reparto es: <strong>servidor para descubrirse, P2P para transferir</strong>.</p>
+                         <p>El <strong>servidor</strong> se encarga de la fase de establecimiento. Sabe quién está
+                         conectado, autentica a los usuarios, gestiona la sala y —lo más importante— pone en contacto a
+                         los participantes, comunicando a cada uno cómo alcanzar a los demás. Esa función necesita
+                         sí o sí una <strong>dirección conocida y estable</strong> a la que todos puedan llamar.</p>
+                         <p>Una vez hechas las presentaciones, el <strong>audio y el vídeo van directos</strong> entre
+                         los participantes siempre que sea posible.</p>
+                         <p>¿Por qué no solo P2P? Porque el P2P puro tiene un <strong>problema de arranque</strong>:
+                         si nadie tiene una dirección conocida, ¿a quién preguntas para encontrar a los demás? Hace
+                         falta al menos un punto fijo que haga de directorio.</p>
+                         <p>¿Y por qué no solo cliente-servidor? Por <strong>coste y latencia</strong>. Si todo el
+                         vídeo pasara por el servidor, este tendría que recibir y reenviar el flujo de cada
+                         participante, con un consumo de ancho de banda enorme y creciente. Además el rodeo añade
+                         latencia: dos personas en la misma ciudad estarían mandando su vídeo a un centro de datos
+                         lejano para que volviera.</p>
+                         <p>Lo directo no siempre es posible —hay NAT y cortafuegos por medio, y a veces hay que
+                         reenviar por un servidor intermedio—, pero cuando se puede, es mejor para todos.</p>`,
+                puntos: [
+                    'El servidor autentica, gestiona la sala y presenta a los participantes',
+                    'Necesita una dirección conocida y estable',
+                    'El audio y el vídeo van directos cuando se puede',
+                    'P2P puro no resuelve el arranque: nadie sabría a quién preguntar',
+                    'Cliente-servidor puro sería caro en ancho de banda y añadiría latencia'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Qué significa que un programa esté <strong>a la escucha</strong>?', dorso: 'Que ha pedido al sistema todo lo que llegue a un <strong>puerto</strong> concreto y espera en segundo plano a que alguien se conecte.' },
+            { frente: '¿Cuántos bits tiene un puerto y qué rango cubre?', dorso: '<strong>16 bits</strong>: de <strong>0 a 65535</strong>.' },
+            { frente: 'Los tres rangos de puertos', dorso: '<strong>0–1023</strong> bien conocidos · <strong>1024–49151</strong> registrados · <strong>49152–65535</strong> efímeros, los que usa el cliente.' },
+            { frente: 'IP y puerto, en una analogía', dorso: 'La <strong>IP</strong> es el edificio; el <strong>puerto</strong>, el piso. Sin las dos cosas el paquete no llega a su destinatario.' },
+            { frente: '¿Cómo se identifica una conexión?', dorso: 'Por <strong>cuatro datos</strong>: IP y puerto de origen, IP y puerto de destino. Por eso caben varias pestañas a la misma web.' },
+            { frente: 'Puertos: 22, 53, 80, 443', dorso: '<strong>22</strong> SSH · <strong>53</strong> DNS · <strong>80</strong> HTTP · <strong>443</strong> HTTPS.' },
+            { frente: 'Puertos: 21, 25, 3389, 445', dorso: '<strong>21</strong> FTP · <strong>25</strong> SMTP · <strong>3389</strong> RDP · <strong>445</strong> SMB.' },
+            { frente: '¿Qué diferencia a un cliente de un servidor?', dorso: 'Quién <strong>inicia</strong> la conversación. El cliente empieza; el servidor <strong>espera</strong>, y por eso necesita una dirección conocida.' },
+            { frente: 'Principal ventaja e inconveniente de cliente-servidor', dorso: 'Ventaja: <strong>control centralizado</strong> de permisos y copias. Inconveniente: <strong>punto único de fallo</strong>.' },
+            { frente: 'Principal ventaja e inconveniente de P2P', dorso: 'Ventaja: <strong>sin punto único de fallo</strong> y mejora al crecer. Inconveniente: <strong>sin control central</strong>, copias y seguridad difíciles.' },
+            { frente: '¿Por qué P2P mejora al crecer?', dorso: 'Porque cada nodo nuevo <strong>aporta la capacidad que consume</strong>. En cliente-servidor solo consume de una capacidad fija.' },
+            { frente: 'El patrón híbrido más común de Internet', dorso: '<strong>Servidor para descubrirse, P2P para transferir</strong>. Lo usan BitTorrent, las videollamadas y la mensajería.' },
+            { frente: '¿Es «servidor» un tipo de ordenador?', dorso: 'No: es un <strong>papel</strong>. Una Raspberry Pi puede ser servidor y un equipo caro puede ser solo cliente.' },
+            { frente: '¿Por qué Windows de escritorio no sirve como servidor de ficheros de una empresa?', dorso: 'Por el límite de <strong>20 conexiones simultáneas</strong>, que es una restricción de <strong>licencia</strong>, no técnica.' },
+            { frente: '¿Tener un puerto abierto significa estar comprometido?', dorso: 'No. Significa que se puede <strong>alcanzar</strong> ese servicio. Entrar depende de que sea vulnerable o esté mal configurado.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 3 — El software de red',
+        subtitulo: 'Servicios · puertos · cliente-servidor · P2P',
+        tiempo: '18 minutos',
+        minutos: 18,
+        questions: [
+            {
+                topic: 'Servicios',
+                repaso: '#servicios',
+                text: '¿Qué distingue exactamente a un cliente de un servidor?',
+                options: {
+                    a: 'La potencia del hardware',
+                    b: 'Quién inicia la conversación: el cliente empieza, el servidor espera',
+                    c: 'El sistema operativo instalado',
+                    d: 'Que el servidor siempre tiene IP pública'
+                },
+                answer: 'b',
+                feedback: 'Es un <strong>papel</strong>, no un hardware ni un sistema operativo. Un mismo equipo puede ser servidor de un servicio y cliente de otro al mismo tiempo.'
+            },
+            {
+                topic: 'Servicios',
+                repaso: '#servicios',
+                text: '¿Por qué un servidor necesita una dirección conocida y un cliente no?',
+                options: {
+                    a: 'Porque el servidor envía más datos',
+                    b: 'Porque el servidor es quien espera: si nadie sabe dónde está, nadie puede llamarlo',
+                    c: 'Porque los clientes no tienen dirección IP',
+                    d: 'Porque lo exige el protocolo TCP'
+                },
+                answer: 'b',
+                feedback: 'La asimetría de papeles lo explica todo: quien espera tiene que ser localizable; quien llama, no. Por eso los servicios usan puertos fijos y los clientes, puertos efímeros cualesquiera.'
+            },
+            {
+                topic: 'Puertos',
+                repaso: '#puertos',
+                text: 'Tu equipo abre una conexión a un servidor web. ¿Qué puertos intervienen?',
+                options: {
+                    a: 'El 443 en los dos extremos',
+                    b: 'El 443 como destino y uno del rango efímero como origen',
+                    c: 'Uno efímero en los dos extremos',
+                    d: 'Ninguno: los puertos solo se usan en UDP'
+                },
+                answer: 'b',
+                feedback: 'El puerto del servidor es fijo y conocido (443 para HTTPS). El del cliente lo asigna el sistema del rango 49152–65535, y solo necesita ser único mientras dure la conexión.'
+            },
+            {
+                topic: 'Puertos',
+                repaso: '#puertos',
+                text: 'Tienes cinco pestañas abiertas en la misma web. ¿Qué impide que se mezclen las respuestas?',
+                options: {
+                    a: 'Que cada pestaña usa una IP distinta',
+                    b: 'Que cada conexión tiene un puerto de origen diferente, y la cuaterna la identifica',
+                    c: 'Que el navegador las procesa una a una',
+                    d: 'Que el servidor las numera'
+                },
+                answer: 'b',
+                feedback: 'Tres de los cuatro datos coinciden: tu IP, la IP del servidor y su puerto. Lo único que cambia es <strong>tu puerto de origen</strong>, y eso basta para que la cuaterna sea única.'
+            },
+            {
+                topic: 'Puertos',
+                repaso: '#puertos',
+                text: 'Relaciona correctamente: ¿qué servicio escucha en el puerto 22?',
+                options: {
+                    a: 'Telnet',
+                    b: 'SMTP',
+                    c: 'SSH',
+                    d: 'DNS'
+                },
+                answer: 'c',
+                feedback: 'El 22 es SSH. Telnet es el 23 y va <strong>en claro</strong>, por lo que está obsoleto; SMTP es el 25 y DNS el 53.'
+            },
+            {
+                topic: 'Cliente-servidor',
+                repaso: '#cliservidor',
+                text: 'Una empresa de 40 empleados quiere organizar sus datos. ¿Qué modelo conviene y por qué?',
+                options: {
+                    a: 'P2P, porque es más barato',
+                    b: 'Cliente-servidor, por el control centralizado de permisos y copias de seguridad',
+                    c: 'P2P, porque no tiene punto único de fallo',
+                    d: 'Da igual: a ese tamaño no hay diferencia'
+                },
+                answer: 'b',
+                feedback: 'La ventaja decisiva no es técnica sino de gestión: cuando alguien se va de la empresa, se desactiva una cuenta y pierde el acceso a todo. Con datos repartidos habría que ir equipo por equipo.'
+            },
+            {
+                topic: 'Cliente-servidor',
+                repaso: '#cliservidor',
+                text: '¿Cuál es el principal inconveniente del modelo cliente-servidor?',
+                options: {
+                    a: 'Que no se pueden hacer copias de seguridad',
+                    b: 'Que no permite controlar los permisos',
+                    c: 'Que constituye un punto único de fallo: si cae el servidor, caen todos los clientes',
+                    d: 'Que no escala más allá de 20 equipos'
+                },
+                answer: 'c',
+                feedback: 'Las copias y los permisos son justo sus <strong>ventajas</strong>. Su punto débil es la dependencia de una máquina, que se mitiga con redundancia y alta disponibilidad.'
+            },
+            {
+                topic: 'P2P',
+                repaso: '#p2p',
+                text: 'Se publica una nueva versión de Ubuntu y millones de personas la descargan a la vez por BitTorrent. ¿Qué ocurre?',
+                options: {
+                    a: 'El sistema se satura, como pasaría con un servidor',
+                    b: 'La descarga va más rápida cuanta más gente participa, porque cada nodo también sirve',
+                    c: 'Se reparte el ancho de banda del tracker entre todos',
+                    d: 'Solo pueden descargar 20 personas a la vez'
+                },
+                answer: 'b',
+                feedback: 'Es la propiedad característica del P2P: cada participante <strong>aporta la capacidad que consume</strong>. Por eso se usa precisamente para picos de demanda enormes.'
+            },
+            {
+                topic: 'P2P',
+                repaso: '#p2p',
+                text: 'Tres equipos en una casa quieren compartir una carpeta. ¿Qué modelo tiene sentido?',
+                options: {
+                    a: 'Cliente-servidor, con un servidor dedicado',
+                    b: 'P2P: montar y mantener un servidor para tres equipos no compensa',
+                    c: 'Ninguno: hace falta un servicio en la nube',
+                    d: 'Cliente-servidor, porque P2P no permite compartir carpetas'
+                },
+                answer: 'b',
+                feedback: 'El modelo se elige por <strong>tamaño y objetivo</strong>. Por debajo de unos diez equipos, el coste y la administración de un servidor no se justifican.'
+            },
+            {
+                topic: 'Modelos híbridos',
+                repaso: '#hibridos',
+                text: 'En una videollamada, ¿qué papel cumple el servidor?',
+                options: {
+                    a: 'Transporta todo el audio y el vídeo de los participantes',
+                    b: 'Autentica, gestiona la sala y pone en contacto a los participantes',
+                    c: 'Ninguno: las videollamadas son P2P puro',
+                    d: 'Solo guarda la grabación'
+                },
+                answer: 'b',
+                feedback: 'Es el patrón «servidor para descubrirse, P2P para transferir». El P2P puro no resolvería el arranque —nadie sabría a quién preguntar— y el servidor puro sería carísimo en ancho de banda.'
+            },
+            {
+                topic: 'Sistemas operativos',
+                repaso: '#so',
+                text: 'Una pyme usa un PC con Windows 11 como servidor de ficheros. Al crecer a 25 empleados empiezan los errores de conexión. ¿Por qué?',
+                options: {
+                    a: 'El hardware no da más de sí',
+                    b: 'La edición de escritorio limita a 20 conexiones simultáneas por licencia',
+                    c: 'Windows 11 no admite carpetas compartidas',
+                    d: 'Se ha agotado el rango de puertos efímeros'
+                },
+                answer: 'b',
+                feedback: 'Es un límite <strong>de licencia</strong>, no técnico: el sistema podría, pero lo impide. Es un problema clásico y difícil de diagnosticar si no se conoce.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: '../Dia_01/teoria.html#macip',
+                text: '<em>Repaso.</em> ¿Cuál de estas direcciones cambia en cada salto del trayecto hacia un servidor de Internet?',
+                options: {
+                    a: 'La IP de destino',
+                    b: 'La IP de origen',
+                    c: 'Las direcciones MAC de origen y destino',
+                    d: 'Ninguna'
+                },
+                answer: 'c',
+                feedback: 'Las IP identifican a los <strong>extremos</strong> y se mantienen; las MAC identifican el <strong>tramo actual</strong> y se reescriben en cada router.'
+            },
+            {
+                topic: 'Recuperación · Día 2',
+                repaso: '../Dia_02/teoria.html#categorias',
+                text: '<em>Repaso.</em> Hay que llevar 10 Gbps a 90 metros. ¿Qué categoría de cable se necesita?',
+                options: {
+                    a: 'Cat 5e',
+                    b: 'Cat 6',
+                    c: 'Cat 6A',
+                    d: 'Cat 8'
+                },
+                answer: 'c',
+                feedback: 'Cat 6 solo alcanza 10 Gbps hasta unos 55 m y Cat 8 se queda en 30 m. <strong>Cat 6A</strong> es la que garantiza 10 Gbps a los 100 m completos.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

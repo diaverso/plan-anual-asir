@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 6 — Proyecto: diseña la red de Gestoría Ribera</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Proyecto Día 6</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> papel y lápiz</div>
+        <div class="info-item"><strong>Tipo:</strong> proyecto de diseño</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del proyecto</strong>
+            <p>Diseñar la red completa de una empresa a partir de sus requisitos, aplicando el método de seis pasos y
+            <strong>justificando cada decisión</strong>. Es el primer trabajo del curso en el que produces una
+            propuesta, no una respuesta.</p>
+            <p>Al terminar tendrás algo que se parece bastante a lo que se entrega a un cliente de verdad.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Cómo se evalúa esto</strong>
+            No hay una única solución correcta. Varios diseños distintos pueden ser válidos si están bien
+            justificados, y uno «correcto» sin justificación no vale nada.
+            <br><br>
+            Por eso la mayoría de apartados son de <strong>autoevaluación con rúbrica</strong>: escribes tu propuesta,
+            la comparas con una solución modelo y compruebas si has cubierto los puntos clave. Los cálculos, que sí
+            tienen respuesta única, se corrigen solos.
+        </div>
+
+        <div class="paso-lab">
+            <h3>El encargo</h3>
+
+            <div class="destacado">
+                <strong>Gestoría Ribera, S.L.</strong>
+                <p>Una gestoría que se muda a una nueva oficina y quiere la red montada antes de entrar. Han pedido
+                presupuesto y estos son los datos que han dado en la primera reunión.</p>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Dato</th><th>Valor</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Personas</strong></td><td>60, repartidas en <strong>2 plantas</strong> (35 en la baja, 25 en la primera)</td></tr>
+                    <tr><td><strong>Puestos</strong></td><td>Cada uno con un PC y un teléfono IP</td></tr>
+                    <tr><td><strong>Otros equipos</strong></td><td>5 impresoras multifunción, 6 puntos de acceso Wi-Fi, 4 cámaras de seguridad IP</td></tr>
+                    <tr><td><strong>Distancias</strong></td><td>Desde el cuarto técnico de la planta baja, el puesto más lejano de esa planta está a <strong>75 m</strong> de cable; el más lejano de la primera planta, a <strong>130 m</strong></td></tr>
+                    <tr><td><strong>Datos que manejan</strong></td><td>Nóminas, contabilidad y declaraciones fiscales de sus clientes</td></tr>
+                    <tr><td><strong>Aplicaciones</strong></td><td>Un programa de gestión con base de datos propia, documentos compartidos por departamento, correo</td></tr>
+                    <tr><td><strong>Coste de una hora parados</strong></td><td>Unos <strong>900 €</strong> en horas de trabajo perdidas</td></tr>
+                    <tr><td><strong>Administración</strong></td><td>No hay informático interno. Una empresa externa da soporte, con acuerdo de respuesta en 4 h</td></tr>
+                    <tr><td><strong>Crecimiento previsto</strong></td><td>Esperan llegar a 80 personas en 3 años</td></tr>
+                    <tr><td><strong>Presupuesto</strong></td><td>Ajustado. No da para duplicarlo todo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Antes de empezar, lee esto</strong>
+                <p>Hay <strong>un dato en la tabla que hace inviable</strong> una de las soluciones más obvias.
+                Localízalo antes de diseñar nada: si no lo ves ahora, lo descubrirás a mitad del proyecto y tendrás
+                que rehacer.</p>
+                <p>Y hay <strong>dos datos que no son técnicos</strong> pero condicionan el diseño entero. Identifica
+                también cuáles son.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Cómo trabajar</h3>
+
+            <p>Ten papel y lápiz a mano: <strong>dibuja</strong> la topología antes de escribir nada en los campos.
+            Un esquema a mano de dos minutos evita la mitad de los errores.</p>
+
+            <p>Sigue el método en orden. Cada parte del cuestionario corresponde a un paso:</p>
+
+<pre><code>  Parte A → Requisitos: qué te dicen los datos
+  Parte B → Topología y medio
+  Parte C → Dimensionado del equipamiento
+  Parte D → Servidores y servicios
+  Parte E → Riesgos y documentación</code></pre>
+
+            <div class="dato">
+                <strong>Alcance del proyecto</strong>
+                <p>Se diseña a nivel de <strong>componentes y servicios</strong>. <strong>No</strong> hay que calcular
+                subredes ni configurar VLAN: eso llega en los Meses 4 y 9. Si en algún punto te apetece decir «aquí
+                pondría VLAN separadas», dilo y explica por qué, pero no hace falta más.</p>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir el proyecto</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:24px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has detectado el dato que hace inviable la solución de un solo armario.</li>
+                <li>Tu diseño tiene topología, medio por tramo y número de armarios justificados.</li>
+                <li>Has dimensionado los puertos contando tomas y aplicando margen.</li>
+                <li>Has decidido qué servicios van dentro y cuáles fuera, con criterio.</li>
+                <li>Has escrito al menos tres riesgos con su coste, su impacto y tu decisión.</li>
+                <li>Puedes defender cada decisión ante alguien que pregunte «¿por qué?».</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_05/laboratorio.html">← Día 5</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Proyecto — Gestoría Ribera, S.L.',
+    subtitulo: '60 personas · 2 plantas · datos fiscales · presupuesto ajustado',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'PARTE A: Leer los requisitos',
+            tiempo: '12 min',
+            enunciado: '<p>Antes de diseñar, extrae de la tabla lo que condiciona el diseño.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>1.</strong> ¿Qué dato hace <strong>inviable</strong> montar todo desde un único armario en la planta baja?',
+                    opciones: {
+                        a: 'Que hay 60 personas',
+                        b: 'Que el puesto más lejano de la primera planta está a 130 m de cable',
+                        c: 'Que hay 6 puntos de acceso Wi-Fi',
+                        d: 'Que el presupuesto es ajustado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los 130 m superan el límite de 100 m del enlace de cobre, y ninguna categoría lo salva: Cat 6A llega a 100 m y Cat 8 solo a 30. No es una cuestión de dinero ni de material, sino <strong>física</strong>.',
+                    pistas: [
+                        'Busca en la tabla un número que choque con un límite que memorizaste en el Día 2.',
+                        'Ese límite no depende de la categoría del cable.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>2.</strong> ¿Qué dato de la tabla justifica que <strong>sí</strong> hace falta un servicio de directorio?',
+                    opciones: {
+                        a: 'Que son 60 personas',
+                        b: 'Que manejan nóminas y declaraciones fiscales de sus clientes',
+                        c: 'Que hay 5 impresoras',
+                        d: 'Que esperan crecer a 80 personas'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El tamaño ayuda, pero lo decisivo es el <strong>tipo de datos</strong>: con información fiscal de terceros hay que poder controlar quién accede a qué, revocar accesos de forma verificable y auditar. Eso no se consigue con cuentas locales.',
+                    pistas: [
+                        'Dos opciones hablan de cantidad de gente; una de tipo de información.',
+                        'Piensa qué tendrían que poder demostrar si un cliente reclama.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>3.</strong> Los <strong>dos datos no técnicos</strong> que más condicionan el diseño son «900 € por hora parados» y «sin informático interno». Explica qué decide cada uno.',
+                    placeholder: 'el primero decide... y el segundo decide...',
+                    ancho: '560px',
+                    explicacion: 'Los <strong>900 €/h</strong> permiten calcular cuánta redundancia se paga sola: si duplicar el DNS cuesta 300 € y evita 4 h de parada al año, se amortiza en el primer incidente. La <strong>ausencia de informático interno</strong> obliga a un diseño sencillo, muy documentado y con repuestos preparados, porque el MTTR depende de un tercero con 4 h de respuesta.',
+                    pistas: [
+                        'Uno de los dos permite comparar el coste de la redundancia con el de la parada.',
+                        'El otro tiene que ver con quién arregla las cosas y en cuánto tiempo.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>4.</strong> Con 900 €/h, ¿cuánto cuesta a la gestoría una parada de <strong>media jornada</strong> (4 horas)?',
+                    respuesta: 3600,
+                    tolerancia: 1,
+                    unidad: '€',
+                    explicacion: '900 × 4 = <strong>3 600 €</strong>. Ese número es el que convierte una discusión sobre redundancia en una decisión: cualquier medida que cueste menos y evite una parada así al año, se paga sola.',
+                    pistas: [
+                        'Multiplica el coste por hora por las horas de parada.',
+                        'Cuatro horas es justamente el tiempo de respuesta del soporte externo.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE B: Topología y medio',
+            tiempo: '13 min',
+            enunciado: '<p>Paso 2 y 3 del método. Dibuja antes de escribir.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>5.</strong> ¿Cuántos armarios de comunicaciones hacen falta como mínimo?',
+                    respuesta: 2,
+                    tolerancia: 0.5,
+                    unidad: 'armarios',
+                    explicacion: 'Uno por planta. La planta baja llega bien (75 m &lt; 90 m de cableado fijo), pero la primera necesita el suyo porque desde abajo no se alcanza. Es la consecuencia directa del dato que detectaste en el apartado 1.',
+                    pistas: [
+                        'Cada armario cubre un radio limitado por los 90 m de cableado fijo.',
+                        '¿Cuántas plantas quedan fuera del alcance del armario de la planta baja?'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>6.</strong> Indica el medio de cada tramo: <em>cobre</em> o <em>fibra</em>.',
+                    esquina: 'Tramo',
+                    cabecera: ['Medio'],
+                    filas: [
+                        { etiqueta: 'Armario de planta baja → puestos de la planta baja', celdas: [{ respuestas: ['cobre', 'cat 6a', 'cat6a', 'par trenzado', 'utp'], placeholder: 'medio' }] },
+                        { etiqueta: 'Armario de planta 1 → puestos de la planta 1', celdas: [{ respuestas: ['cobre', 'cat 6a', 'cat6a', 'par trenzado', 'utp'], placeholder: 'medio' }] },
+                        { etiqueta: 'Armario de planta baja → armario de planta 1', celdas: [{ respuestas: ['fibra', 'fibra optica', 'fibra óptica'], placeholder: 'medio' }] }
+                    ],
+                    explicacion: 'Cobre al puesto porque son muchas tomas y distancias cortas; <strong>fibra entre armarios</strong> porque es un enlace troncal por el que pasa todo el tráfico de una planta, y porque atraviesa el edificio verticalmente, donde hay más ruido eléctrico.',
+                    pistas: [
+                        'Aplica la regla: cobre al puesto, fibra entre armarios.',
+                        'El enlace vertical transporta el tráfico de 25 personas: merece el mejor medio.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>7.</strong> ¿Qué categoría de cobre propones y por qué? Justifícalo con el crecimiento previsto.',
+                    placeholder: 'Cat 6A, porque...',
+                    ancho: '560px',
+                    explicacion: '<strong>Cat 6A</strong> es la respuesta razonable. Cat 5e o Cat 6 funcionarían hoy a 1 Gbps, pero el ahorro es mínimo frente al coste de la obra, y la instalación va a durar quince o veinte años. Es la aplicación directa de «sé generoso en lo difícil de cambiar».',
+                    pistas: [
+                        'Compara el coste del cable con el coste de abrir paredes.',
+                        '¿Cuántos años va a durar ese cableado antes de que alguien lo toque?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>8.</strong> Describe la topología completa que propones, indicando qué hay en cada armario y cómo se conectan entre sí.',
+                    modelo: `<p><strong>Topología en estrella jerárquica de dos niveles</strong>, con un armario por
+                             planta.</p>
+                             <p><strong>Armario de la planta baja</strong> (armario principal). Aloja el equipo del
+                             operador y el router de salida a Internet, los switches de acceso de esa planta, el patch
+                             panel del cableado de la planta baja, el servidor —o los servidores— y el SAI. Es el
+                             centro de la estrella.</p>
+                             <p><strong>Armario de la planta 1</strong> (armario secundario). Aloja los switches de
+                             acceso de esa planta y su patch panel. No necesita servidores.</p>
+                             <p><strong>Enlace entre ambos:</strong> fibra óptica multimodo, que sobra para la
+                             distancia de un edificio y es más barata que la monomodo. Por él pasa todo el tráfico de
+                             la planta 1, incluido el acceso al servidor y a Internet.</p>
+                             <p>Desde cada armario salen tiradas <strong>independientes</strong> de cobre Cat 6A hasta
+                             la roseta de cada puesto: una estrella dentro de cada planta. Nada de encadenar puestos
+                             ni de poner minihubs bajo las mesas.</p>
+                             <p><strong>Por qué esta topología.</strong> La estrella aísla los fallos: un cable
+                             estropeado afecta a un puesto y el diagnóstico es inmediato. La jerarquía en dos niveles
+                             resuelve el problema de la distancia y, de paso, reduce muchísimo el cableado: sin ella
+                             habría que bajar 25 tiradas desde la planta 1 hasta el armario de abajo.</p>
+                             <p><strong>Punto débil conocido:</strong> el enlace de fibra entre armarios es un punto
+                             único de fallo para toda la planta 1. Se anota para la parte E.</p>`,
+                    rubrica: [
+                        'Propone estrella jerárquica con un armario por planta',
+                        'Detalla qué contiene cada armario',
+                        'Indica fibra como enlace entre armarios',
+                        'Especifica tiradas independientes de cobre a cada puesto',
+                        'Justifica la elección por aislamiento de fallos y ahorro de cableado',
+                        'Anticipa que el enlace vertical será un punto único de fallo'
+                    ],
+                    pistas: [
+                        'Empieza diciendo qué topología es y por qué esa y no otra.',
+                        'Enumera el contenido de cada armario: no solo switches.',
+                        'No olvides justificar por qué es mejor que bajarlo todo a un armario único, aunque se pudiera.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE C: Dimensionado',
+            tiempo: '13 min',
+            enunciado: '<p>Paso 4. Cuenta tomas, no personas, y aplica margen.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>9.</strong> ¿Cuántas tomas hacen falta en total, <strong>sin</strong> margen? Cuenta PC, teléfonos, impresoras, puntos de acceso, cámaras y el enlace entre armarios (1 por armario).',
+                    respuesta: 137,
+                    tolerancia: 2,
+                    unidad: 'tomas',
+                    explicacion: '(60 × 2) + 5 + 6 + 4 + 2 = 120 + 15 + 2 = <strong>137 tomas</strong>. El error habitual es contar 60 en lugar de 120: cada puesto lleva PC <em>y</em> teléfono IP.',
+                    pistas: [
+                        'Cada puesto son DOS tomas, no una.',
+                        'Suma impresoras, puntos de acceso y cámaras.',
+                        'Añade un puerto por armario para el enlace de fibra entre ellos.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>10.</strong> Aplicando un margen del <strong>25 %</strong>, ¿cuántas tomas se prevén? Redondea al alza.',
+                    respuesta: 172,
+                    tolerancia: 3,
+                    unidad: 'tomas',
+                    explicacion: '137 × 1,25 = 171,25 → <strong>172 tomas</strong>. Y ojo: ese margen cubre el crecimiento a 80 personas, que añadiría 40 tomas más. Conviene comprobarlo antes de darlo por bueno.',
+                    pistas: [
+                        'Multiplica por 1,25.',
+                        'Compara el margen resultante con las 40 tomas que exigirían 20 personas más.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>11.</strong> ¿Cubre ese margen el crecimiento a 80 personas? Haz la cuenta y responde.',
+                    placeholder: 'no: 20 personas más son 40 tomas, y el margen solo da 35',
+                    ancho: '560px',
+                    explicacion: 'El margen del 25 % son 35 tomas, pero 20 personas más exigen <strong>40 tomas</strong> (PC + teléfono). Se queda corto. Es el tipo de comprobación que separa un dimensionado real de aplicar un porcentaje de memoria: <strong>el margen hay que contrastarlo con el crecimiento declarado por el cliente</strong>. Con 30 % (179 tomas) ya encajaría.',
+                    pistas: [
+                        '20 personas más, ¿cuántas tomas son?',
+                        'Compara ese número con la diferencia entre los apartados 9 y 10.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>12.</strong> ¿Cómo repartirías los switches entre los dos armarios?',
+                    opciones: {
+                        a: 'Todos en la planta baja, y cable hasta la planta 1',
+                        b: 'Según las tomas de cada planta: unos 80 puertos abajo y unos 60 arriba, redondeando a switches de 48',
+                        c: 'Uno solo de 192 puertos en la planta baja',
+                        d: 'Uno de 48 en cada planta, y ya se ampliará'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Cada armario sirve a su planta: 35 puestos abajo (70 tomas) más impresoras, puntos de acceso, cámaras y enlace; 25 arriba (50 tomas) más los suyos. Con switches de 48, salen 2 abajo y 2 arriba, con margen. La opción <strong>a</strong> es imposible por distancia y la <strong>d</strong> deja la instalación sin margen desde el primer día.',
+                    pistas: [
+                        'Una opción ya la descartaste en el apartado 1 por el límite de 100 m.',
+                        'Reparte las tomas por planta antes de elegir cuántos switches.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE D: Servidores y servicios',
+            tiempo: '15 min',
+            enunciado: '<p>Pasos 4 y 5. Qué máquinas, qué servicios y dónde vive cada uno.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>13.</strong> Decide si cada servicio se aloja <em>dentro</em> de la gestoría o se contrata <em>fuera</em>.',
+                    esquina: 'Servicio',
+                    cabecera: ['Dentro o fuera'],
+                    filas: [
+                        { etiqueta: 'Directorio de usuarios', celdas: [{ respuestas: ['dentro', 'interno', 'local'], placeholder: 'dentro / fuera' }] },
+                        { etiqueta: 'DNS y DHCP internos', celdas: [{ respuestas: ['dentro', 'interno', 'local'], placeholder: 'dentro / fuera' }] },
+                        { etiqueta: 'Base de datos del programa de gestión', celdas: [{ respuestas: ['dentro', 'interno', 'local'], placeholder: 'dentro / fuera' }] },
+                        { etiqueta: 'Correo electrónico', celdas: [{ respuestas: ['fuera', 'externo', 'nube', 'contratado'], placeholder: 'dentro / fuera' }] },
+                        { etiqueta: 'Una copia de seguridad', celdas: [{ respuestas: ['fuera', 'externo', 'nube', 'externa'], placeholder: 'dentro / fuera' }] }
+                    ],
+                    explicacion: 'Dentro lo que necesita <strong>rendimiento local y control</strong>: directorio, DNS, DHCP y la base de datos que usan 60 personas todo el día. Fuera el <strong>correo</strong>, porque mantener un servidor propio es de lo más difícil que existe (reputación, filtrado, disponibilidad) y no aporta nada a una gestoría. Y <strong>al menos una copia fuera</strong>, o no protege de un incendio ni de un robo.',
+                    pistas: [
+                        'Pregúntate qué pasa con cada servicio si se cae la línea de Internet.',
+                        'Uno de los cinco es famoso por ser una pesadilla de mantener por cuenta propia.',
+                        'La copia tiene que sobrevivir a lo que destruya el original.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>14.</strong> ¿Cómo repartirías los servicios internos entre máquinas?',
+                    opciones: {
+                        a: 'Un servidor físico por servicio: cuatro máquinas',
+                        b: 'Un solo servidor físico con todos los servicios instalados encima',
+                        c: 'Un anfitrión virtualizado con una máquina virtual por servicio',
+                        d: 'Todo en la nube'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Es la regla del Día 4 y del Día 5: <strong>consolidar el hardware y separar los servicios</strong>. Se obtiene el coste de la consolidación y el aislamiento de la separación: se puede reiniciar o actualizar un servicio sin tocar los demás.',
+                    pistas: [
+                        'Dos opciones son los extremos: todo junto o todo separado en hardware.',
+                        'Recuerda la regla que resuelve esa disyuntiva desde que existe la virtualización.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>15.</strong> El presupuesto solo da para duplicar <strong>un</strong> servicio. ¿Cuál eliges y por qué?',
+                    placeholder: 'el DNS, porque...',
+                    ancho: '560px',
+                    explicacion: 'El <strong>DNS</strong>. Su caída paraliza todo —los usuarios dirán que no va nada—, y duplicarlo es de lo más barato que existe: un segundo servidor DNS es una máquina virtual pequeña. El directorio sería el siguiente, pero cuesta más. El DHCP puede esperar porque las concesiones vigentes aguantan horas, y el servidor de ficheros se cubre con copias.',
+                    pistas: [
+                        'Cruza dos criterios: cuánto duele su caída y cuánto cuesta duplicarlo.',
+                        'Hay un servicio que gana en los dos criterios a la vez.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>16.</strong> Describe la solución de copias de seguridad que propones, con su justificación.',
+                    modelo: `<p>Propongo aplicar la regla <strong>3-2-1</strong>: tres copias de los datos, en dos
+                             soportes distintos, y al menos una <strong>fuera del edificio</strong>.</p>
+                             <p><strong>Copia local</strong>, diaria y automática, sobre un NAS o un disco dedicado
+                             dentro del armario. Es la que se usa el 95 % de las veces, porque el caso más frecuente
+                             no es el incendio: es que alguien borre una carpeta o necesite la versión de anteayer de
+                             un documento. Restaurar desde local es rápido.</p>
+                             <p><strong>Copia externa</strong>, también automática, hacia un servicio en línea o hacia
+                             un soporte que salga físicamente del edificio. Es la que cubre lo irreversible: incendio,
+                             inundación, robo o un cifrado que alcance también al NAS.</p>
+                             <p>Tres condiciones que hacen que esto funcione de verdad:</p>
+                             <ul>
+                               <li><strong>Que el destino no esté permanentemente accesible</strong> desde el servidor
+                               con permisos de escritura. Un disco conectado las 24 horas lo cifra el mismo programa
+                               malicioso que cifra el original. Conviene retención de versiones o copias inmutables.</li>
+                               <li><strong>Que sea automática y esté vigilada.</strong> Una copia que depende de que
+                               alguien se acuerde no se hace; y una que falla en silencio durante meses es peor que no
+                               tener ninguna, porque da falsa tranquilidad. Tiene que avisar cuando falle.</li>
+                               <li><strong>Que se pruebe la restauración</strong> periódicamente, al menos una vez al
+                               año, restaurando de verdad algún fichero. Una copia que nunca se ha restaurado no es
+                               una copia: es una suposición.</li>
+                             </ul>
+                             <p>Hay un motivo añadido en este caso concreto: la gestoría maneja <strong>datos fiscales
+                             de terceros</strong>. Perderlos no es solo un problema operativo, es un problema legal y
+                             de responsabilidad frente a sus clientes. Es, con diferencia, el riesgo más grave de todo
+                             el proyecto, y por eso las copias no son un extra: son parte del núcleo del diseño.</p>`,
+                    rubrica: [
+                        'Propone la regla 3-2-1 o equivalente',
+                        'Incluye una copia local para lo cotidiano y otra externa para lo irreversible',
+                        'Exige que el destino no sea escribible permanentemente desde el servidor',
+                        'Pide que sea automática y que avise cuando falle',
+                        'Insiste en probar la restauración',
+                        'Menciona la responsabilidad legal por manejar datos de terceros'
+                    ],
+                    pistas: [
+                        '¿De qué escenarios distintos tiene que protegerte una copia? No todos son catástrofes.',
+                        'Piensa qué le pasa a un disco de copia permanentemente conectado si entra un cifrador.',
+                        'Hay un paso que casi todo el mundo se salta y que decide si la copia sirve o no.',
+                        'No olvides que aquí los datos son de clientes, no de la propia empresa.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE E: Riesgos y documentación',
+            tiempo: '17 min',
+            enunciado: '<p>Paso 6, el que distingue una propuesta profesional de una lista de material.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>17.</strong> En tu diseño, ¿cuál es el punto único de fallo que afecta a <strong>más gente a la vez</strong>?',
+                    opciones: {
+                        a: 'El enlace de fibra entre armarios: deja sin red a las 25 personas de la planta 1',
+                        b: 'Una impresora',
+                        c: 'El cable de un puesto',
+                        d: 'Un punto de acceso Wi-Fi'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Por ese enlace pasa <strong>todo</strong> el tráfico de la planta 1: acceso al servidor, a Internet y al programa de gestión. Los otros tres afectan a una persona o a un grupo pequeño y tienen alternativa inmediata.',
+                    pistas: [
+                        'Busca el elemento por el que pasa el tráfico de más personas.',
+                        'Piensa en la planta que no tiene servidores propios.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>18.</strong> Redacta ese riesgo como iría en el informe: identificación, coste de corregirlo, impacto si ocurre y tu decisión.',
+                    placeholder: 'R-01 Enlace vertical sin redundancia. Coste de corregir: ... Impacto: ... Decisión: ...',
+                    ancho: '620px',
+                    explicacion: 'Un ejemplo válido: «<strong>R-01 — Enlace vertical sin redundancia.</strong> Coste de corregir: ~600 € (segunda fibra por canalización distinta y puertos ópticos). Impacto: 25 personas sin red durante el tiempo de reposición; a 900 €/h, una parada de 4 h cuesta 3 600 €. <strong>Decisión: se corrige</strong>, porque el coste de la redundancia es inferior al de una sola incidencia». Fíjate en que el dato de 900 €/h convierte la decisión en un cálculo, no en una opinión.',
+                    pistas: [
+                        'Incluye los cuatro elementos: qué es, cuánto cuesta arreglarlo, qué pasa si ocurre y qué decides.',
+                        'Usa el coste por hora del enunciado para calcular el impacto en euros.',
+                        'Compara ambas cifras: ahí está la justificación de tu decisión.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>19.</strong> Escribe un riesgo que decidas <strong>asumir</strong> (no corregir), con su justificación.',
+                    placeholder: 'R-0? ... Decisión: se asume porque...',
+                    ancho: '620px',
+                    explicacion: 'Ejemplo razonable: «<strong>R-03 — Línea de Internet única.</strong> Coste de corregir: ~70 €/mes por una segunda línea de otro operador. Impacto: sin correo ni acceso externo; el trabajo interno con el programa de gestión continúa, porque el servidor es local. <strong>Decisión: se asume</strong> el primer año, y se revisa si hay más de dos cortes». Lo importante es que la decisión esté <strong>escrita, valorada y aprobada por el cliente</strong>: eso es asumir, no ignorar.',
+                    pistas: [
+                        'Elige algo cuyo impacto sea limitado o cuya corrección sea cara frente al daño que evita.',
+                        'Fíjate en que muchos servicios de esta gestoría son internos: ¿qué se pierde exactamente sin Internet?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: '<strong>20.</strong> Cierra la propuesta: resume tu diseño en un párrafo y enumera los documentos que entregarías al cliente.',
+                    modelo: `<p><strong>Resumen del diseño.</strong> Red en estrella jerárquica con un armario por
+                             planta, unidos por fibra óptica. Cableado horizontal de cobre Cat 6A con tiradas
+                             independientes hasta cada puesto y dos tomas por puesto (PC y teléfono IP). Unos 172
+                             puertos previstos, repartidos en cuatro switches de 48, con margen para crecer a 80
+                             personas. Un anfitrión virtualizado en el armario principal, con máquinas virtuales
+                             separadas para directorio, DNS, DHCP, ficheros y la base de datos de gestión; el correo se
+                             contrata fuera. DNS duplicado por ser el servicio cuya caída más duele y el más barato de
+                             redundar. Copias de seguridad 3-2-1, con copia local diaria y copia externa automática.
+                             SAI en el armario principal.</p>
+                             <p><strong>Documentación que entregaría:</strong></p>
+                             <ul>
+                               <li><strong>Plano lógico</strong>: qué equipos hay y cómo se conectan.</li>
+                               <li><strong>Plano físico</strong>: ubicación de armarios, rosetas y canalizaciones sobre
+                               el plano de las dos plantas.</li>
+                               <li><strong>Tabla de cableado</strong>: correspondencia entre cada roseta y su puerto del
+                               patch panel, con el mismo código etiquetado en ambos extremos.</li>
+                               <li><strong>Inventario</strong>: equipos, números de serie, garantías y versiones.</li>
+                               <li><strong>Procedimiento de arranque</strong>: orden de encendido tras un apagón
+                               —red física, DHCP, DNS, directorio y NTP, y por último ficheros e impresión— y
+                               direcciones IP fijas de la infraestructura, para no depender del DNS al arrancarlo.</li>
+                               <li><strong>Registro de decisiones</strong>: por qué Cat 6A y no Cat 6, por qué dos
+                               armarios, por qué el correo va fuera, y qué riesgos se han asumido y con qué
+                               justificación.</li>
+                               <li><strong>Procedimiento de restauración</strong> de copias, con la fecha de la última
+                               prueba realizada.</li>
+                             </ul>
+                             <p>Dado que no hay informático interno, insistiría en dos cosas: que la documentación sea
+                             <strong>legible por un tercero</strong> que llegue sin conocer la instalación, y que el
+                             pago final dependa de haberla recibido. Es la única forma de que el proveedor no se
+                             convierta él mismo en un punto único de fallo.</p>`,
+                    rubrica: [
+                        'Resume topología, medio y número de armarios',
+                        'Indica el dimensionado y el margen de crecimiento',
+                        'Describe el reparto de servicios y qué se contrata fuera',
+                        'Menciona la redundancia elegida y las copias',
+                        'Enumera al menos cinco documentos',
+                        'Incluye el registro de decisiones y el procedimiento de arranque',
+                        'Relaciona la exigencia de documentación con la ausencia de informático interno'
+                    ],
+                    pistas: [
+                        'El resumen debe poder leerse solo: alguien que no vea el resto tiene que entender el diseño.',
+                        'Repasa la tabla de documentación de la teoría y adapta cada documento a este caso.',
+                        'Hay dos documentos que solo se consultan en el peor momento: no los olvides.',
+                        'Cierra explicando por qué la documentación es especialmente crítica en esta empresa concreta.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Servidores: hardware, disponibilidad y virtualización</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 4 — Servidores</h1>
+        <p>Qué hace distinta a la máquina que sostiene una red, y por qué hoy casi ninguna es física</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 48 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 18 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 35 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> de escritura y un laboratorio en el que vas a calcular
+            <strong>cuánto tiempo de caída al año</strong> permite cada nivel de disponibilidad, comprobar si tu equipo
+            puede virtualizar y localizar los <strong>puntos únicos de fallo de tu propia red</strong>.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Ayer viste que «servidor» es un <strong>papel</strong>, no un hardware: un programa que espera conexiones.
+            Hoy toca la otra cara: cuando ese papel es importante de verdad, se le pone debajo una máquina
+            <strong>diseñada para no parar</strong>. Y se estudia qué la hace distinta.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#papel">Papel y máquina: dos cosas distintas</a></li>
+                <li><a href="#hardware">Qué distingue de verdad al hardware de servidor</a></li>
+                <li><a href="#formatos">Formatos: torre, rack y blade</a></li>
+                <li><a href="#raid">RAID: redundancia de discos</a></li>
+                <li><a href="#disponibilidad">Disponibilidad: los nueves, MTBF y MTTR</a></li>
+                <li><a href="#spof">Puntos únicos de fallo</a></li>
+                <li><a href="#virtualizacion">Virtualización: por qué casi ningún servidor es físico</a></li>
+                <li><a href="#contenedores">Contenedores frente a máquinas virtuales</a></li>
+                <li><a href="#nube">La nube y el modelo de servicio</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="papel">1. Papel y máquina: dos cosas distintas</h2>
+
+            <p>Ayer quedó claro que <strong>servidor es un papel</strong>: cualquier programa que espera conexiones lo
+            desempeña, y tu portátil ya ejecuta una decena.</p>
+
+            <p>Pero en el lenguaje profesional la palabra se usa también para <strong>la máquina</strong> dedicada a
+            ese papel. Y esas máquinas sí son distintas de un PC, aunque no por lo que suele creerse.</p>
+
+            <div class="aviso">
+                <strong>El malentendido más extendido</strong>
+                «Un servidor es un ordenador muy potente.» Falso, o al menos incompleto.
+                <br><br>
+                Hay servidores con menos potencia bruta que un PC para juegos: un controlador de dominio para 50
+                personas no necesita gran cosa. Lo que se paga en un servidor <strong>no es la velocidad, es la
+                capacidad de no parar</strong>: componentes redundantes, memoria que corrige errores, piezas que se
+                cambian en caliente y gestión remota.
+                <br><br>
+                Dicho de otro modo: un PC está diseñado para ser <strong>rápido</strong>; un servidor, para ser
+                <strong>fiable</strong>.
+            </div>
+
+            <h2 id="hardware">2. Qué distingue de verdad al hardware de servidor</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Característica</th><th>Qué es</th><th>Para qué sirve</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Memoria ECC</strong></td>
+                        <td>RAM que <em>detecta y corrige</em> errores de un bit</td>
+                        <td>Un bit alterado en un PC provoca un cuelgue; en una base de datos, corrompe datos <strong>en silencio</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fuentes redundantes</strong></td>
+                        <td>Dos o más fuentes; si una muere, la otra sigue</td>
+                        <td>Enchufadas a circuitos distintos, sobreviven a un corte parcial</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Intercambio en caliente</strong><br>(<em>hot-swap</em>)</td>
+                        <td>Cambiar discos o fuentes <strong>sin apagar</strong></td>
+                        <td>Reparar sin cortar el servicio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAID</strong></td>
+                        <td>Varios discos actuando como uno, con redundancia</td>
+                        <td>Que la muerte de un disco no pare nada</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gestión remota</strong><br>(iLO, iDRAC, IPMI)</td>
+                        <td>Un pequeño ordenador dentro del servidor, con su propia red</td>
+                        <td>Encender, apagar y ver la pantalla <strong>aunque el sistema esté muerto</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Varias NIC</strong></td>
+                        <td>Dos o cuatro interfaces de red</td>
+                        <td>Agregarlas para sumar velocidad, o duplicarlas para tolerar fallos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Componentes certificados</strong></td>
+                        <td>Piezas probadas para funcionar <strong>24×7 durante años</strong></td>
+                        <td>Un PC descansa por la noche; un servidor no descansa nunca</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La gestión remota es la que más sorprende</strong>
+                Un servidor lleva dentro <strong>un segundo ordenador independiente</strong>, con su propio procesador,
+                su propia dirección IP y su propia alimentación. Sigue vivo aunque el servidor esté apagado.
+                <br><br>
+                Sirve para lo que de verdad importa a las tres de la madrugada: <strong>reiniciar una máquina que no
+                responde</strong>, ver la pantalla de arranque, montar una imagen de instalación o consultar la
+                temperatura, todo <strong>sin ir al centro de datos</strong>. Sin esto, cualquier problema grave exige
+                coger el coche.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="formatos">3. Formatos: torre, rack y blade</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Formato</th><th>Aspecto</th><th>Cuándo se usa</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Torre</strong></td>
+                        <td>Como un PC grande, de pie</td>
+                        <td>Pymes con uno o dos servidores y sin armario</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rack</strong></td>
+                        <td>Plano, se atornilla al armario de 19″</td>
+                        <td><strong>Lo habitual</strong> a partir de tres o cuatro servidores</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Blade</strong></td>
+                        <td>Tarjetas verticales que comparten un chasis</td>
+                        <td>Centros de datos con decenas de servidores</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>El tamaño de un servidor de rack se mide en <strong>unidades</strong> (U): 1U ≈ 4,4 cm de alto. Un
+            armario típico tiene <strong>42U</strong>. Es la misma unidad del rack que viste en el Día 2.</p>
+
+<pre><code>   ARMARIO 42U
+
+  ┌────────────────────┐
+  │ ▓▓▓▓ patch panel 1U│
+  │ ▓▓▓▓ switch      1U│
+  │                    │
+  │ ███████ servidor 2U│   ← cada servidor ocupa 1U, 2U, 4U...
+  │ ███████ servidor 2U│
+  │ █ servidor       1U│
+  │                    │
+  │ ▒▒▒▒▒▒▒ SAI      3U│   ← abajo lo pesado
+  └────────────────────┘</code></pre>
+
+            <div class="dato">
+                <strong>Por qué el SAI va abajo y el cableado arriba</strong>
+                <p>El <strong>SAI</strong> (sistema de alimentación ininterrumpida) es lo más pesado del armario, y
+                un rack cargado arriba puede volcar al extraer un servidor sobre sus guías.</p>
+                <p>El patch panel y los switches van arriba porque el cableado del edificio suele entrar por el techo
+                y así los latiguillos son cortos. Son detalles de instalación, pero se preguntan en la Semana 8.</p>
+            </div>
+
+            <h2 id="raid">4. RAID: redundancia de discos</h2>
+
+            <p><strong>RAID</strong> (<em>Redundant Array of Independent Disks</em>) hace que varios discos se
+            comporten como uno solo, ganando velocidad, capacidad o tolerancia a fallos según cómo se combinen.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Nivel</th><th>Cómo funciona</th><th>Discos mínimos</th><th>Tolera</th><th>Capacidad útil</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>RAID 0</strong></td>
+                        <td>Reparte los datos entre discos (<em>striping</em>)</td>
+                        <td>2</td>
+                        <td><strong>Ningún fallo</strong></td>
+                        <td>100 %</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAID 1</strong></td>
+                        <td>Copia idéntica en dos discos (<em>espejo</em>)</td>
+                        <td>2</td>
+                        <td>1 disco</td>
+                        <td>50 %</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAID 5</strong></td>
+                        <td>Datos repartidos + <strong>paridad</strong> distribuida</td>
+                        <td>3</td>
+                        <td>1 disco</td>
+                        <td>(N−1)/N</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAID 6</strong></td>
+                        <td>Como RAID 5 pero con <strong>doble</strong> paridad</td>
+                        <td>4</td>
+                        <td><strong>2 discos</strong></td>
+                        <td>(N−2)/N</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAID 10</strong></td>
+                        <td>Espejos, y encima reparto</td>
+                        <td>4</td>
+                        <td>1 por espejo</td>
+                        <td>50 %</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Las dos trampas del RAID</strong>
+                <br>· <strong>RAID 0 no es RAID</strong> en el sentido de redundante: no tolera ningún fallo y además
+                <em>duplica</em> el riesgo, porque si muere cualquiera de los dos discos se pierde todo. Su nombre
+                confunde a mucha gente.
+                <br>· <strong>RAID no es una copia de seguridad.</strong> Protege del fallo <em>de un disco</em>, y de
+                nada más. Si borras un fichero por error, se borra de todos los discos a la vez. Si un cifrador entra
+                en el servidor, cifra el volumen entero. Si arde el edificio, arden todos los discos.
+                <br><br>
+                <strong>RAID es disponibilidad; la copia de seguridad es recuperación.</strong> Son cosas distintas y
+                hacen falta las dos.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="disponibilidad">5. Disponibilidad: los nueves, MTBF y MTTR</h2>
+
+            <p>La <strong>disponibilidad</strong> es el porcentaje del tiempo que un sistema está operativo. Se expresa
+            en «nueves», y la diferencia entre uno y otro es mucho mayor de lo que sugiere el número.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Disponibilidad</th><th>Se dice</th><th>Caída máxima al año</th><th>Al mes</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>99 %</strong></td><td>«dos nueves»</td><td>3 días 15 h</td><td>7 h 18 min</td></tr>
+                    <tr><td><strong>99,9 %</strong></td><td>«tres nueves»</td><td>8 h 46 min</td><td>43 min</td></tr>
+                    <tr><td><strong>99,99 %</strong></td><td>«cuatro nueves»</td><td>52 min</td><td>4 min 23 s</td></tr>
+                    <tr><td><strong>99,999 %</strong></td><td>«cinco nueves»</td><td><strong>5 min 15 s</strong></td><td>26 s</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Cómo se calcula, para poder hacerlo en el examen</strong>
+                Un año tiene <strong>525 600 minutos</strong> (365 × 24 × 60).
+                <br><br>
+                Caída anual = 525 600 × (1 − disponibilidad).
+                <br>
+                Con 99,9 %: 525 600 × 0,001 = <strong>525,6 minutos</strong> ≈ 8 h 46 min.
+            </div>
+
+            <div class="dato">
+                <strong>Por qué cada nueve cuesta mucho más que el anterior</strong>
+                <p>Pasar de 99 % a 99,9 % puede resolverse con buen hardware y un técnico atento.</p>
+                <p>Llegar a <strong>99,999 %</strong> significa que <em>todo el año</em> el sistema puede estar caído
+                cinco minutos. En esos cinco minutos tiene que caber cualquier actualización, cualquier reinicio y
+                cualquier avería. Eso ya no se consigue con una máquina buena: exige <strong>duplicarlo todo</strong>,
+                incluidos el centro de datos y el personal de guardia las 24 horas.</p>
+                <p>Por eso la pregunta profesional nunca es «¿cuánta disponibilidad quieres?» —todo el mundo dice
+                cinco nueves— sino <strong>«¿cuánto te cuesta cada hora de parada?»</strong>. Esa cifra es la que
+                decide cuánto tiene sentido invertir.</p>
+            </div>
+
+            <h3>MTBF y MTTR</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Sigla</th><th>Significa</th><th>Qué mide</th><th>Se mejora…</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>MTBF</strong></td>
+                        <td><em>Mean Time Between Failures</em></td>
+                        <td>Cuánto tarda de media en <strong>averiarse</strong></td>
+                        <td>Con mejor hardware y redundancia</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MTTR</strong></td>
+                        <td><em>Mean Time To Repair</em></td>
+                        <td>Cuánto se tarda de media en <strong>repararlo</strong></td>
+                        <td>Con repuestos, documentación y procedimientos</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Disponibilidad = MTBF ÷ (MTBF + MTTR). Y de ahí sale una conclusión poco intuitiva:</p>
+
+            <div class="destacado">
+                <strong>Casi siempre sale más barato bajar el MTTR que subir el MTBF</strong>
+                Comprar hardware el doble de fiable cuesta mucho dinero y mejora poco la fórmula. En cambio,
+                <strong>tener un disco de repuesto en el armario</strong>, la documentación al día y un procedimiento
+                escrito puede recortar una reparación de ocho horas a treinta minutos, por casi nada.
+                <br><br>
+                Un servidor que falla el doble pero se arregla en la décima parte del tiempo tiene
+                <strong>mejor</strong> disponibilidad. En la práctica, invertir en <em>saber reaccionar</em> rinde más
+                que invertir en <em>que no pase nada</em>.
+            </div>
+
+            <h2 id="spof">6. Puntos únicos de fallo</h2>
+
+            <p>Un <strong>punto único de fallo</strong> (SPOF, <em>Single Point Of Failure</em>) es cualquier elemento
+            cuya avería, por sí sola, tumba el servicio.</p>
+
+            <p>El error clásico es duplicar lo llamativo y olvidar lo aburrido:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se duplica…</th><th>…pero se olvida</th></tr></thead>
+                <tbody>
+                    <tr><td>Los servidores</td><td>El <strong>switch</strong> al que están los dos conectados</td></tr>
+                    <tr><td>Las fuentes de alimentación</td><td>Que ambas van al <strong>mismo enchufe</strong></td></tr>
+                    <tr><td>Los discos con RAID</td><td>La <strong>controladora RAID</strong>, que es una sola</td></tr>
+                    <tr><td>La conexión a Internet</td><td>Que las dos líneas entran por <strong>la misma acometida</strong></td></tr>
+                    <tr><td>Los sistemas</td><td>Que solo <strong>una persona</strong> sabe cómo funcionan</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>El SPOF más habitual no es técnico</strong>
+                Es la <strong>persona</strong> que lo montó todo y no lo documentó. Se va de vacaciones, o de la
+                empresa, y nadie sabe dónde están las contraseñas ni cómo se reinicia el sistema.
+                <br><br>
+                Por eso documentar no es papeleo: es <strong>eliminar un punto único de fallo</strong>. Y es la razón
+                de que en este curso los laboratorios te pidan anotar y explicar lo que haces.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="virtualizacion">7. Virtualización: por qué casi ningún servidor es físico</h2>
+
+            <p>La <strong>virtualización</strong> permite que una sola máquina física ejecute varios sistemas
+            operativos completos, cada uno creyendo que tiene el equipo para él solo.</p>
+
+            <p>El programa que lo hace posible se llama <strong>hipervisor</strong>, y hay dos tipos:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Tipo 1 (<em>bare metal</em>)</th><th>Tipo 2 (alojado)</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Dónde se instala</th><td><strong>Directamente sobre el hardware</strong></td><td>Como un programa dentro de un sistema operativo</td></tr>
+                    <tr><th scope="row">Rendimiento</th><td>Alto</td><td>Menor: hay un sistema de por medio</td></tr>
+                    <tr><th scope="row">Ejemplos</th><td>Proxmox VE, VMware ESXi, Hyper-V, KVM</td><td>VirtualBox, VMware Workstation</td></tr>
+                    <tr><th scope="row">Uso</th><td><strong>Servidores en producción</strong></td><td>Escritorio, pruebas, laboratorios</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<pre><code>      TIPO 1                          TIPO 2
+
+  ┌────┬────┬────┐              ┌────┬────┐
+  │ VM │ VM │ VM │              │ VM │ VM │
+  ├────┴────┴────┤              ├────┴────┤
+  │  HIPERVISOR  │              │Hipervis.│
+  ├──────────────┤              ├─────────┤
+  │   HARDWARE   │              │   S.O.  │
+  └──────────────┘              ├─────────┤
+                                │ HARDWARE│
+                                └─────────┘</code></pre>
+
+            <h3>Por qué se impuso</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ventaja</th><th>En qué se nota</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Aprovechamiento</strong></td>
+                        <td>Un servidor físico dedicado a un solo servicio usaba el 10 % de su capacidad. Con diez máquinas virtuales, se aprovecha</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aislamiento</strong></td>
+                        <td>Si un servicio se cuelga o lo comprometen, no arrastra a los demás</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Instantáneas</strong> (<em>snapshots</em>)</td>
+                        <td>Antes de una actualización arriesgada, se guarda el estado; si sale mal, se vuelve en segundos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Migración en vivo</strong></td>
+                        <td>Mover una máquina virtual a otro anfitrión <strong>sin apagarla</strong>, para mantener el hardware sin parar el servicio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Despliegue rápido</strong></td>
+                        <td>Clonar una plantilla lleva minutos; comprar e instalar un servidor, semanas</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Ojo: la virtualización concentra el riesgo</strong>
+                Diez servicios en diez máquinas físicas toleran que se estropee una: caen uno de cada diez.
+                <br><br>
+                Los mismos diez servicios en un solo anfitrión virtualizado <strong>caen todos a la vez</strong> si ese
+                anfitrión muere. Se ha ganado eficiencia y se ha creado un <strong>punto único de fallo enorme</strong>.
+                <br><br>
+                Por eso en producción los anfitriones se agrupan en <strong>clústeres</strong> de dos o más, capaces de
+                arrancar automáticamente las máquinas del que ha caído. Virtualizar sin clúster es cambiar diez
+                problemas pequeños por uno catastrófico.
+            </div>
+
+            <h2 id="contenedores">8. Contenedores frente a máquinas virtuales</h2>
+
+            <p>Un <strong>contenedor</strong> también aísla una aplicación, pero no lleva sistema operativo propio:
+            comparte el núcleo del anfitrión y empaqueta solo la aplicación y sus dependencias.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Máquina virtual</th><th>Contenedor</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Qué incluye</th><td>Un <strong>sistema operativo completo</strong></td><td>Solo la aplicación y sus dependencias</td></tr>
+                    <tr><th scope="row">Tamaño típico</th><td>Gigabytes</td><td>Megabytes</td></tr>
+                    <tr><th scope="row">Arranque</th><td>Decenas de segundos</td><td><strong>Menos de un segundo</strong></td></tr>
+                    <tr><th scope="row">Aislamiento</th><td><strong>Fuerte</strong>: núcleos separados</td><td>Menor: comparten núcleo</td></tr>
+                    <tr><th scope="row">Puede ejecutar…</th><td>Cualquier sistema operativo</td><td>Solo compatible con el núcleo del anfitrión</td></tr>
+                    <tr><th scope="row">Ejemplo</th><td>Proxmox, VMware, Hyper-V</td><td>Docker, Podman, LXC</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Regla de decisión</strong>
+                <p>¿Necesitas <strong>otro sistema operativo</strong> o un aislamiento fuerte? <strong>Máquina
+                virtual.</strong></p>
+                <p>¿Necesitas <strong>desplegar una aplicación</strong> rápido, muchas veces y siempre igual?
+                <strong>Contenedor.</strong></p>
+                <p>En la práctica se combinan: máquinas virtuales que dentro ejecutan contenedores. Volverás a esto en
+                el Mes 12.</p>
+            </div>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="nube">9. La nube y el modelo de servicio</h2>
+
+            <p>La «nube» no es magia ni un lugar: son <strong>servidores de otra persona</strong>, alquilados por uso.
+            Lo interesante es <strong>hasta dónde llega la responsabilidad de cada uno</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Modelo</th><th>Te dan</th><th>Tú gestionas</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>IaaS</strong><br><em>infraestructura</em></td>
+                        <td>Máquinas virtuales, discos y red</td>
+                        <td><strong>Sistema operativo, parches y aplicación</strong></td>
+                        <td>Una VM en cualquier proveedor</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PaaS</strong><br><em>plataforma</em></td>
+                        <td>Un entorno donde desplegar tu código</td>
+                        <td>Solo la aplicación</td>
+                        <td>Bases de datos gestionadas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SaaS</strong><br><em>software</em></td>
+                        <td>La aplicación terminada</td>
+                        <td><strong>Solo tus datos y usuarios</strong></td>
+                        <td>Correo web, suites ofimáticas en línea</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Lo que la nube <em>no</em> quita</strong>
+                Ni la <strong>responsabilidad sobre tus datos</strong>, ni la necesidad de <strong>copias de
+                seguridad</strong>. Es un error muy caro y muy frecuente: el proveedor garantiza que la
+                <em>infraestructura</em> no se pierda, no que tú no borres tus propios ficheros ni que un atacante con
+                tus credenciales no los destruya.
+                <br><br>
+                Tampoco elimina la administración: en IaaS sigues siendo responsable de actualizar el sistema
+                operativo, exactamente igual que si la máquina estuviera en tu armario.
+            </div>
+
+            <h2 id="resumen">10. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Un servidor no se paga por potencia, sino por <strong>fiabilidad</strong>: ECC, fuentes
+                    redundantes, hot-swap, RAID y gestión remota.</li>
+                    <li><strong>RAID 0 no tolera fallos</strong>; RAID 1 y 5 toleran uno; RAID 6 tolera dos.</li>
+                    <li><strong>RAID no es copia de seguridad</strong>: es disponibilidad, no recuperación.</li>
+                    <li>Un año tiene <strong>525 600 minutos</strong>. 99,9 % = 8 h 46 min de caída al año.</li>
+                    <li><strong>Disponibilidad = MTBF ÷ (MTBF + MTTR)</strong>, y bajar el MTTR suele salir más barato.</li>
+                    <li>Un <strong>SPOF</strong> es lo que tumba el servicio por sí solo. El más común es la persona
+                    que no documentó.</li>
+                    <li><strong>Hipervisor tipo 1</strong> sobre el hardware, tipo 2 dentro de un sistema operativo.</li>
+                    <li>Virtualizar <strong>concentra el riesgo</strong>: hace falta clúster.</li>
+                    <li><strong>IaaS / PaaS / SaaS</strong> se distinguen por hasta dónde llega tu responsabilidad.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>«Tengo RAID, luego tengo copia de seguridad»</td>
+                        <td>RAID protege del fallo <strong>de un disco</strong>. No del borrado, ni del cifrado, ni del incendio.</td>
+                    </tr>
+                    <tr>
+                        <td>«RAID 0 es redundante, lo dice el nombre»</td>
+                        <td>No tolera <strong>ningún</strong> fallo, y además duplica la probabilidad de perderlo todo.</td>
+                    </tr>
+                    <tr>
+                        <td>«Un servidor es un PC muy potente»</td>
+                        <td>Se paga la <strong>fiabilidad</strong>, no la velocidad. Muchos tienen menos potencia que un PC de juegos.</td>
+                    </tr>
+                    <tr>
+                        <td>«Con dos fuentes ya no puede caerse»</td>
+                        <td>Si las dos van al mismo enchufe, el SPOF sigue existiendo: solo se ha movido.</td>
+                    </tr>
+                    <tr>
+                        <td>«Virtualizando gano disponibilidad»</td>
+                        <td>Ganas eficiencia. <strong>Concentras</strong> el riesgo, salvo que montes clúster.</td>
+                    </tr>
+                    <tr>
+                        <td>«En la nube ya no necesito copias»</td>
+                        <td>El proveedor cubre la infraestructura, no tus errores ni tus atacantes.</td>
+                    </tr>
+                    <tr>
+                        <td>«Un contenedor es una máquina virtual ligera»</td>
+                        <td>No lleva sistema operativo: <strong>comparte el núcleo</strong>. Aísla menos.</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">11. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 18 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>calcular disponibilidades</strong> con datos reales, comprobar si tu equipo puede
+            virtualizar y si ya lo está haciendo, y hacer el <strong>análisis de puntos únicos de fallo de tu propia
+            red</strong>.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 4</strong></a> (55 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 5</strong>
+            <p>Ya sabes qué máquina sostiene los servicios. Mañana toca <strong>qué servicios</strong>: los que una
+            oficina necesita para poder trabajar un lunes por la mañana, en qué orden arrancan y qué pasa cuando falla
+            cada uno.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> imagina que llegas a la oficina y no puedes abrir ninguna
+            página web, pero sí hacer ping a una dirección IP. ¿Qué servicio sospecharías?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/teoria.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Un cliente quiere montar un servidor de ficheros y dice: «me compro el PC más potente de la tienda, que sale más barato». Explícale <strong>qué le falta</strong>, con ejemplos concretos.',
+                modelo: `<p>Le falta todo lo que convierte a una máquina en fiable, que es justo lo que no se ve en la
+                         hoja de características de un PC de tienda.</p>
+                         <ul>
+                           <li><strong>Memoria ECC.</strong> Un PC normal lleva RAM sin corrección de errores. Cuando
+                           un bit se altera —y ocurre—, el PC se cuelga, se reinicia y no pasa nada grave. En un
+                           servidor de ficheros, ese bit puede escribirse en un documento y <strong>corromper datos en
+                           silencio</strong>: nadie se entera hasta meses después, cuando el fichero ya está en todas
+                           las copias.</li>
+                           <li><strong>Fuente redundante.</strong> Con una sola fuente, el día que muera —que es la
+                           pieza que más falla— el servicio se para hasta que alguien consiga otra.</li>
+                           <li><strong>Intercambio en caliente y RAID.</strong> En el PC, cambiar un disco significa
+                           apagar, abrir la caja y parar a toda la oficina. Con RAID y hot-swap se sustituye el disco
+                           averiado <strong>sin que nadie se entere</strong>.</li>
+                           <li><strong>Gestión remota.</strong> Si el sistema no arranca, en el PC hay que ir
+                           físicamente con un monitor y un teclado. Un servidor se reinicia y se diagnostica desde
+                           casa.</li>
+                           <li><strong>Componentes certificados para 24×7.</strong> Un PC está pensado para trabajar
+                           unas horas al día; un servidor no se apaga nunca, y los ventiladores y condensadores
+                           baratos no aguantan ese régimen durante años.</li>
+                         </ul>
+                         <p>El argumento que suele convencer no es la lista, sino la pregunta: <strong>«¿cuánto os
+                         cuesta una mañana con la oficina parada?»</strong>. Si la respuesta supera la diferencia de
+                         precio, el servidor ya está pagado.</p>`,
+                puntos: [
+                    'Menciona la memoria ECC y el riesgo de corrupción silenciosa',
+                    'Señala la fuente redundante',
+                    'Explica RAID e intercambio en caliente sin parar el servicio',
+                    'Añade la gestión remota',
+                    'Traduce la decisión al coste de una parada'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Una empresa tiene RAID 5 en su servidor y cree que sus datos están a salvo. Enumera <strong>tres situaciones</strong> en las que lo perderían todo igualmente.',
+                modelo: `<p>RAID protege exactamente de una cosa: <strong>el fallo físico de un disco</strong>. Frente a
+                         todo lo demás no hace nada, y con RAID 5 ni siquiera cubre el fallo simultáneo de dos discos.</p>
+                         <p><strong>1. Borrado o sobrescritura por error.</strong> Si alguien elimina una carpeta o
+                         guarda encima de un fichero, la operación se replica <em>instantáneamente</em> en todos los
+                         discos del conjunto. RAID no guarda versiones anteriores: solo mantiene el estado actual,
+                         redundante pero único.</p>
+                         <p><strong>2. Cifrado por un programa malicioso.</strong> Un cifrador que llegue al servidor
+                         escribe los ficheros cifrados a través del sistema de ficheros, así que el RAID los replica
+                         con toda diligencia. Al terminar, hay una copia perfectamente redundante de datos
+                         inservibles.</p>
+                         <p><strong>3. Desastre físico o fallo del propio conjunto.</strong> Un incendio, una
+                         inundación o un robo se llevan todos los discos a la vez, porque están en la misma máquina y
+                         en la misma sala. Y hay un caso más sutil: si falla la <strong>controladora RAID</strong>,
+                         los discos quedan intactos pero ilegibles hasta conseguir una controladora compatible.</p>
+                         <p>Se podría añadir un cuarto: en RAID 5, mientras se reconstruye tras cambiar un disco, el
+                         conjunto queda <strong>sin protección</strong> y sometido a mucho esfuerzo. Con discos
+                         grandes la reconstrucción dura horas o días, y es justo cuando más fallos aparecen.</p>
+                         <p>La distinción que hay que fijar: <strong>RAID es disponibilidad</strong> —seguir
+                         funcionando pese a una avería— y <strong>la copia de seguridad es recuperación</strong>
+                         —volver a un estado anterior—. Resuelven problemas distintos y hacen falta las dos.</p>`,
+                puntos: [
+                    'Borrado o sobrescritura: se replica al instante en todos los discos',
+                    'Cifrado malicioso: el RAID replica los ficheros cifrados',
+                    'Desastre físico: todos los discos están en el mismo sitio',
+                    'Menciona la controladora o la ventana de reconstrucción',
+                    'Concluye distinguiendo disponibilidad de recuperación'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Tienes 15 000 € para mejorar la disponibilidad de un servidor. La opción A es un servidor el doble de fiable; la B es un repuesto completo en el armario, documentación y un procedimiento de recuperación probado. <strong>Justifica cuál eliges</strong> con la fórmula.',
+                modelo: `<p>Elijo la <strong>opción B</strong>, y la fórmula lo explica:
+                         <strong>disponibilidad = MTBF ÷ (MTBF + MTTR)</strong>.</p>
+                         <p>Supongamos un servidor con MTBF de 20 000 horas y MTTR de 8 horas, porque cuando se rompe
+                         hay que buscar la pieza, esperar al proveedor y reinstalar sin instrucciones. Su
+                         disponibilidad es 20 000 ÷ 20 008 = <strong>99,96 %</strong>.</p>
+                         <p><strong>Opción A</strong>, duplicar el MTBF a 40 000 horas: 40 000 ÷ 40 008 =
+                         <strong>99,98 %</strong>.</p>
+                         <p><strong>Opción B</strong>, bajar el MTTR de 8 horas a 30 minutos gracias al repuesto y al
+                         procedimiento: 20 000 ÷ 20 000,5 = <strong>99,9975 %</strong>.</p>
+                         <p>La opción B da mejor resultado, y además es la que mejor se comporta ante lo imprevisto: el
+                         MTBF es una media estadística que no impide que la avería ocurra <em>mañana</em>, mientras que
+                         un MTTR bajo mejora la respuesta ante <strong>cualquier</strong> incidencia, incluidas las que
+                         no son de hardware.</p>
+                         <p>Hay una razón más, que no está en la fórmula: la documentación y el procedimiento probado
+                         eliminan un <strong>punto único de fallo humano</strong>. Con la opción A, si la persona que
+                         sabe recuperar el sistema no está, el MTTR se dispara igualmente.</p>
+                         <p>La conclusión general: <strong>invertir en saber reaccionar rinde más que invertir en que
+                         no pase nada</strong>, porque acabará pasando.</p>`,
+                puntos: [
+                    'Aplica disponibilidad = MTBF / (MTBF + MTTR)',
+                    'Calcula ambas opciones con números concretos',
+                    'Concluye que bajar el MTTR mejora más',
+                    'Señala que el MTBF es una media y no evita la avería de mañana',
+                    'Añade que documentar elimina un punto único de fallo humano'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Una empresa pasa sus 10 servidores físicos a 10 máquinas virtuales sobre <strong>un solo anfitrión</strong>. Explica qué ha ganado, qué ha empeorado y qué falta.',
+                modelo: `<p><strong>Lo que ha ganado</strong> es real y considerable: aprovechamiento del hardware
+                         —diez máquinas al 10 % pasan a ser una bien usada—, ahorro en electricidad, refrigeración y
+                         espacio de armario, despliegue de nuevos servicios en minutos clonando plantillas,
+                         instantáneas antes de cada actualización arriesgada y copias de seguridad de la máquina
+                         entera, no solo de los datos.</p>
+                         <p><strong>Lo que ha empeorado</strong> es la tolerancia a fallos, y de forma drástica. Antes,
+                         una avería de hardware dejaba fuera <em>un</em> servicio: los otros nueve seguían. Ahora,
+                         cualquier fallo del anfitrión —placa, fuente, controladora, un parche que impide
+                         arrancar— <strong>tumba los diez a la vez</strong>. Se han cambiado diez problemas pequeños e
+                         independientes por uno solo, catastrófico y simultáneo. Ha aparecido un punto único de fallo
+                         donde antes no había ninguno.</p>
+                         <p>Además hay una dependencia nueva: si el almacenamiento es compartido y falla, no arranca
+                         nada; y si el anfitrión se queda corto de memoria, los servicios compiten entre sí, cosa que
+                         antes no ocurría.</p>
+                         <p><strong>Lo que falta</strong> es un <strong>clúster</strong>: al menos dos anfitriones con
+                         almacenamiento compartido y alta disponibilidad configurada, de modo que si uno cae, el otro
+                         arranque automáticamente sus máquinas. Con eso se recupera —y se mejora— la tolerancia
+                         original, porque además permite mover máquinas en vivo para mantener el hardware sin parar
+                         nada.</p>
+                         <p>Falta también lo de siempre: copias de seguridad <strong>fuera</strong> del anfitrión.
+                         Guardarlas en el mismo equipo que se quiere proteger no sirve de nada.</p>`,
+                puntos: [
+                    'Ganancias: aprovechamiento, coste, despliegue rápido, instantáneas',
+                    'Empeora: los diez servicios caen a la vez si falla el anfitrión',
+                    'Identifica que se ha creado un punto único de fallo',
+                    'Propone un clúster de al menos dos anfitriones con alta disponibilidad',
+                    'Añade que las copias deben estar fuera del anfitrión'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Qué se paga realmente en un servidor?', dorso: 'La <strong>fiabilidad</strong>, no la potencia: ECC, fuentes redundantes, hot-swap, RAID, gestión remota y componentes para 24×7.' },
+            { frente: '¿Qué hace la memoria <strong>ECC</strong> y por qué importa?', dorso: 'Detecta y corrige errores de un bit. Sin ella, un bit alterado puede <strong>corromper datos en silencio</strong> en lugar de solo colgar la máquina.' },
+            { frente: '¿Qué es la <strong>gestión remota</strong> (iLO, iDRAC, IPMI)?', dorso: 'Un ordenador independiente dentro del servidor, con su IP y su alimentación: permite encender, apagar y ver la pantalla <strong>aunque el sistema esté muerto</strong>.' },
+            { frente: '¿Cuánto es <strong>1U</strong> y cuántas tiene un armario típico?', dorso: '1U ≈ <strong>4,4 cm</strong>. Un armario estándar de 19″ tiene <strong>42U</strong>.' },
+            { frente: '<strong>RAID 0</strong>: ¿qué tolera?', dorso: '<strong>Nada</strong>. No es redundante pese al nombre: si muere cualquier disco se pierde todo, así que <em>duplica</em> el riesgo.' },
+            { frente: '<strong>RAID 1, 5 y 6</strong>: ¿cuántos discos toleran?', dorso: 'RAID 1 y RAID 5: <strong>1 disco</strong>. RAID 6: <strong>2 discos</strong>, gracias a la doble paridad.' },
+            { frente: '¿Por qué RAID <strong>no</strong> es una copia de seguridad?', dorso: 'Solo protege del fallo de un disco. Un borrado, un cifrado o un incendio afectan <strong>a todos los discos a la vez</strong>. RAID = disponibilidad; copia = recuperación.' },
+            { frente: '¿Cuántos minutos tiene un año? ¿Y cuánta caída permite el 99,9 %?', dorso: '<strong>525 600 minutos</strong>. Al 99,9 %: 525,6 min = <strong>8 h 46 min</strong> al año.' },
+            { frente: '¿Cuánta caída anual permiten los <strong>cinco nueves</strong>?', dorso: '99,999 % → <strong>5 min 15 s al año</strong>. Ahí tienen que caber actualizaciones, reinicios y averías.' },
+            { frente: 'Fórmula de la disponibilidad', dorso: '<strong>MTBF ÷ (MTBF + MTTR)</strong>. MTBF: tiempo medio entre fallos. MTTR: tiempo medio de reparación.' },
+            { frente: '¿Sale más barato subir el MTBF o bajar el MTTR?', dorso: 'Casi siempre <strong>bajar el MTTR</strong>: un repuesto en el armario y un procedimiento escrito cuestan poco y recortan mucho.' },
+            { frente: '¿Qué es un <strong>SPOF</strong> y cuál es el más común?', dorso: 'Un elemento que por sí solo tumba el servicio. El más común no es técnico: la <strong>persona</strong> que lo montó y no lo documentó.' },
+            { frente: 'Hipervisor <strong>tipo 1</strong> frente a <strong>tipo 2</strong>', dorso: 'Tipo 1: <strong>sobre el hardware</strong> (Proxmox, ESXi, KVM), para producción. Tipo 2: dentro de un sistema operativo (VirtualBox), para escritorio y pruebas.' },
+            { frente: '¿Qué riesgo introduce virtualizar?', dorso: '<strong>Concentra el fallo</strong>: si cae el anfitrión, caen todas las máquinas a la vez. Se resuelve con un <strong>clúster</strong> de varios anfitriones.' },
+            { frente: '<strong>Contenedor</strong> frente a <strong>máquina virtual</strong>', dorso: 'La VM lleva <strong>sistema operativo completo</strong> (GB, decenas de segundos, aislamiento fuerte). El contenedor comparte el núcleo (MB, menos de un segundo, aísla menos).' },
+            { frente: '<strong>IaaS, PaaS, SaaS</strong>: ¿qué los separa?', dorso: 'Hasta dónde llega <strong>tu responsabilidad</strong>. IaaS: tú el sistema y la aplicación. PaaS: solo la aplicación. SaaS: solo tus datos y usuarios.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 4 — Servidores',
+        subtitulo: 'Hardware · RAID · disponibilidad · virtualización · nube',
+        tiempo: '18 minutos',
+        minutos: 18,
+        questions: [
+            {
+                topic: 'Hardware de servidor',
+                repaso: '#hardware',
+                text: '¿Cuál es el principal riesgo de usar memoria <strong>sin ECC</strong> en un servidor de ficheros?',
+                options: {
+                    a: 'Que el servidor irá más lento',
+                    b: 'Que un bit alterado puede corromper datos sin que nadie se entere',
+                    c: 'Que no admitirá más de 16 GB',
+                    d: 'Ninguno: la ECC solo aporta velocidad'
+                },
+                answer: 'b',
+                feedback: 'En un PC un bit alterado provoca un cuelgue y se nota. En un servidor de datos puede escribirse en un fichero y propagarse a las copias sin que salte ninguna alarma. Es <strong>corrupción silenciosa</strong>.'
+            },
+            {
+                topic: 'Hardware de servidor',
+                repaso: '#hardware',
+                text: 'Son las 3 de la madrugada y un servidor del centro de datos no responde ni a ping. ¿Qué te evita coger el coche?',
+                options: {
+                    a: 'El RAID',
+                    b: 'La memoria ECC',
+                    c: 'La interfaz de gestión remota (iLO, iDRAC, IPMI)',
+                    d: 'La segunda fuente de alimentación'
+                },
+                answer: 'c',
+                feedback: 'Es un ordenador independiente dentro del servidor, con su propia IP y alimentación. Permite reiniciar la máquina y ver su pantalla <strong>aunque el sistema operativo esté muerto</strong>.'
+            },
+            {
+                topic: 'RAID',
+                repaso: '#raid',
+                text: 'Un conjunto <strong>RAID 0</strong> de dos discos. ¿Cuántos fallos de disco tolera?',
+                options: {
+                    a: 'Uno',
+                    b: 'Dos',
+                    c: 'Ninguno, y además duplica la probabilidad de perderlo todo',
+                    d: 'Depende del tamaño de los discos'
+                },
+                answer: 'c',
+                feedback: 'RAID 0 solo reparte datos para ganar velocidad y capacidad. Al necesitar los dos discos para reconstruir cualquier fichero, la avería de cualquiera lo pierde todo: el riesgo es <strong>mayor</strong> que con un disco suelto.'
+            },
+            {
+                topic: 'RAID',
+                repaso: '#raid',
+                text: 'Un empleado borra por error una carpeta del servidor, que tiene RAID 6. ¿Se puede recuperar del RAID?',
+                options: {
+                    a: 'Sí, porque RAID 6 tolera dos fallos',
+                    b: 'No: el borrado se replica al instante en todos los discos',
+                    c: 'Sí, si se actúa en menos de 24 horas',
+                    d: 'Solo si el servidor no se ha reiniciado'
+                },
+                answer: 'b',
+                feedback: 'RAID mantiene el estado <strong>actual</strong> de forma redundante, no versiones anteriores. Para esto hace falta una copia de seguridad: RAID es disponibilidad, la copia es recuperación.'
+            },
+            {
+                topic: 'RAID',
+                repaso: '#raid',
+                text: 'Con cinco discos de 4 TB en RAID 5, ¿cuánta capacidad útil queda?',
+                options: {
+                    a: '20 TB',
+                    b: '16 TB',
+                    c: '12 TB',
+                    d: '10 TB'
+                },
+                answer: 'b',
+                feedback: 'RAID 5 dedica el equivalente a un disco a la paridad: (N−1) × tamaño = 4 × 4 TB = <strong>16 TB</strong>.'
+            },
+            {
+                topic: 'Disponibilidad',
+                repaso: '#disponibilidad',
+                text: 'Un servicio con <strong>99,9 %</strong> de disponibilidad, ¿cuánto puede estar caído al año?',
+                options: {
+                    a: 'Unos 5 minutos',
+                    b: 'Unos 52 minutos',
+                    c: 'Unas 8 horas y 46 minutos',
+                    d: 'Unos 3 días y medio'
+                },
+                answer: 'c',
+                feedback: '525 600 minutos al año × 0,001 = 525,6 minutos ≈ <strong>8 h 46 min</strong>. Las otras opciones corresponden a cinco, cuatro y dos nueves respectivamente.'
+            },
+            {
+                topic: 'Disponibilidad',
+                repaso: '#disponibilidad',
+                text: 'Dos servidores: A falla cada 20 000 h y se repara en 8 h; B falla cada 10 000 h pero se repara en 30 min. ¿Cuál tiene mayor disponibilidad?',
+                options: {
+                    a: 'A, porque falla la mitad de veces',
+                    b: 'B, porque su MTTR es mucho menor',
+                    c: 'Son iguales',
+                    d: 'No se puede saber sin conocer el hardware'
+                },
+                answer: 'b',
+                feedback: 'A: 20 000/20 008 = 99,96 %. B: 10 000/10 000,5 = <strong>99,995 %</strong>. Es la razón de que salga más rentable invertir en repuestos y procedimientos que en hardware más caro.'
+            },
+            {
+                topic: 'Puntos únicos de fallo',
+                repaso: '#spof',
+                text: 'Un servidor tiene dos fuentes de alimentación redundantes, ambas conectadas a la misma regleta. ¿Qué se ha conseguido?',
+                options: {
+                    a: 'Eliminar el punto único de fallo de la alimentación',
+                    b: 'Nada: el punto único de fallo se ha movido a la regleta',
+                    c: 'Duplicar la potencia disponible',
+                    d: 'Cumplir el requisito de los cinco nueves'
+                },
+                answer: 'b',
+                feedback: 'La redundancia solo sirve si llega hasta el final de la cadena. Las dos fuentes deben ir a <strong>circuitos eléctricos distintos</strong>, idealmente uno de ellos con SAI.'
+            },
+            {
+                topic: 'Virtualización',
+                repaso: '#virtualizacion',
+                text: '¿Qué hipervisor usarías en un servidor de producción y por qué?',
+                options: {
+                    a: 'Tipo 2, porque es más fácil de instalar',
+                    b: 'Tipo 1, porque se instala directamente sobre el hardware y no arrastra el peso de un sistema operativo anfitrión',
+                    c: 'Cualquiera: el rendimiento es idéntico',
+                    d: 'Tipo 2, porque permite instantáneas'
+                },
+                answer: 'b',
+                feedback: 'Proxmox, ESXi, Hyper-V o KVM son de tipo 1. VirtualBox y VMware Workstation son de tipo 2 y están pensados para escritorio, pruebas y laboratorios.'
+            },
+            {
+                topic: 'Virtualización',
+                repaso: '#virtualizacion',
+                text: 'Diez servicios pasan de diez servidores físicos a diez máquinas virtuales sobre <strong>un</strong> anfitrión. ¿Qué ha ocurrido con la tolerancia a fallos?',
+                options: {
+                    a: 'Ha mejorado: la virtualización aporta alta disponibilidad',
+                    b: 'Ha empeorado: ahora un fallo del anfitrión tumba los diez a la vez',
+                    c: 'No ha cambiado',
+                    d: 'Ha mejorado si se hacen instantáneas'
+                },
+                answer: 'b',
+                feedback: 'Virtualizar aporta eficiencia y agilidad, pero <strong>concentra el riesgo</strong>. La alta disponibilidad no la da el hipervisor por sí solo: la da montar un <strong>clúster</strong> de varios anfitriones.'
+            },
+            {
+                topic: 'Contenedores',
+                repaso: '#contenedores',
+                text: '¿Cuál es la diferencia fundamental entre un contenedor y una máquina virtual?',
+                options: {
+                    a: 'El contenedor es una máquina virtual más pequeña',
+                    b: 'El contenedor no lleva sistema operativo propio: comparte el núcleo del anfitrión',
+                    c: 'La máquina virtual no permite instalar aplicaciones',
+                    d: 'El contenedor solo funciona en la nube'
+                },
+                answer: 'b',
+                feedback: 'De ahí salen todas las demás diferencias: tamaño en megabytes en vez de gigabytes, arranque en menos de un segundo y, como contrapartida, un <strong>aislamiento menor</strong>.'
+            },
+            {
+                topic: 'Nube',
+                repaso: '#nube',
+                text: 'Contratas una máquina virtual en un proveedor de nube (IaaS). ¿Quién actualiza el sistema operativo?',
+                options: {
+                    a: 'El proveedor, está incluido',
+                    b: 'Tú: en IaaS te dan la infraestructura, el sistema y la aplicación son tuyos',
+                    c: 'Nadie: las máquinas en la nube no necesitan parches',
+                    d: 'Se actualiza solo automáticamente'
+                },
+                answer: 'b',
+                feedback: 'En IaaS la frontera está justo debajo del sistema operativo. Es un error caro y frecuente: mucha gente supone que al estar «en la nube» ya está mantenido.'
+            },
+            {
+                topic: 'Recuperación · Día 3',
+                repaso: '../Dia_03/teoria.html#puertos',
+                text: '<em>Repaso.</em> ¿Qué distingue el puerto que usa un servidor del que usa un cliente?',
+                options: {
+                    a: 'El del servidor es fijo y conocido; el del cliente lo asigna el sistema del rango efímero',
+                    b: 'El del cliente es fijo y el del servidor variable',
+                    c: 'Los dos son efímeros',
+                    d: 'El cliente no usa puerto'
+                },
+                answer: 'a',
+                feedback: 'Quien espera tiene que ser localizable; quien llama, no. Por eso el servidor usa 443, 22 o 53, y el cliente cualquiera del rango 49152–65535.'
+            },
+            {
+                topic: 'Recuperación · Semana 1',
+                repaso: '../../Semana_01/Dia_06/teoria.html',
+                text: '<em>Repaso.</em> En el modelo jerárquico de tres capas, ¿qué capa prioriza la velocidad de conmutación por encima de todo?',
+                options: {
+                    a: 'Acceso',
+                    b: 'Distribución',
+                    c: 'Núcleo',
+                    d: 'Las tres por igual'
+                },
+                answer: 'c',
+                feedback: 'El núcleo mueve el tráfico agregado de toda la red y no debe entretenerse: las políticas, el filtrado y el enrutamiento entre VLAN se hacen en <strong>distribución</strong>.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

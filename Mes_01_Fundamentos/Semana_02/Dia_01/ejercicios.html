@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">55 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 5</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 2 —leer los bits de una MAC— es el que más rendimiento te va a dar. Es rápido de aplicar,
+            cae en examen y te servirá cada vez que mires una tabla ARP en el resto del curso. Asegúrate de saber
+            hacerlo <em>sin</em> mirar la tabla de la teoría.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_01/Dia_07/ejercicios.html">← Semana 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Ejercicios',
+    subtitulo: 'NIC · OUI · bits I/G y U/L · MAC frente a IP',
+    tiempo: '55 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: La tarjeta de red por dentro',
+            tiempo: '9 min',
+            enunciado: '<p>Fija primero qué hace la NIC y dónde encaja, antes de entrar en las direcciones.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada función de la NIC con la tarea concreta que realiza.',
+                    izquierda: [
+                        'Conexión física',
+                        'Conversión de señal',
+                        'Direccionamiento',
+                        'Control de acceso al medio'
+                    ],
+                    derecha: [
+                        'Adaptar el conector y la electrónica al cable o a la antena',
+                        'Traducir los bits del equipo a la codificación del medio',
+                        'Poner su MAC como origen y descartar lo que no va dirigido a ella',
+                        'Decidir cuándo puede transmitir sin pisar a otro equipo'
+                    ],
+                    pares: {
+                        'Conexión física': 'Adaptar el conector y la electrónica al cable o a la antena',
+                        'Conversión de señal': 'Traducir los bits del equipo a la codificación del medio',
+                        'Direccionamiento': 'Poner su MAC como origen y descartar lo que no va dirigido a ella',
+                        'Control de acceso al medio': 'Decidir cuándo puede transmitir sin pisar a otro equipo'
+                    },
+                    explicacion: 'Las dos primeras son trabajo de capa física; las dos últimas, de capa de enlace. La NIC es de los pocos componentes que operan a caballo entre ambas.',
+                    pistas: [
+                        'Dos de las funciones tienen que ver con el cable y la señal; las otras dos, con decisiones.',
+                        'La sigla MAC significa literalmente «control de acceso al medio»: eso te dice cuál es esa función.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>b)</strong> Completa la frase sobre lo que ocurre en una red con medio compartido.',
+                    frase: 'En una red con hub, la trama dirigida a otro equipo <strong>sí</strong> llega eléctricamente a tu tarjeta. Es la propia {{0}} la que compara la {{1}} de destino con la suya y, al no coincidir, la {{2}}. Si se activa el modo {{3}}, la tarjeta deja de descartar y lo entrega todo.',
+                    respuestas: [
+                        ['nic', 'tarjeta', 'tarjeta de red', 'interfaz'],
+                        ['mac', 'direccion mac', 'dirección mac'],
+                        ['descarta', 'desecha', 'ignora', 'tira'],
+                        ['promiscuo', 'promiscuo.', 'modo promiscuo']
+                    ],
+                    explicacion: 'El filtrado no lo hace la red: lo hace la tarjeta, y es una decisión voluntaria que se puede desactivar. Ese es el fundamento de cualquier analizador de tráfico.',
+                    pistas: [
+                        'El primer hueco es el componente del que trata todo el día.',
+                        'El último es el nombre del modo que usa Wireshark para capturar tráfico ajeno.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál de estos equipos <strong>no</strong> necesita una interfaz de red para comunicarse?',
+                    opciones: {
+                        a: 'Un móvil conectado por Bluetooth a unos auriculares',
+                        b: 'Una Raspberry Pi conectada por Wi-Fi',
+                        c: 'Un PC conectado por cable a un switch',
+                        d: 'Ninguno: todos la necesitan'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Puede faltar el switch, el router o incluso el cable, pero <strong>siempre</strong> hacen falta al menos dos interfaces de red. Es el único componente imprescindible.',
+                    pistas: [
+                        'Piensa si el Bluetooth cuenta o no como interfaz de red.',
+                        'Pregúntate qué componente aparece en absolutamente todos los casos.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Leer una MAC bit a bit',
+            tiempo: '16 min',
+            enunciado: `
+                <p>El apartado más importante del día. Usa la regla del <strong>segundo dígito hexadecimal</strong>:
+                impar → va a un grupo; 2, 3, 6, 7, A, B, E o F → es local.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Clasifica cada dirección. En «Destino» escribe <em>unicast</em> o <em>grupo</em>; en «Asignación», <em>universal</em> o <em>local</em>.',
+                    esquina: 'Dirección MAC',
+                    cabecera: ['Destino', 'Asignación'],
+                    filas: [
+                        {
+                            etiqueta: '<code>00-1B-44-11-3A-B7</code>',
+                            celdas: [
+                                { respuestas: ['unicast', 'individual'], placeholder: 'unicast / grupo' },
+                                { respuestas: ['universal', 'global', 'de fabrica', 'de fábrica'], placeholder: 'universal / local' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<code>02-42-AC-11-00-02</code>',
+                            celdas: [
+                                { respuestas: ['unicast', 'individual'], placeholder: 'unicast / grupo' },
+                                { respuestas: ['local', 'administrada localmente'], placeholder: 'universal / local' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<code>01-80-C2-00-00-00</code>',
+                            celdas: [
+                                { respuestas: ['grupo', 'multicast'], placeholder: 'unicast / grupo' },
+                                { respuestas: ['universal', 'global'], placeholder: 'universal / local' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<code>FF-FF-FF-FF-FF-FF</code>',
+                            celdas: [
+                                { respuestas: ['grupo', 'broadcast', 'multicast'], placeholder: 'unicast / grupo' },
+                                { respuestas: ['local', 'administrada localmente'], placeholder: 'universal / local' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Segundos dígitos: <strong>0</strong> (par, y sin bit U/L) → unicast universal. <strong>2</strong> (par pero con U/L) → unicast local: es el rango típico de los contenedores Docker. <strong>1</strong> (impar) → grupo; <code>01-80-C2</code> es el multicast reservado a STP. <strong>F</strong> = 1111: los dos bits a 1, grupo y local, que es el caso extremo del broadcast.',
+                    pistas: [
+                        'Trabaja siempre sobre el SEGUNDO dígito hexadecimal, nunca sobre el primero.',
+                        'Para «destino» solo importa la paridad: impar significa grupo.',
+                        'Para «asignación» pregúntate si ese dígito está en el conjunto 2, 3, 6, 7, A, B, E, F.'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>b)</strong> Escribe el primer byte de la MAC <code>0A-00-27-00-00-0D</code> en <strong>binario</strong>, con sus 8 bits.',
+                    respuestas: ['00001010', '0000 1010'],
+                    placeholder: '8 bits',
+                    ancho: '200px',
+                    explicacion: '0A en hexadecimal = 0000 1010. El bit de menor peso (el de la derecha) es I/G = 0 → unicast. El siguiente es U/L = 1 → administrada localmente.',
+                    pistas: [
+                        'Convierte cada dígito hexadecimal por separado: cada uno son 4 bits.',
+                        'El 0 son cuatro ceros. Ahora solo falta la A.',
+                        'A vale 10 en decimal, que en 4 bits es 1010.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Ves en tu tabla ARP una MAC que empieza por <code>7E-</code>. ¿Qué es lo más probable?',
+                    opciones: {
+                        a: 'Un equipo de un fabricante poco conocido',
+                        b: 'Una dirección de multicast',
+                        c: 'Un móvil con aleatorización de MAC, o una interfaz virtual',
+                        d: 'Una dirección corrupta que hay que investigar'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Segundo dígito <strong>E</strong> = 1110: I/G a 0 (unicast) pero U/L a 1 (local). No hay fabricante detrás, así que es software: un móvil con MAC aleatoria o una interfaz virtual.',
+                    pistas: [
+                        'Descompón la E en binario y mira los dos últimos bits.',
+                        'El bit I/G a 0 descarta ya una de las opciones.',
+                        'Si es unicast pero local, nadie la fabricó: la generó un programa.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> ¿Cuántas direcciones distintas puede repartir un fabricante que ha comprado <strong>un solo OUI</strong>? Responde en millones, con un decimal.',
+                    respuesta: 16.7,
+                    tolerancia: 0.2,
+                    unidad: 'millones',
+                    explicacion: 'Le quedan libres los 24 bits de la parte baja: 2²⁴ = 16 777 216 ≈ 16,7 millones de tarjetas por cada OUI adquirido.',
+                    pistas: [
+                        'El OUI ocupa 24 de los 48 bits. ¿Cuántos quedan?',
+                        'Calcula 2 elevado a los bits restantes.',
+                        '2²⁴ = 16 777 216.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: MAC y IP trabajando juntas',
+            tiempo: '13 min',
+            enunciado: `
+                <p>Tu PC es <code>192.168.1.70</code>, tu router <code>192.168.1.1</code>. Abres una web alojada en
+                <code>93.184.216.34</code>. Analiza la <strong>primera trama que sale de tu tarjeta</strong>.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa las cuatro direcciones de esa trama. Usa las descripciones, no valores inventados.',
+                    esquina: 'Campo',
+                    cabecera: ['Qué contiene'],
+                    filas: [
+                        {
+                            etiqueta: 'IP de origen',
+                            celdas: [{ respuestas: ['192.168.1.70', 'la de mi pc', 'mi pc'], placeholder: 'dirección' }]
+                        },
+                        {
+                            etiqueta: 'IP de destino',
+                            celdas: [{ respuestas: ['93.184.216.34', 'la del servidor', 'el servidor'], placeholder: 'dirección' }]
+                        },
+                        {
+                            etiqueta: 'MAC de origen',
+                            celdas: [{ respuestas: ['la de mi tarjeta', 'la mia', 'la mía', 'mi mac', 'la de mi pc', 'la de mi nic'], placeholder: 'de quién' }]
+                        },
+                        {
+                            etiqueta: 'MAC de destino',
+                            celdas: [{ respuestas: ['la del router', 'la de la puerta de enlace', 'la del gateway', 'router'], placeholder: 'de quién' }]
+                        }
+                    ],
+                    explicacion: 'Las IP son las de los <strong>extremos</strong> y no cambian en todo el trayecto. Las MAC son las del <strong>tramo actual</strong>: tu PC no puede conocer la MAC del servidor, así que entrega la trama a su vecino, el router.',
+                    pistas: [
+                        'Separa las dos preguntas: ¿quiénes son los extremos de la comunicación? ¿quiénes son los vecinos en este tramo?',
+                        'Tu PC solo puede poner como MAC de destino la de alguien que esté en su misma red local.',
+                        'El servidor está en otra red, así que su MAC es inalcanzable para ti.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> La trama pasa por seis routers hasta llegar al servidor. ¿Cuántas veces cambian las direcciones?',
+                    opciones: {
+                        a: 'Las IP cambian en cada salto; las MAC no cambian nunca',
+                        b: 'Las MAC cambian en cada salto; las IP de origen y destino no cambian',
+                        c: 'Cambian las dos en cada salto',
+                        d: 'No cambia ninguna: por eso llega al destino'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la idea central del día. La IP identifica a los extremos y se mantiene; la MAC identifica el tramo y se reescribe en cada router.',
+                    pistas: [
+                        'Recuerda la analogía: la dirección postal del sobre frente al cartero de cada tramo.',
+                        '¿Cuál de las dos tendría que cambiar para que un router pueda entregar al siguiente vecino?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>c)</strong> Un compañero propone: «eliminemos las direcciones IP y enrutemos Internet solo con MAC, que ya son únicas en el mundo». Explica por qué no funcionaría.',
+                    modelo: `<p>El problema no es que falten direcciones —2⁴⁸ son unos 281 billones, de sobra— sino que las
+                             MAC son <strong>planas</strong>: sus 48 bits identifican <em>quién</em> es una interfaz,
+                             pero no contienen ninguna información sobre <em>dónde</em> está. Dos tarjetas con MAC
+                             consecutivas pueden estar en continentes distintos, porque lo único que comparten es el
+                             fabricante y el lote de fabricación.</p>
+                             <p>Enrutar consiste en decidir por dónde reenviar, y para eso hace falta ubicar el
+                             destino. Con direcciones planas la única forma sería que <strong>cada router guardase una
+                             entrada por cada interfaz existente en el mundo</strong>: miles de millones de líneas,
+                             actualizadas cada vez que se fabrica o se retira un dispositivo. La memoria y el tiempo
+                             de búsqueda lo hacen inviable.</p>
+                             <p>La IP resuelve esto siendo <strong>jerárquica</strong>: se divide en parte de red y
+                             parte de host, de modo que un router guarda una sola ruta para toda una red
+                             («192.168.1.0/24 sale por aquí») en lugar de una por equipo. Millones de destinos se
+                             agrupan en una línea.</p>
+                             <p>Hay un segundo motivo: la IP se puede <strong>reasignar</strong>. Un portátil que se
+                             mueve de casa a la oficina recibe una dirección acorde a su nueva ubicación; su MAC, en
+                             cambio, no cambia. La dirección de enrutamiento tiene que poder adaptarse a la topología,
+                             y la MAC, por diseño, no puede.</p>`,
+                    rubrica: [
+                        'Descarta que el problema sea la cantidad de direcciones',
+                        'Explica que la MAC es plana: identifica pero no ubica',
+                        'Deduce que las tablas de rutas serían inmanejables',
+                        'Contrapone la jerarquía de la IP (red + host)',
+                        'Menciona que la IP se reasigna al cambiar de red y la MAC no'
+                    ],
+                    pistas: [
+                        'No empieces por «son capas distintas»: eso describe el reparto, no lo explica.',
+                        'Compara un DNI con una dirección postal. ¿Cuál sirve para entregar una carta y por qué?',
+                        'Piensa en el tamaño que tendría la tabla de rutas de un router de Internet.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Diagnóstico con la tabla ARP',
+            tiempo: '10 min',
+            enunciado: `
+                <p>Esta es una tabla ARP de una red doméstica. Analízala como lo haría un administrador que llega
+                nuevo a la instalación.</p>
+                <pre><code>Dirección de Internet     Dirección física      Tipo
+192.168.1.1               e4-ab-89-b8-6f-38     dinámico
+192.168.1.45              00-1b-44-11-3a-b7     dinámico
+192.168.1.88              3a-6f-87-48-98-13     dinámico
+192.168.1.255             ff-ff-ff-ff-ff-ff     estático
+224.0.0.251               01-00-5e-00-00-fb     estático</code></pre>`,
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Cuál de esas entradas corresponde con seguridad a un dispositivo con <strong>MAC aleatorizada o virtual</strong>?',
+                    opciones: {
+                        a: '<code>e4-ab-89-b8-6f-38</code>',
+                        b: '<code>00-1b-44-11-3a-b7</code>',
+                        c: '<code>3a-6f-87-48-98-13</code>',
+                        d: '<code>01-00-5e-00-00-fb</code>'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Segundo dígito <strong>a</strong> = 1010: unicast pero con el bit U/L a 1. Es una dirección administrada localmente, típica de un móvil con aleatorización de MAC.',
+                    pistas: [
+                        'Descarta primero las que no son unicast.',
+                        'De las unicast que quedan, mira cuál tiene el segundo dígito en el conjunto 2, 3, 6, 7, A, B, E, F.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Las dos últimas entradas aparecen como <em>estático</em> y no como <em>dinámico</em>. ¿Por qué?',
+                    opciones: {
+                        a: 'Porque el administrador las configuró a mano',
+                        b: 'Porque no son direcciones de equipos concretos: son de grupo, y su MAC se deduce por regla fija sin preguntar a nadie',
+                        c: 'Porque esos equipos tienen IP fija',
+                        d: 'Porque son entradas caducadas'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Una entrada dinámica se aprende preguntando por ARP. Pero a la dirección de broadcast y a los grupos multicast no hay a quién preguntar: su MAC se calcula por una regla fija, así que el sistema la da por conocida.',
+                    pistas: [
+                        'Fíjate en qué tienen en común esas dos direcciones IP: ninguna es de un equipo concreto.',
+                        'ARP sirve para preguntar «¿quién tiene esta IP?». ¿Tiene sentido preguntárselo a un broadcast?'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> ¿Qué papel desempeña casi con seguridad el equipo <code>192.168.1.1</code> en esta red? Una palabra.',
+                    respuestas: ['router', 'puerta de enlace', 'gateway', 'el router', 'encaminador'],
+                    placeholder: 'una palabra',
+                    ancho: '260px',
+                    explicacion: 'La primera dirección utilizable del rango es, por convención casi universal, la puerta de enlace. Además es la MAC que aparecerá como destino en todo el tráfico dirigido a Internet.',
+                    pistas: [
+                        'Piensa en qué dirección tiene por costumbre el dispositivo que da salida a Internet en una red doméstica.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Integración con la Semana 1',
+            tiempo: '7 min',
+            enunciado: '<p>Une lo de hoy con lo que ya sabes de dominios de difusión y tipos de red.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Relaciona el dominio de broadcast del Día 6 con lo de hoy: ¿qué es exactamente un dominio de broadcast, dicho en términos de MAC?',
+                    opciones: {
+                        a: 'El conjunto de interfaces que comparten un mismo medio físico',
+                        b: 'El conjunto de interfaces a las que llega una trama dirigida a <code>FF-FF-FF-FF-FF-FF</code>',
+                        c: 'El conjunto de interfaces con el mismo OUI',
+                        d: 'El conjunto de interfaces conectadas al mismo switch'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La opción a describe un dominio de <em>colisión</em>. La d es incompleta: varios switches enlazados forman un solo dominio de broadcast. La definición precisa es la b.',
+                    pistas: [
+                        'Una de las opciones define el dominio de colisión, no el de broadcast.',
+                        'Piensa si dos switches conectados entre sí forman uno o dos dominios de broadcast.'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>b)</strong> Ordena los pasos que sigue tu PC la primera vez que quiere hablar con un equipo de su red del que solo conoce la IP.',
+                    elementos: [
+                        'Comprueba su tabla ARP y no encuentra esa IP',
+                        'Envía un broadcast a FF-FF-FF-FF-FF-FF preguntando quién tiene esa IP',
+                        'El equipo con esa IP responde indicando su MAC',
+                        'El PC guarda la pareja IP–MAC en su tabla ARP',
+                        'Envía por fin la trama de datos, ya con la MAC de destino correcta'
+                    ],
+                    orden: [
+                        'Comprueba su tabla ARP y no encuentra esa IP',
+                        'Envía un broadcast a FF-FF-FF-FF-FF-FF preguntando quién tiene esa IP',
+                        'El equipo con esa IP responde indicando su MAC',
+                        'El PC guarda la pareja IP–MAC en su tabla ARP',
+                        'Envía por fin la trama de datos, ya con la MAC de destino correcta'
+                    ],
+                    explicacion: 'Este es el funcionamiento de ARP, que estudiarás a fondo en la Semana 22. Lo importante hoy es entender por qué hace falta: se conoce la IP del vecino, pero para construir la trama se necesita su MAC.',
+                    pistas: [
+                        'Empieza por lo que hace el equipo antes de molestar a nadie: mirar si ya lo sabe.',
+                        'Para preguntar a alguien cuya MAC desconoces, no te queda otra que hablarle a todos.',
+                        'Guardar la respuesta va antes de usarla, para no repetir la pregunta cada vez.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

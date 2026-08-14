@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — La tarjeta de red y la dirección MAC</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 1 — La tarjeta de red y la dirección MAC</h1>
+        <p>El componente por el que entra y sale todo, y el nombre con el que te conoce la red local</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 45 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 18 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 28 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> de escritura obligatoria y un laboratorio en el que vas a
+            <strong>identificar todas las tarjetas de red de tu equipo</strong>, descubrir cuáles son físicas y
+            cuáles inventadas, y leer bit a bit una MAC real.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            En la Semana 1 viste <em>qué</em> es una red, <em>cómo</em> viaja la señal y <em>con qué forma</em> se
+            disponen los equipos. Lo que nunca miramos fue <strong>de qué está hecha</strong> por dentro. Eso es la
+            Semana 2: los componentes. Y el primero, porque sin él no hay nada, es la <strong>tarjeta de red</strong>.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#nic">Qué es y qué hace realmente una tarjeta de red</a></li>
+                <li><a href="#partes">Las cuatro funciones de una NIC</a></li>
+                <li><a href="#mac">La dirección MAC: qué es y cómo está formada</a></li>
+                <li><a href="#bits">Los dos bits que casi nadie mira</a></li>
+                <li><a href="#tipos">Unicast, multicast y broadcast</a></li>
+                <li><a href="#macip">MAC frente a IP: por qué hacen falta las dos</a></li>
+                <li><a href="#virtuales">Tarjetas y MAC que no existen físicamente</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="nic">1. Qué es y qué hace realmente una tarjeta de red</h2>
+
+            <p>La <strong>tarjeta de red</strong> —<strong>NIC</strong>, de <em>Network Interface Card</em>, también
+            llamada <em>adaptador de red</em> o <em>interfaz de red</em>— es el componente que conecta un equipo con
+            el medio de transmisión.</p>
+
+            <p>La definición suena inofensiva, pero esconde el trabajo más interesante de todo el equipo. Dentro del
+            ordenador los datos son <strong>bytes en memoria</strong>, movidos por un bus a velocidades enormes y sin
+            errores. Fuera hay un <strong>cable de cobre</strong>, o una <strong>onda de radio</strong>, o un
+            <strong>haz de luz</strong>: medios lentos, compartidos con otros y expuestos al ruido.</p>
+
+            <p>Alguien tiene que traducir de un mundo al otro. Ese alguien es la NIC.</p>
+
+<pre><code>   DENTRO DEL EQUIPO                    │                 FUERA
+                                        │
+  ┌──────────┐   bytes    ┌─────────┐   │   señal    ┌──────────────┐
+  │ Memoria  │ ─────────► │   NIC   │ ──┼──────────► │  Medio       │
+  │ y CPU    │ ◄───────── │         │ ◄─┼─────────── │  (cable/aire)│
+  └──────────┘            └─────────┘   │            └──────────────┘
+                               ▲        │
+                        aquí se decide  │
+                       cuándo transmitir│</code></pre>
+
+            <div class="destacado">
+                <strong>Por qué se estudia la NIC antes que nada</strong>
+                Porque es el único componente que aparece <em>siempre</em>. Puede no haber switch, ni router, ni
+                servidor, ni cable —piensa en dos móviles por Bluetooth—, pero <strong>si no hay al menos dos
+                interfaces de red, no hay comunicación posible</strong>.
+            </div>
+
+            <h3>Dónde está físicamente</h3>
+
+            <p>El nombre «tarjeta» es un resto histórico. En los años ochenta y noventa era literalmente una tarjeta
+            que se pinchaba en una ranura ISA o PCI de la placa base. Hoy casi nunca lo es:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Formato</th><th>Dónde aparece</th><th>Situación actual</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Integrada</strong> en la placa base</td><td>Prácticamente todo PC y portátil</td><td>Lo normal</td></tr>
+                    <tr><td>Tarjeta <strong>PCIe</strong></td><td>Servidores, PC que necesitan 2,5/10 Gbps o varios puertos</td><td>Habitual en servidor</td></tr>
+                    <tr><td>Adaptador <strong>USB</strong></td><td>Portátiles sin puerto RJ45, diagnóstico, emergencias</td><td>Muy común</td></tr>
+                    <tr><td>Módulo <strong>M.2</strong> o soldado</td><td>Wi-Fi de portátiles</td><td>Lo normal en Wi-Fi</td></tr>
+                    <tr><td>Interfaz del <strong>SoC</strong></td><td>Móviles, Raspberry Pi, IoT</td><td>Integrada en el chip</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Cambia el empaquetado, no la función. Un móvil de 2026 y un PC de 1994 hacen exactamente lo mismo en
+            este punto.</p>
+
+            <details>
+                <summary>💡 Ampliación: un equipo tiene muchas más NIC de las que crees</summary>
+                <p>Un portátil corriente tiene fácilmente <strong>cuatro o cinco</strong> interfaces de red:
+                Ethernet, Wi-Fi, Bluetooth (que a efectos de red es una interfaz más) y, si hay virtualización o VPN,
+                otras tantas <em>virtuales</em>. En el laboratorio de hoy las vas a listar todas.</p>
+                <p>Cada una tiene su propia dirección MAC. Por eso la pregunta «¿cuál es la MAC de mi ordenador?»
+                está mal formulada: <strong>la MAC no es del ordenador, es de cada interfaz</strong>.</p>
+            </details>
+
+            <h2 id="partes">2. Las cuatro funciones de una NIC</h2>
+
+            <p>Conviene no verla como una pieza que «conecta el cable», sino como cuatro trabajos distintos:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Función</th><th>En qué consiste</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Conexión física</td>
+                        <td>El conector y la electrónica que adaptan la señal al medio: RJ45, antena, transceptor óptico</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>Conversión de señal</td>
+                        <td>Pasar de los bits del equipo a la <strong>codificación</strong> que entiende el medio, y al revés</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Direccionamiento</td>
+                        <td>Poner su <strong>MAC</strong> como origen en lo que envía y <strong>decidir qué recibe</strong>: acepta lo dirigido a ella y descarta el resto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Control de acceso al medio</td>
+                        <td>Decidir <strong>cuándo</strong> puede transmitir sin pisar a otro: CSMA/CD, CSMA/CA</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Las funciones 1 y 2 son de <strong>capa física</strong>; las 3 y 4, de <strong>capa de enlace</strong>.
+            Verás esos nombres con detalle en la Semana 3, al estudiar el modelo OSI. Retén la idea: la NIC es de los
+            pocos componentes que trabajan a caballo entre dos capas.</p>
+
+            <div class="destacado">
+                <strong>La función 3 es la que más se malinterpreta</strong>
+                En una red con medio compartido —un hub, o el Wi-Fi— <strong>a tu NIC le llega tráfico que no es
+                suyo</strong>. Lo recibe eléctricamente y lo <em>descarta ella misma</em> porque la MAC de destino no
+                coincide con la suya. No es que no le llegue: es que no te lo entrega.
+                <br><br>
+                Ahí está la clave de que un analizador como Wireshark pueda poner la tarjeta en <strong>modo
+                promiscuo</strong>: le dice «no descartes nada, dámelo todo». Eso es exactamente lo que hace un
+                <em>sniffer</em>.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="mac">3. La dirección MAC: qué es y cómo está formada</h2>
+
+            <p>La dirección <strong>MAC</strong> (<em>Media Access Control</em>) es el identificador de una interfaz
+            de red dentro de su red local. También se la llama <strong>dirección física</strong>, <em>dirección
+            hardware</em> o <em>dirección de capa 2</em>.</p>
+
+            <p>Tiene <strong>48 bits</strong> = 6 bytes, y se escribe en hexadecimal, de tres formas equivalentes:</p>
+
+<pre><code>50-EB-F6-26-B4-2F      ← con guiones      (formato de Windows)
+50:EB:F6:26:B4:2F      ← con dos puntos   (formato de Linux, Cisco IOS usa 50eb.f626.b42f)
+50eb.f626.b42f         ← agrupada de 4    (formato de Cisco)</code></pre>
+
+            <p>Las tres son la <strong>misma dirección</strong>. Cambia solo la puntuación, igual que 1.000 y 1000.</p>
+
+            <h3>Los dos bloques de una MAC</h3>
+
+<pre><code>   50 - EB - F6  │  26 - B4 - 2F
+   └─────┬─────┘    └─────┬────┘
+      24 bits          24 bits
+        OUI          Identificador
+   Quién la fabricó   de la tarjeta
+   (lo asigna IEEE)  (lo asigna el fabricante)</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Primeros 24 bits</th><th>Últimos 24 bits</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Nombre</th><td><strong>OUI</strong> (<em>Organizationally Unique Identifier</em>)</td><td>Identificador de la interfaz</td></tr>
+                    <tr><th scope="row">Quién lo asigna</th><td>El <strong>IEEE</strong>, que lo vende a los fabricantes</td><td>El propio fabricante</td></tr>
+                    <tr><th scope="row">Qué identifica</th><td>La empresa que fabricó la tarjeta</td><td>Esa tarjeta concreta entre las de esa empresa</td></tr>
+                    <tr><th scope="row">Combinaciones</th><td>2<sup>24</sup> ≈ 16,7 millones de fabricantes</td><td>2<sup>24</sup> ≈ 16,7 millones por cada OUI</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Total: 2<sup>48</sup> ≈ <strong>281 billones</strong> de direcciones posibles. La idea original era que
+            cada interfaz fabricada en el mundo tuviera una distinta y para siempre.</p>
+
+            <div class="dato">
+                <strong>El OUI es información pública y muy útil</strong>
+                <p>Cualquiera puede consultar el registro del IEEE y saber qué empresa fabricó una tarjeta a partir de
+                los tres primeros bytes de su MAC. En el laboratorio de hoy vas a hacerlo con la tuya.</p>
+                <p>Esto tiene un uso práctico diario en administración: ves una MAC desconocida en la tabla ARP,
+                consultas el OUI y descubres si es una impresora, un móvil o una consola. Es el primer paso del
+                inventario de una red.</p>
+            </div>
+
+            <h3>¿Es realmente única?</h3>
+
+            <p>En teoría sí, y por eso se dice que la MAC viene <em>grabada de fábrica</em>. En la práctica hay tres
+            grietas grandes:</p>
+
+            <ul>
+                <li>La MAC se puede <strong>cambiar por software</strong> en casi cualquier sistema operativo. Es una
+                operación de un comando.</li>
+                <li>Existen fabricantes que <strong>reutilizan</strong> rangos, sobre todo en hardware barato.</li>
+                <li>Las interfaces <strong>virtuales</strong> se inventan la suya.</li>
+            </ul>
+
+            <div class="aviso">
+                <strong>Consecuencia práctica: la MAC no sirve como control de seguridad</strong>
+                El «filtrado por MAC» de los routers domésticos es una comodidad, no una medida de seguridad. Quien
+                sepa mirar el tráfico ve las MAC permitidas —viajan <em>en claro</em>, siempre, incluso en redes
+                cifradas— y se pone una. Suspender esta pregunta en un examen es muy fácil: <strong>filtrar por MAC
+                no protege una red</strong>.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="bits">4. Los dos bits que casi nadie mira</h2>
+
+            <p>Dentro del <strong>primer byte</strong> de una MAC hay dos bits con significado propio. Saber leerlos
+            distingue a quien ha estudiado el tema de quien solo lo ha leído por encima.</p>
+
+<pre><code>Primer byte de la MAC, en binario:
+
+        bit 7  6  5  4  3  2  1  0
+               ·  ·  ·  ·  ·  ·  │  │
+                                 │  └── I/G  ¿individual o de grupo?
+                                 └───── U/L  ¿universal o local?</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Bit</th><th>Nombre</th><th>Vale 0</th><th>Vale 1</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>bit 0</strong></td>
+                        <td><strong>I/G</strong><br><em>Individual / Group</em></td>
+                        <td><strong>Unicast</strong>: va a una sola interfaz</td>
+                        <td><strong>Multicast o broadcast</strong>: va a un grupo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>bit 1</strong></td>
+                        <td><strong>U/L</strong><br><em>Universal / Local</em></td>
+                        <td><strong>Universal</strong>: el OUI es real, lo asignó el IEEE</td>
+                        <td><strong>Local</strong>: dirección inventada, no hay fabricante detrás</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Cómo leerlos sin pasar a binario</h3>
+
+            <p>No hace falta convertir nada. Basta mirar el <strong>segundo dígito hexadecimal</strong> de la
+            dirección, porque los dos bits que nos interesan son los dos de menor peso:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>2.º dígito hex</th><th>En binario</th><th>I/G</th><th>U/L</th><th>Qué significa</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>0, 4, 8, C</strong></td><td>_ _ 0 0</td><td>0</td><td>0</td><td>Unicast, universal → <em>MAC normal de fábrica</em></td></tr>
+                    <tr><td><strong>2, 6, A, E</strong></td><td>_ _ 1 0</td><td>0</td><td>1</td><td>Unicast, <strong>local</strong> → <em>MAC inventada</em></td></tr>
+                    <tr><td><strong>1, 5, 9, D</strong></td><td>_ _ 0 1</td><td>1</td><td>0</td><td>Grupo, universal → <em>multicast</em></td></tr>
+                    <tr><td><strong>3, 7, B, F</strong></td><td>_ _ 1 1</td><td>1</td><td>1</td><td>Grupo, local</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Regla rápida para el examen</strong>
+                Mira solo el <strong>segundo dígito</strong> de la MAC:
+                <br>· ¿Es <strong>impar</strong> (1,3,5,7,9,B,D,F)? → no es unicast, va a un <strong>grupo</strong>.
+                <br>· ¿Es <strong>2, 3, 6, 7, A, B, E o F</strong>? → es <strong>local</strong>, dirección inventada.
+            </div>
+
+            <h3>Compruébalo con ejemplos reales</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>MAC</th><th>2.º dígito</th><th>Lectura</th><th>De dónde sale</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>50-EB-F6-…</code></td><td>0</td>
+                        <td>Unicast, universal</td>
+                        <td>Tarjeta Ethernet física de un PC</td>
+                    </tr>
+                    <tr>
+                        <td><code>0A-00-27-…</code></td><td><strong>A</strong></td>
+                        <td>Unicast, <strong>local</strong></td>
+                        <td>Adaptador <em>host-only</em> de VirtualBox: es software</td>
+                    </tr>
+                    <tr>
+                        <td><code>62-45-B4-…</code></td><td><strong>2</strong></td>
+                        <td>Unicast, <strong>local</strong></td>
+                        <td>Interfaz generada por el sistema, no de fábrica</td>
+                    </tr>
+                    <tr>
+                        <td><code>01-00-5E-00-00-FB</code></td><td><strong>1</strong></td>
+                        <td><strong>Multicast</strong></td>
+                        <td>Grupo multicast (aquí, mDNS)</td>
+                    </tr>
+                    <tr>
+                        <td><code>FF-FF-FF-FF-FF-FF</code></td><td><strong>F</strong></td>
+                        <td>Grupo (caso extremo)</td>
+                        <td><strong>Broadcast</strong>: todas las interfaces</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Fíjate en lo que acabas de conseguir: <strong>con solo mirar un dígito puedes decir si una interfaz es
+            física o virtual</strong>, sin saber nada más de ella. En el laboratorio lo aplicarás a las tuyas.</p>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="tipos">5. Unicast, multicast y broadcast</h2>
+
+            <p>El bit I/G separa dos mundos. Una trama puede ir dirigida a uno, a varios o a todos:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tipo</th><th>MAC de destino</th><th>Quién la procesa</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Unicast</strong></td>
+                        <td>La MAC concreta del destinatario</td>
+                        <td><strong>Una</strong> interfaz</td>
+                        <td>Abrir una web, copiar un fichero</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multicast</strong></td>
+                        <td>Una MAC de grupo (<code>01-00-5E-…</code> para IPv4)</td>
+                        <td>Las interfaces <strong>suscritas</strong> a ese grupo</td>
+                        <td>Descubrir impresoras, IPTV</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Broadcast</strong></td>
+                        <td><code>FF-FF-FF-FF-FF-FF</code></td>
+                        <td><strong>Todas</strong> las de la red local</td>
+                        <td>ARP, arranque DHCP</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Enlaza con el Día 6 de la semana pasada</strong>
+                El <strong>dominio de broadcast</strong> que estudiaste es, exactamente, el conjunto de interfaces a
+                las que llega una trama dirigida a <code>FF-FF-FF-FF-FF-FF</code>. Un switch la reenvía por todos sus
+                puertos; un router <strong>no la deja pasar</strong>. Ahí tienes la definición vista desde el lado de
+                la MAC.
+            </div>
+
+            <h2 id="macip">6. MAC frente a IP: por qué hacen falta las dos</h2>
+
+            <p>Es la pregunta clásica: si cada interfaz ya tiene un identificador único mundial, ¿para qué inventar
+            además las direcciones IP?</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Característica</th><th>Dirección MAC</th><th>Dirección IP</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Longitud</th><td>48 bits</td><td>32 bits (IPv4) · 128 (IPv6)</td></tr>
+                    <tr><th scope="row">Quién la asigna</th><td>El fabricante, en fábrica</td><td>El administrador o el DHCP</td></tr>
+                    <tr><th scope="row">Cambia al mover el equipo</th><td><strong>No</strong>: viaja con la tarjeta</td><td><strong>Sí</strong>: depende de la red donde estés</td></tr>
+                    <tr><th scope="row">Alcance</th><td>Solo la <strong>red local</strong></td><td><strong>Extremo a extremo</strong>, por todo Internet</td></tr>
+                    <tr><th scope="row">¿Tiene estructura jerárquica?</th><td><strong>No</strong>: es plana</td><td><strong>Sí</strong>: red + host</td></tr>
+                    <tr><th scope="row">Capa</th><td>Enlace (2)</td><td>Red (3)</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La razón de fondo: la MAC es plana</strong>
+                Una MAC no dice <em>dónde</em> está el equipo, solo <em>quién</em> es. Es como un DNI: te identifica,
+                pero no permite enviarte una carta.
+                <br><br>
+                Una IP sí dice dónde: <code>192.168.1.70</code> se lee como «el equipo 70 de la red 192.168.1». Eso es
+                una dirección postal, y es lo que permite a un router decidir por dónde reenviar.
+                <br><br>
+                Si Internet funcionase con MAC, <strong>cada router del mundo tendría que guardar una entrada por cada
+                interfaz existente</strong>: miles de millones. Con IP guarda entradas por <em>rangos</em>. La jerarquía
+                es lo que hace posible enrutar a escala planetaria.
+            </div>
+
+            <h3>Cómo trabajan juntas</h3>
+
+            <p>En una comunicación real se usan las dos a la vez, cada una en su ámbito:</p>
+
+<pre><code>Tu PC quiere abrir una web alojada en 93.184.216.34
+
+  IP origen:   192.168.1.70      ─┐  no cambian en todo el trayecto:
+  IP destino:  93.184.216.34     ─┘  identifican a los extremos
+
+  MAC origen:  la de tu tarjeta   ─┐  cambian en CADA salto:
+  MAC destino: la de tu router    ─┘  identifican el tramo actual</code></pre>
+
+            <p>Tu PC no conoce ni puede conocer la MAC del servidor: está a miles de kilómetros y en otra red. Lo que
+            hace es entregar la trama a <strong>su router</strong>, que es su vecino en la red local, y el router la
+            reenvía cambiando las MAC por las del siguiente tramo.</p>
+
+            <div class="dato">
+                <strong>La analogía que conviene memorizar</strong>
+                <p>La <strong>IP</strong> es la dirección postal del destinatario final: se escribe una vez en el
+                sobre y no cambia.</p>
+                <p>La <strong>MAC</strong> es el nombre del cartero que lleva el paquete <em>en este tramo concreto</em>:
+                cambia en cada oficina de reparto.</p>
+            </div>
+
+            <p>¿Y cómo averigua tu PC la MAC de su router, si solo conoce su IP? Con el protocolo <strong>ARP</strong>,
+            que lanza un broadcast preguntando «¿quién tiene la IP 192.168.1.1?». Lo verás a fondo en la
+            <strong>Semana 22</strong>; por ahora quédate con que existe y con que por eso tu equipo tiene una
+            <em>tabla ARP</em>, que ya viste en el laboratorio del Día 5.</p>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="virtuales">7. Tarjetas y MAC que no existen físicamente</h2>
+
+            <p>Al listar las interfaces de un equipo moderno aparecen muchas más de las que hay cables. La razón es que
+            el sistema operativo <strong>crea interfaces por software</strong> con la misma apariencia que las reales:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Interfaz virtual</th><th>Para qué sirve</th><th>Pista para reconocerla</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Adaptadores de virtualización</strong><br>VirtualBox, VMware, Hyper-V, WSL</td><td>Conectar las máquinas virtuales con el anfitrión</td><td>MAC <strong>local</strong> y nombre del producto en la descripción</td></tr>
+                    <tr><td><strong>Adaptadores de VPN</strong><br>OpenVPN, WireGuard</td><td>Crear el túnel cifrado</td><td>Suelen aparecer <em>desconectados</em> mientras la VPN está apagada</td></tr>
+                    <tr><td><strong>Interfaz de bucle</strong><br><code>loopback</code>, <code>127.0.0.1</code></td><td>Que el equipo se hable a sí mismo</td><td>Existe siempre, incluso sin ninguna red</td></tr>
+                    <tr><td><strong>Puentes y VLAN</strong></td><td>Agrupar o separar tráfico</td><td>Se apoyan en una interfaz física existente</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Esto explica un fallo que verás mucho</strong>
+                Cuando alguien dice «mi IP es rara y no me funciona nada», muchas veces está mirando la interfaz
+                equivocada: la de VirtualBox o la de la VPN, no la real. <strong>Antes de diagnosticar nada,
+                identifica por qué interfaz sale de verdad el tráfico.</strong> Es el primer paso de cualquier
+                incidencia, y hoy lo practicas.
+            </div>
+
+            <h3>Aleatorización de MAC en móviles</h3>
+
+            <p>Desde hace unos años, Android e iOS <strong>se inventan una MAC distinta para cada red Wi-Fi</strong> a
+            la que se conectan. El motivo es la privacidad: con una MAC fija, cualquier comercio con un punto de
+            acceso podía seguir tu recorrido por una ciudad sin que te conectaras a nada.</p>
+
+            <p>Esas MAC aleatorias son siempre <strong>locales</strong> (bit U/L a 1), así que se reconocen con la
+            regla del segundo dígito que acabas de aprender.</p>
+
+            <div class="destacado">
+                <strong>Consecuencia para el administrador</strong>
+                Cualquier control basado en MAC —filtrado, reservas de DHCP fijas, listas de inventario— empieza a
+                fallar con los móviles modernos. Es otro motivo, además del de seguridad, para no construir nada
+                importante sobre la dirección MAC.
+            </div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>La <strong>NIC</strong> conecta el equipo con el medio y hace cuatro cosas: conexión física,
+                    conversión de señal, direccionamiento y control de acceso al medio.</li>
+                    <li>La <strong>MAC</strong> tiene 48 bits: 24 de <strong>OUI</strong> (fabricante) + 24 de la
+                    interfaz.</li>
+                    <li>El <strong>segundo dígito hexadecimal</strong> revela si es unicast o de grupo, y si es
+                    universal o inventada.</li>
+                    <li><code>FF-FF-FF-FF-FF-FF</code> es <strong>broadcast</strong>: la procesan todas las interfaces
+                    del dominio.</li>
+                    <li>La MAC identifica <strong>quién</strong>, dentro de la red local. La IP identifica
+                    <strong>dónde</strong>, en todo Internet. Hacen falta las dos.</li>
+                    <li>La MAC de origen y destino <strong>cambia en cada salto</strong>; la IP no.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>«La MAC de mi ordenador es…»</td>
+                        <td>La MAC es de <strong>cada interfaz</strong>, no del equipo. Un portátil tiene varias.</td>
+                    </tr>
+                    <tr>
+                        <td>«La MAC no se puede cambiar, viene de fábrica»</td>
+                        <td>Se cambia por software en un minuto. Por eso el filtrado por MAC no es seguridad.</td>
+                    </tr>
+                    <tr>
+                        <td>«Con la MAC se puede localizar un equipo en Internet»</td>
+                        <td>La MAC <strong>no sale de la red local</strong>: el primer router la sustituye.</td>
+                    </tr>
+                    <tr>
+                        <td>«Si cambio de red, cambia mi MAC»</td>
+                        <td>Cambia tu <strong>IP</strong>. La MAC viaja con la tarjeta (salvo aleatorización Wi-Fi).</td>
+                    </tr>
+                    <tr>
+                        <td>«Mi tarjeta solo recibe lo que va dirigido a ella»</td>
+                        <td>Le llega más, y lo <strong>descarta ella</strong>. En modo promiscuo lo entrega todo.</td>
+                    </tr>
+                    <tr>
+                        <td>«Tengo tres adaptadores, luego tengo tres tarjetas»</td>
+                        <td>Muchos son <strong>virtuales</strong>. Se reconocen por el bit U/L.</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar cada tarjeta y sé honesto al marcar si la sabías:
+            las que falles son justo lo que debes repasar antes del quiz.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>13 preguntas · 18 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>inventariar todas las interfaces de tu equipo</strong>, separar las físicas de las
+            virtuales leyendo el bit U/L, identificar al fabricante por el OUI y comprobar en tu tabla ARP quién es
+            broadcast y quién multicast.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 1</strong></a> (55 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 2</strong>
+            <p>Bajamos un nivel más: el <strong>medio físico</strong>. Par trenzado, categorías, RJ45, el orden de los
+            hilos T568A/B, cable cruzado frente a directo y qué hace realmente el <em>auto-MDIX</em>.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> busca un latiguillo de red por casa y mira si lleva impreso
+            algo como «Cat 5e» o «Cat 6» a lo largo de la funda.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_01/Dia_07/teoria.html">← Semana 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> En una red con un <em>hub</em>, a tu tarjeta le llega tráfico dirigido a otros equipos. Explica <strong>qué hace con él</strong> y qué implica eso para un analizador como Wireshark.',
+                modelo: `<p>Con un hub el medio está compartido: cada bit que entra por un puerto se repite por todos
+                         los demás, así que <strong>eléctricamente le llega a todas las tarjetas</strong>, sea o no
+                         para ellas.</p>
+                         <p>Lo que hace la NIC es <strong>comparar la MAC de destino de la trama con la suya</strong>.
+                         Si no coincide —y no es broadcast ni un grupo multicast al que esté suscrita— la
+                         <strong>descarta ella misma</strong>, sin molestar al sistema operativo. El usuario nunca se
+                         entera de que ese tráfico pasó por su cable.</p>
+                         <p>La implicación es directa: el filtrado <strong>no lo hace la red, lo hace la tarjeta</strong>,
+                         y es una decisión voluntaria. Por eso un analizador puede pedirle que active el <strong>modo
+                         promiscuo</strong>: «no descartes nada, entrégamelo todo». En ese momento el equipo ve el
+                         tráfico de sus vecinos. Eso es lo que hace un <em>sniffer</em>, y es la razón de que los hubs
+                         desaparecieran también por seguridad, no solo por rendimiento.</p>`,
+                puntos: [
+                    'Con hub el tráfico llega físicamente a todas las tarjetas',
+                    'La NIC compara la MAC de destino con la suya',
+                    'Si no coincide, la descarta ella misma',
+                    'El filtrado es una decisión de la tarjeta, no de la red',
+                    'En modo promiscuo entrega todo: es la base de un sniffer'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Un compañero te dice: «he activado el filtrado por MAC en el router, así que mi Wi-Fi ya es segura». Explícale <strong>por qué se equivoca</strong>.',
+                modelo: `<p>El filtrado por MAC parte de una suposición falsa: que la dirección MAC es un dato secreto y
+                         permanente. No es ni lo uno ni lo otro.</p>
+                         <p><strong>No es secreta.</strong> La MAC viaja en la cabecera de cada trama y esa cabecera va
+                         <em>en claro</em> incluso en una red cifrada: el cifrado protege los datos, pero las
+                         direcciones tienen que ser legibles para que la red funcione. Cualquiera con una tarjeta en
+                         modo monitor ve, en segundos, la lista de MAC autorizadas que hay conectadas.</p>
+                         <p><strong>No es permanente.</strong> Cambiar la MAC de una interfaz es una operación de un
+                         comando en Windows, Linux o macOS. Una vez copiada una MAC permitida, el filtro deja pasar al
+                         atacante como si fuera el equipo legítimo.</p>
+                         <p>Es decir: el atacante obtiene la llave <em>observando</em>, y la usa <em>copiándola</em>.
+                         El filtrado por MAC sirve para evitar conexiones accidentales de un vecino despistado, no
+                         para detener a nadie que quiera entrar. La seguridad real de un Wi-Fi está en el
+                         <strong>cifrado y la autenticación</strong> (WPA2/WPA3 con una contraseña fuerte).</p>`,
+                puntos: [
+                    'La MAC viaja en claro, incluso en redes cifradas',
+                    'Cualquiera puede observar las MAC autorizadas',
+                    'Cambiar la MAC propia es trivial en cualquier sistema',
+                    'El atacante copia una MAC permitida y entra',
+                    'La seguridad real está en el cifrado y la autenticación'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Tienes estas dos direcciones: <code>0A-00-27-00-00-0D</code> y <code>50-EB-F6-26-B4-2F</code>. <strong>Sin buscar nada</strong>, di cuál corresponde a una tarjeta física real y explica cómo lo has deducido.',
+                modelo: `<p>La física es <strong><code>50-EB-F6-26-B4-2F</code></strong>. La otra es virtual.</p>
+                         <p>El razonamiento está en el <strong>segundo dígito hexadecimal</strong> del primer byte, que
+                         contiene los bits I/G y U/L:</p>
+                         <ul>
+                           <li><code><strong>5</strong>0</code>-EB-F6… → el segundo dígito es <strong>0</strong> = 0000
+                           en binario. El bit I/G vale 0 (unicast) y el bit U/L vale 0
+                           (<strong>universal</strong>): el OUI <code>50-EB-F6</code> está registrado en el IEEE a
+                           nombre de un fabricante real, así que la dirección viene grabada de fábrica.</li>
+                           <li><code><strong>0</strong>A</code>-00-27… → el segundo dígito es <strong>A</strong> = 1010
+                           en binario. El bit I/G vale 0 (sigue siendo unicast) pero el bit U/L vale
+                           <strong>1</strong>: es una dirección <strong>administrada localmente</strong>, inventada por
+                           software. Detrás no hay ningún fabricante.</li>
+                         </ul>
+                         <p>Conclusión: la segunda pertenece a una interfaz creada por un programa —de hecho
+                         <code>0A-00-27</code> es el rango que usa VirtualBox para su adaptador <em>host-only</em>—.
+                         Y todo esto se deduce mirando <strong>un solo dígito</strong>, sin consultar ninguna base de
+                         datos.</p>`,
+                puntos: [
+                    'Identifica 50-EB-F6-… como la física',
+                    'Se fija en el segundo dígito hexadecimal',
+                    'Explica que ahí está el bit U/L',
+                    'A = 1010 → U/L a 1 → administrada localmente',
+                    '0 = 0000 → U/L a 0 → OUI real del IEEE'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Si la dirección MAC ya es única en el mundo entero, ¿por qué se inventaron las direcciones IP? Da la razón <strong>de fondo</strong>, no solo «porque van en capas distintas».',
+                modelo: `<p>Porque la MAC dice <strong>quién</strong> eres, pero no <strong>dónde</strong> estás. Es una
+                         dirección <strong>plana</strong>: los 48 bits no contienen ninguna información sobre la
+                         ubicación del equipo. Dos tarjetas con MAC casi consecutivas pueden estar en continentes
+                         distintos, porque lo único que comparten es el fabricante y el lote.</p>
+                         <p>Enrutar significa <strong>decidir por dónde reenviar</strong>, y para eso hace falta saber
+                         dónde está el destino. Con direcciones planas, un router tendría que guardar en su tabla
+                         <strong>una entrada por cada interfaz del planeta</strong>: miles de millones de líneas, que
+                         además cambiarían cada vez que se fabrica o se retira un dispositivo. Es sencillamente
+                         imposible.</p>
+                         <p>La IP es <strong>jerárquica</strong>: se divide en una parte de red y otra de host. Eso
+                         permite que un router guarde una sola entrada para <em>toda</em> una red («para llegar a
+                         192.168.1.0/24, sal por aquí») en lugar de una por equipo. Las tablas pasan de miles de
+                         millones a cientos de miles de rutas, y eso sí es manejable.</p>
+                         <p>Hay una segunda razón: la IP se puede <strong>reasignar</strong>. Un equipo que se mueve de
+                         una red a otra recibe una IP acorde a su nueva ubicación, mientras que su MAC no cambia. La
+                         dirección tiene que poder adaptarse a la topología, y la MAC no puede.</p>`,
+                puntos: [
+                    'La MAC es plana: identifica, no ubica',
+                    'Con direcciones planas la tabla de rutas sería inmanejable',
+                    'La IP es jerárquica: red + host',
+                    'Permite agrupar millones de equipos en una sola ruta',
+                    'La IP se reasigna según dónde estés; la MAC no'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Qué significa <strong>NIC</strong> y qué hace?', dorso: '<em>Network Interface Card</em>. Conecta el equipo con el medio: <strong>conexión física, conversión de señal, direccionamiento y control de acceso al medio</strong>.' },
+            { frente: '¿Cuántos bits tiene una MAC y cómo se reparten?', dorso: '<strong>48 bits</strong> = 6 bytes. Los <strong>24 primeros</strong> son el <strong>OUI</strong> (fabricante, lo asigna el IEEE) y los <strong>24 últimos</strong> identifican la tarjeta.' },
+            { frente: '¿Qué es el <strong>OUI</strong> y para qué sirve en la práctica?', dorso: 'Los 3 primeros bytes: identifican al <strong>fabricante</strong>. Sirve para saber qué es un dispositivo desconocido de la tabla ARP: impresora, móvil, consola…' },
+            { frente: '¿Qué indican los bits <strong>I/G</strong> y <strong>U/L</strong>?', dorso: '<strong>I/G</strong> (bit 0): unicast o de grupo. <strong>U/L</strong> (bit 1): universal (OUI real) o <strong>local</strong> (inventada por software).' },
+            { frente: 'Regla rápida: ¿cómo se leen esos dos bits sin pasar a binario?', dorso: 'Mirando el <strong>segundo dígito hexadecimal</strong>. <strong>Impar</strong> → va a un grupo. <strong>2,3,6,7,A,B,E,F</strong> → es local.' },
+            { frente: '<code>0A-00-27-00-00-0D</code>: ¿física o virtual?', dorso: '<strong>Virtual</strong>. Segundo dígito <strong>A</strong> = 1010 → bit U/L a 1 → administrada localmente. Detrás no hay fabricante.' },
+            { frente: '¿Cuál es la MAC de <strong>broadcast</strong>?', dorso: '<code>FF-FF-FF-FF-FF-FF</code>. La procesan <strong>todas</strong> las interfaces del dominio de broadcast. La usan ARP y el arranque de DHCP.' },
+            { frente: '¿Por qué el <strong>filtrado por MAC</strong> no es seguridad?', dorso: 'La MAC viaja <strong>en claro</strong> aunque la red esté cifrada, y cambiarla es un comando. Se observa una permitida y se copia.' },
+            { frente: 'MAC frente a IP en una frase', dorso: 'La MAC dice <strong>quién</strong> eres dentro de la red local. La IP dice <strong>dónde</strong> estás, en todo Internet.' },
+            { frente: '¿Cuál cambia en cada salto: la MAC o la IP?', dorso: 'La <strong>MAC</strong>. Las IP de origen y destino no cambian en todo el trayecto; las MAC se reescriben en cada tramo.' },
+            { frente: '¿Por qué no se enruta Internet con direcciones MAC?', dorso: 'Porque son <strong>planas</strong>: identifican pero no ubican. Haría falta una entrada de tabla por cada interfaz del mundo. La IP es <strong>jerárquica</strong> y permite agrupar.' },
+            { frente: '¿Qué es el <strong>modo promiscuo</strong>?', dorso: 'Pedirle a la NIC que <strong>no descarte</strong> las tramas ajenas y las entregue todas. Es lo que hace un analizador como Wireshark.' },
+            { frente: '¿Por qué los móviles usan MAC aleatorias?', dorso: 'Por <strong>privacidad</strong>: con MAC fija se podía seguir el recorrido de una persona por los puntos de acceso. Son siempre direcciones <strong>locales</strong>.' },
+            { frente: '¿De quién es la MAC: del equipo o de la interfaz?', dorso: 'De <strong>cada interfaz</strong>. Un portátil con Ethernet, Wi-Fi, Bluetooth y virtualización tiene <strong>varias</strong> MAC distintas.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 1 — La tarjeta de red y la dirección MAC',
+        subtitulo: 'NIC · OUI · bits I/G y U/L · MAC frente a IP',
+        tiempo: '18 minutos',
+        minutos: 18,
+        questions: [
+            {
+                topic: 'La NIC',
+                repaso: '#partes',
+                text: 'Un equipo conectado a un <strong>hub</strong> recibe eléctricamente una trama dirigida a otro PC. ¿Qué ocurre?',
+                options: {
+                    a: 'El hub impide que llegue, porque conoce las MAC de cada puerto',
+                    b: 'La NIC la recibe, ve que la MAC de destino no es la suya y la descarta',
+                    c: 'El sistema operativo la recibe y muestra un aviso de seguridad',
+                    d: 'La trama se pierde en el cable antes de llegar'
+                },
+                answer: 'b',
+                feedback: 'El hub no conoce ninguna MAC: repite por todos los puertos. El filtrado lo hace <strong>la propia tarjeta</strong>, comparando la MAC de destino con la suya. Por eso el modo promiscuo puede desactivar ese descarte.'
+            },
+            {
+                topic: 'La NIC',
+                repaso: '#partes',
+                text: 'De las cuatro funciones de una NIC, ¿cuál corresponde a decidir <strong>cuándo</strong> puede transmitir sin pisar a otro equipo?',
+                options: {
+                    a: 'Conversión de señal',
+                    b: 'Direccionamiento',
+                    c: 'Control de acceso al medio',
+                    d: 'Conexión física'
+                },
+                answer: 'c',
+                feedback: 'El control de acceso al medio (CSMA/CD en Ethernet clásico, CSMA/CA en Wi-Fi) es el que arbitra el turno. Fíjate en que es de lo que toma su nombre la propia dirección MAC: <em>Media Access Control</em>.'
+            },
+            {
+                topic: 'Estructura de la MAC',
+                repaso: '#mac',
+                text: 'En la dirección <code>3C-7A-8B-11-22-33</code>, ¿qué parte es el OUI?',
+                options: {
+                    a: '<code>3C-7A-8B</code>, que identifica al fabricante',
+                    b: '<code>11-22-33</code>, que identifica al fabricante',
+                    c: '<code>3C-7A-8B</code>, que identifica a esa tarjeta concreta',
+                    d: 'Los 48 bits completos'
+                },
+                answer: 'a',
+                feedback: 'El OUI son los <strong>24 primeros bits</strong> (3 primeros bytes) y lo asigna el IEEE al fabricante. Los 24 últimos los reparte ese fabricante entre sus tarjetas.'
+            },
+            {
+                topic: 'Bits I/G y U/L',
+                repaso: '#bits',
+                text: 'Ves la MAC <code>AE-3F-11-04-9C-70</code> en un equipo. ¿Qué puedes afirmar?',
+                options: {
+                    a: 'Es una dirección multicast',
+                    b: 'Es una dirección de fábrica de un fabricante registrado',
+                    c: 'Es unicast pero administrada localmente: no viene de fábrica',
+                    d: 'Es una dirección inválida'
+                },
+                answer: 'c',
+                feedback: 'Segundo dígito <strong>E</strong> = 1110. El bit I/G (el último) vale 0 → unicast. El bit U/L (el penúltimo) vale 1 → <strong>local</strong>. Es una interfaz virtual o una MAC cambiada por software.'
+            },
+            {
+                topic: 'Bits I/G y U/L',
+                repaso: '#bits',
+                text: '¿Cuál de estas MAC va dirigida a un <strong>grupo</strong> y no a una sola interfaz?',
+                options: {
+                    a: '<code>08-00-27-4B-1C-90</code>',
+                    b: '<code>01-00-5E-00-00-FB</code>',
+                    c: '<code>0A-00-27-00-00-0D</code>',
+                    d: '<code>50-EB-F6-26-B4-2F</code>'
+                },
+                answer: 'b',
+                feedback: 'El bit I/G es el de menor peso del primer byte, y solo está a 1 cuando el segundo dígito es <strong>impar</strong>. Aquí <code>01</code> → 1 es impar → grupo. Además <code>01-00-5E</code> es el prefijo del multicast IPv4.'
+            },
+            {
+                topic: 'Tipos de destino',
+                repaso: '#tipos',
+                text: 'Una trama sale con MAC de destino <code>FF-FF-FF-FF-FF-FF</code>. ¿Hasta dónde llega?',
+                options: {
+                    a: 'A todas las interfaces de su dominio de broadcast; el router no la reenvía',
+                    b: 'A todas las interfaces de Internet',
+                    c: 'Solo a la puerta de enlace',
+                    d: 'A las interfaces suscritas a ese grupo multicast'
+                },
+                answer: 'a',
+                feedback: 'Es broadcast de capa 2. El switch la reenvía por todos sus puertos, pero el <strong>router no deja pasar difusiones de capa 2</strong>: ahí termina el dominio de broadcast que estudiaste en el Día 6.'
+            },
+            {
+                topic: 'MAC frente a IP',
+                repaso: '#macip',
+                text: 'Tu PC (<code>192.168.1.70</code>) abre una web en <code>93.184.216.34</code>. En la trama que sale de tu tarjeta, ¿qué MAC de destino lleva?',
+                options: {
+                    a: 'La MAC del servidor web',
+                    b: 'La MAC de tu router (la puerta de enlace)',
+                    c: '<code>FF-FF-FF-FF-FF-FF</code>, porque el destino está fuera',
+                    d: 'Ninguna: al salir a Internet no se usan MAC'
+                },
+                answer: 'b',
+                feedback: 'Tu PC no puede conocer la MAC del servidor: está en otra red. Entrega la trama a su vecino de la red local, el router, que la reenviará reescribiendo las MAC del siguiente tramo. Las IP, en cambio, no cambian.'
+            },
+            {
+                topic: 'MAC frente a IP',
+                repaso: '#macip',
+                text: 'Llevas tu portátil de casa a la oficina. ¿Qué cambia?',
+                options: {
+                    a: 'La MAC de la tarjeta Ethernet, pero no su IP',
+                    b: 'Su IP, pero no la MAC de la tarjeta Ethernet',
+                    c: 'Ni una ni otra',
+                    d: 'Las dos, siempre'
+                },
+                answer: 'b',
+                feedback: 'La MAC viaja con la tarjeta: identifica <em>quién</em> eres. La IP depende de la red en la que estés porque identifica <em>dónde</em> estás, así que la nueva red te asignará otra.'
+            },
+            {
+                topic: 'MAC frente a IP',
+                repaso: '#macip',
+                text: '¿Cuál es la razón de fondo por la que Internet no se enruta con direcciones MAC?',
+                options: {
+                    a: 'Porque 48 bits son pocos para tantos equipos',
+                    b: 'Porque las MAC se pueden falsificar',
+                    c: 'Porque son planas: no permiten agrupar equipos por ubicación y las tablas de rutas serían inmanejables',
+                    d: 'Porque las MAC solo funcionan con cable'
+                },
+                answer: 'c',
+                feedback: 'El problema no es la cantidad —2⁴⁸ es enorme— sino la <strong>falta de jerarquía</strong>. Con IP un router guarda una entrada por red completa; con MAC necesitaría una por cada interfaz del planeta.'
+            },
+            {
+                topic: 'Interfaces virtuales',
+                repaso: '#virtuales',
+                text: 'Un usuario se queja de que «su IP es rara y no navega». Al mirarlo, ves varias interfaces. ¿Cuál es el primer paso?',
+                options: {
+                    a: 'Reinstalar los controladores de la tarjeta',
+                    b: 'Identificar por qué interfaz sale realmente el tráfico, descartando las virtuales',
+                    c: 'Cambiar la MAC de la tarjeta',
+                    d: 'Asignar una IP fija a todas las interfaces'
+                },
+                answer: 'b',
+                feedback: 'Es un fallo clásico: el usuario está mirando la interfaz de VirtualBox o de la VPN. Antes de tocar nada hay que saber cuál es la interfaz activa de verdad.'
+            },
+            {
+                topic: 'Seguridad',
+                repaso: '#mac',
+                text: 'Un router doméstico tiene activado el filtrado por MAC. ¿Qué protección real aporta frente a un atacante con conocimientos?',
+                options: {
+                    a: 'Alta: sin la MAC autorizada es imposible conectarse',
+                    b: 'Ninguna práctica: la MAC viaja en claro y se puede copiar',
+                    c: 'Alta si además el Wi-Fi está cifrado con WPA3',
+                    d: 'Depende del fabricante del router'
+                },
+                answer: 'b',
+                feedback: 'Las direcciones MAC viajan sin cifrar incluso en redes cifradas, porque la red necesita leerlas. El atacante observa una permitida y se la pone. Sirve contra conexiones accidentales, no contra un ataque.'
+            },
+            {
+                topic: 'Recuperación · Semana 1',
+                repaso: '../../Semana_01/Dia_06/teoria.html',
+                text: '<em>Repaso.</em> Un switch de 8 puertos, sin VLAN, con 8 PC conectados. ¿Cuántos dominios de colisión y de broadcast hay?',
+                options: {
+                    a: '1 de colisión y 1 de broadcast',
+                    b: '8 de colisión y 8 de broadcast',
+                    c: '8 de colisión y 1 de broadcast',
+                    d: '1 de colisión y 8 de broadcast'
+                },
+                answer: 'c',
+                feedback: 'El switch segmenta colisión (uno por puerto) pero <strong>no</strong> broadcast: sin VLAN, todos comparten un único dominio de broadcast. Es el error más repetido del tema.'
+            },
+            {
+                topic: 'Recuperación · Semana 1',
+                repaso: '../../Semana_01/Dia_04/teoria.html',
+                text: '<em>Repaso.</em> ¿Por qué millones de viviendas pueden usar a la vez la dirección <code>192.168.1.1</code>?',
+                options: {
+                    a: 'Porque el operador reserva ese rango para cada cliente',
+                    b: 'Porque es una dirección privada, no enrutable en Internet, y el router traduce con NAT al salir',
+                    c: 'Porque solo una de ellas está activa en cada momento',
+                    d: 'Porque es una dirección multicast'
+                },
+                answer: 'b',
+                feedback: 'Los rangos privados (10.x, 172.16–31.x, 192.168.x) no se enrutan en Internet, así que pueden repetirse sin conflicto. El NAT del router las traduce a la IP pública al salir.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

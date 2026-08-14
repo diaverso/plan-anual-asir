@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 7 — Síntesis de la Semana 2 y test semanal</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 7 — Síntesis y test semanal</h1>
+        <p>Todo lo de la Semana 2 en una página, y la evaluación que la cierra</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Síntesis:</strong> 35 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 20 min</div>
+        <div class="info-item"><strong>Test:</strong> 45 min · 30 preguntas</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 12 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Cómo aprovechar hoy</strong>
+            Lee la síntesis <strong>tapando la columna derecha</strong> de cada tabla e intentando recordar el
+            contenido antes de mirarlo. Recuperar de memoria fija mucho más que releer.
+            <br><br>
+            Después pasa el mazo de <strong>30 flashcards</strong> y, solo entonces, haz el test. El desglose final te
+            dirá <strong>qué día concreto</strong> tienes que repasar.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#mapa">Mapa de la semana</a></li>
+                <li><a href="#d1">Día 1 — La tarjeta de red y la MAC</a></li>
+                <li><a href="#d2">Día 2 — El medio físico</a></li>
+                <li><a href="#d3">Día 3 — El software de red</a></li>
+                <li><a href="#d4">Día 4 — Servidores</a></li>
+                <li><a href="#d5">Día 5 — Los servicios</a></li>
+                <li><a href="#d6">Día 6 — Método de diseño</a></li>
+                <li><a href="#errores">Los 12 errores que más se repiten</a></li>
+                <li><a href="#formulas">Datos y fórmulas de memoria</a></li>
+                <li><a href="#repaso">Repaso con flashcards de toda la semana</a></li>
+                <li><a href="#quiz-inicio">Test semanal</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="mapa">1. Mapa de la semana</h2>
+
+            <p>La Semana 1 respondía <em>qué es</em> una red. La Semana 2 responde <strong>de qué está hecha</strong>,
+            y lo hace de dentro hacia fuera:</p>
+
+<pre><code>  Día 1   LA TARJETA        el único componente imprescindible
+            ↓
+  Día 2   EL MEDIO          lo único que se toca con las manos
+            ↓
+  Día 3   EL SOFTWARE       quién habla, quién espera y por qué puerto
+            ↓
+  Día 4   EL SERVIDOR       la máquina que sostiene ese software
+            ↓
+  Día 5   LOS SERVICIOS     qué hace falta para poder trabajar
+            ↓
+  Día 6   EL DISEÑO         todo junto, con decisiones justificadas</code></pre>
+
+            <div class="destacado">
+                <strong>El hilo que une los seis días</strong>
+                Cada día explica un eslabón de la <strong>misma cadena</strong>: cuando un usuario abre un documento
+                de la carpeta común, intervienen los seis. Y si falla cualquiera de ellos, el usuario dirá exactamente
+                lo mismo: «no me va».
+                <br><br>
+                Por eso la semana termina con un método de diagnóstico y otro de diseño: son las dos caras de entender
+                la cadena entera.
+            </div>
+
+            <h2 id="d1">2. Día 1 — La tarjeta de red y la MAC</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Las 4 funciones de la NIC</strong></td><td>Conexión física · conversión de señal · direccionamiento · control de acceso al medio</td></tr>
+                    <tr><td><strong>Estructura de la MAC</strong></td><td>48 bits = <strong>24 de OUI</strong> (fabricante, lo asigna el IEEE) + 24 de la interfaz</td></tr>
+                    <tr><td><strong>Bit I/G</strong> (bit 0)</td><td>0 = unicast · 1 = grupo. Se lee mirando si el <strong>2.º dígito hex es impar</strong></td></tr>
+                    <tr><td><strong>Bit U/L</strong> (bit 1)</td><td>0 = universal · 1 = <strong>local</strong> (inventada). 2.º dígito en <strong>2,3,6,7,A,B,E,F</strong></td></tr>
+                    <tr><td><strong>Broadcast</strong></td><td><code>FF-FF-FF-FF-FF-FF</code>. Multicast IPv4: <code>01-00-5E-…</code></td></tr>
+                    <tr><td><strong>MAC frente a IP</strong></td><td>MAC = <strong>quién</strong>, en la red local. IP = <strong>dónde</strong>, en todo Internet</td></tr>
+                    <tr><td><strong>Qué cambia en cada salto</strong></td><td>Las <strong>MAC</strong>. Las IP de origen y destino no cambian nunca</td></tr>
+                    <tr><td><strong>Por qué no se enruta con MAC</strong></td><td>Son <strong>planas</strong>: no ubican, y la tabla de rutas sería inmanejable</td></tr>
+                    <tr><td><strong>Filtrado por MAC</strong></td><td>No es seguridad: viaja <strong>en claro</strong> y cambiarla es un comando</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>📖 <a href="../Dia_01/teoria.html">Volver al Día 1</a></p>
+
+            <h2 id="d2">3. Día 2 — El medio físico</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Por qué está trenzado</strong></td><td>Señalización <strong>diferencial</strong>: el receptor mide la diferencia y el ruido común se cancela</td></tr>
+                    <tr><td><strong>Paso de trenzado distinto</strong></td><td>Evita la <strong>diafonía</strong> entre pares</td></tr>
+                    <tr><td><strong>UTP / FTP / STP</strong></td><td>Sin pantalla · lámina general · pantalla por par. El apantallado <strong>mal puesto a tierra empeora</strong></td></tr>
+                    <tr><td><strong>Cat 5e</strong></td><td>1 Gbps a 100 m</td></tr>
+                    <tr><td><strong>Cat 6</strong></td><td>1 Gbps a 100 m · 10 Gbps <strong>solo hasta 55 m</strong></td></tr>
+                    <tr><td><strong>Cat 6A</strong></td><td><strong>10 Gbps a 100 m</strong></td></tr>
+                    <tr><td><strong>Cat 8</strong></td><td>25-40 Gbps pero <strong>solo 30 m</strong>: cable de rack</td></tr>
+                    <tr><td><strong>Los 100 metros</strong></td><td><strong>90 m</strong> de cableado fijo + <strong>10 m</strong> de latiguillos</td></tr>
+                    <tr><td><strong>T568A y T568B</strong></td><td>Intercambian el par <strong>verde y naranja</strong>. Ninguna es mejor: no mezclarlas</td></tr>
+                    <tr><td><strong>Pares usados</strong></td><td>10/100 Mbps: <strong>2 pares</strong>. 1 Gbps: <strong>los 4</strong></td></tr>
+                    <tr><td><strong>Enlace a 100 Mbps</strong></td><td>Síntoma clásico de <strong>fallo físico</strong> del cableado</td></tr>
+                    <tr><td><strong>Auto-MDIX</strong></td><td>Hace innecesario el cable cruzado, pero depende de la <strong>autonegociación</strong></td></tr>
+                    <tr><td><strong>Cableado estructurado</strong></td><td>Lo fijo no se toca; toda la flexibilidad está en los <strong>latiguillos</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>📖 <a href="../Dia_02/teoria.html">Volver al Día 2</a></p>
+
+            <h2 id="d3">4. Día 3 — El software de red</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Servicio</strong></td><td>Programa que <strong>espera</strong> conexiones: está <em>a la escucha</em> en un puerto</td></tr>
+                    <tr><td><strong>Cliente frente a servidor</strong></td><td>Lo define <strong>quién inicia</strong> la conversación, no el hardware</td></tr>
+                    <tr><td><strong>Puerto</strong></td><td>16 bits: 0 a 65535, o sea <strong>65 536 valores</strong></td></tr>
+                    <tr><td><strong>Rangos</strong></td><td>0-1023 bien conocidos · 1024-49151 registrados · <strong>49152-65535 efímeros</strong></td></tr>
+                    <tr><td><strong>Cuaterna</strong></td><td>Una conexión se identifica por <strong>4 datos</strong>: IP y puerto de origen y de destino</td></tr>
+                    <tr><td><strong>Puertos clave</strong></td><td>21 FTP · <strong>22 SSH</strong> · 23 Telnet · 25 SMTP · <strong>53 DNS</strong> · 80 HTTP · <strong>443 HTTPS</strong> · 445 SMB · 3389 RDP</td></tr>
+                    <tr><td><strong>Cliente-servidor</strong></td><td>Control centralizado, copias sencillas · <strong>punto único de fallo</strong></td></tr>
+                    <tr><td><strong>P2P</strong></td><td>Sin punto único de fallo y <strong>mejora al crecer</strong> · sin control ni copias</td></tr>
+                    <tr><td><strong>Modelo híbrido</strong></td><td><strong>Servidor para descubrirse, P2P para transferir</strong></td></tr>
+                    <tr><td><strong>127.0.0.1 frente a 0.0.0.0</strong></td><td>Escuchar solo en local frente a estar <strong>expuesto a la red</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>📖 <a href="../Dia_03/teoria.html">Volver al Día 3</a></p>
+
+            <h2 id="d4">5. Día 4 — Servidores</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Qué se paga</strong></td><td>La <strong>fiabilidad</strong>, no la potencia</td></tr>
+                    <tr><td><strong>ECC</strong></td><td>Evita la <strong>corrupción silenciosa</strong> de datos</td></tr>
+                    <tr><td><strong>Gestión remota</strong></td><td>Ordenador independiente dentro: reinicia <strong>aunque el sistema esté muerto</strong></td></tr>
+                    <tr><td><strong>1U</strong></td><td>≈ 4,4 cm. Armario estándar: <strong>42U</strong></td></tr>
+                    <tr><td><strong>RAID 0</strong></td><td>Tolera <strong>0</strong> fallos. No es redundante pese al nombre</td></tr>
+                    <tr><td><strong>RAID 1 y 5</strong></td><td>Toleran <strong>1</strong>. RAID 5 útil: (N−1) × tamaño</td></tr>
+                    <tr><td><strong>RAID 6</strong></td><td>Tolera <strong>2</strong>. Útil: (N−2) × tamaño</td></tr>
+                    <tr><td><strong>RAID ≠ copia</strong></td><td>RAID = <strong>disponibilidad</strong>. Copia = <strong>recuperación</strong></td></tr>
+                    <tr><td><strong>Minutos del año</strong></td><td><strong>525 600</strong>. Caída = 525 600 × (1 − disponibilidad)</td></tr>
+                    <tr><td><strong>99,9 %</strong></td><td><strong>8 h 46 min</strong> al año. Cada nueve divide entre 10</td></tr>
+                    <tr><td><strong>Disponibilidad</strong></td><td><strong>MTBF ÷ (MTBF + MTTR)</strong>. Bajar el MTTR sale más barato</td></tr>
+                    <tr><td><strong>SPOF</strong></td><td>Lo que tumba el servicio por sí solo. El más común: la <strong>persona</strong> que no documentó</td></tr>
+                    <tr><td><strong>Hipervisor tipo 1 / 2</strong></td><td>Sobre el hardware (producción) frente a dentro de un S.O. (escritorio)</td></tr>
+                    <tr><td><strong>Virtualizar</strong></td><td><strong>Concentra el riesgo</strong>: hace falta clúster</td></tr>
+                    <tr><td><strong>Contenedor</strong></td><td>No lleva sistema operativo: <strong>comparte el núcleo</strong></td></tr>
+                    <tr><td><strong>IaaS / PaaS / SaaS</strong></td><td>Se separan por <strong>hasta dónde llega tu responsabilidad</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>📖 <a href="../Dia_04/teoria.html">Volver al Día 4</a></p>
+
+            <h2 id="d5">6. Día 5 — Los servicios</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Infraestructura</strong></td><td>DHCP, DNS y directorio: no producen nada útil, pero sin ellos no va nada</td></tr>
+                    <tr><td><strong>Qué entrega el DHCP</strong></td><td>IP, <strong>máscara, puerta de enlace y DNS</strong>, como <strong>concesión</strong> temporal</td></tr>
+                    <tr><td><strong>169.254.x.x</strong></td><td><strong>APIPA</strong>: no se encontró ningún DHCP</td></tr>
+                    <tr><td><strong>Valor del DNS</strong></td><td>La <strong>indirección</strong>: cambiar servidores sin avisar a nadie</td></tr>
+                    <tr><td><strong>TTL</strong></td><td>Cuánto se guarda en caché. Explica los cambios «a medias»</td></tr>
+                    <tr><td><strong>Directorio</strong></td><td>Identidad única, permisos por grupos, auditoría y <strong>directivas</strong></td></tr>
+                    <tr><td><strong>NTP</strong></td><td>Sin hora común <strong>falla la autenticación</strong></td></tr>
+                    <tr><td><strong>Orden de arranque</strong></td><td>Red física → DHCP → DNS → directorio y NTP → ficheros e impresión</td></tr>
+                    <tr><td><strong>Dependencia circular</strong></td><td>DNS virtualizado en un anfitrión localizado <em>por nombre</em></td></tr>
+                    <tr><td><strong>Diagnóstico</strong></td><td><strong>Ping a IP + ping a nombre.</strong> IP sí y nombre no → DNS</td></tr>
+                    <tr><td><strong>Caída del DHCP</strong></td><td>No se nota al instante: las concesiones aguantan. Se nota <strong>al arrancar</strong></td></tr>
+                    <tr><td><strong>Qué duplicar primero</strong></td><td><strong>DNS</strong>, después directorio, después DHCP</td></tr>
+                    <tr><td><strong>Reparto</strong></td><td><strong>Consolidar el hardware, separar los servicios</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>📖 <a href="../Dia_05/teoria.html">Volver al Día 5</a></p>
+
+            <h2 id="d6">7. Día 6 — Método de diseño</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Primer paso</strong></td><td><strong>Preguntar</strong>, no dibujar</td></tr>
+                    <tr><td><strong>Las dos preguntas olvidadas</strong></td><td>¿Cuánto cuesta una hora parados? ¿Quién lo administrará?</td></tr>
+                    <tr><td><strong>El método</strong></td><td>Requisitos → topología → medio → equipamiento → servicios → <strong>riesgos</strong></td></tr>
+                    <tr><td><strong>Dimensionado</strong></td><td>Se cuentan <strong>tomas, no personas</strong>, más un 20-30 % de margen</td></tr>
+                    <tr><td><strong>Segundo armario</strong></td><td>Cuando algún puesto pasa de <strong>90 m</strong> de cableado fijo</td></tr>
+                    <tr><td><strong>Medio por tramo</strong></td><td>Cobre al puesto · <strong>fibra entre armarios</strong> · VPN o línea entre sedes</td></tr>
+                    <tr><td><strong>Asumir ≠ ignorar</strong></td><td>Asumir es identificarlo, valorarlo y <strong>escribirlo</strong></td></tr>
+                    <tr><td><strong>Dónde ser generoso</strong></td><td>En lo <strong>difícil de cambiar</strong>: cable y canalizaciones</td></tr>
+                    <tr><td><strong>Documentación</strong></td><td>Lo más valioso es el <strong>registro de decisiones</strong>: el porqué</td></tr>
+                    <tr><td><strong>Criterio final</strong></td><td>El mejor diseño es <strong>el más avanzado que esa empresa puede sostener</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>📖 <a href="../Dia_06/teoria.html">Volver al Día 6</a></p>
+
+            <h2 id="errores">8. Los 12 errores que más se repiten</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>«La MAC de mi ordenador»</td><td>Es de <strong>cada interfaz</strong>. Un portátil tiene varias</td></tr>
+                    <tr><td>2</td><td>«Con la MAC se localiza un equipo en Internet»</td><td>La MAC <strong>no sale</strong> de la red local</td></tr>
+                    <tr><td>3</td><td>«El filtrado por MAC protege el Wi-Fi»</td><td>Viaja en claro y se copia en un minuto</td></tr>
+                    <tr><td>4</td><td>«Cat 6 ya da 10 Gbps»</td><td>Solo hasta <strong>55 m</strong>. A 100 m hace falta <strong>Cat 6A</strong></td></tr>
+                    <tr><td>5</td><td>«El cable apantallado siempre es mejor»</td><td>Mal puesto a tierra, <strong>empeora</strong></td></tr>
+                    <tr><td>6</td><td>«Va a 100 Mbps pero funciona»</td><td>Es el síntoma clásico de <strong>fallo físico</strong> del cable</td></tr>
+                    <tr><td>7</td><td>«Servidor es un ordenador potente»</td><td>Es un <strong>papel</strong>, y lo que se paga es la fiabilidad</td></tr>
+                    <tr><td>8</td><td>«Tengo RAID, tengo copia»</td><td>RAID = disponibilidad. Copia = <strong>recuperación</strong></td></tr>
+                    <tr><td>9</td><td>«RAID 0 es redundante»</td><td>Tolera <strong>cero</strong> fallos y duplica el riesgo</td></tr>
+                    <tr><td>10</td><td>«Virtualizando gano disponibilidad»</td><td><strong>Concentras</strong> el riesgo, salvo que montes clúster</td></tr>
+                    <tr><td>11</td><td>«No hay Internet»</td><td>Muchas veces sí lo hay: falla el <strong>DNS</strong></td></tr>
+                    <tr><td>12</td><td>«Cuanto más avanzado el diseño, mejor»</td><td>Lo que no se sabe mantener <strong>se degrada solo</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="formulas">9. Datos y fórmulas de memoria</h2>
+
+            <div class="destacado">
+                <strong>Números que hay que saber sin pensar</strong>
+<pre><code>MAC              48 bits = 24 de OUI + 24 de interfaz
+Puertos          16 bits → 0 a 65535 (65 536 valores)
+                 efímeros: 49152 – 65535
+Enlace de cobre  100 m = 90 m fijo + 10 m latiguillos
+Ethernet         10/100 Mbps → 2 pares ; 1 Gbps → 4 pares
+Rack             1U ≈ 4,4 cm ; armario típico 42U
+Año              525 600 minutos</code></pre>
+            </div>
+
+            <div class="destacado">
+                <strong>Fórmulas</strong>
+<pre><code>caída anual        = 525 600 × (1 − disponibilidad)
+disponibilidad     = MTBF ÷ (MTBF + MTTR)
+RAID 5 útil        = (N − 1) × tamaño
+RAID 6 útil        = (N − 2) × tamaño
+tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
+            </div>
+
+            <div class="destacado">
+                <strong>Reglas rápidas</strong>
+                <br>· <strong>2.º dígito hex de una MAC</strong>: impar → grupo; en 2,3,6,7,A,B,E,F → local.
+                <br>· <strong>Categorías</strong>: 5e → 1 G a 100 m · 6 → 10 G solo a 55 m · <strong>6A → 10 G a 100 m</strong> · 8 → 30 m.
+                <br>· <strong>Puertos</strong>: 22 SSH · 53 DNS · 80 HTTP · 443 HTTPS · 3389 RDP · 445 SMB.
+                <br>· <strong>Diagnóstico</strong>: ping a IP + ping a nombre.
+                <br>· <strong>Arranque</strong>: red → DHCP → DNS → directorio y NTP → resto.
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards de toda la semana</h2>
+
+            <p>Un mazo de <strong>30 tarjetas</strong> con lo esencial de los seis días. Piensa la respuesta
+            <strong>antes</strong> de girar cada una y sé honesto al marcar si la sabías: las que falles son
+            exactamente lo que debes repasar antes del test.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Test semanal</h2>
+            <p>30 preguntas · 45 minutos · <strong>Sin mirar la teoría</strong></p>
+            <p>Aprobado: <strong>15/30</strong>. Al corregir verás el desglose <strong>por día</strong>, con enlace
+            directo al que necesites repasar.</p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees la
+            síntesis</strong>: arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir test</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por día</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: recuperación de errores</strong>
+            <p>La hoja de hoy no es más de lo mismo: está construida sobre los <strong>errores concretos</strong> que
+            más se cometen en esta semana. Haz primero los bloques de los días que peor te hayan salido en el test.</p>
+            <p><a href="ejercicios.html"><strong>→ Ir a la recuperación</strong></a> (60 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Semana 2 terminada</strong>
+            <p>Con esto cierras los <strong>componentes</strong> de una red. La <strong>Semana 3</strong> da el salto
+            conceptual más importante del curso: el <strong>modelo OSI y TCP/IP</strong>, que pone nombre y orden a
+            todo lo que has visto estas dos semanas.</p>
+            <p>Ahí descubrirás que la NIC del Día 1, el cable del Día 2 y los puertos del Día 3 no eran temas sueltos:
+            son <strong>capas</strong> de una misma arquitectura.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Recuperación</a></span>
+        <span><a href="../Dia_06/teoria.html">← Día 6</a> · <a href="../README.md">Índice de la semana</a> · <a href="../../Semana_01/Dia_07/teoria.html">Test de la Semana 1</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        flashcards: [
+            // --- Día 1 ---
+            { frente: '<em>Día 1.</em> ¿Cuáles son las <strong>4 funciones</strong> de una NIC?', dorso: '<strong>Conexión física</strong>, <strong>conversión de señal</strong>, <strong>direccionamiento</strong> (poner su MAC y descartar lo ajeno) y <strong>control de acceso al medio</strong>.' },
+            { frente: '<em>Día 1.</em> ¿Cómo se reparten los 48 bits de una MAC?', dorso: '<strong>24 de OUI</strong> (fabricante, lo asigna el IEEE) + <strong>24</strong> que asigna ese fabricante a cada interfaz.' },
+            { frente: '<em>Día 1.</em> Regla del <strong>segundo dígito</strong> hexadecimal', dorso: '<strong>Impar</strong> (1,3,5,7,9,B,D,F) → va a un <strong>grupo</strong>. En <strong>2,3,6,7,A,B,E,F</strong> → dirección <strong>local</strong>, inventada por software.' },
+            { frente: '<em>Día 1.</em> ¿Qué cambia en cada salto: la MAC o la IP?', dorso: 'La <strong>MAC</strong>. Las IP identifican a los <em>extremos</em> y no cambian; las MAC identifican el <em>tramo</em> y se reescriben en cada router.' },
+            { frente: '<em>Día 1.</em> ¿Por qué no se enruta Internet con MAC?', dorso: 'Porque son <strong>planas</strong>: identifican pero no ubican. Haría falta una entrada de tabla por cada interfaz del mundo. La IP es <strong>jerárquica</strong>.' },
+
+            // --- Día 2 ---
+            { frente: '<em>Día 2.</em> ¿Por qué el trenzado cancela el ruido?', dorso: 'Señalización <strong>diferencial</strong>: los dos hilos van juntos, el ruido les afecta <strong>por igual</strong> y desaparece al medir la <strong>diferencia</strong>.' },
+            { frente: '<em>Día 2.</em> Cat 5e, Cat 6, Cat 6A y Cat 8', dorso: '5e: 1 G a 100 m. 6: 1 G a 100 m pero 10 G <strong>solo a 55 m</strong>. <strong>6A: 10 G a 100 m</strong>. 8: hasta 40 G pero <strong>solo 30 m</strong>.' },
+            { frente: '<em>Día 2.</em> ¿Cómo se reparten los <strong>100 metros</strong>?', dorso: '<strong>90 m</strong> de cableado fijo por la pared + <strong>10 m</strong> repartidos entre los latiguillos de los dos extremos.' },
+            { frente: '<em>Día 2.</em> ¿En qué se diferencian T568A y T568B?', dorso: 'Solo en que <strong>intercambian el par verde y el naranja</strong>. Ninguna es mejor: lo grave es <strong>mezclarlas</strong>.' },
+            { frente: '<em>Día 2.</em> Un enlace negocia 100 Mbps con equipamiento de 1 Gbps. ¿Qué sospechas?', dorso: '<strong>Fallo físico del cable</strong>: 100 Mbps usa <strong>2 pares</strong> y gigabit necesita <strong>los 4</strong>. Con dos dañados aún funciona, y por eso pasa desapercibido.' },
+            { frente: '<em>Día 2.</em> ¿Cuándo empeora un cable apantallado?', dorso: 'Si la pantalla <strong>no está puesta a tierra en ambos extremos</strong> o se mezcla con conectores UTP: se convierte en antena e <em>introduce</em> ruido.' },
+
+            // --- Día 3 ---
+            { frente: '<em>Día 3.</em> ¿Qué distingue a un cliente de un servidor?', dorso: '<strong>Quién inicia</strong> la conversación. El servidor <em>espera</em>, y por eso necesita una dirección conocida. No es cuestión de hardware.' },
+            { frente: '<em>Día 3.</em> ¿Cómo se identifica una conexión?', dorso: 'Por <strong>cuatro datos</strong>: IP y puerto de <em>origen</em>, IP y puerto de <em>destino</em>. Por eso caben varias pestañas a la misma web.' },
+            { frente: '<em>Día 3.</em> Puertos 22, 53, 80, 443, 445, 3389', dorso: '<strong>22</strong> SSH · <strong>53</strong> DNS · <strong>80</strong> HTTP · <strong>443</strong> HTTPS · <strong>445</strong> SMB · <strong>3389</strong> RDP.' },
+            { frente: '<em>Día 3.</em> ¿Por qué el P2P <strong>mejora</strong> al crecer?', dorso: 'Porque cada nodo nuevo <strong>aporta la capacidad que consume</strong>. En cliente-servidor la capacidad es fija y hay que repartirla entre más gente.' },
+            { frente: '<em>Día 3.</em> El patrón híbrido de Internet', dorso: '<strong>Servidor para descubrirse, P2P para transferir.</strong> Lo usan BitTorrent, las videollamadas y la mensajería.' },
+            { frente: '<em>Día 3.</em> <code>127.0.0.1</code> frente a <code>0.0.0.0</code> al escuchar', dorso: '<code>127.0.0.1</code>: solo alcanzable <strong>desde la propia máquina</strong>. <code>0.0.0.0</code>: <strong>expuesto a toda la red</strong>, y eso hay que justificarlo.' },
+
+            // --- Día 4 ---
+            { frente: '<em>Día 4.</em> ¿Qué se paga realmente en un servidor?', dorso: 'La <strong>fiabilidad</strong>: ECC, fuentes redundantes, hot-swap, RAID, gestión remota y componentes para 24×7. No la potencia.' },
+            { frente: '<em>Día 4.</em> ¿Cuántos fallos tolera cada RAID?', dorso: 'RAID 0: <strong>ninguno</strong>. RAID 1 y 5: <strong>uno</strong>. RAID 6: <strong>dos</strong>.' },
+            { frente: '<em>Día 4.</em> ¿Por qué RAID no es una copia de seguridad?', dorso: 'Solo protege del fallo <strong>de un disco</strong>. Un borrado, un cifrado o un incendio afectan a <strong>todos los discos a la vez</strong>.' },
+            { frente: '<em>Día 4.</em> Minutos del año y caída al 99,9 %', dorso: '<strong>525 600 minutos</strong>. Al 99,9 %: 525,6 min = <strong>8 h 46 min</strong>. Cada nueve divide la caída <strong>entre diez</strong>.' },
+            { frente: '<em>Día 4.</em> Fórmula de la disponibilidad', dorso: '<strong>MTBF ÷ (MTBF + MTTR)</strong>. Casi siempre sale más barato <strong>bajar el MTTR</strong> que subir el MTBF.' },
+            { frente: '<em>Día 4.</em> ¿Qué riesgo introduce virtualizar?', dorso: '<strong>Concentra el fallo</strong>: si cae el anfitrión, caen todas las máquinas a la vez. Se resuelve con un <strong>clúster</strong>.' },
+            { frente: '<em>Día 4.</em> ¿Cuál es el SPOF más común?', dorso: 'No es técnico: la <strong>persona</strong> que lo montó todo y no lo documentó. Por eso documentar <em>es</em> eliminar un punto único de fallo.' },
+
+            // --- Día 5 ---
+            { frente: '<em>Día 5.</em> ¿Qué entrega el DHCP además de la IP?', dorso: '<strong>Máscara, puerta de enlace y servidores DNS</strong>. Y lo hace como <strong>concesión</strong> temporal, para poder reutilizar direcciones.' },
+            { frente: '<em>Día 5.</em> ¿Qué significa una IP <code>169.254.x.x</code>?', dorso: '<strong>APIPA</strong>: el equipo no encontró ningún DHCP y se la autoasignó. Parece conectado y no funciona nada.' },
+            { frente: '<em>Día 5.</em> ¿Cuál es el valor real del DNS?', dorso: 'La <strong>indirección</strong>: permite cambiar servidores, repartir carga o migrar <strong>sin avisar a nadie</strong>. No es solo comodidad.' },
+            { frente: '<em>Día 5.</em> Orden de arranque tras un apagón', dorso: '<strong>Red física → DHCP → DNS → directorio y NTP → ficheros e impresión.</strong> Cada escalón necesita el anterior.' },
+            { frente: '<em>Día 5.</em> La prueba de diagnóstico más rentable', dorso: '<strong>Ping a una IP y ping a un nombre.</strong> Fallan las dos → conectividad. IP sí y nombre no → <strong>DNS</strong>.' },
+
+            // --- Día 6 ---
+            { frente: '<em>Día 6.</em> Los seis pasos del método de diseño', dorso: '<strong>Requisitos → topología → medio → equipamiento → servicios → riesgos.</strong> De arriba hacia abajo, nunca al revés.' },
+            { frente: '<em>Día 6.</em> ¿Qué se cuenta al dimensionar un switch?', dorso: '<strong>Tomas, no personas</strong>: PC, teléfonos IP, impresoras, puntos de acceso, cámaras, servidores y enlaces. Más un <strong>20-30 %</strong> de margen.' },
+            { frente: '<em>Día 6.</em> Diferencia entre <strong>asumir</strong> e <strong>ignorar</strong> un riesgo', dorso: 'Asumir: identificado, valorado y <strong>escrito</strong>, aprobado por quien paga. Ignorar: no aparece en ningún sitio y sorprende a todos.' },
+            { frente: '<em>Día 6.</em> El criterio final de un buen diseño', dorso: 'No el más avanzado, sino <strong>el más avanzado que esa empresa puede sostener</strong>. Lo que nadie mantiene se degrada solo.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Test semanal — Semana 2',
+        subtitulo: 'Componentes de una red · 30 preguntas · aprobado 15/30',
+        tiempo: '45 minutos',
+        minutos: 45,
+        questions: [
+
+            // ================= DÍA 1 =================
+            {
+                topic: 'Día 1 — Tarjeta de red y MAC',
+                repaso: '../Dia_01/teoria.html',
+                text: 'Analizas una tabla ARP y encuentras <code>B6-2F-19-04-8A-51</code>. ¿Qué puedes afirmar <strong>solo con mirarla</strong>?',
+                options: {
+                    a: 'Es multicast, porque empieza por B',
+                    b: 'Es unicast pero administrada localmente: no viene de fábrica',
+                    c: 'Es unicast y de fábrica, de un fabricante registrado',
+                    d: 'Es una dirección inválida'
+                },
+                answer: 'b',
+                feedback: 'Segundo dígito <strong>6</strong> = 0110. El bit I/G (último) vale 0 → unicast. El bit U/L (penúltimo) vale 1 → <strong>local</strong>. Un móvil con MAC aleatoria o una interfaz virtual.'
+            },
+            {
+                topic: 'Día 1 — Tarjeta de red y MAC',
+                repaso: '../Dia_01/teoria.html#macip',
+                text: 'Tu PC descarga un fichero de un servidor situado a 8 saltos. ¿Cuántas veces se reescriben las direcciones?',
+                options: {
+                    a: 'Las IP 8 veces, las MAC ninguna',
+                    b: 'Las MAC en cada salto; las IP de origen y destino, nunca',
+                    c: 'Ambas en cada salto',
+                    d: 'Ninguna: por eso llega al destino'
+                },
+                answer: 'b',
+                feedback: 'La IP identifica a los <strong>extremos</strong> y se mantiene de punta a punta; la MAC identifica el <strong>tramo actual</strong> y cada router la reescribe.'
+            },
+            {
+                topic: 'Día 1 — Tarjeta de red y MAC',
+                repaso: '../Dia_01/teoria.html#partes',
+                text: 'Un analizador de red captura tráfico dirigido a otros equipos de un segmento con hub. ¿Qué ha tenido que hacer?',
+                options: {
+                    a: 'Configurar el hub para que le reenvíe todo',
+                    b: 'Poner su tarjeta en modo promiscuo para que deje de descartar lo ajeno',
+                    c: 'Cambiar su MAC por la del equipo espiado',
+                    d: 'Nada: por defecto se recibe todo el tráfico'
+                },
+                answer: 'b',
+                feedback: 'El tráfico ya le llegaba eléctricamente: era la <strong>propia NIC</strong> la que lo descartaba al no coincidir la MAC de destino. El modo promiscuo desactiva ese descarte.'
+            },
+            {
+                topic: 'Día 1 — Tarjeta de red y MAC',
+                repaso: '../Dia_01/teoria.html#mac',
+                text: 'Un fabricante compra <strong>dos</strong> OUI al IEEE. ¿Cuántas direcciones distintas puede repartir?',
+                options: {
+                    a: 'Unos 16,7 millones',
+                    b: 'Unos 33,5 millones',
+                    c: '281 billones',
+                    d: 'Ilimitadas'
+                },
+                answer: 'b',
+                feedback: 'Cada OUI deja libres 24 bits: 2²⁴ ≈ 16,7 millones. Con dos OUI, el doble: unos <strong>33,5 millones</strong>.'
+            },
+
+            // ================= DÍA 2 =================
+            {
+                topic: 'Día 2 — El medio físico',
+                repaso: '../Dia_02/teoria.html#categorias',
+                text: 'Hay que llevar 10 Gbps a un puesto situado a <strong>70 m</strong> del armario. ¿Qué categoría se instala?',
+                options: {
+                    a: 'Cat 5e',
+                    b: 'Cat 6',
+                    c: 'Cat 6A',
+                    d: 'Cat 8, por ser la más moderna'
+                },
+                answer: 'c',
+                feedback: 'Cat 6 solo alcanza 10 Gbps hasta unos <strong>55 m</strong> y Cat 8 se queda en <strong>30 m</strong>. Solo Cat 6A garantiza 10 Gbps a los 100 m completos.'
+            },
+            {
+                topic: 'Día 2 — El medio físico',
+                repaso: '../Dia_02/teoria.html#rj45',
+                text: 'Se sustituye un latiguillo y el enlace pasa de 1 Gbps a 100 Mbps. ¿Qué ha ocurrido con casi total seguridad?',
+                options: {
+                    a: 'El switch ha limitado el puerto por seguridad',
+                    b: 'El nuevo latiguillo tiene pares dañados o solo dos pares conectados',
+                    c: 'La tarjeta de red ha cambiado de modo dúplex',
+                    d: 'El cable es demasiado largo'
+                },
+                answer: 'b',
+                feedback: '100 Mbps necesita <strong>2 pares</strong> y gigabit <strong>los 4</strong>. Es el síntoma más característico del cableado, y el más fácil de pasar por alto porque la red sigue funcionando.'
+            },
+            {
+                topic: 'Día 2 — El medio físico',
+                repaso: '../Dia_02/teoria.html#categorias',
+                text: 'El cableado fijo de un puesto mide 88 m. ¿Cuánto puede sumar como máximo el conjunto de los dos latiguillos?',
+                options: {
+                    a: '10 m, siempre',
+                    b: '12 m',
+                    c: '20 m, porque los latiguillos van aparte',
+                    d: 'No hay límite si el cable es Cat 6A'
+                },
+                answer: 'b',
+                feedback: 'El tope del enlace completo son <strong>100 m</strong>, y los latiguillos <strong>cuentan dentro</strong>: 100 − 88 = <strong>12 m</strong>. Creer que van aparte es un error clásico.'
+            },
+            {
+                topic: 'Día 2 — El medio físico',
+                repaso: '../Dia_02/teoria.html#cruzado',
+                text: 'Un técnico fija a mano velocidad y dúplex en dos switches y el enlace entre ellos deja de funcionar con el cable de siempre. ¿Por qué?',
+                options: {
+                    a: 'Porque los switches necesitan fibra entre sí',
+                    b: 'Porque al desactivar la autonegociación se ha perdido el auto-MDIX, y entre dispositivos iguales hace falta cable cruzado',
+                    c: 'Porque el cable se ha estropeado por coincidencia',
+                    d: 'Porque fijar el dúplex duplica el consumo del puerto'
+                },
+                answer: 'b',
+                feedback: 'El auto-MDIX forma parte de la <strong>autonegociación</strong>. Al fijarlo todo a mano, el puerto deja de conmutar internamente los pines y reaparece la necesidad del cable cruzado.'
+            },
+
+            // ================= DÍA 3 =================
+            {
+                topic: 'Día 3 — El software de red',
+                repaso: '../Dia_03/teoria.html#puertos',
+                text: 'En un servidor ves <code>0.0.0.0:3306 LISTENING</code>. ¿Qué implica frente a <code>127.0.0.1:3306</code>?',
+                options: {
+                    a: 'Nada: son equivalentes',
+                    b: 'Que la base de datos es alcanzable desde toda la red, y no solo desde la propia máquina',
+                    c: 'Que el servicio está detenido',
+                    d: 'Que usa UDP en lugar de TCP'
+                },
+                answer: 'b',
+                feedback: '<code>127.0.0.1</code> limita el servicio al bucle local. <code>0.0.0.0</code> significa «en todas las interfaces»: expuesto. Atar cada servicio a la interfaz mínima necesaria es una buena práctica universal.'
+            },
+            {
+                topic: 'Día 3 — El software de red',
+                repaso: '../Dia_03/teoria.html#p2p',
+                text: 'Un juego reparte su parche del día del lanzamiento por P2P en lugar de por descarga directa. ¿Cuál es la razón técnica?',
+                options: {
+                    a: 'Que el P2P cifra mejor los datos',
+                    b: 'Que en cliente-servidor cada usuario nuevo resta capacidad, y en P2P la aporta',
+                    c: 'Que el P2P no necesita ningún servidor',
+                    d: 'Que evita pagar licencias'
+                },
+                answer: 'b',
+                feedback: 'Es la propiedad definitoria del P2P. Además, BitTorrent <em>sí</em> usa un servidor (el <em>tracker</em>) para poner en contacto a los pares: es un modelo híbrido.'
+            },
+            {
+                topic: 'Día 3 — El software de red',
+                repaso: '../Dia_03/teoria.html#puertos',
+                text: 'Un cortafuegos permite solo los puertos 22, 53 y 443. ¿Qué <strong>no</strong> funcionará?',
+                options: {
+                    a: 'La navegación web cifrada',
+                    b: 'La resolución de nombres',
+                    c: 'El escritorio remoto de Windows',
+                    d: 'La administración remota por SSH'
+                },
+                answer: 'c',
+                feedback: 'RDP usa el <strong>3389</strong>, que no está permitido. 443 cubre HTTPS, 53 el DNS y 22 el SSH. Este tipo de pregunta es la razón de aprenderse los puertos de memoria.'
+            },
+            {
+                topic: 'Día 3 — El software de red',
+                repaso: '../Dia_03/teoria.html#cliservidor',
+                text: 'Una empresa de 40 personas descarta el modelo cliente-servidor «porque es un punto único de fallo». ¿Qué error comete?',
+                options: {
+                    a: 'Ninguno: es un buen razonamiento',
+                    b: 'Que a ese tamaño el control de accesos, las copias y la revocación pesan más, y el punto único de fallo se mitiga con redundancia',
+                    c: 'Que el P2P no permite compartir ficheros',
+                    d: 'Que el modelo cliente-servidor no tiene puntos únicos de fallo'
+                },
+                answer: 'b',
+                feedback: 'El punto único de fallo es real, pero es un problema <strong>resoluble</strong>. Lo que no se resuelve con P2P es poder revocar el acceso de un empleado de forma verificable ni hacer copias fiables.'
+            },
+
+            // ================= DÍA 4 =================
+            {
+                topic: 'Día 4 — Servidores',
+                repaso: '../Dia_04/teoria.html#raid',
+                text: 'Ocho discos de 3 TB en <strong>RAID 6</strong>. ¿Cuánta capacidad útil queda?',
+                options: {
+                    a: '24 TB',
+                    b: '21 TB',
+                    c: '18 TB',
+                    d: '12 TB'
+                },
+                answer: 'c',
+                feedback: 'RAID 6 reserva el equivalente a <strong>dos</strong> discos: (8 − 2) × 3 TB = <strong>18 TB</strong>.'
+            },
+            {
+                topic: 'Día 4 — Servidores',
+                repaso: '../Dia_04/teoria.html#disponibilidad',
+                text: 'Un servicio estuvo caído <strong>90 minutos</strong> el año pasado. ¿Qué disponibilidad tuvo?',
+                options: {
+                    a: '99,9 %',
+                    b: '99,98 %',
+                    c: '99,999 %',
+                    d: '99 %'
+                },
+                answer: 'b',
+                feedback: '90 ÷ 525 600 = 0,000171. Disponibilidad = 1 − 0,000171 = <strong>99,983 %</strong>, que se corresponde con «cuatro nueves» largos. Al 99,9 % habría podido caer 526 min.'
+            },
+            {
+                topic: 'Día 4 — Servidores',
+                repaso: '../Dia_04/teoria.html#disponibilidad',
+                text: 'Servidor A: MTBF 40 000 h, MTTR 10 h. Servidor B: MTBF 20 000 h, MTTR 2 h. ¿Cuál tiene mayor disponibilidad?',
+                options: {
+                    a: 'A, porque falla la mitad de veces',
+                    b: 'B',
+                    c: 'Son idénticos',
+                    d: 'Faltan datos'
+                },
+                answer: 'b',
+                feedback: 'A: 40 000/40 010 = 99,975 %. B: 20 000/20 002 = <strong>99,990 %</strong>. Fallar el doble pero repararse cinco veces más rápido gana. Es el argumento para invertir en repuestos y procedimientos.'
+            },
+            {
+                topic: 'Día 4 — Servidores',
+                repaso: '../Dia_04/teoria.html#spof',
+                text: 'Una sala tiene dos servidores en clúster, cada uno con dos fuentes, y las cuatro van a la misma regleta con SAI. ¿Qué se ha logrado?',
+                options: {
+                    a: 'Eliminar el punto único de fallo eléctrico',
+                    b: 'Moverlo: ahora el punto único es la regleta',
+                    c: 'Duplicar la autonomía del SAI',
+                    d: 'Cumplir los cinco nueves'
+                },
+                answer: 'b',
+                feedback: 'La redundancia solo vale si llega hasta el final de la cadena. Las fuentes deben repartirse entre <strong>circuitos distintos</strong>. Es el error de «redundar lo visible».'
+            },
+
+            // ================= DÍA 5 =================
+            {
+                topic: 'Día 5 — Los servicios',
+                repaso: '../Dia_05/teoria.html#sintomas',
+                text: 'Un usuario no abre webs. <code>ping 8.8.8.8</code> responde; <code>ping google.com</code> falla. ¿Qué revisas?',
+                options: {
+                    a: 'El cableado del puesto',
+                    b: 'La puerta de enlace',
+                    c: 'Los servidores DNS configurados y su disponibilidad',
+                    d: 'Los permisos del directorio'
+                },
+                answer: 'c',
+                feedback: 'El primer ping demuestra conectividad completa hasta Internet: cable, IP, máscara, puerta de enlace y rutas quedan descartados. Solo falla la <strong>traducción de nombres</strong>.'
+            },
+            {
+                topic: 'Día 5 — Los servicios',
+                repaso: '../Dia_05/teoria.html#dhcp',
+                text: 'Un lunes por la mañana, varios equipos recién encendidos tienen direcciones <code>169.254.x.x</code> y otros, encendidos desde el viernes, funcionan. ¿Qué ha pasado?',
+                options: {
+                    a: 'Se ha caído el DNS',
+                    b: 'Se ha caído el DHCP: los que ya estaban encendidos conservan su concesión',
+                    c: 'Hay un problema de permisos',
+                    d: 'Los equipos nuevos tienen el cable mal'
+                },
+                answer: 'b',
+                feedback: 'Es el patrón característico de una avería de DHCP: <strong>no se nota al instante</strong>, sino al arrancar. Por eso muchas se descubren los lunes o después de un puente.'
+            },
+            {
+                topic: 'Día 5 — Los servicios',
+                repaso: '../Dia_05/teoria.html#dependencias',
+                text: '¿Por qué el DNS tiene que arrancar <strong>antes</strong> que el directorio?',
+                options: {
+                    a: 'Por convenio; no hay razón técnica',
+                    b: 'Porque los clientes localizan el controlador de dominio <strong>por nombre</strong>',
+                    c: 'Porque el DNS entrega las contraseñas',
+                    d: 'Porque el directorio no usa la red'
+                },
+                answer: 'b',
+                feedback: 'Sin resolución de nombres, el directorio puede estar perfectamente encendido y ser <strong>invisible</strong> para los clientes.'
+            },
+            {
+                topic: 'Día 5 — Los servicios',
+                repaso: '../Dia_05/teoria.html#resto',
+                text: 'Un equipo con el reloj adelantado 45 minutos no consigue iniciar sesión en el dominio. ¿Cuál es la causa?',
+                options: {
+                    a: 'Coincidencia: son dos problemas distintos',
+                    b: 'La autenticación usa marcas de tiempo y un desfase grande invalida las credenciales',
+                    c: 'El DHCP rechaza equipos con la hora mal',
+                    d: 'El DNS no resuelve con la hora desviada'
+                },
+                answer: 'b',
+                feedback: 'Las marcas de tiempo evitan la reutilización de credenciales capturadas. El mensaje de error no menciona la hora, y de ahí que cueste tanto diagnosticarlo.'
+            },
+
+            // ================= DÍA 6 =================
+            {
+                topic: 'Día 6 — Método de diseño',
+                repaso: '../Dia_06/teoria.html#metodo',
+                text: 'Una oficina tiene 45 puestos con PC y teléfono IP, 4 impresoras, 5 puntos de acceso y 1 enlace de subida. ¿Cuántas tomas hacen falta sin margen?',
+                options: {
+                    a: '55',
+                    b: '90',
+                    c: '100',
+                    d: '135'
+                },
+                answer: 'c',
+                feedback: '(45 × 2) + 4 + 5 + 1 = 90 + 10 = <strong>100 tomas</strong>. El error habitual es contar 45 en lugar de 90: cada puesto son <strong>dos</strong> tomas.'
+            },
+            {
+                topic: 'Día 6 — Método de diseño',
+                repaso: '../Dia_06/teoria.html#metodo',
+                text: 'El puesto más lejano de la planta 2 está a 115 m del único armario. ¿Qué se hace?',
+                options: {
+                    a: 'Usar Cat 6A, que soporta más distancia',
+                    b: 'Usar Cat 8, que es más moderna',
+                    c: 'Instalar un segundo armario en esa planta, unido por fibra',
+                    d: 'Poner un repetidor de señal en el cable'
+                },
+                answer: 'c',
+                feedback: 'El límite de 100 m es <strong>físico</strong> y ninguna categoría lo supera: Cat 8 llega incluso a menos. La solución es meter un dispositivo activo por el camino.'
+            },
+            {
+                topic: 'Día 6 — Método de diseño',
+                repaso: '../Dia_06/teoria.html#metodo',
+                text: 'Un informe dice: «R-02: sin línea de respaldo. Coste 70 €/mes. Impacto: sin correo ni acceso externo; el trabajo interno continúa. Decisión: se asume y se revisa en 12 meses». ¿Qué opinas?',
+                options: {
+                    a: 'Es negligente: todo riesgo debe corregirse',
+                    b: 'Es correcto: el riesgo está identificado, valorado y la decisión es consciente y revisable',
+                    c: 'Falta indicar quién tiene la culpa',
+                    d: 'Los riesgos no deben aparecer en un informe de diseño'
+                },
+                answer: 'b',
+                feedback: 'Asumir por escrito, con coste e impacto, y con fecha de revisión, es exactamente lo profesional. Lo negligente sería que ese riesgo <strong>no apareciera</strong> en ninguna parte.'
+            },
+            {
+                topic: 'Día 6 — Método de diseño',
+                repaso: '../Dia_06/teoria.html#errores',
+                text: 'Una empresa de 15 personas sin informático interno recibe dos propuestas: una muy sofisticada y otra sencilla y muy documentada. ¿Cuál es mejor y por qué?',
+                options: {
+                    a: 'La sofisticada, porque durará más años',
+                    b: 'La sencilla, porque podrán sostenerla y cualquier técnico externo la entenderá',
+                    c: 'Da igual: la complejidad no influye en el mantenimiento',
+                    d: 'La sofisticada, siempre que sea más barata'
+                },
+                answer: 'b',
+                feedback: 'Un diseño se juzga por cómo está <strong>dos años después</strong>. Lo que nadie entiende no se actualiza ni se toca, y acaba funcionando peor que una instalación sencilla y bien cuidada.'
+            },
+
+            // ================= INTEGRACIÓN =================
+            {
+                topic: 'Integración',
+                repaso: '../Dia_05/teoria.html#sintomas',
+                text: 'Un usuario dice «no me va nada». Tiene IP correcta de la red, ping a la puerta de enlace responde, ping a 8.8.8.8 responde y ping por nombre falla. Su puerto negocia 1 Gbps. ¿Dónde está el problema?',
+                options: {
+                    a: 'En el cableado',
+                    b: 'En el DHCP',
+                    c: 'En el DNS',
+                    d: 'En los permisos del directorio'
+                },
+                answer: 'c',
+                feedback: 'Cada dato descarta una capa: la IP correcta descarta el DHCP, la velocidad negociada descarta el cable, y el ping a una IP externa descarta la conectividad. Solo queda la <strong>resolución de nombres</strong>.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_04/teoria.html#spof',
+                text: 'Diseñas una red con dos servidores en clúster, RAID 6, dos líneas de Internet, DNS duplicado… y <strong>un solo switch</strong>. ¿Cuál es el fallo?',
+                options: {
+                    a: 'Ninguno: está bien redundado',
+                    b: 'Que toda esa redundancia pasa por una única pieza barata, que se convierte en el punto único de fallo del conjunto',
+                    c: 'Que RAID 6 es excesivo con clúster',
+                    d: 'Que sobra una línea de Internet'
+                },
+                answer: 'b',
+                feedback: 'La redundancia se analiza por <strong>caminos completos</strong>, no por componentes sueltos. La pregunta correcta es: «si esto desaparece ahora, ¿sigue funcionando el servicio?».'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_03/teoria.html#servicios',
+                text: 'Ordena mentalmente lo que ocurre al abrir un documento de la carpeta común. ¿Qué sucede <strong>antes</strong> de que el usuario se autentique?',
+                options: {
+                    a: 'El servidor de ficheros comprueba sus permisos',
+                    b: 'La NIC enlaza, el DHCP entrega la configuración y el DNS localiza el controlador de dominio',
+                    c: 'Se resuelve el nombre del servidor de ficheros',
+                    d: 'Nada: la autenticación es lo primero'
+                },
+                answer: 'b',
+                feedback: 'Autenticarse exige antes tener enlace físico, dirección IP y saber <em>dónde</em> está el directorio. Los permisos y el nombre del servidor de ficheros vienen <strong>después</strong>.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_04/teoria.html#raid',
+                text: 'Una empresa tiene RAID 6, clúster de virtualización y copias diarias… en un disco dentro del propio anfitrión. Un incendio destruye la sala. ¿Qué se recupera?',
+                options: {
+                    a: 'Todo: el RAID 6 tolera dos fallos',
+                    b: 'Todo: el clúster mantiene una réplica',
+                    c: 'Nada: original y copia estaban en el mismo sitio físico',
+                    d: 'Solo los datos de las últimas 24 horas'
+                },
+                answer: 'c',
+                feedback: 'RAID y clúster son <strong>disponibilidad</strong>: protegen de averías, no de desastres. Una copia solo protege si sobrevive a lo que destruye el original: al menos una debe estar <strong>fuera del edificio</strong>.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_02/teoria.html#estructurado',
+                text: 'Hay que mover 8 puestos a otro switch y a otra configuración de red. Con cableado estructurado bien hecho y etiquetado, ¿cuánto trabajo supone?',
+                options: {
+                    a: 'Tirar cable nuevo desde cada puesto',
+                    b: 'Mover 8 latiguillos dentro del armario, minutos de trabajo',
+                    c: 'Sustituir las 8 rosetas',
+                    d: 'Reconfigurar el patch panel'
+                },
+                answer: 'b',
+                feedback: 'Esa es toda la razón de ser del modelo: el cableado fijo se instala <strong>una vez</strong> y no se toca; la flexibilidad vive en los latiguillos. Sin etiquetado, en cambio, la ventaja desaparece.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_06/teoria.html#documentar',
+                text: 'Llegas a una empresa y encuentras una configuración extraña que funciona. No hay documentación. ¿Cuál es el riesgo de cambiarla, y qué documento lo habría evitado?',
+                options: {
+                    a: 'Ninguno; bastaría con un inventario',
+                    b: 'Romper algo que resolvía un problema que desconoces; lo habría evitado el registro de decisiones',
+                    c: 'Ninguno: si es extraña, está mal',
+                    d: 'Perder la garantía; lo habría evitado el plano físico'
+                },
+                answer: 'b',
+                feedback: 'El <em>qué</em> se deduce mirando la instalación; el <strong>porqué</strong> se pierde para siempre. Sin él solo quedan dos malas opciones: cambiarlo a ciegas o no tocarlo por miedo.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

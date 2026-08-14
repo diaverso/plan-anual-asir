@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: tu cable, tu velocidad negociada</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 2</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal y un cable de red</div>
+        <div class="info-item"><strong>Tipo:</strong> inspección y diagnóstico</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Salir de la teoría y mirar <strong>el cable que tienes en casa</strong>: qué categoría es, a qué
+            velocidad ha negociado tu enlace, si la autonegociación está activa y qué harías si negociara menos de lo
+            debido.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Si te conectas por Wi-Fi</strong>
+            Buena parte del laboratorio necesita un <strong>enlace por cable</strong>. Si no tienes ninguno
+            disponible, puedes hacerlo igualmente: los pasos 1 y 2 solo necesitan <em>un cable</em> que puedas mirar
+            —el del router, el de una consola, el de una impresora—, y los pasos 3 y 4 se pueden responder sobre la
+            interfaz Wi-Fi anotando su velocidad de enlace. Indícalo cuando corresponda.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — Lee la etiqueta de un cable real</h3>
+
+            <p>Coge cualquier latiguillo de red que tengas a mano y mira la <strong>funda</strong> con atención. Los
+            fabricantes imprimen a lo largo del cable, cada pocos centímetros, una línea con toda su identificación.</p>
+
+            <p>Algo parecido a esto:</p>
+
+<pre><code>XXXX CABLE  UTP  CAT 5E  4PR 24AWG  ETL VERIFIED  CMR  75°C  0123 M</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Lo que pone</th><th>Qué significa</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>UTP</strong> / FTP / STP</td><td>Nivel de apantallamiento</td></tr>
+                    <tr><td><strong>CAT 5E</strong>, CAT 6, CAT 6A…</td><td>La categoría: lo más importante</td></tr>
+                    <tr><td><strong>4PR</strong> o 4 PAIRS</td><td>Cuatro pares, ocho hilos</td></tr>
+                    <tr><td><strong>24AWG</strong></td><td>Grosor del hilo. Cuanto <em>menor</em> el número, más grueso</td></tr>
+                    <tr><td><strong>CM, CMR, CMP</strong></td><td>Comportamiento ante el fuego. CMP es el de mayor exigencia</td></tr>
+                    <tr><td>Un número creciente + <strong>M</strong></td><td>Metros marcados desde el origen de la bobina</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Si el cable no lleva nada impreso</strong>
+                Es mala señal. Los latiguillos de calidad siempre van marcados; los que vienen «de regalo» con
+                routers o televisores a menudo no lo llevan y suelen ser <strong>Cat 5 de dos pares</strong>, que no
+                pasan de 100 Mbps aunque el conector tenga sus ocho pines.
+                <br><br>
+                Truco para salir de dudas: mira los ocho pines del conector <strong>al trasluz</strong>. Si solo hay
+                cuatro hilos de colores llegando a los contactos, ese cable <strong>nunca</strong> dará gigabit.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — Comprueba a qué velocidad ha negociado tu enlace</h3>
+
+            <p>Este es el dato clave del día: no lo que <em>debería</em> dar tu red, sino lo que <strong>realmente ha
+            negociado</strong>.</p>
+
+            <div class="so-tabs" data-grupo="vel">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="vel" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Format-Table Name, Status, LinkSpeed, MediaType -AutoSize</code></pre></div>
+                <p>La columna <strong>LinkSpeed</strong> es la velocidad negociada del enlace. Fíjate en que las
+                interfaces desconectadas muestran <code>0 bps</code> o el valor nominal, no uno real.</p>
+            </div>
+
+            <div class="so-panel" data-grupo="vel" data-so="nix">
+                <div class="comando"><pre><code>ethtool eth0 | grep -E "Speed|Duplex|Auto-negotiation|Link detected"</code></pre></div>
+                <p>Sustituye <code>eth0</code> por el nombre de tu interfaz. Si <code>ethtool</code> no está
+                instalado, un dato más limitado:</p>
+                <div class="comando"><pre><code>cat /sys/class/net/eth0/speed</code></pre></div>
+                <p>En macOS: <code>networksetup -getmedia "Ethernet"</code>.</p>
+            </div>
+
+            <div class="dato" style="margin-top:14px">
+                <strong>Ejemplo de salida real</strong>
+<pre><code>Name              Status        LinkSpeed  MediaType
+----              ------        ---------  ---------
+Ethernet          Up            1 Gbps     802.3
+Wi-Fi             Disconnected  0 bps      Native 802.11
+Ethernet 2        Up            600 Mbps   Native 802.11</code></pre>
+                <p>Aquí hay tres cosas que interpretar: el enlace de cobre ha negociado correctamente a
+                <strong>1 Gbps</strong>; la Wi-Fi aparece desconectada porque el cable tiene prioridad; y la tercera
+                interfaz, pese a llamarse «Ethernet 2», es en realidad inalámbrica, como delata su
+                <em>MediaType</em>.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — ¿Está activa la autonegociación?</h3>
+
+            <p>Recuerda que el auto-MDIX y la elección de velocidad y dúplex forman parte del mismo proceso. Comprueba
+            que no esté fijado a mano:</p>
+
+            <div class="so-tabs" data-grupo="auto">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="auto" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapterAdvancedProperty -DisplayName "*dúplex*","*Duplex*" | Format-Table Name, DisplayName, DisplayValue -AutoSize</code></pre></div>
+                <p>Lo normal y lo correcto es que el valor sea <strong>«Negociación automática»</strong> o
+                <em>«Auto Negotiation»</em>. Cualquier otro valor —«100 Mbps Full Duplex», por ejemplo— significa que
+                alguien lo fijó a mano.</p>
+            </div>
+
+            <div class="so-panel" data-grupo="auto" data-so="nix">
+                <div class="comando"><pre><code>ethtool eth0 | grep -A2 "Auto-negotiation"</code></pre></div>
+                <p>Debe decir <code>Auto-negotiation: on</code>.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Por qué esto importa</strong>
+                Fijar la velocidad a mano fue una práctica común hace veinte años, cuando la autonegociación fallaba
+                a menudo. Hoy es una <strong>fuente de averías</strong>: si un extremo está fijo y el otro negocia,
+                aparece un <strong>desajuste de dúplex</strong> —el problema que estudiaste en el Día 2 de la Semana
+                1—, la red funciona pero lentísima, y además el auto-MDIX puede dejar de operar.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 4 — Si tienes acceso a más equipos</h3>
+
+            <p>Si en tu casa hay más dispositivos por cable —una consola, un televisor, un NAS, otro PC—, comprueba la
+            velocidad negociada de cada uno. Es exactamente la revisión rutinaria que proponía el ejercicio 4.</p>
+
+            <p>Muchos routers domésticos muestran esta información en su interfaz web, en una sección llamada
+            «Estado», «LAN» o «Dispositivos conectados». Busca si el tuyo indica la velocidad de cada puerto.</p>
+
+            <div class="dato">
+                <strong>Qué esperas encontrar</strong>
+                <p>Es bastante habitual descubrir <strong>al menos un dispositivo negociando 100 Mbps</strong> sin
+                motivo aparente. Las causas más frecuentes: un cable viejo de dos pares que vino con el aparato, un
+                latiguillo pisado por un mueble, o directamente un dispositivo cuyo puerto es de 100 Mbps de fábrica
+                —algo aún común en televisores, impresoras y domótica—.</p>
+            </div>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:24px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has leído la etiqueta de un cable real y sabes de qué categoría es.</li>
+                <li>Conoces la velocidad negociada de tu enlace y sabes decir si es la esperada.</li>
+                <li>Has comprobado que la autonegociación está activa.</li>
+                <li>Sabes explicar qué comprobarías, y en qué orden, ante un enlace que negocia por debajo.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_01/laboratorio.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 2 — Tu cable y tu enlace',
+    subtitulo: 'Etiqueta del cable · velocidad negociada · autonegociación',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'PARTE A: El cable que tienes delante',
+            tiempo: '15 min',
+            enunciado: '<p>Datos leídos directamente de la funda de un cable real.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>1.</strong> Transcribe la línea impresa en la funda del cable, tan completa como puedas leerla.',
+                    placeholder: 'UTP CAT 5E 4PR 24AWG CM...',
+                    ancho: '520px',
+                    explicacion: 'Si no consigues leerla entera, con la parte que identifique el apantallamiento y la categoría es suficiente.',
+                    pistas: [
+                        'Estira el cable y busca a lo largo de la funda: el texto se repite cada pocos centímetros.',
+                        'Si está muy borroso, prueba con luz rasante o con la cámara del móvil ampliando.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>2.</strong> ¿Qué <strong>categoría</strong> es ese cable?',
+                    placeholder: 'Cat 5e, Cat 6, Cat 6A...',
+                    ancho: '220px',
+                    explicacion: 'Si no pone nada, anota «sin marcar»: es un dato en sí mismo y casi siempre significa cable de baja calidad.',
+                    pistas: [
+                        'Busca la palabra CAT seguida de un número.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>3.</strong> Mira los pines del conector al trasluz. ¿Cuántos hilos de colores llegan a los contactos: cuatro u ocho?',
+                    placeholder: 'ocho / cuatro',
+                    ancho: '200px',
+                    explicacion: 'Ocho hilos es lo correcto y lo necesario para gigabit. Cuatro significa que el cable es de dos pares y su tope son 100 Mbps, por muy Cat 6 que ponga en la funda.',
+                    pistas: [
+                        'Mira el conector de frente, contra una luz: se ven los ocho contactos metálicos y qué hay debajo de cada uno.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>4.</strong> Según lo que has visto, ¿ese cable podría soportar 1 Gbps? Responde <em>sí</em>, <em>no</em> o <em>no puedo saberlo</em>, y justifícalo en una línea.',
+                    placeholder: 'sí, es Cat 5e y tiene los ocho hilos conectados',
+                    ancho: '520px',
+                    explicacion: 'Gigabit exige <strong>dos condiciones a la vez</strong>: categoría Cat 5e o superior <em>y</em> los cuatro pares conectados. Si falla cualquiera de las dos, no hay gigabit. Y si el cable no lleva marcado nada y no distingues los hilos, «no puedo saberlo» es la respuesta honesta y correcta.',
+                    pistas: [
+                        'Necesitas que se cumplan DOS condiciones a la vez: categoría suficiente y ocho hilos.',
+                        'Un cable puede poner Cat 6 en la funda y llevar solo cuatro hilos crimpados: manda lo que veas en el conector.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE B: Tu enlace, medido',
+            tiempo: '18 min',
+            enunciado: '<p>Ahora los datos de tu equipo. Anota lo que devuelvan los comandos, no lo que crees que debería salir.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    pregunta: '<strong>5.</strong> Pega la salida del comando que muestra la velocidad de enlace de tus interfaces.',
+                    placeholder: 'Pega la salida de Get-NetAdapter o de ethtool',
+                    minimo: 40,
+                    debe: [['bps', 'gbps', 'mbps', 'speed', 'linkspeed'], ['up', 'down', 'yes', 'no', 'ethernet', 'wi-fi', 'eth']],
+                    explicacion: 'Guardar la salida en bruto te permite comparar dentro de unos meses, y es lo que se adjunta en un parte de incidencia.',
+                    pistas: [
+                        'Copia la tabla completa, con su cabecera.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>6.</strong> ¿Qué velocidad ha negociado tu interfaz activa?',
+                    placeholder: '1 Gbps, 100 Mbps, 600 Mbps...',
+                    ancho: '220px',
+                    explicacion: 'Si te conectas por Wi-Fi, este valor cambiará con la distancia al punto de acceso: es normal, porque el enlace se renegocia constantemente.',
+                    pistas: [
+                        'Es el valor de la columna LinkSpeed, o la línea Speed de ethtool.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>7.</strong> ¿Es la velocidad que esperabas según tu equipamiento? Responde <em>sí</em> o <em>no</em> y explica en una línea por qué.',
+                    placeholder: 'sí, porque tarjeta, cable y router son de gigabit',
+                    ancho: '520px',
+                    explicacion: 'La comparación correcta es contra el <strong>menor</strong> de los tres elementos: tarjeta, cable y puerto del switch. El enlace negocia siempre al mínimo común.',
+                    pistas: [
+                        'Mira las tres piezas de la cadena: tu tarjeta, el cable y el puerto al que está conectado.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>8.</strong> ¿Está la autonegociación activa en tu interfaz? Copia el valor exacto que te ha devuelto el comando.',
+                    placeholder: 'Negociación automática / Auto-negotiation: on',
+                    ancho: '420px',
+                    explicacion: 'Si en tu sistema no aparece esa propiedad, anótalo: algunos adaptadores —sobre todo los virtuales y los USB baratos— no la exponen.',
+                    pistas: [
+                        'En Windows es una propiedad avanzada llamada «Velocidad y dúplex».'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE C: Tu red doméstica al completo',
+            tiempo: '12 min',
+            enunciado: '<p>Aplica la revisión rutinaria a todo lo que tengas conectado por cable.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>9.</strong> ¿Cuántos dispositivos tienes conectados por <strong>cable</strong> en casa? Cuenta también router, consolas, televisores, NAS o impresoras.',
+                    ayuda: 'dispositivos',
+                    ancho: '110px',
+                    explicacion: 'Si la respuesta es 1, cuenta al menos el enlace entre tu equipo y el router: ese ya es un enlace que analizar.',
+                    pistas: [
+                        'Mira físicamente los puertos ocupados en la parte trasera del router.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>10.</strong> ¿Alguno negocia por debajo de 1 Gbps? Indica cuál y a qué velocidad; si no puedes consultarlo, escribe cómo lo averiguarías.',
+                    placeholder: 'la impresora, a 100 Mbps / no puedo consultarlo porque...',
+                    ancho: '520px',
+                    explicacion: 'Encontrar alguno es lo habitual. Antes de acusar al cable, comprueba la especificación del aparato: muchas impresoras, televisores y dispositivos domóticos llevan puerto de 100 Mbps de fábrica, y ahí no hay nada que arreglar.',
+                    pistas: [
+                        'La interfaz web del router suele listar la velocidad de cada puerto LAN.',
+                        'Si el router no lo muestra, busca el modelo del dispositivo y mira su especificación de red.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>11.</strong> Elige uno de tus enlaces y explica <strong>qué limita su velocidad</strong>: la tarjeta, el cable o el puerto del otro extremo. Justifícalo.',
+                    modelo: `<p>La respuesta depende de tu instalación, pero el razonamiento debe ser siempre el mismo:
+                             un enlace Ethernet negocia a la velocidad del <strong>elemento más lento de la
+                             cadena</strong>. Hay tres candidatos, y hay que descartarlos uno a uno.</p>
+                             <ul>
+                               <li><strong>La tarjeta de red</strong>: se comprueba con la descripción del adaptador.
+                               Un «Gigabit Ethernet» o «I225-V» descarta la tarjeta; un adaptador USB antiguo o un
+                               portátil de más de quince años puede ser el cuello de botella.</li>
+                               <li><strong>El cable</strong>: categoría inferior a Cat 5e, o cable de solo dos pares.
+                               Es la causa más frecuente cuando la velocidad es <em>exactamente</em> 100 Mbps
+                               teniendo el resto a gigabit.</li>
+                               <li><strong>El puerto del otro extremo</strong>: muchos routers domésticos de operador
+                               tienen algunos puertos LAN de 100 Mbps y otros de 1 Gbps, y no siempre está indicado.
+                               También hay dispositivos —impresoras, televisores, domótica— cuyo puerto es de
+                               100 Mbps de fábrica.</li>
+                             </ul>
+                             <p>El método para averiguarlo sin herramientas es la <strong>sustitución</strong>: cambia
+                             un elemento cada vez y mira si la velocidad negociada cambia. Si al poner otro cable sube
+                             a 1 Gbps, era el cable. Si al cambiar de puerto del router sube, era el puerto. Si no
+                             cambia con nada, es el dispositivo.</p>
+                             <p>Un caso especial: si el elemento limitante resulta ser el <strong>dispositivo</strong>
+                             —una impresora de 100 Mbps— no hay avería que reparar. Conviene documentarlo para no
+                             volver a investigarlo dentro de seis meses.</p>`,
+                    rubrica: [
+                        'Identifica que el enlace negocia al mínimo de la cadena',
+                        'Enumera los tres candidatos: tarjeta, cable y puerto del otro extremo',
+                        'Aporta una forma de comprobar cada uno',
+                        'Propone el método de sustituir un elemento cada vez',
+                        'Distingue entre una avería y una limitación de fábrica del dispositivo'
+                    ],
+                    pistas: [
+                        'Un enlace tiene tres piezas: dos extremos y el medio. Repásalas una a una.',
+                        'Piensa cómo comprobarías cada hipótesis sin comprar nada.',
+                        'No todo lo que va a 100 Mbps está averiado: algunos aparatos son así de fábrica.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE D: Interpretación',
+            tiempo: '13 min',
+            enunciado: '<p>Cierra el laboratorio razonando sobre lo que has medido.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>12.</strong> Imagina que mañana tuvieras que cablear tu propia casa desde cero. Decide qué categoría instalarías y por dónde llevarías el cable, justificando ambas decisiones.',
+                    modelo: `<p>La decisión razonable hoy es <strong>Cat 6A</strong> para el cableado fijo, y las
+                             razones son de coste a largo plazo más que de necesidad inmediata.</p>
+                             <p>El material representa una parte pequeña del coste de una instalación: lo caro es
+                             <strong>abrir y cerrar paredes</strong> y las horas de trabajo. Ese coste es idéntico se
+                             instale Cat 5e o Cat 6A. Como el cableado de un edificio dura fácilmente
+                             <strong>quince o veinte años</strong>, ahorrar en la categoría para tener que repetir la
+                             obra más adelante es una mala inversión. Cat 6A garantiza 10 Gbps a 100 m y cubre
+                             cualquier necesidad previsible.</p>
+                             <p>Sí instalaría <strong>UTP, no apantallado</strong>: una vivienda no tiene el nivel de
+                             interferencia que justifique FTP, y el apantallado obliga a que <em>todos</em> los
+                             componentes —conectores, rosetas, patch panel— lo sean y estén correctamente puestos a
+                             tierra. Mal hecho, es peor que no ponerlo.</p>
+                             <p>En cuanto al trazado, aplicaría el <strong>cableado estructurado</strong> aunque sea
+                             una casa: un punto central donde llegue la fibra del operador y quepa un pequeño rack o
+                             al menos un switch, y desde ahí una tirada <strong>independiente a cada
+                             estancia</strong>, terminada en roseta. Nada de encadenar habitaciones en serie.</p>
+                             <p>Dos decisiones más que se agradecen después: llevar <strong>dos tomas por
+                             estancia</strong> en lugar de una, porque el coste marginal de la segunda es mínimo y
+                             evita tener que poner un switch pequeño en cada habitación; y <strong>etiquetar</strong>
+                             ambos extremos de cada tirada durante la obra, cuando aún se sabe qué cable es cuál.</p>
+                             <p>Respetaría además el límite de <strong>100 m</strong> por enlace, algo que en una
+                             vivienda no suele ser problema, y dejaría los cables en canaleta o tubo corrugado para
+                             poder sustituirlos sin obra si algún día hiciera falta.</p>`,
+                    rubrica: [
+                        'Elige Cat 6A o justifica razonadamente otra categoría',
+                        'Argumenta que lo caro es la obra, no el cable',
+                        'Descarta el apantallado para un entorno doméstico y explica por qué',
+                        'Propone una topología en estrella desde un punto central, con roseta por estancia',
+                        'Menciona el etiquetado y el límite de 100 m'
+                    ],
+                    pistas: [
+                        'Compara el coste del cable con el de abrir una pared. ¿Cuál pesa más en la decisión?',
+                        'Piensa cuántos años va a durar esa instalación antes de tocarla otra vez.',
+                        'Recuerda por qué el apantallamiento puede empeorar las cosas si no se hace completo.',
+                        'Aplica lo del cableado estructurado: ¿dónde estaría tu «armario»?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>13.</strong> Une el día de hoy con el de ayer: ¿por qué un problema de cableado puede hacer que un equipo <strong>no aparezca</strong> en la tabla ARP de sus vecinos?',
+                    modelo: `<p>Porque si el enlace físico no se establece, el equipo no puede enviar ni recibir
+                             <strong>ninguna</strong> trama, y la tabla ARP se construye precisamente a partir de
+                             tramas.</p>
+                             <p>El mecanismo es este: para que la IP de un equipo aparezca asociada a su MAC en la
+                             tabla ARP de un vecino, ese vecino ha tenido que <strong>preguntar por broadcast</strong>
+                             quién tiene esa IP y <strong>recibir la respuesta</strong>. Las dos cosas son tráfico de
+                             capa 2, y el tráfico de capa 2 necesita un enlace físico funcionando.</p>
+                             <p>Si el cable está cortado, mal crimpado o desconectado, no hay <em>link</em>: la NIC ni
+                             siquiera intenta transmitir. El equipo es invisible para el resto de la red, aunque su
+                             configuración IP sea perfecta.</p>
+                             <p>De ahí una regla de diagnóstico que conviene interiorizar: <strong>se depura de abajo
+                             hacia arriba</strong>. Antes de revisar la IP, la máscara, la puerta de enlace o el DNS,
+                             hay que confirmar que existe enlace físico: luz en el puerto, estado <em>Up</em> y una
+                             velocidad negociada coherente. Gastar media hora revisando configuración de red cuando el
+                             latiguillo está suelto es un clásico.</p>
+                             <p>El caso intermedio es más sutil: con dos pares dañados sí hay enlace, el equipo
+                             aparece en la tabla ARP con normalidad y todo parece correcto. La única señal es la
+                             <strong>velocidad negociada por debajo de lo esperado</strong>, que es justo lo que has
+                             medido hoy.</p>`,
+                    rubrica: [
+                        'Explica que la tabla ARP se construye con tráfico de capa 2',
+                        'Sin enlace físico no hay tramas, ni preguntas ni respuestas ARP',
+                        'El equipo resulta invisible aunque su configuración IP sea correcta',
+                        'Formula la regla de depurar de abajo hacia arriba',
+                        'Distingue el caso del cable a medias: sí hay enlace, pero a menor velocidad'
+                    ],
+                    pistas: [
+                        'Recuerda cómo se llena la tabla ARP: hace falta enviar una pregunta y recibir una respuesta.',
+                        '¿Qué necesita una trama para poder salir de la tarjeta?',
+                        'Termina con qué comprobarías primero en una incidencia, y por qué.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

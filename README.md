@@ -28,10 +28,13 @@ Además: **modo oscuro**, seguimiento de progreso guardado en el navegador y des
 | Parte | Estado |
 |-------|--------|
 | **Mes 1 · Semana 1** (7 días completos) | ✅ Terminada — teoría, quizzes, ejercicios y **6 laboratorios** |
-| Mes 1 · Semanas 2-4 | 🟡 Material en formato antiguo, pendiente de convertir |
+| **Mes 1 · Semana 2** (7 días completos) | ✅ Terminada — **6 laboratorios**, un **proyecto de diseño** y test semanal |
+| Mes 1 · Semanas 3-4 | ⏳ Material en formato antiguo, pendiente de convertir |
 | Meses 2 a 12 | ⏳ Planificados en el calendario, sin desarrollar |
 
-La **Semana 1** suma unas 24 horas de trabajo y sirve de referencia del formato.
+Las dos semanas publicadas suman unas **48 horas** de trabajo. La **Semana 2** culmina en un **proyecto**: diseñar la red completa de una empresa a partir de sus requisitos, justificando cada decisión.
+
+> Nota: los tipos de red y las topologías que el calendario original asignaba a la Semana 2 ya se cubrieron en la Semana 1, así que la Semana 2 desarrolla la otra mitad de su título: los **componentes** de una red.
 
 ## Información general
 
@@ -58,7 +61,7 @@ La **Semana 1** suma unas 24 horas de trabajo y sirve de referencia del formato.
 | Semana | Tema | Contenido Principal | Evaluación |
 |--------|------|---------------------|------------|
 | 1 | Introducción a las Redes | Sistemas de comunicación, evolución histórica | Test 1 |
-| 2 | Componentes y Tipos de Redes | PAN, LAN, MAN, WAN, topologías | Test 2 |
+| 2 | Componentes de una red | Tarjeta de red y MAC, medios y cableado, software y modelos | Test 2 |
 | 3 | Arquitecturas y Modelos | OSI, TCP/IP, normalización | Test 3 |
 | 4 | Dispositivos de Red | Hub, Switch, Router, AP | Examen Mensual 1 |
 

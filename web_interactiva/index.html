@@ -174,6 +174,8 @@
         }
 
         /* ---------- Curso: días de la semana en curso ---------- */
+        .dia-card.pendiente { opacity: 0.62; border-style: dashed; }
+        .dia-card.pendiente .dia-dur { font-style: italic; }
 
         .curso {
             background: white;
@@ -473,7 +475,7 @@
 
             <div class="dias-grid">
 
-                <div class="dia-card" data-dia="Dia_01">
+                <div class="dia-card" data-semana="Semana_01" data-dia="Dia_01">
                     <div class="dia-head">
                         <span class="dia-num">Día 1</span>
                         <span class="dia-dur">3 h 17 min</span>
@@ -487,7 +489,7 @@
                     </div>
                 </div>
 
-                <div class="dia-card" data-dia="Dia_02">
+                <div class="dia-card" data-semana="Semana_01" data-dia="Dia_02">
                     <div class="dia-head">
                         <span class="dia-num">Día 2</span>
                         <span class="dia-dur">3 h 32 min</span>
@@ -501,7 +503,7 @@
                     </div>
                 </div>
 
-                <div class="dia-card" data-dia="Dia_03">
+                <div class="dia-card" data-semana="Semana_01" data-dia="Dia_03">
                     <div class="dia-head">
                         <span class="dia-num">Día 3</span>
                         <span class="dia-dur">3 h 22 min</span>
@@ -515,7 +517,7 @@
                     </div>
                 </div>
 
-                <div class="dia-card" data-dia="Dia_04">
+                <div class="dia-card" data-semana="Semana_01" data-dia="Dia_04">
                     <div class="dia-head">
                         <span class="dia-num">Día 4</span>
                         <span class="dia-dur">3 h 42 min</span>
@@ -529,7 +531,7 @@
                     </div>
                 </div>
 
-                <div class="dia-card" data-dia="Dia_05">
+                <div class="dia-card" data-semana="Semana_01" data-dia="Dia_05">
                     <div class="dia-head">
                         <span class="dia-num">Día 5</span>
                         <span class="dia-dur">3 h 13 min</span>
@@ -543,7 +545,7 @@
                     </div>
                 </div>
 
-                <div class="dia-card" data-dia="Dia_06">
+                <div class="dia-card" data-semana="Semana_01" data-dia="Dia_06">
                     <div class="dia-head">
                         <span class="dia-num">Día 6</span>
                         <span class="dia-dur">3 h 53 min</span>
@@ -557,7 +559,7 @@
                     </div>
                 </div>
 
-                <div class="dia-card repaso" data-dia="Dia_07">
+                <div class="dia-card repaso" data-semana="Semana_01" data-dia="Dia_07">
                     <div class="dia-head">
                         <span class="dia-num">Día 7 · Evaluación</span>
                         <span class="dia-dur">3 h 07 min</span>
@@ -575,6 +577,117 @@
             <div class="curso-footer">
                 <span>📋 <a href="../Mes_01_Fundamentos/Semana_01/README.md">Índice de la semana</a> · <a href="../Mes_01_Fundamentos/README.md">Mes 1 completo</a></span>
                 <span>📝 <a href="../Mes_01_Fundamentos/examen_mensual.html">Examen mensual del Mes 1</a></span>
+            </div>
+        </div>
+
+        <div class="curso">
+            <h2>📅 Semana 2 — Componentes de una red</h2>
+            <p>Mes 1: Fundamentos de Redes · <strong>7 días</strong> · 24 h 36 min. De qué está hecha una red, pieza a pieza: la tarjeta, el medio, el software, los servidores y los servicios. Termina diseñando una red completa y con test semanal.</p>
+
+            <div class="dias-grid">
+
+                <div class="dia-card" data-semana="Semana_02" data-dia="Dia_01">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 1</span>
+                        <span class="dia-dur">3 h 28 min</span>
+                    </div>
+                    <p class="dia-tema">La <strong>tarjeta de red</strong> y la dirección MAC: OUI, bits I/G y U/L, y por qué hacen falta MAC e IP. Laboratorio: inventario de tus interfaces.</p>
+                    <div class="dia-resultados" data-resultados="Dia_01"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_01/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_01/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_01/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-semana="Semana_02" data-dia="Dia_02">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 2</span>
+                        <span class="dia-dur">3 h 47 min</span>
+                    </div>
+                    <p class="dia-tema">El <strong>medio físico</strong>: par trenzado, categorías, T568A/B y cableado estructurado. Laboratorio: la etiqueta de tu cable y tu velocidad negociada.</p>
+                    <div class="dia-resultados" data-resultados="Dia_02"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_02/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_02/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_02/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-semana="Semana_02" data-dia="Dia_03">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 3</span>
+                        <span class="dia-dur">3 h 19 min</span>
+                    </div>
+                    <p class="dia-tema">El <strong>software de red</strong>: servicios, puertos y los modelos cliente-servidor y P2P. Laboratorio: qué está escuchando en tu equipo.</p>
+                    <div class="dia-resultados" data-resultados="Dia_03"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_03/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_03/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_03/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-semana="Semana_02" data-dia="Dia_04">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 4</span>
+                        <span class="dia-dur">3 h 35 min</span>
+                    </div>
+                    <p class="dia-tema"><strong>Servidores</strong>: RAID, disponibilidad, MTBF y MTTR, virtualización y nube. Laboratorio: cálculo de nueves y análisis de puntos únicos de fallo.</p>
+                    <div class="dia-resultados" data-resultados="Dia_04"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_04/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_04/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_04/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-semana="Semana_02" data-dia="Dia_05">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 5</span>
+                        <span class="dia-dur">3 h 51 min</span>
+                    </div>
+                    <p class="dia-tema">Los <strong>servicios</strong> que sostienen una red: DHCP, DNS, directorio y NTP, con su orden de arranque. Laboratorio: quién presta cada servicio en tu red.</p>
+                    <div class="dia-resultados" data-resultados="Dia_05"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_05/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_05/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_05/laboratorio.html" class="lab">Laboratorio</a>
+                    </div>
+                </div>
+
+                <div class="dia-card" data-semana="Semana_02" data-dia="Dia_06">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 6</span>
+                        <span class="dia-dur">3 h 24 min</span>
+                    </div>
+                    <p class="dia-tema"><strong>Método de diseño</strong> en seis pasos y análisis de riesgos. <strong>Proyecto completo</strong>: diseñar la red de una gestoría de 60 personas.</p>
+                    <div class="dia-resultados" data-resultados="Dia_06"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_06/teoria.html">Teoría + Quiz</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_06/ejercicios.html" class="sec">Ejercicios</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_06/laboratorio.html" class="lab">Proyecto</a>
+                    </div>
+                </div>
+
+                <div class="dia-card repaso" data-semana="Semana_02" data-dia="Dia_07">
+                    <div class="dia-head">
+                        <span class="dia-num">Día 7 · Evaluación</span>
+                        <span class="dia-dur">3 h 12 min</span>
+                    </div>
+                    <p class="dia-tema">Síntesis, mazo de 30 flashcards y <strong>test semanal de 30 preguntas</strong> cronometrado, con desglose por día y enlace al que repasar.</p>
+                    <div class="dia-resultados" data-resultados="Dia_07"></div>
+                    <div class="dia-links">
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_07/teoria.html">Síntesis + Test</a>
+                        <a href="../Mes_01_Fundamentos/Semana_02/Dia_07/ejercicios.html" class="sec">Recuperación</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="curso-footer">
+                <span>📋 <a href="../Mes_01_Fundamentos/Semana_02/README.md">Índice de la semana</a></span>
+<span>✅ Semana completa · 6 laboratorios, 1 proyecto de diseño y test semanal</span>
             </div>
         </div>
 
@@ -678,9 +791,11 @@
 
     <script src="../assets/progreso.js"></script>
     <script>
-        // Actividades evaluables de la Semana 1: 7 quizzes + 7 hojas de
-        // ejercicios + los 6 laboratorios (días 1 a 6). Barra de progreso.
-        const ACTIVIDADES_SEMANA_1 = 20;
+        // Actividades evaluables ya publicadas:
+        //   Semana 1 → 7 quizzes + 7 hojas de ejercicios + 6 laboratorios = 20
+        //   Semana 2 → 6 días × 3 actividades + test y recuperación del Día 7 = 20
+        // La barra mide sobre este total, así que crecerá al publicar más días.
+        const ACTIVIDADES_PUBLICADAS = 20 + 20;
 
         function etiquetaResultado(pct) {
             if (pct >= 70) return 'bien';
@@ -708,11 +823,11 @@
 
             // La barra mide lo completado de la Semana 1, no la semana del calendario:
             // así avanza a medida que se trabaja, no solo al cambiar de semana.
-            const hechas = Math.min(p.exercisesDone, ACTIVIDADES_SEMANA_1);
-            const pct = Math.round((hechas / ACTIVIDADES_SEMANA_1) * 100);
+            const hechas = Math.min(p.exercisesDone, ACTIVIDADES_PUBLICADAS);
+            const pct = Math.round((hechas / ACTIVIDADES_PUBLICADAS) * 100);
             const barra = document.getElementById('generalProgress');
             barra.style.width = pct + '%';
-            barra.textContent = pct + '% de la Semana 1';
+            barra.textContent = pct + '% del material publicado';
         }
 
         // Marca cada tarjeta de día con el resultado guardado de su quiz y
@@ -723,6 +838,10 @@
 
             document.querySelectorAll('.dia-card').forEach(card => {
                 const dia = card.dataset.dia;
+                const semana = card.dataset.semana || 'Semana_01';
+                // Se busca por semana Y día: "Dia_01" a secas casaría con el
+                // Día 1 de todas las semanas y cruzaría los resultados.
+                const ruta = '/' + semana + '/' + dia + '/';
                 const cont = card.querySelector('.dia-resultados');
                 if (!cont) return;
 
@@ -731,7 +850,7 @@
 
                 [['teoria', 'Quiz'], ['ejercicios', 'Ejercicios'], ['laboratorio', 'Laboratorio']].forEach(([archivo, titulo]) => {
                     const clave = Object.keys(detalle).find(k =>
-                        k.includes('/' + dia + '/') && k.endsWith('/' + archivo));
+                        k.includes(ruta) && k.endsWith('/' + archivo));
                     if (!clave) return;
 
                     const act = detalle[clave];
@@ -743,7 +862,7 @@
                         + `${titulo}: ${act.correctas}/${act.total} · ${pct}%</span>`);
 
                     if (!ultima || act.fecha > ultima.fecha) {
-                        ultima = { fecha: act.fecha, dia: dia, titulo: titulo, pct: pct };
+                        ultima = { fecha: act.fecha, dia: dia, semana: semana, titulo: titulo, pct: pct };
                     }
                 });
 
@@ -756,8 +875,10 @@
                 const f = new Date(ultima.fecha);
                 const cuando = f.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
                     + ' ' + f.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                aviso.textContent = `Última actividad: ${ultima.titulo} del `
-                    + `${ultima.dia.replace('_', ' ')} — ${ultima.pct}% (${cuando})`;
+                const donde = ultima.semana.replace('_0', ' ').replace('_', ' ')
+                    + ' · ' + ultima.dia.replace('_0', ' ').replace('_', ' ');
+                aviso.textContent = `Última actividad: ${ultima.titulo} de la `
+                    + `${donde} — ${ultima.pct}% (${cuando})`;
             } else {
                 aviso.textContent = 'Aún no has corregido ningún quiz ni ejercicio.';
             }

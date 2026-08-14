@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — El medio físico: cables, conectores y cableado estructurado</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 2 — El medio físico</h1>
+        <p>Par trenzado, categorías, RJ45 y el orden de los hilos: el componente que se toca con las manos</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 50 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 47 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> de escritura y un laboratorio en el que vas a
+            <strong>leer la etiqueta de un cable real</strong>, comprobar a qué velocidad ha negociado tu enlace y
+            averiguar por qué a veces negocia menos de lo que debería.
+        </div>
+
+        <div class="destacado">
+            <strong>Dónde encaja este día</strong>
+            Ayer viste el componente que <em>pone</em> los bits en el medio. Hoy toca el <strong>medio</strong>: lo
+            único de toda la red que puedes coger con la mano. Es también el componente que más averías causa y el
+            más despreciado en los presupuestos.
+            <br><br>
+            <em>Nota de alcance:</em> hoy estudias el cable <strong>como componente</strong> —qué tipos hay, cómo se
+            conecta, cómo se organiza—. La física de la transmisión, la atenuación, la diafonía y la certificación
+            con equipo de medida son el <strong>Mes 2 completo</strong>. Aquí se sienta la base.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#familias">Las tres familias de medios</a></li>
+                <li><a href="#partrenzado">Par trenzado: por qué está trenzado</a></li>
+                <li><a href="#apantallado">Apantallamiento: UTP, FTP y STP</a></li>
+                <li><a href="#categorias">Categorías: de Cat 5e a Cat 8</a></li>
+                <li><a href="#rj45">El conector RJ45 y el orden de los hilos</a></li>
+                <li><a href="#cruzado">Cable directo, cruzado y auto-MDIX</a></li>
+                <li><a href="#fibra">Fibra óptica: cuándo y por qué</a></li>
+                <li><a href="#estructurado">Cableado estructurado: rack, panel y latiguillo</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="familias">1. Las tres familias de medios</h2>
+
+            <p>El <strong>medio de transmisión</strong> es el soporte por el que viaja la señal. Se agrupa en tres
+            familias, y la diferencia entre ellas es más importante de lo que parece:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Familia</th><th>Qué transporta</th><th>Ejemplos</th><th>Se comparte…</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Cobre</strong></td>
+                        <td>Señal <strong>eléctrica</strong></td>
+                        <td>Par trenzado, coaxial</td>
+                        <td>No: cada cable es de un enlace</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fibra óptica</strong></td>
+                        <td>Señal <strong>luminosa</strong></td>
+                        <td>Monomodo, multimodo</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inalámbrico</strong></td>
+                        <td>Ondas <strong>electromagnéticas</strong></td>
+                        <td>Wi-Fi, Bluetooth, 5G</td>
+                        <td><strong>Sí</strong>: el aire es de todos</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La consecuencia que hay que retener</strong>
+                Los medios guiados (cobre y fibra) <strong>confinan</strong> la señal dentro de un soporte: nadie más
+                la usa y nadie de fuera la escucha sin pinchar el cable. El medio inalámbrico es
+                <strong>compartido por naturaleza</strong>: todos los vecinos usan el mismo aire y todos pueden
+                escuchar.
+                <br><br>
+                De ahí salen dos hechos que ya conoces: el Wi-Fi es <strong>half-duplex</strong> y necesita CSMA/CA
+                (Día 2 de la Semana 1), y el Wi-Fi <strong>obliga</strong> a cifrar, mientras que en un cable el
+                cifrado es opcional.
+            </div>
+
+            <p>Hoy nos centramos en el <strong>par trenzado</strong>, porque es el medio con el que un administrador
+            de sistemas trabaja a diario, y en la <strong>fibra</strong> lo justo para saber cuándo se usa.</p>
+
+            <h2 id="partrenzado">2. Par trenzado: por qué está trenzado</h2>
+
+            <p>Un cable de red típico contiene <strong>ocho hilos de cobre agrupados en cuatro parejas</strong>, y cada
+            pareja está <strong>trenzada</strong> sobre sí misma con un número de vueltas por metro distinto.</p>
+
+<pre><code>Sección de un cable UTP de 4 pares:
+
+   ╭───────────────────────────────╮
+   │   ⟨⟩ naranja / blanco-naranja │   4 pares
+   │   ⟨⟩ verde   / blanco-verde   │   8 hilos
+   │   ⟨⟩ azul    / blanco-azul    │
+   │   ⟨⟩ marrón  / blanco-marrón  │
+   ╰───────────────────────────────╯
+        cada ⟨⟩ = par trenzado</code></pre>
+
+            <p>El trenzado no es decorativo ni sirve para que el cable sea flexible. Resuelve un problema físico
+            concreto.</p>
+
+            <h3>El problema: el ruido electromagnético</h3>
+
+            <p>Un hilo de cobre por el que circula una señal actúa como una pequeña antena: <strong>emite</strong>
+            interferencias hacia fuera y <strong>capta</strong> las que vienen de otros cables, motores, fluorescentes
+            o cables eléctricos cercanos. Si esa interferencia es lo bastante fuerte, corrompe los bits.</p>
+
+            <h3>La solución: dos hilos y una resta</h3>
+
+            <p>El par trenzado usa <strong>señalización diferencial</strong>. La señal no se envía por un hilo, sino
+            por dos, con la <strong>polaridad invertida</strong>: si por uno va +1 voltio, por el otro va −1.</p>
+
+            <p>El receptor no mide la tensión de cada hilo, sino la <strong>diferencia</strong> entre ambos.</p>
+
+<pre><code>Sin interferencia:      hilo A = +1      hilo B = −1      diferencia = 2
+Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
+                                                          ────────────
+                                        el ruido se cancela en la resta</code></pre>
+
+            <p>Como los dos hilos están trenzados, van <strong>físicamente juntos</strong> por todo el recorrido, así
+            que cualquier interferencia les afecta <em>por igual</em>. Al restar, el ruido común desaparece y la señal
+            se conserva. A esto se le llama <strong>rechazo en modo común</strong>.</p>
+
+            <div class="dato">
+                <strong>Y por eso cada par tiene un trenzado distinto</strong>
+                <p>Si los cuatro pares tuvieran el mismo paso de trenzado, quedarían alineados a lo largo del cable y
+                se acoplarían entre sí. Al usar pasos diferentes, la posición relativa de un par respecto a otro
+                cambia constantemente, y la interferencia entre pares —la <strong>diafonía</strong>— se promedia hasta
+                casi anularse.</p>
+                <p>Es un detalle de fabricación invisible que sostiene toda la Ethernet moderna.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Consecuencia práctica al crimpar</strong>
+                Al montar un conector hay que <strong>destrenzar lo mínimo imprescindible</strong>: como máximo 13 mm.
+                Cada centímetro destrenzado de más es un tramo sin protección, y es la causa número uno de que un
+                cable «hecho a mano» funcione a 100 Mbps en lugar de a 1 Gbps, o falle de forma intermitente.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="apantallado">3. Apantallamiento: UTP, FTP y STP</h2>
+
+            <p>El trenzado por sí solo basta en entornos normales. Cuando no basta, se añade una
+            <strong>pantalla</strong> metálica:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Sigla</th><th>Nombre</th><th>Qué lleva</th><th>Dónde se usa</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>UTP</strong></td>
+                        <td><em>Unshielded Twisted Pair</em></td>
+                        <td>Nada: solo el trenzado</td>
+                        <td><strong>El 95 % de las instalaciones</strong>: oficinas, casas, aulas</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FTP</strong></td>
+                        <td><em>Foiled Twisted Pair</em></td>
+                        <td>Una lámina de aluminio rodeando <strong>todos</strong> los pares</td>
+                        <td>Cerca de maquinaria, canaletas con cable eléctrico</td>
+                    </tr>
+                    <tr>
+                        <td><strong>STP</strong></td>
+                        <td><em>Shielded Twisted Pair</em></td>
+                        <td>Pantalla <strong>por cada par</strong>, y a veces general</td>
+                        <td>Industria, hospitales, entornos muy hostiles</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Más pantalla no es siempre mejor</strong>
+                Un cable apantallado <strong>solo funciona si la pantalla está puesta a tierra correctamente en los
+                dos extremos</strong>, con conectores y tomas también apantallados. Si se conecta a tierra en un solo
+                extremo, o se mezcla con material sin apantallar, la pantalla se convierte en una antena que
+                <em>introduce</em> ruido en lugar de eliminarlo.
+                <br><br>
+                Es un error caro y muy común: comprar cable FTP para una oficina normal, montarlo con conectores UTP y
+                acabar con una instalación peor que si se hubiera usado UTP desde el principio. <strong>El
+                apantallado exige una instalación completa apantallada.</strong>
+            </div>
+
+            <h2 id="categorias">4. Categorías: de Cat 5e a Cat 8</h2>
+
+            <p>La <strong>categoría</strong> clasifica el cable por el ancho de banda que garantiza. No es una marca
+            comercial: es una certificación con ensayos definidos.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Categoría</th><th>Ancho de banda</th><th>Velocidad y distancia</th><th>Situación</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Cat 5</strong></td><td>100 MHz</td>
+                        <td>100 Mbps a 100 m</td>
+                        <td>Obsoleta, no se instala</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cat 5e</strong></td><td>100 MHz</td>
+                        <td><strong>1 Gbps a 100 m</strong></td>
+                        <td>Mínimo aceptable hoy</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cat 6</strong></td><td>250 MHz</td>
+                        <td>1 Gbps a 100 m · <strong>10 Gbps solo hasta 55 m</strong></td>
+                        <td><strong>Lo más instalado</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cat 6A</strong></td><td>500 MHz</td>
+                        <td><strong>10 Gbps a 100 m</strong></td>
+                        <td>Obra nueva y centros de datos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cat 7 / 7A</strong></td><td>600 / 1000 MHz</td>
+                        <td>10 Gbps a 100 m</td>
+                        <td>Poco usada: exige conectores especiales</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cat 8</strong></td><td>2000 MHz</td>
+                        <td>25-40 Gbps, <strong>solo 30 m</strong></td>
+                        <td>Únicamente dentro de centros de datos</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Los 100 metros: el número que hay que memorizar</strong>
+                <p>El límite de un enlace de cobre Ethernet es de <strong>100 m</strong>, y se reparte así:</p>
+                <ul>
+                    <li><strong>90 m</strong> de cable rígido, el que va por la pared (<em>cableado horizontal</em>).</li>
+                    <li><strong>10 m</strong> repartidos entre los latiguillos de los dos extremos.</li>
+                </ul>
+                <p>Pasado ese límite la señal se atenúa demasiado. La solución no es «poner un cable mejor»: es
+                <strong>meter un dispositivo activo</strong> por el camino (un switch) o <strong>cambiar a fibra</strong>.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Dos ideas contraintuitivas de la tabla</strong>
+                <br>· <strong>Cat 6 no garantiza 10 Gbps.</strong> Solo lo consigue hasta 55 m, y en condiciones
+                buenas. Para 10 Gbps de verdad hace falta <strong>Cat 6A</strong>.
+                <br>· <strong>Cat 8 no es «mejor» para una oficina.</strong> Solo llega a 30 m: en un edificio normal
+                sería inservible. Es un cable de <em>rack</em>, no de instalación.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="rj45">5. El conector RJ45 y el orden de los hilos</h2>
+
+            <p>El conector que se usa en par trenzado se llama coloquialmente <strong>RJ45</strong>. Su nombre técnico
+            correcto es <strong>8P8C</strong> (8 posiciones, 8 contactos), pero en la práctica todo el mundo dice
+            RJ45 y así lo verás en cualquier catálogo.</p>
+
+            <h3>Las dos normas: T568A y T568B</h3>
+
+            <p>Los ocho hilos se pueden colocar en el conector en dos órdenes normalizados:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Pin</th><th>T568A</th><th>T568B</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Blanco-<strong>verde</strong></td><td>Blanco-<strong>naranja</strong></td></tr>
+                    <tr><td>2</td><td><strong>Verde</strong></td><td><strong>Naranja</strong></td></tr>
+                    <tr><td>3</td><td>Blanco-<strong>naranja</strong></td><td>Blanco-<strong>verde</strong></td></tr>
+                    <tr><td>4</td><td>Azul</td><td>Azul</td></tr>
+                    <tr><td>5</td><td>Blanco-azul</td><td>Blanco-azul</td></tr>
+                    <tr><td>6</td><td><strong>Naranja</strong></td><td><strong>Verde</strong></td></tr>
+                    <tr><td>7</td><td>Blanco-marrón</td><td>Blanco-marrón</td></tr>
+                    <tr><td>8</td><td>Marrón</td><td>Marrón</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La única diferencia entre A y B</strong>
+                Se <strong>intercambian el par verde y el par naranja</strong>. Los pines 4, 5, 7 y 8 son idénticos en
+                las dos normas. Si te aprendes una sola, aprende <strong>T568B</strong>: es la más extendida.
+                <br><br>
+                Y lo importante: <strong>ninguna de las dos es mejor</strong>. Lo que importa es la
+                <strong>coherencia</strong>: toda una instalación debe usar la misma. Mezclarlas sin querer es
+                justamente lo que produce un cable cruzado por accidente.
+            </div>
+
+            <h3>Qué pares se usan realmente</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Velocidad</th><th>Pares usados</th><th>Consecuencia</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>10 y 100 Mbps</td>
+                        <td><strong>2 pares</strong> (pines 1-2 y 3-6)</td>
+                        <td>Un cable con dos pares rotos <em>sigue funcionando</em> a 100 Mbps</td>
+                    </tr>
+                    <tr>
+                        <td>1 Gbps y superior</td>
+                        <td><strong>Los 4 pares</strong>, en ambos sentidos a la vez</td>
+                        <td>Cualquier hilo mal crimpado tumba el gigabit</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>El síntoma más revelador de toda la instalación de red</strong>
+                Si un equipo negocia <strong>100 Mbps cuando debería dar 1 Gbps</strong>, la causa casi siempre es
+                <strong>física</strong>: un hilo mal crimpado, un par cortado, un latiguillo aplastado o un cable
+                Cat 5 antiguo. La red «funciona», el usuario navega, y por eso nadie lo detecta durante meses.
+                <br><br>
+                <strong>Es la primera comprobación que debes hacer ante una queja de lentitud.</strong> Hoy la
+                practicas en el laboratorio.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="cruzado">6. Cable directo, cruzado y auto-MDIX</h2>
+
+            <p>Históricamente había que elegir entre dos tipos de cable según qué se conectaba:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tipo</th><th>Cómo se monta</th><th>Para qué servía</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Directo</strong><br>(<em>straight-through</em>)</td>
+                        <td>La <strong>misma</strong> norma en los dos extremos: B–B o A–A</td>
+                        <td>Unir dispositivos <strong>distintos</strong>: PC↔switch, switch↔router</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cruzado</strong><br>(<em>crossover</em>)</td>
+                        <td>Una norma en cada extremo: <strong>A–B</strong></td>
+                        <td>Unir dispositivos <strong>iguales</strong>: PC↔PC, switch↔switch</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Por qué existía esa distinción</h3>
+
+            <p>Un PC transmite por los pines 1-2 y escucha por los 3-6. Un switch hace justo lo contrario. Al unirlos
+            con un cable directo, cada «boca» de uno cae en la «oreja» del otro y todo encaja.</p>
+
+            <p>Pero al unir dos PC, ambos transmitirían por 1-2 y escucharían por 3-6: los dos hablarían a la vez a un
+            hilo donde nadie escucha. El cable cruzado invierte los pares y arregla el desencuentro.</p>
+
+<pre><code>PC ─────────── SWITCH          PC ───────╳─── PC
+ TX 1,2 ──────► 1,2 RX          TX 1,2 ──╲╱──► 3,6 RX
+ RX 3,6 ◄────── 3,6 TX          RX 3,6 ◄─╱╲── 1,2 TX
+   cable DIRECTO                    cable CRUZADO</code></pre>
+
+            <h3>Y por qué ya casi no importa: auto-MDIX</h3>
+
+            <p>Desde principios de los 2000, los puertos incorporan <strong>auto-MDIX</strong>: durante la negociación
+            del enlace, el puerto <strong>detecta si está recibiendo por los pines equivocados y conmuta
+            internamente</strong> sus transmisores y receptores.</p>
+
+            <div class="destacado">
+                <strong>Qué significa en la práctica</strong>
+                Con equipos modernos, <strong>cualquier cable directo vale para todo</strong>. Puedes unir dos
+                portátiles con un latiguillo normal y funcionará.
+                <br><br>
+                Pero sigue estudiándose, y no por nostalgia: el auto-MDIX es <strong>parte de la
+                autonegociación</strong>. Si alguien fija la velocidad y el dúplex a mano en un puerto, la
+                autonegociación se desactiva y <strong>el auto-MDIX puede dejar de funcionar</strong>. En un
+                laboratorio de Packet Tracer o con equipo antiguo, el cable equivocado no enlaza.
+            </div>
+
+            <details>
+                <summary>💡 Ampliación: el cable de consola, que no es de red</summary>
+                <p>Los switches y routers gestionables tienen un puerto <strong>Console</strong>, de aspecto RJ45 pero
+                que <strong>no es Ethernet</strong>: es un puerto serie. Se usa para configurar el equipo cuando
+                todavía no tiene ninguna dirección IP, o cuando se ha perdido el acceso por red.</p>
+                <p>El cable, tradicionalmente de color azul claro, lleva RJ45 en un extremo y DB9 o USB en el otro.
+                Lo usarás a partir de la <strong>Semana 27</strong>, al empezar con la CLI de Cisco.</p>
+            </details>
+
+            <h2 id="fibra">7. Fibra óptica: cuándo y por qué</h2>
+
+            <p>La fibra transporta <strong>luz</strong> por un filamento de vidrio. Eso le da propiedades que el cobre
+            no puede igualar:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Característica</th><th>Cobre (par trenzado)</th><th>Fibra óptica</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Distancia máxima</th><td>100 m</td><td>Desde 550 m hasta <strong>decenas de km</strong></td></tr>
+                    <tr><th scope="row">Inmunidad al ruido eléctrico</th><td>Parcial</td><td><strong>Total</strong>: la luz no capta interferencias</td></tr>
+                    <tr><th scope="row">Seguridad frente a escucha</th><td>Se puede pinchar por inducción</td><td>Muy difícil sin cortar la fibra</td></tr>
+                    <tr><th scope="row">Coste del material</th><td>Bajo</td><td>Medio</td></tr>
+                    <tr><th scope="row">Coste de instalación</th><td>Bajo</td><td><strong>Alto</strong>: requiere fusionadora y personal formado</td></tr>
+                    <tr><th scope="row">Fragilidad</th><td>Tolera dobleces</td><td>Se rompe al doblarla demasiado</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Los dos tipos</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Multimodo (MM)</th><th>Monomodo (SM)</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Núcleo</th><td>Ancho (50 o 62,5 µm)</td><td>Muy estrecho (9 µm)</td></tr>
+                    <tr><th scope="row">Fuente de luz</th><td>LED o VCSEL, barato</td><td>Láser, caro</td></tr>
+                    <tr><th scope="row">Alcance típico</th><td>Cientos de metros</td><td>Decenas de kilómetros</td></tr>
+                    <tr><th scope="row">Color habitual</th><td>Naranja o aguamarina</td><td>Amarillo</td></tr>
+                    <tr><th scope="row">Uso</th><td>Entre plantas o edificios de un campus</td><td>Entre ciudades, acceso del operador</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Regla de decisión sencilla</strong>
+                <p>Cobre para llegar <strong>al puesto de trabajo</strong>. Fibra para <strong>unir armarios,
+                plantas y edificios</strong>, o para cualquier tramo que supere los 100 m.</p>
+                <p>Es exactamente la estructura del modelo jerárquico que viste en el Día 6: cobre en la capa de
+                <em>acceso</em>, fibra en <em>distribución</em> y <em>núcleo</em>.</p>
+            </div>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="estructurado">8. Cableado estructurado: rack, panel y latiguillo</h2>
+
+            <p>En una instalación seria los cables no van de un equipo a otro directamente. Se sigue el
+            <strong>cableado estructurado</strong>, un modelo normalizado que separa la parte fija de la parte
+            reconfigurable.</p>
+
+<pre><code>       ARMARIO (rack)                          PUESTO DE TRABAJO
+
+  ┌──────────────────┐
+  │     SWITCH       │
+  │ □ □ □ □ □ □ □ □  │
+  └───┬──────────────┘
+      │ latiguillo (corto, flexible)
+  ┌───┴──────────────┐
+  │  PATCH PANEL     │                        ┌───────────┐
+  │ ▣ ▣ ▣ ▣ ▣ ▣ ▣ ▣  │═══ cableado fijo ═════►│ ROSETA    │
+  └──────────────────┘    (rígido, por pared) └─────┬─────┘
+                                                    │ latiguillo
+                                                 ┌──┴──┐
+                                                 │  PC │
+                                                 └─────┘</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Elemento</th><th>Qué es</th><th>Se toca…</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Rack</strong></td>
+                        <td>Armario normalizado de 19 pulgadas donde se monta todo el equipamiento</td>
+                        <td>Al ampliar la instalación</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Patch panel</strong></td>
+                        <td>Panel donde terminan <em>todos</em> los cables fijos del edificio, numerados</td>
+                        <td><strong>Nunca</strong> tras la instalación</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cableado horizontal</strong></td>
+                        <td>El cable rígido que va por paredes y falsos techos, hasta 90 m</td>
+                        <td><strong>Nunca</strong>: está empotrado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Roseta</strong></td>
+                        <td>La toma de red de la pared, en el puesto de trabajo</td>
+                        <td>Nunca</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Latiguillo</strong> (<em>patch cord</em>)</td>
+                        <td>Cable corto y flexible, ya montado de fábrica</td>
+                        <td><strong>A diario</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Para qué sirve todo este aparato</strong>
+                Para que <strong>cambiar la configuración de la red no implique tocar ni un cable de la pared</strong>.
+                <br><br>
+                ¿Hay que mover un puesto a otra VLAN, o a otro switch? Se cambia <strong>un latiguillo dentro del
+                armario</strong>, en treinta segundos. Sin cableado estructurado habría que tirar cable nuevo por el
+                falso techo: horas de trabajo y una instalación cada vez más caótica.
+                <br><br>
+                El cable fijo se instala <strong>una vez</strong> y se toca <strong>lo mínimo</strong>. Toda la
+                flexibilidad se concentra en los latiguillos del rack.
+            </div>
+
+            <div class="aviso">
+                <strong>El etiquetado no es burocracia</strong>
+                Cada cable fijo se etiqueta en los dos extremos con el mismo código, y ese código se anota en un
+                plano. Sin etiquetas, localizar qué roseta corresponde a qué puerto del panel exige ir probando uno a
+                uno con un comprobador, o pedirle a alguien que grite desde la otra punta del edificio.
+                <br><br>
+                Es la diferencia entre resolver una avería en cinco minutos o en media mañana. En un examen práctico
+                de ASIR, documentar el etiquetado puntúa.
+            </div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>El <strong>trenzado</strong> permite cancelar el ruido por señalización diferencial. Cada par
+                    tiene un paso distinto para evitar la diafonía.</li>
+                    <li><strong>UTP</strong> es lo normal. El apantallado <strong>solo sirve si la instalación
+                    completa está apantallada y puesta a tierra</strong>.</li>
+                    <li><strong>Cat 5e</strong> = 1 Gbps a 100 m. <strong>Cat 6A</strong> = 10 Gbps a 100 m.
+                    <strong>Cat 6</strong> solo da 10 Gbps hasta 55 m.</li>
+                    <li><strong>100 metros</strong>: 90 de cableado fijo + 10 de latiguillos.</li>
+                    <li><strong>T568A y T568B</strong> se diferencian en que intercambian el par verde y el naranja.</li>
+                    <li>10/100 Mbps usan <strong>2 pares</strong>; 1 Gbps usa <strong>los 4</strong>. Por eso un cable
+                    defectuoso negocia 100 Mbps en vez de 1 Gbps.</li>
+                    <li><strong>Auto-MDIX</strong> hace innecesario el cable cruzado, pero depende de la
+                    autonegociación.</li>
+                    <li>El <strong>cableado estructurado</strong> separa lo fijo (nunca se toca) de los latiguillos
+                    (se cambian a diario).</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>«El cable apantallado siempre es mejor»</td>
+                        <td>Solo si <strong>toda</strong> la instalación lo es y está bien puesta a tierra. Si no, empeora.</td>
+                    </tr>
+                    <tr>
+                        <td>«Cat 6 ya da 10 Gbps»</td>
+                        <td>Solo hasta <strong>55 m</strong>. Para 10 Gbps a 100 m hace falta <strong>Cat 6A</strong>.</td>
+                    </tr>
+                    <tr>
+                        <td>«Cat 8 es el mejor cable para mi oficina»</td>
+                        <td>Llega a <strong>30 m</strong>. En un edificio es inservible: es cable de rack.</td>
+                    </tr>
+                    <tr>
+                        <td>«T568B es mejor que T568A»</td>
+                        <td>Son equivalentes. Lo que importa es <strong>no mezclarlas</strong> en una instalación.</td>
+                    </tr>
+                    <tr>
+                        <td>«Va a 100 Mbps, pero funciona, así que no hay problema»</td>
+                        <td>Es el <strong>síntoma clásico</strong> de un fallo físico en el cableado.</td>
+                    </tr>
+                    <tr>
+                        <td>«Con auto-MDIX el cable cruzado ya no existe»</td>
+                        <td>Sigue existiendo, y hace falta si alguien <strong>desactiva la autonegociación</strong>.</td>
+                    </tr>
+                    <tr>
+                        <td>«Un cable un poco más largo de 100 m aguantará»</td>
+                        <td>Es el límite del estándar. Más allá hay que meter un switch o pasar a fibra.</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta. Las que falles son lo que debes repasar
+            antes del quiz.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>leer la etiqueta de un cable real</strong>, comprobar a qué velocidad ha negociado tu
+            enlace, ver si la autonegociación está activa y diagnosticar el caso clásico del enlace que se queda en
+            100 Mbps.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 2</strong></a> (60 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 3</strong>
+            <p>Terminamos los componentes con la parte que no se toca: el <strong>software de red</strong>. Servicios,
+            puertos, y el modelo <strong>cliente-servidor frente a P2P</strong>, con ejemplos que conoces bien.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> piensa cuántos programas de tu equipo crees que están ahora
+            mismo esperando conexiones de red. Mañana lo comprobarás con un comando.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Explica <strong>con tus palabras</strong> por qué el trenzado de los pares cancela el ruido. ¿Qué pasaría si los dos hilos de un par fueran por caminos distintos dentro del cable?',
+                modelo: `<p>La señal no viaja por un hilo, sino por <strong>dos, con la polaridad invertida</strong>: si
+                         por uno va +1 V, por el otro va −1 V. El receptor no mide la tensión de cada hilo por separado,
+                         sino la <strong>diferencia</strong> entre ambos, que en este ejemplo es 2.</p>
+                         <p>Cuando llega una interferencia externa, se suma <em>a los dos hilos por igual</em>: con un
+                         ruido de +5, un hilo pasa a +6 y el otro a +4. Pero la diferencia sigue siendo 2. El ruido
+                         <strong>se cancela al restar</strong>, y la señal queda intacta. A esto se le llama rechazo en
+                         modo común.</p>
+                         <p>La clave está en el «por igual»: para que la interferencia afecte lo mismo a los dos hilos,
+                         estos tienen que estar <strong>físicamente juntos en todo el recorrido</strong>, y eso es
+                         exactamente lo que consigue el trenzado.</p>
+                         <p>Si los dos hilos fueran por caminos distintos, atravesarían zonas con interferencias
+                         diferentes: uno podría pasar junto a un motor y el otro no. El ruido dejaría de ser común, ya
+                         no se cancelaría en la resta, y aparecería en la señal como si fuera parte de ella. El cable
+                         funcionaría mal o directamente no funcionaría.</p>`,
+                puntos: [
+                    'La señal va por dos hilos con polaridad invertida',
+                    'El receptor mide la diferencia, no cada hilo',
+                    'El ruido afecta a ambos por igual y se cancela al restar',
+                    'El trenzado es lo que garantiza que vayan juntos',
+                    'Si fueran separados, el ruido dejaría de ser común y corrompería la señal'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Una empresa quiere instalar 10 Gbps en toda una planta, con tiradas de unos 80 metros. Un comercial le ofrece Cat 6, y otro Cat 8 «porque es la más moderna». <strong>Las dos ofertas son malas.</strong> Explica por qué y di qué hay que pedir.',
+                modelo: `<p>Hay que pedir <strong>Cat 6A</strong>. Las dos ofertas fallan, pero por motivos opuestos.</p>
+                         <p><strong>Cat 6 se queda corta.</strong> Sí admite 10 Gbps, pero solo hasta unos
+                         <strong>55 metros</strong> y en condiciones favorables. Con tiradas de 80 m no llega: el enlace
+                         negociaría 1 Gbps, o daría 10 Gbps de forma inestable. Se habría pagado una instalación
+                         completa para no obtener lo que se buscaba.</p>
+                         <p><strong>Cat 8 es peor todavía, pese a ser «más moderna».</strong> Su límite es de
+                         <strong>30 metros</strong>: con tiradas de 80 m no enlaza en absoluto. Cat 8 está pensada para
+                         conexiones cortas <em>dentro de un rack</em> de un centro de datos, no para cablear un
+                         edificio. Además exige conectores y componentes específicos, más caros.</p>
+                         <p><strong>Cat 6A</strong> es la única que garantiza <strong>10 Gbps a los 100 m</strong>
+                         completos del estándar, así que cubre los 80 m con margen usando conectores RJ45 normales.</p>
+                         <p>La lección de fondo: en cableado, <em>más moderno</em> no significa <em>mejor para mi
+                         caso</em>. La categoría se elige cruzando <strong>velocidad objetivo y distancia real</strong>,
+                         y la distancia es la que suele descartar opciones.</p>`,
+                puntos: [
+                    'La respuesta correcta es Cat 6A',
+                    'Cat 6 solo llega a 10 Gbps hasta unos 55 m',
+                    'Cat 8 solo alcanza 30 m: no serviría para 80 m',
+                    'Cat 8 es cable de rack, no de instalación de edificio',
+                    'La elección cruza velocidad objetivo con distancia real'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Un usuario se queja de que copiar ficheros al servidor va lentísimo. Compruebas su puerto y ha negociado <strong>100 Mbps</strong>, cuando la tarjeta y el switch son de 1 Gbps. ¿Qué sospechas y por qué?',
+                modelo: `<p>Sospecho de un <strong>fallo físico en el cableado</strong>, y concretamente de que
+                         <strong>alguno de los cuatro pares no está haciendo contacto</strong>.</p>
+                         <p>El razonamiento es este: Ethernet a 10 y 100 Mbps utiliza solo <strong>dos pares</strong>
+                         (pines 1-2 y 3-6), mientras que 1 Gbps necesita <strong>los cuatro</strong>, funcionando además
+                         en los dos sentidos a la vez. Si dos de los pares están cortados, mal crimpados o aplastados,
+                         el gigabit es imposible, pero los dos pares que sí funcionan bastan para negociar 100 Mbps.</p>
+                         <p>Por eso el síntoma es tan traicionero: <strong>la red funciona</strong>. El usuario navega,
+                         abre el correo y no reporta nada durante meses. Solo se nota al mover ficheros grandes, y para
+                         entonces se culpa al servidor o al disco.</p>
+                         <p>Las causas concretas más habituales son: destrenzar demasiado al montar el conector,
+                         un latiguillo pisado por una silla o doblado en exceso, un conector mal engastado que ha
+                         perdido contacto con el tiempo, o un cable Cat 5 antiguo que quedó en la instalación.</p>
+                         <p>Cómo lo comprobaría: primero <strong>cambiar el latiguillo</strong> por uno nuevo, que es
+                         gratis y resuelve la mitad de los casos. Si sigue igual, probar el equipo en otra roseta para
+                         saber si el problema está en el puesto o en el cableado fijo. Y comprobar también que nadie
+                         haya fijado a mano la velocidad del puerto, porque eso también deja el enlace clavado.</p>`,
+                puntos: [
+                    'Sospecha de un fallo físico del cableado',
+                    'Explica que 100 Mbps usa 2 pares y 1 Gbps los 4',
+                    'Con dos pares dañados aún se negocia 100 Mbps',
+                    'Señala que el síntoma pasa desapercibido porque la red funciona',
+                    'Propone comprobaciones: cambiar latiguillo, probar otra roseta, revisar configuración fija'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> ¿Para qué sirve realmente el cableado estructurado? Responde pensando en qué ocurre <strong>el día que hay que reorganizar la oficina</strong>.',
+                modelo: `<p>Sirve para que <strong>cambiar la red no implique tocar ningún cable de la pared</strong>.</p>
+                         <p>El modelo separa dos cosas que en una instalación improvisada están mezcladas. Por un lado,
+                         el <strong>cableado fijo</strong>: el cable rígido que va por falsos techos y canaletas desde
+                         el patch panel del armario hasta la roseta de cada puesto. Se instala <strong>una sola
+                         vez</strong>, se etiqueta en ambos extremos y no se vuelve a tocar. Por otro, los
+                         <strong>latiguillos</strong>: cables cortos y flexibles, de fábrica, que unen el patch panel
+                         con el switch y la roseta con el equipo.</p>
+                         <p>Toda la flexibilidad se concentra en esos latiguillos. El día que hay que reorganizar la
+                         oficina —mover un departamento a otra VLAN, pasar unos puestos a un switch distinto, aislar
+                         una sala— el trabajo consiste en <strong>mover latiguillos dentro del armario</strong>: un
+                         minuto por puesto, sin escaleras, sin obra y sin cortar el servicio a nadie más.</p>
+                         <p>Sin cableado estructurado, cada cambio significa tirar cable nuevo por el techo. Es caro,
+                         lento, y cada intervención deja la instalación un poco peor, hasta acabar con una maraña que
+                         nadie entiende y en la que localizar una avería lleva horas.</p>
+                         <p>Por eso el <strong>etiquetado</strong> es parte inseparable del modelo: sin saber qué
+                         roseta corresponde a qué puerto del panel, la ventaja desaparece y hay que ir probando cable
+                         por cable.</p>`,
+                puntos: [
+                    'Separa el cableado fijo de los latiguillos',
+                    'El cable fijo se instala una vez y no se toca',
+                    'Los cambios se hacen moviendo latiguillos en el rack',
+                    'Evita tirar cable nuevo en cada reorganización',
+                    'El etiquetado es lo que hace posible la ventaja'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Por qué están <strong>trenzados</strong> los pares?', dorso: 'Para que los dos hilos vayan juntos y el ruido les afecte <strong>por igual</strong>: al medir la <strong>diferencia</strong> entre ambos, el ruido se cancela.' },
+            { frente: '¿Por qué cada par tiene un <strong>paso de trenzado distinto</strong>?', dorso: 'Para que no queden alineados entre sí y se anule la <strong>diafonía</strong>: la interferencia de un par sobre otro.' },
+            { frente: '<strong>UTP, FTP, STP</strong>: ¿qué cambia?', dorso: 'UTP: solo trenzado. FTP: una <strong>lámina general</strong>. STP: pantalla <strong>por cada par</strong>. UTP cubre el 95 % de los casos.' },
+            { frente: '¿Cuándo empeora las cosas un cable apantallado?', dorso: 'Si la pantalla <strong>no está puesta a tierra correctamente en ambos extremos</strong> o se mezcla con conectores UTP: se convierte en antena.' },
+            { frente: '<strong>Cat 5e, Cat 6, Cat 6A</strong>: velocidad y distancia', dorso: 'Cat 5e: <strong>1 Gbps a 100 m</strong>. Cat 6: 1 Gbps a 100 m, pero 10 Gbps <strong>solo hasta 55 m</strong>. Cat 6A: <strong>10 Gbps a 100 m</strong>.' },
+            { frente: '¿Por qué Cat 8 no sirve para cablear una oficina?', dorso: 'Porque su alcance es de <strong>30 metros</strong>. Es cable para dentro de un <strong>rack</strong> de centro de datos.' },
+            { frente: 'Los <strong>100 metros</strong>: ¿cómo se reparten?', dorso: '<strong>90 m</strong> de cableado fijo por la pared + <strong>10 m</strong> repartidos entre los latiguillos de los dos extremos.' },
+            { frente: '¿En qué se diferencian <strong>T568A</strong> y <strong>T568B</strong>?', dorso: 'Solo en que <strong>intercambian el par verde y el naranja</strong>. Los pines 4, 5, 7 y 8 son iguales. Ninguna es mejor: lo importante es no mezclarlas.' },
+            { frente: '¿Cuántos pares usa 100 Mbps? ¿Y 1 Gbps?', dorso: '100 Mbps: <strong>2 pares</strong> (1-2 y 3-6). 1 Gbps: <strong>los 4</strong>, en ambos sentidos a la vez.' },
+            { frente: 'Un enlace negocia 100 Mbps con tarjeta y switch de 1 Gbps. ¿Qué sospechas?', dorso: 'Un <strong>fallo físico</strong>: pares cortados o mal crimpados. Con dos pares sanos aún se llega a 100 Mbps, y por eso pasa desapercibido.' },
+            { frente: 'Cable <strong>directo</strong> frente a <strong>cruzado</strong>', dorso: 'Directo: <strong>misma norma</strong> en los dos extremos, para dispositivos distintos. Cruzado: <strong>A en un extremo y B en el otro</strong>, para dispositivos iguales.' },
+            { frente: '¿Qué hace el <strong>auto-MDIX</strong> y de qué depende?', dorso: 'Detecta si recibe por los pines equivocados y <strong>conmuta internamente</strong>. Depende de la <strong>autonegociación</strong>: si se fija velocidad y dúplex a mano, puede dejar de funcionar.' },
+            { frente: '¿Cuándo se pasa de cobre a <strong>fibra</strong>?', dorso: 'Al superar los <strong>100 m</strong>, al unir edificios o plantas, o en entornos con mucho ruido eléctrico. Cobre al puesto, fibra entre armarios.' },
+            { frente: '<strong>Multimodo</strong> frente a <strong>monomodo</strong>', dorso: 'Multimodo: núcleo ancho, LED, <strong>cientos de metros</strong>, campus. Monomodo: núcleo de 9 µm, láser, <strong>decenas de km</strong>, operadores.' },
+            { frente: '¿Qué elemento del cableado estructurado se toca <strong>a diario</strong>?', dorso: 'El <strong>latiguillo</strong>. El cableado fijo, el patch panel y la roseta no se tocan tras la instalación.' },
+            { frente: '¿Para qué sirve el <strong>patch panel</strong>?', dorso: 'Para que todos los cables fijos terminen en un punto numerado, de modo que reconfigurar la red sea <strong>mover latiguillos</strong> y no tirar cable nuevo.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 2 — El medio físico',
+        subtitulo: 'Par trenzado · categorías · RJ45 · cableado estructurado',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Par trenzado',
+                repaso: '#partrenzado',
+                text: 'Una interferencia externa alcanza un par trenzado y sube +3 V en los dos hilos. ¿Qué ocurre con la señal?',
+                options: {
+                    a: 'Se corrompe: el ruido se suma a los datos',
+                    b: 'No le afecta: el receptor mide la diferencia entre los hilos y el ruido común desaparece',
+                    c: 'El cable la detecta y pide retransmitir',
+                    d: 'Se reduce la velocidad para compensar'
+                },
+                answer: 'b',
+                feedback: 'Es el <strong>rechazo en modo común</strong>. Como los dos hilos van trenzados y por tanto juntos, el ruido les afecta por igual y se cancela al restar. Ese es todo el motivo de que exista el trenzado.'
+            },
+            {
+                topic: 'Par trenzado',
+                repaso: '#partrenzado',
+                text: 'Al montar un conector RJ45, ¿por qué hay que destrenzar los pares lo mínimo posible?',
+                options: {
+                    a: 'Para que el cable quede más estético',
+                    b: 'Para que quepan los ocho hilos en el conector',
+                    c: 'Porque cada tramo destrenzado pierde la protección frente al ruido y la diafonía',
+                    d: 'Porque los hilos se rompen si se destrenzan'
+                },
+                answer: 'c',
+                feedback: 'El máximo admitido son unos 13 mm. Destrenzar de más es la causa número uno de que un cable montado a mano acabe negociando 100 Mbps en lugar de 1 Gbps.'
+            },
+            {
+                topic: 'Apantallamiento',
+                repaso: '#apantallado',
+                text: 'Una oficina normal compra cable FTP «por si acaso», pero lo instala con conectores y rosetas UTP corrientes. ¿Qué consigue?',
+                options: {
+                    a: 'Una instalación mejor protegida frente al ruido',
+                    b: 'El mismo resultado que con UTP, pero más caro',
+                    c: 'Una instalación potencialmente peor: la pantalla sin tierra actúa como antena',
+                    d: 'Una instalación más rápida'
+                },
+                answer: 'c',
+                feedback: 'El apantallamiento es todo o nada. Una pantalla que no está correctamente puesta a tierra en ambos extremos capta interferencias e <strong>introduce</strong> ruido, en lugar de eliminarlo.'
+            },
+            {
+                topic: 'Categorías',
+                repaso: '#categorias',
+                text: 'Hay que llevar 10 Gbps a un puesto situado a 80 m del armario. ¿Qué categoría de cable se necesita?',
+                options: {
+                    a: 'Cat 5e',
+                    b: 'Cat 6',
+                    c: 'Cat 6A',
+                    d: 'Cat 8, por ser la más moderna'
+                },
+                answer: 'c',
+                feedback: 'Cat 6 solo alcanza 10 Gbps hasta unos 55 m, y Cat 8 se queda en 30 m: no llegaría. <strong>Cat 6A</strong> es la que garantiza 10 Gbps a los 100 m completos.'
+            },
+            {
+                topic: 'Categorías',
+                repaso: '#categorias',
+                text: 'El límite de 100 m de un enlace de cobre, ¿cómo se reparte según el cableado estructurado?',
+                options: {
+                    a: '100 m de cable fijo, más los latiguillos aparte',
+                    b: '90 m de cableado fijo y 10 m repartidos entre los latiguillos',
+                    c: '50 m a cada lado del patch panel',
+                    d: 'No hay reparto: son 100 m de cualquier tipo de cable'
+                },
+                answer: 'b',
+                feedback: 'Los latiguillos <strong>cuentan</strong> dentro del límite. Es un error clásico pensar que los 100 m son solo del cable de la pared y que los latiguillos van aparte.'
+            },
+            {
+                topic: 'RJ45 y normas',
+                repaso: '#rj45',
+                text: '¿Cuál es la diferencia entre las normas T568A y T568B?',
+                options: {
+                    a: 'T568B admite mayor velocidad',
+                    b: 'Intercambian el par verde y el par naranja; el resto de pines es igual',
+                    c: 'T568A usa 4 hilos y T568B usa 8',
+                    d: 'T568A es para cable apantallado'
+                },
+                answer: 'b',
+                feedback: 'Los pines 4, 5, 7 y 8 son idénticos en ambas. Ninguna es técnicamente superior: lo que importa es usar la misma en toda la instalación.'
+            },
+            {
+                topic: 'RJ45 y normas',
+                repaso: '#rj45',
+                text: 'Un latiguillo tiene dos pares dañados. ¿Qué ocurre al conectarlo entre un PC y un switch, ambos de 1 Gbps?',
+                options: {
+                    a: 'No enlaza: no hay conectividad',
+                    b: 'Enlaza a 1 Gbps pero con errores',
+                    c: 'Enlaza a 100 Mbps, y todo parece funcionar bien',
+                    d: 'Enlaza a 10 Mbps'
+                },
+                answer: 'c',
+                feedback: '100 Mbps solo necesita dos pares (1-2 y 3-6). Por eso el fallo pasa desapercibido: la red funciona, el usuario navega, y la avería solo se nota al copiar ficheros grandes.'
+            },
+            {
+                topic: 'Directo y cruzado',
+                repaso: '#cruzado',
+                text: 'Antes de que existiera el auto-MDIX, ¿qué cable hacía falta para unir dos switches entre sí?',
+                options: {
+                    a: 'Directo, porque son dispositivos de red',
+                    b: 'Cruzado, porque son dispositivos del mismo tipo y ambos transmiten por los mismos pines',
+                    c: 'Uno de fibra obligatoriamente',
+                    d: 'Cualquiera de los dos, siempre ha dado igual'
+                },
+                answer: 'b',
+                feedback: 'Dos dispositivos iguales transmiten y escuchan por los mismos pines: sin cruzar los pares, ambos hablarían a un hilo donde nadie escucha.'
+            },
+            {
+                topic: 'Directo y cruzado',
+                repaso: '#cruzado',
+                text: 'Un técnico fija a mano la velocidad y el dúplex de un puerto de switch. ¿Qué efecto secundario puede aparecer?',
+                options: {
+                    a: 'Ninguno: es la configuración recomendada',
+                    b: 'Se desactiva la autonegociación y con ella puede dejar de funcionar el auto-MDIX',
+                    c: 'El puerto pasa a exigir cable apantallado',
+                    d: 'Se duplica el consumo del puerto'
+                },
+                answer: 'b',
+                feedback: 'El auto-MDIX forma parte del proceso de autonegociación. Al fijarlo todo a mano, el puerto deja de adaptarse y un cable directo entre dispositivos iguales puede no enlazar.'
+            },
+            {
+                topic: 'Fibra óptica',
+                repaso: '#fibra',
+                text: 'Hay que unir dos edificios separados 800 m dentro de un mismo campus. ¿Qué medio se elige?',
+                options: {
+                    a: 'Cat 6A, que llega a 100 m',
+                    b: 'Varios tramos de cobre unidos con acopladores',
+                    c: 'Fibra óptica',
+                    d: 'Wi-Fi punto a punto, que es lo más barato siempre'
+                },
+                answer: 'c',
+                feedback: 'Ningún cobre llega a 800 m: el límite es 100 m. Unir tramos con acopladores no resuelve la atenuación. La regla es cobre al puesto y fibra entre edificios.'
+            },
+            {
+                topic: 'Fibra óptica',
+                repaso: '#fibra',
+                text: '¿Cuál es la principal ventaja de la fibra frente al cobre en un entorno industrial con motores?',
+                options: {
+                    a: 'Es más barata de instalar',
+                    b: 'Es totalmente inmune a las interferencias electromagnéticas',
+                    c: 'Se puede doblar sin límite',
+                    d: 'No necesita conectores'
+                },
+                answer: 'b',
+                feedback: 'La fibra transporta luz, no electricidad, así que ningún campo electromagnético la afecta. Sus desventajas son justo las otras opciones: instalación cara y fragilidad ante dobleces.'
+            },
+            {
+                topic: 'Cableado estructurado',
+                repaso: '#estructurado',
+                text: 'Hay que pasar cinco puestos a otro switch. Con cableado estructurado bien hecho, ¿qué se toca?',
+                options: {
+                    a: 'Se tira cable nuevo desde cada puesto hasta el armario',
+                    b: 'Se cambian los latiguillos correspondientes dentro del rack',
+                    c: 'Se sustituyen las rosetas de los cinco puestos',
+                    d: 'Se reconfigura el patch panel'
+                },
+                answer: 'b',
+                feedback: 'Esa es exactamente la razón de ser del modelo: el cableado fijo se instala una vez y no se toca; toda la flexibilidad está en los latiguillos del armario.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: '../Dia_01/teoria.html#bits',
+                text: '<em>Repaso.</em> Ves la MAC <code>B2-14-7C-00-1A-3F</code>. ¿Qué puedes afirmar?',
+                options: {
+                    a: 'Es multicast',
+                    b: 'Es unicast y administrada localmente',
+                    c: 'Es unicast y de fábrica',
+                    d: 'Es la dirección de broadcast'
+                },
+                answer: 'b',
+                feedback: 'Segundo dígito <strong>2</strong> = 0010: el bit I/G vale 0 (unicast) y el U/L vale 1 (local). Es una dirección generada por software o cambiada a mano.'
+            },
+            {
+                topic: 'Recuperación · Semana 1',
+                repaso: '../../Semana_01/Dia_03/teoria.html',
+                text: '<em>Repaso.</em> Un enlace de 1 Gbps transfiere un fichero de 500 MB. Sin contar cabeceras, ¿cuánto tarda aproximadamente?',
+                options: {
+                    a: '0,5 segundos',
+                    b: '4 segundos',
+                    c: '8 segundos',
+                    d: '40 segundos'
+                },
+                answer: 'b',
+                feedback: '500 MB × 8 = 4000 Mb. 4000 Mb ÷ 1000 Mbps = <strong>4 s</strong>. Recuerda pasar siempre el tamaño a bits antes de dividir: los tamaños van en bytes y las velocidades en bits.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 7 — Recuperación de errores de la Semana 2</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 7 — Recuperación</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Bloques:</strong> 6, uno por día</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Cómo usar esta hoja</strong>
+            No es más de lo mismo: cada bloque ataca los <strong>errores concretos</strong> que más se cometen en su
+            día. Hay uno por día de la semana.
+            <br><br>
+            <strong>Empieza por los bloques de los días que peor te hayan salido en el test.</strong> El desglose por
+            día de la corrección te dice cuáles son. Si has aprobado todo con holgura, hazlos en orden.
+        </div>
+
+        <div class="aviso">
+            <strong>Estos son los fallos reales, no los fáciles</strong>
+            Varias preguntas están planteadas para que caigas en la trampa si no has entendido bien el concepto.
+            Fallar aquí no es un problema: es exactamente lo que esta hoja busca detectar <em>antes</em> del examen
+            mensual.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Síntesis y test</a></span>
+        <span><a href="../Dia_06/ejercicios.html">← Día 6</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 7 — Recuperación de errores',
+    subtitulo: 'Un bloque por cada día de la Semana 2',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1 · Día 1 — Leer una MAC sin dudar',
+            tiempo: '10 min',
+            enunciado: `
+                <p>El error más repetido del Día 1 es <strong>confundir el bit I/G con el U/L</strong>. Truco: I/G es
+                el <em>último</em> bit, el de menor peso; U/L es el de al lado.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Clasifica estas cuatro direcciones. Escribe <em>unicast</em> o <em>grupo</em>, y <em>universal</em> o <em>local</em>.',
+                    esquina: 'MAC',
+                    cabecera: ['Destino', 'Asignación'],
+                    filas: [
+                        {
+                            etiqueta: '<code>4C-11-AE-30-2B-99</code>',
+                            celdas: [
+                                { respuestas: ['unicast', 'individual'], placeholder: 'unicast / grupo' },
+                                { respuestas: ['universal', 'global', 'de fabrica', 'de fábrica'], placeholder: 'universal / local' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<code>DA-55-01-77-C4-08</code>',
+                            celdas: [
+                                { respuestas: ['unicast', 'individual'], placeholder: 'unicast / grupo' },
+                                { respuestas: ['local', 'administrada localmente'], placeholder: 'universal / local' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<code>0D-9F-22-10-00-01</code>',
+                            celdas: [
+                                { respuestas: ['grupo', 'multicast'], placeholder: 'unicast / grupo' },
+                                { respuestas: ['universal', 'global'], placeholder: 'universal / local' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<code>96-00-5E-AB-CD-EF</code>',
+                            celdas: [
+                                { respuestas: ['unicast', 'individual'], placeholder: 'unicast / grupo' },
+                                { respuestas: ['local', 'administrada localmente'], placeholder: 'universal / local' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Segundos dígitos: <strong>C</strong>=1100 → par y sin U/L: unicast universal. <strong>A</strong>=1010 → unicast local. <strong>D</strong>=1101 → impar: grupo, y sin U/L: universal. <strong>6</strong>=0110 → unicast local. Fíjate en la última: empieza por 96 y contiene «5E», pero <strong>no</strong> es multicast: el prefijo multicast es <code>01-00-5E</code> al principio, no en cualquier posición.',
+                    pistas: [
+                        'Trabaja SIEMPRE sobre el segundo dígito, nunca sobre el primero ni sobre el resto de la dirección.',
+                        'Para «destino» solo cuenta la paridad de ese dígito: impar → grupo.',
+                        'Para «asignación», comprueba si está en el conjunto 2, 3, 6, 7, A, B, E, F.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un compañero afirma: «como la MAC es única en el mundo, sirve para identificar a un usuario en Internet». ¿Qué falla en su razonamiento?',
+                    opciones: {
+                        a: 'Nada: es correcto',
+                        b: 'Que la MAC no sale de la red local: el primer router la sustituye por la suya',
+                        c: 'Que las MAC no son únicas en absoluto',
+                        d: 'Que solo las tarjetas Wi-Fi tienen MAC'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El alcance de la MAC es <strong>un salto</strong>. Lo que sí llega al servidor es la IP pública, y ni siquiera es la del equipo: es la del router, por el NAT.',
+                    pistas: [
+                        'La premisa (que es única) es más o menos cierta. El fallo está en la conclusión.',
+                        'Recuerda qué direcciones se reescriben en cada salto.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2 · Día 2 — Categorías y distancias',
+            tiempo: '10 min',
+            enunciado: `
+                <p>Los dos errores de este día: creer que <strong>Cat 6 da 10 Gbps a cualquier distancia</strong> y
+                pensar que los <strong>latiguillos no cuentan</strong> dentro de los 100 m.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para cada caso, indica la categoría <strong>mínima</strong> que lo cumple: <em>Cat 5e</em>, <em>Cat 6</em> o <em>Cat 6A</em>.',
+                    esquina: 'Requisito',
+                    cabecera: ['Categoría mínima'],
+                    filas: [
+                        { etiqueta: '1 Gbps a 95 m', celdas: [{ respuestas: ['cat 5e', 'cat5e', '5e'], placeholder: 'categoría' }] },
+                        { etiqueta: '10 Gbps a 40 m', celdas: [{ respuestas: ['cat 6', 'cat6', '6'], placeholder: 'categoría' }] },
+                        { etiqueta: '10 Gbps a 85 m', celdas: [{ respuestas: ['cat 6a', 'cat6a', '6a'], placeholder: 'categoría' }] }
+                    ],
+                    explicacion: 'La clave es cruzar <strong>velocidad y distancia</strong>, no memorizar una categoría por velocidad. Cat 6 sí da 10 Gbps, pero solo hasta unos 55 m: a 40 m vale y a 85 m no.',
+                    pistas: [
+                        'Fíjate en que dos filas piden la misma velocidad y solo cambia la distancia.',
+                        'El límite de Cat 6 para 10 Gbps está en torno a los 55 m.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> El cableado fijo mide 93 m y el latiguillo del puesto 3 m. ¿Cuánto puede medir <strong>como máximo</strong> el latiguillo del armario?',
+                    respuesta: 4,
+                    tolerancia: 0.5,
+                    unidad: 'metros',
+                    explicacion: '100 − 93 − 3 = <strong>4 m</strong>. Ojo además: 93 m de cableado fijo ya supera la recomendación de 90 m, así que este enlace está al límite y conviene revisarlo.',
+                    pistas: [
+                        'El tope del enlace completo son 100 m, y los latiguillos cuentan dentro.',
+                        'Resta del total lo que ya está ocupado.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Una oficina compra cable Cat 6A <strong>apantallado (FTP)</strong> y lo monta con conectores y rosetas UTP normales. ¿Qué consigue?',
+                    opciones: {
+                        a: 'Mejor protección frente al ruido, aunque no la máxima',
+                        b: 'Lo mismo que con UTP, pero pagando más',
+                        c: 'Una instalación potencialmente peor: la pantalla sin continuidad ni tierra actúa como antena',
+                        d: 'Mayor velocidad'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'El apantallamiento es <strong>todo o nada</strong>: exige que conectores, rosetas y panel sean apantallados y estén correctamente puestos a tierra en ambos extremos. Hecho a medias, empeora.',
+                    pistas: [
+                        'Piensa qué le pasa a un conductor metálico aislado que no está conectado a tierra.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3 · Día 3 — Puertos y modelos',
+            tiempo: '10 min',
+            enunciado: '<p>Los puertos hay que sabérselos. Y la diferencia entre 65535 y 65536 se pregunta con mala intención.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Escribe el puerto de cada servicio. Sin mirar.',
+                    esquina: 'Servicio',
+                    cabecera: ['Puerto'],
+                    filas: [
+                        { etiqueta: '<strong>SSH</strong>', celdas: [{ respuestas: ['22'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>DNS</strong>', celdas: [{ respuestas: ['53'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>HTTPS</strong>', celdas: [{ respuestas: ['443'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>SMB</strong>', celdas: [{ respuestas: ['445'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>RDP</strong>', celdas: [{ respuestas: ['3389'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'Los tres primeros son los que más vas a usar. El 445 y el 3389 conviene reconocerlos porque son los objetivos favoritos de los ataques contra equipos Windows expuestos a Internet.',
+                    pistas: [
+                        'SSH y Telnet son consecutivos: el seguro es el menor de los dos.',
+                        'Los de compartir ficheros de Windows y el de escritorio remoto son los dos «peligrosos» de la lista.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Cuántos puertos distintos existen? Cuidado con la trampa.',
+                    respuesta: 65536,
+                    tolerancia: 0.5,
+                    unidad: 'puertos',
+                    explicacion: '16 bits → 2¹⁶ = <strong>65 536</strong> valores, del 0 al 65535. La respuesta 65535 es el <em>número más alto</em>, no la cantidad.',
+                    pistas: [
+                        'Un puerto son 16 bits.',
+                        'Se numera desde el 0, no desde el 1.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa la explicación de por qué no se mezclan varias conexiones a la misma web.',
+                    frase: 'Una conexión se identifica por {{0}} datos. Al abrir varias pestañas a la misma web, coinciden mi IP, la IP del servidor y su puerto: lo único que cambia es mi {{1}}, que el sistema toma del rango {{2}}.',
+                    respuestas: [
+                        ['4', 'cuatro'],
+                        ['puerto de origen', 'puerto origen', 'puerto', 'puerto local'],
+                        ['efimero', 'efímero', 'dinamico', 'dinámico', '49152-65535']
+                    ],
+                    explicacion: 'Es la <strong>cuaterna</strong> o <em>socket</em>. Y de aquí se entiende el reparto de papeles: el puerto del servidor debe ser <em>conocido</em>; el del cliente solo tiene que ser <em>único</em>.',
+                    pistas: [
+                        'No es una dirección ni dos: son más.',
+                        'El tercer hueco es el nombre del rango 49152-65535.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> «El P2P no necesita ningún servidor.» ¿Es cierto?',
+                    opciones: {
+                        a: 'Sí, esa es su definición',
+                        b: 'No: casi todos los sistemas reales son híbridos y usan un servidor para que los pares se encuentren',
+                        c: 'Solo es cierto en BitTorrent',
+                        d: 'No, porque el P2P necesita un servidor para transferir los datos'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El P2P puro tiene un <strong>problema de arranque</strong>: si nadie tiene dirección conocida, no hay a quién preguntar. De ahí el patrón «servidor para descubrirse, P2P para transferir». La opción d se equivoca al revés: los datos sí van directos.',
+                    pistas: [
+                        '¿Cómo encuentras al primer par si no conoces a nadie?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4 · Día 4 — RAID y disponibilidad',
+            tiempo: '11 min',
+            enunciado: '<p>Los cálculos hay que hacerlos, no reconocerlos. Papel y lápiz.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Diez discos de 2 TB en <strong>RAID 5</strong>. ¿Capacidad útil, en TB?',
+                    respuesta: 18,
+                    tolerancia: 0.5,
+                    unidad: 'TB',
+                    explicacion: '(10 − 1) × 2 TB = <strong>18 TB</strong>. RAID 5 reserva el equivalente a un disco para la paridad.',
+                    pistas: [
+                        'La fórmula de RAID 5 es (N − 1) × tamaño.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Los mismos diez discos en <strong>RAID 6</strong>. ¿Capacidad útil, en TB?',
+                    respuesta: 16,
+                    tolerancia: 0.5,
+                    unidad: 'TB',
+                    explicacion: '(10 − 2) × 2 TB = <strong>16 TB</strong>. Se pierden 2 TB más que en RAID 5, y a cambio se tolera el fallo de <strong>dos</strong> discos, no de uno.',
+                    pistas: [
+                        'RAID 6 lleva doble paridad.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Un servicio garantiza <strong>99,5 %</strong> de disponibilidad. ¿Cuántas <strong>horas</strong> puede estar caído al año?',
+                    respuesta: 43.8,
+                    tolerancia: 1.5,
+                    unidad: 'horas',
+                    explicacion: '525 600 × 0,005 = 2 628 min = <strong>43,8 horas</strong>, casi dos días enteros. Sorprende lo poco exigente que resulta un 99,5 % cuando se traduce a tiempo real.',
+                    pistas: [
+                        'La indisponibilidad es 0,5 %, o sea 0,005 en tanto por uno.',
+                        'Calcula primero los minutos y después divide entre 60.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Una empresa tiene RAID 6 y un clúster de dos anfitriones. Un empleado borra por error una carpeta con seis meses de trabajo. ¿Qué la recupera?',
+                    opciones: {
+                        a: 'El RAID 6, que tolera dos fallos',
+                        b: 'El clúster, que mantiene una réplica',
+                        c: 'Solo una copia de seguridad con versiones anteriores',
+                        d: 'Cualquiera de los dos mecanismos'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'RAID y clúster son mecanismos de <strong>disponibilidad</strong>: replican fielmente todas las operaciones, incluido el borrado. Recuperar un estado anterior es cosa de la <strong>copia de seguridad</strong>.',
+                    pistas: [
+                        '¿Distingue el RAID entre una escritura legítima y un error humano?',
+                        'Piensa qué mecanismo guarda el estado de <em>ayer</em>.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>e)</strong> Explica por qué duplicar las fuentes de alimentación de un servidor puede no servir absolutamente de nada.',
+                    modelo: `<p>Porque la redundancia solo aporta algo si <strong>cubre el camino completo</strong>, y
+                             las fuentes son solo el último tramo de la cadena eléctrica.</p>
+                             <p>Si las dos fuentes se enchufan a la <strong>misma regleta</strong>, al mismo SAI o al
+                             mismo circuito del cuadro eléctrico, cualquier fallo aguas arriba —una regleta quemada, un
+                             SAI averiado, un diferencial que salta— apaga las dos a la vez. Se ha pagado el doble de
+                             hardware para no eliminar ningún punto único de fallo: solo se ha
+                             <strong>movido</strong> unos centímetros más atrás.</p>
+                             <p>Para que la redundancia sea real, cada fuente debe alimentarse de una
+                             <strong>vía independiente</strong>: circuitos eléctricos distintos del cuadro, e
+                             idealmente uno de ellos respaldado por SAI y el otro no, o dos SAI separados.</p>
+                             <p>Esto generaliza a todo el diseño y es el error más repetido de la semana: se duplica
+                             lo caro y llamativo —servidores, discos, líneas— y la cadena se rompe en la pieza barata
+                             por la que pasa todo: el switch único, la regleta, la controladora RAID, la única
+                             acometida por la que entran las dos líneas de Internet.</p>
+                             <p>La pregunta que hay que hacerse en cada pieza no es «¿qué tengo duplicado?», sino
+                             <strong>«si esto desaparece ahora mismo, ¿sigue funcionando el servicio?»</strong>.</p>`,
+                    rubrica: [
+                        'Explica que las dos fuentes pueden depender de la misma vía eléctrica',
+                        'Señala que el punto único de fallo se mueve, no se elimina',
+                        'Propone circuitos independientes como corrección',
+                        'Generaliza al error de redundar solo lo visible',
+                        'Formula la pregunta correcta para detectar un SPOF'
+                    ],
+                    pistas: [
+                        'Sigue la corriente hacia atrás desde las fuentes: ¿qué hay antes?',
+                        'Piensa en otros casos de la semana donde pasa lo mismo con otra pieza barata.',
+                        'Termina con la pregunta que sirve para detectar cualquier punto único de fallo.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 5 · Día 5 — Diagnóstico',
+            tiempo: '11 min',
+            enunciado: `
+                <p>El trabajo real de soporte: del síntoma al servicio. Fíjate en el dato que acompaña a cada queja,
+                porque es lo que descarta el resto de hipótesis.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica el servicio o elemento sospechoso: <em>DHCP</em>, <em>DNS</em>, <em>NTP</em>, <em>permisos</em> o <em>cableado</em>.',
+                    esquina: 'Situación',
+                    cabecera: ['Sospechoso'],
+                    filas: [
+                        {
+                            etiqueta: 'Un portátil recién encendido tiene IP <code>169.254.3.9</code>',
+                            celdas: [{ respuestas: ['dhcp', 'el dhcp', 'servidor dhcp'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: '<code>ping 1.1.1.1</code> va bien; <code>ping cloudflare.com</code> falla',
+                            celdas: [{ respuestas: ['dns', 'el dns', 'servidor dns'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: 'Un equipo no autentica y su reloj va 50 min adelantado',
+                            celdas: [{ respuestas: ['ntp', 'el ntp', 'hora', 'servidor de hora', 'servidor ntp'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: 'Una sola persona no accede a una carpeta que todos ven',
+                            celdas: [{ respuestas: ['permisos', 'los permisos', 'directorio', 'permisos del directorio'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: 'Un puesto copia ficheros lentísimo y su enlace negocia 100 Mbps',
+                            celdas: [{ respuestas: ['cableado', 'el cableado', 'cable', 'red fisica', 'red física'], placeholder: 'servicio' }]
+                        }
+                    ],
+                    explicacion: 'En los cinco casos el diagnóstico sale del <strong>dato añadido</strong>, no de la queja. Pedir ese dato extra —¿qué IP tienes?, ¿funciona el ping por IP?, ¿le pasa a alguien más?— es la mitad del trabajo de soporte.',
+                    pistas: [
+                        'Dos casos se resuelven mirando una dirección IP.',
+                        'Uno no es un servicio de red, sino un problema físico.',
+                        'Cuando falla a uno solo y a los demás no, el problema es de esa persona, no del sistema.'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>b)</strong> Ordena el arranque de la infraestructura tras un corte de luz.',
+                    elementos: [
+                        'Switches y routers',
+                        'Servidor DHCP',
+                        'Servidor DNS',
+                        'Directorio y servidor de hora',
+                        'Servidor de ficheros e impresión'
+                    ],
+                    orden: [
+                        'Switches y routers',
+                        'Servidor DHCP',
+                        'Servidor DNS',
+                        'Directorio y servidor de hora',
+                        'Servidor de ficheros e impresión'
+                    ],
+                    explicacion: 'Sin enlace nadie habla, sin IP nadie pregunta, sin DNS nadie localiza y sin directorio nadie autoriza. Lo que el usuario percibe es lo <strong>último</strong> en poder arrancar.',
+                    pistas: [
+                        'Lo primero no es un servidor.',
+                        '¿Qué necesita un equipo antes incluso de poder preguntar dónde está el resto?',
+                        'El directorio se localiza por nombre: eso te dice qué va justo antes.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Se cae el DHCP un jueves a las 16:00 y nadie nota nada hasta el lunes. ¿Por qué?',
+                    opciones: {
+                        a: 'Porque el DHCP no es un servicio importante',
+                        b: 'Porque los equipos encendidos conservan su concesión, y el fallo solo aparece al arrancar',
+                        c: 'Porque el DNS suple su función',
+                        d: 'Porque los equipos pasan automáticamente a IP fija'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es el único servicio cuya caída no es inmediata. Y por eso muchas averías de DHCP se descubren un lunes o tras un puente, cuando decenas de equipos arrancan a la vez y ninguno consigue dirección.',
+                    pistas: [
+                        'Recuerda qué es exactamente una concesión y cuánto dura.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 6 · Día 6 — Criterio de diseño',
+            tiempo: '8 min',
+            enunciado: '<p>Cierra la semana con las decisiones que más se equivocan al diseñar.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Una planta con 32 puestos (PC + teléfono), 3 impresoras, 4 puntos de acceso, 2 cámaras y 1 enlace de subida. ¿Cuántas tomas, con un margen del 25 %? Redondea al alza.',
+                    respuesta: 93,
+                    tolerancia: 2,
+                    unidad: 'tomas',
+                    explicacion: '(32 × 2) + 3 + 4 + 2 + 1 = 74 tomas. Con margen: 74 × 1,25 = 92,5 → <strong>93 tomas</strong>. Si te ha salido mucho menos, probablemente contaste 32 en lugar de 64.',
+                    pistas: [
+                        'Cada puesto son DOS tomas.',
+                        'Suma primero todo sin margen y después multiplica por 1,25.',
+                        'El total sin margen debería darte 74.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿En cuál de estas decisiones conviene ser <strong>generoso</strong> aunque el presupuesto esté ajustado?',
+                    opciones: {
+                        a: 'En el modelo de switch',
+                        b: 'En la categoría del cable y el número de tiradas',
+                        c: 'En la potencia del servidor',
+                        d: 'En el tamaño del SAI'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un switch, un servidor o un SAI se sustituyen en una tarde. El cableado exige <strong>obra</strong> y dura veinte años. La regla: generoso en lo difícil de cambiar, tacaño en lo fácil.',
+                    pistas: [
+                        'Pregúntate qué cuesta más cambiar dentro de tres años, no qué cuesta más comprar hoy.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un informe de diseño <strong>no menciona</strong> que el switch de una planta carece de redundancia. El técnico dice: «se lo dije de palabra al gerente». ¿Es suficiente?',
+                    opciones: {
+                        a: 'Sí, si el gerente lo recuerda',
+                        b: 'No: un riesgo asumido tiene que estar identificado, valorado y escrito, con la decisión aprobada por quien paga',
+                        c: 'Sí, porque los riesgos no van en un informe técnico',
+                        d: 'Da igual, porque el riesgo es pequeño'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Sin constancia escrita no hay diferencia entre asumir e <strong>ignorar</strong>: el día que ocurra, nadie recordará la conversación y el diseño parecerá negligente. Escribirlo protege al cliente y al técnico.',
+                    pistas: [
+                        'Piensa qué pasará el día que ese switch se estropee y haya que explicar por qué no estaba duplicado.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Los servicios que sostienen una red</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 5 — Los servicios que sostienen una red</h1>
+        <p>Qué hace falta para que una oficina pueda trabajar un lunes por la mañana</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 50 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 10 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 51 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> de escritura y un laboratorio en el que vas a
+            <strong>descubrir quién presta cada servicio en tu propia red</strong>: quién te da la IP, quién resuelve
+            los nombres y qué pasa cuando dejas de preguntarles.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            El Día 3 viste qué es un servicio: un programa que espera. El Día 4, la máquina que lo sostiene. Hoy toca
+            la pregunta que faltaba: <strong>¿qué servicios concretos hacen falta</strong> para que una red sea algo
+            más que cables conectados?
+            <br><br>
+            <em>Nota de alcance:</em> hoy se estudia <strong>para qué sirve</strong> cada servicio, quién depende de
+            quién y qué pasa cuando falla. La <strong>configuración</strong> de DNS, DHCP y directorio es el
+            <strong>Mes 10 completo</strong>.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#lunes">La prueba del lunes por la mañana</a></li>
+                <li><a href="#dhcp">DHCP: quién reparte las direcciones</a></li>
+                <li><a href="#dns">DNS: quién traduce los nombres</a></li>
+                <li><a href="#directorio">Directorio: quién dice quién eres</a></li>
+                <li><a href="#resto">Ficheros, impresión, correo y copias</a></li>
+                <li><a href="#dependencias">Dependencias y orden de arranque</a></li>
+                <li><a href="#sintomas">Diagnóstico: del síntoma al servicio</a></li>
+                <li><a href="#reparto">Cómo se reparten entre máquinas</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="lunes">1. La prueba del lunes por la mañana</h2>
+
+            <p>Hay una forma muy útil de descubrir qué servicios necesita una red: imaginar a cuarenta personas
+            entrando a la oficina un lunes a las nueve y encendiendo sus equipos <strong>a la vez</strong>.</p>
+
+            <p>Sigue mentalmente lo que tiene que ocurrir para que la primera de ellas pueda abrir un documento:</p>
+
+<pre><code>1. El PC arranca y no tiene dirección IP        → hace falta DHCP
+2. La persona escribe su usuario y contraseña   → hace falta un DIRECTORIO
+3. Abre el navegador y escribe un nombre        → hace falta DNS
+4. Abre la carpeta compartida del departamento  → hace falta un servidor de FICHEROS
+5. Imprime el documento                         → hace falta un servidor de IMPRESIÓN
+6. Consulta su correo                           → hace falta el servicio de CORREO
+7. Todo esto tiene que sobrevivir a un desastre → hacen falta COPIAS</code></pre>
+
+            <div class="destacado">
+                <strong>Los tres primeros son distintos de los demás</strong>
+                DHCP, directorio y DNS no producen nada útil por sí mismos: nadie llega a la oficina con ganas de
+                consultar el DNS. Son <strong>servicios de infraestructura</strong>: existen para que los demás
+                puedan funcionar.
+                <br><br>
+                Y por eso son los que más ruido hacen al caer. Si se cae el servidor de impresión, no se puede
+                imprimir. Si se cae el DNS, <strong>parece que se ha caído todo</strong>.
+            </div>
+
+            <h2 id="dhcp">2. DHCP: quién reparte las direcciones</h2>
+
+            <p><strong>DHCP</strong> (<em>Dynamic Host Configuration Protocol</em>) asigna automáticamente la
+            configuración de red a los equipos que arrancan.</p>
+
+            <p>No entrega solo una dirección IP. Entrega el <strong>paquete completo</strong> sin el que un equipo no
+            puede comunicarse:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Dato</th><th>Para qué</th><th>Si falta…</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Dirección IP</strong></td><td>Identificar al equipo en la red</td><td>No hay red en absoluto</td></tr>
+                    <tr><td><strong>Máscara de red</strong></td><td>Saber qué direcciones son «vecinas»</td><td>No sabe a quién puede hablar directamente</td></tr>
+                    <tr><td><strong>Puerta de enlace</strong></td><td>Por dónde salir de la red local</td><td>Red local sí, Internet no</td></tr>
+                    <tr><td><strong>Servidores DNS</strong></td><td>A quién preguntar por los nombres</td><td>Funcionan las IP, no los nombres</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>La concesión no es para siempre</strong>
+                <p>DHCP no «da» una dirección: la <strong>presta</strong> durante un tiempo, y a eso se le llama
+                <em>concesión</em> o <em>lease</em>. Antes de que caduque, el equipo pide renovarla.</p>
+                <p>Tiene sentido: en una red donde entran y salen portátiles y móviles constantemente, las direcciones
+                de los que se fueron tienen que poder reutilizarse. Sin caducidad, el rango se agotaría en unos días.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>El fallo que más despista: la dirección 169.254.x.x</strong>
+                Cuando un equipo Windows arranca y <strong>no encuentra ningún DHCP</strong>, se autoasigna una
+                dirección del rango <code>169.254.0.0/16</code>, llamada <strong>APIPA</strong>.
+                <br><br>
+                El síntoma es característico: el equipo dice que está conectado, tiene una IP con buen aspecto y no
+                funciona absolutamente nada. Si ves una dirección que empieza por <code>169.254</code>, no pierdas el
+                tiempo mirando el navegador: <strong>no hay DHCP, o no se llega hasta él</strong>.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="dns">3. DNS: quién traduce los nombres</h2>
+
+            <p><strong>DNS</strong> (<em>Domain Name System</em>) traduce nombres en direcciones IP. Es lo que permite
+            escribir un nombre legible en lugar de memorizar números.</p>
+
+            <p>Suena a comodidad, pero es mucho más que eso:</p>
+
+            <div class="destacado">
+                <strong>Por qué el DNS es imprescindible, no cómodo</strong>
+                Un mismo servicio puede estar en <strong>muchas direcciones distintas</strong>, y esas direcciones
+                <strong>cambian</strong>: se sustituye un servidor, se reparte la carga entre varios, se contrata otro
+                proveedor. Si los nombres no existieran, cada cambio obligaría a avisar a todos los usuarios del
+                mundo.
+                <br><br>
+                El DNS es la capa de <strong>indirección</strong> que hace posible que la infraestructura cambie sin
+                que nadie se entere. Ese es su verdadero valor.
+            </div>
+
+            <h3>El DNS de una empresa hace dos trabajos</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Resolución externa</th><th>Resolución interna</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Qué resuelve</th><td>Nombres de Internet</td><td>Nombres de la propia empresa</td></tr>
+                    <tr><th scope="row">Ejemplo</th><td>Un sitio web cualquiera</td><td><code>servidor-ficheros.empresa.local</code></td></tr>
+                    <tr><th scope="row">Cómo lo hace</th><td>Pregunta a otros DNS y guarda la respuesta en caché</td><td>Tiene los datos él mismo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>La caché explica muchos fenómenos</strong>
+                <p>Cada respuesta DNS viene con un <strong>TTL</strong> (<em>Time To Live</em>): cuántos segundos
+                puede guardarse antes de volver a preguntar.</p>
+                <p>Eso explica por qué, cuando una empresa cambia de servidor, hay usuarios que ven la web nueva y
+                otros la vieja durante unas horas: unos tienen la respuesta antigua en caché y otros no. También
+                explica por qué a veces «se arregla solo» esperando.</p>
+            </div>
+
+            <h3>El DNS como punto de control</h3>
+
+            <p>Como <strong>todo</strong> pasa por el DNS antes de conectarse a cualquier sitio, se ha convertido en un
+            punto de control muy usado:</p>
+
+            <ul>
+                <li><strong>Bloqueo de publicidad y rastreadores</strong>: si el DNS se niega a resolver esos dominios,
+                el navegador ni siquiera intenta conectarse. Es lo que hacen herramientas como Pi-hole.</li>
+                <li><strong>Filtrado de contenido</strong> en empresas y centros educativos.</li>
+                <li><strong>Bloqueo de dominios maliciosos</strong> conocidos, antes de que el usuario llegue a ellos.</li>
+            </ul>
+
+            <div class="aviso">
+                <strong>La contrapartida: si el DNS cae, parece que cae todo</strong>
+                Los usuarios no dirán «no resuelve el DNS». Dirán <strong>«no hay Internet»</strong>, «no va el
+                correo», «no entro en la aplicación» y «la impresora no aparece», todo a la vez y desde todas las
+                mesas.
+                <br><br>
+                Por eso el DNS es de los <strong>primeros servicios que se duplican</strong> en cualquier red seria, y
+                por eso todo equipo recibe siempre <em>dos</em> direcciones de DNS.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="directorio">4. Directorio: quién dice quién eres</h2>
+
+            <p>Un <strong>servicio de directorio</strong> es la base de datos central de usuarios, equipos, grupos y
+            permisos de una organización. En el mundo Windows es <strong>Active Directory</strong>; en el estándar
+            abierto, <strong>LDAP</strong>.</p>
+
+            <p>Resuelve el problema que aparecía en el Día 3 al comparar cliente-servidor con P2P:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Sin directorio</th><th>Con directorio</th></tr></thead>
+                <tbody>
+                    <tr><td>Una cuenta distinta en cada equipo y en cada servicio</td><td><strong>Una identidad única</strong> para toda la organización</td></tr>
+                    <tr><td>Cambiar una contraseña = cambiarla en todas partes</td><td>Se cambia una vez</td></tr>
+                    <tr><td>Al irse un empleado, hay que ir máquina por máquina</td><td>Se <strong>desactiva una cuenta</strong> y pierde el acceso a todo</td></tr>
+                    <tr><td>Los permisos los pone cada usuario en su equipo</td><td>Se gestionan de forma centralizada por grupos</td></tr>
+                    <tr><td>Imposible auditar quién accedió a qué</td><td>Todo queda registrado</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El directorio hace algo más que autenticar</strong>
+                También <strong>configura los equipos</strong>. A través de directivas centralizadas se decide qué
+                impresoras aparecen, qué unidades de red se montan, qué fondo de pantalla se aplica o qué programas se
+                pueden ejecutar, <strong>sin tocar ni un ordenador</strong>.
+                <br><br>
+                Esa es la diferencia real entre administrar cuarenta equipos y administrar <em>uno</em> cuarenta
+                veces.
+            </div>
+
+            <h2 id="resto">5. Ficheros, impresión, correo y copias</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Servicio</th><th>Qué aporta</th><th>Detalle que suele olvidarse</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ficheros</strong></td>
+                        <td>Carpetas compartidas con permisos por grupo</td>
+                        <td>Evita que exista una <em>versión buena</em> distinta en cada portátil</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Impresión</strong></td>
+                        <td>Cola centralizada y controladores repartidos solos</td>
+                        <td>Permite <strong>contabilizar</strong> quién imprime cuánto, y ahorrar de verdad</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Correo</strong></td>
+                        <td>Envío y recepción de mensajes</td>
+                        <td>Hoy casi siempre <strong>externo</strong>: mantener un servidor de correo propio es de lo más difícil que hay</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Copias de seguridad</strong></td>
+                        <td>Recuperar lo que se pierda</td>
+                        <td>Solo cuenta si se ha <strong>probado la restauración</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hora (NTP)</strong></td>
+                        <td>Que todos los equipos tengan la misma hora</td>
+                        <td>Sin hora sincronizada <strong>fallan la autenticación y los registros</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>El servicio invisible: NTP</strong>
+                <p>Nadie piensa en la hora como un servicio de red, hasta que se descuadra.</p>
+                <p>La autenticación de un directorio usa <strong>marcas de tiempo</strong> para evitar que alguien
+                reutilice una credencial capturada. Si el reloj de un equipo se desvía más de unos minutos respecto al
+                servidor, <strong>ese equipo deja de poder iniciar sesión</strong>, con un mensaje de error que no
+                menciona la hora por ninguna parte.</p>
+                <p>Y sin hora común, correlacionar los registros de varios equipos para investigar un incidente se
+                vuelve imposible.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="dependencias">6. Dependencias y orden de arranque</h2>
+
+            <p>Los servicios no son independientes: unos necesitan a otros. Saber el orden importa mucho el día que
+            hay que levantar todo tras un corte de luz general.</p>
+
+<pre><code>            ELECTRICIDAD y RED FÍSICA
+                      ↓
+              DHCP  ──────────────► los equipos obtienen IP
+                      ↓
+               DNS  ──────────────► se pueden resolver nombres
+                      ↓
+            DIRECTORIO (+ NTP) ───► la gente puede iniciar sesión
+                      ↓
+        FICHEROS · IMPRESIÓN · APLICACIONES</code></pre>
+
+            <div class="destacado">
+                <strong>Por qué este orden y no otro</strong>
+                <br>· <strong>DHCP primero</strong>, porque sin dirección IP un equipo no puede hablar con nadie, ni
+                siquiera para preguntar dónde está el resto.
+                <br>· <strong>DNS después</strong>, porque casi todo lo demás se localiza <em>por nombre</em>, no por
+                dirección. El propio directorio se busca por DNS.
+                <br>· <strong>Directorio a continuación</strong>, porque los servidores de ficheros y de impresión
+                necesitan preguntarle si el usuario tiene permiso.
+                <br>· <strong>NTP junto al directorio</strong>, porque la autenticación depende de la hora.
+                <br>· <strong>El resto al final</strong>: son los que el usuario percibe, pero los últimos en poder
+                arrancar.
+            </div>
+
+            <div class="aviso">
+                <strong>La dependencia circular que hay que evitar</strong>
+                Si el servidor DNS es una <strong>máquina virtual</strong> alojada en un anfitrión que se localiza
+                <strong>por nombre</strong>, tras un apagón general nada arranca: el anfitrión necesita el DNS y el
+                DNS necesita el anfitrión.
+                <br><br>
+                Es un error real y bastante común al virtualizarlo todo sin pensar. La solución es sencilla —dejar
+                direcciones IP fijas y documentadas en las piezas de infraestructura— pero hay que <strong>haberlo
+                previsto antes</strong> del apagón, no durante.
+            </div>
+
+            <h2 id="sintomas">7. Diagnóstico: del síntoma al servicio</h2>
+
+            <p>Esta tabla es la más práctica del día. Los usuarios nunca describen el problema técnico: describen lo
+            que ven.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>El usuario dice…</th><th>Comprobación</th><th>Servicio sospechoso</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>«No tengo Internet» y su IP empieza por <code>169.254</code></td>
+                        <td>Mirar la configuración IP</td>
+                        <td><strong>DHCP</strong>: no lo encuentra</td>
+                    </tr>
+                    <tr>
+                        <td>«No abre ninguna web», pero <code>ping</code> a una <strong>IP</strong> funciona</td>
+                        <td>Comparar ping por IP y por nombre</td>
+                        <td><strong>DNS</strong></td>
+                    </tr>
+                    <tr>
+                        <td>«No puedo iniciar sesión» y el reloj está descuadrado</td>
+                        <td>Mirar la hora del equipo</td>
+                        <td><strong>NTP</strong> o el directorio</td>
+                    </tr>
+                    <tr>
+                        <td>«No veo la carpeta compartida», pero otros sí</td>
+                        <td>Comprobar sus grupos</td>
+                        <td><strong>Permisos</strong> del directorio</td>
+                    </tr>
+                    <tr>
+                        <td>«Nadie ve ninguna carpeta»</td>
+                        <td>Comprobar el servidor</td>
+                        <td><strong>Servidor de ficheros</strong> o su red</td>
+                    </tr>
+                    <tr>
+                        <td>«Todo va lento desde hoy»</td>
+                        <td>Comprobar la velocidad negociada del puerto</td>
+                        <td><strong>Cableado</strong> (Día 2)</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La prueba de diagnóstico más rentable que existe</strong>
+                Hacer <strong>ping a una dirección IP</strong> y después <strong>ping a un nombre</strong>.
+                <br><br>
+                · Fallan las dos → el problema es de <strong>conectividad</strong>: cable, IP, puerta de enlace.
+                <br>· Funciona la IP y falla el nombre → el problema es de <strong>DNS</strong>, y solo de DNS.
+                <br><br>
+                Dos comandos, quince segundos, y divide el espacio de búsqueda en dos mitades. Empieza siempre por
+                aquí.
+            </div>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="reparto">8. Cómo se reparten entre máquinas</h2>
+
+            <p>Con los servicios identificados, queda decidir <strong>cuántas máquinas</strong> los albergan. No hay
+            una respuesta única: depende del tamaño.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tamaño</th><th>Reparto habitual</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Menos de 10 personas</strong></td>
+                        <td>El router hace de DHCP y DNS; un NAS para ficheros y copias; correo externo. Sin directorio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10 a 50</strong></td>
+                        <td>Un servidor virtualizado con directorio + DNS + DHCP, otra máquina para ficheros e impresión, copias fuera</td>
+                    </tr>
+                    <tr>
+                        <td><strong>50 a 250</strong></td>
+                        <td><strong>Dos</strong> controladores de dominio, DNS y DHCP redundantes, servidor de ficheros aparte, clúster de virtualización</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Más de 250</strong></td>
+                        <td>Servicios separados y redundados, varias sedes, personal dedicado</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Consolidar o separar</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Consolidar (todo junto)</th><th>Separar (cada uno en su máquina)</th></tr></thead>
+                <tbody>
+                    <tr><td>Más barato y sencillo de administrar</td><td>Un fallo no arrastra a los demás</td></tr>
+                    <tr><td>Menos licencias y menos consumo</td><td>Se puede reiniciar uno sin tocar el resto</td></tr>
+                    <tr><td><strong>Un fallo se lo lleva todo</strong></td><td>Más caro y más trabajo</td></tr>
+                    <tr><td>Actualizar obliga a parar todo a la vez</td><td>Un problema de seguridad queda contenido</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Lo que se hace en la práctica</strong>
+                <p>Se <strong>consolida el hardware y se separan los servicios</strong>: un solo anfitrión físico (o
+                un clúster) con varias máquinas virtuales, una por función.</p>
+                <p>Así se obtiene el coste de la consolidación y el aislamiento de la separación. Es exactamente la
+                razón por la que se impuso la virtualización que viste ayer.</p>
+            </div>
+
+            <h3>Qué se duplica primero</h3>
+
+            <p>Si el presupuesto no da para duplicarlo todo, el orden razonable es:</p>
+
+            <ol>
+                <li><strong>DNS</strong> — su caída lo paraliza todo y duplicarlo es barato.</li>
+                <li><strong>Directorio</strong> — sin él nadie inicia sesión.</li>
+                <li><strong>DHCP</strong> — su caída no es inmediata: las concesiones vigentes aguantan un tiempo.</li>
+                <li><strong>Ficheros</strong> — se cubre con copias y con un plan de restauración.</li>
+            </ol>
+
+            <div class="destacado">
+                <strong>Fíjate en el matiz del DHCP</strong>
+                Es el único servicio cuya caída <strong>no se nota enseguida</strong>. Los equipos ya encendidos
+                conservan su concesión durante horas o días, así que hay margen para arreglarlo.
+                <br><br>
+                Eso sí: se nota <strong>brutalmente</strong> el lunes por la mañana, cuando cuarenta equipos arrancan
+                a la vez y ninguno consigue dirección. Por eso muchas averías de DHCP aparecen los lunes o después de
+                un puente.
+            </div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li><strong>DHCP, DNS y directorio</strong> son servicios de infraestructura: no producen nada
+                    útil por sí mismos, pero sin ellos no funciona nada.</li>
+                    <li>DHCP entrega <strong>IP, máscara, puerta de enlace y DNS</strong>, y lo hace en forma de
+                    <strong>concesión</strong> temporal.</li>
+                    <li>Una IP <strong>169.254.x.x</strong> significa que no se encontró el DHCP.</li>
+                    <li>El DNS aporta <strong>indirección</strong>: permite cambiar la infraestructura sin avisar a
+                    nadie. Y es un punto de control y de filtrado.</li>
+                    <li>El <strong>directorio</strong> da identidad única, permisos centralizados y configuración de
+                    los equipos.</li>
+                    <li><strong>NTP</strong> es invisible hasta que falla: sin hora común no hay autenticación ni
+                    registros correlacionables.</li>
+                    <li>Orden de arranque: <strong>DHCP → DNS → directorio y NTP → el resto</strong>.</li>
+                    <li>Diagnóstico: <strong>ping a una IP y ping a un nombre</strong> divide el problema en dos.</li>
+                    <li>Se <strong>consolida el hardware y se separan los servicios</strong> mediante virtualización.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>«No hay Internet»</td>
+                        <td>Muchas veces sí lo hay: lo que falla es el <strong>DNS</strong>. Compruébalo con un ping a una IP.</td>
+                    </tr>
+                    <tr>
+                        <td>«Tengo IP, luego la red funciona»</td>
+                        <td>Si empieza por <strong>169.254</strong> es una autoasignada: no hay DHCP.</td>
+                    </tr>
+                    <tr>
+                        <td>«El DNS solo sirve para no memorizar direcciones»</td>
+                        <td>Su valor real es la <strong>indirección</strong>: permite cambiar servidores sin avisar a nadie.</td>
+                    </tr>
+                    <tr>
+                        <td>«Si se cae el DHCP, se cae la red al momento»</td>
+                        <td>Las concesiones vigentes aguantan. Se nota <strong>al arrancar</strong>, no al instante.</td>
+                    </tr>
+                    <tr>
+                        <td>«La hora no es cosa de la red»</td>
+                        <td>Sin NTP <strong>fallan la autenticación y los registros</strong>.</td>
+                    </tr>
+                    <tr>
+                        <td>«Mejor todo en un solo servidor, es más fácil»</td>
+                        <td>Más fácil y más frágil. Hoy se consolida el <em>hardware</em> y se separan los <em>servicios</em>.</td>
+                    </tr>
+                    <tr>
+                        <td>«Tengo copias, estoy cubierto»</td>
+                        <td>Solo si has <strong>restaurado</strong> alguna vez. Una copia sin probar es una suposición.</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>descubrir quién presta cada servicio en tu propia red</strong>: quién te da la IP, quién
+            resuelve los nombres, cuánto dura tu concesión y qué ocurre exactamente cuando el DNS deja de responder.
+            Comprobarás en directo la prueba de los dos <em>ping</em>.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 5</strong></a> (60 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 6</strong>
+            <p>El día de <strong>juntarlo todo</strong>: un caso práctico completo. Te dan los requisitos de una
+            empresa y diseñas su red usando lo de las dos semanas: topología, cableado, componentes, servidores y
+            servicios, con sus puntos únicos de fallo analizados.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> piensa qué le preguntarías a un cliente que te dice «quiero
+            montar la red de mi empresa». Anota tres preguntas.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_04/teoria.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_06/teoria.html">Día 6 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Un usuario dice que su equipo «está conectado pero no funciona nada». Miras su configuración y su IP es <code>169.254.12.87</code>. Explica <strong>qué ha pasado</strong> y qué comprobarías, en orden.',
+                modelo: `<p>Esa dirección es <strong>APIPA</strong>, del rango <code>169.254.0.0/16</code>. El equipo se
+                         la ha <strong>autoasignado</strong> porque arrancó, pidió configuración por DHCP y
+                         <strong>nadie le contestó</strong>.</p>
+                         <p>Por eso el síntoma es tan engañoso: el sistema informa de que hay conexión y muestra una
+                         dirección de aspecto normal, pero esa dirección no pertenece a la red de la empresa. El
+                         equipo no puede hablar con nadie, no tiene puerta de enlace y no tiene servidores DNS. No es
+                         que «no haya Internet»: es que <strong>no hay red</strong>.</p>
+                         <p>Lo que comprobaría, de lo más barato a lo más caro:</p>
+                         <ol>
+                           <li><strong>¿Le pasa solo a él o a más gente?</strong> Es la pregunta que más acota. Si es
+                           general, el DHCP está caído; si es solo suyo, el problema está en su puesto.</li>
+                           <li><strong>El enlace físico.</strong> Que el puerto esté en estado activo y con velocidad
+                           negociada coherente: sin enlace, la petición DHCP no sale del equipo. Cambiar el latiguillo
+                           y probar otra roseta, como en el Día 2.</li>
+                           <li><strong>Forzar la renovación</strong> de la concesión, por si fue un fallo puntual del
+                           arranque.</li>
+                           <li><strong>El propio servidor DHCP</strong>: que esté encendido, que el servicio esté
+                           arrancado y que <strong>queden direcciones libres</strong> en el rango, que es una causa muy
+                           frecuente y que nadie mira.</li>
+                         </ol>
+                         <p>El orden importa: los tres primeros pasos se hacen en un minuto desde el propio puesto,
+                         y el último exige acceso al servidor.</p>`,
+                puntos: [
+                    'Identifica 169.254.x.x como APIPA, dirección autoasignada',
+                    'Explica que no se ha encontrado ningún servidor DHCP',
+                    'Señala por qué el síntoma engaña: parece conectado',
+                    'Comprueba primero si afecta a más usuarios',
+                    'Incluye el enlace físico y el agotamiento del rango de direcciones'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> «El DNS solo sirve para no tener que memorizar direcciones IP.» Explica por qué esa idea se queda muy corta.',
+                modelo: `<p>La comodidad es lo de menos. El verdadero valor del DNS es que aporta una capa de
+                         <strong>indirección</strong> entre el nombre de un servicio y la máquina que lo presta en este
+                         momento.</p>
+                         <p>Un servicio no vive en una dirección fija para siempre. Se cambia el servidor por otro más
+                         potente, se reparte la carga entre varias máquinas, se migra a otro proveedor, se activa un
+                         servidor de respaldo porque el principal ha caído. Si los usuarios se conectaran a
+                         direcciones IP, <strong>cada uno de esos cambios obligaría a avisar a todo el mundo</strong> y
+                         a que todo el mundo cambiara su configuración. Sería inmanejable.</p>
+                         <p>Con DNS, la infraestructura puede cambiar por completo y <strong>nadie se entera</strong>:
+                         se actualiza el registro y las siguientes consultas ya apuntan al sitio nuevo. Esto es lo que
+                         hace posible el equilibrado de carga, la conmutación ante fallos y las migraciones sin
+                         parada.</p>
+                         <p>Hay más funciones que tampoco tienen que ver con memorizar: un mismo nombre puede devolver
+                         <strong>direcciones distintas según quién pregunte</strong>, para dirigir a cada usuario al
+                         servidor más cercano; y el DNS es el punto natural de <strong>control y filtrado</strong>,
+                         porque todo pasa por él antes de conectarse a nada. En eso se basan el bloqueo de publicidad,
+                         el filtrado de contenido y el bloqueo de dominios maliciosos.</p>
+                         <p>La contrapartida es la que conviene recordar: al ser el punto por el que pasa todo, cuando
+                         el DNS falla <strong>parece que ha fallado la red entera</strong>.</p>`,
+                puntos: [
+                    'El valor real es la indirección entre nombre y máquina',
+                    'Permite cambiar servidores sin avisar a los usuarios',
+                    'Habilita equilibrado de carga y conmutación ante fallos',
+                    'Es el punto natural de control y filtrado',
+                    'Su caída parece una caída general de la red'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Una empresa de 40 personas usa cuentas locales en cada equipo, sin directorio. Un empleado se marcha. Describe <strong>todo lo que hay que hacer</strong> y qué se escapará con casi total seguridad.',
+                modelo: `<p>Sin directorio no existe «la cuenta» del empleado: existen <strong>tantas cuentas como
+                         sitios</strong> donde haya trabajado. Hay que ir apagándolas una a una.</p>
+                         <p>El recorrido mínimo sería: su propio equipo; cualquier otro ordenador donde se le creara
+                         un usuario alguna vez; los recursos compartidos de los equipos de sus compañeros, donde puede
+                         figurar con permisos; el NAS o el servidor de ficheros si lo hay; el router y los puntos de
+                         acceso, si conocía sus claves; la contraseña del Wi-Fi, que ahora tendría que cambiarse
+                         <em>para todos</em>; las aplicaciones y servicios en línea contratados; y las cuentas de
+                         administración de impresoras, cámaras o cualquier equipo con panel web.</p>
+                         <p><strong>Lo que se escapará casi seguro:</strong></p>
+                         <ul>
+                           <li>Algún equipo donde tuviera cuenta y nadie recuerda. No hay <strong>lista</strong> de
+                           dónde existía esa identidad, así que la revisión se hace de memoria.</li>
+                           <li>Los <strong>datos que solo estaban en su portátil</strong>, y que se van con él o se
+                           pierden. No es solo un problema de seguridad: es pérdida de información de la empresa.</li>
+                           <li>Contraseñas <strong>compartidas</strong> que él conocía y que nadie va a cambiar porque
+                           cambiarlas molesta a todo el mundo.</li>
+                           <li>Cuentas de servicios en línea contratados directamente por él, sin que administración
+                           lo sepa.</li>
+                         </ul>
+                         <p>Y hay algo peor que lo que se escapa: <strong>no hay forma de comprobar que se ha hecho
+                         bien</strong>. No existe un sitio donde mirar qué accesos tenía ni un registro que permita
+                         auditar si sigue entrando.</p>
+                         <p>Con un directorio, todo esto se reduce a <strong>deshabilitar una cuenta</strong>: como
+                         todos los servicios delegan en él la autenticación, el acceso se corta en el acto y de forma
+                         verificable. Esta es la razón de fondo por la que a partir de cierto tamaño el directorio deja
+                         de ser opcional, y no es técnica: es de <strong>gestión y responsabilidad</strong>.</p>`,
+                puntos: [
+                    'Enumera los múltiples sitios donde existe una cuenta local',
+                    'Incluye contraseñas compartidas y Wi-Fi',
+                    'Señala que no hay lista de dónde tenía acceso',
+                    'Menciona los datos que solo estaban en su equipo',
+                    'Concluye que con directorio basta deshabilitar una cuenta, de forma verificable'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Corte de luz general. Al volver, hay que arrancar toda la infraestructura. <strong>Ordena los servicios</strong> y explica qué pasa si te saltas el orden.',
+                modelo: `<p>El orden es: <strong>red física → DHCP → DNS → directorio y NTP → ficheros, impresión y
+                         aplicaciones</strong>.</p>
+                         <p><strong>Primero la red física</strong>: switches y routers. Sin enlace, ningún servidor
+                         puede hablar con otro por muy encendido que esté.</p>
+                         <p><strong>Después DHCP</strong>, porque sin dirección IP un equipo no puede comunicarse con
+                         nadie, ni siquiera para preguntar dónde está el resto de la infraestructura.</p>
+                         <p><strong>Luego DNS</strong>, porque prácticamente todo se localiza <em>por nombre</em>. Si
+                         arranca antes el servidor de ficheros, estará encendido pero será inalcanzable: los clientes
+                         no sabrán traducir su nombre a una dirección.</p>
+                         <p><strong>Directorio y NTP a continuación</strong>, y conviene que vayan juntos: la
+                         autenticación usa marcas de tiempo, así que un servidor con la hora descuadrada puede
+                         rechazar inicios de sesión perfectamente legítimos con un error que no menciona la hora.
+                         Además, el directorio se localiza <em>por DNS</em>, de ahí que vaya después.</p>
+                         <p><strong>Al final los servicios de usuario</strong>: ficheros, impresión y aplicaciones.
+                         Necesitan preguntar al directorio si quien llama tiene permiso, así que antes tiene que
+                         existir alguien a quien preguntar.</p>
+                         <p><strong>Si te saltas el orden</strong> no suele haber un error claro, y eso es lo peor: hay
+                         servicios encendidos que fallan de formas raras. Un servidor de ficheros que arrancó sin
+                         directorio puede quedarse en un estado inconsistente y rechazar a todo el mundo aunque
+                         después el directorio esté disponible. La solución acaba siendo reiniciarlo <em>otra vez</em>,
+                         ya en el orden correcto, y perder media mañana averiguando por qué.</p>
+                         <p>Un aviso que merece la pena: si el DNS es una máquina virtual y el anfitrión se localiza
+                         por nombre, se produce una <strong>dependencia circular</strong> y no arranca nada. Hay que
+                         haber dejado direcciones IP fijas y documentadas en las piezas de infraestructura
+                         <strong>antes</strong> del apagón.</p>`,
+                puntos: [
+                    'Empieza por la red física: switches y routers',
+                    'Ordena DHCP → DNS → directorio y NTP → servicios de usuario',
+                    'Justifica cada paso por la dependencia del anterior',
+                    'Explica que saltarse el orden da fallos confusos, no errores claros',
+                    'Advierte de la dependencia circular si el DNS está virtualizado'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Qué entrega el <strong>DHCP</strong>, además de la IP?', dorso: '<strong>Máscara de red, puerta de enlace y servidores DNS</strong>. Y lo hace como <strong>concesión</strong> temporal, no para siempre.' },
+            { frente: '¿Qué significa una IP <code>169.254.x.x</code>?', dorso: 'Es <strong>APIPA</strong>: el equipo no encontró ningún DHCP y se autoasignó una dirección. Parece conectado pero no funciona nada.' },
+            { frente: '¿Por qué las concesiones DHCP caducan?', dorso: 'Para poder <strong>reutilizar</strong> las direcciones de los equipos que ya no están. Sin caducidad, el rango se agotaría en días.' },
+            { frente: '¿Cuál es el valor real del <strong>DNS</strong>?', dorso: 'La <strong>indirección</strong>: permite cambiar servidores, repartir carga o migrar de proveedor <strong>sin avisar a nadie</strong>.' },
+            { frente: '¿Qué es el <strong>TTL</strong> de una respuesta DNS?', dorso: 'Cuántos segundos puede guardarse en caché antes de volver a preguntar. Explica que tras un cambio unos usuarios vean lo nuevo y otros lo viejo.' },
+            { frente: '¿Por qué el DNS sirve para filtrar contenido?', dorso: 'Porque <strong>todo pasa por él</strong> antes de conectarse. Si no resuelve un dominio, el navegador ni lo intenta.' },
+            { frente: '¿Qué aporta un <strong>servicio de directorio</strong>?', dorso: '<strong>Identidad única</strong>, permisos centralizados por grupos, auditoría y <strong>configuración de los equipos</strong> mediante directivas.' },
+            { frente: '¿Qué pasa al irse un empleado, con directorio y sin él?', dorso: 'Con directorio: se <strong>desactiva una cuenta</strong> y pierde el acceso a todo, de forma verificable. Sin él: hay que ir máquina por máquina, y siempre se escapa algo.' },
+            { frente: '¿Por qué <strong>NTP</strong> es crítico si nadie lo ve?', dorso: 'La autenticación usa <strong>marcas de tiempo</strong>: con el reloj desviado, un equipo deja de poder iniciar sesión. Y sin hora común no se pueden correlacionar registros.' },
+            { frente: 'Orden de arranque tras un apagón', dorso: '<strong>Red física → DHCP → DNS → directorio y NTP → ficheros, impresión y aplicaciones.</strong>' },
+            { frente: '¿Qué dependencia circular hay que evitar?', dorso: 'Que el <strong>DNS sea una máquina virtual</strong> en un anfitrión localizado por nombre: tras un apagón, nada arranca. Deja IP fijas documentadas.' },
+            { frente: 'La prueba de diagnóstico más rentable', dorso: '<strong>Ping a una IP y ping a un nombre.</strong> Fallan las dos → conectividad. Funciona la IP y falla el nombre → <strong>DNS</strong>.' },
+            { frente: '¿Cuál es el único servicio cuya caída <strong>no</strong> se nota enseguida?', dorso: 'El <strong>DHCP</strong>: las concesiones vigentes aguantan horas. Pero se nota brutalmente el lunes, cuando todos arrancan a la vez.' },
+            { frente: '¿Qué servicio se duplica primero, si el dinero no llega para todo?', dorso: 'El <strong>DNS</strong>: su caída lo paraliza todo y duplicarlo es barato. Después el directorio.' },
+            { frente: '¿Se consolidan o se separan los servicios?', dorso: 'Se <strong>consolida el hardware y se separan los servicios</strong>: un anfitrión (o clúster) con una máquina virtual por función.' },
+            { frente: '¿Cuándo cuenta de verdad una copia de seguridad?', dorso: 'Cuando se ha <strong>restaurado alguna vez</strong>. Una copia que nunca se ha probado no es una copia: es una suposición.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 5 — Los servicios que sostienen una red',
+        subtitulo: 'DHCP · DNS · directorio · dependencias · diagnóstico',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'DHCP',
+                repaso: '#dhcp',
+                text: 'Un equipo arranca y obtiene la dirección <code>169.254.88.13</code>. ¿Qué ha ocurrido?',
+                options: {
+                    a: 'El DHCP le ha asignado una dirección de un rango especial',
+                    b: 'No encontró ningún servidor DHCP y se autoasignó una dirección APIPA',
+                    c: 'El administrador le puso una IP fija',
+                    d: 'Está conectado a la red de invitados'
+                },
+                answer: 'b',
+                feedback: 'Es la señal inequívoca de que no hay DHCP o no se llega a él. El equipo parece conectado y muestra una IP de aspecto normal, pero no tiene puerta de enlace ni DNS: <strong>no hay red</strong>.'
+            },
+            {
+                topic: 'DHCP',
+                repaso: '#dhcp',
+                text: 'Además de la dirección IP, ¿qué entrega el DHCP?',
+                options: {
+                    a: 'Solo la IP; el resto se configura a mano',
+                    b: 'La máscara de red, la puerta de enlace y los servidores DNS',
+                    c: 'La MAC del equipo',
+                    d: 'El usuario y la contraseña de dominio'
+                },
+                answer: 'b',
+                feedback: 'Sin máscara el equipo no sabe qué direcciones son vecinas; sin puerta de enlace no sale a Internet; sin DNS funcionan las IP pero no los nombres. Es el paquete completo.'
+            },
+            {
+                topic: 'DHCP',
+                repaso: '#reparto',
+                text: 'Se cae el servidor DHCP un miércoles a las 11 de la mañana. ¿Qué ocurre inmediatamente?',
+                options: {
+                    a: 'Todos los equipos pierden la red al instante',
+                    b: 'Casi nada: los equipos encendidos conservan su concesión durante horas',
+                    c: 'Los equipos pasan automáticamente a IP fija',
+                    d: 'Se cae también el DNS'
+                },
+                answer: 'b',
+                feedback: 'Es el único servicio cuya caída no es inmediata. El problema aparece <strong>al arrancar</strong>: por eso muchas averías de DHCP se descubren un lunes, cuando decenas de equipos piden dirección a la vez.'
+            },
+            {
+                topic: 'DNS',
+                repaso: '#dns',
+                text: 'Un usuario no abre ninguna página web, pero <code>ping 8.8.8.8</code> funciona perfectamente. ¿Qué falla?',
+                options: {
+                    a: 'El cableado',
+                    b: 'La puerta de enlace',
+                    c: 'El DNS',
+                    d: 'El servidor de ficheros'
+                },
+                answer: 'c',
+                feedback: 'Si el ping por IP funciona, hay conectividad completa hasta Internet. Lo único que falta es traducir nombres a direcciones. Es la prueba de diagnóstico más rentable que existe.'
+            },
+            {
+                topic: 'DNS',
+                repaso: '#dns',
+                text: '¿Cuál es el valor principal del DNS, más allá de la comodidad?',
+                options: {
+                    a: 'Que cifra las conexiones',
+                    b: 'Que aporta indirección: permite cambiar la infraestructura sin avisar a los usuarios',
+                    c: 'Que acelera la navegación',
+                    d: 'Que asigna las direcciones IP'
+                },
+                answer: 'b',
+                feedback: 'Sin DNS, cambiar de servidor obligaría a avisar a todos los usuarios del mundo. Esa capa de indirección es la que hace posible el equilibrado de carga y las migraciones sin parada.'
+            },
+            {
+                topic: 'DNS',
+                repaso: '#dns',
+                text: 'Una empresa cambia su web a otro servidor. Durante unas horas, unos usuarios ven la web nueva y otros la antigua. ¿Por qué?',
+                options: {
+                    a: 'Por un fallo del servidor web',
+                    b: 'Por la caché de DNS: cada respuesta tiene un TTL y unos ya han caducado y otros no',
+                    c: 'Porque el DHCP asigna servidores DNS distintos',
+                    d: 'Porque el cambio no se hizo bien'
+                },
+                answer: 'b',
+                feedback: 'Es el comportamiento normal y esperado. Por eso, antes de una migración planificada, se baja el TTL del registro con antelación para que la caché caduque antes.'
+            },
+            {
+                topic: 'Directorio',
+                repaso: '#directorio',
+                text: 'Un empleado deja la empresa. ¿Qué diferencia hay entre tener directorio y no tenerlo?',
+                options: {
+                    a: 'Ninguna: en ambos casos hay que revisar equipo por equipo',
+                    b: 'Con directorio se desactiva una cuenta y pierde el acceso a todo, de forma verificable',
+                    c: 'Sin directorio es más rápido porque hay menos sistemas',
+                    d: 'El directorio solo afecta al correo'
+                },
+                answer: 'b',
+                feedback: 'Es la razón de fondo por la que a partir de cierto tamaño el directorio deja de ser opcional, y no es técnica sino de <strong>gestión y responsabilidad</strong>: sin él no hay forma de comprobar que se ha hecho bien.'
+            },
+            {
+                topic: 'Directorio',
+                repaso: '#directorio',
+                text: 'Además de autenticar usuarios, ¿qué otra función importante cumple un directorio?',
+                options: {
+                    a: 'Asignar direcciones IP',
+                    b: 'Configurar los equipos mediante directivas centralizadas',
+                    c: 'Hacer las copias de seguridad',
+                    d: 'Resolver nombres de Internet'
+                },
+                answer: 'b',
+                feedback: 'Impresoras, unidades de red, restricciones y aplicaciones permitidas se deciden en un sitio y se aplican a todos los equipos. Es la diferencia entre administrar 40 equipos y administrar uno 40 veces.'
+            },
+            {
+                topic: 'NTP',
+                repaso: '#resto',
+                text: 'Un equipo lleva el reloj desviado 20 minutos y su usuario no consigue iniciar sesión en el dominio. ¿Por qué?',
+                options: {
+                    a: 'Coincidencia: son dos problemas distintos',
+                    b: 'La autenticación usa marcas de tiempo, y un desfase grande hace que se rechacen las credenciales',
+                    c: 'El DHCP no entrega dirección a equipos con la hora mal',
+                    d: 'El DNS no resuelve nombres si la hora está mal'
+                },
+                answer: 'b',
+                feedback: 'Las marcas de tiempo evitan que alguien reutilice una credencial capturada. El mensaje de error que ve el usuario no menciona la hora por ninguna parte, y por eso cuesta tanto diagnosticarlo.'
+            },
+            {
+                topic: 'Dependencias',
+                repaso: '#dependencias',
+                text: 'Tras un corte de luz, ¿en qué orden se arrancan los servicios?',
+                options: {
+                    a: 'Ficheros → directorio → DNS → DHCP',
+                    b: 'DHCP → DNS → directorio y NTP → ficheros e impresión',
+                    c: 'Directorio → DHCP → ficheros → DNS',
+                    d: 'Da igual: todos son independientes'
+                },
+                answer: 'b',
+                feedback: 'Cada uno depende del anterior: sin IP no se habla con nadie, sin DNS no se localiza nada por nombre, y los servidores de ficheros necesitan preguntar al directorio si el usuario tiene permiso.'
+            },
+            {
+                topic: 'Dependencias',
+                repaso: '#dependencias',
+                text: 'El servidor DNS es una máquina virtual, y el anfitrión que la aloja se localiza por su nombre. ¿Qué problema hay?',
+                options: {
+                    a: 'Ninguno: es la configuración recomendada',
+                    b: 'Una dependencia circular: tras un apagón, el anfitrión necesita el DNS y el DNS necesita el anfitrión',
+                    c: 'Que la máquina virtual irá más lenta',
+                    d: 'Que hace falta el doble de memoria'
+                },
+                answer: 'b',
+                feedback: 'Es un error real y frecuente al virtualizarlo todo sin pensar. Se evita dejando <strong>direcciones IP fijas y documentadas</strong> en las piezas de infraestructura, pero hay que haberlo previsto antes del apagón.'
+            },
+            {
+                topic: 'Diagnóstico',
+                repaso: '#sintomas',
+                text: 'Un usuario no ve una carpeta compartida, pero sus compañeros del mismo departamento sí. ¿Por dónde empiezas?',
+                options: {
+                    a: 'Por el servidor de ficheros: seguramente está caído',
+                    b: 'Por sus permisos y sus grupos en el directorio',
+                    c: 'Por el cableado de su puesto',
+                    d: 'Por el servidor DHCP'
+                },
+                answer: 'b',
+                feedback: 'El dato decisivo es que <strong>a los demás sí les funciona</strong>: eso descarta el servidor y la red, y apunta a algo específico de ese usuario. Comparar lo que falla con lo que funciona es la técnica de diagnóstico más eficaz.'
+            },
+            {
+                topic: 'Reparto de servicios',
+                repaso: '#reparto',
+                text: 'Con presupuesto ajustado, ¿qué servicio conviene duplicar primero?',
+                options: {
+                    a: 'El servidor de impresión',
+                    b: 'El DNS: su caída lo paraliza todo y duplicarlo es barato',
+                    c: 'El DHCP, porque su caída es inmediata',
+                    d: 'El servidor de ficheros'
+                },
+                answer: 'b',
+                feedback: 'El DHCP puede esperar porque las concesiones vigentes aguantan horas. El servidor de ficheros se cubre con copias. El DNS, en cambio, deja la red aparentemente muerta en cuanto falla.'
+            },
+            {
+                topic: 'Recuperación · Día 4',
+                repaso: '../Dia_04/teoria.html#raid',
+                text: '<em>Repaso.</em> Con cuatro discos de 6 TB en RAID 5, ¿cuánta capacidad útil queda?',
+                options: {
+                    a: '24 TB',
+                    b: '18 TB',
+                    c: '12 TB',
+                    d: '6 TB'
+                },
+                answer: 'b',
+                feedback: 'RAID 5 reserva el equivalente a un disco para la paridad: (4 − 1) × 6 TB = <strong>18 TB</strong>.'
+            },
+            {
+                topic: 'Recuperación · Día 3',
+                repaso: '../Dia_03/teoria.html#puertos',
+                text: '<em>Repaso.</em> ¿En qué puerto escucha un servidor DNS?',
+                options: {
+                    a: '22',
+                    b: '53',
+                    c: '80',
+                    d: '443'
+                },
+                answer: 'b',
+                feedback: 'El 53, y normalmente sobre <strong>UDP</strong> para las consultas corrientes, porque son pequeñas y no compensa montar una conexión TCP para cada una.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

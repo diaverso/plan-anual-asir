@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 5 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">62 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 5</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 3 es una <strong>mesa de incidencias</strong>: seis avisos de usuarios y hay que decidir qué
+            falla en cada uno. Es literalmente el trabajo de un técnico de soporte, y lo que se evalúa no es acertar
+            de memoria, sino <strong>fijarse en qué dato descarta qué hipótesis</strong>.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_04/ejercicios.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_06/teoria.html">Día 6 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 5 — Ejercicios',
+    subtitulo: 'DHCP · DNS · directorio · dependencias · diagnóstico',
+    tiempo: '62 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Qué hace cada servicio',
+            tiempo: '11 min',
+            enunciado: '<p>Fija para qué existe cada pieza antes de diagnosticar nada.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada servicio con lo que aporta.',
+                    izquierda: ['DHCP', 'DNS', 'Directorio', 'NTP'],
+                    derecha: [
+                        'Reparte IP, máscara, puerta de enlace y servidores de nombres',
+                        'Traduce nombres en direcciones y permite cambiar servidores sin avisar',
+                        'Identidad única, permisos por grupos y configuración de los equipos',
+                        'Mantiene la misma hora en todos los equipos'
+                    ],
+                    pares: {
+                        'DHCP': 'Reparte IP, máscara, puerta de enlace y servidores de nombres',
+                        'DNS': 'Traduce nombres en direcciones y permite cambiar servidores sin avisar',
+                        'Directorio': 'Identidad única, permisos por grupos y configuración de los equipos',
+                        'NTP': 'Mantiene la misma hora en todos los equipos'
+                    },
+                    explicacion: 'Los cuatro son <strong>servicios de infraestructura</strong>: ninguno produce nada que el usuario quiera directamente, pero sin ellos no funciona nada de lo que sí quiere.',
+                    pistas: [
+                        'Tres de los cuatro los usa el equipo antes incluso de que el usuario escriba su contraseña.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>b)</strong> Completa la explicación de la concesión DHCP.',
+                    frase: 'El DHCP no regala una dirección: la {{0}} durante un tiempo limitado, y a eso se le llama {{1}}. Caduca para poder {{2}} las direcciones de los equipos que ya no están en la red.',
+                    respuestas: [
+                        ['presta', 'cede', 'alquila', 'asigna temporalmente'],
+                        ['concesion', 'concesión', 'lease', 'arrendamiento'],
+                        ['reutilizar', 'reaprovechar', 'volver a usar', 'liberar']
+                    ],
+                    explicacion: 'Sin caducidad, un rango de direcciones se agotaría en pocos días en cualquier red por la que pasen portátiles y móviles.',
+                    pistas: [
+                        'El segundo hueco es el término técnico, que también se usa en inglés.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué se dice que DHCP, DNS y directorio son «servicios de infraestructura»?',
+                    opciones: {
+                        a: 'Porque van instalados en el mismo servidor',
+                        b: 'Porque no producen nada útil por sí mismos: existen para que los demás funcionen',
+                        c: 'Porque son los más caros',
+                        d: 'Porque solo existen en empresas grandes'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Nadie llega a la oficina con ganas de consultar el DNS. Y esa es justo la razón de que su caída sea tan aparatosa: no falla un servicio, parece que fallan todos.',
+                    pistas: [
+                        'Piensa si algún usuario abre el ordenador con la intención de usar directamente alguno de esos tres.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Dependencias y orden',
+            tiempo: '12 min',
+            enunciado: '<p>Qué necesita a qué, y qué pasa cuando no se respeta.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena el arranque de la infraestructura tras un corte de luz general.',
+                    elementos: [
+                        'Switches y routers',
+                        'Servidor DHCP',
+                        'Servidor DNS',
+                        'Directorio y servidor de hora',
+                        'Servidores de ficheros e impresión'
+                    ],
+                    orden: [
+                        'Switches y routers',
+                        'Servidor DHCP',
+                        'Servidor DNS',
+                        'Directorio y servidor de hora',
+                        'Servidores de ficheros e impresión'
+                    ],
+                    explicacion: 'Cada escalón necesita el anterior: sin enlace nadie habla, sin IP nadie pregunta, sin DNS nadie localiza y sin directorio nadie autoriza. Los servicios que el usuario percibe son los <strong>últimos</strong> en poder arrancar.',
+                    pistas: [
+                        'Empieza por lo que no es un servidor: si no hay red física, da igual lo que enciendas.',
+                        'Después, ¿qué necesita un equipo antes de poder hablar con nadie?',
+                        'Lo que el usuario usa directamente va al final.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué el DNS va antes que el directorio?',
+                    opciones: {
+                        a: 'Por convenio, no hay razón técnica',
+                        b: 'Porque el propio directorio se localiza por nombre, y sin DNS los clientes no lo encuentran',
+                        c: 'Porque el DNS asigna las contraseñas',
+                        d: 'Porque el directorio no usa la red'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los clientes no llevan escrita la dirección IP de su controlador de dominio: la buscan por DNS. Sin resolución de nombres, el directorio puede estar perfectamente encendido y ser invisible.',
+                    pistas: [
+                        'Pregúntate cómo sabe un PC dónde está el servidor al que tiene que pedir permiso.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> El DNS de una empresa es una máquina virtual, y su anfitrión se localiza por nombre. Tras un apagón, no arranca nada. ¿Cómo se llama ese problema y cómo se evita?',
+                    opciones: {
+                        a: 'Cuello de botella; se evita con más memoria',
+                        b: 'Dependencia circular; se evita dejando IP fijas y documentadas en la infraestructura',
+                        c: 'Desajuste de dúplex; se evita con autonegociación',
+                        d: 'Punto único de fallo; se evita con RAID'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El anfitrión necesita el DNS para ser localizado y el DNS necesita el anfitrión para existir. Es un error real y frecuente al virtualizarlo todo sin pensar en el orden de arranque.',
+                    pistas: [
+                        'Fíjate en la forma del problema: A necesita B y B necesita A.',
+                        'La solución pasa por no depender de nombres justo en las piezas más básicas.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>d)</strong> Un técnico arranca primero el servidor de ficheros «para que la gente pueda trabajar cuanto antes». Explica por qué es contraproducente.',
+                    modelo: `<p>Porque el servidor de ficheros no puede hacer su trabajo solo: <strong>depende de dos
+                             servicios que todavía no están</strong>.</p>
+                             <p>En primer lugar, necesita el <strong>directorio</strong> para saber si quien llama tiene
+                             permiso. Un servidor de ficheros no guarda las contraseñas de los usuarios: delega la
+                             autenticación. Si arranca sin poder contactar con el directorio, no podrá autorizar a
+                             nadie, y lo peor es que <strong>puede quedarse en un estado inconsistente</strong>: seguir
+                             rechazando peticiones incluso después de que el directorio esté disponible, hasta que se
+                             le reinicie.</p>
+                             <p>En segundo lugar, aunque el servidor esté encendido, los clientes lo buscan
+                             <strong>por su nombre</strong>. Sin DNS funcionando, es inalcanzable: encendido pero
+                             invisible.</p>
+                             <p>El resultado práctico es el contrario del que buscaba el técnico. En lugar de adelantar
+                             trabajo, se genera una tanda de llamadas de usuarios a los que «no les va nada» aunque el
+                             servidor esté visiblemente encendido, y la solución acaba siendo <strong>reiniciarlo otra
+                             vez</strong>, ya en el orden correcto. Se ha perdido tiempo y se ha añadido ruido a una
+                             situación que ya era tensa.</p>
+                             <p>La lección general: en una recuperación, la prisa se paga. Lo rápido es
+                             <strong>respetar el orden de dependencias</strong> y no encender nada hasta que lo que
+                             está por debajo responda de verdad.</p>`,
+                    rubrica: [
+                        'El servidor de ficheros depende del directorio para autorizar',
+                        'Sin DNS los clientes no lo localizan aunque esté encendido',
+                        'Puede quedar en estado inconsistente y necesitar otro reinicio',
+                        'El efecto es más llamadas de usuarios, no menos',
+                        'Concluye que respetar el orden es lo verdaderamente rápido'
+                    ],
+                    pistas: [
+                        '¿Guarda un servidor de ficheros las contraseñas de los usuarios, o pregunta a alguien?',
+                        '¿Cómo localizan los clientes ese servidor: por IP o por nombre?',
+                        'Piensa qué pasará cuando después sí arranque el directorio.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Mesa de incidencias',
+            tiempo: '18 min',
+            enunciado: `
+                <p>Seis avisos llegan a soporte un martes por la mañana. Para cada uno, identifica el
+                <strong>servicio sospechoso</strong>. Fíjate bien en el dato que acompaña a cada queja: es lo que
+                descarta el resto de hipótesis.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica el servicio sospechoso en cada caso: <em>DHCP</em>, <em>DNS</em>, <em>NTP</em>, <em>permisos</em> o <em>cableado</em>.',
+                    esquina: 'Aviso',
+                    cabecera: ['Servicio sospechoso'],
+                    filas: [
+                        {
+                            etiqueta: '«No va nada» · su IP es <code>169.254.7.4</code>',
+                            celdas: [{ respuestas: ['dhcp', 'el dhcp', 'servidor dhcp'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: '«No abre webs» · <code>ping 8.8.8.8</code> funciona',
+                            celdas: [{ respuestas: ['dns', 'el dns', 'servidor dns'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: '«No me deja iniciar sesión» · su reloj marca 40 min de más',
+                            celdas: [{ respuestas: ['ntp', 'el ntp', 'hora', 'servidor de hora', 'servidor ntp'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: '«No veo la carpeta común» · sus compañeros sí la ven',
+                            celdas: [{ respuestas: ['permisos', 'los permisos', 'directorio', 'permisos del directorio'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: '«Copiar ficheros va lentísimo» · su puerto negocia 100 Mbps',
+                            celdas: [{ respuestas: ['cableado', 'el cableado', 'cable', 'red fisica', 'red física'], placeholder: 'servicio' }]
+                        },
+                        {
+                            etiqueta: '«Hoy nadie puede entrar» · todos los equipos arrancados hoy sin IP',
+                            celdas: [{ respuestas: ['dhcp', 'el dhcp', 'servidor dhcp'], placeholder: 'servicio' }]
+                        }
+                    ],
+                    explicacion: 'En todos los casos el diagnóstico sale del <strong>dato añadido</strong>, no de la queja. «No va nada» puede ser cualquier cosa; «no va nada y su IP es 169.254» solo puede ser una. Aprender a pedir ese dato extra es la mitad del trabajo de soporte.',
+                    pistas: [
+                        'Empieza por los dos que llevan una dirección IP en el enunciado.',
+                        'Uno de los seis no es un servicio de red, sino un problema físico del Día 2.',
+                        'Cuando falla a uno solo y a los demás no, el problema es específico de esa persona.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué tienen en común el primer aviso y el último?',
+                    opciones: {
+                        a: 'Nada: son problemas distintos',
+                        b: 'Los dos apuntan al DHCP, pero el último indica que la avería es general y no de un puesto',
+                        c: 'Los dos son de cableado',
+                        d: 'Los dos se resuelven reiniciando el equipo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La diferencia entre «le pasa a uno» y «le pasa a todos los que han arrancado hoy» es la que separa revisar un puesto de ir corriendo al servidor. Es la primera pregunta que hay que hacer siempre.',
+                    pistas: [
+                        'Fíjate en el alcance de cada aviso: ¿cuánta gente está afectada?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Llega un séptimo aviso: «va todo lentísimo». Los usuarios afectados están repartidos por toda la oficina, en plantas distintas. ¿Qué descartas de entrada?',
+                    opciones: {
+                        a: 'Un problema de cableado de un puesto concreto',
+                        b: 'Un problema del servidor',
+                        c: 'Un problema de la línea de Internet',
+                        d: 'No se puede descartar nada'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Un cable defectuoso afecta a <strong>un</strong> puesto. Si el síntoma aparece repartido por varias plantas, la causa tiene que estar en algo compartido: un servidor, un enlace troncal o la salida a Internet.',
+                    pistas: [
+                        'Pregúntate qué alcance puede tener cada causa posible.',
+                        'Un latiguillo estropeado, ¿a cuánta gente puede afectar?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Diseñar los servicios de una empresa',
+            tiempo: '13 min',
+            enunciado: `
+                <p><strong>Escenario.</strong> Una asesoría de <strong>35 personas</strong> en una sola planta.
+                Manejan datos fiscales de clientes, trabajan con documentos compartidos por departamento, imprimen
+                bastante y tienen el correo contratado con un proveedor externo.</p>`,
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Necesitan un servicio de directorio?',
+                    opciones: {
+                        a: 'No: con 35 personas se apañan con cuentas locales',
+                        b: 'Sí: manejan datos de clientes y necesitan permisos centralizados, revocación y auditoría',
+                        c: 'Solo si tienen más de una sede',
+                        d: 'No, porque el correo es externo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'No es solo el tamaño: es el <strong>tipo de datos</strong>. Con información fiscal de clientes hay que poder demostrar quién accedió a qué y cortar el acceso de forma verificable cuando alguien se marcha.',
+                    pistas: [
+                        'Fíjate en qué tipo de datos manejan, no solo en cuánta gente son.',
+                        '¿Qué pasaría si tuvieran que demostrar quién accedió a un expediente?'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Decide si cada servicio se aloja <em>dentro</em> de la empresa o se contrata <em>fuera</em>.',
+                    esquina: 'Servicio',
+                    cabecera: ['Dentro o fuera'],
+                    filas: [
+                        { etiqueta: 'Correo electrónico', celdas: [{ respuestas: ['fuera', 'externo', 'nube', 'contratado'], placeholder: 'dentro / fuera' }] },
+                        { etiqueta: 'Ficheros compartidos por departamento', celdas: [{ respuestas: ['dentro', 'interno', 'local'], placeholder: 'dentro / fuera' }] },
+                        { etiqueta: 'Directorio de usuarios', celdas: [{ respuestas: ['dentro', 'interno', 'local'], placeholder: 'dentro / fuera' }] },
+                        { etiqueta: 'Una copia de seguridad de los datos', celdas: [{ respuestas: ['fuera', 'externo', 'nube', 'externa'], placeholder: 'dentro / fuera' }] }
+                    ],
+                    explicacion: 'El <strong>correo</strong> propio es de lo más difícil de mantener que existe: reputación, filtrado de spam, disponibilidad. Los <strong>ficheros y el directorio</strong> se quedan dentro por rendimiento y control. Y <strong>al menos una copia</strong> tiene que estar fuera del edificio, o no protege de un incendio ni de un robo.',
+                    pistas: [
+                        'Uno de los cuatro es famoso por ser una pesadilla de mantener por cuenta propia.',
+                        'La copia de seguridad tiene que sobrevivir a lo que destruya el original.'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>c)</strong> El presupuesto solo da para redundar dos servicios. Ordena los cuatro por prioridad de duplicación.',
+                    elementos: [
+                        'DNS',
+                        'Directorio',
+                        'DHCP',
+                        'Servidor de ficheros'
+                    ],
+                    orden: [
+                        'DNS',
+                        'Directorio',
+                        'DHCP',
+                        'Servidor de ficheros'
+                    ],
+                    explicacion: 'El <strong>DNS</strong> primero: su caída paraliza todo y duplicarlo cuesta muy poco. El <strong>directorio</strong> después: sin él nadie inicia sesión. El <strong>DHCP</strong> aguanta horas gracias a las concesiones vigentes. Y el servidor de <strong>ficheros</strong> se cubre con copias y un plan de restauración, que ya deberían existir.',
+                    pistas: [
+                        'Ordena por dos criterios a la vez: cuánto duele su caída y cuánto cuesta duplicarlo.',
+                        'Hay un servicio cuya caída no se nota hasta que alguien arranca un equipo.',
+                        'Uno de los cuatro se protege con copias en vez de con redundancia.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Integración de la semana',
+            tiempo: '8 min',
+            enunciado: '<p>Une los servicios de hoy con los componentes de los días anteriores.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena todo lo que ocurre desde que un empleado enciende su PC hasta que abre un documento de la carpeta común.',
+                    elementos: [
+                        'La NIC establece enlace con el switch y negocia la velocidad',
+                        'El equipo pide configuración por DHCP y recibe IP, máscara, puerta de enlace y DNS',
+                        'El equipo consulta al DNS dónde está el controlador de dominio',
+                        'El usuario se autentica contra el directorio',
+                        'El equipo resuelve por DNS el nombre del servidor de ficheros',
+                        'El servidor de ficheros consulta los permisos y entrega el documento'
+                    ],
+                    orden: [
+                        'La NIC establece enlace con el switch y negocia la velocidad',
+                        'El equipo pide configuración por DHCP y recibe IP, máscara, puerta de enlace y DNS',
+                        'El equipo consulta al DNS dónde está el controlador de dominio',
+                        'El usuario se autentica contra el directorio',
+                        'El equipo resuelve por DNS el nombre del servidor de ficheros',
+                        'El servidor de ficheros consulta los permisos y entrega el documento'
+                    ],
+                    explicacion: 'Esta secuencia recorre <strong>toda la semana</strong>: la tarjeta del Día 1, el medio del Día 2, los servicios del Día 3, la máquina del Día 4 y las dependencias de hoy. Si falla cualquier eslabón, el usuario solo dirá «no me va».',
+                    pistas: [
+                        'Lo primero es físico: sin enlace no hay nada.',
+                        'El DNS aparece dos veces, en dos momentos distintos.',
+                        'Autenticarse va antes de pedir un fichero: primero demuestras quién eres.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> En esa secuencia, ¿cuántos eslabones tendrían que fallar para que el usuario diga exactamente lo mismo, «no me va»?',
+                    opciones: {
+                        a: 'Solo el primero',
+                        b: 'Cualquiera de los seis: el síntoma que percibe el usuario es idéntico',
+                        c: 'Al menos tres a la vez',
+                        d: 'Ninguno: siempre da un error distinto'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Esta es la razón de ser del diagnóstico por capas. El usuario no puede darte el diagnóstico, solo el síntoma: el trabajo consiste en <strong>ir descartando eslabones de abajo hacia arriba</strong> con pruebas rápidas.',
+                    pistas: [
+                        'Ponte en el lugar del usuario: ¿distingue él en qué punto se rompió la cadena?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

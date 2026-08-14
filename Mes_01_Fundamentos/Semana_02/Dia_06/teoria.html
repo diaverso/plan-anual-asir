@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 6 — Método de diseño de una red</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 6 — Método de diseño de una red</h1>
+        <p>Cómo se pasa de «quiero montar la red de mi empresa» a una propuesta defendible</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 40 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 8 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 16 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 24 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Hoy el peso está en el laboratorio</strong>
+            La teoría es corta a propósito: <strong>40 minutos</strong>. El grueso del día son
+            <strong>70 minutos de proyecto</strong> en el que diseñas la red completa de una empresa y defiendes cada
+            decisión. Es el primer día del curso en el que produces algo, en lugar de responder algo.
+        </div>
+
+        <div class="destacado">
+            <strong>Qué se junta hoy</strong>
+            Todo lo de dos semanas: topologías y tipos de red (Semana 1), tarjeta, medio y software (Días 1-3),
+            servidores y disponibilidad (Día 4) y servicios (Día 5). Hoy dejan de ser temas y pasan a ser
+            <strong>decisiones con consecuencias</strong>.
+            <br><br>
+            <em>Nota de alcance:</em> hoy se diseña a nivel de <strong>componentes y servicios</strong>. El cálculo de
+            subredes es el Mes 4, la configuración de VLAN el Mes 9 y el enrutamiento los Meses 7 y 8. Aquí se decide
+            <em>qué hace falta</em>; más adelante aprenderás <em>cómo se configura</em>.
+        </div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#preguntar">Antes de diseñar: preguntar</a></li>
+                <li><a href="#metodo">El método en seis pasos</a></li>
+                <li><a href="#crecer">Diseñar para el crecimiento</a></li>
+                <li><a href="#documentar">Documentar: qué entregar</a></li>
+                <li><a href="#errores">Errores de diseño más comunes</a></li>
+                <li><a href="#resumen">Resumen</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="preguntar">1. Antes de diseñar: preguntar</h2>
+
+            <p>Un cliente dice: «quiero montar la red de mi empresa». Es un encargo <strong>imposible de cumplir</strong>
+            tal cual, porque no contiene ni un solo dato con el que decidir nada.</p>
+
+            <p>El primer trabajo de diseño no es dibujar: es <strong>preguntar</strong>. Y hay una lista corta que
+            resuelve el 90 % de los casos:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Pregunta</th><th>Qué decide</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>¿Cuántas personas, y en cuántos sitios?</strong></td><td>Tamaño, número de tomas, si hay una o varias sedes</td></tr>
+                    <tr><td><strong>¿Cuántas plantas y qué distancias hay?</strong></td><td>Cobre o fibra, cuántos armarios hacen falta</td></tr>
+                    <tr><td><strong>¿Qué datos manejan?</strong></td><td>Si hace falta directorio, cifrado, auditoría</td></tr>
+                    <tr><td><strong>¿Qué aplicaciones usan a diario?</strong></td><td>Qué servidores hacen falta y cuánto ancho de banda</td></tr>
+                    <tr><td><strong>¿Cuánto cuesta una hora parados?</strong></td><td>Cuánta redundancia se justifica</td></tr>
+                    <tr><td><strong>¿Quién lo va a administrar después?</strong></td><td>Cuánta complejidad se puede permitir</td></tr>
+                    <tr><td><strong>¿Van a crecer? ¿Cuánto?</strong></td><td>Margen de puertos, de rack y de direcciones</td></tr>
+                    <tr><td><strong>¿Qué presupuesto hay?</strong></td><td>Todo lo anterior, en la práctica</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Las dos preguntas que casi nadie hace y más importan</strong>
+                <br>· <strong>«¿Cuánto cuesta una hora parados?»</strong> Es la única forma de decidir racionalmente
+                cuánta redundancia comprar. Sin ese número, la conversación sobre disponibilidad es una discusión de
+                opiniones.
+                <br>· <strong>«¿Quién lo va a administrar?»</strong> Un diseño elegante que nadie de la empresa sabe
+                mantener es un diseño <strong>fallido</strong>. Si no hay informático interno, la simplicidad vale más
+                que la sofisticación.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="metodo">2. El método en seis pasos</h2>
+
+            <p>Diseñar en el orden correcto evita rehacer el trabajo. El orden es <strong>de arriba hacia abajo</strong>:
+            de lo que la empresa necesita a los cables concretos, no al revés.</p>
+
+<pre><code>  1. REQUISITOS      ¿cuánta gente, dónde, con qué datos, con qué presupuesto?
+         ↓
+  2. TOPOLOGÍA       ¿cómo se estructura? ¿cuántos armarios?
+         ↓
+  3. MEDIO           ¿cobre dónde, fibra dónde?
+         ↓
+  4. EQUIPAMIENTO    ¿cuántos puertos, qué dispositivos, qué servidores?
+         ↓
+  5. SERVICIOS       ¿qué se aloja dentro, qué se contrata fuera?
+         ↓
+  6. RIESGOS         ¿qué puntos únicos de fallo quedan? ¿cuáles se asumen?</code></pre>
+
+            <h3>Paso 2 — Topología</h3>
+
+            <p>Con lo que sabes de la Semana 1, la decisión está prácticamente tomada: <strong>estrella jerárquica</strong>.
+            No porque sea la más moderna, sino por lo que viste en el Día 5: <strong>aísla los fallos</strong> y hace
+            el diagnóstico inmediato.</p>
+
+            <p>Lo que sí hay que decidir es <strong>cuántos armarios</strong>, y ahí manda la física: si algún puesto
+            queda a más de <strong>90 metros</strong> de cable del armario, hace falta otro armario.</p>
+
+            <h3>Paso 3 — Medio</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tramo</th><th>Medio</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr><td>Armario → puesto de trabajo</td><td><strong>Cobre Cat 6A</strong></td><td>Distancias cortas, muchas tomas, coste por toma bajo</td></tr>
+                    <tr><td>Armario → armario</td><td><strong>Fibra</strong></td><td>Supera los 100 m e inmune al ruido entre plantas</td></tr>
+                    <tr><td>Sede → sede</td><td>Línea contratada o <strong>VPN</strong></td><td>Atraviesa terreno público</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Paso 4 — Equipamiento</h3>
+
+            <div class="destacado">
+                <strong>Cómo se cuentan los puertos</strong>
+                No se cuentan personas: se cuentan <strong>tomas</strong>. Y salen bastantes más de las que parece.
+                <br><br>
+                Por cada puesto: el ordenador y, muy a menudo, un teléfono IP. Más las impresoras, los puntos de acceso
+                Wi-Fi, las cámaras, los servidores y los propios enlaces entre switches.
+                <br><br>
+                Y sobre ese total se aplica un <strong>margen del 20-30 %</strong>. No es despilfarro: añadir un
+                switch después obliga a reorganizar el armario, y los puertos libres se acaban siempre antes de lo
+                previsto.
+            </div>
+
+            <h3>Paso 5 — Servicios</h3>
+
+            <p>La decisión clave es <strong>dentro o fuera</strong>, con los criterios del Día 5. Y el reparto entre
+            máquinas sigue la regla que ya conoces: <strong>consolidar el hardware, separar los servicios</strong>
+            mediante virtualización.</p>
+
+            <h3>Paso 6 — Riesgos</h3>
+
+            <p>Es el paso que distingue una propuesta profesional de un presupuesto de material. Consiste en
+            <strong>recorrer el diseño buscando puntos únicos de fallo</strong> y decidir, para cada uno, si se corrige
+            o se asume.</p>
+
+            <div class="aviso">
+                <strong>Asumir un riesgo no es ignorarlo</strong>
+                Es perfectamente profesional escribir: «el switch de la planta 2 es un punto único de fallo; se asume
+                porque duplicarlo cuesta 1 800 € y una caída afecta a 12 personas durante las 4 horas que tardaría la
+                sustitución».
+                <br><br>
+                Lo que no es profesional es que ese riesgo <strong>no aparezca en ninguna parte</strong>, y que el día
+                que ocurra nadie lo hubiera previsto. La diferencia entre asumir e ignorar es que lo asumido está
+                <strong>escrito y decidido por quien paga</strong>.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="crecer">3. Diseñar para el crecimiento</h2>
+
+            <p>Toda red se queda pequeña. La diferencia entre un buen y un mal diseño es <strong>cuánto duele
+            crecer</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Elemento</th><th>Margen razonable</th><th>Qué pasa si no se deja</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Puertos de switch</strong></td><td>20-30 % libres</td><td>Hay que reorganizar el armario entero</td></tr>
+                    <tr><td><strong>Espacio de rack</strong></td><td>Un tercio libre</td><td>Armario nuevo, y quizá otra sala</td></tr>
+                    <tr><td><strong>Tomas por estancia</strong></td><td>Dos como mínimo</td><td>Aparecen minihubs bajo las mesas</td></tr>
+                    <tr><td><strong>Categoría del cable</strong></td><td>Una por encima de la necesaria</td><td>Volver a abrir paredes</td></tr>
+                    <tr><td><strong>Direcciones IP</strong></td><td>Rango holgado</td><td>Rediseñar el direccionamiento entero</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La asimetría que justifica los márgenes</strong>
+                Lo caro nunca es el material: es <strong>la obra y la mano de obra</strong>. Tirar un cable de más
+                mientras la pared está abierta cuesta unos euros; volver a abrirla dentro de dos años cuesta cientos y
+                paraliza una oficina.
+                <br><br>
+                Por eso la regla práctica es: <strong>sé generoso en lo que es difícil de cambiar y tacaño en lo que es
+                fácil</strong>. El cableado y las canalizaciones duran veinte años; un switch se sustituye en una
+                tarde.
+            </div>
+
+            <h2 id="documentar">4. Documentar: qué entregar</h2>
+
+            <p>Un diseño que solo existe en la cabeza de quien lo hizo es —literalmente, como viste en el Día 4— un
+            <strong>punto único de fallo</strong>. La documentación mínima de cualquier instalación es:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Documento</th><th>Qué contiene</th><th>Se consulta cuando…</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Plano lógico</strong></td><td>Qué equipos hay y cómo se conectan entre sí</td><td>Se quiere entender la red</td></tr>
+                    <tr><td><strong>Plano físico</strong></td><td>Dónde está cada cosa: plantas, salas, armarios</td><td>Hay que ir a tocar algo</td></tr>
+                    <tr><td><strong>Tabla de cableado</strong></td><td>Qué roseta corresponde a qué puerto del panel</td><td>Hay una avería</td></tr>
+                    <tr><td><strong>Inventario</strong></td><td>Equipos, números de serie, garantías, versiones</td><td>Toca renovar o reclamar</td></tr>
+                    <tr><td><strong>Procedimiento de arranque</strong></td><td>En qué orden se levanta todo tras un corte</td><td>Ha habido un apagón</td></tr>
+                    <tr><td><strong>Registro de decisiones</strong></td><td>Qué se decidió, qué se descartó y <strong>por qué</strong></td><td>Alguien pregunta «¿por qué está así?»</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>El registro de decisiones es el más olvidado y el más valioso</strong>
+                <p>Dentro de tres años, alguien mirará una configuración rara y tendrá dos opciones: cambiarla —y
+                romper algo que estaba resuelto— o dejarla por miedo, sin entenderla.</p>
+                <p>Una línea escrita —«se usó Cat 6A y no Cat 6 porque las tiradas de la planta 2 superan los 60 m»—
+                ahorra esa disyuntiva. Documentar el <strong>porqué</strong> vale más que documentar el qué, porque el
+                qué se puede deducir mirando; el porqué, no.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="errores">5. Errores de diseño más comunes</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error</th><th>Cómo se manifiesta</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Empezar por el material</strong></td>
+                        <td>Se elige el switch antes de saber cuántas tomas hacen falta. Sobra o falta, y siempre falta</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Diseñar para hoy</strong></td>
+                        <td>Cero puertos libres el día del estreno. Al primer empleado nuevo, minihub bajo la mesa</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Redundar lo visible</strong></td>
+                        <td>Dos servidores en un switch, cuatro fuentes en una regleta</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Confundir RAID con copia</strong></td>
+                        <td>Se descubre el día que alguien borra una carpeta</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Copias en el mismo edificio</strong></td>
+                        <td>Un incendio se lleva original y copia</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sobredimensionar la complejidad</strong></td>
+                        <td>Un diseño que la empresa no sabe mantener y que se degrada solo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>No documentar</strong></td>
+                        <td>Cada avería empieza con media hora de arqueología</td>
+                    </tr>
+                    <tr>
+                        <td><strong>No preguntar el presupuesto</strong></td>
+                        <td>Una propuesta impecable que el cliente rechaza entera</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El error del que menos se habla: pasarse</strong>
+                Se enseña mucho a no quedarse corto y muy poco a no pasarse. Pero una red demasiado compleja para
+                quien tiene que mantenerla <strong>se degrada sola</strong>: nadie se atreve a tocarla, las
+                actualizaciones se posponen, la documentación se queda vieja y al cabo de dos años funciona peor que
+                una instalación sencilla y bien cuidada.
+                <br><br>
+                <strong>El mejor diseño no es el más avanzado: es el más avanzado que esa empresa puede
+                sostener.</strong>
+            </div>
+
+            <h2 id="resumen">6. Resumen</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>El diseño empieza <strong>preguntando</strong>, no dibujando.</li>
+                    <li>Las dos preguntas más olvidadas: <strong>cuánto cuesta una hora parados</strong> y
+                    <strong>quién lo va a administrar</strong>.</li>
+                    <li>Orden: <strong>requisitos → topología → medio → equipamiento → servicios → riesgos</strong>.</li>
+                    <li>Se cuentan <strong>tomas, no personas</strong>, y se añade un 20-30 % de margen.</li>
+                    <li>Cobre al puesto, <strong>fibra entre armarios</strong>; más de 90 m de cable exige otro
+                    armario.</li>
+                    <li><strong>Asumir</strong> un riesgo por escrito es profesional; ignorarlo, no.</li>
+                    <li>Sé generoso en lo difícil de cambiar (cable, canalizaciones) y tacaño en lo fácil.</li>
+                    <li>Documenta sobre todo el <strong>porqué</strong>: el qué se deduce mirando.</li>
+                    <li>El mejor diseño es <strong>el más avanzado que esa empresa puede sostener</strong>.</li>
+                </ul>
+            </div>
+
+            <h2 id="repaso">7. Repaso con flashcards</h2>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>12 preguntas · 16 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el proyecto</strong>
+            <p>Hoy el laboratorio <strong>es</strong> el día. Vas a diseñar la red completa de una empresa real —dos
+            plantas, 60 personas, datos sensibles y un presupuesto que no da para todo— aplicando el método de seis
+            pasos y justificando cada decisión.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al proyecto del Día 6</strong></a> (70 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 7</strong>
+            <p>Síntesis de la Semana 2 y <strong>test semanal</strong>, con el mismo formato que el del Día 7 de la
+            Semana 1: mazo de repaso de los seis días y evaluación cronometrada con desglose por día.</p>
+            <p><em>Preparación:</em> repasa las flashcards de los días que peor se te dieran. El panel del Centro de
+            Aprendizaje te dice cuáles son.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Proyecto</a></span>
+        <span><a href="../Dia_05/teoria.html">← Día 5</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Un cliente te dice: «quiero montar la red de mi empresa, dame un presupuesto». Escribe las <strong>cinco preguntas</strong> que le harías antes de escribir una sola cifra, y qué decide cada una.',
+                modelo: `<p>Sin datos no hay diseño, solo un catálogo. Las cinco que más rendimiento dan:</p>
+                         <ol>
+                           <li><strong>¿Cuántas personas y en cuántas plantas o sedes?</strong> Decide el número de
+                           tomas, cuántos armarios hacen falta y si hay que unir edificios. Es la pregunta de la que
+                           cuelga todo lo demás.</li>
+                           <li><strong>¿Qué distancias hay entre el armario y el puesto más lejano?</strong> Decide
+                           cobre o fibra y, sobre todo, si con un solo armario basta: si algún puesto pasa de 90 m de
+                           cable, hace falta otro.</li>
+                           <li><strong>¿Qué datos manejáis?</strong> Decide si hace falta directorio, control de
+                           accesos, auditoría y cifrado. No es lo mismo un taller que una asesoría con datos fiscales
+                           de clientes.</li>
+                           <li><strong>¿Cuánto os cuesta una hora parados?</strong> Es la única forma de decidir
+                           racionalmente cuánta redundancia comprar. Sin ese número, hablar de disponibilidad es
+                           intercambiar opiniones.</li>
+                           <li><strong>¿Quién va a administrar esto cuando yo me vaya?</strong> Decide cuánta
+                           complejidad puede permitirse el diseño. Si no hay informático interno, la simplicidad vale
+                           más que la sofisticación.</li>
+                         </ol>
+                         <p>Añadiría una sexta que no es técnica pero condiciona todas las anteriores:
+                         <strong>¿qué presupuesto hay?</strong> Una propuesta impecable fuera de presupuesto se
+                         rechaza entera, y no sirve de nada.</p>
+                         <p>El motivo de fondo para preguntar antes es que <strong>rehacer un diseño es barato y
+                         rehacer una instalación no lo es</strong>. Media hora de preguntas evita semanas de obra mal
+                         planteada.</p>`,
+                puntos: [
+                    'Pregunta por número de personas, plantas o sedes',
+                    'Pregunta por distancias, que deciden medio y número de armarios',
+                    'Pregunta por el tipo de datos, que decide directorio y seguridad',
+                    'Incluye el coste de una hora de parada',
+                    'Incluye quién administrará la red después'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Explica la diferencia entre <strong>asumir</strong> un riesgo e <strong>ignorarlo</strong>, con un ejemplo escrito como lo pondrías en un informe.',
+                modelo: `<p>La diferencia no está en lo que se hace —en los dos casos no se corrige— sino en si la
+                         decisión <strong>existe</strong>.</p>
+                         <p><strong>Ignorar</strong> es no haberlo detectado, o haberlo detectado y no contarlo. El
+                         riesgo no aparece en ningún documento, nadie lo ha valorado y, el día que se materializa,
+                         sorprende a todo el mundo. La conversación posterior es siempre la misma: «¿nadie sabía que
+                         esto podía pasar?».</p>
+                         <p><strong>Asumir</strong> es haberlo identificado, haber calculado lo que cuesta corregirlo y
+                         lo que cuesta que ocurra, y haber decidido <em>conscientemente</em> convivir con él. Queda
+                         escrito, y lo aprueba quien paga, que es quien tiene autoridad para aceptar un riesgo del
+                         negocio.</p>
+                         <p>Redactado para un informe:</p>
+                         <blockquote>
+                           <p><strong>Riesgo R-04 — Switch de planta 2 sin redundancia.</strong> El switch de la
+                           planta 2 es un punto único de fallo: su avería deja sin red a 12 puestos.</p>
+                           <p><em>Coste de corregirlo:</em> 1 800 € (segundo switch y enlaces redundantes).<br>
+                           <em>Impacto si ocurre:</em> 12 personas sin red durante unas 4 h, tiempo estimado de
+                           sustitución con el equipo de repuesto en almacén.<br>
+                           <em>Decisión:</em> se asume. Se mitiga manteniendo un switch de repuesto configurado y
+                           etiquetado en el armario, lo que reduce el tiempo de reposición de 2 días a 4 h.</p>
+                         </blockquote>
+                         <p>Fíjate en que asumir un riesgo no es cruzarse de brazos: casi siempre viene acompañado de
+                         una <strong>mitigación barata</strong>. Aquí no se compra redundancia, pero se ataca el
+                         <strong>MTTR</strong> con un repuesto, que es exactamente la lección del Día 4.</p>`,
+                puntos: [
+                    'Ignorar = no detectado o no comunicado',
+                    'Asumir = identificado, valorado y decidido por escrito',
+                    'Señala que lo aprueba quien paga',
+                    'Redacta un ejemplo con coste, impacto y decisión',
+                    'Incluye una mitigación barata que reduce el MTTR'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> «Cuanto más avanzado sea el diseño, mejor.» Explica por qué esta idea es falsa, y qué criterio la sustituye.',
+                modelo: `<p>Es falsa porque un diseño no se evalúa el día que se entrega, sino
+                         <strong>dos años después</strong>. Y lo que decide cómo estará entonces no es su
+                         sofisticación, sino si alguien ha sido capaz de mantenerlo.</p>
+                         <p>Una red demasiado compleja para quien la administra <strong>se degrada sola</strong>, y el
+                         proceso es siempre parecido: nadie se atreve a tocar lo que no entiende, así que las
+                         actualizaciones se posponen; los cambios se hacen «por fuera», parcheando en lugar de
+                         modificar lo existente; la documentación deja de reflejar la realidad; y cuando llega una
+                         avería, hay que llamar —y pagar— a quien lo montó. Al cabo de dos años, esa instalación
+                         funciona <em>peor</em> que una sencilla y bien cuidada.</p>
+                         <p>Hay un coste añadido: la complejidad innecesaria también aumenta la superficie de fallo.
+                         Cada mecanismo avanzado es otro sitio donde algo puede romperse y otro concepto que hay que
+                         dominar para diagnosticar.</p>
+                         <p>El criterio que lo sustituye: <strong>el mejor diseño es el más avanzado que esa empresa
+                         puede sostener</strong>. Eso obliga a preguntar quién lo va a administrar <em>antes</em> de
+                         diseñar, y a aceptar que la respuesta correcta para una empresa de 20 personas sin informático
+                         interno puede ser deliberadamente sencilla.</p>
+                         <p>Dicho de otra forma: la sofisticación que no se puede mantener no es una ventaja que
+                         sobra, es un <strong>problema que se entrega junto con la instalación</strong>.</p>`,
+                puntos: [
+                    'Un diseño se juzga por cómo está dos años después',
+                    'Lo que no se entiende no se toca ni se actualiza',
+                    'La documentación deja de reflejar la realidad',
+                    'La complejidad añade superficie de fallo',
+                    'Criterio: el más avanzado que esa empresa pueda sostener'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Cuál es el <strong>primer</strong> trabajo de diseño?', dorso: '<strong>Preguntar</strong>, no dibujar. «Quiero montar la red de mi empresa» no contiene ni un dato con el que decidir nada.' },
+            { frente: 'Las dos preguntas más olvidadas al diseñar', dorso: '<strong>¿Cuánto cuesta una hora parados?</strong> (decide la redundancia) y <strong>¿quién lo va a administrar?</strong> (decide la complejidad).' },
+            { frente: 'El método en seis pasos', dorso: '<strong>Requisitos → topología → medio → equipamiento → servicios → riesgos.</strong> De arriba hacia abajo, nunca al revés.' },
+            { frente: '¿Qué se cuenta para dimensionar un switch?', dorso: '<strong>Tomas, no personas</strong>: PC, teléfonos IP, impresoras, puntos de acceso, cámaras, servidores y enlaces. Y se añade un <strong>20-30 %</strong> de margen.' },
+            { frente: '¿Cuándo hace falta un segundo armario?', dorso: 'Cuando algún puesto queda a más de <strong>90 m de cable</strong> del armario existente. Es una decisión física, no de presupuesto.' },
+            { frente: 'Cobre o fibra: la regla', dorso: '<strong>Cobre al puesto</strong> (Cat 6A), <strong>fibra entre armarios</strong> y plantas. Entre sedes, línea contratada o VPN.' },
+            { frente: 'Diferencia entre <strong>asumir</strong> e <strong>ignorar</strong> un riesgo', dorso: 'Asumir: identificado, valorado y <strong>escrito</strong>, aprobado por quien paga. Ignorar: no aparece en ninguna parte y sorprende a todos.' },
+            { frente: '¿Dónde hay que ser generoso y dónde tacaño?', dorso: 'Generoso en lo <strong>difícil de cambiar</strong> (cable, canalizaciones, categoría); tacaño en lo fácil (un switch se sustituye en una tarde).' },
+            { frente: '¿Qué parte de la documentación es la más valiosa?', dorso: 'El <strong>registro de decisiones</strong>: el <em>porqué</em>. El <em>qué</em> se deduce mirando la instalación; el porqué se pierde para siempre.' },
+            { frente: '¿Por qué es un error pasarse de complejidad?', dorso: 'Porque una red que nadie sabe mantener <strong>se degrada sola</strong>: no se actualiza, se parchea por fuera y acaba peor que una sencilla bien cuidada.' },
+            { frente: 'El criterio final de un buen diseño', dorso: 'No el más avanzado, sino <strong>el más avanzado que esa empresa puede sostener</strong>.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 6 — Método de diseño de una red',
+        subtitulo: 'Requisitos · método · crecimiento · documentación',
+        tiempo: '16 minutos',
+        minutos: 16,
+        questions: [
+            {
+                topic: 'Requisitos',
+                repaso: '#preguntar',
+                text: 'Un cliente pide «la red de mi empresa». ¿Cuál es el primer paso?',
+                options: {
+                    a: 'Elegir el switch y el cableado',
+                    b: 'Hacer las preguntas que permitan tomar decisiones: tamaño, distancias, datos, presupuesto',
+                    c: 'Dibujar la topología',
+                    d: 'Pedir presupuesto a los proveedores'
+                },
+                answer: 'b',
+                feedback: 'Ese encargo no contiene ni un dato con el que decidir nada. Rehacer un diseño es barato; rehacer una instalación, no.'
+            },
+            {
+                topic: 'Requisitos',
+                repaso: '#preguntar',
+                text: '¿Qué pregunta permite decidir racionalmente cuánta redundancia comprar?',
+                options: {
+                    a: '¿Cuántos empleados hay?',
+                    b: '¿Qué presupuesto tenéis?',
+                    c: '¿Cuánto os cuesta una hora parados?',
+                    d: '¿Qué marca preferís?'
+                },
+                answer: 'c',
+                feedback: 'Sin esa cifra, la conversación sobre disponibilidad es un intercambio de opiniones. Con ella, se puede comparar el coste de la redundancia con el de la parada que evita.'
+            },
+            {
+                topic: 'Método',
+                repaso: '#metodo',
+                text: '¿Cuál es el orden correcto del método de diseño?',
+                options: {
+                    a: 'Equipamiento → topología → requisitos → medio',
+                    b: 'Requisitos → topología → medio → equipamiento → servicios → riesgos',
+                    c: 'Medio → equipamiento → requisitos → servicios',
+                    d: 'Riesgos → requisitos → equipamiento → medio'
+                },
+                answer: 'b',
+                feedback: 'De arriba hacia abajo: de lo que la empresa necesita a los cables concretos. Empezar por el material obliga a rehacerlo casi siempre.'
+            },
+            {
+                topic: 'Método',
+                repaso: '#metodo',
+                text: 'Un puesto queda a 110 metros de cable del único armario. ¿Qué implica?',
+                options: {
+                    a: 'Nada, si se usa Cat 6A',
+                    b: 'Que hay que usar un cable de mejor categoría',
+                    c: 'Que hace falta un segundo armario, o llevar fibra hasta un punto intermedio',
+                    d: 'Que hay que poner un repetidor de señal'
+                },
+                answer: 'c',
+                feedback: 'El límite de 100 m del enlace de cobre es físico y ninguna categoría lo cambia: Cat 8 llega incluso a menos. La solución es meter un dispositivo activo por el camino o pasar a fibra.'
+            },
+            {
+                topic: 'Método',
+                repaso: '#metodo',
+                text: 'Una oficina tiene 40 personas. ¿Cuántos puertos de switch hay que prever, aproximadamente?',
+                options: {
+                    a: '40, uno por persona',
+                    b: 'Bastantes más: se cuentan tomas (PC, teléfonos, impresoras, puntos de acceso, servidores) y se añade un 20-30 % de margen',
+                    c: '20, porque la mitad usará Wi-Fi',
+                    d: 'Exactamente 48, que es el tamaño de switch estándar'
+                },
+                answer: 'b',
+                feedback: 'Se cuentan <strong>tomas, no personas</strong>. Entre teléfonos IP, impresoras, puntos de acceso, cámaras, servidores y enlaces entre switches, el total supera con facilidad el doble del número de empleados.'
+            },
+            {
+                topic: 'Método',
+                repaso: '#metodo',
+                text: 'Cobre y fibra en un edificio de tres plantas con un armario por planta. ¿Cómo se reparten?',
+                options: {
+                    a: 'Fibra hasta cada puesto, cobre entre armarios',
+                    b: 'Cobre del armario al puesto, fibra entre los armarios de las plantas',
+                    c: 'Cobre en todo el edificio',
+                    d: 'Fibra en todo el edificio'
+                },
+                answer: 'b',
+                feedback: 'Cobre donde hay muchas tomas y distancias cortas; fibra donde hay pocos enlaces, más de 100 m o ruido eléctrico. Coincide con el modelo jerárquico: cobre en acceso, fibra en distribución.'
+            },
+            {
+                topic: 'Riesgos',
+                repaso: '#metodo',
+                text: 'En un informe se lee: «el switch de planta 2 es un punto único de fallo; se asume porque duplicarlo cuesta 1 800 € y afectaría a 12 personas durante 4 h». ¿Qué opinas?',
+                options: {
+                    a: 'Es negligente: un punto único de fallo hay que corregirlo siempre',
+                    b: 'Es profesional: el riesgo está identificado, valorado y la decisión es consciente',
+                    c: 'Falta poner de quién es la culpa',
+                    d: 'No debería aparecer en un informe'
+                },
+                answer: 'b',
+                feedback: 'Asumir un riesgo por escrito, con su coste y su impacto, y que lo apruebe quien paga, es exactamente lo correcto. Lo negligente es que ese riesgo no aparezca en ninguna parte.'
+            },
+            {
+                topic: 'Crecimiento',
+                repaso: '#crecer',
+                text: '¿Por qué se recomienda dejar un 20-30 % de puertos libres?',
+                options: {
+                    a: 'Por si algún puerto se estropea',
+                    b: 'Porque añadir un switch después obliga a reorganizar el armario y los puertos se agotan antes de lo previsto',
+                    c: 'Porque lo exige la normativa',
+                    d: 'Para mejorar la velocidad de la red'
+                },
+                answer: 'b',
+                feedback: 'El material es barato comparado con la mano de obra y con la reorganización. Sin margen, el primer empleado nuevo acaba con un minihub bajo la mesa.'
+            },
+            {
+                topic: 'Crecimiento',
+                repaso: '#crecer',
+                text: '¿Dónde conviene ser generoso al dimensionar y dónde no?',
+                options: {
+                    a: 'Generoso en los switches, tacaño en el cableado',
+                    b: 'Generoso en lo difícil de cambiar (cable, canalizaciones), tacaño en lo fácil de sustituir',
+                    c: 'Generoso en todo, siempre',
+                    d: 'Tacaño en todo: siempre se puede ampliar'
+                },
+                answer: 'b',
+                feedback: 'El cableado y las canalizaciones duran veinte años y cambiarlos exige obra. Un switch se sustituye en una tarde. La generosidad hay que ponerla donde volver atrás es caro.'
+            },
+            {
+                topic: 'Documentación',
+                repaso: '#documentar',
+                text: '¿Cuál es la parte más valiosa de la documentación de una red?',
+                options: {
+                    a: 'El inventario de números de serie',
+                    b: 'El plano físico',
+                    c: 'El registro de decisiones: por qué se hizo así y qué se descartó',
+                    d: 'La tabla de cableado'
+                },
+                answer: 'c',
+                feedback: 'El <em>qué</em> se puede deducir mirando la instalación; el <em>porqué</em> se pierde para siempre. Sin él, quien llegue después cambiará algo que estaba resuelto o no tocará nada por miedo.'
+            },
+            {
+                topic: 'Errores',
+                repaso: '#errores',
+                text: 'Una empresa de 20 personas sin informático interno recibe un diseño muy sofisticado. ¿Cuál es el riesgo?',
+                options: {
+                    a: 'Ninguno: cuanto más avanzado, mejor',
+                    b: 'Que se degrade sola, porque nadie se atreve a tocarla ni a actualizarla',
+                    c: 'Que consuma demasiada electricidad',
+                    d: 'Que no cumpla la normativa'
+                },
+                answer: 'b',
+                feedback: 'Un diseño se juzga por cómo está <strong>dos años después</strong>. El mejor diseño no es el más avanzado, sino el más avanzado que esa empresa puede sostener.'
+            },
+            {
+                topic: 'Recuperación · Semana 2',
+                repaso: '../Dia_05/teoria.html#dependencias',
+                text: '<em>Repaso.</em> En el diseño hay que documentar el orden de arranque. ¿Cuál es?',
+                options: {
+                    a: 'Ficheros → DNS → DHCP → directorio',
+                    b: 'Red física → DHCP → DNS → directorio y NTP → ficheros e impresión',
+                    c: 'Directorio → red física → DNS → DHCP',
+                    d: 'Da igual, todos son independientes'
+                },
+                answer: 'b',
+                feedback: 'Cada escalón necesita el anterior. Y hay que evitar la dependencia circular de tener el DNS virtualizado en un anfitrión que se localiza por nombre.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

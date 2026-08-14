@@ -38,11 +38,13 @@ Ninguno. Es el mes inicial del curso.
 | Semana | Tema | Estado |
 |--------|------|--------|
 | **[Semana 1](Semana_01/README.md)** | Introducción a las Redes | ✅ Disponible (7 días) |
-| Semana 2 | Componentes y Tipos de Redes | ⏳ Pendiente |
+| **[Semana 2](Semana_02/README.md)** | Componentes de una red | ✅ Disponible (7 días) |
 | Semana 3 | Arquitecturas y Modelos (OSI, TCP/IP) | ⏳ Pendiente |
 | Semana 4 | Dispositivos de Red | ⏳ Pendiente |
 
-Cada semana se divide en **7 días de estudio**, con duración aleatoria entre 3 h y 4 h conforme a las reglas de [CLAUDE.md](../CLAUDE.md).
+Cada semana se divide en **7 días de estudio**, con duración aleatoria entre 3 h y 4 h.
+
+> ⚠️ **Ajuste de temario en la Semana 2.** El calendario le asignaba *«Componentes y Tipos de Redes»*, pero la mitad de **tipos de red y topologías** ya quedó cubierta en la Semana 1 (Días 4 a 6). Para no duplicarla, la Semana 2 desarrolla la otra mitad del título: los **componentes** —tarjeta de red, medio físico y software—, sin invadir la Semana 3 (OSI) ni la Semana 4 (dispositivos).
 
 ---
 

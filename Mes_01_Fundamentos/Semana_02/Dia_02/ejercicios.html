@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 5</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 4 es un caso de diagnóstico real, del tipo que te vas a encontrar el primer día de trabajo.
+            No lo hagas deprisa: lo que se evalúa no es acertar la respuesta, sino <strong>el orden en que
+            compruebas las cosas</strong>.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/ejercicios.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Ejercicios',
+    subtitulo: 'Par trenzado · categorías · normas · diagnóstico físico',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: El cable por dentro',
+            tiempo: '11 min',
+            enunciado: '<p>Fija los conceptos físicos antes de pasar a elegir material.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa la explicación de por qué funciona el par trenzado.',
+                    frase: 'La señal viaja por dos hilos con la polaridad {{0}}. El receptor no mide cada hilo por separado: mide la {{1}} entre ambos. Como el trenzado los mantiene juntos, cualquier interferencia les afecta {{2}}, así que desaparece al restar. A este efecto se le llama rechazo en modo {{3}}.',
+                    respuestas: [
+                        ['invertida', 'contraria', 'opuesta'],
+                        ['diferencia', 'resta'],
+                        ['por igual', 'igual', 'a los dos por igual', 'lo mismo'],
+                        ['comun', 'común']
+                    ],
+                    explicacion: 'Todo el diseño del par trenzado se sostiene sobre esa idea: convertir el ruido en algo <em>común</em> a los dos hilos para poder eliminarlo con una simple resta.',
+                    pistas: [
+                        'Si por un hilo van +1 V, ¿qué va por el otro?',
+                        'El truco está en que el ruido sea idéntico en ambos hilos: por eso van trenzados.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué cada uno de los cuatro pares lleva un <strong>paso de trenzado diferente</strong>?',
+                    opciones: {
+                        a: 'Para poder distinguirlos visualmente al crimpar',
+                        b: 'Para que no queden alineados entre sí y se reduzca la diafonía',
+                        c: 'Para que el cable sea más flexible',
+                        d: 'Para que cada par transporte una velocidad distinta'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con el mismo paso, dos pares quedarían siempre en la misma posición relativa y se acoplarían. Con pasos distintos esa posición cambia constantemente y la interferencia se promedia hasta anularse.',
+                    pistas: [
+                        'Los pares ya se distinguen por el color, así que esa no es la razón.',
+                        'Piensa qué pasaría si dos pares vecinos quedaran siempre paralelos a lo largo del cable.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>c)</strong> Relaciona cada tipo de cable con lo que lleva.',
+                    izquierda: ['UTP', 'FTP', 'STP'],
+                    derecha: [
+                        'Solo el trenzado, sin pantalla',
+                        'Una lámina de aluminio que rodea todos los pares',
+                        'Pantalla individual para cada par'
+                    ],
+                    pares: {
+                        'UTP': 'Solo el trenzado, sin pantalla',
+                        'FTP': 'Una lámina de aluminio que rodea todos los pares',
+                        'STP': 'Pantalla individual para cada par'
+                    },
+                    explicacion: 'La U de UTP es de <em>unshielded</em>: sin apantallar. Es el que se usa en la inmensa mayoría de instalaciones, y con razón.',
+                    pistas: [
+                        'Fíjate en la primera letra de cada sigla: U de unshielded, F de foiled (lámina), S de shielded.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Elegir el cable correcto',
+            tiempo: '14 min',
+            enunciado: `
+                <p>La categoría no se elige por «lo más moderno», sino cruzando <strong>velocidad objetivo</strong> y
+                <strong>distancia real</strong>. Aplícalo a cuatro casos.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la tabla de categorías con la velocidad máxima que garantizan a <strong>100 metros</strong>.',
+                    esquina: 'Categoría',
+                    cabecera: ['Velocidad a 100 m'],
+                    filas: [
+                        { etiqueta: '<strong>Cat 5e</strong>', celdas: [{ respuestas: ['1 gbps', '1gbps', '1000 mbps', '1 gb', '1gb'], placeholder: 'velocidad' }] },
+                        { etiqueta: '<strong>Cat 6</strong>', celdas: [{ respuestas: ['1 gbps', '1gbps', '1000 mbps', '1 gb', '1gb'], placeholder: 'velocidad' }] },
+                        { etiqueta: '<strong>Cat 6A</strong>', celdas: [{ respuestas: ['10 gbps', '10gbps', '10000 mbps', '10 gb', '10gb'], placeholder: 'velocidad' }] }
+                    ],
+                    explicacion: 'La trampa está en Cat 6: mucha gente responde 10 Gbps. Cat 6 <strong>sí</strong> admite 10 Gbps, pero solo hasta unos 55 m. A los 100 m garantiza 1 Gbps, igual que Cat 5e.',
+                    pistas: [
+                        'Ojo con Cat 6: la pregunta dice explícitamente «a 100 metros».',
+                        'Solo una de las tres alcanza los 10 Gbps a distancia completa.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Instalación nueva de oficina, tiradas de 70 m, se quiere dejar preparado para 10 Gbps en el futuro. ¿Qué se instala?',
+                    opciones: {
+                        a: 'Cat 5e, que es más barato',
+                        b: 'Cat 6, suficiente para 70 m',
+                        c: 'Cat 6A',
+                        d: 'Cat 8'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Cat 6 daría 10 Gbps solo hasta 55 m, así que a 70 m no cumple el objetivo. Cat 8 no llega a 30 m. Cat 6A es la única que cubre 10 Gbps a esa distancia con conectores estándar.',
+                    pistas: [
+                        'Compara los 70 m con el alcance de cada categoría a 10 Gbps.',
+                        'Dos opciones se descartan solas por distancia: una se queda en 55 m y otra en 30 m.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un comercial insiste en vender Cat 8 para cablear las plantas de un edificio de oficinas. ¿Cuál es el problema?',
+                    opciones: {
+                        a: 'Ninguno: es la mejor categoría disponible',
+                        b: 'Que su alcance es de 30 m, insuficiente para cablear plantas',
+                        c: 'Que no admite conectores RJ45 de ningún tipo',
+                        d: 'Que solo funciona con fibra'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Cat 8 está pensada para conexiones cortas <strong>dentro de un rack</strong> de centro de datos. En un edificio, con tiradas normales, sencillamente no enlazaría.',
+                    pistas: [
+                        'Vuelve a mirar la columna de distancia de Cat 8, no la de velocidad.',
+                        'Pregúntate para qué escenario fue diseñada esa categoría.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Si el cableado fijo desde el patch panel hasta la roseta mide 86 m, ¿cuántos metros quedan <strong>como máximo</strong> para el conjunto de los dos latiguillos?',
+                    respuesta: 14,
+                    tolerancia: 0.5,
+                    unidad: 'metros',
+                    explicacion: 'El límite total del enlace es de 100 m: 100 − 86 = 14 m. Aunque el estándar recomienda no pasar de 90 m de cable fijo y reservar 10 para latiguillos, el tope duro del enlace completo son los 100 m.',
+                    pistas: [
+                        'Recuerda cuál es el límite total de un enlace de cobre.',
+                        'Los latiguillos cuentan dentro de ese límite: no van aparte.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Conectores y normas',
+            tiempo: '12 min',
+            enunciado: '<p>El orden de los hilos y qué pares se usan según la velocidad.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los cuatro primeros pines de la norma <strong>T568B</strong>, del pin 1 al pin 4.',
+                    elementos: [
+                        'Blanco-naranja',
+                        'Naranja',
+                        'Blanco-verde',
+                        'Azul'
+                    ],
+                    orden: [
+                        'Blanco-naranja',
+                        'Naranja',
+                        'Blanco-verde',
+                        'Azul'
+                    ],
+                    explicacion: 'En T568B el par naranja va primero. Fíjate en un detalle del diseño: el pin 3 es blanco-verde pero el pin 4 es azul, porque el par verde está «partido» entre los pines 3 y 6 para dejar sitio al par azul en el centro.',
+                    pistas: [
+                        'En T568B manda el naranja: ocupa las dos primeras posiciones.',
+                        'Después empieza el verde, pero se interrumpe: el azul se cuela en el centro del conector.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál es la <strong>única</strong> diferencia entre T568A y T568B?',
+                    opciones: {
+                        a: 'T568A usa cuatro hilos y T568B usa ocho',
+                        b: 'Se intercambian el par verde y el par naranja',
+                        c: 'T568B soporta gigabit y T568A no',
+                        d: 'T568A es obligatoria en cable apantallado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los pines 4, 5, 7 y 8 son idénticos en ambas. Técnicamente son equivalentes: el error real no es elegir una u otra, sino <strong>mezclarlas</strong> sin darse cuenta.',
+                    pistas: [
+                        'Compara las dos columnas de la tabla y mira cuántas filas cambian de verdad.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>c)</strong> Indica cuántos <strong>pares</strong> utiliza cada velocidad de Ethernet.',
+                    esquina: 'Velocidad',
+                    cabecera: ['Pares usados'],
+                    filas: [
+                        { etiqueta: '100 Mbps', celdas: [{ respuestas: ['2', 'dos', '2 pares', 'dos pares'], placeholder: 'número' }] },
+                        { etiqueta: '1 Gbps', celdas: [{ respuestas: ['4', 'cuatro', '4 pares', 'cuatro pares', 'todos'], placeholder: 'número' }] }
+                    ],
+                    explicacion: 'De aquí sale el síntoma más útil del diagnóstico físico: si dos pares fallan, el gigabit es imposible pero los 100 Mbps siguen funcionando, y la avería pasa desapercibida.',
+                    pistas: [
+                        '10 y 100 Mbps se diseñaron cuando los cables tenían menos calidad: no aprovechaban todo el cable.',
+                        'Gigabit necesita todo lo que hay, y además en los dos sentidos a la vez.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Con equipos modernos, ¿qué pasa si conectas dos portátiles directamente con un latiguillo <strong>directo</strong>?',
+                    opciones: {
+                        a: 'No enlazan: hace falta un cable cruzado',
+                        b: 'Enlazan, porque el auto-MDIX conmuta internamente los pines',
+                        c: 'Enlazan pero solo a 10 Mbps',
+                        d: 'Se dañan los puertos de red'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El auto-MDIX detecta durante la negociación que está recibiendo por los pines equivocados y conmuta sus transmisores y receptores. Por eso el cable cruzado prácticamente ha desaparecido.',
+                    pistas: [
+                        'Piensa en qué mecanismo hace innecesario el cable cruzado hoy en día.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Caso de diagnóstico',
+            tiempo: '15 min',
+            enunciado: `
+                <p><strong>Escenario.</strong> Un usuario de una oficina lleva meses quejándose de que copiar ficheros
+                al servidor va muy lento, aunque navega e imprime sin problemas. Todo el equipamiento es de 1 Gbps y
+                el resto de compañeros de su planta no tienen ninguna queja.</p>
+                <p>Al mirar su puerto, ves que el enlace ha negociado <strong>100 Mbps full-duplex</strong>.</p>`,
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Cuál es la hipótesis más probable?',
+                    opciones: {
+                        a: 'El servidor está saturado',
+                        b: 'Un problema físico del cableado: pares dañados o mal contactados',
+                        c: 'La tarjeta de red del usuario está averiada por completo',
+                        d: 'El disco duro del usuario es lento'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La pista decisiva es que el enlace negocia exactamente 100 Mbps con equipamiento de 1 Gbps. Un servidor saturado o un disco lento no cambian la velocidad negociada del enlace: eso es una característica de la <strong>capa física</strong>.',
+                    pistas: [
+                        'Fíjate en qué dato es objetivo y medible: la velocidad negociada.',
+                        'Pregúntate qué causas pueden hacer bajar la velocidad de negociación de un enlace, y cuáles no.',
+                        'Si el resto de la planta funciona bien, el problema es de ese puesto concreto.'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>b)</strong> Ordena las comprobaciones de menor a mayor coste y molestia para el usuario.',
+                    elementos: [
+                        'Sustituir el latiguillo del puesto por uno nuevo',
+                        'Probar el equipo en otra roseta cercana',
+                        'Comprobar si alguien ha fijado a mano la velocidad del puerto en el switch',
+                        'Certificar el cableado fijo con un comprobador de red',
+                        'Sustituir el cableado fijo del puesto'
+                    ],
+                    orden: [
+                        'Sustituir el latiguillo del puesto por uno nuevo',
+                        'Probar el equipo en otra roseta cercana',
+                        'Comprobar si alguien ha fijado a mano la velocidad del puerto en el switch',
+                        'Certificar el cableado fijo con un comprobador de red',
+                        'Sustituir el cableado fijo del puesto'
+                    ],
+                    explicacion: 'El principio es empezar por lo <strong>barato, rápido y reversible</strong>. Cambiar un latiguillo cuesta céntimos y resuelve la mitad de estos casos. Tirar cable nuevo por el falso techo es lo último: caro, lento y sucio.',
+                    pistas: [
+                        'Ordena pensando en cuánto cuesta y cuánto molesta cada paso, no en cuál es más probable.',
+                        'Lo primero debe ser algo que puedas hacer en un minuto y sin herramientas.',
+                        'Lo último es siempre la obra.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>c)</strong> Explica por qué este fallo ha podido pasar <strong>meses</strong> sin detectarse, y qué comprobación rutinaria lo habría descubierto antes.',
+                    modelo: `<p>Ha pasado desapercibido porque <strong>la red funciona</strong>. Un enlace de 100 Mbps es
+                             más que suficiente para navegar, leer el correo, imprimir o usar aplicaciones web: el
+                             usuario no percibe nada raro en su trabajo diario. La avería solo se manifiesta al mover
+                             <strong>ficheros grandes</strong>, que es una actividad ocasional.</p>
+                             <p>Y cuando por fin se nota, la queja se formula como «el servidor va lento» o «la red va
+                             lenta», que apunta a los sitios equivocados. Es habitual que se investigue el servidor, el
+                             disco o incluso el antivirus antes de mirar el cable, porque a nadie se le ocurre que un
+                             cable pueda estar «medio roto»: se supone que un cable funciona o no funciona.</p>
+                             <p>La causa técnica es que 100 Mbps solo necesita <strong>dos pares</strong> y 1 Gbps
+                             necesita <strong>los cuatro</strong>. Con dos pares dañados, el enlace no puede subir a
+                             gigabit pero sí mantiene los 100 Mbps con total normalidad. El cable está a medias, y
+                             Ethernet lo disimula.</p>
+                             <p>La comprobación rutinaria que lo habría descubierto es <strong>revisar
+                             periódicamente la velocidad negociada de todos los puertos del switch</strong>. En un
+                             switch gestionable basta con listar el estado de los puertos: cualquiera que aparezca a
+                             100 Mbps teniendo equipamiento de gigabit es un candidato a revisión. Es una comprobación
+                             de minutos que se puede automatizar, y detecta el problema <em>antes</em> de que nadie se
+                             queje.</p>`,
+                    rubrica: [
+                        'Explica que 100 Mbps basta para el trabajo habitual del usuario',
+                        'Señala que solo se nota con ficheros grandes',
+                        'Menciona que la queja apunta al servidor o a la red, no al cable',
+                        'Recuerda la causa técnica: 2 pares frente a 4',
+                        'Propone revisar la velocidad negociada de los puertos como rutina'
+                    ],
+                    pistas: [
+                        'Pregúntate qué tareas del día a día notan la diferencia entre 100 Mbps y 1 Gbps.',
+                        'Piensa en cómo formula la queja el usuario y hacia dónde dirige la investigación.',
+                        'Para la comprobación rutinaria: ¿qué dato puedes consultar en el switch sin molestar a nadie?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Cableado estructurado e integración',
+            tiempo: '8 min',
+            enunciado: '<p>Cierra el día uniéndolo con lo que ya sabes.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada elemento con su papel.',
+                    izquierda: ['Patch panel', 'Cableado horizontal', 'Roseta', 'Latiguillo'],
+                    derecha: [
+                        'Punto numerado del armario donde terminan todos los cables fijos',
+                        'Cable rígido que va por paredes y falsos techos, hasta 90 m',
+                        'La toma de red del puesto de trabajo',
+                        'Cable corto y flexible que se cambia a diario'
+                    ],
+                    pares: {
+                        'Patch panel': 'Punto numerado del armario donde terminan todos los cables fijos',
+                        'Cableado horizontal': 'Cable rígido que va por paredes y falsos techos, hasta 90 m',
+                        'Roseta': 'La toma de red del puesto de trabajo',
+                        'Latiguillo': 'Cable corto y flexible que se cambia a diario'
+                    },
+                    explicacion: 'Todo el modelo se resume en una frase: lo fijo se instala una vez y no se toca; toda la flexibilidad está en los latiguillos.',
+                    pistas: [
+                        'Piensa qué elementos están empotrados y cuáles se pueden mover con la mano.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Enlaza con el Día 6 de la Semana 1: en el modelo jerárquico de tres capas, ¿dónde encaja cada medio?',
+                    opciones: {
+                        a: 'Fibra en acceso, cobre en núcleo',
+                        b: 'Cobre en acceso, fibra en distribución y núcleo',
+                        c: 'Cobre en las tres capas',
+                        d: 'Fibra en las tres capas'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El cobre llega hasta el puesto de trabajo (acceso), donde las distancias son cortas y el coste importa mucho por la cantidad de tomas. La fibra une armarios, plantas y edificios, donde las distancias superan los 100 m y el número de enlaces es pequeño.',
+                    pistas: [
+                        'Piensa dónde hay cientos de tomas baratas y dónde hay unos pocos enlaces largos.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

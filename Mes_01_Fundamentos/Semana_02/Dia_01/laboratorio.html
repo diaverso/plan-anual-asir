@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio: inventario de interfaces y lectura de MAC</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 1</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">55 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Tipo:</strong> inventario y análisis</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Dejar de leer sobre direcciones MAC y <strong>leer las tuyas</strong>. Al terminar sabrás cuántas
+            interfaces de red tiene realmente tu equipo, cuáles son de hardware y cuáles se las ha inventado el
+            sistema, quién fabricó tu tarjeta y qué significa cada tipo de dirección de tu tabla ARP.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            Todos los comandos de hoy son de <strong>solo lectura</strong>: consultan información, no cambian nada.
+            No hace falta ser administrador para ninguno. Trabaja sobre <strong>tu propio equipo</strong>.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 1 — Cuenta tus interfaces de red</h3>
+
+            <p>Empieza por lo más revelador: descubrir cuántas interfaces tienes. Casi todo el mundo se equivoca al
+            estimarlo.</p>
+
+            <div class="so-tabs" data-grupo="listar">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="listar" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Format-Table Name, InterfaceDescription, Status, LinkSpeed, MacAddress -AutoSize</code></pre></div>
+                <p>En <strong>PowerShell</strong>. Si prefieres el símbolo del sistema clásico, el equivalente más
+                cercano es:</p>
+                <div class="comando"><pre><code>getmac /v /fo list</code></pre></div>
+                <p>La ventaja de <code>Get-NetAdapter</code> es que muestra también las interfaces
+                <strong>ocultas o desconectadas</strong>, que son justo las más interesantes hoy.</p>
+            </div>
+
+            <div class="so-panel" data-grupo="listar" data-so="nix">
+                <div class="comando"><pre><code>ip -brief link show</code></pre></div>
+                <p>En macOS, o si <code>ip</code> no está disponible:</p>
+                <div class="comando"><pre><code>ifconfig -a</code></pre></div>
+            </div>
+
+            <div class="dato" style="margin-top:14px">
+                <strong>Ejemplo de lo que vas a ver</strong>
+                <p>Una salida real de un portátil con virtualización y VPN instaladas:</p>
+<pre><code>Name                      InterfaceDescription                Status        LinkSpeed  MacAddress
+----                      --------------------                ------        ---------  ----------
+Ethernet                  Intel(R) Ethernet Controller I225-V  Up            1 Gbps     50-EB-F6-...
+Wi-Fi                     Intel(R) Wi-Fi 6 AX201 160MHz        Disconnected  0 bps      0C-9A-3C-...
+Conexión de red Bluetooth Bluetooth Device (PAN)               Disconnected  3 Mbps     0C-9A-3C-...
+Ethernet 3                VirtualBox Host-Only Ethernet Ad...  Up            1 Gbps     0A-00-27-...
+vEthernet (WSL)           Hyper-V Virtual Ethernet Adapter     Up            10 Gbps    00-15-5D-...</code></pre>
+                <p>Cinco interfaces en un solo portátil, y solo <strong>dos</strong> son hardware real.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 2 — Separa lo físico de lo virtual</h3>
+
+            <p>Ahora aplica lo que has aprendido. Para cada interfaz de tu lista, mira el <strong>segundo dígito
+            hexadecimal</strong> de su MAC:</p>
+
+            <ul>
+                <li>Si es <strong>2, 3, 6, 7, A, B, E o F</strong> → bit U/L a 1 → <strong>administrada
+                localmente</strong>: la generó un programa.</li>
+                <li>En cualquier otro caso → OUI real registrado en el IEEE → <strong>hardware</strong>.</li>
+            </ul>
+
+            <div class="aviso">
+                <strong>Dos casos que despistan</strong>
+                <p>Hay interfaces virtuales cuya MAC es <strong>universal</strong>, porque el fabricante del software
+                compró su propio OUI. Es el caso de Hyper-V (<code>00-15-5D</code>) o VMware
+                (<code>00-50-56</code>): el bit U/L no las delata, pero el nombre de la descripción sí.</p>
+                <p>Al revés también pasa: una tarjeta física puede tener MAC local si alguien se la cambió a mano.</p>
+                <p><strong>Conclusión:</strong> el bit U/L es una pista muy buena, no una prueba. Combínalo siempre
+                con la descripción del adaptador.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 3 — Identifica al fabricante por el OUI</h3>
+
+            <p>Coge los <strong>tres primeros bytes</strong> de la MAC de tu interfaz principal y búscalos en el
+            registro público del IEEE:</p>
+
+            <p><a href="https://standards-oui.ieee.org/oui/oui.txt" target="_blank" rel="noopener">standards-oui.ieee.org/oui/oui.txt</a>
+            — es un fichero de texto grande; usa la búsqueda del navegador con tu OUI en formato <code>50EBF6</code>,
+            sin guiones ni dos puntos.</p>
+
+            <p>También sirve cualquier buscador escribiendo <em>«OUI lookup»</em> seguido de los tres bytes.</p>
+
+            <div class="destacado">
+                <strong>Comprueba si el fabricante coincide</strong>
+                Compara el resultado con lo que dice la columna <em>InterfaceDescription</em>. A veces no coinciden, y
+                el motivo es interesante: el chip lo hizo una empresa y la tarjeta la ensambló otra, o el equipo es de
+                una marca que subcontrata el hardware de red.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Paso 4 — Los tres tipos de destino en tu tabla ARP</h3>
+
+            <p>Vuelve a mirar tu tabla ARP, ahora sabiendo leerla:</p>
+
+            <div class="so-tabs" data-grupo="arp">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="arp" data-so="win">
+                <div class="comando"><pre><code>arp -a</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="arp" data-so="nix">
+                <div class="comando"><pre><code>ip neigh show</code></pre></div>
+                <p>En macOS: <code>arp -a</code>.</p>
+            </div>
+
+            <p>Busca en ella las tres categorías del día:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Busca…</th><th>Qué aspecto tiene</th></tr></thead>
+                <tbody>
+                    <tr><td>Una <strong>unicast</strong> normal</td><td>Cualquier equipo de tu red: segundo dígito par y sin U/L</td></tr>
+                    <tr><td>El <strong>broadcast</strong></td><td><code>ff-ff-ff-ff-ff-ff</code>, asociado a la última IP de tu red</td></tr>
+                    <tr><td>Un <strong>multicast</strong></td><td>Empieza por <code>01-00-5e</code>, asociado a una IP del rango 224.x</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Si no ves entradas multicast</strong>
+                <p>Aparecen sobre todo en Windows y en la interfaz que tenga tráfico de descubrimiento. Si tu tabla
+                sale corta, genera actividad abriendo el explorador de red o simplemente esperando un minuto con el
+                equipo conectado. En Linux, <code>ip neigh</code> no muestra multicast; usa
+                <code>ip maddr show</code> para verlas.</p>
+            </div>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:24px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has listado <strong>todas</strong> las interfaces de tu equipo, incluidas las desconectadas.</li>
+                <li>Sabes decir de cada una si es física o virtual, y por qué.</li>
+                <li>Has identificado al fabricante de tu tarjeta principal a partir de su OUI.</li>
+                <li>Has localizado en tu tabla ARP un ejemplo de unicast, uno de broadcast y uno de multicast.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 1 — Tus interfaces y tus MAC',
+    subtitulo: 'Inventario · bit U/L · OUI · tipos de destino',
+    tiempo: '55 min',
+    ejercicios: [
+
+        {
+            titulo: 'PARTE A: Inventario de tu equipo',
+            tiempo: '15 min',
+            enunciado: '<p>Anota los datos reales que ha devuelto el Paso 1. No hay una respuesta única: se comprueba que el dato tenga la <strong>forma correcta</strong>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 10,
+                    pregunta: '<strong>1.</strong> Pega aquí la salida completa del comando que lista tus interfaces.',
+                    placeholder: 'Pega la salida de Get-NetAdapter o de ip -brief link show',
+                    minimo: 60,
+                    debe: [['-', ':'], ['up', 'down', 'ethernet', 'wi-fi', 'wifi', 'lo', 'eth']],
+                    explicacion: 'Guardar la salida en bruto es un hábito de administrador: cuando dentro de un mes algo cambie, tendrás con qué comparar.',
+                    pistas: [
+                        'Copia toda la tabla, con su cabecera, no solo una línea.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>2.</strong> ¿Cuántas interfaces de red te ha listado <strong>en total</strong>, contando las desconectadas?',
+                    ayuda: 'interfaces',
+                    ancho: '110px',
+                    explicacion: 'Lo habitual en un portátil actual son entre 3 y 8. Si te ha salido 1 o 2, es probable que hayas usado un comando que oculta las inactivas.',
+                    pistas: [
+                        'Cuenta también el Bluetooth y las de virtualización o VPN.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>3.</strong> ¿Cómo se llama la interfaz por la que sale realmente tu tráfico ahora mismo? (la que está <em>Up</em> y tiene velocidad de enlace)',
+                    placeholder: 'Ethernet, Wi-Fi, eth0, en0...',
+                    explicacion: 'Identificar la interfaz activa es el primer paso de cualquier diagnóstico. Muchas incidencias se resuelven al descubrir que el usuario miraba la interfaz equivocada.',
+                    pistas: [
+                        'Si tienes varias en estado Up, la buena es la que tiene una IP de tu red doméstica.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'mac',
+                    pregunta: '<strong>4.</strong> Escribe la dirección MAC de esa interfaz activa.',
+                    placeholder: '50-EB-F6-26-B4-2F',
+                    explicacion: 'Seis pares hexadecimales. Da igual que uses guiones o dos puntos: es la misma dirección.',
+                    pistas: [
+                        'Son 6 pares, no 4 ni 8. Si tienes menos, te has dejado un tramo al copiar.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE B: Lee los bits de tu propia MAC',
+            tiempo: '15 min',
+            enunciado: '<p>Aplica la regla del segundo dígito a la dirección que acabas de anotar.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>5.</strong> ¿Cuál es el <strong>segundo dígito hexadecimal</strong> de tu MAC?',
+                    placeholder: 'un solo carácter',
+                    ancho: '140px',
+                    explicacion: 'Por ejemplo, en 50-EB-F6-… el segundo dígito es el 0.',
+                    pistas: [
+                        'Es el segundo carácter de todo, no el segundo par.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>6.</strong> Según ese dígito, ¿tu interfaz activa es <em>universal</em> o <em>local</em>? Escribe cuál y en una línea por qué.',
+                    placeholder: 'universal, porque el dígito 0 tiene el bit U/L a 0',
+                    ancho: '460px',
+                    explicacion: 'Ninguna interfaz puede tener una MAC de <em>grupo</em> como dirección propia: nunca sería el origen de nada. Así que la única duda real es universal o local. En un equipo físico sin retoques saldrá <strong>universal</strong>; si te sale local, o estás mirando una interfaz virtual o alguien cambió la MAC.',
+                    pistas: [
+                        'Mira si tu dígito está en el conjunto 2, 3, 6, 7, A, B, E, F.',
+                        'Si está en ese conjunto es local; en cualquier otro caso, universal.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>7.</strong> Escribe el <strong>OUI</strong> de tu interfaz activa: los tres primeros bytes.',
+                    placeholder: '50-EB-F6',
+                    explicacion: 'Los 24 primeros bits. Es lo que hay que buscar en el registro del IEEE.',
+                    pistas: [
+                        'Tres pares hexadecimales, ni más ni menos.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>8.</strong> Tras buscarlo en el registro del IEEE, ¿a qué empresa pertenece ese OUI?',
+                    placeholder: 'nombre del fabricante',
+                    explicacion: 'Si el nombre no te suena de nada, es normal: muchos equipos llevan chips de red de empresas que no aparecen en la carcasa.',
+                    pistas: [
+                        'Busca el OUI sin guiones, en mayúsculas, dentro del fichero oui.txt.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>9.</strong> ¿Coincide con el fabricante que muestra la descripción del adaptador? Responde <em>sí</em> o <em>no</em> y, si no coincide, di qué pone cada uno.',
+                    placeholder: 'sí / no, y qué pone cada uno',
+                    ancho: '420px',
+                    explicacion: 'No coincidir es habitual y no indica ningún problema: el chip lo fabrica una empresa, la tarjeta la ensambla otra y el equipo lo vende una tercera.',
+                    pistas: [
+                        'Compara el resultado del IEEE con la columna InterfaceDescription del Paso 1.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE C: Los tres tipos de destino en tu red',
+            tiempo: '13 min',
+            enunciado: '<p>Vuelve a tu tabla ARP y localiza un ejemplo de cada tipo.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'mac',
+                    pregunta: '<strong>10.</strong> Una MAC <strong>unicast</strong> de otro equipo de tu red (tu router sirve).',
+                    placeholder: 'e4-ab-89-b8-6f-38',
+                    explicacion: 'Cualquier equipo real de tu red vale. Comprueba de paso que su segundo dígito sea par.',
+                    pistas: [
+                        'La entrada asociada a la IP de tu puerta de enlace es la más fácil de identificar.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>11.</strong> ¿A qué dirección IP aparece asociada la MAC <code>ff-ff-ff-ff-ff-ff</code> en tu tabla?',
+                    placeholder: '192.168.1.255',
+                    explicacion: 'Es la dirección de <strong>broadcast de tu red</strong>: la última del rango. En una red 192.168.1.0/24 es la .255.',
+                    pistas: [
+                        'Busca la línea cuya dirección física es toda efes.',
+                        'Si no aparece ninguna, es que tu sistema no la lista; anota entonces cuál sería, según el rango de tu red.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>12.</strong> Escribe una entrada de <strong>multicast</strong> que hayas encontrado: la IP y su MAC.',
+                    placeholder: '224.0.0.251 → 01-00-5e-00-00-fb',
+                    ancho: '420px',
+                    explicacion: 'Las MAC multicast de IPv4 empiezan siempre por <code>01-00-5e</code>. Los últimos 23 bits se copian directamente de la dirección IP del grupo: por eso 224.0.0.251 acaba en <code>…-00-00-fb</code>, y 0xfb = 251.',
+                    pistas: [
+                        'Busca las entradas cuya IP empieza por 224 o 239.',
+                        'Su MAC empieza siempre por 01-00-5e.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>13.</strong> Mira la relación entre <code>224.0.0.251</code> y <code>01-00-5e-00-00-fb</code>. ¿Qué patrón observas? ¿Por qué crees que se diseñó así?',
+                    modelo: `<p>El último byte de la IP es <strong>251</strong>, y el último byte de la MAC es
+                             <strong>fb</strong>, que en decimal es exactamente <strong>251</strong>. Lo mismo pasa con
+                             los bytes anteriores: los últimos <strong>23 bits de la dirección IP se copian tal cual</strong>
+                             en los últimos 23 bits de la MAC, detrás del prefijo fijo <code>01-00-5e</code>.</p>
+                             <p>Está diseñado así para que la conversión sea <strong>automática y sin consultas</strong>.
+                             Cuando un equipo quiere enviar a un grupo multicast, necesita una MAC de destino para
+                             construir la trama. Si tuviera que preguntar por ARP «¿quién tiene 224.0.0.251?», el
+                             mecanismo no funcionaría: un grupo no es un equipo concreto, no hay nadie que pueda
+                             responder por él.</p>
+                             <p>La solución es que la MAC se <strong>calcule</strong> a partir de la IP mediante una
+                             regla fija que todos los equipos conocen. Por eso estas entradas aparecen como
+                             <em>estáticas</em> en la tabla ARP: no se han aprendido preguntando, se han deducido.</p>
+                             <p>El precio de esta simplicidad es que se pierden bits por el camino —la IP multicast
+                             tiene 28 bits útiles y solo caben 23—, así que <strong>varios grupos IP distintos pueden
+                             acabar en la misma MAC</strong>. El equipo recibe esas tramas y las filtra después a nivel
+                             de IP.</p>`,
+                    rubrica: [
+                        'Detecta que fb en hexadecimal es 251 en decimal, igual que el final de la IP',
+                        'Generaliza: los últimos bits de la IP se copian en la MAC',
+                        'Identifica 01-00-5e como prefijo fijo',
+                        'Explica que hace falta porque a un grupo no se le puede preguntar por ARP',
+                        'Menciona que por eso la entrada es estática y no dinámica'
+                    ],
+                    pistas: [
+                        'Convierte fb de hexadecimal a decimal y compáralo con el final de la IP.',
+                        'Piensa qué pasaría si un equipo tuviera que preguntar por ARP la MAC de un grupo: ¿quién contestaría?',
+                        'Fíjate en que la tabla marca esas entradas como estáticas, no dinámicas.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'PARTE D: Interpretación',
+            tiempo: '12 min',
+            enunciado: '<p>Lo importante no es tener los datos, sino saber qué dicen.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>14.</strong> Repasa tu lista del Paso 1 y clasifica <strong>tus</strong> interfaces en físicas y virtuales, justificando cada una con el criterio que hayas usado.',
+                    modelo: `<p>La respuesta depende de tu equipo, pero debe seguir este razonamiento. Ejemplo sobre la
+                             salida de muestra del laboratorio:</p>
+                             <ul>
+                               <li><strong>Ethernet</strong> (<code>50-EB-F6-…</code>): <strong>física</strong>. Segundo
+                               dígito 0 → U/L a 0, OUI registrado. La descripción nombra un controlador Ethernet
+                               concreto.</li>
+                               <li><strong>Wi-Fi</strong> (<code>0C-9A-3C-…</code>): <strong>física</strong>. Mismo
+                               razonamiento. Aparece desconectada porque el cable tiene prioridad.</li>
+                               <li><strong>Bluetooth PAN</strong> (<code>0C-9A-3C-…</code>): <strong>física</strong>, y
+                               con un detalle revelador: <em>comparte OUI con la Wi-Fi y su MAC es casi consecutiva</em>,
+                               porque las dos radios están en el mismo chip combinado.</li>
+                               <li><strong>VirtualBox Host-Only</strong> (<code>0A-00-27-…</code>):
+                               <strong>virtual</strong>. Segundo dígito A → U/L a 1, dirección inventada. La descripción
+                               lo confirma.</li>
+                               <li><strong>vEthernet (WSL)</strong> (<code>00-15-5D-…</code>):
+                               <strong>virtual</strong>, y aquí el bit U/L <em>no</em> lo delata: vale 0 porque
+                               <code>00-15-5D</code> es un OUI que Microsoft compró para Hyper-V. Se identifica por la
+                               descripción.</li>
+                             </ul>
+                             <p>La conclusión metodológica es la importante: <strong>el bit U/L es una pista fuerte,
+                             pero no una prueba</strong>. Hay software con OUI propio y hardware con la MAC cambiada.
+                             El criterio fiable es cruzar los dos datos: bit U/L <em>y</em> descripción del
+                             adaptador.</p>`,
+                    rubrica: [
+                        'Clasifica cada interfaz de su propio equipo, no las del ejemplo',
+                        'Justifica con el segundo dígito hexadecimal',
+                        'Usa también la descripción del adaptador',
+                        'Detecta al menos un caso donde el bit U/L no basta',
+                        'Concluye que hay que cruzar ambos criterios'
+                    ],
+                    pistas: [
+                        'Ve interfaz por interfaz: primero el dígito, después la descripción.',
+                        'Busca si dos de tus interfaces comparten OUI: suele significar que están en el mismo chip.',
+                        'Si alguna es virtual pero tiene OUI universal, ya tienes tu caso de que el bit no basta.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>15.</strong> Con los datos que has recogido hoy, ¿podrías identificar tu equipo desde un servidor de Internet usando su MAC? Explica por qué.',
+                    modelo: `<p>No. La dirección MAC <strong>no sale de la red local</strong>.</p>
+                             <p>Cuando tu equipo envía algo a Internet, pone en la trama su MAC como origen y la de tu
+                             router como destino. Ese es el alcance de la MAC: <strong>el tramo actual</strong>. En
+                             cuanto el router recibe la trama, la descarta entera y construye una nueva hacia el
+                             siguiente salto, con MAC completamente distintas. Tu dirección desaparece en el primer
+                             dispositivo del camino.</p>
+                             <p>Lo que sí llega al servidor es la <strong>dirección IP pública</strong> con la que has
+                             salido, que además es la del router y no la tuya, porque el NAT ha traducido tu IP
+                             privada. El servidor ve la IP pública de tu conexión, no tu equipo concreto.</p>
+                             <p>Esto tiene dos consecuencias prácticas. La primera es que <strong>la MAC no sirve para
+                             rastrear a alguien por Internet</strong>, al contrario de lo que se repite a menudo. La
+                             segunda es que sí sirve para identificar equipos <strong>dentro</strong> de una red local:
+                             por eso el inventario, el DHCP y el control de acceso de una empresa se apoyan en ella,
+                             aunque con las limitaciones que ya conoces.</p>`,
+                    rubrica: [
+                        'Responde que no',
+                        'Explica que la MAC solo tiene alcance local, de un salto',
+                        'Describe que el router reescribe las MAC en cada tramo',
+                        'Menciona que lo que ve el servidor es la IP pública, tras el NAT',
+                        'Distingue entre no servir en Internet y sí servir dentro de la LAN'
+                    ],
+                    pistas: [
+                        'Recuerda qué direcciones cambian en cada salto y cuáles no.',
+                        'Piensa qué hace exactamente tu router con la trama que le entregas.',
+                        'Añade qué es lo que sí llega al servidor, y de quién es esa dirección.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

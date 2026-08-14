@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 6 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 6 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">45 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 4</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            Estos ejercicios son el <strong>calentamiento</strong> del proyecto. Son más cortos que otros días
+            justamente porque el trabajo fuerte está en el laboratorio: hazlos con soltura y pasa cuanto antes al
+            diseño.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Proyecto</a></span>
+        <span><a href="../Dia_05/ejercicios.html">← Día 5</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 6 — Ejercicios',
+    subtitulo: 'Requisitos · método · dimensionado · documentación',
+    tiempo: '45 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Preguntar antes de diseñar',
+            tiempo: '11 min',
+            enunciado: '<p>Cada pregunta al cliente sirve para decidir algo concreto. Practica esa conexión.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada pregunta con la decisión que permite tomar.',
+                    izquierda: [
+                        '¿Qué distancia hay al puesto más lejano?',
+                        '¿Qué datos manejáis?',
+                        '¿Cuánto os cuesta una hora parados?',
+                        '¿Quién lo administrará después?'
+                    ],
+                    derecha: [
+                        'Cuántos armarios hacen falta y si se necesita fibra',
+                        'Si hace falta directorio, auditoría y control de accesos',
+                        'Cuánta redundancia se justifica pagar',
+                        'Cuánta complejidad puede permitirse el diseño'
+                    ],
+                    pares: {
+                        '¿Qué distancia hay al puesto más lejano?': 'Cuántos armarios hacen falta y si se necesita fibra',
+                        '¿Qué datos manejáis?': 'Si hace falta directorio, auditoría y control de accesos',
+                        '¿Cuánto os cuesta una hora parados?': 'Cuánta redundancia se justifica pagar',
+                        '¿Quién lo administrará después?': 'Cuánta complejidad puede permitirse el diseño'
+                    },
+                    explicacion: 'Una pregunta que no decide nada sobra. Y al revés: si tomas una decisión sin haber hecho la pregunta correspondiente, la estás adivinando.',
+                    pistas: [
+                        'Dos de las preguntas son técnicas y dos no lo son en absoluto.',
+                        'Las dos no técnicas son justamente las que más se olvidan.'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>b)</strong> Ordena los seis pasos del método de diseño.',
+                    elementos: [
+                        'Recoger requisitos',
+                        'Decidir la topología y el número de armarios',
+                        'Elegir el medio de cada tramo',
+                        'Dimensionar el equipamiento',
+                        'Decidir qué servicios van dentro y cuáles fuera',
+                        'Analizar los riesgos que quedan'
+                    ],
+                    orden: [
+                        'Recoger requisitos',
+                        'Decidir la topología y el número de armarios',
+                        'Elegir el medio de cada tramo',
+                        'Dimensionar el equipamiento',
+                        'Decidir qué servicios van dentro y cuáles fuera',
+                        'Analizar los riesgos que quedan'
+                    ],
+                    explicacion: 'De arriba hacia abajo: de lo que la empresa necesita a los cables concretos. El análisis de riesgos va al final porque solo se puede hacer sobre un diseño ya existente.',
+                    pistas: [
+                        'Nada se puede decidir sin el primer paso.',
+                        'El medio depende de las distancias, que salen de la topología.',
+                        'Los riesgos solo se pueden analizar cuando ya hay algo que analizar.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué es un error empezar eligiendo el switch?',
+                    opciones: {
+                        a: 'Porque los switches son muy caros',
+                        b: 'Porque todavía no se sabe cuántas tomas hacen falta ni cuántos armarios habrá',
+                        c: 'Porque hay que elegir primero el fabricante',
+                        d: 'No es un error: es lo más práctico'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Elegir material antes de dimensionar lleva casi siempre a rehacerlo. Y el error se descubre tarde, cuando ya se ha comprado.',
+                    pistas: [
+                        '¿Qué necesitas saber antes de poder decir cuántos puertos comprar?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Dimensionar',
+            tiempo: '13 min',
+            enunciado: `
+                <p><strong>Escenario.</strong> Una planta de oficinas con <strong>28 puestos de trabajo</strong>. Cada
+                puesto tiene un PC y un teléfono IP. Además hay <strong>3 impresoras</strong> de red,
+                <strong>4 puntos de acceso</strong> Wi-Fi, <strong>2 servidores</strong> y <strong>1 enlace</strong>
+                de subida hacia el armario principal.</p>`,
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> ¿Cuántas tomas de red hacen falta <strong>sin</strong> contar margen?',
+                    respuesta: 66,
+                    tolerancia: 0.5,
+                    unidad: 'tomas',
+                    explicacion: '(28 × 2) + 3 + 4 + 2 + 1 = 56 + 10 = <strong>66 tomas</strong>. El error habitual es contar 28 y olvidar que cada puesto necesita dos.',
+                    pistas: [
+                        'Cuidado: cada puesto tiene dos dispositivos, no uno.',
+                        'No olvides el enlace de subida: también ocupa un puerto.',
+                        '28 × 2 = 56, y luego suma el resto.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Aplicando un margen del <strong>25 %</strong>, ¿cuántas tomas hay que prever? Redondea al alza.',
+                    respuesta: 83,
+                    tolerancia: 1.5,
+                    unidad: 'tomas',
+                    explicacion: '66 × 1,25 = 82,5 → <strong>83 tomas</strong>. Ese margen es lo que evita tener que reorganizar el armario al primer cambio.',
+                    pistas: [
+                        'Multiplica el resultado anterior por 1,25.',
+                        'Redondea hacia arriba: no existen media toma.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Con switches de 48 puertos, ¿cuántos hacen falta?',
+                    opciones: {
+                        a: 'Uno: 48 puertos son suficientes',
+                        b: 'Dos: 96 puertos, con margen incluido',
+                        c: 'Tres, para tener redundancia',
+                        d: 'Cuatro, uno por cada tipo de dispositivo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con 83 tomas previstas, un switch de 48 se queda corto y dos suman 96. Ojo con un detalle real: al apilar switches, algunos puertos se dedican al enlace entre ellos, así que el margen efectivo es algo menor de lo que sugiere la resta.',
+                    pistas: [
+                        'Compara el resultado del apartado b con la capacidad de un switch.',
+                        'Divide 83 entre 48 y redondea hacia arriba.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>d)</strong> Completa la regla de dimensionado.',
+                    frase: 'Para dimensionar un switch no se cuentan {{0}}, se cuentan {{1}}: ordenadores, teléfonos IP, impresoras, puntos de acceso, cámaras, servidores y los propios enlaces entre switches. Sobre ese total se añade un margen del {{2}} por ciento.',
+                    respuestas: [
+                        ['personas', 'empleados', 'usuarios', 'trabajadores'],
+                        ['tomas', 'puertos', 'dispositivos', 'bocas'],
+                        ['20-30', '25', '20 a 30', '30', '20']
+                    ],
+                    explicacion: 'Contar personas es el error de dimensionado más frecuente y el que más rápido se paga: en una oficina moderna, cada persona genera dos o más tomas.',
+                    pistas: [
+                        'El primer hueco es lo que la gente cuenta por error.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Decisiones de diseño',
+            tiempo: '12 min',
+            enunciado: '<p>Cuatro decisiones típicas, cada una con su justificación.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica el medio adecuado para cada tramo: <em>cobre</em>, <em>fibra</em> o <em>VPN</em>.',
+                    esquina: 'Tramo',
+                    cabecera: ['Medio'],
+                    filas: [
+                        { etiqueta: 'Del armario de planta al puesto (35 m)', celdas: [{ respuestas: ['cobre', 'par trenzado', 'utp', 'cat 6a', 'cat6a'], placeholder: 'medio' }] },
+                        { etiqueta: 'Entre el armario de planta 1 y el de planta 3 (140 m)', celdas: [{ respuestas: ['fibra', 'fibra optica', 'fibra óptica'], placeholder: 'medio' }] },
+                        { etiqueta: 'Entre la sede de Madrid y la de Sevilla', celdas: [{ respuestas: ['vpn', 'linea contratada', 'línea contratada', 'wan'], placeholder: 'medio' }] }
+                    ],
+                    explicacion: 'La regla es de distancia y de propiedad del medio: cobre mientras se esté por debajo de 100 m dentro de la propiedad; fibra al superarlos; y al salir a terreno público hay que <strong>contratar</strong> el transporte, sea línea dedicada o VPN sobre Internet.',
+                    pistas: [
+                        'Compara cada distancia con el límite de 100 m del cobre.',
+                        'El tercer caso no es una cuestión de distancia, sino de quién es el dueño del terreno.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Una empresa de 12 personas sin informático interno. ¿Qué diseño es mejor?',
+                    opciones: {
+                        a: 'El más avanzado posible, para que les dure más',
+                        b: 'Uno sencillo y bien documentado, que puedan sostener y que un externo entienda rápido',
+                        c: 'Cualquiera: la complejidad no influye',
+                        d: 'Uno mínimo, sin margen de crecimiento, para abaratar'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un diseño se juzga por cómo está dos años después. Lo que nadie sabe mantener se degrada solo. Ojo: sencillo no significa escaso, y por eso la <strong>d</strong> también es mala: quitar margen de crecimiento no simplifica, solo aplaza el problema.',
+                    pistas: [
+                        'Dos opciones son extremos opuestos y las dos están mal.',
+                        'Piensa en cómo estará esa red dentro de dos años.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un presupuesto incluye: dos servidores en clúster, RAID 6, dos líneas de Internet… y un solo switch. ¿Qué falla?',
+                    opciones: {
+                        a: 'Nada, es un buen diseño',
+                        b: 'Que se ha redundado lo visible y el switch queda como punto único de fallo por el que pasa todo',
+                        c: 'Que RAID 6 es excesivo',
+                        d: 'Que faltan más servidores'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es el error clásico: se duplica lo caro y llamativo, y la cadena se rompe en la pieza barata por la que pasa todo el tráfico. La redundancia se analiza por <strong>caminos completos</strong>, no por componentes sueltos.',
+                    pistas: [
+                        'Recorre mentalmente el camino desde un usuario hasta los servidores.',
+                        '¿Por cuántas piezas únicas pasa ese camino?'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>d)</strong> Relaciona cada documento con el momento en que se consulta.',
+                    izquierda: ['Tabla de cableado', 'Procedimiento de arranque', 'Registro de decisiones', 'Inventario'],
+                    derecha: [
+                        'Hay una avería y hay que saber qué roseta va a qué puerto',
+                        'Ha habido un apagón y hay que levantar todo en orden',
+                        'Alguien pregunta por qué está configurado así',
+                        'Toca renovar equipos o reclamar una garantía'
+                    ],
+                    pares: {
+                        'Tabla de cableado': 'Hay una avería y hay que saber qué roseta va a qué puerto',
+                        'Procedimiento de arranque': 'Ha habido un apagón y hay que levantar todo en orden',
+                        'Registro de decisiones': 'Alguien pregunta por qué está configurado así',
+                        'Inventario': 'Toca renovar equipos o reclamar una garantía'
+                    },
+                    explicacion: 'Cada documento existe porque hay un momento concreto en que se necesita. Uno que no se consulta nunca sobra; y todos estos se consultan en el peor momento posible, que es justo cuando no hay tiempo de improvisarlos.',
+                    pistas: [
+                        'Piensa en qué situación estarías buscando cada papel.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Crítica de un diseño',
+            tiempo: '9 min',
+            enunciado: `
+                <p><strong>Propuesta recibida</strong> para una gestoría de 30 personas en dos plantas:</p>
+                <ul>
+                    <li>Un switch de 32 puertos en la planta baja, para las dos plantas.</li>
+                    <li>Cable Cat 5e, con una tirada de 105 m hasta el puesto más lejano de la planta 1.</li>
+                    <li>Un servidor con todo: directorio, DNS, DHCP, ficheros e impresión.</li>
+                    <li>Copias de seguridad en un disco externo conectado a ese servidor.</li>
+                    <li>Sin documentación: «ya os lo explico cuando esté montado».</li>
+                </ul>`,
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Cuál de estos problemas es directamente <strong>imposible de que funcione</strong>, no solo arriesgado?',
+                    opciones: {
+                        a: 'El servidor único con todos los servicios',
+                        b: 'La tirada de 105 metros de cobre',
+                        c: 'Las copias en un disco conectado al servidor',
+                        d: 'La ausencia de documentación'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los otros tres son malas decisiones, pero funcionan. Los 105 m superan el límite físico del enlace de cobre: ese puesto <strong>no enlazará</strong>, o enlazará de forma intermitente. Es un fallo de diseño, no de criterio.',
+                    pistas: [
+                        'Tres de los cuatro son riesgos; uno viola un límite físico.',
+                        'Recuerda el número que hay que memorizar del Día 2.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: '<strong>b)</strong> Redacta la crítica completa de la propuesta: señala <strong>cada</strong> problema y propón la corrección.',
+                    modelo: `<p>La propuesta tiene <strong>cinco problemas</strong>, de distinta gravedad.</p>
+                             <p><strong>1. La tirada de 105 m es inviable.</strong> Supera el límite de 100 m del enlace
+                             de cobre, y no se arregla con mejor categoría: ninguna llega más lejos, y las más
+                             modernas llegan incluso menos. <em>Corrección:</em> un segundo armario en la planta 1,
+                             unido al principal por fibra. Deja de ser un parche y pasa a ser el diseño correcto para
+                             un edificio de dos plantas.</p>
+                             <p><strong>2. Un solo switch para dos plantas.</strong> Aunque las distancias lo
+                             permitieran, obliga a bajar todos los cables de la planta 1 hasta la baja, lo que
+                             encarece el cableado y crea un punto único de fallo para todo el edificio.
+                             <em>Corrección:</em> un switch por planta, con enlace de fibra entre ellos.</p>
+                             <p><strong>3. Cat 5e en obra nueva.</strong> Funciona a 1 Gbps, pero cierra la puerta a
+                             10 Gbps y el ahorro es ridículo comparado con el coste de la instalación.
+                             <em>Corrección:</em> Cat 6A. Es la aplicación directa de «sé generoso en lo difícil de
+                             cambiar».</p>
+                             <p><strong>4. Un único servidor con todo.</strong> Su avería deja a la gestoría sin
+                             directorio, sin DNS, sin DHCP, sin ficheros y sin impresión <em>a la vez</em>. Además
+                             obliga a parar todo para cualquier actualización. <em>Corrección:</em> virtualizar y
+                             separar los servicios en máquinas virtuales, y como mínimo un <strong>segundo DNS</strong>,
+                             que es barato y es el primer servicio que conviene duplicar.</p>
+                             <p><strong>5. Copias en un disco conectado al servidor.</strong> Es el fallo más grave de
+                             la propuesta, porque los demás causan <em>paradas</em> y este causa <em>pérdida
+                             definitiva</em>. Un disco permanentemente conectado lo cifra el mismo programa malicioso
+                             que cifra el original, y arde en el mismo incendio. <em>Corrección:</em> aplicar la regla
+                             3-2-1, con al menos una copia fuera del edificio, y probar la restauración.</p>
+                             <p><strong>6. Sin documentación.</strong> «Ya os lo explico» significa que el proveedor se
+                             convierte en punto único de fallo de la instalación, y que la gestoría queda atada a él.
+                             <em>Corrección:</em> exigir como entregable los planos lógico y físico, la tabla de
+                             cableado, el inventario y el procedimiento de arranque, y que el pago final dependa de
+                             recibirlos.</p>
+                             <p><strong>Prioridad:</strong> primero las copias, porque es lo único irreversible.
+                             Después el problema físico de los 105 m, porque sin resolverlo la instalación
+                             sencillamente no funciona.</p>`,
+                    rubrica: [
+                        'Detecta que los 105 m superan el límite del cobre y propone otro armario con fibra',
+                        'Señala el problema de un solo switch para dos plantas',
+                        'Recomienda Cat 6A en lugar de Cat 5e y lo justifica por el coste de la obra',
+                        'Critica el servidor único y propone separar servicios y duplicar el DNS',
+                        'Identifica las copias como el problema más grave, por ser irreversible',
+                        'Exige documentación como entregable'
+                    ],
+                    pistas: [
+                        'Recorre la propuesta punto por punto: hay un problema en cada línea.',
+                        'Separa los problemas que causan una parada de los que causan pérdida definitiva.',
+                        'Para cada crítica, propón una corrección concreta: criticar sin alternativa no sirve.',
+                        'Termina ordenando las correcciones por prioridad.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

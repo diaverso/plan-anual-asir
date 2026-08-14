@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 2</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">55 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 5</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            La tabla de puertos del ejercicio 2 hay que <strong>sabérsela de memoria</strong>. Aparecerá en el examen
+            mensual, en el de la semana 4 y en todos los laboratorios de cortafuegos del resto del curso. Si fallas
+            alguno, repítelo mañana en el repaso.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/ejercicios.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Ejercicios',
+    subtitulo: 'Servicios · puertos · cliente-servidor · P2P',
+    tiempo: '55 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Clientes, servidores y escucha',
+            tiempo: '10 min',
+            enunciado: '<p>Fija los papeles antes de entrar en los puertos.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa la definición de servicio.',
+                    frase: 'Un servicio es un programa que se ejecuta en segundo plano y queda a la {{0}} en un {{1}} concreto. Nunca inicia la conversación: siempre {{2}}. Por eso necesita una dirección {{3}}, mientras que el cliente no.',
+                    respuestas: [
+                        ['escucha', 'espera'],
+                        ['puerto'],
+                        ['espera', 'aguarda', 'responde'],
+                        ['conocida', 'fija', 'estable', 'conocida y estable']
+                    ],
+                    explicacion: 'Toda la asimetría del modelo cliente-servidor se deduce de una sola cosa: quién empieza la conversación.',
+                    pistas: [
+                        'El primer y el tercer hueco son casi la misma idea, expresada de dos formas.',
+                        'El último: si nadie sabe dónde está el servidor, ¿podría alguien llamarlo?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un mismo equipo, ¿puede ser cliente y servidor a la vez?',
+                    opciones: {
+                        a: 'No: los papeles son excluyentes',
+                        b: 'Sí: puede ofrecer un servicio y a la vez consumir otros',
+                        c: 'Solo si tiene dos tarjetas de red',
+                        d: 'Solo en redes P2P'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El papel se define <strong>por conexión</strong>, no por máquina. Un servidor web es servidor de HTTP y, al mismo tiempo, cliente de DNS cada vez que necesita resolver un nombre.',
+                    pistas: [
+                        'Piensa si un servidor web necesita alguna vez pedir algo a otro equipo.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué se considera que cada servicio a la escucha es una responsabilidad?',
+                    opciones: {
+                        a: 'Porque consume mucha memoria mientras espera',
+                        b: 'Porque es un punto alcanzable desde la red, que puede ser vulnerable, estar mal configurado o estar olvidado',
+                        c: 'Porque ralentiza el arranque del sistema',
+                        d: 'Porque ocupa un puerto que podría necesitar otro programa'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un servicio esperando no consume prácticamente nada. El problema es que constituye una puerta: por eso la regla es apagar lo que no se usa y conocer lo que queda encendido.',
+                    pistas: [
+                        'Un programa que espera no hace nada: descarta las opciones sobre consumo.',
+                        'Piensa en qué le permite hacer a alguien de fuera.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Puertos de memoria',
+            tiempo: '14 min',
+            enunciado: `
+                <p>Estos números hay que sabérselos. Rellénalos <strong>sin mirar</strong>; solo después usa las
+                pistas si te has quedado atascado.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Escribe el número de puerto de cada servicio.',
+                    esquina: 'Servicio',
+                    cabecera: ['Puerto'],
+                    filas: [
+                        { etiqueta: '<strong>HTTPS</strong>', celdas: [{ respuestas: ['443'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>SSH</strong>', celdas: [{ respuestas: ['22'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>DNS</strong>', celdas: [{ respuestas: ['53'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>HTTP</strong>', celdas: [{ respuestas: ['80'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>SMTP</strong>', celdas: [{ respuestas: ['25'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>RDP</strong>', celdas: [{ respuestas: ['3389'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'Los cuatro primeros (443, 22, 53, 80) son los que más vas a usar. El 3389 conviene reconocerlo porque es el objetivo favorito de los ataques de fuerza bruta contra Windows expuestos a Internet.',
+                    pistas: [
+                        'Los de web van juntos: uno sin cifrar y otro cifrado, y ambos son números redondos y conocidos.',
+                        'SSH y Telnet son consecutivos: 22 y 23. El seguro es el menor.',
+                        'El de correo saliente está entre los dos de FTP (21) y el de DNS (53).'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Relaciona cada rango de puertos con su uso.',
+                    izquierda: ['0 – 1023', '1024 – 49151', '49152 – 65535'],
+                    derecha: [
+                        'Bien conocidos: servicios estándar, requieren privilegios en Linux',
+                        'Registrados: aplicaciones que han pedido su número a la IANA',
+                        'Efímeros: los asigna el sistema al cliente, temporalmente'
+                    ],
+                    pares: {
+                        '0 – 1023': 'Bien conocidos: servicios estándar, requieren privilegios en Linux',
+                        '1024 – 49151': 'Registrados: aplicaciones que han pedido su número a la IANA',
+                        '49152 – 65535': 'Efímeros: los asigna el sistema al cliente, temporalmente'
+                    },
+                    explicacion: 'Que los puertos bajos exijan privilegios en Linux es una medida de seguridad histórica: impide que un usuario cualquiera monte un servicio falso en el puerto 80 y suplante al legítimo.',
+                    pistas: [
+                        'Los números más bajos son los más antiguos y los más protegidos.',
+                        'El rango más alto es el que nunca eliges tú.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántos puertos distintos existen en total?',
+                    respuesta: 65536,
+                    tolerancia: 0.5,
+                    unidad: 'puertos',
+                    explicacion: 'Son 16 bits: 2¹⁶ = 65 536 valores, del 0 al 65535. Cuidado con responder 65535, que es el número <em>más alto</em>, no la cantidad.',
+                    pistas: [
+                        'Un puerto son 16 bits.',
+                        'Calcula 2¹⁶, y recuerda que se cuenta desde el 0.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Cuál de estos servicios usa habitualmente <strong>UDP</strong> y no TCP?',
+                    opciones: {
+                        a: 'HTTPS',
+                        b: 'SSH',
+                        c: 'DNS para consultas normales',
+                        d: 'RDP'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'DNS usa UDP para las consultas corrientes porque son pequeñas y una sola pregunta y respuesta bastan: montar una conexión TCP costaría más que la propia consulta. Sí usa TCP para transferencias de zona y respuestas grandes.',
+                    pistas: [
+                        'Piensa cuál de los cuatro intercambia un mensaje diminuto y no necesita mantener una sesión.',
+                        'Recuerda del Día 1 de la Semana 1: UDP cuando prima la velocidad y el dato es pequeño o caduca.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Elegir modelo',
+            tiempo: '13 min',
+            enunciado: '<p>El modelo se elige por tamaño, objetivo y quién debe tener el control. Aplícalo.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica qué modelo conviene en cada caso: escribe <em>cliente-servidor</em> o <em>P2P</em>.',
+                    esquina: 'Escenario',
+                    cabecera: ['Modelo'],
+                    filas: [
+                        {
+                            etiqueta: 'Gestoría de 30 empleados con datos de clientes',
+                            celdas: [{ respuestas: ['cliente-servidor', 'cliente servidor', 'clienteservidor', 'servidor'], placeholder: 'modelo' }]
+                        },
+                        {
+                            etiqueta: 'Dos ordenadores de una casa compartiendo fotos',
+                            celdas: [{ respuestas: ['p2p', 'peer to peer', 'peer-to-peer', 'entre iguales'], placeholder: 'modelo' }]
+                        },
+                        {
+                            etiqueta: 'Distribuir un parche de 40 GB a millones de jugadores',
+                            celdas: [{ respuestas: ['p2p', 'peer to peer', 'peer-to-peer', 'entre iguales'], placeholder: 'modelo' }]
+                        },
+                        {
+                            etiqueta: 'Un servidor de correo corporativo',
+                            celdas: [{ respuestas: ['cliente-servidor', 'cliente servidor', 'clienteservidor', 'servidor'], placeholder: 'modelo' }]
+                        }
+                    ],
+                    explicacion: 'La regla: cuando hace falta <strong>control, auditoría y copias</strong>, cliente-servidor. Cuando hace falta <strong>escala o resistencia sin autoridad central</strong>, P2P. Y cuando el sistema es diminuto, P2P por pura economía.',
+                    pistas: [
+                        'Pregúntate en cada caso: ¿alguien tiene que poder revocar accesos y hacer copias?',
+                        'Para el caso del parche: ¿qué pasa cuando millones de personas descargan a la vez?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> En un juego con <strong>host entre jugadores</strong>, ¿qué desventaja tiene frente a un servidor dedicado?',
+                    opciones: {
+                        a: 'Ninguna: es equivalente y más barato',
+                        b: 'El jugador que hace de host tiene ventaja de latencia, y si se va se corta la partida',
+                        c: 'No permite más de cuatro jugadores',
+                        d: 'Consume más ancho de banda para todos'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la manifestación práctica del punto único de fallo, más un problema de equidad: el host tiene latencia cero contra sí mismo. De ahí las migraciones de anfitrión cuando alguien abandona.',
+                    pistas: [
+                        'Piensa qué latencia tiene el jugador que ejecuta el servidor en su propia máquina.',
+                        'Y qué ocurre cuando ese jugador cierra el juego.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>c)</strong> Una empresa de 15 personas trabaja «en P2P»: cada uno comparte carpetas desde su propio PC. El gerente no ve el problema porque «funciona». Explícale <strong>tres riesgos concretos</strong>.',
+                    modelo: `<p>Funciona hoy, pero acumula tres riesgos que se materializan todos tarde o temprano.</p>
+                             <p><strong>1. No hay copias de seguridad reales.</strong> Los datos de la empresa están
+                             repartidos por quince discos duros, cada uno con su propia suerte. Basta con que se
+                             estropee el portátil de una persona, o que le entre un cifrador de archivos, para perder
+                             información que nadie más tenía. Y no hay forma de saber qué se ha perdido, porque nadie
+                             tiene el inventario de qué guardaba cada uno.</p>
+                             <p><strong>2. No hay control de accesos ni forma de revocarlo.</strong> Los permisos los
+                             pone cada usuario en su equipo, con su criterio y sin registro. Cuando alguien deja la
+                             empresa, hay que ir máquina por máquina retirando sus accesos y recuperando lo que tuviera
+                             solo él; en la práctica nunca se hace del todo. Tampoco se puede auditar quién accedió a
+                             qué, algo exigible cuando se manejan datos personales.</p>
+                             <p><strong>3. La disponibilidad depende de que la gente no apague su equipo.</strong> Si
+                             quien tiene el fichero está de vacaciones, o simplemente ha apagado el portátil, ese
+                             fichero no existe para el resto. Con quince personas eso pasa a diario, y el efecto es
+                             que aparecen copias duplicadas por correo o por memorias USB, y ya nadie sabe cuál es la
+                             versión buena.</p>
+                             <p>Añadiría un cuarto, aunque no lo pida el enunciado: la <strong>superficie de
+                             ataque</strong>. Quince equipos compartiendo carpetas son quince servicios a la escucha,
+                             sin actualizar de forma coordinada y sin que nadie los vigile.</p>
+                             <p>El argumento que suele funcionar con un gerente no es técnico: el modelo actual
+                             <strong>no permite garantizar que la empresa recupere sus propios datos</strong> ni
+                             demostrar quién accedió a ellos. Eso es un riesgo de negocio, no de informática.</p>`,
+                    rubrica: [
+                        'Riesgo 1: imposibilidad de hacer copias de seguridad fiables',
+                        'Riesgo 2: sin control de accesos ni forma de revocarlos al salir alguien',
+                        'Riesgo 3: disponibilidad dependiente de que cada equipo esté encendido',
+                        'Menciona el problema de las versiones duplicadas o la superficie de ataque',
+                        'Traduce el riesgo a términos de negocio, no solo técnicos'
+                    ],
+                    pistas: [
+                        'Piensa qué pasa el día que se estropea un disco duro. ¿Quién más tenía esos datos?',
+                        'Piensa qué pasa el día que alguien se va de la empresa enfadado.',
+                        'Piensa qué pasa un martes cualquiera en que una persona está de vacaciones.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Interpretar una lista de puertos',
+            tiempo: '11 min',
+            enunciado: `
+                <p><strong>Escenario.</strong> Llegas nuevo a una empresa y ejecutas un listado de servicios a la
+                escucha en un servidor. Obtienes esto:</p>
+                <pre><code>Proto  Dirección local        Estado       Proceso
+TCP    0.0.0.0:22             LISTENING    sshd
+TCP    0.0.0.0:80             LISTENING    nginx
+TCP    0.0.0.0:443            LISTENING    nginx
+TCP    127.0.0.1:3306         LISTENING    mysqld
+TCP    0.0.0.0:23             LISTENING    telnetd
+TCP    192.168.1.10:51422     ESTABLISHED  curl</code></pre>`,
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué línea deberías señalar de inmediato como problema de seguridad?',
+                    opciones: {
+                        a: 'El puerto 22, porque permite acceso remoto',
+                        b: 'El puerto 23: Telnet transmite las credenciales en claro y está obsoleto',
+                        c: 'El puerto 3306, porque una base de datos no debería existir',
+                        d: 'El puerto 443, porque está expuesto a Internet'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Telnet envía usuario y contraseña <strong>sin cifrar</strong>. Su sustituto es SSH, que ya está funcionando en el 22: el servicio de Telnet no aporta nada y solo añade riesgo. Es un residuo que hay que apagar.',
+                    pistas: [
+                        'Dos de los servicios listados hacen lo mismo, pero uno es de los años setenta.',
+                        'Fíjate en cuál de ellos transmite las contraseñas tal cual.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> <code>mysqld</code> escucha en <code>127.0.0.1:3306</code> y no en <code>0.0.0.0:3306</code>. ¿Qué significa?',
+                    opciones: {
+                        a: 'Que está mal configurado',
+                        b: 'Que solo acepta conexiones desde el propio equipo, no desde la red',
+                        c: 'Que solo acepta conexiones de la red local',
+                        d: 'Que el servicio está detenido'
+                    },
+                    respuesta: 'b',
+                    explicacion: '<code>127.0.0.1</code> es la interfaz de bucle local: solo alcanzable desde la propia máquina. <code>0.0.0.0</code> significa «en todas las interfaces», es decir, expuesto a la red. Es una diferencia de seguridad enorme y una buena práctica muy habitual: la base de datos solo la usa el servidor web, que está en la misma máquina.',
+                    pistas: [
+                        'Recuerda qué es la dirección 127.0.0.1 y quién puede alcanzarla.',
+                        'Compara con lo que significa 0.0.0.0 en las otras líneas.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> La última línea, con puerto 51422 y estado ESTABLISHED, ¿qué representa?',
+                    opciones: {
+                        a: 'Otro servicio a la escucha',
+                        b: 'Una conexión saliente en la que este equipo actúa como cliente, con puerto de origen efímero',
+                        c: 'Un ataque en curso',
+                        d: 'Un puerto abierto por error'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Dos pistas lo confirman: el estado es ESTABLISHED y no LISTENING, y el puerto está en el rango efímero (49152–65535). Además el proceso es <code>curl</code>, una herramienta cliente. El servidor está actuando de cliente de otro servicio.',
+                    pistas: [
+                        'Compara el estado de esa línea con el de las demás.',
+                        'Mira en qué rango cae ese número de puerto.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Integración de la semana',
+            tiempo: '7 min',
+            enunciado: '<p>Une los tres componentes que has visto: tarjeta, medio y software.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena lo que ocurre desde que escribes una dirección en el navegador hasta que sale la primera trama por el cable.',
+                    elementos: [
+                        'El navegador pide al sistema abrir una conexión al puerto 443 del destino',
+                        'El sistema le asigna un puerto de origen del rango efímero',
+                        'La pila TCP/IP construye el paquete con las IP de origen y destino',
+                        'Se determina la MAC de destino: la del router, porque el destino está fuera de la red local',
+                        'La NIC convierte la trama en señal eléctrica y la pone en el par trenzado'
+                    ],
+                    orden: [
+                        'El navegador pide al sistema abrir una conexión al puerto 443 del destino',
+                        'El sistema le asigna un puerto de origen del rango efímero',
+                        'La pila TCP/IP construye el paquete con las IP de origen y destino',
+                        'Se determina la MAC de destino: la del router, porque el destino está fuera de la red local',
+                        'La NIC convierte la trama en señal eléctrica y la pone en el par trenzado'
+                    ],
+                    explicacion: 'Esta secuencia recorre los tres días de la semana en orden inverso al que los estudiaste: el software decide, la pila direcciona, la tarjeta convierte y el medio transporta. En la Semana 3 le pondrás nombre a cada nivel con el modelo OSI.',
+                    pistas: [
+                        'Empieza por arriba: lo primero es la decisión de la aplicación.',
+                        'El puerto de origen se necesita antes de poder construir nada.',
+                        'Lo último es siempre lo físico.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> De los tres componentes de la semana, ¿cuál es imprescindible en <strong>cualquier</strong> comunicación de red?',
+                    opciones: {
+                        a: 'El cable: sin medio guiado no hay red',
+                        b: 'La interfaz de red: puede no haber cable, switch ni servidor, pero siempre hacen falta al menos dos interfaces',
+                        c: 'El servidor: alguien tiene que ofrecer el servicio',
+                        d: 'Los tres por igual'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El medio puede ser el aire y el modelo puede ser P2P sin ningún servidor, pero sin interfaces de red no hay nada. Es la conclusión con la que abrió el Día 1 y cierra la semana.',
+                    pistas: [
+                        'Piensa en dos móviles hablando por Bluetooth: ¿qué falta de la lista y qué sigue estando?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>
