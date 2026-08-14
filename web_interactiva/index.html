@@ -150,21 +150,31 @@
 
         .progress-bar {
             background: #e9ecef;
-            height: 30px;
-            border-radius: 15px;
+            height: 22px;
+            border-radius: 11px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .progress-fill {
             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
             transition: width 0.5s ease;
+        }
+
+        /* La etiqueta va DEBAJO de la barra, no dentro ni superpuesta.
+           Dentro del relleno quedaba recortada con porcentajes bajos («3 % del
+           material publicado» no cabe en el 3 % del ancho), y superpuesta en
+           blanco no contrastaba con la pista gris clara. Fuera de la barra se
+           lee siempre, con cualquier porcentaje. */
+        .progress-texto {
+            color: #444;
+            font-size: 0.95em;
+            margin: 0 0 20px;
+        }
+
+        .progress-texto strong {
+            color: #1e3c72;
         }
 
         .stats {
@@ -442,8 +452,9 @@
         <div class="progress-section">
             <h2>Tu Progreso General</h2>
             <div class="progress-bar">
-                <div class="progress-fill" id="generalProgress" style="width: 0%">0%</div>
+                <div class="progress-fill" id="generalProgress" style="width: 0%"></div>
             </div>
+            <p class="progress-texto" id="generalProgressTexto">Aún no has completado ninguna actividad.</p>
             <div class="stats">
                 <div class="stat-box">
                     <div class="stat-number" id="exercisesDone">0</div>
@@ -827,7 +838,10 @@
             const pct = Math.round((hechas / ACTIVIDADES_PUBLICADAS) * 100);
             const barra = document.getElementById('generalProgress');
             barra.style.width = pct + '%';
-            barra.textContent = pct + '% del material publicado';
+            document.getElementById('generalProgressTexto').innerHTML = hechas === 0
+                ? 'Aún no has completado ninguna actividad.'
+                : `<strong>${pct} %</strong> del material publicado · `
+                  + `${hechas} de ${ACTIVIDADES_PUBLICADAS} actividades`;
         }
 
         // Marca cada tarjeta de día con el resultado guardado de su quiz y
