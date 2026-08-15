@@ -247,12 +247,12 @@ Las dos semanas publicadas suman unas **48 horas** de trabajo. La **Semana 2** c
 
 ## Sistema de Evaluación
 
-### Evaluación Semanal (48 exámenes)
-- **Tipo test**: 10-15 preguntas (70% de la nota semanal)
-- **Ejercicios prácticos**: 2-3 problemas (30% de la nota semanal)
+### Evaluación semanal (48 exámenes) — **los viernes**
+- **Tipo test**: 20-30 preguntas, con desglose por día (70 % de la nota semanal)
+- **Ejercicios prácticos**: recuperación de los errores de la semana (30 %)
 - **Nota mínima para aprobar**: 5/10
 
-### Evaluación Mensual (12 exámenes)
+### Evaluación mensual (12 exámenes) — **el viernes de la cuarta semana**
 - **Tipo test**: 20-25 preguntas (50%)
 - **Ejercicios prácticos**: 3-5 problemas (50%)
 - **Nota mínima para aprobar**: 5/10
@@ -319,11 +319,19 @@ Plan Anual ASIR/
 
 ## Consejos para el Estudio
 
-### Organización del Tiempo
-1. **Lunes-Miércoles**: Estudio de teoría (4-5 horas)
-2. **Jueves-Viernes**: Ejercicios prácticos (4-5 horas)
-3. **Sábado**: Examen semanal (2 horas)
-4. **Domingo**: Revisión y descanso
+### Organización del tiempo
+
+La semana lectiva es de **cinco días, de lunes a viernes**. El fin de semana queda libre.
+
+| Día | Qué se hace | Duración |
+|---|---|---|
+| **Lunes a jueves** | Contenido nuevo: teoría, quiz, ejercicios y laboratorio | 4-5 h cada día |
+| **Viernes** | Síntesis de la semana, flashcards y **test semanal** | 3-4 h |
+| Sábado y domingo | Libres | — |
+
+Carga semanal: unas **19 a 24 horas**.
+
+> Las **Semanas 1 y 2** se publicaron antes de adoptar esta organización y conservan sus siete días de 3-4 h. La estructura de cinco días rige a partir de la Semana 3.
 
 ### Técnicas de Estudio
 - **Mapas conceptuales**: Crear diagramas de cada tema
