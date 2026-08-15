@@ -150,6 +150,77 @@ const PARProgreso = (function () {
         });
     }
 
+    /* ------------------------------------------------------- copia de seguridad
+     * El progreso vive en localStorage, que es de este navegador y de este
+     * equipo: se pierde al limpiar los datos de navegación y no viaja al móvil.
+     * Estas dos funciones permiten sacarlo a un fichero y volver a meterlo.
+     */
+    const FORMATO = 'par-asir-progreso';
+    const VERSION_COPIA = 1;
+
+    function exportar() {
+        return JSON.stringify({
+            formato: FORMATO,
+            version: VERSION_COPIA,
+            fecha: new Date().toISOString(),
+            detalle: leer(CLAVE_DETALLE, {})
+        }, null, 2);
+    }
+
+    // Lee la copia sin aplicarla, para poder avisar antes de tocar nada
+    function analizarCopia(texto) {
+        let datos;
+        try {
+            datos = JSON.parse(texto);
+        } catch (e) {
+            return { ok: false, error: 'El archivo no es un JSON válido.' };
+        }
+        if (!datos || datos.formato !== FORMATO || typeof datos.detalle !== 'object' || !datos.detalle) {
+            return { ok: false, error: 'Este archivo no es una copia de progreso de este curso.' };
+        }
+        if (datos.version > VERSION_COPIA) {
+            return { ok: false, error: 'La copia se hizo con una versión más nueva del curso.' };
+        }
+
+        const propias = leer(CLAVE_DETALLE, {});
+        const claves = Object.keys(datos.detalle);
+        return {
+            ok: true,
+            fecha: datos.fecha,
+            actividades: claves.length,
+            nuevas: claves.filter(k => !propias[k]).length,
+            existentes: Object.keys(propias).length
+        };
+    }
+
+    /*
+     * Se FUNDE con lo que ya hay, quedándose con el resultado más reciente de
+     * cada actividad. Así nunca se pierde trabajo: importar la copia del
+     * portátil en el móvil suma en lugar de sustituir.
+     */
+    function importar(texto) {
+        const info = analizarCopia(texto);
+        if (!info.ok) return info;
+
+        const entrante = JSON.parse(texto).detalle;
+        const detalle = leer(CLAVE_DETALLE, {});
+        let nuevas = 0, actualizadas = 0;
+
+        Object.keys(entrante).forEach(k => {
+            const act = entrante[k];
+            if (!act || typeof act.total !== 'number') return;   // línea corrupta: se salta
+            if (!detalle[k]) {
+                detalle[k] = act; nuevas++;
+            } else if ((act.fecha || '') > (detalle[k].fecha || '')) {
+                detalle[k] = act; actualizadas++;
+            }
+        });
+
+        escribir(CLAVE_DETALLE, detalle);
+        recalcularResumen(detalle);
+        return { ok: true, nuevas: nuevas, actualizadas: actualizadas };
+    }
+
     function reiniciar() {
         try {
             localStorage.removeItem(CLAVE_DETALLE);
@@ -162,6 +233,9 @@ const PARProgreso = (function () {
     return {
         registrar: registrar,
         fallosPendientes: fallosPendientes,
+        exportar: exportar,
+        analizarCopia: analizarCopia,
+        importar: importar,
         detalle: detalle,
         resumen: resumen,
         reiniciar: reiniciar

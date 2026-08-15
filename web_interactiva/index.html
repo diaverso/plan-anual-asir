@@ -21,7 +21,7 @@
     --texto-fuerte:   #444444;
     --texto-cabecera: #ffffff;
     --boton-texto:    #ffffff;
-    --acento:         #667eea;
+    --acento:         #4e6ae7;   /* 4,63:1 con blanco; #667eea daba 3,66 */
     --acento-b:       #764ba2;
     --pista:          #e9ecef;
     --suave:          #f8f9fa;
@@ -32,7 +32,7 @@
     --linea:          #dee2e6;
     --deshab:         #adb5bd;
     --peligro:        #dc3545;
-    --verde:          #20c997;
+    --verde:          #158564;   /* 4,59:1 con blanco; #20c997 daba 2,13 */
     --verde-borde:    #28a745;
     --ambar:          #ffc107;
     --ambar-fondo:    #fffdf5;
@@ -501,6 +501,43 @@
             color: var(--tenue);
         }
 
+        .acciones-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-sec {
+            background: none;
+            border: 1px solid var(--linea);
+            color: var(--tenue-b);
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-sec:hover {
+            border-color: var(--acento);
+            color: var(--acento);
+        }
+
+        .aviso-copia {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            background: var(--suave);
+            border-left: 4px solid var(--acento);
+            color: var(--texto-fuerte);
+        }
+
+        .aviso-copia.mal {
+            border-left-color: var(--peligro);
+            color: var(--peligro);
+        }
+
         .btn-reset {
             background: none;
             border: 1px solid var(--linea);
@@ -730,8 +767,15 @@
 
             <div class="progreso-acciones">
                 <small id="ultimaActividad">Aún no has corregido ningún quiz ni ejercicio.</small>
-                <button class="btn-reset" onclick="reiniciarProgreso()">Reiniciar progreso</button>
+                <span class="acciones-btns">
+                    <button class="btn-sec" type="button" onclick="guardarCopia()">Guardar copia</button>
+                    <button class="btn-sec" type="button" onclick="document.getElementById('ficheroCopia').click()">Restaurar copia</button>
+                    <button class="btn-reset" type="button" onclick="reiniciarProgreso()">Reiniciar progreso</button>
+                </span>
+                <input type="file" id="ficheroCopia" accept="application/json,.json" hidden
+                       onchange="restaurarCopia(this)">
             </div>
+            <p class="aviso-copia" id="avisoCopia" hidden></p>
         </div>
 
         <div class="mes">
@@ -1205,6 +1249,77 @@
         function cargarProgreso() {
             pintarResumen();
             pintarDias();
+        }
+
+        // El progreso vive en este navegador: estas dos funciones lo sacan a un
+        // fichero y lo devuelven, para no perderlo y para pasarlo a otro equipo.
+        function decirCopia(texto, mal) {
+            const aviso = document.getElementById('avisoCopia');
+            aviso.textContent = texto;
+            aviso.classList.toggle('mal', !!mal);
+            aviso.hidden = false;
+        }
+
+        function guardarCopia() {
+            const p = PARProgreso.resumen();
+            if (!p.exercisesDone) {
+                decirCopia('Todavía no hay progreso que guardar. Corrige un quiz o una hoja de ejercicios primero.', true);
+                return;
+            }
+
+            const hoy = new Date().toISOString().slice(0, 10);
+            const blob = new Blob([PARProgreso.exportar()], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `progreso-par-${hoy}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+
+            decirCopia(`Copia guardada: ${p.exercisesDone} actividades. `
+                + 'Guárdala fuera de este equipo si quieres que sobreviva a un formateo.');
+        }
+
+        function restaurarCopia(input) {
+            const fichero = input.files && input.files[0];
+            input.value = '';                 // permite reelegir el mismo fichero
+            if (!fichero) return;
+
+            const lector = new FileReader();
+            lector.onerror = () => decirCopia('No se ha podido leer el archivo.', true);
+            lector.onload = () => {
+                const texto = lector.result;
+                const info = PARProgreso.analizarCopia(texto);
+                if (!info.ok) { decirCopia(info.error, true); return; }
+
+                const cuando = info.fecha
+                    ? new Date(info.fecha).toLocaleDateString('es-ES',
+                        { day: 'numeric', month: 'long', year: 'numeric' })
+                    : 'fecha desconocida';
+
+                const salto = '\n\n';
+                const mensaje = `La copia es del ${cuando} y contiene ${info.actividades} actividades.`
+                    + salto
+                    + (info.existentes
+                        ? `Ahora mismo tienes ${info.existentes}. Se fusionarán: de cada actividad `
+                          + 'se conserva el resultado más reciente, así que no perderás nada.'
+                        : 'No tienes progreso guardado, así que se restaurará tal cual.')
+                    + salto
+                    + '¿Continuamos?';
+
+                if (!confirm(mensaje)) { decirCopia('Restauración cancelada. No se ha tocado nada.'); return; }
+
+                const res = PARProgreso.importar(texto);
+                if (!res.ok) { decirCopia(res.error, true); return; }
+
+                cargarProgreso();
+                decirCopia(res.nuevas + res.actualizadas === 0
+                    ? 'La copia no aportaba nada nuevo: ya tenías todos esos resultados, o más recientes.'
+                    : `Restaurado: ${res.nuevas} actividades nuevas y ${res.actualizadas} actualizadas.`);
+            };
+            lector.readAsText(fichero);
         }
 
         function reiniciarProgreso() {
