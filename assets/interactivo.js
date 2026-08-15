@@ -678,10 +678,72 @@
         });
     }
 
+    /* ------------------------------------------------- repaso de fallos
+     * Muestra al empezar el día las preguntas que se fallaron en
+     * actividades anteriores. Primero hay que intentar recordarlas: el
+     * botón revela la respuesta, no al revés. Si no hay nada pendiente el
+     * bloque no aparece, para no meter ruido.
+     */
+    function montarRepasoFallos() {
+        const caja = document.getElementById('repaso-fallos');
+        if (!caja) return;
+
+        if (typeof PARProgreso === 'undefined' || !PARProgreso.fallosPendientes) return;
+
+        let pendientes = [];
+        try { pendientes = PARProgreso.fallosPendientes(); } catch (e) { return; }
+        if (!pendientes.length) return;
+
+        const titulo = document.createElement('h3');
+        titulo.className = 'repaso-fallos-titulo';
+        titulo.innerHTML = '🔁 Antes de empezar: lo que fallaste';
+        caja.appendChild(titulo);
+
+        const intro = document.createElement('p');
+        intro.className = 'repaso-fallos-intro';
+        intro.innerHTML = pendientes.length === 1
+            ? 'Quedó <strong>una pregunta</strong> sin acertar. Intenta responderla de memoria antes de descubrirla.'
+            : `Quedaron <strong>${pendientes.length} preguntas</strong> sin acertar. `
+              + 'Intenta responderlas de memoria antes de descubrirlas: recuperar fija mucho más que releer.';
+        caja.appendChild(intro);
+
+        pendientes.forEach((f, n) => {
+            const item = document.createElement('div');
+            item.className = 'repaso-fallo';
+
+            const origen = f.titulo ? `<span class="repaso-fallo-origen">${f.titulo}</span>` : '';
+            const enlace = f.repaso
+                ? ` · <a href="${f.repaso}">Ver en la teoría</a>`
+                : '';
+
+            item.innerHTML = `
+                ${origen}
+                <div class="repaso-fallo-pregunta">${f.texto}</div>
+                <button type="button" class="btn-sec repaso-fallo-btn">Ver la respuesta</button>
+                <div class="repaso-fallo-solucion" hidden>
+                    <strong>Respuesta:</strong> ${f.solucion || '—'}
+                    ${f.porque ? `<p>${f.porque}</p>` : ''}
+                    <p class="repaso-fallo-meta">${f.tema || ''}${enlace}</p>
+                </div>`;
+
+            const btn = item.querySelector('.repaso-fallo-btn');
+            const sol = item.querySelector('.repaso-fallo-solucion');
+            btn.addEventListener('click', () => {
+                sol.hidden = false;
+                btn.remove();
+            });
+
+            caja.appendChild(item);
+        });
+
+        caja.classList.add('activo');
+    }
+
     // ------------------------------------------------------------- arranque
 
     function iniciar() {
         montarTema();
+        montarRepasoFallos();
         montarTimeline();
         montarFlashcards();
         montarCheckpoints();

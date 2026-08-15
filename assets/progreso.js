@@ -22,6 +22,9 @@
 const PARProgreso = (function () {
 
     const CLAVE_RESUMEN = 'parProgress';
+    // Topes para no llenar localStorage ni abrumar en el repaso
+    const MAX_FALLOS = 20;
+    const MAX_REPASO = 8;
     const CLAVE_DETALLE = 'parProgresoDetalle';
 
     // Tope por actividad: si se deja la pestaña abierta toda la noche, no
@@ -95,7 +98,7 @@ const PARProgreso = (function () {
      * @param {number} correctas  aciertos obtenidos
      * @param {number} total      apartados evaluables
      */
-    function registrar(correctas, total) {
+    function registrar(correctas, total, fallos) {
         const detalle = leer(CLAVE_DETALLE, {});
 
         detalle[idActividad()] = {
@@ -103,11 +106,34 @@ const PARProgreso = (function () {
             total: total,
             minutos: minutosEnPagina(),
             semana: semanaDeLaRuta(),
-            fecha: new Date().toISOString()
+            fecha: new Date().toISOString(),
+            // Preguntas falladas, para que reaparezcan en el repaso del día
+            // siguiente. Si se repite la actividad, la lista se sustituye:
+            // lo que ya se domina deja de aparecer.
+            fallos: Array.isArray(fallos) ? fallos.slice(0, MAX_FALLOS) : []
         };
 
         escribir(CLAVE_DETALLE, detalle);
         return recalcularResumen(detalle);
+    }
+
+    /*
+     * Preguntas falladas en actividades ANTERIORES a la actual, de más
+     * reciente a más antigua. La página de hoy las muestra al empezar, que es
+     * cuando el repaso rinde: recuperar lo que fallaste ayer fija mucho más
+     * que releerlo.
+     */
+    function fallosPendientes(limite) {
+        const actual = idActividad();
+        const detalle = leer(CLAVE_DETALLE, {});
+
+        return Object.keys(detalle)
+            .filter(k => k !== actual)
+            .map(k => ({ clave: k, act: detalle[k] }))
+            .filter(x => x.act.fallos && x.act.fallos.length)
+            .sort((a, b) => (a.act.fecha < b.act.fecha ? 1 : -1))
+            .flatMap(x => x.act.fallos.map(f => Object.assign({ origen: x.clave }, f)))
+            .slice(0, limite || MAX_REPASO);
     }
 
     function detalle() {
@@ -135,6 +161,7 @@ const PARProgreso = (function () {
 
     return {
         registrar: registrar,
+        fallosPendientes: fallosPendientes,
         detalle: detalle,
         resumen: resumen,
         reiniciar: reiniciar

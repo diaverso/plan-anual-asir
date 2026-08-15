@@ -1,10 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Centro de Aprendizaje PAR - ASIR</title>
     <style>
+/* ─────────────────────────────────────────────────────────────
+   Paleta. Cada variable arranca con el valor que ya tenía el
+   diseño claro, así que el aspecto no cambia; el tema oscuro
+   solo redefine estos valores. Ningún color se define
+   únicamente dentro de un bloque de tema.
+   ───────────────────────────────────────────────────────────── */
+:root {
+    --fondo-a:        #1e3c72;
+    --fondo-b:        #2a5298;
+    --carta:          #ffffff;
+    --titulo:         #1e3c72;
+    --texto:          #666666;
+    --texto-fuerte:   #444444;
+    --texto-cabecera: #ffffff;
+    --boton-texto:    #ffffff;
+    --acento:         #667eea;
+    --acento-b:       #764ba2;
+    --pista:          #e9ecef;
+    --suave:          #f8f9fa;
+    --suave-b:        #f1f3f5;
+    --tenue:          #868e96;
+    --tenue-b:        #495057;
+    --gris:           #6c757d;
+    --linea:          #dee2e6;
+    --deshab:         #adb5bd;
+    --peligro:        #dc3545;
+    --verde:          #20c997;
+    --verde-borde:    #28a745;
+    --ambar:          #ffc107;
+    --ambar-fondo:    #fffdf5;
+    --bien-fondo:     #d4edda;  --bien-texto: #155724;
+    --reg-fondo:      #fff3cd;  --reg-texto:  #856404;
+    --mal-fondo:      #f8d7da;  --mal-texto:  #721c24;
+    --sombra:         0 10px 30px rgba(0,0,0,0.3);
+    --sombra-alta:    0 15px 40px rgba(0,0,0,0.4);
+    --halo-fuerte:    rgba(102, 126, 234, 0.4);
+    --halo-suave:     rgba(102, 126, 234, 0.2);
+}
+
+/* Tema oscuro: automático según el sistema, salvo que el usuario
+   haya elegido el claro a mano. Misma clave «parTema» que las
+   páginas de estudio, para que el curso entero vaya a una. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-tema="claro"]) {
+        --fondo-a:        #070d1a;
+        --fondo-b:        #101a30;
+        --carta:          #171d2b;
+        --titulo:         #c6d2ff;
+        --texto:          #aab3c6;
+        --texto-fuerte:   #e7ebf4;
+        --texto-cabecera: #e7ebf4;
+        --acento:         #949bff;
+        --acento-b:       #b088e6;
+        /* Los rellenos son claros en oscuro: el texto del botón va en tinta */
+        --boton-texto:    #0f1524;
+        --pista:          #242c3e;
+        --suave:          #1d2433;
+        --suave-b:        #232b3d;
+        --tenue:          #99a3b7;
+        --tenue-b:        #c8cfdc;
+        --gris:           #98a3b8;
+        --linea:          #2d3648;
+        --deshab:         #8b95a9;
+        --peligro:        #ff7b88;
+        --verde:          #3ddaa8;
+        --verde-borde:    #33cf92;
+        --ambar:          #d8a30a;
+        --ambar-fondo:    #23200f;
+        --bien-fondo:     #10291d;  --bien-texto: #79e3ae;
+        --reg-fondo:      #2a2312;  --reg-texto:  #f4c86e;
+        --mal-fondo:      #2e1419;  --mal-texto:  #ffa2ac;
+        --sombra:         0 10px 30px rgba(0,0,0,0.55);
+        --sombra-alta:    0 15px 40px rgba(0,0,0,0.65);
+        --halo-fuerte:    rgba(148, 155, 255, 0.35);
+        --halo-suave:     rgba(148, 155, 255, 0.18);
+    }
+}
+
+:root[data-tema="oscuro"] {
+    --fondo-a:        #070d1a;
+    --fondo-b:        #101a30;
+    --carta:          #171d2b;
+    --titulo:         #c6d2ff;
+    --texto:          #aab3c6;
+    --texto-fuerte:   #e7ebf4;
+    --texto-cabecera: #e7ebf4;
+    --acento:         #949bff;
+    --acento-b:       #b088e6;
+    /* Los rellenos son claros en oscuro: el texto del botón va en tinta */
+    --boton-texto:    #0f1524;
+    --pista:          #242c3e;
+    --suave:          #1d2433;
+    --suave-b:        #232b3d;
+    --tenue:          #99a3b7;
+    --tenue-b:        #c8cfdc;
+    --gris:           #98a3b8;
+    --linea:          #2d3648;
+    --deshab:         #8b95a9;
+    --peligro:        #ff7b88;
+    --verde:          #3ddaa8;
+    --verde-borde:    #33cf92;
+    --ambar:          #d8a30a;
+    --ambar-fondo:    #23200f;
+    --bien-fondo:     #10291d;  --bien-texto: #79e3ae;
+    --reg-fondo:      #2a2312;  --reg-texto:  #f4c86e;
+    --mal-fondo:      #2e1419;  --mal-texto:  #ffa2ac;
+    --sombra:         0 10px 30px rgba(0,0,0,0.55);
+    --sombra-alta:    0 15px 40px rgba(0,0,0,0.65);
+    --halo-fuerte:    rgba(148, 155, 255, 0.35);
+    --halo-suave:     rgba(148, 155, 255, 0.18);
+}
+
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +126,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, var(--fondo-a) 0%, var(--fondo-b) 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -25,7 +138,7 @@
 
         .header {
             text-align: center;
-            color: white;
+            color: var(--texto-cabecera);
             margin-bottom: 40px;
         }
 
@@ -48,17 +161,17 @@
         }
 
         .tool-card {
-            background: white;
+            background: var(--carta);
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: var(--sombra);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
         }
 
         .tool-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            box-shadow: var(--sombra-alta);
         }
 
         .tool-icon {
@@ -68,13 +181,13 @@
         }
 
         .tool-card h2 {
-            color: #1e3c72;
+            color: var(--titulo);
             margin-bottom: 15px;
             text-align: center;
         }
 
         .tool-card p {
-            color: #666;
+            color: var(--texto);
             line-height: 1.6;
             margin-bottom: 20px;
             text-align: center;
@@ -82,8 +195,8 @@
 
         .tool-card button {
             width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--acento) 0%, var(--acento-b) 100%);
+            color: var(--boton-texto);
             border: none;
             padding: 12px 24px;
             border-radius: 25px;
@@ -94,19 +207,19 @@
 
         .tool-card button:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px var(--halo-fuerte);
         }
 
         .features {
-            background: white;
+            background: var(--carta);
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: var(--sombra);
             margin-top: 40px;
         }
 
         .features h2 {
-            color: #1e3c72;
+            color: var(--titulo);
             margin-bottom: 25px;
             text-align: center;
             font-size: 2em;
@@ -120,36 +233,36 @@
 
         .feature-item {
             padding: 20px;
-            border-left: 4px solid #667eea;
-            background: #f8f9fa;
+            border-left: 4px solid var(--acento);
+            background: var(--suave);
             border-radius: 8px;
         }
 
         .feature-item h3 {
-            color: #667eea;
+            color: var(--acento);
             margin-bottom: 10px;
         }
 
         .feature-item p {
-            color: #666;
+            color: var(--texto);
             line-height: 1.5;
         }
 
         .progress-section {
-            background: white;
+            background: var(--carta);
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: var(--sombra);
             margin-bottom: 30px;
         }
 
         .progress-section h2 {
-            color: #1e3c72;
+            color: var(--titulo);
             margin-bottom: 20px;
         }
 
         .progress-bar {
-            background: #e9ecef;
+            background: var(--pista);
             height: 22px;
             border-radius: 11px;
             overflow: hidden;
@@ -157,7 +270,7 @@
         }
 
         .progress-fill {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, var(--acento) 0%, var(--acento-b) 100%);
             height: 100%;
             transition: width 0.5s ease;
         }
@@ -168,13 +281,13 @@
            blanco no contrastaba con la pista gris clara. Fuera de la barra se
            lee siempre, con cualquier porcentaje. */
         .progress-texto {
-            color: #444;
+            color: var(--texto-fuerte);
             font-size: 0.95em;
             margin: 0 0 20px;
         }
 
         .progress-texto strong {
-            color: #1e3c72;
+            color: var(--titulo);
         }
 
         .stats {
@@ -188,20 +301,20 @@
         .dia-card.pendiente .dia-dur { font-style: italic; }
 
         .curso {
-            background: white;
+            background: var(--carta);
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: var(--sombra);
             margin-bottom: 30px;
         }
 
         .curso h2 {
-            color: #1e3c72;
+            color: var(--titulo);
             margin-bottom: 8px;
         }
 
         .curso > p {
-            color: #666;
+            color: var(--texto);
             margin-bottom: 22px;
         }
 
@@ -212,21 +325,21 @@
         }
 
         .dia-card {
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--pista);
             border-radius: 12px;
             padding: 18px 20px;
             transition: all 0.25s ease;
         }
 
         .dia-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.2);
+            border-color: var(--acento);
+            box-shadow: 0 6px 18px var(--halo-suave);
             transform: translateY(-3px);
         }
 
         .dia-card.repaso {
-            border-color: #ffc107;
-            background: #fffdf5;
+            border-color: var(--ambar);
+            background: var(--ambar-fondo);
         }
 
         .dia-head {
@@ -239,13 +352,13 @@
 
         .dia-num {
             font-weight: bold;
-            color: #1e3c72;
+            color: var(--titulo);
             font-size: 1.1em;
         }
 
         .dia-dur {
-            background: #f1f3f5;
-            color: #495057;
+            background: var(--suave-b);
+            color: var(--tenue-b);
             padding: 3px 10px;
             border-radius: 20px;
             font-size: 0.82em;
@@ -253,7 +366,7 @@
         }
 
         .dia-tema {
-            color: #666;
+            color: var(--texto);
             font-size: 0.95em;
             line-height: 1.45;
             margin-bottom: 14px;
@@ -271,8 +384,8 @@
             min-width: 110px;
             text-align: center;
             text-decoration: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--acento) 0%, var(--acento-b) 100%);
+            color: var(--boton-texto);
             padding: 9px 14px;
             border-radius: 20px;
             font-size: 0.9em;
@@ -281,21 +394,21 @@
 
         .dia-links a:hover {
             transform: scale(1.04);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px var(--halo-fuerte);
         }
 
         .dia-links a.sec {
-            background: #6c757d;
+            background: var(--gris);
         }
 
         .dia-links a.lab {
-            background: #20c997;
+            background: var(--verde);
         }
 
         .curso-footer {
             margin-top: 22px;
             padding-top: 18px;
-            border-top: 2px solid #e9ecef;
+            border-top: 2px solid var(--pista);
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
@@ -304,7 +417,7 @@
         }
 
         .curso-footer a {
-            color: #667eea;
+            color: var(--acento);
             text-decoration: none;
             font-weight: 500;
         }
@@ -320,7 +433,7 @@
         }
 
         .tool-card.pendiente button {
-            background: #adb5bd;
+            background: var(--deshab);
             cursor: not-allowed;
         }
 
@@ -331,8 +444,8 @@
 
         .badge-pendiente {
             display: inline-block;
-            background: #f1f3f5;
-            color: #868e96;
+            background: var(--suave-b);
+            color: var(--tenue);
             padding: 3px 12px;
             border-radius: 20px;
             font-size: 0.78em;
@@ -357,22 +470,22 @@
         }
 
         .resultado.bien {
-            background: #d4edda;
-            color: #155724;
+            background: var(--bien-fondo);
+            color: var(--bien-texto);
         }
 
         .resultado.regular {
-            background: #fff3cd;
-            color: #856404;
+            background: var(--reg-fondo);
+            color: var(--reg-texto);
         }
 
         .resultado.mal {
-            background: #f8d7da;
-            color: #721c24;
+            background: var(--mal-fondo);
+            color: var(--mal-texto);
         }
 
         .dia-card.hecho {
-            border-color: #28a745;
+            border-color: var(--verde-borde);
         }
 
         .progreso-acciones {
@@ -385,13 +498,13 @@
         }
 
         .progreso-acciones small {
-            color: #868e96;
+            color: var(--tenue);
         }
 
         .btn-reset {
             background: none;
-            border: 1px solid #dee2e6;
-            color: #868e96;
+            border: 1px solid var(--linea);
+            color: var(--tenue);
             padding: 7px 16px;
             border-radius: 20px;
             font-size: 0.85em;
@@ -400,35 +513,174 @@
         }
 
         .btn-reset:hover {
-            border-color: #dc3545;
-            color: #dc3545;
+            border-color: var(--peligro);
+            color: var(--peligro);
         }
 
         .stat-box {
             text-align: center;
             padding: 20px;
-            background: #f8f9fa;
+            background: var(--suave);
             border-radius: 10px;
         }
 
         .stat-number {
             font-size: 2.5em;
-            color: #667eea;
+            color: var(--acento);
             font-weight: bold;
         }
 
         .stat-label {
-            color: #666;
+            color: var(--texto);
             margin-top: 10px;
         }
 
         footer {
             text-align: center;
-            color: white;
+            color: var(--texto-cabecera);
             margin-top: 40px;
             padding: 20px;
             opacity: 0.8;
         }
+
+        /* ---------- Mes: contenedor de las semanas ---------- */
+
+        .mes {
+            margin-bottom: 35px;
+        }
+
+        .mes-head {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: baseline;
+            justify-content: space-between;
+            color: var(--texto-cabecera);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--texto-cabecera);
+        }
+
+        .mes-head h2 {
+            font-size: 1.7em;
+        }
+
+        .mes-head span {
+            opacity: 0.85;
+        }
+
+        /* La semana reutiliza la tarjeta .curso, pero plegable */
+
+        .curso > summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+
+        .curso > summary::-webkit-details-marker { display: none; }
+
+        .curso > summary h2 {
+            color: var(--titulo);
+            margin: 0;
+        }
+
+        .curso > summary .sem-estado {
+            color: var(--texto);
+            font-size: 0.95em;
+        }
+
+        .curso > summary .flecha {
+            display: inline-block;
+            transition: transform 0.25s ease;
+            color: var(--acento);
+        }
+
+        .curso[open] > summary .flecha { transform: rotate(90deg); }
+
+        .curso > summary:hover h2 { color: var(--acento); }
+
+        .curso[open] > summary { margin-bottom: 8px; }
+
+        /* Semanas todavía sin material */
+
+        .curso.sin-material {
+            opacity: 0.72;
+            border: 2px dashed var(--linea);
+            box-shadow: none;
+            padding: 20px 30px;
+        }
+
+        .curso.sin-material > summary { cursor: default; }
+        .curso.sin-material > summary:hover h2 { color: var(--titulo); }
+
+        /* Meses que aún no tocan */
+
+        .meses-futuros {
+            background: var(--carta);
+            border-radius: 15px;
+            padding: 22px 30px;
+            box-shadow: var(--sombra);
+            margin-bottom: 30px;
+        }
+
+        .meses-futuros > summary {
+            list-style: none;
+            cursor: pointer;
+            color: var(--titulo);
+            font-size: 1.15em;
+            font-weight: bold;
+        }
+
+        .meses-futuros > summary::-webkit-details-marker { display: none; }
+        .meses-futuros > summary:hover { color: var(--acento); }
+
+        .tabla-meses {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+            font-size: 0.92em;
+        }
+
+        .tabla-meses th {
+            text-align: left;
+            color: var(--tenue-b);
+            border-bottom: 2px solid var(--pista);
+            padding: 8px 10px;
+        }
+
+        .tabla-meses td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--pista);
+            color: var(--texto);
+        }
+
+        .tabla-meses td:first-child {
+            color: var(--titulo);
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Botón de tema, arriba a la derecha */
+
+        .btn-tema {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.14);
+            color: var(--texto-cabecera);
+            border: 1px solid rgba(255,255,255,0.35);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-tema:hover { background: rgba(255,255,255,0.26); }
 
         @media (max-width: 768px) {
             .header h1 {
@@ -442,6 +694,8 @@
     </style>
 </head>
 <body>
+    <button class="btn-tema" id="btnTema" type="button">🌓 Tema</button>
+
     <div class="container">
         <div class="header">
             <h1>Centro de Aprendizaje PAR</h1>
@@ -480,9 +734,18 @@
             </div>
         </div>
 
-        <div class="curso">
-            <h2>📅 Semana 1 — Introducción a las Redes</h2>
-            <p>Mes 1: Fundamentos de Redes · 7 días · 23 h 46 min. Cada día incluye teoría con paradas de escritura, quiz cronometrado y ejercicios interactivos con pistas.</p>
+        <div class="mes">
+            <div class="mes-head">
+                <h2>📚 Mes 1 — Fundamentos de Redes</h2>
+                <span>2 de 4 semanas publicadas · 48 h 22 min</span>
+            </div>
+
+        <details class="curso" open>
+            <summary>
+                <h2><span class="flecha">▶</span> Semana 1 — Introducción a las Redes</h2>
+                <span class="sem-estado">7 días · 23 h 46 min · completa</span>
+            </summary>
+            <p>Cada día incluye teoría con paradas de escritura, quiz cronometrado y ejercicios interactivos con pistas.</p>
 
             <div class="dias-grid">
 
@@ -586,14 +849,17 @@
             </div>
 
             <div class="curso-footer">
-                <span>📋 <a href="../Mes_01_Fundamentos/Semana_01/README.md">Índice de la semana</a> · <a href="../Mes_01_Fundamentos/README.md">Mes 1 completo</a></span>
+                <span>📋 <a href="../Mes_01_Fundamentos/Semana_01/README.md">Índice de la semana</a></span>
                 <span>📝 <a href="../Mes_01_Fundamentos/examen_mensual.html">Examen mensual del Mes 1</a></span>
             </div>
-        </div>
+        </details>
 
-        <div class="curso">
-            <h2>📅 Semana 2 — Componentes de una red</h2>
-            <p>Mes 1: Fundamentos de Redes · <strong>7 días</strong> · 24 h 36 min. De qué está hecha una red, pieza a pieza: la tarjeta, el medio, el software, los servidores y los servicios. Termina diseñando una red completa y con test semanal.</p>
+        <details class="curso">
+            <summary>
+                <h2><span class="flecha">▶</span> Semana 2 — Componentes de una red</h2>
+                <span class="sem-estado">7 días · 24 h 36 min · completa</span>
+            </summary>
+            <p>De qué está hecha una red, pieza a pieza: la tarjeta, el medio, el software, los servidores y los servicios. Termina diseñando una red completa y con test semanal.</p>
 
             <div class="dias-grid">
 
@@ -698,9 +964,47 @@
 
             <div class="curso-footer">
                 <span>📋 <a href="../Mes_01_Fundamentos/Semana_02/README.md">Índice de la semana</a></span>
-<span>✅ Semana completa · 6 laboratorios, 1 proyecto de diseño y test semanal</span>
+                <span>✅ 6 laboratorios, 1 proyecto de diseño y test semanal</span>
             </div>
-        </div>
+        </details>
+
+        <details class="curso sin-material">
+            <summary>
+                <h2>📅 Semana 3 — Arquitecturas y modelos</h2>
+                <span class="sem-estado">OSI y TCP/IP · pendiente</span>
+            </summary>
+        </details>
+
+        <details class="curso sin-material">
+            <summary>
+                <h2>📅 Semana 4 — Dispositivos de red</h2>
+                <span class="sem-estado">Hub, switch, router y AP · pendiente</span>
+            </summary>
+        </details>
+
+        </div><!-- /mes 1 -->
+
+        <details class="meses-futuros">
+            <summary>📆 Lo que viene después — meses 2 a 12</summary>
+            <table class="tabla-meses">
+                <thead>
+                    <tr><th>Mes</th><th>Bloque</th><th>Semanas</th><th>Contenido</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Mes 2</td><td>Capa física y medios</td><td>5-8</td><td>Señales · cableado · inalámbrico · cableado estructurado</td></tr>
+                    <tr><td>Mes 3</td><td>Capa de enlace y Ethernet</td><td>9-12</td><td>MAC y tramas · Ethernet · switches · Wi-Fi</td></tr>
+                    <tr><td>Mes 4</td><td>Direccionamiento IP (I)</td><td>13-16</td><td>Numeración · IPv4 y clases · máscaras · subnetting</td></tr>
+                    <tr><td>Mes 5</td><td>Direccionamiento IP (II)</td><td>17-20</td><td>VLSM · CIDR · supernetting · classful frente a classless</td></tr>
+                    <tr><td>Mes 6</td><td>Capa de red y protocolos</td><td>21-24</td><td>IP · ARP e ICMP · multicast · IPv6</td></tr>
+                    <tr><td>Mes 7</td><td>Enrutamiento estático</td><td>25-28</td><td>Tabla de rutas · routers · CLI de Cisco · rutas estáticas</td></tr>
+                    <tr><td>Mes 8</td><td>Enrutamiento dinámico</td><td>29-32</td><td>Vector-distancia y estado de enlace · RIP · OSPF</td></tr>
+                    <tr><td>Mes 9</td><td>Switching avanzado y VLAN</td><td>33-36</td><td>STP · VLAN · trunking · enrutamiento entre VLAN</td></tr>
+                    <tr><td>Mes 10</td><td>Servicios de red</td><td>37-40</td><td>TCP y UDP · DHCP · DNS · web y correo</td></tr>
+                    <tr><td>Mes 11</td><td>WAN y seguridad</td><td>41-44</td><td>Tecnologías WAN · NAT · ACL · VPN y cortafuegos</td></tr>
+                    <tr><td>Mes 12</td><td>Administración y proyecto</td><td>45-48</td><td>Monitorización · documentación · alta disponibilidad · proyecto final</td></tr>
+                </tbody>
+            </table>
+        </details>
 
         <div class="tools-grid">
             <div class="tool-card">
@@ -911,7 +1215,27 @@
             cargarProgreso();
         }
 
+        // Conmutador de tema: misma clave que las páginas de estudio
+        document.getElementById('btnTema').addEventListener('click', () => {
+            const raiz = document.documentElement;
+            const oscuro = raiz.dataset.tema === 'oscuro'
+                || (raiz.dataset.tema !== 'claro'
+                    && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            raiz.dataset.tema = oscuro ? 'claro' : 'oscuro';
+            try { localStorage.setItem('parTema', raiz.dataset.tema); } catch (e) { /* modo privado */ }
+        });
+
+        // Deja abierta la semana donde estás y pliega las demás
+        function plegarSemanas() {
+            const semanas = [...document.querySelectorAll('.curso[open], .curso:not(.sin-material)')]
+                .filter(c => c.querySelector('.dia-card'));
+            const pendiente = semanas.find(c =>
+                [...c.querySelectorAll('.dia-card')].some(d => !d.classList.contains('hecho')));
+            semanas.forEach(c => { c.open = (c === (pendiente || semanas[semanas.length - 1])); });
+        }
+
         cargarProgreso();
+        plegarSemanas();
 
         // Refrescar si se corrige algo en otra pestaña
         window.addEventListener('storage', cargarProgreso);

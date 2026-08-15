@@ -247,6 +247,7 @@ function checkAnswers() {
 
     // Aciertos por tema para el desglose final
     const aciertosPorTema = {};
+    const falladas = [];
     questions.forEach(q => {
         if (!q.topic) return;
         if (!aciertosPorTema[q.topic]) {
@@ -302,6 +303,16 @@ function checkAnswers() {
             questionDiv.classList.remove('correct');
             feedback.classList.add('show', 'incorrect');
             feedback.classList.remove('correct');
+
+            // Se guarda para el repaso del día siguiente
+            falladas.push({
+                texto: pregunta.text,
+                solucion: esperadas.map(l => pregunta.options[l]).join(' · '),
+                porque: pregunta.feedback || '',
+                tema: pregunta.topic || '',
+                repaso: pregunta.repaso || '',
+                titulo: (typeof quizData !== 'undefined' && quizData.titulo) || document.title
+            });
         }
     }
 
@@ -336,7 +347,7 @@ function checkAnswers() {
     // Guardar el resultado para el panel del Centro de Aprendizaje.
     // Si progreso.js no está cargado, el quiz sigue funcionando igual.
     if (typeof PARProgreso !== 'undefined') {
-        PARProgreso.registrar(correct, total);
+        PARProgreso.registrar(correct, total, falladas);
     }
 
     document.getElementById('results').classList.add('show');

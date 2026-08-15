@@ -31,6 +31,8 @@
             por qué el hub desapareció.
         </div>
 
+        <div id="repaso-fallos"></div>
+
         <div class="toc">
             <h2>Contenido del día</h2>
             <ol>
@@ -39,7 +41,7 @@
                 <li><a href="#perturbaciones">Lo que el medio le hace a la señal</a></li>
                 <li><a href="#ejemplos">Identificar los componentes en casos reales</a></li>
                 <li><a href="#modos">Modos: simplex, half-duplex y full-duplex</a></li>
-                <li><a href="#colisiones">Por qué el dúplex importa: las colisiones</a></li>
+                <li><a href="#colisiones">Por qué el dúplex importa: las colisiones y el reparto del ancho de banda</a></li>
                 <li><a href="#serie">Transmisión serie y paralelo</a></li>
                 <li><a href="#resumen">Resumen y errores frecuentes</a></li>
                 <li><a href="#repaso">Repaso con flashcards</a></li>
@@ -284,6 +286,85 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 </div>
             </details>
 
+            <div class="destacado">
+                <strong>Ponle nombre: el dominio de colisión</strong>
+                Al conjunto de equipos que <strong>compiten por el mismo medio</strong>, y que por tanto pueden
+                chocar entre sí, se le llama <strong>dominio de colisión</strong>.
+                <br><br>
+                · Un <strong>hub</strong> no separa nada: todo lo que cuelga de él forma <strong>un único</strong>
+                dominio de colisión, tenga 4 puertos o 24.
+                <br>· Un <strong>switch</strong> crea <strong>un dominio de colisión por puerto</strong>, porque cada
+                enlace es punto a punto y nadie más lo usa.
+                <br><br>
+                De momento basta con contarlos. <em>📚 En el Día 6</em> se retoma junto a los <em>dominios de
+                difusión</em>, que son otra cosa distinta y se confunden constantemente.
+            </div>
+
+            <h3>El reparto del ancho de banda</h3>
+
+            <p>Las colisiones no son el único precio de compartir el medio. Hay otro más directo:
+            <strong>la capacidad también se reparte</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Hub (medio compartido)</th><th>Switch (enlaces dedicados)</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Capacidad del aparato</th><td>100 Mbps <strong>en total</strong></td><td>100 Mbps <strong>por puerto</strong></td></tr>
+                    <tr><th scope="row">Con 8 equipos activos</th><td>100 ÷ 8 = <strong>12,5 Mbps</strong> para cada uno</td><td><strong>100 Mbps</strong> para cada uno</td></tr>
+                    <tr><th scope="row">Al añadir equipos</th><td>Todos van <strong>más lentos</strong></td><td>No afecta a los demás</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La cuenta, que es toda la idea</strong>
+                En un <strong>hub</strong> hay <em>un solo medio</em>: la velocidad anunciada es la del conjunto, no
+                la de cada equipo. Si ocho ordenadores lo usan a la vez y se lo reparten por igual:
+<pre><code>100 Mbps ÷ 8 equipos = 12,5 Mbps para cada uno</code></pre>
+                En un <strong>switch</strong>, cada puerto es un enlace punto a punto: los 100 Mbps son
+                <em>de cada uno</em>. Por eso al conectar más gente a un hub la red se arrastra, y al conectarla a un
+                switch no pasa nada.
+                <br><br>
+                Y ojo: eso es <strong>además</strong> de las colisiones. El hub pierde por los dos lados: reparte la
+                capacidad <em>y</em> desperdicia parte de ella en choques y reintentos.
+            </div>
+
+            <h3>Cuánto tarda en enviarse algo</h3>
+
+            <p>Con el ancho de banda ya se puede calcular algo muy práctico: <strong>cuánto se tarda en transferir un
+            fichero</strong>. Solo hace falta una división y una precaución.</p>
+
+            <div class="aviso">
+                <strong>La precaución: bytes frente a bits</strong>
+                Los <strong>tamaños</strong> de fichero se miden en <strong>bytes</strong> (MB, GB) y las
+                <strong>velocidades</strong> en <strong>bits</strong> por segundo (Mbps, Gbps). No se pueden dividir
+                directamente: primero hay que pasar el tamaño a bits.
+                <br><br>
+                <strong>1 byte = 8 bits</strong>, así que se multiplica por 8.
+            </div>
+
+<pre><code>tiempo = tamaño en bits ÷ velocidad en bits por segundo</code></pre>
+
+            <div class="dato">
+                <strong>Ejemplo resuelto</strong>
+                <p>Un fichero de <strong>500 MB</strong> por un enlace conmutado de <strong>100 Mbps</strong>:</p>
+<pre><code>1. Pasar el tamaño a bits   500 MB × 8 = 4.000 Mb
+2. Dividir por la velocidad 4.000 Mb ÷ 100 Mbps = 40 segundos</code></pre>
+                <p>Por el mismo hub de antes, repartido entre 8 equipos, cada uno dispondría de 12,5 Mbps:
+                4.000 ÷ 12,5 = <strong>320 segundos</strong>, más de cinco minutos. Ocho veces más lento, exactamente
+                lo que dice el reparto.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Es un tiempo teórico, no el que verás en pantalla</strong>
+                El cálculo ignora las <strong>cabeceras</strong> de los protocolos, los reconocimientos, la latencia y
+                la posible congestión. En la práctica se pierde en torno a un 5-10 % solo en sobrecarga. Sirve como
+                <em>cota inferior</em>: nunca irá más rápido que eso.
+                <br><br>
+                <em>📚 Mañana, en el Día 3</em>, se estudia esto a fondo: unidades, latencia frente a ancho de banda,
+                y por qué más megas no siempre significan ir más deprisa.
+            </div>
+
             <h2 id="serie">7. Transmisión serie y paralelo</h2>
 
             <p>Otra clasificación, según <strong>cuántos bits</strong> viajan a la vez:</p>
@@ -299,6 +380,19 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                     <tr><th scope="row">Ejemplos</th><td>Ethernet, USB, SATA, fibra</td><td>Bus interno de la CPU, antiguo puerto de impresora</td></tr>
                 </tbody>
             </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Qué es serie y qué es paralelo, en concreto</strong>
+                <br>· <strong>En serie:</strong> <strong>Ethernet</strong>, <strong>USB</strong> (la S final es de
+                <em>Serial</em>), <strong>SATA</strong> (la primera S también), <strong>fibra óptica</strong>, HDMI y
+                PCIe. Es decir, <em>todo lo que sale del ordenador</em>.
+                <br>· <strong>En paralelo:</strong> el <strong>bus interno de la CPU</strong> y el <strong>antiguo
+                puerto de impresora</strong> (Centronics, aquel conector ancho de 25 pines). Es decir, lo que se
+                queda <em>dentro</em> o recorre centímetros.
+                <br><br>
+                Regla para no fallar: <strong>si el cable sale del equipo y recorre metros, es serie</strong>. Las
+                siglas ayudan, porque USB y SATA llevan la palabra en el nombre.
             </div>
 
             <p>Puede parecer contradictorio que el paralelo, que envía más bits a la vez, se use solo en distancias
@@ -319,7 +413,10 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 <li>El medio introduce <strong>atenuación, ruido y distorsión</strong>.</li>
                 <li>Modos: <strong>simplex</strong> (un sentido), <strong>half-duplex</strong> (dos sentidos por turnos), <strong>full-duplex</strong> (dos sentidos a la vez).</li>
                 <li>El hub impone half-duplex y provoca <strong>colisiones</strong>; el switch permite full-duplex y las <strong>elimina</strong>.</li>
-                <li>Las redes modernas transmiten en <strong>serie</strong>, no en paralelo.</li>
+                <li>Un <strong>dominio de colisión</strong> es el conjunto de equipos que compiten por el mismo medio: el hub forma <strong>uno solo</strong>; el switch, <strong>uno por puerto</strong>.</li>
+                <li>El hub <strong>reparte</strong> su capacidad entre los equipos activos (100 ÷ 8 = <strong>12,5 Mbps</strong>); el switch da la capacidad completa <strong>a cada puerto</strong>.</li>
+                <li><strong>tiempo = tamaño en bits ÷ velocidad en bps.</strong> Pasa el tamaño a bits multiplicando por 8: los ficheros se miden en bytes y los enlaces en bits.</li>
+                <li>Las redes modernas transmiten en <strong>serie</strong>, no en paralelo: Ethernet, USB, SATA y fibra son serie; el bus de la CPU y el viejo puerto de impresora, paralelo.</li>
             </ul>
 
             <h3>Errores frecuentes</h3>
@@ -495,6 +592,11 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
             { frente: 'Un puerto de 100 Mbps anunciado como «200 Mbps», ¿qué significa?', dorso: 'Full-duplex: <strong>100 de subida + 100 de bajada simultáneos</strong>. No es que un sentido vaya al doble; son dos caminos independientes.' },
             { frente: '¿Por qué las redes transmiten en <strong>serie</strong> y no en paralelo?', dorso: 'Por el <strong>skew</strong> o sesgo de sincronismo: a alta velocidad los bits que salen juntos por hilos distintos no llegan a la vez, y pasada cierta distancia el dato es irrecuperable.' },
             { frente: '¿Qué es un <strong>desajuste de dúplex</strong> y cómo se detecta?', dorso: 'Un extremo en full y el otro en half. La red funciona pero lentísima. Se detecta por <strong>colisiones tardías</strong> en un solo lado del enlace.' }
+,
+            { frente: 'Un hub de 100 Mbps con <strong>8 equipos</strong> activos: ¿cuánto le toca a cada uno?', dorso: '<strong>12,5 Mbps</strong> (100 ÷ 8). En un hub la velocidad anunciada es la del <strong>conjunto</strong>; en un switch es la de <strong>cada puerto</strong>.' },
+            { frente: 'Fórmula del <strong>tiempo de transferencia</strong>', dorso: '<strong>tiempo = tamaño en bits ÷ velocidad en bps</strong>. Los tamaños van en <strong>bytes</strong> y las velocidades en <strong>bits</strong>: multiplica el tamaño por 8 antes de dividir.' },
+            { frente: '500 MB por un enlace de 100 Mbps: ¿cuánto tarda?', dorso: '500 × 8 = 4.000 Mb; 4.000 ÷ 100 = <strong>40 segundos</strong>. Es una cota inferior: no incluye cabeceras ni latencia.' },
+            { frente: '¿Qué tecnologías son <strong>serie</strong> y cuáles <strong>paralelo</strong>?', dorso: 'Serie: <strong>Ethernet, USB, SATA, fibra</strong>. Paralelo: <strong>bus interno de la CPU</strong> y el antiguo puerto de impresora. Si el cable sale del equipo y recorre metros, es serie.' }
         ]
     };
 

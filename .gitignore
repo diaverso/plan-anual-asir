@@ -25,3 +25,7 @@ desktop.ini
 # --- Node (solo aparece si se usan las utilidades de verificación) ---
 node_modules/
 package-lock.json
+
+# Capturas de verificacion, no forman parte del curso
+v[0-9]-*.png
+barra.png

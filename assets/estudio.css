@@ -1868,3 +1868,70 @@ select:focus {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ---------------------------------------------------------------- repaso de
+ * fallos. Bloque que abre el día con las preguntas que se fallaron en
+ * actividades anteriores. Lo monta interactivo.js y solo aparece si hay algo
+ * pendiente, así que en su estado normal no ocupa nada.
+ */
+#repaso-fallos { display: none; }
+
+#repaso-fallos.activo {
+    display: block;
+    background: var(--avi-bg);
+    border: 1px solid var(--avi-bd);
+    border-left: 5px solid var(--avi-bd);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 26px;
+}
+
+.repaso-fallos-titulo {
+    margin: 0 0 6px;
+    color: var(--avi-txt);
+    font-size: 1.1em;
+}
+
+.repaso-fallos-intro {
+    margin: 0 0 14px;
+    color: var(--texto-suave);
+    font-size: 0.95em;
+}
+
+.repaso-fallo {
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+}
+
+.repaso-fallo:last-child { margin-bottom: 0; }
+
+.repaso-fallo-origen {
+    display: block;
+    font-size: 0.78em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--texto-tenue);
+    margin-bottom: 4px;
+}
+
+.repaso-fallo-pregunta {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.repaso-fallo-solucion {
+    border-top: 1px solid var(--borde);
+    margin-top: 10px;
+    padding-top: 10px;
+    font-size: 0.95em;
+}
+
+.repaso-fallo-solucion p { margin: 8px 0 0; }
+
+.repaso-fallo-meta {
+    color: var(--texto-tenue);
+    font-size: 0.88em;
+}
