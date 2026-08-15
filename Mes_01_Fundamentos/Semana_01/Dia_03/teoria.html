@@ -97,6 +97,17 @@ Digital:       ‾‾|__|‾‾|_|‾   solo dos niveles: alto (1) y bajo (0)</c
             <p>Un amplificador no sabe distinguir qué parte de lo que le llega es señal original y qué parte es ruido:
             lo amplifica todo por igual. Tras varios tramos, el ruido acumulado puede superar a la información.</p>
 
+<figure class="figura">
+                <img src="../../../imagenes/dia_03_analogica_amplificacion.png"
+                     width="1024" height="377" loading="lazy"
+                     alt="Recorrido de una señal analógica por cinco etapas. Empieza como una onda
+                          limpia y en cada tramo se le suma temblor. Los dos amplificadores del camino
+                          agrandan la onda y el ruido por igual, así que en la última etapa el ruido
+                          ha tapado por completo la señal y se marca como irrecuperable.">
+                <figcaption>El amplificador no distingue señal de ruido: agranda las dos cosas. Al final
+                del trayecto ya no queda información que recuperar.</figcaption>
+            </figure>
+
 <pre><code>Original  →  degradada  →  AMPLIFICADA  →  degradada  →  AMPLIFICADA
   ∿∿∿          ∿≈∿≈           ∿≈∿≈≈            ≈∿≈≈≈         ≈≈≈≈≈≈
                                                        (irrecuperable)</code></pre>
@@ -106,6 +117,17 @@ Digital:       ‾‾|__|‾‾|_|‾   solo dos niveles: alto (1) y bajo (0)</c
             <p>El receptor solo tiene que decidir <strong>una cosa</strong>: ¿este valor está más cerca del nivel alto o
             del bajo? Tomada esa decisión, emite una señal <strong>completamente nueva y perfecta</strong>. El ruido
             acumulado hasta ese punto desaparece por completo.</p>
+
+<figure class="figura">
+                <img src="../../../imagenes/dia_03_digital_regeneracion.png"
+                     width="1024" height="377" loading="lazy"
+                     alt="Recorrido de una señal digital por las mismas cinco etapas. La onda cuadrada
+                          llega muy deformada a cada regenerador, pero como todavía se distingue el
+                          nivel alto del bajo, el aparato emite una onda nueva y perfecta. Las etapas
+                          regeneradas son idénticas a la original.">
+                <figcaption>Mientras se distinga el nivel alto del bajo, el regenerador emite una señal
+                <strong>nueva</strong>: el ruido acumulado hasta ahí desaparece.</figcaption>
+            </figure>
 
 <pre><code>Original  →  degradada  →  REGENERADA  →  degradada  →  REGENERADA
  ‾|_|‾        ⌐|_|⌐          ‾|_|‾          ⌐|_|⌐          ‾|_|‾
