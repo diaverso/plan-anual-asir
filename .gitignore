@@ -29,3 +29,4 @@ package-lock.json
 # Capturas de verificacion, no forman parte del curso
 v[0-9]-*.png
 barra.png
+fig-*.png
