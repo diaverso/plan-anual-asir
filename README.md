@@ -237,7 +237,7 @@ Las dos semanas publicadas suman unas **48 horas** de trabajo. La **Semana 2** c
 - Archivos markdown en `pdf_markdown/`
 - [GitHub - jamj2000/PlanificacionAdministracionRedes](https://github.com/jamj2000/PlanificacionAdministracionRedes)
 - [Wikibooks - PAR](https://es.wikibooks.org/wiki/Planificaci%C3%B3n_y_Administraci%C3%B3n_de_Redes/Texto_completo)
-- [Apuntes Informática FP](https://www.apuntesinformaticafp.com/modulos/par.html)
+- [Buscador de OUI](https://maclookup.app/) — para identificar el fabricante de una dirección MAC
 
 ### Calculadoras Online
 - Calculadora de subredes (incluida en página web del proyecto)

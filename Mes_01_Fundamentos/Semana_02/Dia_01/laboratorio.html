@@ -108,14 +108,21 @@ vEthernet (WSL)           Hyper-V Virtual Ethernet Adapter     Up            10 
         <div class="paso-lab">
             <h3>Paso 3 — Identifica al fabricante por el OUI</h3>
 
-            <p>Coge los <strong>tres primeros bytes</strong> de la MAC de tu interfaz principal y búscalos en el
-            registro público del IEEE:</p>
+            <p>Coge los <strong>tres primeros bytes</strong> de la MAC de tu interfaz principal y búscalos en
+            cualquiera de estos buscadores de OUI:</p>
 
-            <p><a href="https://standards-oui.ieee.org/oui/oui.txt" target="_blank" rel="noopener">standards-oui.ieee.org/oui/oui.txt</a>
-            — es un fichero de texto grande; usa la búsqueda del navegador con tu OUI en formato <code>50EBF6</code>,
-            sin guiones ni dos puntos.</p>
+            <ul>
+                <li><a href="https://maclookup.app/" target="_blank" rel="noopener">maclookup.app</a>
+                — pega la MAC entera y te dice el fabricante.</li>
+                <li><a href="https://www.wireshark.org/tools/oui-lookup.html" target="_blank" rel="noopener">Buscador de Wireshark</a>
+                — el mismo servicio, mantenido por el proyecto Wireshark.</li>
+            </ul>
 
-            <p>También sirve cualquier buscador escribiendo <em>«OUI lookup»</em> seguido de los tres bytes.</p>
+            <p>El registro <strong>oficial</strong> lo publica el <strong>IEEE</strong>, que es quien asigna los OUI.
+            Su fichero <code>oui.txt</code> es la fuente de la que beben todos estos buscadores, pero son varios
+            megabytes y su servidor responde con lentitud, así que para el laboratorio compensa usar un buscador.</p>
+
+            <p>También sirve cualquier motor de búsqueda escribiendo <em>«OUI lookup»</em> seguido de los tres bytes.</p>
 
             <div class="destacado">
                 <strong>Comprueba si el fabricante coincide</strong>
