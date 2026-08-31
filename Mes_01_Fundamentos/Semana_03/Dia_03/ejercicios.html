@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 2 es la <strong>tabla de correspondencia</strong> entre los dos modelos. Hazla sin mirar:
+            si te sabes la regla de que «las del medio son idénticas», sale sola.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/ejercicios.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Ejercicios',
+    subtitulo: 'TCP/IP · correspondencia con OSI · reloj de arena · mapa de protocolos',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Las cuatro capas',
+            tiempo: '10 min',
+            enunciado: '<p>Fija el modelo antes de compararlo con nada.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena las capas de TCP/IP <strong>de abajo arriba</strong>, empezando por la que toca el cable.',
+                    elementos: ['Aplicación', 'Transporte', 'Internet', 'Acceso a la red'],
+                    orden: ['Acceso a la red', 'Internet', 'Transporte', 'Aplicación'],
+                    explicacion: 'La capa de red aquí se llama <strong>internet</strong>, en minúscula y sin relación con «la Internet». Es el nombre que le puso el modelo porque su trabajo es precisamente <em>interconectar redes</em>.',
+                    pistas: [
+                        'Empieza por la que se ocupa del medio físico.',
+                        'La segunda no se llama «red».'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Escribe un protocolo característico de cada capa. Hay varias respuestas válidas.',
+                    esquina: 'Capa TCP/IP',
+                    cabecera: ['Un protocolo'],
+                    filas: [
+                        { etiqueta: '<strong>Aplicación</strong>', celdas: [{ respuestas: ['http', 'dns', 'smtp', 'ssh', 'ftp', 'dhcp', 'https', 'pop3', 'imap'], placeholder: 'protocolo' }] },
+                        { etiqueta: '<strong>Transporte</strong>', celdas: [{ respuestas: ['tcp', 'udp'], placeholder: 'protocolo' }] },
+                        { etiqueta: '<strong>Internet</strong>', celdas: [{ respuestas: ['ip', 'icmp', 'arp', 'ipv4', 'ipv6'], placeholder: 'protocolo' }] },
+                        { etiqueta: '<strong>Acceso a la red</strong>', celdas: [{ respuestas: ['ethernet', 'wifi', 'wi-fi', 'ppp', '802.11', '802.3'], placeholder: 'protocolo' }] }
+                    ],
+                    explicacion: 'Si has puesto <strong>TCP e IP</strong> en sus filas, ya has explicado por qué el modelo se llama así: son los dos protocolos centrales de la familia, uno en cada una de las dos capas del medio.',
+                    pistas: [
+                        'Los dos del medio dan nombre al modelo entero.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué define TCP/IP sobre su capa de acceso a la red?',
+                    opciones: {
+                        a: 'El formato de la trama Ethernet',
+                        b: 'Nada, y es deliberado: así funciona sobre cualquier tecnología',
+                        c: 'Solo el cableado, no el inalámbrico',
+                        d: 'Las direcciones MAC'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Ese hueco es lo que permitió que el mismo modelo de 1974 funcione hoy sobre 5G. Si hubiera definido la capa de abajo, habría definido la tecnología de su época.',
+                    pistas: [
+                        'Piensa qué tecnologías de red existen hoy y no existían en 1974.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: La correspondencia entre modelos',
+            tiempo: '14 min',
+            enunciado: '<p>El ejercicio que más cae en examen. Recuerda la regla: <strong>las del medio son idénticas</strong>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica a qué capa de <strong>TCP/IP</strong> corresponde cada capa de OSI.',
+                    esquina: 'Capa de OSI',
+                    cabecera: ['Capa de TCP/IP'],
+                    filas: [
+                        { etiqueta: '7 · Aplicación', celdas: [{ respuestas: ['aplicacion', 'aplicación'], placeholder: 'capa' }] },
+                        { etiqueta: '6 · Presentación', celdas: [{ respuestas: ['aplicacion', 'aplicación'], placeholder: 'capa' }] },
+                        { etiqueta: '5 · Sesión', celdas: [{ respuestas: ['aplicacion', 'aplicación'], placeholder: 'capa' }] },
+                        { etiqueta: '4 · Transporte', celdas: [{ respuestas: ['transporte'], placeholder: 'capa' }] },
+                        { etiqueta: '3 · Red', celdas: [{ respuestas: ['internet'], placeholder: 'capa' }] },
+                        { etiqueta: '2 · Enlace', celdas: [{ respuestas: ['acceso a la red', 'acceso', 'acceso red'], placeholder: 'capa' }] },
+                        { etiqueta: '1 · Física', celdas: [{ respuestas: ['acceso a la red', 'acceso', 'acceso red'], placeholder: 'capa' }] }
+                    ],
+                    explicacion: 'Fíjate en el patrón: <strong>tres filas repiten «aplicación»</strong> y <strong>dos repiten «acceso a la red»</strong>. Las dos del medio son las únicas que van solas, y son justo las que coinciden en ambos modelos.',
+                    pistas: [
+                        'Solo hay cuatro respuestas posibles, y dos de ellas se repiten varias veces.',
+                        'La capa 3 de OSI no se llama igual en TCP/IP.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>b)</strong> Completa la regla que permite reconstruir la tabla sin memorizarla.',
+                    frase: 'Las dos capas del {{0}} son idénticas en ambos modelos. En la parte de arriba, OSI separa en {{1}} capas lo que TCP/IP deja en una. En la parte de abajo, OSI separa en {{2}} capas lo que TCP/IP deja en una.',
+                    respuestas: [
+                        ['medio', 'centro'],
+                        ['3', 'tres'],
+                        ['2', 'dos']
+                    ],
+                    explicacion: 'Con esos tres datos se reconstruye la tabla entera. Memorizar siete filas cuando basta con una regla es trabajo desperdiciado.',
+                    pistas: [
+                        'Cuenta cuántas capas de OSI se funden en la de aplicación de TCP/IP.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> En una reunión alguien dice «necesitamos un balanceador de capa 7». ¿Qué modelo está usando y cómo lo sabes?',
+                    opciones: {
+                        a: 'TCP/IP, porque es el que se usa en la práctica',
+                        b: 'OSI, porque TCP/IP solo tiene cuatro capas y no puede existir una séptima',
+                        c: 'El modelo híbrido de cinco capas',
+                        d: 'No se puede saber'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El argumento es aritmético y no admite discusión: <strong>en un modelo de cuatro capas no hay capa 7</strong>. Todo el vocabulario de producto y de incidencias es de OSI.',
+                    pistas: [
+                        'Cuenta las capas de cada modelo.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Sitúa cada protocolo',
+            tiempo: '12 min',
+            enunciado: '<p>Casi todo lo que has visto en tres semanas cabe en la pila. Colócalo.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada protocolo con su capa de <strong>TCP/IP</strong>.',
+                    izquierda: ['HTTP', 'TCP', 'IP', 'Ethernet', 'DNS', 'ICMP'],
+                    derecha: [
+                        'Aplicación — el servicio web',
+                        'Transporte — entrega garantizada y en orden',
+                        'Internet — direccionar y encaminar',
+                        'Acceso a la red — la red local por cable',
+                        'Aplicación — traducir nombres a direcciones',
+                        'Internet — mensajes de control y error'
+                    ],
+                    pares: {
+                        'HTTP': 'Aplicación — el servicio web',
+                        'TCP': 'Transporte — entrega garantizada y en orden',
+                        'IP': 'Internet — direccionar y encaminar',
+                        'Ethernet': 'Acceso a la red — la red local por cable',
+                        'DNS': 'Aplicación — traducir nombres a direcciones',
+                        'ICMP': 'Internet — mensajes de control y error'
+                    },
+                    explicacion: 'Dos protocolos están en la capa de aplicación y dos en la de internet. <strong>ICMP</strong> es el que usa <code>ping</code>: por eso el ping comprueba la capa 3 y no la 4.',
+                    pistas: [
+                        'Hay dos parejas por capa en dos de las capas.',
+                        '¿Qué protocolo hay detrás del comando ping?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Sobre qué viaja <strong>DNS</strong>, y por qué?',
+                    opciones: {
+                        a: 'Sobre TCP, porque es un servicio crítico',
+                        b: 'Sobre UDP: una consulta y una respuesta cortas, en las que montar una conexión costaría más que preguntar',
+                        c: 'Directamente sobre IP',
+                        d: 'Sobre ICMP'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Que un servicio sea importante no implica que necesite garantías de transporte. Si la respuesta no llega, se repite la pregunta, y sale más barato que negociar una conexión para dos mensajes.',
+                    pistas: [
+                        '¿Cuántos mensajes hacen falta para resolver un nombre?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>c)</strong> <strong>ARP</strong> es el protocolo que peor encaja en el modelo. Explica por qué los libros no se ponen de acuerdo sobre en qué capa ponerlo.',
+                    modelo: `<p>Porque hace dos cosas que pertenecen a capas distintas.</p>
+                             <p><strong>Por su función</strong> parece de la capa de internet: trabaja con
+                             direcciones IP, ya que su trabajo es averiguar qué MAC corresponde a una IP
+                             determinada.</p>
+                             <p><strong>Pero por cómo viaja</strong> es de la capa de acceso: un mensaje ARP
+                             <strong>no va dentro de un paquete IP</strong>. Se mete directamente en una trama
+                             Ethernet, con su propio EtherType, sin ninguna cabecera IP por medio.</p>
+                             <p>Así que es un protocolo que vive <strong>en la frontera</strong>: su cometido es
+                             traducir entre los dos mundos, el de las direcciones lógicas y el de las físicas. Por eso
+                             unos libros lo dibujan en la capa de internet, otros en la de acceso y otros a caballo
+                             entre las dos.</p>
+                             <p>Es un buen recordatorio de que el modelo es <strong>una herramienta para entender la
+                             realidad</strong>, no la realidad misma. Cuando algo no encaja, normalmente no está mal
+                             el protocolo: es que la clasificación tiene sus límites.</p>`,
+                    rubrica: [
+                        'Señala que por función trabaja con direcciones IP',
+                        'Señala que no viaja dentro de IP, sino dentro de una trama Ethernet',
+                        'Concluye que está en la frontera entre dos capas',
+                        'Extrae la idea de que el modelo es una aproximación, no una ley'
+                    ],
+                    pistas: [
+                        '¿Qué direcciones maneja ARP?',
+                        '¿Dentro de qué viaja un mensaje ARP cuando sale al cable?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: El reloj de arena',
+            tiempo: '12 min',
+            enunciado: '<p>La forma de la pila explica a la vez el éxito de Internet y su mayor atasco.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa la descripción.',
+                    frase: 'La pila tiene forma de reloj de arena: arriba hay muchísimos protocolos de aplicación, abajo muchísimas tecnologías de red, y en la cintura hay un solo protocolo, que es {{0}}. Como todo pasa por él, cualquier aplicación nueva funciona sobre cualquier {{1}} existente sin que nadie tenga que ponerse de acuerdo.',
+                    respuestas: [
+                        ['ip', 'el ip', 'ipv4'],
+                        ['red', 'tecnologia', 'tecnología', 'tecnologia de red', 'medio']
+                    ],
+                    explicacion: 'Es la razón de que el día que apareció el Wi-Fi no hubiera que tocar ni un navegador: la pieza de en medio no cambió.',
+                    pistas: [
+                        'Es el protocolo que da la segunda mitad del nombre al modelo.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> HTTP/2 y HTTP/3 se adoptaron en pocos años. IPv6 lleva desde 1998. ¿Cuál es la diferencia de fondo?',
+                    opciones: {
+                        a: 'IPv6 está peor diseñado',
+                        b: 'Un protocolo de aplicación solo afecta a quien lo usa; el de la cintura los afecta a todos a la vez',
+                        c: 'HTTP es más importante que IP',
+                        d: 'IPv6 todavía no está terminado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Cambiar HTTP afecta a navegadores y servidores web. Cambiar IP afecta a routers, sistemas operativos, cortafuegos y a todos los programas, <strong>simultáneamente</strong>.',
+                    pistas: [
+                        '¿Cuántas cosas se apoyan directamente en cada uno de los dos?'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Si en la pila hay <strong>1</strong> protocolo en la cintura, y arriba y abajo hubiera 20 protocolos de aplicación y 5 tecnologías de red, ¿cuántas combinaciones «aplicación sobre tecnología» funcionarían sin trabajo adicional?',
+                    respuesta: 100,
+                    tolerancia: 0.5,
+                    unidad: 'combinaciones',
+                    explicacion: '20 × 5 = <strong>100</strong>. Y ese es exactamente el valor de la cintura estrecha: sin ella habría que programar y acordar las 100 combinaciones una a una. Con ella, cada parte solo tiene que hablar con IP: <strong>25 acuerdos en lugar de 100</strong>.',
+                    pistas: [
+                        'Cada protocolo de arriba puede funcionar sobre cada tecnología de abajo.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Por qué ganó',
+            tiempo: '12 min',
+            enunciado: '<p>La historia importa porque el patrón se repite.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>a)</strong> Marca <strong>todas</strong> las razones por las que TCP/IP se impuso a OSI.',
+                    opciones: {
+                        a: 'Se distribuía gratis y con el código fuente, dentro de BSD Unix',
+                        b: 'Era más sencillo: cuatro capas en lugar de siete',
+                        c: 'Ya estaba funcionando cuando OSI se publicó',
+                        d: 'La ISO retiró oficialmente el modelo OSI'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'La d es falsa: OSI nunca se retiró, sigue siendo un estándar de la ISO. Simplemente <strong>nadie implementó sus protocolos</strong>, mientras el vocabulario sí se quedó.',
+                    pistas: [
+                        'Tres de las cuatro son correctas.',
+                        'Una de ellas describe algo que la ISO nunca hizo.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> «Rechazamos reyes, presidentes y votaciones. Creemos en el consenso aproximado y en el código que funciona.» ¿Qué describe esa frase?',
+                    opciones: {
+                        a: 'La política de precios de la ISO',
+                        b: 'La forma de trabajar de quienes desarrollaron Internet: implementar primero y estandarizar lo que funciona',
+                        c: 'El funcionamiento interno del protocolo TCP',
+                        d: 'La estructura de gobierno de ARPANET'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es de David Clark, 1992, y resume la diferencia con OSI: un comité que vota especificaciones frente a un grupo que escribe implementaciones y se queda con la que funciona. Mañana verás que sigue siendo el procedimiento oficial.',
+                    pistas: [
+                        'Piensa en la diferencia de método entre los dos modelos.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> Un compañero dice: «si OSI perdió, estudiarlo es perder el tiempo». Respóndele con al menos <strong>dos</strong> argumentos.',
+                    modelo: `<p><strong>Primero: es el idioma que se habla.</strong> OSI perdió como conjunto de
+                             protocolos, pero es el vocabulario con el que la industria describe todo. Un
+                             <strong>switch de capa 2</strong>, un <strong>cortafuegos de capa 7</strong>, un
+                             balanceador «de capa 4», un problema «de capa 1»: eso está en las fichas de producto, en
+                             los manuales y en los partes de incidencia. Sin OSI se entiende cómo funciona la red,
+                             pero no cómo habla de ella la gente que trabaja en ella.</p>
+                             <p><strong>Segundo: separa lo que conviene separar para diagnosticar.</strong> TCP/IP
+                             mete en una sola capa el cable y la trama. OSI los distingue, y esa distinción no es
+                             académica: un fallo de capa 1 es un cable o un puerto, y un fallo de capa 2 es una
+                             configuración. Son dos problemas distintos, con dos soluciones distintas y a menudo dos
+                             responsables distintos.</p>
+                             <p><strong>Y tercero:</strong> el propio modelo de cinco capas que usan casi todos los
+                             libros toma su mitad de abajo de OSI, precisamente por lo anterior. Ni siquiera los que
+                             prefieren TCP/IP se quedan solo con TCP/IP.</p>
+                             <p>Resumido: <strong>TCP/IP para funcionar, OSI para hablar y para diagnosticar</strong>.</p>`,
+                    rubrica: [
+                        'Argumento 1: OSI es el vocabulario de la industria, con ejemplos',
+                        'Argumento 2: separar física y enlace ayuda a diagnosticar',
+                        'Menciona que el modelo híbrido toma su mitad inferior de OSI',
+                        'Cierra con una formulación propia y breve'
+                    ],
+                    pistas: [
+                        '¿Cómo se llaman comercialmente los switches y los cortafuegos?',
+                        '¿Sirve de algo distinguir un fallo de cable de uno de configuración?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Integración de la semana',
+            tiempo: '10 min',
+            enunciado: '<p>Junta los tres días.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para cada elemento, indica su capa de <strong>OSI</strong> (número) y su capa de <strong>TCP/IP</strong> (nombre).',
+                    esquina: 'Elemento',
+                    cabecera: ['Capa OSI', 'Capa TCP/IP'],
+                    filas: [
+                        {
+                            etiqueta: 'Dirección <strong>MAC</strong>',
+                            celdas: [
+                                { respuestas: ['2', 'dos'], placeholder: 'nº' },
+                                { respuestas: ['acceso a la red', 'acceso', 'acceso red'], placeholder: 'nombre' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Dirección <strong>IP</strong>',
+                            celdas: [
+                                { respuestas: ['3', 'tres'], placeholder: 'nº' },
+                                { respuestas: ['internet'], placeholder: 'nombre' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Número de <strong>puerto</strong>',
+                            celdas: [
+                                { respuestas: ['4', 'cuatro'], placeholder: 'nº' },
+                                { respuestas: ['transporte'], placeholder: 'nombre' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Cabecera <strong>HTTP</strong>',
+                            celdas: [
+                                { respuestas: ['7', 'siete'], placeholder: 'nº' },
+                                { respuestas: ['aplicacion', 'aplicación'], placeholder: 'nombre' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Esta tabla es el resumen de la semana: los cuatro identificadores que aparecen en una comunicación, cada uno en su capa. En el laboratorio los vas a ver <strong>los cuatro a la vez</strong> en una sola petición web.',
+                    pistas: [
+                        'Repasa los alcances del Día 1: un salto, extremo a extremo, programa a programa.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> <em>Integración con el Día 2.</em> Una trama Ethernet lleva un paquete IP con un segmento TCP dentro. Sumando las tres cabeceras y el FCS, ¿cuántos bytes viajan que <strong>no</strong> son datos de aplicación?',
+                    respuesta: 58,
+                    tolerancia: 0.5,
+                    unidad: 'bytes',
+                    explicacion: '14 (Ethernet) + 4 (FCS) + 20 (IP) + 20 (TCP) = <strong>58 bytes</strong>. Una cabecera por cada capa que ha tocado el dato, más la comprobación final. Mañana verás esos mismos 58 bytes en una captura real.',
+                    pistas: [
+                        'Son cuatro sumandos: tres cabeceras y el FCS.',
+                        'Ethernet 14, IP 20, TCP 20, FCS 4.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

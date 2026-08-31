@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Normalización: quién decide cómo funciona todo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 4 — Normalización</h1>
+        <p>Quién decide cómo funciona todo · organismos, estándares y RFC</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 62 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 24 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 38 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Hoy estrenas Wireshark</strong>
+            Llevas tres días hablando de cabeceras de 14, 20 y 20 bytes. Hoy vas a
+            <strong>verlas</strong>, byte a byte, en una captura de tu propia red. Y a comprobar si las cuentas del
+            Día 2 eran ciertas.
+        </div>
+
+        <div class="destacado">
+            <strong>La pregunta del día</strong>
+            Ayer terminaste con una pregunta: si nadie manda en Internet, <strong>¿quién decide que el puerto de la
+            web sea el 80?</strong>
+            <br><br>
+            Hoy la respondemos. Y con ella, quién decide cuántos bytes mide una cabecera IP, qué significa cada bit
+            de una MAC y por qué un cable de un fabricante encaja en el aparato de otro.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#porque">Por qué hacen falta estándares</a></li>
+                <li><a href="#tipos">De iure y de facto</a></li>
+                <li><a href="#organismos">Los organismos que importan</a></li>
+                <li><a href="#rfc">Cómo se hace un estándar de Internet</a></li>
+                <li><a href="#ieee802">La familia IEEE 802</a></li>
+                <li><a href="#iana">IANA: quién reparte los números</a></li>
+                <li><a href="#leer">Cómo se lee un RFC</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="porque">1. Por qué hacen falta estándares</h2>
+
+            <p>Coge un cable de red de casa, llévalo a otro edificio y enchúfalo en un aparato de una marca
+            distinta, comprado en otro país diez años después. <strong>Funciona.</strong></p>
+
+            <p>Eso no es casualidad ni suerte: es el resultado de que alguien escribiera, en un documento público,
+            exactamente cuántos hilos lleva el cable, en qué orden van, qué voltaje representa un uno y cuánto
+            tiempo dura cada bit.</p>
+
+            <div class="destacado">
+                <strong>Qué garantiza un estándar</strong>
+                <ul>
+                    <li><strong>Interoperabilidad</strong>: equipos de fabricantes distintos se entienden.</li>
+                    <li><strong>Competencia</strong>: puedes cambiar de proveedor sin cambiar toda la red.</li>
+                    <li><strong>Continuidad</strong>: lo comprado hoy seguirá funcionando dentro de años.</li>
+                    <li><strong>Precio</strong>: muchos fabricantes haciendo lo mismo abaratan el producto.</li>
+                </ul>
+            </div>
+
+            <div class="dato">
+                <strong>Lo que pasa cuando no hay estándar</strong>
+                <p>En los años setenta y ochenta cada fabricante tenía su propia arquitectura de red: IBM la suya,
+                Digital la suya, Novell la suya. Eran <strong>incompatibles entre sí</strong>.</p>
+                <p>Comprar equipos de IBM significaba seguir comprando de IBM: cambiar de proveedor obligaba a
+                sustituir la red entera. Se llama <strong>dependencia del proveedor</strong>, y era el modelo de
+                negocio, no un defecto.</p>
+                <p>Que hoy puedas conectar un portátil cualquiera a un router cualquiera es una conquista
+                relativamente reciente, y es la razón de que exista este tema.</p>
+            </div>
+
+            <h2 id="tipos">2. De iure y de facto</h2>
+
+            <p>Hay dos formas de que algo se convierta en estándar, y conviene distinguirlas porque explican
+            comportamientos muy distintos.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Estándar <em>de iure</em></th><th>Estándar <em>de facto</em></th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Significa</th><td>«De derecho»</td><td>«De hecho»</td></tr>
+                    <tr><th scope="row">Cómo nace</th><td>Un <strong>organismo oficial</strong> lo aprueba y publica</td><td>Se impone porque <strong>todo el mundo lo usa</strong></td></tr>
+                    <tr><th scope="row">Ejemplos</th><td>Ethernet (IEEE 802.3), el modelo OSI (ISO 7498)</td><td>El PDF antes de 2008, los formatos de Microsoft Office en los noventa</td></tr>
+                    <tr><th scope="row">Ventaja</th><td>Público, estable, sin dueño</td><td>Rápido: no espera a ningún comité</td></tr>
+                    <tr><th scope="row">Riesgo</th><td>Lento de aprobar</td><td>Puede tener <strong>dueño</strong>, y el dueño puede cambiarlo o cobrarlo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El caso de TCP/IP: los dos a la vez</strong>
+                TCP/IP empezó siendo <strong>de facto</strong>: se impuso porque venía gratis con BSD Unix y ya
+                estaba funcionando, no porque ningún organismo lo bendijera. OSI, en cambio, era
+                <strong>de iure</strong> desde el principio, y perdió igualmente.
+                <br><br>
+                Con el tiempo TCP/IP también se volvió <em>de iure</em>, publicado en documentos abiertos que
+                cualquiera puede leer. Es el mejor final posible: la <strong>rapidez</strong> del de facto y la
+                <strong>estabilidad</strong> del de iure.
+                <br><br>
+                Y aclara por qué merecía la pena la historia de ayer: no ganó el que tenía más autoridad, ganó el que
+                funcionaba. Pero acabó necesitando la autoridad para durar.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="organismos">3. Los organismos que importan</h2>
+
+            <p>Son muchos, pero para redes solo hacen falta seis. Aprende <strong>de qué se ocupa cada uno</strong>,
+            que es lo que se pregunta.</p>
+
+            <figure class="figura">
+                <img src="../../../imagenes/m01_s03_d04_organismos_por_capa.png"
+                     width="1400" height="1050" loading="lazy"
+                     alt="La pila de capas con dos llaves a la derecha: una agrupa las capas 7, 4 y 3 y apunta al recuadro de la IETF, con sus RFC; otra agrupa las capas 2 y 1 y apunta al del IEEE, con 802.3 y 802.11. Aparte, con borde discontinuo, el recuadro de IANA, que no define ninguna capa: reparte los números.">
+                <figcaption>IEEE abajo, IETF arriba. IANA va aparte porque no define capas: reparte números.</figcaption>
+            </figure>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Organismo</th><th>Qué es</th><th>De qué se ocupa</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ISO</strong></td>
+                        <td>Organización Internacional de Normalización</td>
+                        <td>Normas de <strong>todo tipo</strong>, no solo informática</td>
+                        <td>El <strong>modelo OSI</strong> (ISO 7498)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IEEE</strong></td>
+                        <td>Instituto de Ingenieros Eléctricos y Electrónicos</td>
+                        <td>Las capas <strong>1 y 2</strong>: lo físico y el enlace</td>
+                        <td><strong>802.3</strong> (Ethernet), <strong>802.11</strong> (Wi-Fi)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IETF</strong></td>
+                        <td>Grupo de Trabajo de Ingeniería de Internet</td>
+                        <td>Los protocolos <strong>de Internet</strong>: capas 3 a 7</td>
+                        <td>Los <strong>RFC</strong>: IP, TCP, HTTP, DNS</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IANA</strong> / <strong>ICANN</strong></td>
+                        <td>Autoridad de Números Asignados en Internet</td>
+                        <td>Repartir <strong>números y nombres</strong>: puertos, direcciones, dominios</td>
+                        <td>Que el puerto <strong>80</strong> sea el de la web</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ITU-T</strong></td>
+                        <td>Unión Internacional de Telecomunicaciones</td>
+                        <td><strong>Telecomunicaciones</strong>: telefonía, fibra, satélite</td>
+                        <td>Normas de fibra óptica y ADSL</td>
+                    </tr>
+                    <tr>
+                        <td><strong>W3C</strong></td>
+                        <td>Consorcio de la World Wide Web</td>
+                        <td>Tecnologías <strong>de la Web</strong>, no de la red</td>
+                        <td>HTML y CSS</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>La confusión clásica: IETF frente a W3C</strong>
+                <strong>HTTP</strong> es de la <strong>IETF</strong>. <strong>HTML</strong> es del
+                <strong>W3C</strong>. Se parecen en el nombre y van juntos en cualquier página, pero son cosas
+                distintas:
+                <br><br>
+                <strong>HTTP</strong> es el <strong>protocolo</strong>: cómo se piden y envían los documentos. Es de
+                redes.<br>
+                <strong>HTML</strong> es el <strong>formato</strong> de esos documentos. Es de la Web.
+                <br><br>
+                Un servidor puede enviar por HTTP una imagen, un vídeo o un PDF, sin nada de HTML. Por eso los
+                separan dos organismos distintos.
+            </div>
+
+            <div class="dato">
+                <strong>Una regla para no perderse</strong>
+                <p>Si el estándar tiene que ver con <strong>cables, tramas o el aire</strong> —capas 1 y 2—, mira
+                hacia el <strong>IEEE</strong>.</p>
+                <p>Si tiene que ver con <strong>protocolos que viajan por Internet</strong> —capas 3 a 7—, mira hacia
+                la <strong>IETF</strong>.</p>
+                <p>Y si se trata de <strong>repartir un número o un nombre</strong> para que no se repita, eso es
+                <strong>IANA</strong>.</p>
+            </div>
+
+            <h2 id="rfc">4. Cómo se hace un estándar de Internet</h2>
+
+            <p>La IETF funciona de una forma bastante rara comparada con un organismo tradicional, y esa rareza es
+            justo lo que la hizo eficaz.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>La IETF</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Quién puede participar</th><td><strong>Cualquiera</strong>. No hay cuota ni hace falta representar a una empresa</td></tr>
+                    <tr><th scope="row">Cómo se decide</th><td>Por <strong>consenso aproximado</strong>, no por votación</td></tr>
+                    <tr><th scope="row">Qué se exige</th><td>Que exista <strong>código que funcione</strong>, y a ser posible dos implementaciones independientes</td></tr>
+                    <tr><th scope="row">Qué publica</th><td><strong>RFC</strong>, documentos numerados, públicos y gratuitos</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Qué es un RFC</strong>
+                Significa <em>Request for Comments</em>, «petición de comentarios». El nombre es de 1969 y delata la
+                intención: no eran órdenes, eran <strong>propuestas abiertas a discusión</strong>.
+                <br><br>
+                Se numeran <strong>correlativamente y para siempre</strong>. El RFC 791 es IP y lo será eternamente:
+                un RFC publicado <strong>no se modifica nunca</strong>. Si algo cambia, se publica un RFC nuevo que
+                deja <em>obsoleto</em> al anterior, y el viejo se queda ahí, marcado pero legible.
+                <br><br>
+                Es un archivo histórico completo de cómo se construyó Internet, desde el RFC 1 hasta hoy, y
+                cualquiera puede leerlo entero sin pagar nada.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Paso</th><th>Qué es</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1. Internet-Draft</strong></td><td>Un borrador. Cualquiera puede publicarlo. <strong>Caduca a los seis meses</strong> si nadie lo trabaja</td></tr>
+                    <tr><td><strong>2. Proposed Standard</strong></td><td>Ya es un RFC numerado. Aquí se queda <strong>la mayoría</strong> de los protocolos que usas a diario</td></tr>
+                    <tr><td><strong>3. Internet Standard</strong></td><td>Categoría reservada a lo muy asentado y con implementaciones sobradamente probadas</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Un detalle que sorprende</strong>
+                <p><strong>HTTP nunca ha llegado a «Internet Standard».</strong> Se ha quedado siempre en <em>Proposed
+                Standard</em>, que es el primer escalón real, pese a ser posiblemente el protocolo más usado del
+                planeta.</p>
+                <p>No es un descuido: la promoción exige un trabajo administrativo que a nadie le compensa hacer
+                cuando el protocolo ya funciona y todo el mundo lo usa. <em>Rough consensus and running code</em>
+                otra vez: si funciona, la etiqueta importa poco.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Los RFC que ya conoces</strong>
+                <div class="tabla-wrap" style="margin-top:10px">
+                <table>
+                    <thead><tr><th>RFC</th><th>Qué define</th><th>Año</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>768</strong></td><td>UDP</td><td>1980</td></tr>
+                        <tr><td><strong>791</strong></td><td><strong>IP</strong>: los 20 bytes de cabecera que has contado toda la semana</td><td>1981</td></tr>
+                        <tr><td><strong>792</strong></td><td>ICMP, el protocolo que hay detrás de <code>ping</code></td><td>1981</td></tr>
+                        <tr><td><strong>826</strong></td><td>ARP</td><td>1982</td></tr>
+                        <tr><td><strong>2119</strong></td><td>El significado exacto de «DEBE» y «DEBERÍA» en los demás RFC</td><td>1997</td></tr>
+                        <tr><td><strong>9110-9112</strong></td><td>HTTP/1.1, que sustituyen al veterano RFC 2616</td><td>2022</td></tr>
+                        <tr><td><strong>9293</strong></td><td>TCP, que sustituye al RFC 793 de 1981</td><td>2022</td></tr>
+                    </tbody>
+                </table>
+                </div>
+                Fíjate en las fechas de IP y UDP: <strong>los estás usando hoy tal como se escribieron hace más de
+                cuarenta años</strong>. Pocas cosas en informática duran tanto.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="ieee802">5. La familia IEEE 802</h2>
+
+            <p>El IEEE agrupa todas sus normas de redes locales bajo el número <strong>802</strong>, y después añade
+            un punto y otro número para cada tecnología. Reconocer esa numeración es muy útil: aparece en las cajas
+            de los productos.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Norma</th><th>Qué define</th><th>Dónde la has visto</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>802.3</strong></td><td><strong>Ethernet</strong>: la trama, el cable, el CSMA/CD</td><td>Todo lo de la Semana 2</td></tr>
+                    <tr><td><strong>802.11</strong></td><td><strong>Wi-Fi</strong></td><td>Semana 1, Día 4</td></tr>
+                    <tr><td><strong>802.1Q</strong></td><td><strong>VLAN</strong>: dividir un switch en redes lógicas</td><td>Lo verás en el Mes 9</td></tr>
+                    <tr><td><strong>802.1X</strong></td><td>Autenticación antes de dar acceso al puerto</td><td>Mes 11</td></tr>
+                    <tr><td><strong>802.3af</strong></td><td><strong>PoE</strong>: alimentar un aparato por el cable de red</td><td>Cámaras y teléfonos IP</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Wi-Fi no es 802.11 exactamente</strong>
+                <strong>802.11</strong> es la <strong>norma técnica</strong> del IEEE. <strong>Wi-Fi</strong> es una
+                <strong>marca registrada</strong> de la Wi-Fi Alliance, una asociación de fabricantes.
+                <br><br>
+                Que un aparato lleve el logotipo de Wi-Fi significa que ha pasado las pruebas de compatibilidad de
+                esa asociación. Cumplir 802.11 y llevar el logotipo no son lo mismo, aunque en la práctica vayan
+                casi siempre juntos.
+                <br><br>
+                Y por eso los nombres comerciales —Wi-Fi 5, Wi-Fi 6— no coinciden con los técnicos: Wi-Fi 6 es
+                <strong>802.11ax</strong>. Los pusieron precisamente porque «802.11ax» no se le queda a nadie.
+            </div>
+
+            <h2 id="iana">6. IANA: quién reparte los números</h2>
+
+            <p>Y aquí está por fin la respuesta a la pregunta de ayer.</p>
+
+            <div class="destacado">
+                <strong>Quién decide que el puerto de la web sea el 80</strong>
+                <strong>IANA</strong>, que mantiene el registro público de puertos. No es que el 80 tenga nada
+                especial: es que <strong>está apuntado en una lista</strong> que todo el mundo consulta y respeta.
+                <br><br>
+                IANA no manda sobre nadie. Lleva un <strong>registro</strong> para que dos cosas distintas no acaben
+                usando el mismo número. Es un trabajo de bibliotecario, no de autoridad, y aun así sostiene Internet
+                entera.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>IANA lleva el registro de…</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Puertos</strong></td><td>80 web, 443 web segura, 53 DNS, 22 SSH</td></tr>
+                    <tr><td><strong>Números de protocolo</strong></td><td>El <strong>6</strong> que identifica a TCP dentro de una cabecera IP</td></tr>
+                    <tr><td><strong>Bloques de direcciones IP</strong></td><td>Los reparte por continentes; en Europa los gestiona <strong>RIPE NCC</strong></td></tr>
+                    <tr><td><strong>Dominios de primer nivel</strong></td><td><code>.com</code>, <code>.org</code>, <code>.es</code></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Los OUI los reparte el IEEE, no IANA</strong>
+                <p>Un reparto que ya conoces: los <strong>primeros tres bytes de una MAC</strong>, que identifican al
+                fabricante. Ese registro lo lleva el <strong>IEEE</strong>, porque las MAC son de capa 2 y la capa 2
+                es suya.</p>
+                <p>Es la regla del apartado 3 funcionando: capas 1 y 2 son del IEEE; de la 3 a la 7, de la IETF; y
+                los números de esas capas, de IANA.</p>
+                <p>Hoy, en Wireshark, verás esos tres bytes traducidos automáticamente al nombre del fabricante. Esa
+                traducción sale justamente del registro del IEEE.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Rangos de puertos: también es un acuerdo</strong>
+                <div class="tabla-wrap" style="margin-top:10px">
+                <table>
+                    <thead><tr><th>Rango</th><th>Nombre</th><th>Para qué</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>0 - 1023</strong></td><td>Bien conocidos</td><td>Servicios estándar. En Linux hace falta ser administrador para usarlos</td></tr>
+                        <tr><td><strong>1024 - 49151</strong></td><td>Registrados</td><td>Aplicaciones que han pedido un número a IANA</td></tr>
+                        <tr><td><strong>49152 - 65535</strong></td><td><strong>Efímeros</strong></td><td>Los que el sistema asigna a los clientes</td></tr>
+                    </tbody>
+                </table>
+                </div>
+                Ese último rango explica los números que viste ayer en tus conexiones: <strong>58943, 60891,
+                64405</strong>. Todos por encima de 49152, y ahora ya sabes quién lo decidió y por qué.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="leer">7. Cómo se lee un RFC</h2>
+
+            <p>Los RFC no son manuales: son <strong>especificaciones</strong>. Están escritos para que quien
+            programe el protocolo no tenga ninguna duda, y por eso usan un lenguaje muy preciso.</p>
+
+            <div class="destacado">
+                <strong>El RFC 2119: las palabras que no significan lo que parecen</strong>
+                Hay un RFC dedicado solo a definir qué significan ciertas palabras en los demás. En un RFC,
+                escritas en mayúsculas, tienen valor <strong>normativo</strong>:
+                <div class="tabla-wrap" style="margin-top:10px">
+                <table>
+                    <thead><tr><th>Palabra</th><th>Significa</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>MUST</strong> / <strong>REQUIRED</strong></td><td>Obligatorio. Si no se cumple, <strong>no</strong> es una implementación válida</td></tr>
+                        <tr><td><strong>MUST NOT</strong></td><td>Prohibido</td></tr>
+                        <tr><td><strong>SHOULD</strong></td><td>Recomendado. Se puede incumplir, pero hay que <strong>saber por qué</strong></td></tr>
+                        <tr><td><strong>MAY</strong> / <strong>OPTIONAL</strong></td><td>Opcional de verdad: hacerlo o no, y ambas cosas son válidas</td></tr>
+                    </tbody>
+                </table>
+                </div>
+                La diferencia entre <strong>MUST</strong> y <strong>SHOULD</strong> es lo que separa una
+                incompatibilidad de una decisión de diseño. Cuando dos aparatos «casi» se entienden, muchas veces es
+                que uno se saltó un <em>SHOULD</em>.
+            </div>
+
+            <div class="dato">
+                <strong>Los RFC también tienen sentido del humor</strong>
+                <p>Cada 1 de abril se publican RFC de broma, escritos con toda la seriedad formal del formato. El
+                más famoso es el <strong>RFC 1149</strong>, de 1990: <em>«Transmisión de datagramas IP mediante
+                aves»</em>. Especifica cómo transportar paquetes IP atados a la pata de una paloma mensajera.</p>
+                <p>Tiene incluso una ampliación, el <strong>RFC 2549</strong>, que le añade calidad de servicio. Y en
+                2001 un grupo noruego <strong>lo implementó de verdad</strong>: nueve paquetes enviados, cuatro
+                entregados, con tiempos de respuesta de algo más de una hora.</p>
+                <p>Detrás de la broma hay algo serio, y es la mejor demostración posible de lo que viste ayer:
+                <strong>IP funciona sobre cualquier cosa capaz de mover bits</strong>, porque el modelo no define la
+                capa de abajo. Incluso si esa capa es una paloma.</p>
+            </div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Un estándar garantiza <strong>interoperabilidad, competencia, continuidad y precio</strong>.</li>
+                    <li><strong>De iure</strong>: lo aprueba un organismo. <strong>De facto</strong>: se impone por el uso.</li>
+                    <li><strong>IEEE</strong> → capas 1 y 2. <strong>IETF</strong> → capas 3 a 7. <strong>IANA</strong> → los números.</li>
+                    <li><strong>HTTP es de la IETF; HTML, del W3C.</strong> Protocolo frente a formato.</li>
+                    <li>Los <strong>RFC</strong> son públicos, gratuitos, numerados para siempre y <strong>no se modifican</strong>: se sustituyen.</li>
+                    <li><strong>802.3</strong> Ethernet, <strong>802.11</strong> Wi-Fi, <strong>802.1Q</strong> VLAN.</li>
+                    <li>IANA reparte <strong>puertos, números de protocolo, direcciones y dominios</strong>; el IEEE reparte los <strong>OUI</strong>.</li>
+                    <li>Puertos: <strong>0-1023</strong> conocidos, <strong>1024-49151</strong> registrados, <strong>49152-65535</strong> efímeros.</li>
+                    <li>En un RFC, <strong>MUST</strong> es obligatorio y <strong>SHOULD</strong> es recomendado.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«HTML y HTTP son del mismo organismo»</td><td>HTML es del <strong>W3C</strong>; HTTP, de la <strong>IETF</strong></td></tr>
+                    <tr><td>«Los RFC se van actualizando»</td><td><strong>Nunca se modifican</strong>. Se publica uno nuevo que deja obsoleto al viejo</td></tr>
+                    <tr><td>«Hay que ser miembro para participar en la IETF»</td><td>Es <strong>abierta</strong> a cualquiera y sin cuota</td></tr>
+                    <tr><td>«IANA manda en Internet»</td><td>Solo lleva <strong>registros</strong> para que no se repitan los números</td></tr>
+                    <tr><td>«Wi-Fi es el nombre técnico»</td><td>El técnico es <strong>802.11</strong>; Wi-Fi es una <strong>marca</strong></td></tr>
+                    <tr><td>«El IEEE define IP»</td><td>IP es de la <strong>IETF</strong>. El IEEE se ocupa de las capas 1 y 2</td></tr>
+                    <tr><td>«Un estándar de facto es peor»</td><td>Es más <strong>rápido</strong>; el riesgo es que tenga dueño</td></tr>
+                    <tr><td>«SHOULD y MUST son parecidos»</td><td>Uno es <strong>obligatorio</strong> y el otro no. Ahí está la diferencia entre incompatible y opinable</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 24 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio con Wireshark</strong>
+            <p>Vas a capturar tráfico real y <strong>encontrar en los bytes</strong> lo que has estudiado esta
+            semana: los 14 bytes de Ethernet, los 20 de IP, los 20 de TCP y el bit DF. Y a decir, de cada campo,
+            <strong>qué organismo lo definió</strong>.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 4</strong></a> (70 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 5 — viernes de evaluación</strong>
+            <p>Síntesis de la semana, mazo de flashcards de los cuatro días y <strong>test semanal de 25
+            preguntas</strong> cronometrado, con desglose por día para saber exactamente qué repasar.</p>
+            <p><em>Prepáralo:</em> repasa las dos tablas que más caen, la <strong>correspondencia OSI ↔ TCP/IP</strong>
+            y los <strong>tamaños de cabecera</strong>.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/teoria.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> TCP/IP nació como estándar <em>de facto</em> y OSI como <em>de iure</em>. Explica qué ventaja aportó cada cosa y por qué TCP/IP acabó necesitando las dos.',
+                modelo: `<p>Ser <strong>de facto</strong> le dio <strong>velocidad</strong>. No tuvo que esperar a
+                         que ningún comité lo aprobara: se escribió, se distribuyó gratis con BSD Unix y se
+                         extendió porque funcionaba. Mientras OSI seguía en fase de diseño, TCP/IP ya estaba
+                         instalado.</p>
+                         <p>Pero un estándar de facto tiene un problema: <strong>no está escrito en ningún sitio de
+                         forma definitiva</strong>. Depende de que las implementaciones coincidan, y si alguien
+                         relevante decide cambiarlo, los demás van detrás. Eso funciona mientras hay pocos actores;
+                         con miles de fabricantes, no.</p>
+                         <p>Por eso TCP/IP acabó siendo también <strong>de iure</strong>: sus protocolos se
+                         escribieron en RFC públicos, numerados y estables que cualquiera puede leer y contra los que
+                         cualquiera puede programar. Eso le dio <strong>estabilidad</strong> y la garantía de que no
+                         tiene dueño.</p>
+                         <p>El resultado es lo mejor de los dos: la rapidez de haberse impuesto por el uso y la
+                         solidez de estar documentado. OSI tenía la segunda mitad desde el principio, pero sin la
+                         primera no le sirvió de nada.</p>`,
+                puntos: [
+                    'De facto aporta velocidad: no espera a ningún comité',
+                    'Señala la debilidad: nada escrito de forma definitiva, riesgo de dueño',
+                    'De iure aporta estabilidad y documentación pública',
+                    'Concluye que TCP/IP acabó teniendo las dos cosas'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Un RFC publicado no se modifica nunca: si algo cambia, se publica otro que lo sustituye. Explica <strong>qué ventaja</strong> tiene un sistema así frente a ir actualizando el documento original.',
+                modelo: `<p>La ventaja principal es que <strong>una referencia siempre significa lo mismo</strong>.
+                         Si un fabricante programa su equipo «según el RFC 791», ese documento dice hoy exactamente lo
+                         mismo que decía en 1981. Su producto no se vuelve incorrecto porque alguien haya editado un
+                         documento en un servidor.</p>
+                         <p>Si los RFC se actualizaran en el sitio, dos equipos programados en fechas distintas
+                         «según el mismo RFC» podrían ser incompatibles, y no habría forma de saber cuál seguía qué
+                         versión. La estabilidad del número es lo que permite que los estándares sirvan de
+                         contrato.</p>
+                         <p>Y hay una segunda ventaja: queda un <strong>archivo histórico completo</strong>. Se puede
+                         leer el documento original y el que lo sustituyó, y ver qué se cambió y por qué. Toda la
+                         evolución de Internet está ahí, y no se ha borrado nada.</p>
+                         <p>El coste es que hay que mirar si un RFC está marcado como obsoleto antes de fiarse de él.
+                         Es un precio bajo comparado con lo que se gana.</p>`,
+                puntos: [
+                    'Una referencia estable significa siempre lo mismo',
+                    'Explica el riesgo de que dos equipos sigan versiones distintas del mismo número',
+                    'Menciona el valor del archivo histórico',
+                    'Reconoce el coste: hay que comprobar si está obsoleto'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> IANA no tiene autoridad sobre nadie: solo lleva registros. Explica por qué, aun así, es imprescindible.',
+                modelo: `<p>Porque el problema que resuelve no es de autoridad, sino de
+                         <strong>coordinación</strong>. Cuando muchos actores independientes tienen que usar los
+                         mismos números para entenderse, hace falta que alguien lleve la lista de qué número está
+                         cogido.</p>
+                         <p>Si no existiera, dos protocolos podrían acabar usando el 80, o dos fabricantes el mismo
+                         número de protocolo dentro de la cabecera IP, y ninguna de las dos partes sabría interpretar
+                         lo que recibe. No es que estuviera prohibido: es que <strong>no funcionaría</strong>.</p>
+                         <p>Y por eso no necesita poder coercitivo. Nadie usa el puerto 80 porque IANA le obligue,
+                         sino porque quiere que los navegadores del mundo lo encuentren. El registro se respeta por
+                         <strong>interés propio</strong>, no por imposición.</p>
+                         <p>Eso también explica que se pueda usar el 8080 sin pedir permiso a nadie: es legítimo, solo
+                         que entonces hay que decirle a la gente dónde llamar. La lista no es una ley: es un
+                         <strong>punto de encuentro</strong>.</p>`,
+                puntos: [
+                    'Identifica el problema como de coordinación, no de autoridad',
+                    'Explica qué pasaría si dos cosas usaran el mismo número',
+                    'Señala que el registro se respeta por interés propio',
+                    'Concluye que salirse del registro es legítimo pero obliga a avisar'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: 'Cuatro cosas que garantiza un <strong>estándar</strong>', dorso: '<strong>Interoperabilidad</strong> entre fabricantes, <strong>competencia</strong>, <strong>continuidad</strong> en el tiempo y <strong>precio</strong> más bajo.' },
+            { frente: '<strong>De iure</strong> frente a <strong>de facto</strong>', dorso: '<em>De iure</em>: lo aprueba un <strong>organismo oficial</strong>. <em>De facto</em>: se impone porque <strong>todo el mundo lo usa</strong>. TCP/IP empezó siendo de facto y acabó siendo las dos cosas.' },
+            { frente: '¿De qué capas se ocupa el <strong>IEEE</strong>?', dorso: 'De las <strong>1 y 2</strong>: lo físico y el enlace. 802.3 Ethernet, 802.11 Wi-Fi. También reparte los <strong>OUI</strong> de las MAC.' },
+            { frente: '¿De qué se ocupa la <strong>IETF</strong>?', dorso: 'De los protocolos de Internet, <strong>capas 3 a 7</strong>: IP, TCP, HTTP, DNS. Publica los <strong>RFC</strong>.' },
+            { frente: '<strong>HTTP</strong> y <strong>HTML</strong>: ¿quién define cada uno?', dorso: '<strong>HTTP</strong> es de la <strong>IETF</strong>: es el protocolo. <strong>HTML</strong> es del <strong>W3C</strong>: es el formato del documento. Protocolo y formato son cosas distintas.' },
+            { frente: '¿Qué significa <strong>RFC</strong> y qué implica el nombre?', dorso: '<em>Request for Comments</em>, «petición de comentarios». Delata que no eran órdenes, sino <strong>propuestas abiertas a discusión</strong>.' },
+            { frente: '¿Se puede modificar un RFC publicado?', dorso: '<strong>Nunca.</strong> Si algo cambia se publica uno nuevo que deja <em>obsoleto</em> al anterior. Así una referencia significa siempre lo mismo.' },
+            { frente: '¿Quién puede participar en la <strong>IETF</strong> y cómo se decide?', dorso: '<strong>Cualquiera</strong>, sin cuota. Se decide por <strong>consenso aproximado</strong>, no por votación, y se exige código que funcione.' },
+            { frente: '<strong>802.3</strong>, <strong>802.11</strong> y <strong>802.1Q</strong>', dorso: '<strong>Ethernet</strong>, <strong>Wi-Fi</strong> y <strong>VLAN</strong>, respectivamente. Todas del IEEE, todas de capas 1 y 2.' },
+            { frente: '¿Es «Wi-Fi» el nombre técnico?', dorso: 'No: el técnico es <strong>802.11</strong>. <strong>Wi-Fi</strong> es una <strong>marca registrada</strong> de una asociación de fabricantes. Wi-Fi 6 es 802.11ax.' },
+            { frente: '¿Quién decide que el puerto de la web sea el <strong>80</strong>?', dorso: '<strong>IANA</strong>, que lleva el registro público de puertos. No manda: <strong>lleva la lista</strong> para que dos cosas no usen el mismo número.' },
+            { frente: 'Los tres <strong>rangos de puertos</strong>', dorso: '<strong>0-1023</strong> bien conocidos · <strong>1024-49151</strong> registrados · <strong>49152-65535</strong> <strong>efímeros</strong>, los que el sistema da a los clientes.' },
+            { frente: '¿Quién reparte los <strong>OUI</strong> de las direcciones MAC?', dorso: 'El <strong>IEEE</strong>, no IANA: las MAC son de <strong>capa 2</strong>, y la capa 2 es del IEEE.' },
+            { frente: '<strong>MUST</strong> frente a <strong>SHOULD</strong> en un RFC', dorso: '<strong>MUST</strong> es <strong>obligatorio</strong>: sin ello la implementación no es válida. <strong>SHOULD</strong> es recomendado: se puede incumplir sabiendo por qué.' },
+            { frente: '¿Qué RFC define <strong>IP</strong>, y de cuándo es?', dorso: 'El <strong>RFC 791</strong>, de <strong>1981</strong>. Los 20 bytes de cabecera que has contado toda la semana llevan ahí más de cuarenta años.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 4 — Normalización',
+        subtitulo: 'Organismos · RFC · IEEE 802 · IANA',
+        tiempo: '24 minutos',
+        minutos: 24,
+        questions: [
+            {
+                topic: 'Por qué hacen falta estándares',
+                repaso: '#porque',
+                text: 'En los años ochenta, comprar equipos de red de IBM obligaba a seguir comprando de IBM. ¿Cómo se llama eso y qué lo resolvió?',
+                options: {
+                    a: 'Monopolio; lo resolvió la competencia',
+                    b: 'Dependencia del proveedor; lo resolvieron los estándares abiertos',
+                    c: 'Obsolescencia programada; lo resolvió la ley',
+                    d: 'Incompatibilidad técnica; se resolvió sola'
+                },
+                answer: 'b',
+                feedback: 'No era un defecto técnico: <strong>era el modelo de negocio</strong>. Que hoy cualquier portátil funcione con cualquier router es consecuencia directa de la normalización.'
+            },
+            {
+                topic: 'De iure y de facto',
+                repaso: '#tipos',
+                text: '¿Qué distingue a un estándar <em>de facto</em> de uno <em>de iure</em>?',
+                options: {
+                    a: 'El de facto es siempre peor técnicamente',
+                    b: 'El de iure lo aprueba un organismo oficial; el de facto se impone porque todo el mundo lo usa',
+                    c: 'El de facto es de pago y el de iure gratuito',
+                    d: 'El de iure solo se usa en Europa'
+                },
+                answer: 'b',
+                feedback: '«De derecho» frente a «de hecho». El de facto es más rápido porque no espera a ningún comité; su riesgo es que <strong>puede tener dueño</strong>.'
+            },
+            {
+                topic: 'De iure y de facto',
+                repaso: '#tipos',
+                text: 'TCP/IP se impuso sin que ningún organismo lo aprobara, y años después se publicó en documentos abiertos. ¿Qué describe eso?',
+                options: {
+                    a: 'Un estándar que nació de facto y acabó siendo también de iure',
+                    b: 'Un estándar de iure desde el principio',
+                    c: 'Un estándar propietario',
+                    d: 'Un estándar que dejó de usarse'
+                },
+                answer: 'a',
+                feedback: 'Lo mejor de los dos mundos: la <strong>rapidez</strong> de imponerse por el uso y la <strong>estabilidad</strong> de estar documentado sin dueño.'
+            },
+            {
+                topic: 'Los organismos',
+                repaso: '#organismos',
+                text: 'Vas a montar una red y necesitas la norma que define la trama Ethernet. ¿Qué organismo la publica?',
+                options: {
+                    a: 'La IETF, porque es una tecnología de Internet',
+                    b: 'El IEEE, porque Ethernet es de capas 1 y 2',
+                    c: 'El W3C',
+                    d: 'IANA'
+                },
+                answer: 'b',
+                feedback: 'La regla: <strong>cables y tramas → IEEE</strong>; protocolos que viajan por Internet → IETF; repartir números → IANA.'
+            },
+            {
+                topic: 'Los organismos',
+                repaso: '#organismos',
+                text: 'HTTP y HTML aparecen juntos en cualquier página web. ¿Los define el mismo organismo?',
+                options: {
+                    a: 'Sí, los dos el W3C',
+                    b: 'Sí, los dos la IETF',
+                    c: 'No: HTTP es de la IETF y HTML del W3C',
+                    d: 'No: HTTP es del W3C y HTML de la IETF'
+                },
+                answer: 'c',
+                feedback: 'HTTP es el <strong>protocolo</strong> —cómo se piden los documentos— y es de redes. HTML es el <strong>formato</strong> del documento. Por HTTP se puede enviar un PDF sin nada de HTML.'
+            },
+            {
+                topic: 'Los organismos',
+                repaso: '#organismos',
+                text: '¿Qué organismo publicó el modelo OSI?',
+                options: {
+                    a: 'El IEEE',
+                    b: 'La IETF',
+                    c: 'La ISO',
+                    d: 'La ITU-T'
+                },
+                answer: 'c',
+                feedback: 'La <strong>ISO</strong>, en la norma 7498. De ahí el nombre completo: <em>Open Systems Interconnection</em>, el modelo de interconexión de sistemas abiertos de la ISO.'
+            },
+            {
+                topic: 'Los RFC',
+                repaso: '#rfc',
+                text: 'Se descubre un fallo en un protocolo definido en un RFC. ¿Qué se hace con ese documento?',
+                options: {
+                    a: 'Se corrige el RFC original y se publica la versión revisada',
+                    b: 'Se publica un RFC nuevo que deja obsoleto al anterior; el viejo se conserva',
+                    c: 'Se retira el RFC y se borra del registro',
+                    d: 'Se añade una nota al pie'
+                },
+                answer: 'b',
+                feedback: 'Un RFC <strong>no se modifica jamás</strong>. Así, quien programó «según el RFC 791» sabe que ese documento dice hoy lo mismo que en 1981.'
+            },
+            {
+                topic: 'Los RFC',
+                repaso: '#rfc',
+                text: 'Quieres proponer una mejora a un protocolo de Internet. ¿Qué necesitas para participar en la IETF?',
+                options: {
+                    a: 'Representar a una empresa del sector',
+                    b: 'Pagar la cuota anual de miembro',
+                    c: 'Nada: es abierta a cualquiera y se decide por consenso aproximado',
+                    d: 'Un título universitario homologado'
+                },
+                answer: 'c',
+                feedback: 'Es lo que la diferenciaba de la ISO, cuyos documentos además se pagaban. Lo que sí se espera es <strong>código que funcione</strong>.'
+            },
+            {
+                topic: 'Los RFC',
+                repaso: '#rfc',
+                text: 'Un RFC dice que una implementación <strong>SHOULD</strong> hacer algo, y tu equipo no lo hace. ¿Qué significa?',
+                options: {
+                    a: 'El equipo incumple el estándar y no es válido',
+                    b: 'Es una recomendación: se puede incumplir, pero conviene saber por qué',
+                    c: 'Significa lo mismo que MUST',
+                    d: 'Es una errata del RFC'
+                },
+                answer: 'b',
+                feedback: 'La diferencia entre <strong>MUST</strong> y <strong>SHOULD</strong> es la que separa una incompatibilidad de una decisión de diseño. Cuando dos aparatos «casi» se entienden, suele haber un <em>SHOULD</em> por medio.'
+            },
+            {
+                topic: 'IEEE 802',
+                repaso: '#ieee802',
+                text: 'En la caja de un switch lees «802.1Q». ¿Qué te está diciendo?',
+                options: {
+                    a: 'Que es compatible con Wi-Fi',
+                    b: 'Que admite VLAN',
+                    c: 'Que alimenta aparatos por el cable de red',
+                    d: 'Que cumple la norma de fibra óptica'
+                },
+                answer: 'b',
+                feedback: '802.3 Ethernet, 802.11 Wi-Fi, <strong>802.1Q VLAN</strong>, 802.1X autenticación, 802.3af PoE. Esa numeración aparece constantemente en las fichas de producto.'
+            },
+            {
+                topic: 'IEEE 802',
+                repaso: '#ieee802',
+                text: 'Un compañero dice que «Wi-Fi es el nombre técnico de la tecnología». ¿Qué le corriges?',
+                options: {
+                    a: 'Nada, es correcto',
+                    b: 'Que el nombre técnico es 802.11; Wi-Fi es una marca registrada de una asociación de fabricantes',
+                    c: 'Que el nombre técnico es 802.3',
+                    d: 'Que Wi-Fi es un estándar de la IETF'
+                },
+                answer: 'b',
+                feedback: 'Por eso los nombres comerciales no coinciden con los técnicos: <strong>Wi-Fi 6 es 802.11ax</strong>. Los inventaron porque «802.11ax» no se le queda a nadie.'
+            },
+            {
+                topic: 'IANA',
+                repaso: '#iana',
+                text: 'Por fin: ¿quién decide que el puerto de la web sea el 80?',
+                options: {
+                    a: 'El IEEE, en la norma 802.3',
+                    b: 'IANA, que lleva el registro público de puertos',
+                    c: 'El W3C, porque es cosa de la Web',
+                    d: 'Cada sistema operativo lo decide por su cuenta'
+                },
+                answer: 'b',
+                feedback: 'IANA <strong>no manda</strong>: lleva la lista para que dos cosas distintas no usen el mismo número. Un trabajo de bibliotecario que sostiene Internet entera.'
+            },
+            {
+                topic: 'IANA',
+                repaso: '#iana',
+                text: 'Ayer viste que tus conexiones usaban puertos locales como 58943 o 64405. ¿A qué rango pertenecen?',
+                options: {
+                    a: 'Bien conocidos (0-1023)',
+                    b: 'Registrados (1024-49151)',
+                    c: 'Efímeros (49152-65535)',
+                    d: 'A ninguno: son números libres sin clasificar'
+                },
+                answer: 'c',
+                feedback: 'Los <strong>efímeros</strong>: el sistema coge uno libre para cada conexión de salida y lo devuelve al terminar. Ese reparto también está en el registro de IANA.'
+            },
+            {
+                topic: 'IANA',
+                repaso: '#iana',
+                text: 'Los tres primeros bytes de una MAC identifican al fabricante. ¿Quién lleva ese registro?',
+                options: {
+                    a: 'IANA, porque reparte todos los números',
+                    b: 'El IEEE, porque las MAC son de capa 2',
+                    c: 'La IETF',
+                    d: 'Cada fabricante se lo asigna a sí mismo'
+                },
+                answer: 'b',
+                feedback: 'La regla otra vez: capas <strong>1 y 2 son del IEEE</strong>, y la MAC es de capa 2. Hoy, en Wireshark, verás esos bytes traducidos al nombre del fabricante gracias a ese registro.'
+            },
+            {
+                topic: 'Recuperación · Día 3',
+                repaso: '../Dia_03/teoria.html#reloj',
+                text: '<em>Repaso.</em> ¿Qué protocolo está en la cintura del reloj de arena y qué consecuencia tiene?',
+                options: {
+                    a: 'TCP: por eso todo el tráfico va garantizado',
+                    b: 'IP: como todo pasa por él, cualquier aplicación funciona sobre cualquier red, pero cambiarlo lo afecta todo',
+                    c: 'Ethernet: por eso todas las redes son Ethernet',
+                    d: 'HTTP: por eso es el protocolo más usado'
+                },
+                answer: 'b',
+                feedback: 'Muchos protocolos arriba, muchas tecnologías abajo, <strong>uno solo en medio</strong>. Explica a la vez el éxito de Internet y la lentitud de IPv6.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

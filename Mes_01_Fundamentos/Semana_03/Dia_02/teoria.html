@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Las capas superiores y la encapsulación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 2 — Las capas de arriba y la encapsulación</h1>
+        <p>Transporte, sesión, presentación y aplicación · cómo un dato baja la pila poniéndose cabeceras</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 65 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 24 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 47 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> de escritura y un laboratorio en el que vas a
+            <strong>medir el MTU real de tu línea</strong> con un comando, deducir qué tecnología usa tu operador y
+            calcular cuánto de lo que pagas se va en cabeceras.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Ayer viste las tres capas de abajo, las que llevan los datos de un sitio a otro. Hoy tocan las
+            <strong>cuatro de arriba</strong>, las que se ocupan de que esos datos <em>signifiquen</em> algo, y sobre
+            todo el mecanismo que hace funcionar todo el modelo: la <strong>encapsulación</strong>.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#capa4">Capa 4 — Transporte</a></li>
+                <li><a href="#capa567">Capas 5, 6 y 7 — Sesión, presentación y aplicación</a></li>
+                <li><a href="#encapsulacion">La encapsulación: bajar la pila</a></li>
+                <li><a href="#desencapsulacion">Al llegar: subir la pila</a></li>
+                <li><a href="#coste">El coste: cuánto ocupan las cabeceras</a></li>
+                <li><a href="#mtu">El MTU y por qué importa</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="capa4">1. Capa 4 — Transporte</h2>
+
+            <p>La capa 3 sabe llevar un paquete de un equipo a otro. Pero deja dos problemas sin resolver:</p>
+
+            <ul>
+                <li>Al llegar al equipo, <strong>¿a qué programa se lo entrego?</strong> Puede haber cincuenta
+                esperando.</li>
+                <li>¿Y si el fichero es más grande de lo que cabe en un paquete? ¿Y si se pierde uno por el camino?</li>
+            </ul>
+
+            <p>De eso se ocupa la <strong>capa de transporte</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Capa de transporte</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Unidad de datos</th><td><strong>Segmento</strong> (TCP) o <strong>datagrama</strong> (UDP)</td></tr>
+                    <tr><th scope="row">Direccionamiento</th><td><strong>Puerto</strong>, 16 bits</td></tr>
+                    <tr><th scope="row">Alcance</th><td>Extremo a extremo, <strong>de programa a programa</strong></td></tr>
+                    <tr><th scope="row">De qué se ocupa</th><td>Entregar al proceso correcto, trocear y, con TCP, garantizar la entrega</td></tr>
+                    <tr><th scope="row">Protocolos</th><td><strong>TCP</strong> y <strong>UDP</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Aquí encajan los puertos</strong>
+                Los puertos que estudiaste en la Semana 2 —22, 53, 80, 443— son de <strong>capa 4</strong>. Y ahora se
+                entiende del todo la analogía: la <strong>IP es el edificio</strong> (capa 3) y el <strong>puerto es
+                el piso</strong> (capa 4).
+                <br><br>
+                La capa 3 lleva el paquete hasta la puerta del edificio. La capa 4 sabe en qué piso vive cada
+                programa.
+            </div>
+
+            <h3>TCP y UDP: dos formas de entregar</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Conexión previa</th><td><strong>Sí</strong>, hay que establecerla</td><td>No: se envía y ya está</td></tr>
+                    <tr><th scope="row">Garantiza la entrega</th><td><strong>Sí</strong>: reenvía lo que se pierde</td><td>No</td></tr>
+                    <tr><th scope="row">Mantiene el orden</th><td>Sí</td><td>No</td></tr>
+                    <tr><th scope="row">Tamaño de cabecera</th><td><strong>20 bytes</strong></td><td><strong>8 bytes</strong></td></tr>
+                    <tr><th scope="row">Cuándo se usa</th><td>Cuando no se puede perder ni un byte: web, correo, ficheros</td><td>Cuando el dato caduca y prima la velocidad: voz, vídeo, DNS, juegos</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>La segmentación: por qué se trocea</strong>
+                <p>Un fichero de 10 MB no cabe en un paquete. La capa 4 lo <strong>trocea</strong> en segmentos
+                numerados, y en el destino la misma capa los <strong>vuelve a juntar en orden</strong>.</p>
+                <p>Esa numeración es también lo que permite a TCP detectar que falta un trozo y pedirlo otra vez. La
+                capa 3 no podría hacerlo: ella trata cada paquete como si fuera el único del mundo.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="capa567">2. Capas 5, 6 y 7</h2>
+
+            <p>Las tres de arriba se ocupan del <strong>significado</strong> de los datos, no de su transporte. En la
+            práctica cuesta separarlas, y el miércoles verás que TCP/IP directamente las fusiona en una sola.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>De qué se ocupa</th><th>Ejemplos</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>5 · Sesión</strong></td>
+                        <td>Abrir, mantener y cerrar el <strong>diálogo</strong> entre dos aplicaciones. Quién habla y cuándo, y reanudar si se corta</td>
+                        <td>Sesiones de inicio de sesión, RPC, NetBIOS</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6 · Presentación</strong></td>
+                        <td><strong>Formato</strong> de los datos: codificación de caracteres, compresión y <strong>cifrado</strong></td>
+                        <td>UTF-8, JPEG, <strong>TLS</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>7 · Aplicación</strong></td>
+                        <td>El <strong>servicio</strong> que la persona quiere usar</td>
+                        <td><strong>HTTP, DNS, SMTP, FTP, SSH</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>La capa 7 no es «la aplicación»</strong>
+                Es un matiz que se pregunta y que casi todo el mundo falla. El <strong>navegador no es la capa
+                7</strong>: el navegador es un <em>programa</em> que <strong>usa</strong> un protocolo de capa 7, que
+                es HTTP.
+                <br><br>
+                La capa 7 la forman los <strong>protocolos</strong> —HTTP, DNS, SMTP—, no los programas que los
+                emplean. Word tampoco es capa 7; SMTP sí.
+            </div>
+
+            <div class="dato">
+                <strong>Dónde vive el cifrado de una web</strong>
+                <p>Cuando entras en una dirección que empieza por <code>https</code>, el candado lo pone
+                <strong>TLS</strong>, que es <strong>capa 6</strong>: se ocupa de cómo se representan los datos, y
+                cifrarlos es una forma de representarlos.</p>
+                <p>Por eso HTTPS no es un protocolo distinto de HTTP: es <strong>HTTP (capa 7) viajando sobre TLS
+                (capa 6)</strong>. Y por eso el cambio no afectó ni a TCP ni a IP.</p>
+            </div>
+
+            <h2 id="encapsulacion">3. La encapsulación: bajar la pila</h2>
+
+            <p>Aquí está el mecanismo que hace funcionar todo el modelo. Cuando envías algo, el dato
+            <strong>baja</strong> por las capas, y <strong>cada una le añade su propia cabecera</strong> antes de
+            pasárselo a la de abajo.</p>
+
+<figure class="figura">
+                <img src="../../../imagenes/m01_s03_d02_encapsulacion.png"
+                     width="825" height="1024" loading="lazy"
+                     alt="Un dato baja por las capas. En la 7 son solo datos; la 4 le añade delante la cabecera TCP y pasa a llamarse segmento; la 3 añade la cabecera IP y es un paquete; la 2 añade la cabecera Ethernet delante y el FCS detrás, y es una trama; en la 1 todo ello son bits.">
+                <figcaption>Cada capa añade su cabecera sin mirar lo que recibe. Solo la capa 2 añade algo al final: el FCS.</figcaption>
+            </figure>
+
+            <pre><code>  CAPA 7   [ Datos ]                                    ← «GET /index.html»
+              ↓
+  CAPA 4   [ TCP | Datos ]                              ← SEGMENTO
+              ↓                 + puertos origen y destino
+  CAPA 3   [ IP | TCP | Datos ]                         ← PAQUETE
+              ↓                 + direcciones IP
+  CAPA 2   [ ETH | IP | TCP | Datos | FCS ]             ← TRAMA
+              ↓                 + direcciones MAC
+  CAPA 1   1010110100101110101110100101...              ← BITS</code></pre>
+
+            <div class="destacado">
+                <strong>La idea clave: cada capa envuelve, no abre</strong>
+                Para la capa 3, todo lo que le llega desde arriba —cabecera TCP incluida— es simplemente
+                <strong>«datos»</strong>. No lo mira, no lo entiende y no le interesa: se limita a ponerle delante su
+                cabecera IP.
+                <br><br>
+                Es exactamente la analogía del paquete de mensajería: <strong>el transportista no abre tu
+                caja</strong>. Le pega una etiqueta encima y la mete en un camión.
+                <br><br>
+                Y esa es la razón de que se puedan cambiar capas independientemente: como ninguna mira dentro de lo
+                que le dan, da igual lo que haya ahí.
+            </div>
+
+            <h3>El nombre cambia en cada capa</h3>
+
+            <p>Al conjunto de «cabecera + datos» de cada capa se le llama <strong>PDU</strong> (unidad de datos de
+            protocolo), y tiene un nombre propio en cada nivel. Esto <strong>cae en examen</strong>:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>Nombre de la PDU</th><th>Qué cabecera añade</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>5, 6, 7</strong></td><td><strong>Datos</strong></td><td>—</td></tr>
+                    <tr><td><strong>4 · Transporte</strong></td><td><strong>Segmento</strong> (o datagrama en UDP)</td><td>Puertos de origen y destino</td></tr>
+                    <tr><td><strong>3 · Red</strong></td><td><strong>Paquete</strong></td><td>Direcciones IP de origen y destino</td></tr>
+                    <tr><td><strong>2 · Enlace</strong></td><td><strong>Trama</strong></td><td>Direcciones MAC + FCS <strong>al final</strong></td></tr>
+                    <tr><td><strong>1 · Física</strong></td><td><strong>Bits</strong></td><td>—</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>La capa 2 es la única que añade algo al final</strong>
+                Todas las capas ponen su cabecera <strong>delante</strong>. La capa 2 además añade el
+                <strong>FCS</strong> <em>detrás</em>, que es el código de comprobación que viste ayer.
+                <br><br>
+                Tiene sentido: para calcularlo hay que haber visto la trama entera, así que solo puede ir al final.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="desencapsulacion">4. Al llegar: subir la pila</h2>
+
+            <p>En el destino ocurre exactamente lo contrario. Cada capa <strong>quita su cabecera</strong>, la usa
+            para decidir qué hacer, y entrega el resto hacia arriba:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>Qué mira</th><th>Qué decide</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td><td>La señal</td><td>Reconstruye los bits</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td><td>MAC de destino y FCS</td>
+                        <td>¿Es para mí? ¿Llegó íntegra? Si no, <strong>descarta</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td><td>IP de destino</td>
+                        <td>¿Soy yo el destino, o tengo que reenviarlo?</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td><td>Puerto de destino</td>
+                        <td><strong>A qué programa</strong> se lo entrego</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td><td>Los datos ya limpios</td><td>Qué significan y qué hacer con ellos</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Cada capa habla con su igual del otro extremo</strong>
+                La cabecera TCP que pone tu equipo la lee la <strong>capa 4 del servidor</strong>, no los routers
+                intermedios. La cabecera IP la leen <strong>todos los routers</strong> del camino, porque es su
+                trabajo. Y la cabecera Ethernet solo la lee el <strong>siguiente aparato</strong>, que la tira y pone
+                otra.
+                <br><br>
+                A esto se le llama <strong>comunicación entre pares</strong>: cada capa dialoga con su equivalente del
+                otro lado, como si las de abajo no existieran.
+                <br><br>
+                Y explica de una vez por qué las MAC cambian en cada salto y las IP no: <strong>la cabecera de capa 2
+                se rehace en cada tramo; la de capa 3 viaja intacta</strong>.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="coste">5. El coste: cuánto ocupan las cabeceras</h2>
+
+            <p>Toda esa envoltura no es gratis. Cada cabecera son bytes que viajan por el cable y que
+            <strong>no son tus datos</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Cabecera</th><th>Tamaño</th><th>Qué lleva</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Ethernet</strong></td><td>14 bytes + 4 de FCS</td><td>MAC de origen y destino, tipo</td></tr>
+                    <tr><td><strong>IP</strong></td><td><strong>20 bytes</strong></td><td>IP de origen y destino, TTL</td></tr>
+                    <tr><td><strong>TCP</strong></td><td><strong>20 bytes</strong></td><td>Puertos, números de secuencia</td></tr>
+                    <tr><td><strong>UDP</strong></td><td><strong>8 bytes</strong></td><td>Puertos y longitud</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>La cuenta completa</strong>
+                <p>Una trama Ethernet llena, con TCP sobre IP:</p>
+<figure class="figura">
+                <img src="../../../imagenes/m01_s03_d02_trama_1518_bytes.png"
+                     width="1400" height="525" loading="lazy"
+                     alt="Una barra que representa los 1518 bytes de una trama Ethernet llena. Los 14 de la cabecera Ethernet, los 20 de IP, los 20 de TCP y los 4 del FCS son franjas estrechísimas; los 1460 bytes de datos útiles ocupan casi toda la barra.">
+                <figcaption>De los 1518 bytes de una trama llena, 1460 son tuyos: el 96,2 %.</figcaption>
+            </figure>
+
+            <pre><code>Trama Ethernet completa        1518 bytes
+  – cabecera Ethernet            14
+  – FCS                           4
+  – cabecera IP                  20
+  – cabecera TCP                 20
+                              ──────
+  Datos útiles                 1460 bytes
+
+Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
+                <p>Es decir: de cada 100 MB que pasan por el cable, unos <strong>4 MB son cabeceras</strong>. Ese es
+                el precio de tener capas, y sale muy barato para lo que se gana.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Esto explica el «5-10 % de sobrecarga» del Día 2 de la Semana 2</strong>
+                Cuando calculaste que un fichero de 500 MB tarda 40 segundos a 100 Mbps, se dijo que era una
+                <em>cota inferior</em> porque el cálculo ignora las cabeceras.
+                <br><br>
+                Ahora ya sabes cuáles son y cuánto ocupan. Con TCP sobre IP sobre Ethernet, la sobrecarga es de en
+                torno a un <strong>4 %</strong> solo de cabeceras, más los reconocimientos que TCP envía de vuelta.
+            </div>
+
+            <h2 id="mtu">6. El MTU y por qué importa</h2>
+
+            <p>El <strong>MTU</strong> (<em>Maximum Transmission Unit</em>) es el <strong>tamaño máximo de datos que
+            cabe en una trama</strong> de un enlace. En Ethernet vale <strong>1500 bytes</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Valor en Ethernet</th><th>Qué mide</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>MTU</strong></td><td>1500 bytes</td><td>Lo que la capa 2 acepta llevar dentro</td></tr>
+                    <tr><td><strong>MSS</strong></td><td>1460 bytes</td><td>Datos útiles de TCP: MTU − 20 (IP) − 20 (TCP)</td></tr>
+                    <tr><td>Trama completa</td><td>1518 bytes</td><td>MTU + 14 de cabecera + 4 de FCS</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Cuando el dato no cabe: fragmentación</strong>
+                Si un paquete es mayor que el MTU del siguiente enlace, hay dos opciones: <strong>trocearlo</strong>
+                (fragmentar) o <strong>descartarlo</strong> y avisar.
+                <br><br>
+                Fragmentar es caro y frágil: si se pierde un solo fragmento hay que reenviar el paquete entero. Por
+                eso hoy se prefiere lo segundo: el emisor marca los paquetes con el bit <strong>DF</strong>
+                (<em>Don&#39;t Fragment</em>) y, si alguno no cabe, el router lo descarta y responde «hace falta
+                fragmentar». Así el emisor <strong>descubre el MTU del camino</strong> y ajusta el tamaño.
+            </div>
+
+            <div class="destacado">
+                <strong>Tu línea probablemente no tiene MTU 1500</strong>
+                Los libros dicen 1500 porque es el valor de Ethernet. Pero si tu conexión usa <strong>PPPoE</strong>
+                —muy común en ADSL y en bastante fibra— el operador añade <strong>8 bytes</strong> de cabecera propia,
+                y el MTU real del camino baja a <strong>1492</strong>.
+                <br><br>
+                Es encapsulación otra vez: una capa más que envuelve a las demás y se cobra su parte.
+                <br><br>
+                <em>En el laboratorio vas a medir el MTU real de tu línea</em> con un solo comando, y a deducir de ahí
+                qué tecnología hay debajo.
+            </div>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="resumen">7. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li><strong>Capa 4</strong>: <strong>segmento</strong>, <strong>puertos</strong>, entrega
+                    <strong>de programa a programa</strong>. TCP garantiza y ordena; UDP no.</li>
+                    <li><strong>Capa 5</strong> sesión, <strong>capa 6</strong> formato y cifrado (TLS),
+                    <strong>capa 7</strong> el protocolo del servicio (HTTP, DNS).</li>
+                    <li>La capa 7 son los <strong>protocolos</strong>, no los programas: el navegador no es capa 7,
+                    HTTP sí.</li>
+                    <li><strong>Encapsular</strong> es que cada capa añada su cabecera <strong>sin mirar</strong> lo
+                    que le dan.</li>
+                    <li>PDU por capa: <strong>datos → segmento → paquete → trama → bits</strong>.</li>
+                    <li>Solo la <strong>capa 2</strong> añade algo al final: el <strong>FCS</strong>.</li>
+                    <li>Cabeceras: Ethernet 14+4, <strong>IP 20</strong>, <strong>TCP 20</strong>,
+                    <strong>UDP 8</strong>.</li>
+                    <li><strong>MTU 1500</strong>, <strong>MSS 1460</strong>, trama completa 1518. Eficiencia ≈ 96 %.</li>
+                    <li>Con <strong>PPPoE</strong> el MTU real baja a <strong>1492</strong>.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«El navegador es la capa 7»</td><td>La capa 7 es <strong>HTTP</strong>. El navegador es un programa que lo usa</td></tr>
+                    <tr><td>«Segmento, paquete y trama son lo mismo»</td><td>Capas <strong>4, 3 y 2</strong> respectivamente</td></tr>
+                    <tr><td>«Cada capa lee lo que le llega»</td><td>Solo lee <strong>su</strong> cabecera; el resto es contenido opaco</td></tr>
+                    <tr><td>«El MTU es el tamaño de la trama»</td><td>Es lo que cabe <strong>dentro</strong>: la trama completa son 1518</td></tr>
+                    <tr><td>«MTU y MSS son lo mismo»</td><td>MSS = MTU − 40, porque descuenta las cabeceras IP y TCP</td></tr>
+                    <tr><td>«El cifrado HTTPS es capa 7»</td><td>Lo pone <strong>TLS</strong>, capa 6. HTTP sigue siendo capa 7</td></tr>
+                    <tr><td>«Todas las cabeceras van delante»</td><td>El <strong>FCS</strong> de la capa 2 va detrás</td></tr>
+                    <tr><td>«Mi conexión tiene MTU 1500»</td><td>Con PPPoE son <strong>1492</strong>. Se puede medir</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 24 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>medir el MTU real de tu conexión</strong> con un comando, deducir qué tecnología usa tu
+            operador a partir del número que salga, y calcular cuánta de tu velocidad contratada se va en
+            cabeceras.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 2</strong></a> (72 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 3</strong>
+            <p><strong>TCP/IP</strong>: el modelo que de verdad se usa en Internet. Sus cuatro capas, por qué ganó a
+            OSI y cómo se corresponden ambos.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> si OSI es el modelo «oficial» de la ISO, ¿por qué crees que
+            Internet acabó usando otro?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> La capa 3 ya sabe llevar un paquete al equipo correcto. Explica entonces <strong>qué dos problemas</strong> resuelve la capa 4 que la 3 deja sin resolver.',
+                modelo: `<p><strong>Primero: a qué programa entregar.</strong> La capa 3 lleva el paquete hasta la
+                         máquina, y ahí se queda. Pero en esa máquina puede haber decenas de programas esperando
+                         datos: el navegador, el cliente de correo, la actualización del sistema. La capa 3 no tiene
+                         forma de distinguirlos, porque su dirección identifica al <em>equipo</em>, no al proceso.</p>
+                         <p>La capa 4 lo resuelve con el <strong>puerto</strong>. Es la analogía que ya conocía: la IP
+                         es el edificio y el puerto el piso. La capa 3 entrega en el portal; la capa 4 sabe en qué
+                         puerta llamar.</p>
+                         <p><strong>Segundo: el tamaño y las pérdidas.</strong> Un fichero de 10 MB no cabe en un
+                         paquete, así que hay que <strong>trocearlo</strong>, numerar los trozos y volver a juntarlos
+                         en orden al llegar. La capa 3 no puede hacerlo porque trata cada paquete de forma
+                         independiente: no sabe que forman parte de algo mayor.</p>
+                         <p>Y esa misma numeración es lo que permite a <strong>TCP</strong> darse cuenta de que falta
+                         un trozo y pedir que se reenvíe. UDP renuncia a ello a cambio de ser más rápido y ligero:
+                         8 bytes de cabecera frente a 20.</p>`,
+                puntos: [
+                    'Problema 1: a qué programa entregar dentro del equipo',
+                    'Lo resuelve el puerto; recupera la analogía edificio/piso',
+                    'Problema 2: trocear datos grandes y reordenarlos',
+                    'Explica que la capa 3 trata cada paquete de forma independiente',
+                    'Relaciona la numeración con la recuperación de pérdidas en TCP'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Describe qué le pasa a un «GET /index.html» según <strong>baja</strong> por la pila, capa a capa, diciendo cómo se llama en cada momento.',
+                modelo: `<p>Empieza en la <strong>capa 7</strong> como <strong>datos</strong>: el texto de la petición
+                         HTTP, sin más.</p>
+                         <p>Al llegar a la <strong>capa 4</strong>, TCP le pone delante su cabecera de <strong>20
+                         bytes</strong> con el puerto de origen —uno efímero— y el de destino, el 80 o el 443. Ahora
+                         el conjunto se llama <strong>segmento</strong>.</p>
+                         <p>En la <strong>capa 3</strong>, IP añade otros <strong>20 bytes</strong> con las direcciones
+                         de origen y destino. Y aquí está lo importante: para IP, la cabecera TCP que ya había
+                         <strong>es simplemente contenido</strong>. No la mira ni le interesa. El resultado se llama
+                         <strong>paquete</strong>.</p>
+                         <p>En la <strong>capa 2</strong>, Ethernet añade <strong>14 bytes</strong> delante con las
+                         direcciones MAC, y además —única capa que lo hace— pone <strong>4 bytes al final</strong>: el
+                         FCS, que solo puede calcularse cuando ya está todo lo demás. Ahora es una
+                         <strong>trama</strong>.</p>
+                         <p>Y en la <strong>capa 1</strong> todo eso deja de ser estructura y se convierte en
+                         <strong>bits</strong>: voltajes o pulsos de luz por el medio.</p>
+                         <p>La secuencia de nombres es la que hay que llevarse: <strong>datos → segmento → paquete →
+                         trama → bits</strong>. Y la idea de fondo: cada capa <strong>envuelve sin abrir</strong>, que
+                         es justo lo que permite cambiar unas sin tocar otras.</p>`,
+                puntos: [
+                    'Nombra la secuencia datos → segmento → paquete → trama → bits',
+                    'Indica qué cabecera añade cada capa y su tamaño',
+                    'Señala que cada capa trata lo de arriba como contenido opaco',
+                    'Destaca que la capa 2 añade el FCS al final',
+                    'Relaciona el mecanismo con la independencia entre capas'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> ¿Quién lee cada cabecera? Explica qué hacen con las cabeceras <strong>Ethernet, IP y TCP</strong> los routers intermedios y el servidor de destino.',
+                modelo: `<p>Cada cabecera tiene un lector distinto, y de ahí sale todo lo demás.</p>
+                         <p>La cabecera <strong>Ethernet</strong> la lee <strong>solo el siguiente aparato</strong> del
+                         enlace. Cuando el paquete llega a un router, este comprueba que la trama era para él,
+                         <strong>la descarta entera</strong> y construye una nueva para el tramo siguiente, con otras
+                         direcciones MAC. Se rehace en cada salto.</p>
+                         <p>La cabecera <strong>IP</strong> la leen <strong>todos los routers</strong> del camino:
+                         es su trabajo, porque necesitan la dirección de destino para decidir por dónde reenviar. Pero
+                         <strong>no la modifican</strong> —más allá de descontar el TTL—: viaja intacta de extremo a
+                         extremo.</p>
+                         <p>La cabecera <strong>TCP</strong> <strong>no la lee ningún router</strong>. Solo la abre la
+                         capa 4 del <strong>servidor de destino</strong>, para saber a qué programa entregar y en qué
+                         orden colocar los segmentos.</p>
+                         <p>A esto se le llama <strong>comunicación entre pares</strong>: cada capa dialoga con su
+                         equivalente del otro extremo como si las de abajo no existieran. La capa 4 de mi equipo habla
+                         con la capa 4 del servidor; lo que ocurra por el camino es problema de las capas
+                         inferiores.</p>
+                         <p>Y esto cierra la pregunta que arrastraba desde la Semana 2: las <strong>MAC cambian en
+                         cada salto porque su cabecera se rehace</strong>, y las <strong>IP no cambian porque la suya
+                         viaja intacta</strong>.</p>`,
+                puntos: [
+                    'Ethernet: solo el siguiente aparato; se rehace en cada salto',
+                    'IP: la leen todos los routers pero no la reescriben',
+                    'TCP: solo la lee el destino final',
+                    'Introduce el concepto de comunicación entre pares',
+                    'Explica con ello por qué las MAC cambian y las IP no'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Un compañero calcula que por un enlace de 100 Mbps caben exactamente 100 Mb de datos por segundo. Corrígele con números.',
+                modelo: `<p>No caben 100 Mb de <em>datos</em>: caben 100 Mb de <strong>tráfico</strong>, y parte de eso
+                         son cabeceras que no son suyas.</p>
+                         <p>La cuenta, con una trama Ethernet llena y TCP sobre IP:</p>
+                         <ul>
+                           <li>Trama completa: <strong>1518 bytes</strong></li>
+                           <li>Cabecera Ethernet 14 + FCS 4 = <strong>18</strong></li>
+                           <li>Cabecera IP: <strong>20</strong></li>
+                           <li>Cabecera TCP: <strong>20</strong></li>
+                           <li>Datos útiles: <strong>1460 bytes</strong></li>
+                         </ul>
+                         <p>La eficiencia es <strong>1460 ÷ 1518 ≈ 96,2 %</strong>. Así que por un enlace de 100 Mbps
+                         pasan como mucho unos <strong>96 Mb de datos útiles</strong> por segundo, y eso ya en el mejor
+                         caso posible.</p>
+                         <p>Digo «en el mejor caso» porque el cálculo supone tramas <strong>llenas</strong>. Con
+                         paquetes pequeños la proporción empeora muchísimo: en un paquete de 100 bytes de datos, las
+                         cabeceras siguen ocupando 58, así que la eficiencia cae por debajo del 65 %.</p>
+                         <p>Y falta contar el tráfico que TCP genera en sentido contrario con los reconocimientos.
+                         Por eso en la Semana 2 se dijo que el cálculo de tiempo de transferencia era una <strong>cota
+                         inferior</strong>: ahora ya sabemos exactamente de dónde sale esa diferencia.</p>`,
+                puntos: [
+                    'Distingue tráfico total de datos útiles',
+                    'Desglosa las cabeceras: 18 de Ethernet, 20 de IP, 20 de TCP',
+                    'Calcula la eficiencia en torno al 96 %',
+                    'Señala que con paquetes pequeños la eficiencia cae mucho',
+                    'Conecta con la cota inferior del cálculo de la Semana 2'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '<strong>Capa 4</strong>: unidad, direccionamiento y alcance', dorso: '<strong>Segmento</strong> (TCP) o datagrama (UDP), direccionamiento por <strong>puerto</strong>, y alcance <strong>de programa a programa</strong>.' },
+            { frente: '¿Qué dos problemas resuelve la capa 4 que la 3 deja abiertos?', dorso: '<strong>A qué programa</strong> entregar dentro del equipo, y cómo <strong>trocear</strong> datos grandes y reordenarlos (además de recuperar pérdidas, con TCP).' },
+            { frente: 'Tamaño de las cabeceras <strong>TCP</strong> y <strong>UDP</strong>', dorso: 'TCP: <strong>20 bytes</strong>. UDP: <strong>8 bytes</strong>. UDP es más ligero porque renuncia a garantizar entrega y orden.' },
+            { frente: '¿En qué capa está <strong>TLS</strong>, el candado de HTTPS?', dorso: 'En la <strong>capa 6</strong>, presentación: se ocupa de cómo se representan los datos, y cifrarlos es una forma de representarlos. HTTP sigue en la 7.' },
+            { frente: '¿Es el navegador la capa 7?', dorso: 'No. La capa 7 son los <strong>protocolos</strong>: HTTP, DNS, SMTP. El navegador es un <em>programa</em> que usa HTTP.' },
+            { frente: '¿Qué es <strong>encapsular</strong>?', dorso: 'Que cada capa añada <strong>su cabecera</strong> a lo que recibe de arriba, <strong>sin mirar dentro</strong>: para ella todo lo anterior es contenido opaco.' },
+            { frente: 'Los nombres de la PDU, de arriba abajo', dorso: '<strong>Datos → segmento → paquete → trama → bits.</strong> Capas 5-7, 4, 3, 2 y 1.' },
+            { frente: '¿Qué capa añade algo <strong>al final</strong> y por qué?', dorso: 'La <strong>capa 2</strong>, con el <strong>FCS</strong>: para calcularlo hay que haber visto la trama entera, así que solo puede ir detrás.' },
+            { frente: '¿Quién lee la cabecera <strong>TCP</strong> por el camino?', dorso: '<strong>Nadie</strong>: solo la capa 4 del destino final. Los routers leen la cabecera IP; el siguiente aparato, la Ethernet.' },
+            { frente: '¿Qué es la <strong>comunicación entre pares</strong>?', dorso: 'Que cada capa dialoga con su <strong>equivalente del otro extremo</strong> como si las de abajo no existieran.' },
+            { frente: 'Tamaños de cabecera de <strong>Ethernet</strong> e <strong>IP</strong>', dorso: 'Ethernet: <strong>14 bytes + 4 de FCS</strong>. IP: <strong>20 bytes</strong>.' },
+            { frente: '<strong>MTU</strong> y <strong>MSS</strong> en Ethernet', dorso: 'MTU <strong>1500</strong> bytes: lo que cabe dentro de la trama. MSS <strong>1460</strong>: MTU menos las cabeceras IP (20) y TCP (20).' },
+            { frente: '¿Cuánto ocupa una trama Ethernet completa y qué eficiencia da?', dorso: '<strong>1518 bytes</strong>, de los que 1460 son datos: eficiencia <strong>96,2 %</strong>. Unas 4 de cada 100 unidades son cabeceras.' },
+            { frente: '¿Qué hace un router si el paquete no cabe y lleva el bit DF?', dorso: 'Lo <strong>descarta</strong> y responde que hace falta fragmentar. Así el emisor <strong>descubre el MTU del camino</strong> y ajusta el tamaño.' },
+            { frente: '¿Por qué muchas conexiones tienen MTU <strong>1492</strong>?', dorso: 'Por <strong>PPPoE</strong>, que añade <strong>8 bytes</strong> de cabecera propia a los 1500 de Ethernet. Es encapsulación otra vez.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 2 — Capas superiores y encapsulación',
+        subtitulo: 'Transporte · sesión · presentación · aplicación · PDU · MTU',
+        tiempo: '24 minutos',
+        minutos: 24,
+        questions: [
+            {
+                topic: 'Capa 4 — Transporte',
+                repaso: '#capa4',
+                text: '¿Cuál es la unidad de datos de la capa de transporte con TCP?',
+                options: {
+                    a: 'Trama',
+                    b: 'Paquete',
+                    c: 'Segmento',
+                    d: 'Bit'
+                },
+                answer: 'c',
+                feedback: 'Datos (5-7) → <strong>segmento</strong> (4) → paquete (3) → trama (2) → bits (1). Esta secuencia cae en examen casi siempre.'
+            },
+            {
+                topic: 'Capa 4 — Transporte',
+                repaso: '#capa4',
+                text: 'Llega un paquete a tu equipo y hay treinta programas abiertos. ¿Qué capa decide a cuál se lo entrega, y con qué dato?',
+                options: {
+                    a: 'La capa 3, con la dirección IP',
+                    b: 'La capa 4, con el número de puerto',
+                    c: 'La capa 2, con la dirección MAC',
+                    d: 'La capa 7, con el nombre del programa'
+                },
+                answer: 'b',
+                feedback: 'La IP identifica el <strong>equipo</strong>; el puerto, el <strong>programa</strong>. La IP es el edificio y el puerto el piso.'
+            },
+            {
+                topic: 'Capa 4 — Transporte',
+                repaso: '#capa4',
+                text: '¿Por qué la cabecera de UDP ocupa 8 bytes y la de TCP 20?',
+                options: {
+                    a: 'Porque UDP transporta menos datos',
+                    b: 'Porque UDP renuncia a garantizar la entrega y el orden, así que no necesita números de secuencia ni control',
+                    c: 'Porque UDP solo funciona en redes locales',
+                    d: 'Porque TCP incluye la dirección IP'
+                },
+                answer: 'b',
+                feedback: 'Toda la maquinaria de TCP —secuencia, reconocimientos, control de flujo— ocupa espacio en la cabecera. UDP no la lleva porque no ofrece esas garantías.'
+            },
+            {
+                topic: 'Capas 5, 6 y 7',
+                repaso: '#capa567',
+                text: 'Un compañero dice que «el navegador es la capa 7». ¿Qué le corriges?',
+                options: {
+                    a: 'Nada, es correcto',
+                    b: 'Que la capa 7 son los protocolos, como HTTP; el navegador es un programa que los usa',
+                    c: 'Que el navegador es capa 6',
+                    d: 'Que el navegador abarca las capas 5, 6 y 7'
+                },
+                answer: 'b',
+                feedback: 'Es el matiz que más se falla. La capa 7 la forman <strong>HTTP, DNS, SMTP…</strong>, no los programas que los emplean.'
+            },
+            {
+                topic: 'Capas 5, 6 y 7',
+                repaso: '#capa567',
+                text: '¿En qué capa actúa TLS, el que pone el candado de HTTPS?',
+                options: {
+                    a: 'Capa 4, porque va sobre TCP',
+                    b: 'Capa 6: se ocupa del formato de los datos, y cifrar es una forma de representarlos',
+                    c: 'Capa 7, porque es parte de HTTP',
+                    d: 'Capa 3, junto con IP'
+                },
+                answer: 'b',
+                feedback: 'HTTPS no es un protocolo distinto: es <strong>HTTP (capa 7) sobre TLS (capa 6)</strong>. Por eso el cambio a HTTPS no afectó ni a TCP ni a IP.'
+            },
+            {
+                topic: 'Encapsulación',
+                repaso: '#encapsulacion',
+                text: 'Cuando la capa 3 recibe un segmento de la capa 4, ¿qué hace con la cabecera TCP que ya lleva?',
+                options: {
+                    a: 'La lee para saber a qué puerto va',
+                    b: 'La sustituye por la suya',
+                    c: 'No la mira: para ella todo lo que le llega es contenido, y le pone delante su cabecera IP',
+                    d: 'La mueve al final del paquete'
+                },
+                answer: 'c',
+                feedback: 'Es la idea central de la encapsulación: <strong>cada capa envuelve sin abrir</strong>. Por eso se pueden cambiar unas sin tocar otras.'
+            },
+            {
+                topic: 'Encapsulación',
+                repaso: '#encapsulacion',
+                text: 'Ordena mentalmente la secuencia de PDU al enviar. ¿Cuál es correcta, de arriba abajo?',
+                options: {
+                    a: 'Datos → paquete → segmento → trama → bits',
+                    b: 'Datos → segmento → paquete → trama → bits',
+                    c: 'Bits → trama → paquete → segmento → datos',
+                    d: 'Datos → trama → paquete → segmento → bits'
+                },
+                answer: 'b',
+                feedback: 'Al enviar se baja: <strong>datos → segmento → paquete → trama → bits</strong>. La opción c es la secuencia al <em>recibir</em>, que es la inversa.'
+            },
+            {
+                topic: 'Encapsulación',
+                repaso: '#encapsulacion',
+                text: '¿Qué capa añade información <strong>al final</strong> de la PDU, y qué es?',
+                options: {
+                    a: 'La capa 3, con el TTL',
+                    b: 'La capa 4, con el número de secuencia',
+                    c: 'La capa 2, con el FCS',
+                    d: 'Ninguna: todas ponen su cabecera delante'
+                },
+                answer: 'c',
+                feedback: 'El <strong>FCS</strong> solo puede calcularse cuando ya está toda la trama montada, así que necesariamente va detrás.'
+            },
+            {
+                topic: 'Desencapsulación',
+                repaso: '#desencapsulacion',
+                text: 'Un paquete atraviesa 6 routers. ¿Quién lee la cabecera TCP?',
+                options: {
+                    a: 'Los 6 routers',
+                    b: 'Solo el primero',
+                    c: 'Solo la capa 4 del equipo de destino',
+                    d: 'Ninguno: la cabecera TCP se descarta en el primer salto'
+                },
+                answer: 'c',
+                feedback: 'Es la <strong>comunicación entre pares</strong>: la capa 4 del origen habla con la capa 4 del destino. Los routers solo necesitan la cabecera IP.'
+            },
+            {
+                topic: 'Desencapsulación',
+                repaso: '#desencapsulacion',
+                text: 'Con el vocabulario de hoy, ¿por qué cambian las MAC en cada salto y no las IP?',
+                options: {
+                    a: 'Porque las MAC son más cortas',
+                    b: 'Porque la cabecera de capa 2 se rehace en cada tramo, mientras que la de capa 3 viaja intacta',
+                    c: 'Porque los routers no entienden las MAC',
+                    d: 'Porque las IP se cifran'
+                },
+                answer: 'b',
+                feedback: 'El router descarta la trama entera y construye otra nueva; la cabecera IP, en cambio, la reenvía sin tocar más allá del TTL.'
+            },
+            {
+                topic: 'Cabeceras y MTU',
+                repaso: '#coste',
+                text: 'Cabecera IP y cabecera TCP. ¿Cuánto ocupan?',
+                options: {
+                    a: '20 bytes cada una',
+                    b: '14 y 20 bytes',
+                    c: '8 y 20 bytes',
+                    d: '20 y 8 bytes'
+                },
+                answer: 'a',
+                feedback: 'IP y TCP ocupan <strong>20 bytes cada una</strong>. 14 es la cabecera Ethernet y 8 la de UDP.'
+            },
+            {
+                topic: 'Cabeceras y MTU',
+                repaso: '#mtu',
+                text: 'Con MTU de 1500 bytes, ¿cuál es el MSS de una conexión TCP?',
+                options: {
+                    a: '1500 bytes',
+                    b: '1480 bytes',
+                    c: '1460 bytes',
+                    d: '1518 bytes'
+                },
+                answer: 'c',
+                feedback: 'MSS = MTU − 20 (IP) − 20 (TCP) = <strong>1460</strong>. 1480 sería descontando solo IP, y 1518 es la trama completa.'
+            },
+            {
+                topic: 'Cabeceras y MTU',
+                repaso: '#mtu',
+                text: 'Mides tu conexión y el MTU real del camino resulta ser 1492 en lugar de 1500. ¿Qué indica?',
+                options: {
+                    a: 'Que el cable está defectuoso',
+                    b: 'Que hay PPPoE por medio, que añade 8 bytes de cabecera propia',
+                    c: 'Que la tarjeta de red está mal configurada',
+                    d: 'Que el router tiene poca memoria'
+                },
+                answer: 'b',
+                feedback: 'Es encapsulación otra vez: una capa más que envuelve a las demás y se cobra sus 8 bytes. Muy común en ADSL y en bastante fibra.'
+            },
+            {
+                topic: 'Cabeceras y MTU',
+                repaso: '#coste',
+                text: 'Una trama Ethernet llena transporta 1460 bytes útiles en 1518 totales. ¿Y si el dato fueran solo 100 bytes?',
+                options: {
+                    a: 'La eficiencia sería la misma',
+                    b: 'La eficiencia sería mucho peor: las cabeceras seguirían ocupando 58 bytes',
+                    c: 'Las cabeceras se reducirían proporcionalmente',
+                    d: 'No se podría enviar'
+                },
+                answer: 'b',
+                feedback: 'Las cabeceras son de <strong>tamaño fijo</strong>. Con paquetes pequeños su peso relativo se dispara, y por eso el tráfico de muchos paquetes cortos es tan ineficiente.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: '../Dia_01/teoria.html#capa2',
+                text: '<em>Repaso.</em> ¿Cuál es el alcance de la capa 2?',
+                options: {
+                    a: 'Extremo a extremo, por todas las redes',
+                    b: 'Un solo salto: dentro de la red local',
+                    c: 'De programa a programa',
+                    d: 'Depende del protocolo'
+                },
+                answer: 'b',
+                feedback: 'La capa 2 entrega <strong>dentro</strong> de una red. La opción a es la capa 3 y la c la capa 4.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

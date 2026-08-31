@@ -1,7 +1,9 @@
 # Imágenes del curso
 
-Diagramas que no se pueden representar bien en ASCII: señales, ondas, curvas,
-recorridos físicos y cualquier cosa con matices visuales.
+Diagramas que no se pueden representar bien en ASCII: señales, ondas y curvas,
+pero también el **diagrama principal de cada concepto**, las proporciones, los
+recorridos por varios elementos y las comparaciones lado a lado. La lista
+completa de qué pide imagen está en la sección **8.5 de `CLAUDE.md`**.
 
 ## Cómo se generan
 
@@ -17,7 +19,11 @@ El procedimiento completo está en la sección **8.5 de `CLAUDE.md`**.
 
 ```text
 dia_03_analogica_digital.png
+m01_s03_d02_encapsulacion.png
 ```
+
+Las tres primeras imágenes (Semana 1, Día 3) se nombraron antes de fijar el
+prefijo de mes y semana, y se conservan así para no romper los enlaces.
 
 ## Antes de guardar: limpiar
 

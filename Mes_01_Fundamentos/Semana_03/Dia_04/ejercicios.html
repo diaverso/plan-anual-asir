@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">74 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            Nada de memorizar listas de siglas. Casi todo se resuelve con una sola regla: <strong>capas 1 y 2 son
+            del IEEE, capas 3 a 7 de la IETF, y los números los reparte IANA</strong>.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/ejercicios.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Ejercicios',
+    subtitulo: 'Organismos · de iure y de facto · RFC · IEEE 802 · IANA',
+    tiempo: '74 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Quién define qué',
+            tiempo: '14 min',
+            enunciado: '<p>La pregunta más frecuente del tema. Aplica la regla en lugar de memorizar.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica qué organismo define cada cosa. Escribe solo las siglas.',
+                    esquina: 'Qué se define',
+                    cabecera: ['Organismo'],
+                    filas: [
+                        { etiqueta: 'La trama <strong>Ethernet</strong>', celdas: [{ respuestas: ['ieee'], placeholder: 'siglas' }] },
+                        { etiqueta: 'El protocolo <strong>IP</strong>', celdas: [{ respuestas: ['ietf'], placeholder: 'siglas' }] },
+                        { etiqueta: 'El modelo <strong>OSI</strong>', celdas: [{ respuestas: ['iso'], placeholder: 'siglas' }] },
+                        { etiqueta: 'El lenguaje <strong>HTML</strong>', celdas: [{ respuestas: ['w3c'], placeholder: 'siglas' }] },
+                        { etiqueta: 'El protocolo <strong>HTTP</strong>', celdas: [{ respuestas: ['ietf'], placeholder: 'siglas' }] },
+                        { etiqueta: 'Que el puerto <strong>443</strong> sea el de la web segura', celdas: [{ respuestas: ['iana', 'icann'], placeholder: 'siglas' }] },
+                        { etiqueta: 'El <strong>Wi-Fi</strong> (norma 802.11)', celdas: [{ respuestas: ['ieee'], placeholder: 'siglas' }] },
+                        { etiqueta: 'Los <strong>OUI</strong> de las direcciones MAC', celdas: [{ respuestas: ['ieee'], placeholder: 'siglas' }] }
+                    ],
+                    explicacion: 'Fíjate en el patrón: <strong>tres son del IEEE</strong> y todas son de capas 1 y 2. <strong>Dos son de la IETF</strong> y son protocolos que viajan por Internet. Y la única de IANA no define ningún formato: <strong>reparte un número</strong>.',
+                    pistas: [
+                        'Pregúntate primero de qué capa es cada cosa.',
+                        'HTTP y HTML no son del mismo organismo, aunque vayan siempre juntos.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué HTTP y HTML los definen organismos distintos?',
+                    opciones: {
+                        a: 'Por razones históricas, sin ninguna lógica',
+                        b: 'Porque HTTP es un protocolo de red y HTML es el formato del documento que se transporta',
+                        c: 'Porque HTML es más moderno',
+                        d: 'Porque HTTP es de pago y HTML gratuito'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La prueba está en que por HTTP se puede enviar una imagen, un vídeo o un PDF, <strong>sin una línea de HTML</strong>. El protocolo transporta; el formato es lo transportado.',
+                    pistas: [
+                        '¿Se puede usar HTTP para enviar algo que no sea HTML?'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa la regla general.',
+                    frase: 'Si el estándar trata de cables, tramas o el aire (capas 1 y 2), es del {{0}}. Si trata de protocolos que viajan por Internet (capas 3 a 7), es de la {{1}}. Y si lo que hace es repartir un número o un nombre para que no se repita, es de {{2}}.',
+                    respuestas: [
+                        ['ieee'],
+                        ['ietf'],
+                        ['iana', 'icann']
+                    ],
+                    explicacion: 'Tres siglas y tres ámbitos. Con esto se responde casi cualquier pregunta del tema sin haber memorizado ninguna lista.',
+                    pistas: [
+                        'Las tres empiezan por I.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: De iure y de facto',
+            tiempo: '12 min',
+            enunciado: '<p>Dos caminos para llegar a lo mismo, con ventajas distintas.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>a)</strong> Marca <strong>todo</strong> lo que sea cierto de un estándar <em>de facto</em>.',
+                    opciones: {
+                        a: 'Se impone porque todo el mundo lo usa, no porque lo apruebe un organismo',
+                        b: 'Es más rápido de establecer, porque no espera a ningún comité',
+                        c: 'Puede tener dueño, y el dueño puede cambiarlo o cobrarlo',
+                        d: 'Siempre es técnicamente peor que uno de iure'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'La d es falsa, y TCP/IP lo demuestra: era <em>de facto</em> y ganó a un estándar oficial. La calidad técnica no tiene nada que ver con el camino por el que algo se convierte en estándar.',
+                    pistas: [
+                        'Tres de las cuatro son ciertas.',
+                        'Una de ellas confunde el origen del estándar con su calidad.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Clasifica cada caso.',
+                    izquierda: [
+                        'Ethernet, norma IEEE 802.3',
+                        'TCP/IP en 1985, extendido por venir con BSD Unix',
+                        'El modelo OSI, norma ISO 7498',
+                        'Los formatos de Office en los años noventa'
+                    ],
+                    derecha: [
+                        'De iure — aprobado por un organismo de normalización',
+                        'De facto — se impuso por el uso, sin aprobación previa',
+                        'De iure — publicado por la ISO',
+                        'De facto — con dueño, que controlaba el formato'
+                    ],
+                    pares: {
+                        'Ethernet, norma IEEE 802.3': 'De iure — aprobado por un organismo de normalización',
+                        'TCP/IP en 1985, extendido por venir con BSD Unix': 'De facto — se impuso por el uso, sin aprobación previa',
+                        'El modelo OSI, norma ISO 7498': 'De iure — publicado por la ISO',
+                        'Los formatos de Office en los años noventa': 'De facto — con dueño, que controlaba el formato'
+                    },
+                    explicacion: 'Los dos casos <em>de facto</em> muestran las dos caras: TCP/IP acabó publicándose en RFC abiertos y <strong>se quedó sin dueño</strong>; los formatos de Office siguieron controlados por una empresa durante años.',
+                    pistas: [
+                        'Dos de los cuatro son de iure, y en ambos se nombra el organismo.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>c)</strong> ¿Por qué es peligroso que un estándar <em>de facto</em> tenga dueño? Pon un ejemplo de lo que podría pasar.',
+                    modelo: `<p>Porque el dueño puede <strong>cambiar las reglas cuando le convenga</strong>, y todos
+                             los que dependen de ese estándar tienen que seguirle sin poder discutirlo.</p>
+                             <p>Puede cambiar el formato de una versión a otra y dejar incompatible lo anterior;
+                             puede empezar a cobrar por usarlo o por implementarlo; puede negar la documentación a un
+                             competidor, de modo que solo sus productos funcionen bien; o simplemente puede dejar de
+                             mantenerlo y abandonar a quien lo usaba.</p>
+                             <p>El caso de los formatos de oficina en los noventa lo ilustra: como todo el mundo
+                             intercambiaba documentos en ese formato, no usarlo significaba quedarse fuera, aunque
+                             fuese propiedad de una empresa que podía modificarlo a voluntad. Eso no es un estándar
+                             abierto: es una <strong>dependencia</strong>.</p>
+                             <p>Un estándar de iure evita eso porque está <strong>publicado, es estable y no es de
+                             nadie</strong>. Cualquiera puede implementarlo sin pedir permiso, y nadie puede cambiarlo
+                             unilateralmente. Es la diferencia entre un acuerdo y una concesión.</p>`,
+                    rubrica: [
+                        'Identifica que el dueño puede cambiar las reglas unilateralmente',
+                        'Da al menos dos consecuencias concretas',
+                        'Usa un ejemplo real o verosímil',
+                        'Contrasta con la ventaja del estándar de iure'
+                    ],
+                    pistas: [
+                        '¿Qué podría hacer el dueño que perjudicara a quien depende del formato?',
+                        'Relaciónalo con la dependencia del proveedor de los años ochenta.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Los RFC',
+            tiempo: '14 min',
+            enunciado: '<p>Cómo funciona el sistema que documenta Internet.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa lo esencial del sistema.',
+                    frase: 'RFC significa «petición de {{0}}», un nombre de 1969 que delata que no eran órdenes. Se numeran de forma correlativa y {{1}} se modifican: si algo cambia, se publica uno nuevo que deja {{2}} al anterior. Los publica la {{3}}, y son públicos y gratuitos.',
+                    respuestas: [
+                        ['comentarios', 'comentario'],
+                        ['nunca', 'jamas', 'jamás', 'no'],
+                        ['obsoleto', 'obsoletos', 'anticuado'],
+                        ['ietf']
+                    ],
+                    explicacion: 'Esa inmutabilidad es lo que permite que una referencia sirva de contrato: quien programó «según el RFC 791» sabe que ese documento dice hoy lo mismo que en 1981.',
+                    pistas: [
+                        'La C de RFC.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué ventaja tiene que un RFC no se modifique nunca?',
+                    opciones: {
+                        a: 'Ahorra trabajo a los autores',
+                        b: 'Que una referencia significa siempre lo mismo: dos equipos programados con años de diferencia siguen la misma especificación',
+                        c: 'Que los RFC ocupan menos espacio',
+                        d: 'Ninguna: es una limitación heredada del papel'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Si se editaran sobre la marcha, dos fabricantes podrían programar «según el mismo RFC» y ser incompatibles, sin forma de saber quién siguió qué versión. Además queda un <strong>archivo histórico completo</strong> de la evolución de Internet.',
+                    pistas: [
+                        'Piensa en dos fabricantes que programan el mismo protocolo con diez años de diferencia.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>c)</strong> ¿Qué significa cada palabra clave del RFC 2119?',
+                    esquina: 'Palabra',
+                    cabecera: ['¿Es obligatorio? (sí / no)'],
+                    filas: [
+                        { etiqueta: '<strong>MUST</strong>', celdas: [{ respuestas: ['si', 'sí'], placeholder: 'sí / no' }] },
+                        { etiqueta: '<strong>SHOULD</strong>', celdas: [{ respuestas: ['no'], placeholder: 'sí / no' }] },
+                        { etiqueta: '<strong>MAY</strong>', celdas: [{ respuestas: ['no'], placeholder: 'sí / no' }] },
+                        { etiqueta: '<strong>MUST NOT</strong>', celdas: [{ respuestas: ['si', 'sí'], placeholder: 'sí / no' }] }
+                    ],
+                    explicacion: '<strong>MUST</strong> y <strong>MUST NOT</strong> son normativos: incumplirlos hace que la implementación no sea válida. <strong>SHOULD</strong> es recomendado —se puede incumplir sabiendo por qué— y <strong>MAY</strong> es opcional de verdad. Cuando dos aparatos «casi» se entienden, suele haber un <em>SHOULD</em> incumplido por medio.',
+                    pistas: [
+                        'Dos son obligatorios y dos no.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Qué hace falta para proponer un cambio en un protocolo de Internet a través de la IETF?',
+                    opciones: {
+                        a: 'Ser miembro de pago y representar a una empresa',
+                        b: 'Nada especial: es abierta a cualquiera, se decide por consenso aproximado y se valora que haya código que funcione',
+                        c: 'La aprobación previa de la ISO',
+                        d: 'Una votación entre los países miembros'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la diferencia de método que explicaba lo de ayer. Frente a un comité que vota especificaciones, un grupo abierto que escribe implementaciones y se queda con la que funciona.',
+                    pistas: [
+                        'Recuerda la frase de David Clark del Día 3.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: IEEE 802 e IANA',
+            tiempo: '12 min',
+            enunciado: '<p>Los dos registros con los que te vas a encontrar constantemente.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada norma con lo que define.',
+                    izquierda: ['802.3', '802.11', '802.1Q', '802.3af'],
+                    derecha: [
+                        'Ethernet: la trama y el cable',
+                        'Wi-Fi',
+                        'VLAN: dividir un switch en redes lógicas',
+                        'PoE: alimentar un aparato por el cable de red'
+                    ],
+                    pares: {
+                        '802.3': 'Ethernet: la trama y el cable',
+                        '802.11': 'Wi-Fi',
+                        '802.1Q': 'VLAN: dividir un switch en redes lógicas',
+                        '802.3af': 'PoE: alimentar un aparato por el cable de red'
+                    },
+                    explicacion: 'Todas del IEEE y todas de capas 1 y 2. Esta numeración aparece impresa en las cajas de switches y puntos de acceso: leerla ahorra abrir la ficha técnica.',
+                    pistas: [
+                        'Las dos que empiezan por 802.3 tienen que ver con el cable.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Completa los rangos de puertos.',
+                    esquina: 'Rango',
+                    cabecera: ['Cómo se llaman'],
+                    filas: [
+                        { etiqueta: '<strong>0 - 1023</strong>', celdas: [{ respuestas: ['bien conocidos', 'conocidos', 'well known', 'reservados'], placeholder: 'nombre' }] },
+                        { etiqueta: '<strong>1024 - 49151</strong>', celdas: [{ respuestas: ['registrados', 'registrado'], placeholder: 'nombre' }] },
+                        { etiqueta: '<strong>49152 - 65535</strong>', celdas: [{ respuestas: ['efimeros', 'efímeros', 'dinamicos', 'dinámicos', 'privados'], placeholder: 'nombre' }] }
+                    ],
+                    explicacion: 'El último rango explica los puertos que viste ayer en tus propias conexiones —58943, 60891, 64405—: todos por encima de 49152, porque el sistema los coge de ahí para cada conexión de salida.',
+                    pistas: [
+                        'El tercero es el que usaste ayer sin saberlo.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué los OUI los reparte el IEEE y no IANA, si IANA es «la que reparte los números»?',
+                    opciones: {
+                        a: 'Por un acuerdo histórico sin lógica actual',
+                        b: 'Porque los OUI son parte de las direcciones MAC, que son de capa 2, y la capa 2 es del IEEE',
+                        c: 'Porque IANA solo reparte números decimales',
+                        d: 'Porque los OUI no son números sino nombres'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La regla del día se mantiene incluso aquí: <strong>capa 2 → IEEE</strong>, sin excepciones. IANA reparte los números de las capas de las que se ocupa la IETF.',
+                    pistas: [
+                        '¿De qué capa es una dirección MAC?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Aplicación práctica',
+            tiempo: '12 min',
+            enunciado: '<p>Situaciones que te vas a encontrar de verdad.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Compras un switch de un fabricante y un punto de acceso de otro. ¿Qué te permite darlos por compatibles antes de probarlos?',
+                    opciones: {
+                        a: 'Que sean del mismo año',
+                        b: 'Que ambos declaren cumplir las mismas normas: 802.3 para el cableado, 802.11 para el inalámbrico',
+                        c: 'Nada: hay que probarlo siempre',
+                        d: 'Que sean del mismo distribuidor'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es <strong>para lo que sirven los estándares</strong>: comprar de fabricantes distintos sin quedarte atado a ninguno. Probar sigue siendo buena idea, pero la norma es lo que hace razonable esperar que funcione.',
+                    pistas: [
+                        '¿Qué información de la caja te dice si dos aparatos se van a entender?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un servicio interno de tu empresa escucha en el puerto 8080. ¿Es incorrecto?',
+                    opciones: {
+                        a: 'Sí: el puerto de la web es el 80 y usar otro incumple el estándar',
+                        b: 'No: los puertos son una convención registrada, no una obligación. Basta con indicarlo en la dirección',
+                        c: 'Sí, salvo que se pida permiso a IANA',
+                        d: 'No, porque el 8080 también está reservado para la web'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'IANA lleva un <strong>registro</strong>, no una ley. El registro sirve para que los demás sepan dónde llamar; si te sales de él, todo funciona igual pero hay que avisar: <code>http://servidor:8080</code>.',
+                    pistas: [
+                        'Recuerda los puertos raros que viste ayer en tus propias conexiones.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> Dos equipos de fabricantes distintos «casi» funcionan juntos: se conectan, pero algunas cosas fallan. Usando lo de hoy, explica <strong>una causa probable</strong> y cómo lo investigarías.',
+                    modelo: `<p>Una causa muy probable es que uno de los dos haya <strong>incumplido un
+                             SHOULD</strong> del estándar.</p>
+                             <p>El RFC 2119 distingue entre <strong>MUST</strong>, que es obligatorio, y
+                             <strong>SHOULD</strong>, que es recomendado y se puede incumplir «sabiendo por qué». Si un
+                             fabricante se salta un MUST, su producto directamente no interopera y el problema se
+                             detecta enseguida. Pero si se salta un SHOULD, el resultado es exactamente esto: funciona
+                             en general y falla en casos concretos.</p>
+                             <p>Para investigarlo empezaría por <strong>capturar el tráfico con Wireshark</strong> y
+                             comparar lo que hace cada equipo en el momento del fallo. Buscaría campos opcionales que
+                             uno envía y el otro ignora, o valores fuera de lo esperado.</p>
+                             <p>Después iría al <strong>RFC o a la norma correspondiente</strong> —al IEEE si es de
+                             capas 1 o 2, a la IETF si es de la 3 para arriba— y miraría qué dice exactamente sobre
+                             ese campo: si es un MUST, tengo un argumento sólido para reclamar al fabricante; si es un
+                             SHOULD, probablemente haya que buscar una configuración que evite el caso.</p>
+                             <p>Lo interesante es que el estándar sirve <strong>también como herramienta de
+                             diagnóstico</strong>: no es solo una garantía de compra, es el documento contra el que se
+                             comprueba quién tiene razón.</p>`,
+                    rubrica: [
+                        'Identifica el incumplimiento de un SHOULD como causa probable',
+                        'Explica por qué eso produce un fallo parcial y no total',
+                        'Propone capturar tráfico para comparar comportamientos',
+                        'Sabe a qué organismo acudir según la capa',
+                        'Concluye que el estándar sirve para diagnosticar, no solo para comprar'
+                    ],
+                    pistas: [
+                        '¿Qué diferencia hay entre saltarse un MUST y saltarse un SHOULD?',
+                        '¿Con qué herramienta compararías lo que hace cada equipo?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Integración de la semana',
+            tiempo: '10 min',
+            enunciado: '<p>Último ejercicio antes del viernes. Junta los cuatro días.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para cada elemento de una trama, indica su <strong>capa de OSI</strong> (número) y el <strong>organismo</strong> que lo define.',
+                    esquina: 'Elemento',
+                    cabecera: ['Capa OSI', 'Organismo'],
+                    filas: [
+                        {
+                            etiqueta: 'Cabecera <strong>Ethernet</strong> (14 bytes)',
+                            celdas: [
+                                { respuestas: ['2', 'dos'], placeholder: 'nº' },
+                                { respuestas: ['ieee'], placeholder: 'siglas' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Cabecera <strong>IP</strong> (20 bytes)',
+                            celdas: [
+                                { respuestas: ['3', 'tres'], placeholder: 'nº' },
+                                { respuestas: ['ietf'], placeholder: 'siglas' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Cabecera <strong>TCP</strong> (20 bytes)',
+                            celdas: [
+                                { respuestas: ['4', 'cuatro'], placeholder: 'nº' },
+                                { respuestas: ['ietf'], placeholder: 'siglas' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'La petición <strong>GET / HTTP/1.1</strong>',
+                            celdas: [
+                                { respuestas: ['7', 'siete'], placeholder: 'nº' },
+                                { respuestas: ['ietf'], placeholder: 'siglas' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Una sola trama y toda la semana dentro: cuatro capas, cuatro cabeceras y dos organismos. El de abajo es del IEEE; los tres de arriba, de la IETF. Es exactamente lo que vas a ver hoy en Wireshark.',
+                    pistas: [
+                        'Solo hay un organismo distinto en toda la tabla, y está en la primera fila.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> Resume la semana en un párrafo: qué relación hay entre <strong>OSI</strong>, <strong>TCP/IP</strong> y los <strong>organismos de normalización</strong>.',
+                    modelo: `<p><strong>OSI</strong> es un modelo de referencia de siete capas publicado por la ISO.
+                             Sirve para <strong>entender y describir</strong> cómo funciona una red, y es el
+                             vocabulario que usa toda la industria: «capa 2», «capa 7».</p>
+                             <p><strong>TCP/IP</strong> es la familia de protocolos que se usa de verdad, con cuatro
+                             capas. No es una simplificación de OSI: es <strong>anterior</strong>, y ganó por estar ya
+                             funcionando y ser gratis.</p>
+                             <p>Los <strong>organismos</strong> son quienes escriben las especificaciones concretas
+                             que dan contenido a esas capas. El <strong>IEEE</strong> se ocupa de las dos de abajo
+                             —cables y tramas—, la <strong>IETF</strong> de la 3 a la 7 mediante los RFC, e
+                             <strong>IANA</strong> lleva los registros de números para que no se repitan.</p>
+                             <p>La relación entre las tres cosas es la que da sentido a la semana: <strong>OSI dice
+                             qué capas hay, TCP/IP dice qué protocolos las ocupan y los organismos dicen exactamente
+                             cómo es cada uno</strong>, hasta el nivel del bit.</p>
+                             <p>Y todo eso se puede comprobar: en una trama capturada están los 14 bytes que definió
+                             el IEEE, los 20 que definió la IETF en el RFC 791 y el puerto 80 que apuntó IANA en su
+                             registro.</p>`,
+                    rubrica: [
+                        'Define OSI como modelo de referencia y vocabulario',
+                        'Define TCP/IP como la familia real de protocolos, anterior a OSI',
+                        'Explica el papel de IEEE, IETF e IANA',
+                        'Articula los tres niveles: capas, protocolos y especificaciones',
+                        'Cierra con una idea propia o un ejemplo concreto'
+                    ],
+                    pistas: [
+                        'Uno describe, otro implementa y los terceros especifican.',
+                        'Termina con algo que se pueda comprobar en una captura.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

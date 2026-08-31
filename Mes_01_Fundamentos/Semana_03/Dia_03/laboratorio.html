@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: la pila entera en una petición</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">62 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Requisito:</strong> conexión a Internet</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Abrir una página web es un gesto de un segundo. Debajo hay <strong>cuatro capas trabajando</strong>,
+            cada una con su protocolo, su dirección y su cabecera.</p>
+            <p>Hoy vas a ver las cuatro <strong>en una sola petición</strong>: la consulta DNS que traduce el nombre,
+            la conexión TCP con su puerto, la dirección IP a la que se llega y las cabeceras HTTP que se
+            intercambian. Todo con herramientas que ya tienes instaladas.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Un aviso sobre <code>curl</code> en Windows</strong>
+            En PowerShell, <code>curl</code> a secas <strong>no es curl</strong>: es un alias de otro comando y no
+            entiende las opciones que vas a usar. Hay que escribir <strong><code>curl.exe</code></strong>, con la
+            extensión.
+            <br><br>
+            Si ves un error de «parámetro no encontrado», casi seguro que es esto.
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Capa de aplicación: la traducción del nombre (12 min)</h2>
+
+            <p>Antes de poder conectarse a nada hay que averiguar <strong>a qué dirección IP</strong> corresponde el
+            nombre. De eso se ocupa <strong>DNS</strong>, que es capa de aplicación.</p>
+
+            <div class="so-tabs" data-grupo="dns">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="dns" data-so="win">
+                <div class="comando"><pre><code>Resolve-DnsName -Name example.com -Type A</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="dns" data-so="nix">
+                <div class="comando"><pre><code>dig +short example.com A</code></pre></div>
+                <p>Si no tienes <code>dig</code>, sirve <code>host example.com</code> o
+                <code>nslookup example.com</code>.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>Name        Type IPAddress
+----        ---- ---------
+example.com    A 172.66.147.243
+example.com    A 104.20.23.154</code></pre>
+                <p>Fíjate en que devuelve <strong>dos direcciones</strong> para el mismo nombre. Es lo normal en
+                sitios grandes: reparten la carga entre varios servidores, y el cliente elige uno.</p>
+                <p>Y muy probablemente <strong>tus direcciones no serán estas</strong>. DNS suele responder con el
+                servidor más cercano a quien pregunta, así que la respuesta depende de dónde estés.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Qué capa acabas de usar</strong>
+                DNS es de <strong>capa de aplicación</strong>, igual que HTTP. Es fácil pensar que es «algo del
+                sistema», de más abajo, pero no: es un servicio que se pide a un servidor, con su protocolo, como
+                cualquier otro.
+                <br><br>
+                Con un matiz que ya viste: viaja sobre <strong>UDP</strong>, no sobre TCP. Una pregunta corta y una
+                respuesta corta.
+            </div>
+
+            <h2>Parte 2 — Capa de transporte: los puertos, en directo (16 min)</h2>
+
+            <p>Ahora mira las conexiones que tu equipo tiene abiertas <strong>en este momento</strong>. Cada línea es
+            una conversación de capa 4 en marcha.</p>
+
+            <div class="so-tabs" data-grupo="conex">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="conex" data-so="win">
+                <div class="comando"><pre><code>Get-NetTCPConnection -State Established |
+    Where-Object { $_.RemoteAddress -notmatch '^(::1|127\.)' } |
+    Select-Object LocalPort, RemoteAddress, RemotePort,
+        @{n='Proceso';e={(Get-Process -Id $_.OwningProcess).ProcessName}} |
+    Format-Table -AutoSize</code></pre></div>
+                <p>El filtro quita las conexiones del equipo consigo mismo (<code>::1</code> y <code>127.x</code>),
+                que son ruido para lo que buscamos.</p>
+            </div>
+            <div class="so-panel" data-grupo="conex" data-so="nix">
+                <div class="comando"><pre><code>ss -tnp state established</code></pre></div>
+                <p>En macOS: <code>lsof -i -P | grep ESTABLISHED</code>.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>LocalPort RemoteAddress   RemotePort Proceso
+--------- -------------   ---------- -------
+    64405 162.159.129.235       8443 Discord
+    60891 155.133.229.20       27018 steam
+    58943 34.107.243.93          443 firefox
+    60506 192.168.1.138          8009 steamwebhelper</code></pre>
+                <p>Cada fila tiene <strong>las tres capas de arriba a la vez</strong>:</p>
+                <ul>
+                    <li><strong>RemoteAddress</strong> es la capa 3: con quién se habla.</li>
+                    <li><strong>RemotePort</strong> y <strong>LocalPort</strong> son la capa 4: qué conversación.</li>
+                    <li><strong>Proceso</strong> es la capa 7: qué programa la mantiene.</li>
+                </ul>
+            </div>
+
+            <div class="destacado">
+                <strong>Dos cosas que enseña esta tabla</strong>
+                <p><strong>1. El puerto de origen es aleatorio.</strong> Los <code>LocalPort</code> son números
+                altos y sin relación entre sí: 64405, 60891, 58943. Se llaman <strong>puertos efímeros</strong>: el
+                sistema elige uno libre para cada conexión y lo devuelve al terminar. Solo el puerto del
+                <em>servidor</em> es fijo y conocido.</p>
+                <p><strong>2. Los puertos «conocidos» son una convención, no una ley.</strong> Ahí hay un 443, que es
+                el esperado, pero también un <strong>8443</strong>, un <strong>27018</strong> y un
+                <strong>8009</strong>. Nada obliga a un programa a usar el puerto de la lista: es un acuerdo para que
+                los demás sepan dónde llamar.</p>
+            </div>
+
+            <h2>Parte 3 — Las cuatro capas de una vez (20 min)</h2>
+
+            <p>Y ahora el comando del día. <code>curl -v</code> hace una petición web y va contando <strong>lo que
+            hace en cada capa</strong> mientras lo hace.</p>
+
+            <div class="so-tabs" data-grupo="curl">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="curl" data-so="win">
+                <div class="comando"><pre><code>curl.exe -v -o NUL https://example.com</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="curl" data-so="nix">
+                <div class="comando"><pre><code>curl -v -o /dev/null https://example.com</code></pre></div>
+            </div>
+
+            <p><code>-v</code> pide el detalle y <code>-o</code> tira el contenido de la página, que hoy no
+            interesa: lo que queremos ver es el <em>proceso</em>, no el resultado.</p>
+
+            <div class="dato">
+                <strong>Salida real, capa a capa</strong>
+<pre><code>* Host example.com:443 was resolved.            ← CAPA APLICACIÓN (DNS)
+* IPv4: 172.66.147.243, 104.20.23.154
+
+*   Trying 172.66.147.243:443...               ← CAPAS INTERNET + TRANSPORTE
+* Established connection to example.com
+  (172.66.147.243 port 443) from 192.168.1.70 port 52046
+
+* ALPN: server accepted http/1.1               ← negociación del formato
+
+&gt; GET / HTTP/1.1                                ← CAPA APLICACIÓN (HTTP)
+&gt; Host: example.com
+&gt; User-Agent: curl/8.21.0
+&gt; Accept: */*
+
+&lt; HTTP/1.1 200 OK                               ← respuesta del servidor</code></pre>
+                <p>Las líneas que empiezan por <code>*</code> son comentarios de curl sobre lo que está haciendo.
+                Las de <code>&gt;</code> son lo que <strong>envía</strong>, y las de <code>&lt;</code> lo que
+                <strong>recibe</strong>.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Lee esa salida despacio, porque está toda la semana ahí</strong>
+                <p><strong>«was resolved»</strong> es la consulta DNS de la Parte 1, hecha automáticamente. Capa de
+                aplicación.</p>
+                <p><strong>«Trying 172.66.147.243:443»</strong> junta dos capas en una línea: la
+                <strong>dirección IP</strong> es capa de internet y el <strong>:443</strong> es capa de transporte.</p>
+                <p><strong>«from 192.168.1.70 port 52046»</strong> es el otro extremo de la conexión: tu IP privada y
+                tu <strong>puerto efímero</strong>. Si repites el comando, ese número cambiará.</p>
+                <p><strong>«GET / HTTP/1.1»</strong> es por fin la petición web. Todo lo anterior era preparativo:
+                cuatro pasos antes de poder decir la única frase que de verdad querías decir.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Comprueba tú mismo lo del puerto efímero</strong>
+                Ejecuta el comando <strong>dos veces seguidas</strong> y compara el número que aparece después de
+                <code>from ... port</code>. Cambia en cada ejecución, mientras que el 443 del servidor no.
+                <br><br>
+                Es la diferencia entre <strong>quien llama</strong>, que puede hacerlo desde cualquier número, y
+                <strong>quien atiende</strong>, que tiene que estar siempre en el mismo sitio para que lo
+                encuentren.
+            </div>
+
+            <h2>Parte 4 — Recoge y razona</h2>
+
+            <p>Con <strong>tus datos</strong>. Se comprueba que tengan la forma correcta, no que coincidan con los
+            míos.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sabes resolver un nombre a mano y explicar por qué DNS es capa de aplicación.</li>
+                <li>Distingues un <strong>puerto efímero</strong> de un puerto de servicio, y sabes por qué uno
+                cambia y el otro no.</li>
+                <li>Puedes coger una salida de <code>curl -v</code> y decir <strong>qué capa</strong> corresponde a
+                cada línea.</li>
+                <li>Entiendes que los puertos conocidos son una <strong>convención</strong>.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_02/laboratorio.html">← Laboratorio del Día 2</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Laboratorio: la pila entera en una petición',
+    subtitulo: 'DNS · puertos efímeros · las cuatro capas en una salida de curl',
+    tiempo: '62 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: La traducción del nombre',
+            tiempo: '12 min',
+            enunciado: '<p>Datos de la Parte 1.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'ipv4',
+                    pregunta: '<strong>a)</strong> Una de las direcciones IP que te ha devuelto <code>example.com</code>.',
+                    placeholder: '172.66.147.243',
+                    explicacion: 'Es muy probable que no coincida con la de un compañero de otra ciudad: DNS suele responder con el servidor más cercano a quien pregunta.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>b)</strong> ¿Cuántas direcciones distintas te ha devuelto para ese nombre?',
+                    placeholder: '2',
+                    explicacion: 'Los sitios grandes publican <strong>varias direcciones</strong> para el mismo nombre y reparten la carga entre ellas. Si una falla, el cliente prueba con otra.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿En qué capa de TCP/IP está DNS?',
+                    opciones: {
+                        a: 'En la de acceso a la red, porque es un servicio del sistema',
+                        b: 'En la de internet, porque trabaja con direcciones IP',
+                        c: 'En la de aplicación: es un servicio que se pide a un servidor con su propio protocolo',
+                        d: 'En la de transporte, porque usa UDP'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Que <em>devuelva</em> direcciones IP no lo pone en la capa de internet, igual que un listín telefónico no forma parte de la red telefónica. Es un <strong>servicio</strong>, y va sobre UDP como cualquier otro protocolo de aplicación va sobre su transporte.',
+                    pistas: [
+                        'Distingue entre el dato que devuelve y el sitio donde trabaja.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Los puertos, en directo',
+            tiempo: '16 min',
+            enunciado: '<p>Datos de la Parte 2, con tus conexiones reales.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>a)</strong> Escribe uno de tus <strong>puertos locales</strong> (<code>LocalPort</code>).',
+                    placeholder: '58943',
+                    explicacion: 'Casi seguro que es un número alto, por encima de 49152. Ese rango es el que los sistemas reservan para los <strong>puertos efímeros</strong>.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> Nombre de un <strong>proceso</strong> de tu lista y el puerto remoto al que se conecta.',
+                    placeholder: 'firefox, puerto 443',
+                    explicacion: 'Esa fila enseña las tres capas de arriba a la vez: la dirección remota es capa 3, los puertos son capa 4 y el proceso es capa 7. Una sola línea de salida y tres capas dentro.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Has visto algún puerto remoto que <strong>no</strong> sea 80 ni 443?',
+                    opciones: {
+                        a: 'Sí, hay varios (8443, 27018, 8009 o parecidos)',
+                        b: 'No, todos son 80 o 443'
+                    },
+                    respuesta: null,
+                    libre: true,
+                    explicacion: 'Lo habitual es que <strong>sí</strong>: los juegos, los clientes de chat y los servicios internos usan los suyos. Confirma algo importante: los puertos conocidos son una <strong>convención</strong> para que te encuentren, no una obligación. Nada impide poner un servidor web en el 8080.'
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>d)</strong> Completa la diferencia entre los dos extremos.',
+                    frase: 'El puerto del servidor es {{0}} y conocido, para que los clientes sepan dónde llamar. El puerto del cliente es {{1}}: el sistema elige uno libre para cada conexión y lo libera al terminar. Por eso se llaman puertos {{2}}.',
+                    respuestas: [
+                        ['fijo', 'estable', 'conocido'],
+                        ['aleatorio', 'variable', 'temporal', 'cualquiera', 'distinto'],
+                        ['efimeros', 'efímeros', 'efimero', 'efímero']
+                    ],
+                    explicacion: 'Es como un teléfono de atención al público frente a la llamada de un particular: uno tiene que estar siempre en el mismo número; el otro puede llamar desde donde sea.',
+                    pistas: [
+                        'La tercera palabra significa «de muy corta duración».'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Las cuatro capas en una salida',
+            tiempo: '20 min',
+            enunciado: '<p>Datos de la Parte 3. Este bloque es el corazón del laboratorio.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    filas: 10,
+                    minimo: 60,
+                    debe: [['trying', 'connected', 'established', 'conect'], ['get', 'http'], ['host']],
+                    pregunta: '<strong>a)</strong> Pega las líneas de tu <code>curl -v</code> desde <code>Trying</code> hasta <code>GET</code>.',
+                    explicacion: 'Ahí dentro está toda la semana: la resolución del nombre, la dirección IP, el puerto del servidor, tu puerto efímero y la petición HTTP.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>b)</strong> Tu <strong>puerto efímero</strong> en esa conexión (el que aparece después de <code>from ... port</code>).',
+                    placeholder: '52046',
+                    explicacion: 'Ese número es tuyo y de esa conexión concreta. Al repetir el comando será otro.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Has repetido el comando. ¿Qué ha cambiado?',
+                    opciones: {
+                        a: 'El puerto del servidor (443)',
+                        b: 'Mi puerto efímero, pero no el del servidor',
+                        c: 'Los dos puertos',
+                        d: 'Ninguno de los dos'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Quien <strong>atiende</strong> tiene que estar siempre en el mismo sitio para que lo encuentren. Quien <strong>llama</strong> puede hacerlo desde cualquier número libre.',
+                    pistas: [
+                        'Piensa cuál de los dos extremos necesita ser predecible.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>d)</strong> Relaciona cada línea de la salida con la capa de TCP/IP que le corresponde.',
+                    izquierda: [
+                        'Host example.com:443 was resolved',
+                        'Trying 172.66.147.243...',
+                        'from 192.168.1.70 port 52046',
+                        'GET / HTTP/1.1'
+                    ],
+                    derecha: [
+                        'Aplicación — la consulta DNS que traduce el nombre',
+                        'Internet — la dirección IP a la que se va',
+                        'Transporte — el puerto desde el que se llama',
+                        'Aplicación — la petición web propiamente dicha'
+                    ],
+                    pares: {
+                        'Host example.com:443 was resolved': 'Aplicación — la consulta DNS que traduce el nombre',
+                        'Trying 172.66.147.243...': 'Internet — la dirección IP a la que se va',
+                        'from 192.168.1.70 port 52046': 'Transporte — el puerto desde el que se llama',
+                        'GET / HTTP/1.1': 'Aplicación — la petición web propiamente dicha'
+                    },
+                    explicacion: 'Dos líneas son de la capa de aplicación y son <strong>protocolos distintos</strong>: DNS al principio y HTTP al final. Entre medias, la conexión. Cuatro líneas de texto y la pila entera dentro.',
+                    pistas: [
+                        'Dos de las cuatro son de la misma capa, pero de protocolos diferentes.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>e)</strong> Cuenta, en orden, <strong>todo lo que ha tenido que pasar</strong> desde que ejecutaste el comando hasta que apareció «200 OK». Nombra la capa de cada paso.',
+                    modelo: `<p><strong>1. Resolver el nombre</strong> (aplicación). <code>example.com</code> no
+                             sirve para nada por sí solo: hay que preguntar a un servidor DNS qué dirección IP le
+                             corresponde. Esa consulta viaja sobre UDP al puerto 53.</p>
+                             <p><strong>2. Elegir una dirección</strong> (aplicación / internet). DNS devolvió dos, y
+                             curl se queda con la primera.</p>
+                             <p><strong>3. Averiguar por dónde salir</strong> (internet). La IP no está en mi red, así
+                             que el paquete va a la puerta de enlace. Para entregárselo hace falta su MAC, y de eso se
+                             encarga ARP.</p>
+                             <p><strong>4. Abrir la conexión</strong> (transporte). TCP negocia la conexión con el
+                             puerto 443 del servidor, usando como origen un puerto efímero que el sistema acaba de
+                             asignar: el 52046.</p>
+                             <p><strong>5. Cifrar</strong> (presentación, en OSI). Como es HTTPS, se establece TLS
+                             antes de enviar nada, y ahí se negocia también qué versión de HTTP se va a hablar
+                             (<code>ALPN</code>).</p>
+                             <p><strong>6. Pedir la página</strong> (aplicación). Por fin sale el
+                             <code>GET / HTTP/1.1</code>, que es la única frase que yo quería decir.</p>
+                             <p><strong>7. Responder</strong> (aplicación). Llega el <code>200 OK</code> y, detrás, el
+                             contenido.</p>
+                             <p>Lo que más me llama la atención es la <strong>proporción</strong>: seis pasos de
+                             preparación para una petición. Y todo eso ocurre en unas décimas de segundo, cada vez
+                             que se abre cualquier página.</p>`,
+                    rubrica: [
+                        'Empieza por la resolución DNS e indica que es capa de aplicación',
+                        'Menciona la conexión TCP y el puerto efímero',
+                        'Sitúa el cifrado TLS antes del envío de la petición',
+                        'Termina con el GET y la respuesta 200 OK',
+                        'Añade una observación propia sobre el proceso'
+                    ],
+                    pistas: [
+                        'Empieza por lo primero que hace falta: convertir el nombre en un número.',
+                        'No olvides que es HTTPS: algo pasa antes de poder enviar la petición.',
+                        'Nombra la capa de cada paso, no solo el paso.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre',
+            tiempo: '14 min',
+            enunciado: '<p>Convierte lo observado en conclusiones.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Si un servidor web se pone a escuchar en el puerto 8080 en lugar del 80, ¿qué ocurre?',
+                    opciones: {
+                        a: 'No funciona: el 80 es obligatorio para HTTP',
+                        b: 'Funciona, pero hay que indicar el puerto en la dirección, porque nadie lo supondrá',
+                        c: 'Funciona igual y de forma transparente',
+                        d: 'Funciona, pero solo en redes locales'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los puertos conocidos son un <strong>acuerdo</strong>. Al salirse de él, todo sigue funcionando, pero hay que decirlo: <code>http://servidor:8080</code>. Es exactamente lo que has visto en tus propias conexiones con los puertos 8443 y 27018.',
+                    pistas: [
+                        '¿Qué pasa cuando escribes una dirección sin puerto? ¿Qué asume el navegador?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> Con lo de hoy, explica <strong>cómo diagnosticarías</strong> que una página web no carga, capa por capa y en orden.',
+                    modelo: `<p>Se sube por la pila: cada comprobación descarta todo lo que hay por debajo, así que
+                             conviene empezar por abajo.</p>
+                             <p><strong>Capa de acceso.</strong> ¿La interfaz está levantada y con velocidad
+                             negociada? Si no, es cable, puerto o adaptador, y no hace falta mirar nada más.</p>
+                             <p><strong>Capa de internet.</strong> <code>ping</code> a la puerta de enlace y después a
+                             una IP de fuera, como <code>8.8.8.8</code>. Si responde la puerta de enlace pero no la de
+                             fuera, el problema está en la salida a Internet.</p>
+                             <p><strong>Capa de aplicación, primer protocolo: DNS.</strong> Aquí está la clave que
+                             aprendí hoy. Si <code>ping 8.8.8.8</code> funciona pero <code>ping example.com</code> no,
+                             la red está perfecta y lo que falla es la <strong>resolución de nombres</strong>. Se
+                             comprueba con <code>Resolve-DnsName</code>.</p>
+                             <p><strong>Capa de transporte.</strong> Si el nombre se resuelve, comprobar que el puerto
+                             responde, con <code>Test-NetConnection ... -Port 443</code>. Si el ping va y el puerto no,
+                             la red funciona y el problema es del servicio o de un cortafuegos.</p>
+                             <p><strong>Capa de aplicación, segundo protocolo: HTTP.</strong> Si el puerto responde,
+                             <code>curl -v</code> y mirar el código de estado. Un 200 significa que la red ha hecho
+                             todo su trabajo y el problema es de la aplicación.</p>
+                             <p>Lo valioso del método es que <strong>cada paso reduce el terreno a la mitad</strong>,
+                             y que dice a quién avisar: no es lo mismo un problema de cableado que uno de DNS o que
+                             uno del servidor.</p>`,
+                    rubrica: [
+                        'Propone un orden, de abajo arriba',
+                        'Incluye la comprobación de DNS como paso propio',
+                        'Distingue el fallo de red del fallo de servicio con la prueba de puerto',
+                        'Nombra comandos concretos para cada paso',
+                        'Explica para qué sirve el método, no solo cuál es'
+                    ],
+                    pistas: [
+                        '¿Por qué capa conviene empezar y por qué?',
+                        'La comprobación más útil del día: ping por IP frente a ping por nombre.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

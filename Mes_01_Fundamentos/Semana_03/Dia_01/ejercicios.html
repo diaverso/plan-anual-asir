@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">72 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 2 —situar cada elemento en su capa— es el que más vas a usar en el resto del curso. A partir
+            de esta semana, cada concepto nuevo tendrá una capa, y se te va a preguntar cuál.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_02/Dia_07/ejercicios.html">← Semana 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Ejercicios',
+    subtitulo: 'Modelo OSI · capas 1, 2 y 3',
+    tiempo: '72 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Las siete capas, de memoria',
+            tiempo: '11 min',
+            enunciado: '<p>Antes de razonar nada hay que tener el orden fijado. Sin mirar la teoría.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena las siete capas de OSI, de la <strong>1</strong> a la <strong>7</strong>.',
+                    elementos: [
+                        'Física',
+                        'Enlace de datos',
+                        'Red',
+                        'Transporte',
+                        'Sesión',
+                        'Presentación',
+                        'Aplicación'
+                    ],
+                    orden: [
+                        'Física',
+                        'Enlace de datos',
+                        'Red',
+                        'Transporte',
+                        'Sesión',
+                        'Presentación',
+                        'Aplicación'
+                    ],
+                    explicacion: 'De abajo arriba: la <strong>1 es el cable</strong> y la <strong>7 el usuario</strong>. Si te lías, la frase «Feo Enano Rojo Trepa Sin Parar Arriba» da las iniciales en ese mismo orden.',
+                    pistas: [
+                        'La capa 1 es la más cercana al cable.',
+                        'Las tres primeras son las que has estudiado estas dos semanas: física, enlace y red.',
+                        'Entre Sesión y Presentación, la que va antes es la que abre el diálogo.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Escribe el <strong>número</strong> de capa que corresponde a cada nombre.',
+                    esquina: 'Capa',
+                    cabecera: ['Número'],
+                    filas: [
+                        { etiqueta: 'Red', celdas: [{ respuestas: ['3', 'tres'], placeholder: 'nº' }] },
+                        { etiqueta: 'Aplicación', celdas: [{ respuestas: ['7', 'siete'], placeholder: 'nº' }] },
+                        { etiqueta: 'Enlace de datos', celdas: [{ respuestas: ['2', 'dos'], placeholder: 'nº' }] },
+                        { etiqueta: 'Transporte', celdas: [{ respuestas: ['4', 'cuatro'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'Hay que saber pasar del nombre al número y al revés sin pensarlo: en el trabajo se habla de «un problema de capa 2» o «un cortafuegos de capa 7», no del nombre completo.',
+                    pistas: [
+                        'Cuenta desde abajo: Física es la 1.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa la idea que justifica todo el modelo.',
+                    frase: 'Las capas existen para poder cambiar {{0}} sin tocar las demás. Cada capa ofrece un {{1}} a la que tiene encima, sin contarle {{2}} lo consigue. Por eso una tarjeta de una marca funciona con un switch de otra.',
+                    respuestas: [
+                        ['una', 'una capa', 'solo una', 'una sola'],
+                        ['servicio'],
+                        ['como', 'cómo']
+                    ],
+                    explicacion: 'Servicios bien definidos y contenidos opacos: es la misma idea que aplica una empresa de mensajería, que entrega tu paquete sin abrirlo.',
+                    pistas: [
+                        'El segundo hueco es la palabra técnica para «lo que una capa le ofrece a la de arriba».'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Situar cada cosa en su capa',
+            tiempo: '16 min',
+            enunciado: `
+                <p>Todo lo que has estudiado en dos semanas, colocado. Escribe solo el <strong>número</strong> de
+                capa: 1, 2 o 3.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica la capa de cada elemento.',
+                    esquina: 'Elemento',
+                    cabecera: ['Capa'],
+                    filas: [
+                        { etiqueta: 'Dirección MAC', celdas: [{ respuestas: ['2', 'dos'], placeholder: 'nº' }] },
+                        { etiqueta: 'Dirección IP', celdas: [{ respuestas: ['3', 'tres'], placeholder: 'nº' }] },
+                        { etiqueta: 'Conector RJ45', celdas: [{ respuestas: ['1', 'uno'], placeholder: 'nº' }] },
+                        { etiqueta: 'Switch', celdas: [{ respuestas: ['2', 'dos'], placeholder: 'nº' }] },
+                        { etiqueta: 'Router', celdas: [{ respuestas: ['3', 'tres'], placeholder: 'nº' }] },
+                        { etiqueta: 'Hub', celdas: [{ respuestas: ['1', 'uno'], placeholder: 'nº' }] },
+                        { etiqueta: 'Categoría Cat 6A', celdas: [{ respuestas: ['1', 'uno'], placeholder: 'nº' }] },
+                        { etiqueta: 'CSMA/CD', celdas: [{ respuestas: ['2', 'dos'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'El criterio para los dispositivos es <strong>la información más alta que saben leer</strong>: el hub no lee nada, el switch lee MAC, el router lee IP. CSMA/CD decide cuándo transmitir, que es trabajo de la subcapa MAC, en capa 2.',
+                    pistas: [
+                        'Empieza por lo fácil: todo lo que se puede tocar con la mano es capa 1.',
+                        'Si el elemento tiene que ver con una dirección MAC, es capa 2.',
+                        'CSMA/CD es el control de acceso al medio: fíjate en de qué subcapa era eso.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Relaciona cada capa con su unidad de datos.',
+                    izquierda: ['Capa 1 — Física', 'Capa 2 — Enlace', 'Capa 3 — Red'],
+                    derecha: ['Bit', 'Trama', 'Paquete'],
+                    pares: {
+                        'Capa 1 — Física': 'Bit',
+                        'Capa 2 — Enlace': 'Trama',
+                        'Capa 3 — Red': 'Paquete'
+                    },
+                    explicacion: 'Confundir <strong>trama</strong> con <strong>paquete</strong> es el error más repetido del tema, y en un examen se penaliza porque revela que no se ha entendido la separación entre capas.',
+                    pistas: [
+                        'La unidad más pequeña corresponde a la capa más baja.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un fabricante anuncia un «switch de capa 3». ¿Qué significa?',
+                    opciones: {
+                        a: 'Que tiene tres puertos',
+                        b: 'Que además de conmutar por MAC, sabe leer direcciones IP y encaminar',
+                        c: 'Que solo funciona con cable de categoría 3',
+                        d: 'Que es un switch de tercera generación'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La capa de un dispositivo es la de la información más alta que sabe leer. Un switch normal se queda en la MAC; uno de capa 3 sube hasta la IP y hace también de router.',
+                    pistas: [
+                        'Recuerda el criterio: la capa la marca hasta dónde sabe leer el aparato.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Capa 2 por dentro',
+            tiempo: '12 min',
+            enunciado: '<p>Las subcapas y el alcance, que son las dos cosas que más se preguntan de la capa 2.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada subcapa con lo que hace.',
+                    izquierda: ['LLC', 'MAC'],
+                    derecha: [
+                        'Habla con la capa 3 y le oculta qué medio hay debajo',
+                        'Decide cuándo transmitir y pone las direcciones físicas'
+                    ],
+                    pares: {
+                        'LLC': 'Habla con la capa 3 y le oculta qué medio hay debajo',
+                        'MAC': 'Decide cuándo transmitir y pone las direcciones físicas'
+                    },
+                    explicacion: 'La <strong>LLC mira hacia arriba</strong> y la <strong>MAC hacia abajo</strong>. Gracias a esa división, la capa 3 funciona igual sobre Ethernet que sobre Wi-Fi.',
+                    pistas: [
+                        'Una de las dos da nombre a la dirección física.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Una trama llega con el FCS incorrecto. ¿Qué ocurre?',
+                    opciones: {
+                        a: 'Ethernet la corrige y la entrega',
+                        b: 'Ethernet la descarta y no pide retransmisión',
+                        c: 'Ethernet la entrega igualmente y avisa a la capa 3',
+                        d: 'Se reinicia el enlace'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Ethernet <strong>detecta pero no corrige</strong>. Su compromiso es no entregar datos corruptos hacia arriba; recuperarlos es cosa de capas superiores, como verás mañana con TCP.',
+                    pistas: [
+                        'Piensa qué es más barato de implementar en hardware: detectar o corregir.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> Explica por qué se dice que la capa 2 tiene «alcance de un salto», y qué consecuencia práctica tiene eso.',
+                    modelo: `<p>Porque una trama de capa 2 solo sirve para llegar <strong>al aparato que tienes al
+                             lado</strong> dentro de la misma red. En cuanto la trama alcanza un router, ese router la
+                             <strong>descarta entera</strong> y construye una nueva para el siguiente tramo, con
+                             direcciones MAC completamente distintas.</p>
+                             <p>La consecuencia práctica más visible es la que ya se había estudiado sin explicación:
+                             <strong>las direcciones MAC cambian en cada salto</strong>, mientras que las IP se
+                             mantienen de punta a punta. La MAC identifica el <em>tramo</em>; la IP, los
+                             <em>extremos</em>.</p>
+                             <p>De ahí se derivan otras dos cosas conocidas. Primera: <strong>la MAC no sirve para
+                             identificar a nadie en Internet</strong>, porque desaparece en el primer router. Segunda:
+                             tu equipo <strong>no puede conocer</strong> la MAC de un servidor remoto, y por eso, al
+                             salir a Internet, pone como destino la MAC de su propia puerta de enlace.</p>
+                             <p>Y explica también por qué el <strong>dominio de difusión</strong> termina en el
+                             router: una trama dirigida a todos es de capa 2, y el router no reenvía tramas, solo
+                             paquetes.</p>`,
+                    rubrica: [
+                        'Explica que la trama solo llega al vecino de la misma red',
+                        'Señala que el router descarta la trama y construye otra',
+                        'Deduce que las MAC cambian en cada salto y las IP no',
+                        'Menciona que por eso se usa la MAC de la puerta de enlace al salir',
+                        'Relaciona el alcance con el límite del dominio de difusión'
+                    ],
+                    pistas: [
+                        'Piensa qué le pasa a una trama cuando llega a un router.',
+                        'Relaciónalo con la regla de la Semana 2 sobre qué direcciones cambian.',
+                        'Termina con alguna consecuencia práctica que ya conozcas.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Diagnóstico por capas',
+            tiempo: '15 min',
+            enunciado: `
+                <p>Aquí está el valor práctico del modelo: <strong>saber en qué capa buscar</strong>. Para cada
+                síntoma, indica la capa más probable.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Escribe el número de capa donde empezarías a buscar.',
+                    esquina: 'Síntoma',
+                    cabecera: ['Capa'],
+                    filas: [
+                        {
+                            etiqueta: 'El puerto no enciende ninguna luz y el estado es <em>desconectado</em>',
+                            celdas: [{ respuestas: ['1', 'uno'], placeholder: 'nº' }]
+                        },
+                        {
+                            etiqueta: 'El enlace negocia 100 Mbps con equipamiento de 1 Gbps',
+                            celdas: [{ respuestas: ['1', 'uno'], placeholder: 'nº' }]
+                        },
+                        {
+                            etiqueta: 'Hay enlace, pero el equipo no aparece en la tabla ARP de sus vecinos',
+                            celdas: [{ respuestas: ['2', 'dos'], placeholder: 'nº' }]
+                        },
+                        {
+                            etiqueta: 'Se ve toda la red local pero no se sale a Internet',
+                            celdas: [{ respuestas: ['3', 'tres'], placeholder: 'nº' }]
+                        },
+                        {
+                            etiqueta: 'Ping a una IP externa funciona, ping a un nombre no',
+                            celdas: [{ respuestas: ['7', 'siete'], placeholder: 'nº' }]
+                        }
+                    ],
+                    explicacion: 'Los dos primeros son <strong>físicos</strong>: no hay señal, o el cable está a medias. El tercero es de <strong>capa 2</strong>: hay bits pero no se resuelve el vecindario. El cuarto apunta a la <strong>puerta de enlace o al encaminamiento</strong>, capa 3. Y el último es el <strong>DNS</strong>, un servicio de <strong>capa 7</strong>.',
+                    pistas: [
+                        'Ve de abajo arriba: ¿hay señal? ¿hay vecinos? ¿hay salida? ¿hay nombres?',
+                        'Que el enlace negocie por debajo de lo esperado fue el síntoma estrella del Día 2 de la Semana 2.',
+                        'El último ya lo diagnosticaste en la Semana 2; ahora solo hay que ponerle número de capa.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué conviene diagnosticar <strong>de abajo hacia arriba</strong>?',
+                    opciones: {
+                        a: 'Porque las capas bajas fallan más a menudo',
+                        b: 'Porque si una capa baja falla, todas las de encima fallan también, así que comprobarla primero descarta más de una vez',
+                        c: 'Porque las capas altas no se pueden comprobar',
+                        d: 'Es indiferente: se puede empezar por donde sea'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Cada capa se apoya en la de debajo. Comprobar primero abajo <strong>descarta el máximo posible con cada prueba</strong>: sin enlace físico no tiene sentido mirar el DNS.',
+                    pistas: [
+                        'Piensa qué pasa con las capas superiores si el cable está desconectado.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> Un usuario dice «no me va nada». Describe las <strong>cuatro comprobaciones</strong> que harías, en orden, indicando qué capa descarta cada una.',
+                    modelo: `<p>El orden es de abajo arriba, porque cada prueba descarta todo lo que hay por debajo.</p>
+                             <ol>
+                               <li><strong>¿Hay enlace físico?</strong> Estado del puerto y velocidad negociada.
+                               Si el puerto está caído no hay nada que discutir, y si negocia 100 Mbps teniendo
+                               gigabit el cable está a medias. Esto cubre la <strong>capa 1</strong>.</li>
+                               <li><strong>¿Tiene dirección IP válida?</strong> Si empieza por
+                               <code>169.254</code> es APIPA y no encontró el DHCP. Aquí se comprueba de paso que la
+                               <strong>capa 2</strong> funciona, porque para hablar con el DHCP hacen falta tramas.</li>
+                               <li><strong>Ping a la puerta de enlace.</strong> Si responde, la red local está bien:
+                               capas 1, 2 y 3 dentro de la LAN. Si no responde, el problema está en la red local o en
+                               la propia configuración.</li>
+                               <li><strong>Ping a una IP externa y después a un nombre.</strong> Si la IP responde y
+                               el nombre no, hay conectividad completa y lo que falla es el <strong>DNS</strong>, un
+                               servicio de <strong>capa 7</strong>.</li>
+                             </ol>
+                             <p>En cuatro comprobaciones que cuestan un par de minutos se ha recorrido la pila entera y
+                             el problema queda localizado en una capa concreta. Hacerlo al revés —empezar mirando el
+                             navegador— es lo que lleva a perder media hora revisando configuración cuando el
+                             latiguillo estaba suelto.</p>`,
+                    rubrica: [
+                        'Empieza por el enlace físico: estado del puerto y velocidad',
+                        'Comprueba la dirección IP y reconoce APIPA',
+                        'Hace ping a la puerta de enlace para validar la red local',
+                        'Distingue ping por IP y por nombre para separar red de DNS',
+                        'Justifica el orden: cada prueba descarta todo lo de debajo'
+                    ],
+                    pistas: [
+                        'Empieza por lo que se comprueba sin escribir ningún comando.',
+                        'Una de las comprobaciones ya la conoces con nombre propio: la prueba de los dos ping.',
+                        'Di explícitamente qué capa queda descartada tras cada paso.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Errores típicos',
+            tiempo: '10 min',
+            enunciado: '<p>Frases que se oyen a menudo. Decide si son correctas y corrige las que no lo sean.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>a)</strong> Marca <strong>todas</strong> las afirmaciones <strong>correctas</strong>.',
+                    opciones: {
+                        a: 'La capa 1 es la más baja del modelo',
+                        b: 'Un switch corriente trabaja en capa 2',
+                        c: 'Trama y paquete son sinónimos',
+                        d: 'El router es la frontera del dominio de difusión',
+                        e: 'Ethernet corrige los errores que detecta',
+                        f: 'La tarjeta de red trabaja en las capas 1 y 2'
+                    },
+                    respuesta: ['a', 'b', 'd', 'f'],
+                    explicacion: 'La <strong>c</strong> es falsa: trama es capa 2 y paquete capa 3. La <strong>e</strong> también: Ethernet detecta con el FCS y <em>descarta</em>, pero no corrige. Las otras cuatro son correctas.',
+                    pistas: [
+                        'Dos de las seis son falsas.',
+                        'Una confunde dos unidades de datos de capas distintas.',
+                        'La otra atribuye a Ethernet algo que en realidad hacen las capas de arriba.'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>b)</strong> «El hub es un switch pequeño.» ¿En qué capa está realmente el hub? Escribe solo el número.',
+                    respuestas: ['1', 'uno', 'capa 1'],
+                    placeholder: 'número de capa',
+                    ancho: '180px',
+                    explicacion: 'El hub es de <strong>capa 1</strong>: repite bits eléctricamente sin leer direcciones. No es un switch pequeño, es un dispositivo de otra naturaleza.',
+                    pistas: [
+                        'Pregúntate qué información sabe leer un hub. La respuesta es: ninguna.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> «Internet funciona con el modelo OSI.» ¿Es correcto?',
+                    opciones: {
+                        a: 'Sí, OSI es el estándar que implementa Internet',
+                        b: 'No: Internet usa TCP/IP. OSI es un modelo de referencia para estudiar y comparar',
+                        c: 'Sí, pero solo en las capas 1 a 3',
+                        d: 'No, Internet no sigue ningún modelo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la confusión más habitual de la semana. OSI sirve para <strong>entender y hablar</strong> de redes; lo que se implementa de verdad es <strong>TCP/IP</strong>. La comparación entre ambos es el tema del miércoles.',
+                    pistas: [
+                        'Piensa si alguna vez has configurado algo llamado «capa de sesión» en un equipo real.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Integración',
+            tiempo: '8 min',
+            enunciado: '<p>Enlaza el modelo con lo que ya sabías hacer.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Tu PC envía datos a un servidor a 8 saltos. ¿Cuántas veces se reescriben las direcciones de <strong>capa 2</strong> y cuántas las de <strong>capa 3</strong>?',
+                    opciones: {
+                        a: 'Capa 2: ninguna. Capa 3: en cada salto',
+                        b: 'Capa 2: en cada salto. Capa 3: ninguna',
+                        c: 'Las dos en cada salto',
+                        d: 'Ninguna de las dos'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La capa 2 tiene alcance de <strong>un salto</strong>, así que sus direcciones se reescriben en cada tramo. La capa 3 identifica los <strong>extremos</strong>, así que se mantiene de punta a punta.',
+                    pistas: [
+                        'Relaciona cada capa con su alcance: un salto frente a extremo a extremo.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>b)</strong> ¿Qué aporta el modelo de capas a alguien que ya sabía usar <code>ping</code>, <code>arp</code> e <code>ipconfig</code>?',
+                    modelo: `<p>Aporta el <strong>mapa</strong> que convierte una colección de comandos sueltos en un
+                             método.</p>
+                             <p>Antes, cada herramienta era un truco aprendido de memoria: «si pasa esto, prueba
+                             aquello». Ahora cada comando tiene una <strong>posición</strong>: la velocidad negociada
+                             informa de la capa 1, <code>arp</code> de la capa 2, <code>ipconfig</code> y
+                             <code>ping</code> de la capa 3, y la resolución de nombres de la capa 7.</p>
+                             <p>Eso cambia dos cosas. La primera es que se puede <strong>diagnosticar en orden</strong>
+                             en lugar de a base de intuición: se sube capa por capa y cada prueba descarta todo lo que
+                             hay debajo. La segunda es que se puede <strong>razonar sobre cosas que aún no se
+                             conocen</strong>: ante un protocolo nuevo, la primera pregunta útil es en qué capa vive,
+                             y de ahí se deduce buena parte de su comportamiento.</p>
+                             <p>Y hay un tercer efecto, más práctico de lo que parece: da <strong>vocabulario
+                             común</strong>. Decir «esto es un problema de capa 2» comunica en tres palabras algo que
+                             de otro modo cuesta un párrafo, y es como se habla en el trabajo.</p>`,
+                    rubrica: [
+                        'Explica que el modelo ordena comandos que antes eran trucos sueltos',
+                        'Asigna comandos concretos a capas concretas',
+                        'Señala que permite diagnosticar en orden, de abajo arriba',
+                        'Menciona que sirve para razonar sobre protocolos nuevos',
+                        'Añade el valor del vocabulario común'
+                    ],
+                    pistas: [
+                        'Piensa en la diferencia entre saber trucos y tener un método.',
+                        'Asigna cada comando que conoces a una capa.',
+                        'Piensa también en cómo se comunica un problema a otro técnico.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

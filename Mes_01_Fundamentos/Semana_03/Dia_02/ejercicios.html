@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">78 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 4 son <strong>cálculos de cabeceras y eficiencia</strong>. Tienen respuesta única, se
+            corrigen solos y caen en examen. Hazlos con lápiz y papel antes de escribir el resultado.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/ejercicios.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Ejercicios',
+    subtitulo: 'Capas superiores · encapsulación · cabeceras · MTU',
+    tiempo: '78 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Las cuatro capas de arriba',
+            tiempo: '12 min',
+            enunciado: '<p>Fija qué hace cada una antes de entrar en la encapsulación.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada capa con su cometido.',
+                    izquierda: [
+                        'Capa 4 — Transporte',
+                        'Capa 5 — Sesión',
+                        'Capa 6 — Presentación',
+                        'Capa 7 — Aplicación'
+                    ],
+                    derecha: [
+                        'Entregar al programa correcto y trocear los datos grandes',
+                        'Abrir, mantener y cerrar el diálogo entre dos aplicaciones',
+                        'Formato de los datos: codificación, compresión y cifrado',
+                        'El protocolo del servicio que la persona quiere usar'
+                    ],
+                    pares: {
+                        'Capa 4 — Transporte': 'Entregar al programa correcto y trocear los datos grandes',
+                        'Capa 5 — Sesión': 'Abrir, mantener y cerrar el diálogo entre dos aplicaciones',
+                        'Capa 6 — Presentación': 'Formato de los datos: codificación, compresión y cifrado',
+                        'Capa 7 — Aplicación': 'El protocolo del servicio que la persona quiere usar'
+                    },
+                    explicacion: 'Las tres de arriba se ocupan del <strong>significado</strong> de los datos; la 4, todavía de su transporte. Mañana verás que TCP/IP fusiona las tres superiores en una sola porque en la práctica cuesta separarlas.',
+                    pistas: [
+                        'Una de las cuatro sigue ocupándose de mover datos, no de interpretarlos.',
+                        'El cifrado es una forma de decidir cómo se representan los datos.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Indica en qué <strong>capa</strong> vive cada protocolo. Escribe solo el número.',
+                    esquina: 'Protocolo',
+                    cabecera: ['Capa'],
+                    filas: [
+                        { etiqueta: '<strong>HTTP</strong>', celdas: [{ respuestas: ['7', 'siete'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>TCP</strong>', celdas: [{ respuestas: ['4', 'cuatro'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>IP</strong>', celdas: [{ respuestas: ['3', 'tres'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>TLS</strong>', celdas: [{ respuestas: ['6', 'seis'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>Ethernet</strong>', celdas: [{ respuestas: ['2', 'dos'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>UDP</strong>', celdas: [{ respuestas: ['4', 'cuatro'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'TLS en la <strong>6</strong> es el que más se falla: mucha gente lo pone en la 7 por asociarlo a HTTPS. Pero HTTPS es <strong>HTTP sobre TLS</strong>: dos capas distintas trabajando juntas.',
+                    pistas: [
+                        'Dos de los seis están en la misma capa.',
+                        'El del candado no está donde la mayoría cree.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál de estas afirmaciones sobre la capa 7 es correcta?',
+                    opciones: {
+                        a: 'La capa 7 es el programa que usa el usuario, como el navegador',
+                        b: 'La capa 7 son los protocolos del servicio, como HTTP o DNS; el navegador es un programa que los usa',
+                        c: 'La capa 7 solo existe en el servidor',
+                        d: 'La capa 7 se encarga del cifrado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Distinguir <strong>protocolo</strong> de <strong>programa</strong> es el matiz que separa haber entendido el modelo de haberlo memorizado. El cifrado, además, es capa 6.',
+                    pistas: [
+                        'Una de las opciones confunde capa con cifrado; otra, protocolo con programa.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Encapsulación paso a paso',
+            tiempo: '14 min',
+            enunciado: '<p>El mecanismo central del modelo. Sigue el recorrido de un dato hacia abajo.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena las PDU tal como aparecen al <strong>enviar</strong>, de la capa 7 a la 1.',
+                    elementos: ['Datos', 'Segmento', 'Paquete', 'Trama', 'Bits'],
+                    orden: ['Datos', 'Segmento', 'Paquete', 'Trama', 'Bits'],
+                    explicacion: 'Al enviar se <strong>baja</strong> la pila y cada capa añade su cabecera. Al recibir se sube, y la secuencia es exactamente la inversa.',
+                    pistas: [
+                        'Empieza por lo que produce la aplicación, sin ninguna cabecera todavía.',
+                        'Lo último que existe antes del cable son los bits.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Indica qué cabecera añade cada capa y su tamaño en bytes.',
+                    esquina: 'Capa',
+                    cabecera: ['Cabecera que añade', 'Bytes'],
+                    filas: [
+                        {
+                            etiqueta: 'Capa 4 (TCP)',
+                            celdas: [
+                                { respuestas: ['tcp', 'cabecera tcp', 'puertos'], placeholder: 'cuál' },
+                                { respuestas: ['20'], placeholder: 'bytes' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Capa 3 (IP)',
+                            celdas: [
+                                { respuestas: ['ip', 'cabecera ip'], placeholder: 'cuál' },
+                                { respuestas: ['20'], placeholder: 'bytes' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Capa 2 (Ethernet, sin contar el FCS)',
+                            celdas: [
+                                { respuestas: ['ethernet', 'cabecera ethernet', 'mac'], placeholder: 'cuál' },
+                                { respuestas: ['14'], placeholder: 'bytes' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Estos tres números —<strong>20, 20 y 14</strong>— hay que sabérselos: con ellos se calcula el MSS, la eficiencia y el MTU. El FCS son 4 bytes más, y va al final.',
+                    pistas: [
+                        'Dos de las tres cabeceras miden lo mismo.',
+                        'La de Ethernet es la más pequeña de las tres.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué hace la capa 3 con la cabecera TCP que ya viene puesta?',
+                    opciones: {
+                        a: 'La lee para saber el puerto de destino',
+                        b: 'Nada: para ella es contenido opaco, y le añade delante su propia cabecera',
+                        c: 'La sustituye por la cabecera IP',
+                        d: 'La mueve al final'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Cada capa <strong>envuelve sin abrir</strong>. Es exactamente lo que permite cambiar una capa sin tocar las demás: si ninguna mira dentro, da igual qué haya.',
+                    pistas: [
+                        'Recuerda la analogía del transportista y tu paquete.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Por qué el FCS de la capa 2 va al final y no delante?',
+                    opciones: {
+                        a: 'Por convenio histórico',
+                        b: 'Porque para calcularlo hay que haber visto la trama entera',
+                        c: 'Porque así ocupa menos',
+                        d: 'Porque lo lee el destino antes que la cabecera'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es un código calculado sobre <strong>todo</strong> el contenido de la trama; hasta que no está montada no se puede obtener. De ahí que sea la única información que va detrás.',
+                    pistas: [
+                        'Piensa sobre qué datos se calcula ese código de comprobación.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Quién lee qué',
+            tiempo: '12 min',
+            enunciado: `
+                <p>Tu equipo envía un dato a un servidor que está a <strong>5 routers</strong> de distancia.
+                Analiza qué le pasa a cada cabecera por el camino.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para cada cabecera, indica <strong>quién la lee</strong>: <em>siguiente aparato</em>, <em>todos los routers</em> o <em>solo el destino</em>.',
+                    esquina: 'Cabecera',
+                    cabecera: ['Quién la lee'],
+                    filas: [
+                        {
+                            etiqueta: '<strong>Ethernet</strong>',
+                            celdas: [{ respuestas: ['siguiente aparato', 'el siguiente aparato', 'siguiente', 'el vecino', 'siguiente salto'], placeholder: 'quién' }]
+                        },
+                        {
+                            etiqueta: '<strong>IP</strong>',
+                            celdas: [{ respuestas: ['todos los routers', 'todos', 'los routers', 'todos los saltos'], placeholder: 'quién' }]
+                        },
+                        {
+                            etiqueta: '<strong>TCP</strong>',
+                            celdas: [{ respuestas: ['solo el destino', 'el destino', 'destino', 'solo el destino final'], placeholder: 'quién' }]
+                        }
+                    ],
+                    explicacion: 'Es la <strong>comunicación entre pares</strong>: cada capa habla con su equivalente del otro extremo. La cabecera Ethernet se rehace en cada tramo, la IP viaja intacta y la TCP solo la abre el destino.',
+                    pistas: [
+                        'Piensa en el alcance de cada capa: un salto, extremo a extremo, programa a programa.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> En ese trayecto de 5 routers, ¿cuántas <strong>veces se construye una cabecera Ethernet nueva</strong>? Cuenta también la que pone tu equipo al salir.',
+                    respuesta: 6,
+                    tolerancia: 0.5,
+                    unidad: 'veces',
+                    explicacion: 'Una por cada <strong>tramo</strong>: el de tu equipo al primer router, y después uno por cada router hasta el destino. Con 5 routers hay <strong>6 tramos</strong>, y por tanto 6 tramas distintas.',
+                    pistas: [
+                        'Cuenta los tramos, no los routers.',
+                        'Dibuja la línea: PC — R1 — R2 — R3 — R4 — R5 — servidor. ¿Cuántos segmentos hay?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> Explica, usando la encapsulación, por qué la dirección MAC de tu equipo <strong>no llega nunca</strong> al servidor de destino.',
+                    modelo: `<p>Porque la dirección MAC vive en la <strong>cabecera de capa 2</strong>, y esa cabecera
+                             <strong>se rehace en cada tramo</strong>.</p>
+                             <p>Cuando mi equipo envía, construye una trama con mi MAC como origen y la de mi puerta de
+                             enlace como destino. Ese router recibe la trama, comprueba que era para él, la
+                             <strong>descarta entera</strong> —quita la cabecera Ethernet— y se queda con el paquete
+                             IP que había dentro.</p>
+                             <p>Después mira la cabecera IP para decidir por dónde seguir, y construye una
+                             <strong>trama nueva</strong> con su propia MAC como origen y la del siguiente router como
+                             destino. Mi dirección ya no aparece por ningún sitio: se quedó en el primer tramo.</p>
+                             <p>Lo que sí llega al servidor es la <strong>cabecera IP</strong>, que viaja intacta de
+                             extremo a extremo. Y ni siquiera esa es exactamente la mía si hay NAT por medio: el
+                             router la sustituye por su IP pública.</p>
+                             <p>Esto confirma con el mecanismo lo que se dijo en la Semana 2: <strong>la MAC no sirve
+                             para identificar a nadie en Internet</strong>, porque desaparece en el primer salto.</p>`,
+                    rubrica: [
+                        'La MAC está en la cabecera de capa 2',
+                        'Explica que el router descarta la trama y construye otra',
+                        'Señala que la cabecera IP sí viaja intacta',
+                        'Menciona el NAT como matiz sobre la IP de origen',
+                        'Concluye que la MAC no identifica a nadie en Internet'
+                    ],
+                    pistas: [
+                        'Sigue el recorrido: ¿qué hace el primer router con la trama que recibe?',
+                        'Distingue qué cabeceras se rehacen y cuáles viajan intactas.',
+                        'Enlázalo con lo que ya sabías de la Semana 2.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Cálculos de cabeceras y eficiencia',
+            tiempo: '18 min',
+            enunciado: `
+                <p>Recuerda los tamaños: <strong>Ethernet 14 + 4 de FCS</strong>, <strong>IP 20</strong>,
+                <strong>TCP 20</strong>, <strong>UDP 8</strong>. MTU de Ethernet: <strong>1500</strong>.</p>`,
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Con MTU de 1500 bytes, ¿cuál es el <strong>MSS</strong> de una conexión TCP?',
+                    respuesta: 1460,
+                    tolerancia: 0.5,
+                    unidad: 'bytes',
+                    explicacion: 'MSS = MTU − 20 (IP) − 20 (TCP) = <strong>1460 bytes</strong>. Es la cantidad de datos de aplicación que cabe en un segmento.',
+                    pistas: [
+                        'Al MTU hay que restarle las cabeceras de las capas 3 y 4.',
+                        'Son 20 bytes cada una.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Y el MSS si la conexión fuera <strong>UDP</strong> en lugar de TCP?',
+                    respuesta: 1472,
+                    tolerancia: 0.5,
+                    unidad: 'bytes',
+                    explicacion: '1500 − 20 (IP) − 8 (UDP) = <strong>1472 bytes</strong>. Ese número aparecerá en el laboratorio: es el tamaño máximo de datos que admite un ping sin fragmentar en una red con MTU 1500.',
+                    pistas: [
+                        'La cabecera de UDP es más pequeña que la de TCP.',
+                        'UDP ocupa 8 bytes.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Una trama Ethernet llena ocupa 1518 bytes y transporta 1460 útiles. ¿Qué <strong>eficiencia</strong> tiene, en porcentaje con un decimal?',
+                    respuesta: 96.2,
+                    tolerancia: 0.3,
+                    unidad: '%',
+                    explicacion: '1460 ÷ 1518 = 0,962 → <strong>96,2 %</strong>. De cada 100 MB que pasan por el cable, unos 4 son cabeceras.',
+                    pistas: [
+                        'Divide los datos útiles entre el total y multiplica por 100.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Ahora un paquete con solo <strong>100 bytes</strong> de datos, con las mismas cabeceras (58 bytes en total). ¿Qué eficiencia tiene?',
+                    respuesta: 63.3,
+                    tolerancia: 1.5,
+                    unidad: '%',
+                    explicacion: '100 ÷ 158 = 0,633 → <strong>63,3 %</strong>. Las cabeceras son de <strong>tamaño fijo</strong>, así que con paquetes pequeños su peso relativo se dispara. Por eso el tráfico de muchos paquetes cortos es tan ineficiente.',
+                    pistas: [
+                        'El total es 100 de datos más 58 de cabeceras.',
+                        'Compara el resultado con el del apartado anterior: esa diferencia es la clave.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Si tu MTU real fuera <strong>1492</strong> por usar PPPoE, ¿cuál sería el MSS de TCP?',
+                    respuesta: 1452,
+                    tolerancia: 0.5,
+                    unidad: 'bytes',
+                    explicacion: '1492 − 20 − 20 = <strong>1452 bytes</strong>. Ocho menos que con MTU 1500, que son exactamente los 8 bytes que añade PPPoE.',
+                    pistas: [
+                        'Mismo cálculo que en el apartado a, pero partiendo de 1492.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: MTU y fragmentación',
+            tiempo: '12 min',
+            enunciado: '<p>Qué pasa cuando el dato no cabe.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa la definición.',
+                    frase: 'El {{0}} es el tamaño máximo de datos que cabe dentro de una trama de un enlace. En Ethernet vale {{1}} bytes. Si un paquete no cabe y lleva activado el bit {{2}}, el router lo {{3}} y avisa, en lugar de trocearlo.',
+                    respuestas: [
+                        ['mtu'],
+                        ['1500', '1.500'],
+                        ['df', 'dont fragment', 'no fragmentar'],
+                        ['descarta', 'desecha', 'tira', 'elimina']
+                    ],
+                    explicacion: 'Ese aviso es el que permite al emisor <strong>descubrir el MTU del camino</strong> y ajustar el tamaño de sus paquetes. Es exactamente lo que vas a provocar a mano en el laboratorio.',
+                    pistas: [
+                        'El tercer hueco son dos letras.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué hoy se prefiere descartar y avisar antes que fragmentar?',
+                    opciones: {
+                        a: 'Porque fragmentar es imposible en Ethernet',
+                        b: 'Porque fragmentar es costoso y frágil: si se pierde un solo fragmento hay que reenviar el paquete entero',
+                        c: 'Porque los routers modernos no saben fragmentar',
+                        d: 'Porque el MTU siempre es el mismo en todos los enlaces'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Además obliga al router a hacer trabajo extra por cada paquete. Descartar y avisar traslada el problema al emisor, que puede resolverlo <strong>una sola vez</strong> ajustando el tamaño.',
+                    pistas: [
+                        'Piensa qué pasa si de cinco fragmentos se pierde uno.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un usuario tiene una conexión que declara MTU 1500 en la tarjeta, pero al medirlo resulta ser 1492. ¿Está mal configurada?',
+                    opciones: {
+                        a: 'Sí, hay que corregir el MTU de la tarjeta',
+                        b: 'No: la tarjeta declara el MTU de su enlace Ethernet, pero el camino completo pasa por PPPoE, que añade 8 bytes',
+                        c: 'Sí, el cable es defectuoso',
+                        d: 'No, es un error de medición'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Son dos cosas distintas: el <strong>MTU de la interfaz</strong> y el <strong>MTU del camino</strong>. El primero describe el primer enlace; el segundo, el más restrictivo de todo el trayecto.',
+                    pistas: [
+                        '¿El MTU de tu tarjeta describe todo el camino hasta Internet, o solo el primer tramo?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Integración',
+            tiempo: '10 min',
+            enunciado: '<p>Cierra el día uniendo la encapsulación con lo que ya calculabas.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>a)</strong> En la Semana 2 calculaste que 500 MB por un enlace de 100 Mbps tardan 40 segundos, y se dijo que era una «cota inferior». Explica ahora, con lo de hoy, <strong>de dónde sale exactamente la diferencia</strong>.',
+                    modelo: `<p>La diferencia sale de que el cálculo cuenta <strong>solo los datos</strong>, mientras
+                             que por el cable viaja bastante más que eso.</p>
+                             <p><strong>Primero, las cabeceras.</strong> Cada trama llena lleva 14 bytes de Ethernet,
+                             4 de FCS, 20 de IP y 20 de TCP: 58 bytes que no son míos. La eficiencia máxima es de
+                             1460 ÷ 1518 ≈ <strong>96,2 %</strong>, así que solo por ahí ya se pierde en torno a un
+                             <strong>4 %</strong>. Los 40 segundos teóricos se convierten en unos 41,6.</p>
+                             <p><strong>Segundo, el tráfico de vuelta.</strong> TCP confirma lo que recibe, así que
+                             hay reconocimientos circulando en sentido contrario que también consumen capacidad.</p>
+                             <p><strong>Tercero, el establecimiento de la conexión</strong> y, si la línea usa PPPoE,
+                             <strong>8 bytes más</strong> por trama, que empeoran un poco la proporción.</p>
+                             <p>Y hay un factor que no es de encapsulación pero pesa: la <strong>latencia</strong> y el
+                             control de flujo de TCP, que al principio envía despacio y va acelerando. En
+                             transferencias cortas eso se nota más que las cabeceras.</p>
+                             <p>Por eso el cálculo se presentó como una <strong>cota inferior</strong>: es el tiempo
+                             que tardaría si todo fuese perfecto y no existiera ninguna envoltura. Nunca irá más
+                             rápido que eso; en la práctica irá algo más lento.</p>`,
+                    rubrica: [
+                        'Identifica las cabeceras como causa principal',
+                        'Da el porcentaje de eficiencia y lo aplica al tiempo',
+                        'Menciona el tráfico de reconocimientos de TCP',
+                        'Añade el establecimiento de conexión o el efecto de PPPoE',
+                        'Concluye por qué se llamaba cota inferior'
+                    ],
+                    pistas: [
+                        'Empieza por lo que ocupa cada cabecera y suma.',
+                        'Aplica el porcentaje de eficiencia a los 40 segundos originales.',
+                        'Piensa si TCP envía algo en sentido contrario.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Con todo lo de estos dos días, ¿qué afirmación describe mejor para qué sirve el modelo de capas?',
+                    opciones: {
+                        a: 'Para clasificar los dispositivos por precio',
+                        b: 'Para poder cambiar, diagnosticar y razonar sobre una parte de la red sin tener que entender todas las demás',
+                        c: 'Para que las redes vayan más rápido',
+                        d: 'Para cumplir la normativa de la ISO'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Las capas no hacen la red más rápida: de hecho, la encapsulación <strong>añade</strong> un 4 % de sobrecarga. Lo que aportan es que el problema sea <strong>manejable</strong>, y eso compensa con creces.',
+                    pistas: [
+                        'Una de las opciones es justo lo contrario de lo que has calculado hoy.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

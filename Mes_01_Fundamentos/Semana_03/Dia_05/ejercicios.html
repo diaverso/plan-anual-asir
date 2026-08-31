@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Hoja de recuperación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 5 — Hoja de recuperación</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Bloques:</strong> 5, uno por día</div>
+        <div class="info-item"><strong>Uso:</strong> empieza por el que peor te salió</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esta hoja no se hace entera del tirón</strong>
+            Está organizada <strong>igual que el desglose del test</strong>: un bloque por día. Mira qué día te ha
+            salido peor y <strong>empieza por ese</strong>.
+            <br><br>
+            Si has sacado más de un 80 %, haz solo el bloque más flojo y el de integración. Si has sacado menos de
+            un 50 %, hazla entera: sesenta minutos bien empleados valen más que repetir el test.
+            <br><br>
+            Las preguntas <strong>no son las mismas</strong> del test: son las mismas ideas por otro camino, que es
+            la única forma de saber si algo se ha entendido o solo se recuerda.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Cierre de la semana</strong>
+            <p>Si aquí has ido bien, la semana está consolidada. Si algo sigue resistiéndose, anótalo: el
+            <strong>examen mensual</strong> del viernes que viene vuelve sobre ello, y la Semana 4 empieza
+            precisamente aplicando las capas a los dispositivos.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Síntesis y test</a></span>
+        <span><a href="../Dia_04/ejercicios.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 5 — Hoja de recuperación',
+    subtitulo: 'Un bloque por día · empieza por el que peor te salió en el test',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE A — Recuperación del Día 1: capas y OSI',
+            tiempo: '12 min',
+            enunciado: '<p>Por qué capas, las siete de OSI y el alcance de cada una.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena las capas de OSI, de la 1 a la 7.',
+                    elementos: ['Red', 'Aplicación', 'Física', 'Sesión', 'Enlace', 'Presentación', 'Transporte'],
+                    orden: ['Física', 'Enlace', 'Red', 'Transporte', 'Sesión', 'Presentación', 'Aplicación'],
+                    explicacion: '<em>«Feo Enano Rojo Trepa Sin Parar Arriba.»</em> Si la mnemotecnia no te funciona, invéntate otra: lo que importa es que sea tuya.',
+                    pistas: [
+                        'La primera es la del cable.',
+                        'Transporte va justo en el medio, la cuarta de siete.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Completa el alcance y la dirección de cada capa.',
+                    esquina: 'Capa',
+                    cabecera: ['Dirección que usa', 'Hasta dónde llega'],
+                    filas: [
+                        {
+                            etiqueta: '<strong>2 · Enlace</strong>',
+                            celdas: [
+                                { respuestas: ['mac', 'direccion mac', 'dirección mac', 'fisica', 'física'], placeholder: 'dirección' },
+                                { respuestas: ['un salto', 'salto', 'la red local', 'red local', 'un tramo'], placeholder: 'alcance' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>3 · Red</strong>',
+                            celdas: [
+                                { respuestas: ['ip', 'direccion ip', 'dirección ip', 'logica', 'lógica'], placeholder: 'dirección' },
+                                { respuestas: ['extremo a extremo', 'de extremo a extremo', 'equipo a equipo', 'todo el camino'], placeholder: 'alcance' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>4 · Transporte</strong>',
+                            celdas: [
+                                { respuestas: ['puerto', 'puertos', 'numero de puerto', 'número de puerto'], placeholder: 'dirección' },
+                                { respuestas: ['de programa a programa', 'programa a programa', 'proceso a proceso', 'programa'], placeholder: 'alcance' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Estos tres alcances explican casi todo lo demás. En cuanto los tienes claros, sabes por qué la MAC cambia en cada salto, por qué la IP no y por qué hace falta un puerto además de una IP.',
+                    pistas: [
+                        'Una llega a un salto, otra a todo el camino y otra a un programa concreto.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>c)</strong> Explica con un ejemplo propio por qué dividir en capas permite cambiar una tecnología sin tocar el resto.',
+                    modelo: `<p>El ejemplo más claro es pasar de <strong>cable a Wi-Fi</strong>. Cambian las capas 1 y
+                             2 por completo: el medio deja de ser cobre y pasa a ser el aire, y el método de acceso
+                             cambia también.</p>
+                             <p>Y sin embargo <strong>no hay que tocar nada más</strong>. La dirección IP sigue
+                             funcionando igual, TCP sigue garantizando la entrega igual y el navegador ni se entera.
+                             No hubo que reescribir ningún programa cuando apareció el Wi-Fi.</p>
+                             <p>La razón es que la capa 3 nunca pidió «mándalo por cobre»: pidió «entrega esto al
+                             siguiente salto», sin especificar cómo. Mientras la capa de abajo siga ofreciendo ese
+                             mismo servicio, da igual con qué lo cumpla.</p>
+                             <p>Otro ejemplo del mismo tipo: pasar de HTTP a HTTPS. Se añadió cifrado en la capa 6 y
+                             ni TCP ni IP ni Ethernet se enteraron.</p>`,
+                    rubrica: [
+                        'Da un ejemplo concreto de cambio de tecnología',
+                        'Indica qué capas cambian y cuáles no',
+                        'Explica que la capa de arriba pide un servicio sin especificar el cómo',
+                        'Añade un segundo ejemplo o una conclusión propia'
+                    ],
+                    pistas: [
+                        'Piensa en algo que haya cambiado de verdad en los últimos treinta años.',
+                        '¿Qué le pide exactamente la capa 3 a la capa 2?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE B — Recuperación del Día 2: encapsulación y cabeceras',
+            tiempo: '14 min',
+            enunciado: '<p>El día con más números. Si este bloque falla, repásalos antes de seguir.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Rellena la tabla de PDU y cabeceras.',
+                    esquina: 'Capa',
+                    cabecera: ['Nombre de la PDU', 'Bytes de cabecera'],
+                    filas: [
+                        {
+                            etiqueta: '<strong>4 · Transporte</strong> (TCP)',
+                            celdas: [
+                                { respuestas: ['segmento'], placeholder: 'PDU' },
+                                { respuestas: ['20'], placeholder: 'bytes' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>3 · Red</strong>',
+                            celdas: [
+                                { respuestas: ['paquete'], placeholder: 'PDU' },
+                                { respuestas: ['20'], placeholder: 'bytes' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>2 · Enlace</strong> (Ethernet, sin FCS)',
+                            celdas: [
+                                { respuestas: ['trama'], placeholder: 'PDU' },
+                                { respuestas: ['14'], placeholder: 'bytes' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Segmento, paquete, trama · 20, 20, 14. Con estos seis datos se resuelven todos los cálculos de la semana.',
+                    pistas: [
+                        'Dos de las tres cabeceras miden lo mismo.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Una línea tiene un MTU de <strong>1400</strong> bytes. ¿Cuál es su MSS con TCP?',
+                    respuesta: 1360,
+                    tolerancia: 0.5,
+                    unidad: 'bytes',
+                    explicacion: '1400 − 20 (IP) − 20 (TCP) = <strong>1360</strong>. El cálculo es siempre el mismo: MTU menos 40. Si te salió 1460 es que respondiste de memoria en lugar de calcular.',
+                    pistas: [
+                        'MSS = MTU − cabecera IP − cabecera TCP.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Un paquete transporta <strong>500</strong> bytes de datos con 58 bytes de cabeceras. ¿Qué eficiencia tiene, en porcentaje entero?',
+                    respuesta: 90,
+                    tolerancia: 1.5,
+                    unidad: '%',
+                    explicacion: '500 ÷ 558 ≈ <strong>90 %</strong>. Compáralo con el 96 % de una trama llena y con el 63 % de una de 100 bytes: <strong>cuanto más pequeño es el mensaje, más pesan las cabeceras</strong>.',
+                    pistas: [
+                        'Datos entre el total, por cien. El total son datos más cabeceras.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Qué información se añade <strong>al final</strong> de la PDU, y en qué capa?',
+                    opciones: {
+                        a: 'El puerto de destino, en la capa 4',
+                        b: 'El FCS, en la capa 2',
+                        c: 'El TTL, en la capa 3',
+                        d: 'Nada: todas las cabeceras van delante'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El <strong>FCS</strong> se calcula sobre toda la trama, así que solo puede ir detrás. Es la única excepción a «cada capa pone su cabecera delante».',
+                    pistas: [
+                        '¿Sobre qué datos se calcula un código de comprobación?'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>e)</strong> Completa quién lee cada cabecera.',
+                    frase: 'La cabecera Ethernet la lee solo el {{0}} aparato, y se rehace en cada tramo. La cabecera IP la leen {{1}} los routers del camino, pero viaja intacta. Y la cabecera TCP la lee únicamente el {{2}}.',
+                    respuestas: [
+                        ['siguiente', 'proximo', 'próximo'],
+                        ['todos'],
+                        ['destino', 'destinatario', 'servidor', 'destino final']
+                    ],
+                    explicacion: 'Es la <strong>comunicación entre pares</strong>, y de ahí sale la respuesta a por qué las MAC cambian y las IP no.',
+                    pistas: [
+                        'Piensa en el alcance de cada capa.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE C — Recuperación del Día 3: TCP/IP',
+            tiempo: '12 min',
+            enunciado: '<p>Los dos modelos y su correspondencia.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica a qué capa de <strong>TCP/IP</strong> corresponde cada capa de OSI.',
+                    esquina: 'Capa de OSI',
+                    cabecera: ['Capa de TCP/IP'],
+                    filas: [
+                        { etiqueta: '6 · Presentación', celdas: [{ respuestas: ['aplicacion', 'aplicación'], placeholder: 'capa' }] },
+                        { etiqueta: '4 · Transporte', celdas: [{ respuestas: ['transporte'], placeholder: 'capa' }] },
+                        { etiqueta: '3 · Red', celdas: [{ respuestas: ['internet'], placeholder: 'capa' }] },
+                        { etiqueta: '1 · Física', celdas: [{ respuestas: ['acceso a la red', 'acceso', 'acceso red'], placeholder: 'capa' }] }
+                    ],
+                    explicacion: 'La regla: las <strong>dos del medio coinciden</strong>; arriba OSI separa en tres y abajo en dos. Si te la sabes, no hace falta memorizar la tabla.',
+                    pistas: [
+                        'La capa 3 de OSI cambia de nombre en TCP/IP.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca <strong>todo</strong> lo que sea cierto sobre TCP/IP frente a OSI.',
+                    opciones: {
+                        a: 'TCP/IP ya funcionaba cuando se publicó OSI',
+                        b: 'TCP/IP no define nada de su capa de acceso a la red',
+                        c: 'OSI sigue usándose como vocabulario de la industria',
+                        d: 'TCP/IP tiene siete capas igual que OSI'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'La d es falsa: TCP/IP tiene <strong>cuatro</strong>. Y ese dato es el que resuelve la pregunta de «capa 7»: si solo hay cuatro capas, hablar de la séptima es hablar de OSI.',
+                    pistas: [
+                        'Tres de las cuatro son ciertas.',
+                        'Cuenta las capas de cada modelo.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>c)</strong> Explica el <strong>reloj de arena</strong> y qué consecuencia práctica tiene.',
+                    modelo: `<p>Si se dibuja la pila y se cuenta cuántos protocolos hay en cada nivel, sale una forma
+                             estrecha en el centro: arriba hay cientos de protocolos de aplicación, abajo decenas de
+                             tecnologías de red, y en medio <strong>uno solo: IP</strong>.</p>
+                             <p>La consecuencia buena es que <strong>todo combina con todo</strong>. Como cualquier
+                             aplicación habla con IP y cualquier tecnología de red transporta IP, no hace falta que
+                             cada aplicación se entienda con cada tecnología. Con 20 protocolos arriba y 5 abajo
+                             harían falta 100 acuerdos; con IP en medio bastan 25.</p>
+                             <p>La consecuencia mala es que <strong>cambiar esa pieza lo afecta todo</strong>. Por eso
+                             IPv6 se publicó en 1998 y todavía convive con IPv4: no basta con que un operador lo
+                             active, hacen falta a la vez los routers, los sistemas operativos y los programas.</p>
+                             <p>Es la misma tensión de siempre: lo que hace algo fácil de extender lo hace difícil de
+                             cambiar.</p>`,
+                    rubrica: [
+                        'Describe la forma: muchos arriba, muchos abajo, uno en medio',
+                        'Explica la ventaja de combinarlo todo con todo',
+                        'Señala la desventaja: cambiar IP lo afecta todo',
+                        'Cita IPv6 como caso concreto'
+                    ],
+                    pistas: [
+                        '¿Cuántos protocolos hay en cada nivel de la pila?',
+                        '¿Qué pasa cuando hay que cambiar justo la pieza del centro?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE D — Recuperación del Día 4: normalización',
+            tiempo: '12 min',
+            enunciado: '<p>Aplica la regla en lugar de recordar listas.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> ¿Qué organismo define cada cosa?',
+                    esquina: 'Qué se define',
+                    cabecera: ['Organismo (siglas)'],
+                    filas: [
+                        { etiqueta: 'La norma <strong>802.11</strong> (Wi-Fi)', celdas: [{ respuestas: ['ieee'], placeholder: 'siglas' }] },
+                        { etiqueta: 'El protocolo <strong>TCP</strong>', celdas: [{ respuestas: ['ietf'], placeholder: 'siglas' }] },
+                        { etiqueta: 'Que <strong>SSH</strong> use el puerto 22', celdas: [{ respuestas: ['iana', 'icann'], placeholder: 'siglas' }] },
+                        { etiqueta: 'El lenguaje <strong>HTML</strong>', celdas: [{ respuestas: ['w3c'], placeholder: 'siglas' }] },
+                        { etiqueta: 'El <strong>modelo OSI</strong>', celdas: [{ respuestas: ['iso'], placeholder: 'siglas' }] }
+                    ],
+                    explicacion: 'Capas 1-2 → IEEE. Capas 3-7 → IETF. Números → IANA. Y aparte: la ISO publicó OSI y el W3C define HTML.',
+                    pistas: [
+                        'Empieza por preguntarte de qué capa es cada cosa.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál es la diferencia práctica entre <strong>MUST</strong> y <strong>SHOULD</strong> en un RFC?',
+                    opciones: {
+                        a: 'Ninguna: son sinónimos formales',
+                        b: 'MUST es obligatorio para que la implementación sea válida; SHOULD es recomendado y se puede incumplir justificadamente',
+                        c: 'MUST se aplica al cliente y SHOULD al servidor',
+                        d: 'SHOULD indica que el RFC está obsoleto'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la diferencia entre un producto <strong>incompatible</strong> y uno que ha tomado una decisión distinta. Cuando dos equipos «casi» funcionan juntos, suele haber un <em>SHOULD</em> incumplido.',
+                    pistas: [
+                        'Uno obliga y el otro recomienda.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa lo esencial sobre los RFC y los estándares.',
+                    frase: 'Un estándar {{0}} lo aprueba un organismo oficial; uno de facto se impone porque todo el mundo lo usa. Los RFC los publica la IETF, son gratuitos y {{1}} se modifican: si algo cambia se publica uno nuevo que deja obsoleto al anterior.',
+                    respuestas: [
+                        ['de iure', 'iure', 'de jure'],
+                        ['nunca', 'jamas', 'jamás', 'no']
+                    ],
+                    explicacion: 'Esa inmutabilidad es lo que permite que un RFC sirva de contrato entre fabricantes que nunca han hablado entre sí.',
+                    pistas: [
+                        'La primera expresión es latina y significa «de derecho».'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE E — Integración: la semana entera en un caso',
+            tiempo: '10 min',
+            enunciado: `
+                <p>Abres <code>http://ejemplo.com</code> desde un portátil por cable. El servidor está a
+                <strong>cinco routers</strong> de distancia. Responde con todo lo de la semana.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para cada elemento de esa comunicación, indica la capa de OSI (número), la de TCP/IP (nombre) y el organismo que la define.',
+                    esquina: 'Elemento',
+                    cabecera: ['Capa OSI', 'Capa TCP/IP', 'Organismo'],
+                    filas: [
+                        {
+                            etiqueta: 'La <strong>MAC</strong> de tu tarjeta',
+                            celdas: [
+                                { respuestas: ['2', 'dos'], placeholder: 'nº' },
+                                { respuestas: ['acceso a la red', 'acceso', 'acceso red'], placeholder: 'nombre' },
+                                { respuestas: ['ieee'], placeholder: 'siglas' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'La <strong>IP</strong> del servidor',
+                            celdas: [
+                                { respuestas: ['3', 'tres'], placeholder: 'nº' },
+                                { respuestas: ['internet'], placeholder: 'nombre' },
+                                { respuestas: ['ietf'], placeholder: 'siglas' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'El <strong>puerto 80</strong>',
+                            celdas: [
+                                { respuestas: ['4', 'cuatro'], placeholder: 'nº' },
+                                { respuestas: ['transporte'], placeholder: 'nombre' },
+                                { respuestas: ['iana', 'icann'], placeholder: 'siglas' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Tres identificadores, tres capas, tres organismos. Si esta tabla te sale entera, la semana está consolidada.',
+                    pistas: [
+                        'Ninguno de los tres está en la misma capa que otro.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>b)</strong> Cuenta qué le pasa a esa petición: cómo se encapsula al salir, qué cambia en cada uno de los cinco routers y qué queda intacto hasta el final.',
+                    modelo: `<p><strong>Al salir</strong>, el texto <code>GET / HTTP/1.1</code> baja la pila. TCP le
+                             pone 20 bytes con el puerto de destino 80 y un puerto efímero de origen: ya es un
+                             <strong>segmento</strong>. IP le añade otros 20 con mi dirección y la del servidor: es un
+                             <strong>paquete</strong>. Ethernet le pone 14 delante con mi MAC y la de mi
+                             <strong>router</strong> —no la del servidor— y 4 de FCS detrás: es una
+                             <strong>trama</strong>. Y la capa 1 la convierte en señales.</p>
+                             <p><strong>En cada router</strong> pasa lo mismo cinco veces: recibe la trama, comprueba
+                             el FCS, <strong>la descarta entera</strong>, mira la cabecera IP para decidir por dónde
+                             sigue, descuenta uno al TTL y <strong>construye una trama nueva</strong> con su propia MAC
+                             y la del siguiente salto.</p>
+                             <p>Así que la <strong>cabecera Ethernet se rehace seis veces</strong>: una por cada uno de
+                             los seis tramos que hay con cinco routers en medio.</p>
+                             <p><strong>Lo que queda intacto</strong> es la cabecera IP —salvo el TTL, que baja en cada
+                             salto, y la IP de origen si hay NAT— y por completo la cabecera TCP y los datos HTTP, que
+                             ningún router llega a mirar.</p>
+                             <p><strong>Al llegar</strong>, el servidor sube la pila: la capa 2 comprueba que la trama
+                             es para él, la 3 que la IP es suya, la 4 mira el puerto 80 y entrega al servidor web, y
+                             la 7 interpreta por fin la petición.</p>
+                             <p>Resumido en una frase: <strong>la envoltura de capa 2 se rehace en cada tramo y la de
+                             capa 3 viaja de extremo a extremo</strong>. Todo lo demás de la semana se deduce de
+                             ahí.</p>`,
+                    rubrica: [
+                        'Describe la encapsulación en orden con los nombres de PDU',
+                        'Señala que la MAC de destino inicial es la del router, no la del servidor',
+                        'Explica que cada router descarta la trama y crea una nueva',
+                        'Cuenta correctamente los tramos (seis con cinco routers)',
+                        'Indica qué viaja intacto y menciona el TTL o el NAT',
+                        'Cierra con la desencapsulación en el destino'
+                    ],
+                    pistas: [
+                        'Empieza por lo que ocurre en tu equipo, capa a capa, hacia abajo.',
+                        '¿Cuántos tramos hay si hay cinco routers en medio?',
+                        'Distingue lo que se rehace de lo que viaja intacto.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

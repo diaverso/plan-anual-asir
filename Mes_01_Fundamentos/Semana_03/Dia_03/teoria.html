@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — El modelo TCP/IP</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 3 — El modelo TCP/IP</h1>
+        <p>El modelo que de verdad se usa · sus cuatro capas · por qué ganó a OSI</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 58 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 12 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>El día en que el modelo se vuelve real</strong>
+            OSI es el modelo que se estudia. <strong>TCP/IP es el que está funcionando</strong> ahora mismo en tu
+            equipo. Hoy verás los dos juntos, y en el laboratorio vas a <strong>recorrer sus cuatro capas en una
+            sola petición web</strong>, viendo qué protocolo actúa en cada una.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Dos días con OSI: las siete capas, el alcance de cada una y la encapsulación. Hoy aparece el modelo
+            <strong>rival</strong>, que es el que se usa de verdad. Y la pregunta interesante no es cuál es mejor,
+            sino <strong>por qué seguimos estudiando el que perdió</strong>.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#origen">De dónde sale TCP/IP</a></li>
+                <li><a href="#capas">Las cuatro capas</a></li>
+                <li><a href="#correspondencia">La correspondencia con OSI</a></li>
+                <li><a href="#gano">Por qué ganó TCP/IP</a></li>
+                <li><a href="#reloj">El reloj de arena: IP en la cintura</a></li>
+                <li><a href="#pila">El mapa de protocolos</a></li>
+                <li><a href="#hibrido">El modelo híbrido de cinco capas</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="origen">1. De dónde sale TCP/IP</h2>
+
+            <p>Hay un detalle que explica casi todo lo demás: <strong>TCP/IP es anterior a OSI</strong>. No es una
+            alternativa que apareció después para simplificarlo; es al revés.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Año</th><th>Qué pasó</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1969</strong></td><td>Arranca <strong>ARPANET</strong>, la red del Departamento de Defensa estadounidense</td></tr>
+                    <tr><td><strong>1974</strong></td><td>Vinton <strong>Cerf</strong> y Robert <strong>Kahn</strong> publican el protocolo que acabará siendo TCP/IP</td></tr>
+                    <tr><td><strong>1 de enero de 1983</strong></td><td>ARPANET <strong>cambia a TCP/IP en un solo día</strong>. Lo llamaron <em>flag day</em></td></tr>
+                    <tr><td><strong>1983</strong></td><td>Se distribuye con <strong>BSD Unix</strong>, gratis y con el código fuente</td></tr>
+                    <tr><td><strong>1984</strong></td><td>La <strong>ISO</strong> publica el modelo <strong>OSI</strong>… cuando TCP/IP ya llevaba un año desplegado</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Qué significa que una red cambie de protocolo «en un día»</strong>
+                <p>El 1 de enero de 1983 unos <strong>400 equipos</strong> tuvieron que dejar de hablar el protocolo
+                antiguo y empezar a hablar TCP/IP. No había forma de hacerlo gradualmente: quien no hubiera migrado,
+                se quedaba fuera de la red.</p>
+                <p>Circularon chapas con el lema <em>«I survived the TCP/IP transition»</em>. Da una idea de lo que
+                cuesta cambiar algo que está en la base de todo: es exactamente el mismo problema que hoy frena
+                <strong>IPv6</strong>, solo que ahora no son 400 equipos, sino miles de millones.</p>
+            </div>
+
+            <h2 id="capas">2. Las cuatro capas</h2>
+
+            <p>TCP/IP describe lo mismo que OSI con <strong>cuatro</strong> capas en lugar de siete. No es que le
+            falten tres: es que <strong>agrupa</strong> lo que en la práctica no se separa.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>De qué se ocupa</th><th>Protocolos</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>4 · Aplicación</strong></td>
+                        <td>El servicio que la persona usa, con su formato y su diálogo</td>
+                        <td>HTTP, DNS, SMTP, FTP, SSH, DHCP</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3 · Transporte</strong></td>
+                        <td>Entregar al programa correcto, trocear y, si toca, garantizar</td>
+                        <td><strong>TCP</strong>, <strong>UDP</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2 · Internet</strong></td>
+                        <td>Llevar el paquete de una red a otra: direccionamiento y ruta</td>
+                        <td><strong>IP</strong>, ICMP, ARP</td>
+                    </tr>
+                    <tr>
+                        <td><strong>1 · Acceso a la red</strong></td>
+                        <td>Meter los bits en el medio concreto que haya</td>
+                        <td>Ethernet, Wi-Fi, PPP</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Cuidado con los números</strong>
+                En TCP/IP la capa <strong>4 es la de aplicación</strong>; en OSI, la 4 es la de <strong>transporte</strong>.
+                Decir «capa 4» a secas es ambiguo si no se dice de qué modelo se habla.
+                <br><br>
+                Por eso, cuando alguien dice «un cortafuegos de capa 7» o «un switch de capa 3», se está refiriendo
+                <strong>siempre a OSI</strong>. El vocabulario del día a día es el de OSI, aunque el protocolo que
+                corre por debajo sea TCP/IP. Es la primera pista de por qué merece la pena saberse los dos.
+            </div>
+
+            <div class="dato">
+                <strong>La capa 1 de TCP/IP: lo que el modelo deliberadamente no dice</strong>
+                <p>La capa de acceso a la red es la más rara de las cuatro, porque TCP/IP <strong>no define
+                nada</strong> ahí. No dice cómo son los cables, ni las tramas, ni las direcciones físicas.</p>
+                <p>No es un olvido: es la decisión de diseño más importante del modelo. Al no definir la capa de
+                abajo, TCP/IP puede funcionar sobre <strong>cualquier cosa</strong> que ya exista o que se invente
+                después: Ethernet, Wi-Fi, fibra, 5G, satélite. En 1974 no existía ninguna de las cuatro últimas, y
+                aun así funcionan.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="correspondencia">3. La correspondencia con OSI</h2>
+
+            <p>Esta tabla <strong>cae en examen</strong> y conviene sabérsela en los dos sentidos.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>OSI</th><th>TCP/IP</th><th>Qué ocurre</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>7 · Aplicación</strong><br><strong>6 · Presentación</strong><br><strong>5 · Sesión</strong></td>
+                        <td rowspan="1"><strong>Aplicación</strong></td>
+                        <td><strong>Tres capas de OSI se funden en una.</strong> En la práctica el mismo protocolo se ocupa del servicio, del formato y del diálogo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4 · Transporte</strong></td>
+                        <td><strong>Transporte</strong></td>
+                        <td>Correspondencia exacta, uno a uno</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3 · Red</strong></td>
+                        <td><strong>Internet</strong></td>
+                        <td>Correspondencia exacta; solo cambia el nombre</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2 · Enlace</strong><br><strong>1 · Física</strong></td>
+                        <td><strong>Acceso a la red</strong></td>
+                        <td><strong>Dos capas de OSI se funden en una</strong>, y además TCP/IP no define su contenido</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La regla para no perderse</strong>
+                Las dos capas <strong>del medio</strong> —transporte y red/internet— son idénticas en los dos
+                modelos. Lo único que cambia está en los <strong>extremos</strong>:
+                <br><br>
+                <strong>Arriba</strong>, OSI separa en tres lo que TCP/IP deja en una.<br>
+                <strong>Abajo</strong>, OSI separa en dos lo que TCP/IP deja en una.
+                <br><br>
+                Si te sabes eso, la tabla la reconstruyes entera sin memorizarla.
+            </div>
+
+<figure class="figura">
+                <img src="../../../imagenes/m01_s03_d03_osi_vs_tcpip.png"
+                     width="1400" height="1050" loading="lazy"
+                     alt="Las siete capas de OSI a la izquierda y las cuatro de TCP/IP a la derecha, emparejadas por color. Tres flechas llevan las capas 7, 6 y 5 a la de aplicación; transporte y red van una a una a transporte e internet; y las capas 2 y 1 convergen en la de acceso a la red.">
+                <figcaption>Las dos del medio coinciden. Arriba OSI separa en tres, y abajo en dos.</figcaption>
+            </figure>
+
+            <pre><code>       OSI                        TCP/IP
+  ┌──────────────┐
+  │ 7 Aplicación │ ─┐
+  ├──────────────┤  │        ┌──────────────┐
+  │ 6 Presentac. │ ─┼──────► │  Aplicación  │
+  ├──────────────┤  │        └──────────────┘
+  │ 5 Sesión     │ ─┘
+  ├──────────────┤           ┌──────────────┐
+  │ 4 Transporte │ ────────► │  Transporte  │
+  ├──────────────┤           ├──────────────┤
+  │ 3 Red        │ ────────► │   Internet   │
+  ├──────────────┤           ├──────────────┤
+  │ 2 Enlace     │ ─┐        │  Acceso a    │
+  ├──────────────┤  ├──────► │   la red     │
+  │ 1 Física     │ ─┘        └──────────────┘
+  └──────────────┘</code></pre>
+
+            <h2 id="gano">4. Por qué ganó TCP/IP</h2>
+
+            <p>A mediados de los ochenta parecía claro que el futuro era OSI: lo respaldaban la ISO, los gobiernos
+            europeos y las grandes empresas de telecomunicaciones. Ganó TCP/IP. Merece la pena entender por qué,
+            porque la explicación se repite constantemente en informática.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>TCP/IP</th><th>OSI</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Cómo nació</th><td>Escribiendo <strong>código que funcionaba</strong> y estandarizando después</td><td>Diseñando el modelo <strong>completo por comité</strong> antes de implementarlo</td></tr>
+                    <tr><th scope="row">Coste</th><td><strong>Gratis</strong>, con el código incluido en BSD Unix</td><td>Los documentos de la ISO <strong>se pagaban</strong></td></tr>
+                    <tr><th scope="row">Complejidad</th><td>Cuatro capas, protocolos sencillos</td><td>Siete capas, con dos (sesión y presentación) que casi nadie llegó a usar</td></tr>
+                    <tr><th scope="row">Cuándo estuvo listo</th><td>Funcionando desde <strong>1983</strong></td><td>Publicado en 1984; implementaciones completas, mucho más tarde</td></tr>
+                    <tr><th scope="row">Quién lo empujó</th><td>Universidades, que ya lo tenían instalado</td><td>Gobiernos y operadoras, por decreto</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>«Rough consensus and running code»</strong>
+                <p>Es la frase con la que David Clark resumió en 1992 la filosofía de quienes desarrollaban Internet:
+                <em>«Rechazamos reyes, presidentes y votaciones. Creemos en el consenso aproximado y en el código que
+                funciona.»</em></p>
+                <p>Frente a un comité que vota especificaciones, un grupo que escribe implementaciones y adopta la
+                que funciona. El jueves verás cómo ese principio sigue siendo el procedimiento oficial para crear
+                estándares de Internet.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Pero OSI no desapareció</strong>
+                Aquí está el matiz que hay que entender, porque es lo que justifica estudiar los dos:
+                <br><br>
+                <strong>OSI perdió como conjunto de protocolos</strong> —nadie usa hoy sus protocolos— <strong>pero
+                ganó como vocabulario</strong>. Toda la industria describe los aparatos, los problemas y los productos
+                con sus siete capas.
+                <br><br>
+                Un switch «de capa 2», un cortafuegos «de capa 7», un problema «de capa 1»: todo eso es OSI. Nadie
+                dice «un switch de capa de acceso a la red».
+                <br><br>
+                Se estudian los dos porque se usan los dos, cada uno para una cosa: <strong>TCP/IP para funcionar,
+                OSI para hablar</strong>.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="reloj">5. El reloj de arena: IP en la cintura</h2>
+
+            <p>Si se dibuja la familia de protocolos por capas y se cuenta cuántos hay en cada nivel, sale una forma
+            muy característica:</p>
+
+<figure class="figura">
+                <img src="../../../imagenes/m01_s03_d03_reloj_de_arena.png"
+                     width="1086" height="1448" loading="lazy"
+                     alt="La pila con forma de reloj de arena: arriba, siete protocolos de aplicación; en medio, TCP y UDP; en la parte más estrecha, un único recuadro con IP; y abajo, seis tecnologías de red distintas. Todas las líneas pasan por IP.">
+                <figcaption>Muchos protocolos arriba, muchas tecnologías abajo, y un solo protocolo en la cintura.</figcaption>
+            </figure>
+
+            <pre><code>  Aplicación   HTTP  DNS  SMTP  SSH  FTP  DHCP  ...    ← muchísimos
+                    \    \    |    /    /
+  Transporte           TCP        UDP                  ← dos
+                          \      /
+  Internet                  IP                         ← UNO
+                          /      \
+  Acceso        Ethernet  Wi-Fi  PPP  fibra  5G  ...    ← muchísimos</code></pre>
+
+            <div class="destacado">
+                <strong>Todo sobre IP, IP sobre todo</strong>
+                Arriba hay cientos de protocolos de aplicación. Abajo, decenas de tecnologías de red distintas. Y en
+                medio, en la cintura del reloj de arena, <strong>un solo protocolo: IP</strong>.
+                <br><br>
+                Esa estrechez es justo lo que hace que funcione. Como <strong>todo</strong> pasa por IP,
+                cualquier aplicación nueva funciona sobre cualquier red existente sin que nadie tenga que ponerse de
+                acuerdo. El día que se inventó el Wi-Fi no hubo que tocar los navegadores.
+            </div>
+
+            <div class="aviso">
+                <strong>Y también explica lo difícil que es cambiar IPv4</strong>
+                Si la cintura es lo que sostiene el reloj, <strong>tocar la cintura lo afecta todo</strong>.
+                <br><br>
+                Por eso IPv6, que se publicó en <strong>1998</strong>, sigue conviviendo con IPv4 casi treinta años
+                después. Cambiar un protocolo de aplicación es fácil: afecta a quien lo use. Cambiar el de la cintura
+                obliga a mover, a la vez, todo lo de arriba y todo lo de abajo.
+                <br><br>
+                Es el <em>flag day</em> de 1983 otra vez, pero a escala planetaria. Y esta vez no cabe hacerlo en un
+                día.
+            </div>
+
+            <h2 id="pila">6. El mapa de protocolos</h2>
+
+            <p>Casi todos los protocolos que has visto en tres semanas caben en esta tabla. Vale la pena mirarla
+            despacio: es el resumen de lo que llevas de curso.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa TCP/IP</th><th>Protocolo</th><th>Para qué sirve</th><th>Encima de</th></tr></thead>
+                <tbody>
+                    <tr><td rowspan="5"><strong>Aplicación</strong></td><td><strong>HTTP</strong></td><td>Web</td><td>TCP · 80 y 443</td></tr>
+                    <tr><td><strong>DNS</strong></td><td>Traducir nombres a direcciones IP</td><td><strong>UDP</strong> · 53</td></tr>
+                    <tr><td><strong>SMTP</strong></td><td>Enviar correo</td><td>TCP · 25</td></tr>
+                    <tr><td><strong>SSH</strong></td><td>Administrar equipos a distancia</td><td>TCP · 22</td></tr>
+                    <tr><td><strong>DHCP</strong></td><td>Repartir configuración de red</td><td>UDP · 67 y 68</td></tr>
+                    <tr><td rowspan="2"><strong>Transporte</strong></td><td><strong>TCP</strong></td><td>Entrega garantizada y en orden</td><td>IP</td></tr>
+                    <tr><td><strong>UDP</strong></td><td>Entrega rápida, sin garantías</td><td>IP</td></tr>
+                    <tr><td rowspan="3"><strong>Internet</strong></td><td><strong>IP</strong></td><td>Direccionar y encaminar</td><td>La capa de acceso</td></tr>
+                    <tr><td><strong>ICMP</strong></td><td>Mensajes de control y error: es lo que usa <code>ping</code></td><td>IP</td></tr>
+                    <tr><td><strong>ARP</strong></td><td>Averiguar la MAC que corresponde a una IP</td><td>Directamente sobre Ethernet</td></tr>
+                    <tr><td rowspan="2"><strong>Acceso a la red</strong></td><td><strong>Ethernet</strong></td><td>Red local por cable</td><td>El medio físico</td></tr>
+                    <tr><td><strong>Wi-Fi</strong></td><td>Red local sin cables</td><td>El aire</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Dos rarezas de la tabla que conviene notar</strong>
+                <p><strong>DNS va sobre UDP</strong>, no sobre TCP, aunque sea un servicio importantísimo. Tiene
+                sentido: una consulta y una respuesta cortas, y si se pierde se repite. Montar una conexión TCP para
+                eso costaría más que la propia consulta.</p>
+                <p><strong>ARP no encaja del todo en ninguna capa.</strong> Se le suele situar en la de internet
+                porque trabaja con direcciones IP, pero no viaja dentro de IP: va directamente dentro de una trama
+                Ethernet. Es un protocolo que vive justo en la frontera entre las dos capas, y por eso los libros no
+                se ponen de acuerdo sobre dónde ponerlo.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="hibrido">7. El modelo híbrido de cinco capas</h2>
+
+            <p>Como OSI tiene tres capas de arriba que casi nadie separa y TCP/IP tiene una capa de abajo que agrupa
+            dos cosas muy distintas, en la práctica se usa mucho un <strong>modelo intermedio de cinco
+            capas</strong>:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Modelo híbrido</th><th>Viene de</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>5 · Aplicación</strong></td><td>TCP/IP</td><td>Sesión y presentación se dejan fundidas, como en la realidad</td></tr>
+                    <tr><td><strong>4 · Transporte</strong></td><td>Los dos</td><td>Igual en ambos</td></tr>
+                    <tr><td><strong>3 · Red</strong></td><td>Los dos</td><td>Igual en ambos</td></tr>
+                    <tr><td><strong>2 · Enlace</strong></td><td>OSI</td><td>Se recupera la separación: el cable y la trama son cosas distintas</td></tr>
+                    <tr><td><strong>1 · Física</strong></td><td>OSI</td><td>Igual</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Lo mejor de cada uno</strong>
+                Se queda con la <strong>simplicidad de TCP/IP arriba</strong> y con la <strong>precisión de OSI
+                abajo</strong>, que es donde de verdad hace falta distinguir: un problema de cable (capa 1) y uno de
+                configuración de switch (capa 2) se diagnostican de forma muy distinta.
+                <br><br>
+                No es un modelo oficial de ningún organismo. Es lo que usan la mayoría de los libros y de los
+                profesionales porque es lo que resulta útil.
+            </div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>TCP/IP es <strong>anterior</strong> a OSI: 1983 frente a 1984, y con implementación real desde el principio.</li>
+                    <li>Cuatro capas: <strong>acceso a la red, internet, transporte y aplicación</strong>.</li>
+                    <li>Correspondencia: las <strong>dos del medio son idénticas</strong>; arriba OSI separa en tres, abajo separa en dos.</li>
+                    <li>TCP/IP <strong>no define</strong> su capa de acceso, y por eso funciona sobre cualquier tecnología, incluidas las que aún no existían.</li>
+                    <li>Ganó por ser <strong>gratis, sencillo y estar ya funcionando</strong>, no por ser oficial.</li>
+                    <li>OSI <strong>sobrevive como vocabulario</strong>: «switch de capa 2», «cortafuegos de capa 7».</li>
+                    <li><strong>Reloj de arena</strong>: muchos protocolos arriba, muchas tecnologías abajo, y solo <strong>IP</strong> en la cintura.</li>
+                    <li>Esa cintura explica a la vez el éxito de Internet y la lentitud de <strong>IPv6</strong>.</li>
+                    <li><strong>DNS va sobre UDP</strong>; <strong>ARP</strong> no viaja dentro de IP.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«TCP/IP simplificó OSI»</td><td>Al revés: TCP/IP <strong>es anterior</strong>. OSI llegó después</td></tr>
+                    <tr><td>«A TCP/IP le faltan capas»</td><td>No le faltan: <strong>agrupa</strong> lo que en la práctica no se separa</td></tr>
+                    <tr><td>«Capa 4 es transporte»</td><td>En <strong>OSI</strong> sí; en TCP/IP la 4 es la de <strong>aplicación</strong></td></tr>
+                    <tr><td>«OSI no sirve para nada»</td><td>Es el <strong>vocabulario</strong> de toda la industria</td></tr>
+                    <tr><td>«TCP/IP define Ethernet»</td><td>No define <strong>nada</strong> de su capa de acceso, y eso es una ventaja</td></tr>
+                    <tr><td>«TCP e IP son un solo protocolo»</td><td>Son <strong>dos</strong>, en capas distintas. El nombre junta los dos más conocidos de la familia</td></tr>
+                    <tr><td>«DNS usa TCP porque es importante»</td><td>Usa <strong>UDP</strong>: consultas cortas en las que montar una conexión costaría más que preguntar</td></tr>
+                    <tr><td>«IPv6 no se despliega por pereza»</td><td>Está en la <strong>cintura</strong> del reloj: cambiarlo obliga a mover todo lo de arriba y lo de abajo a la vez</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 22 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a recorrer <strong>las cuatro capas de TCP/IP en una sola petición web</strong>: la consulta DNS,
+            la conexión TCP con su puerto efímero, la dirección IP a la que se llega y las cabeceras HTTP. Todo con
+            comandos que ya tienes instalados.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 3</strong></a> (62 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 4</strong>
+            <p><strong>Normalización</strong>: quién decide cómo son los protocolos. ISO, IEEE, IETF y los RFC. Y el
+            estreno de <strong>Wireshark</strong>, con el que verás por fin los bytes de verdad de una trama.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> si nadie manda en Internet, ¿quién decide que el puerto de la
+            web sea el 80?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/teoria.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> TCP/IP no define nada de su capa de acceso a la red. Explica por qué eso, que parece una carencia, es la <strong>mejor decisión de diseño</strong> del modelo.',
+                modelo: `<p>Parece una carencia porque un modelo «completo» debería decir cómo son los cables y las
+                         tramas. Pero justamente por no decirlo, TCP/IP puede funcionar sobre <strong>cualquier
+                         tecnología</strong>.</p>
+                         <p>Si el modelo hubiera fijado en 1974 cómo debía ser la capa de abajo, habría fijado la
+                         tecnología de 1974. Y todo lo que vino después —Wi-Fi, fibra, 5G, satélite— habría exigido
+                         cambiar el modelo, o directamente no habría podido usarse.</p>
+                         <p>Al dejar ese hueco, TCP/IP dice en la práctica: «dame cualquier cosa capaz de mover bits
+                         de un punto a otro y yo me ocupo del resto». Por eso el mismo protocolo que corría entre
+                         cuatro universidades en 1983 funciona hoy en un móvil por 5G.</p>
+                         <p>Es la idea de la independencia entre capas del Día 1, llevada al extremo: no solo cada
+                         capa ignora cómo trabajan las demás, es que el modelo <strong>ni siquiera describe</strong>
+                         una de ellas.</p>`,
+                puntos: [
+                    'Señala que no definirla permite funcionar sobre cualquier tecnología',
+                    'Explica que definirla habría congelado la tecnología de 1974',
+                    'Cita ejemplos posteriores: Wi-Fi, fibra, 5G',
+                    'Lo relaciona con la independencia entre capas del Día 1'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Si TCP/IP ganó, ¿por qué sigues estudiando OSI? Da una razón que no sea «porque entra en el examen».',
+                modelo: `<p>Porque OSI perdió como <strong>conjunto de protocolos</strong> pero ganó como
+                         <strong>vocabulario</strong>, y el vocabulario es lo que se usa todos los días.</p>
+                         <p>Nadie utiliza hoy los protocolos de OSI. Pero toda la industria describe los aparatos y
+                         los problemas con sus siete capas: un <strong>switch de capa 2</strong>, un
+                         <strong>cortafuegos de capa 7</strong>, un balanceador «de capa 4», un problema «de capa 1».
+                         Esos nombres están en las fichas de producto, en los manuales y en los partes de
+                         incidencia.</p>
+                         <p>Nadie dice «un switch de capa de acceso a la red». Si solo supiera TCP/IP, entendería
+                         cómo funciona la red pero no entendería cómo habla de ella la gente que trabaja en
+                         ella.</p>
+                         <p>Y hay una segunda razón: OSI <strong>separa</strong> cosas que TCP/IP agrupa, y esa
+                         separación es útil para diagnosticar. Distinguir capa 1 de capa 2 dice si el problema es del
+                         cable o de la configuración, y son dos trabajos distintos.</p>
+                         <p>La conclusión: <strong>TCP/IP para funcionar, OSI para hablar y para diagnosticar</strong>.</p>`,
+                puntos: [
+                    'Distingue perder como protocolos de ganar como vocabulario',
+                    'Da ejemplos reales del vocabulario: switch de capa 2, cortafuegos de capa 7',
+                    'Añade que la separación de OSI ayuda a diagnosticar',
+                    'Cierra con una idea propia, no repitiendo la teoría'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Explica el <strong>reloj de arena</strong> y qué tiene que ver con que IPv6 lleve casi treinta años sin terminar de desplegarse.',
+                modelo: `<p>Si se dibujan los protocolos por capas, arriba hay cientos de protocolos de aplicación
+                         y abajo decenas de tecnologías de red. En medio, en la cintura, hay <strong>uno
+                         solo: IP</strong>. De ahí la forma de reloj de arena.</p>
+                         <p>Esa estrechez es lo que hace que todo funcione. Como <strong>todo pasa por IP</strong>,
+                         cualquier aplicación nueva sirve sobre cualquier red existente sin que nadie se ponga de
+                         acuerdo. Cuando apareció el Wi-Fi no hubo que tocar los navegadores; cuando apareció el
+                         streaming no hubo que tocar los routers.</p>
+                         <p>Pero lo que es una ventaja para crecer es un problema para cambiar. <strong>Todo lo de
+                         arriba y todo lo de abajo se apoyan en esa única pieza</strong>, así que cambiarla los
+                         afecta a todos a la vez.</p>
+                         <p>IPv6 se publicó en 1998 y sigue conviviendo con IPv4 por eso: no basta con que un
+                         operador lo active: hacen falta a la vez los routers, los sistemas operativos, los
+                         servidores y los programas. Es el <em>flag day</em> de 1983, cuando 400 equipos migraron en
+                         un día, pero con miles de millones de equipos. A esa escala no cabe hacerlo de golpe, así
+                         que toca convivir durante décadas.</p>`,
+                puntos: [
+                    'Describe la forma: muchos arriba, muchos abajo, uno en medio',
+                    'Explica que la estrechez es lo que permite combinarlo todo',
+                    'Señala que por eso mismo cambiar IP lo afecta todo',
+                    'Conecta con el flag day de 1983 y su diferencia de escala'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Qué es <strong>anterior</strong>, TCP/IP u OSI?', dorso: '<strong>TCP/IP</strong>. Funcionando desde <strong>1983</strong>; OSI se publicó en <strong>1984</strong>. TCP/IP no simplificó a OSI: OSI llegó cuando TCP/IP ya estaba desplegado.' },
+            { frente: 'Las <strong>cuatro capas</strong> de TCP/IP, de abajo arriba', dorso: '<strong>Acceso a la red → Internet → Transporte → Aplicación.</strong>' },
+            { frente: '¿Qué capas de OSI se funden en la de <strong>aplicación</strong> de TCP/IP?', dorso: 'Las <strong>tres de arriba</strong>: sesión (5), presentación (6) y aplicación (7).' },
+            { frente: '¿Qué capas de OSI se funden en la de <strong>acceso a la red</strong>?', dorso: 'Las <strong>dos de abajo</strong>: física (1) y enlace (2).' },
+            { frente: '¿Qué capas coinciden exactamente en los dos modelos?', dorso: 'Las <strong>dos del medio</strong>: transporte, y la de red (que en TCP/IP se llama <strong>internet</strong>).' },
+            { frente: '«Capa 4». ¿De qué estamos hablando?', dorso: 'Depende del modelo: en <strong>OSI es transporte</strong>; en <strong>TCP/IP es aplicación</strong>. Cuando alguien dice «capa 4» o «capa 7» sin más, se refiere a <strong>OSI</strong>.' },
+            { frente: '¿Qué define TCP/IP sobre su capa de acceso a la red?', dorso: '<strong>Nada</strong>, y es deliberado: así funciona sobre cualquier tecnología, incluidas las que no existían cuando se diseñó.' },
+            { frente: 'Tres razones por las que <strong>ganó TCP/IP</strong>', dorso: 'Era <strong>gratis</strong> y venía con BSD Unix, era <strong>más sencillo</strong>, y sobre todo <strong>ya estaba funcionando</strong> cuando OSI se publicó.' },
+            { frente: '¿En qué sentido <strong>no</strong> perdió OSI?', dorso: 'Sobrevive como <strong>vocabulario</strong> de la industria: «switch de capa 2», «cortafuegos de capa 7». TCP/IP para funcionar, OSI para hablar.' },
+            { frente: '¿Qué es el <strong>reloj de arena</strong>?', dorso: 'Muchos protocolos de aplicación arriba, muchas tecnologías de red abajo, y <strong>un solo protocolo en la cintura: IP</strong>.' },
+            { frente: '¿Por qué IPv6 tarda tanto en desplegarse?', dorso: 'Porque IP está en la <strong>cintura</strong> del reloj: todo se apoya en él, así que cambiarlo obliga a mover a la vez todo lo de arriba y todo lo de abajo.' },
+            { frente: '¿Sobre qué protocolo de transporte va <strong>DNS</strong>?', dorso: 'Sobre <strong>UDP</strong>, puerto 53. Una consulta y una respuesta cortas: montar una conexión TCP costaría más que preguntar.' },
+            { frente: '¿Dónde encaja <strong>ARP</strong>?', dorso: 'Entre dos capas: trabaja con direcciones IP, pero <strong>no viaja dentro de IP</strong>, sino directamente dentro de una trama Ethernet. Por eso los libros no se ponen de acuerdo.' },
+            { frente: '¿Qué es el <strong>modelo híbrido de cinco capas</strong>?', dorso: 'El que usan la mayoría de los libros: la <strong>aplicación única</strong> de TCP/IP arriba y la separación <strong>física/enlace</strong> de OSI abajo. No es oficial: es el que resulta útil.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 3 — El modelo TCP/IP',
+        subtitulo: 'Origen · cuatro capas · correspondencia con OSI · reloj de arena',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'Origen e historia',
+                repaso: '#origen',
+                text: 'Un compañero dice que «TCP/IP nació para simplificar el modelo OSI». ¿Qué le corriges?',
+                options: {
+                    a: 'Nada, es correcto',
+                    b: 'Que es al revés: TCP/IP ya estaba funcionando en 1983 y OSI se publicó en 1984',
+                    c: 'Que los dos se publicaron a la vez',
+                    d: 'Que TCP/IP es en realidad más complejo'
+                },
+                answer: 'b',
+                feedback: 'TCP/IP <strong>es anterior</strong>. No es una versión reducida de OSI: son dos modelos que nacieron por caminos distintos, y el de la ISO llegó cuando el otro ya estaba desplegado.'
+            },
+            {
+                topic: 'Origen e historia',
+                repaso: '#origen',
+                text: 'El 1 de enero de 1983 ARPANET cambió a TCP/IP en un solo día. ¿Con qué problema actual se compara eso en la teoría?',
+                options: {
+                    a: 'Con la saturación de los servidores DNS',
+                    b: 'Con la migración a IPv6, que es lo mismo pero con miles de millones de equipos',
+                    c: 'Con la aparición del Wi-Fi',
+                    d: 'Con el cambio de HTTP a HTTPS'
+                },
+                answer: 'b',
+                feedback: 'Aquel día migraron unos 400 equipos y aun así fue una operación memorable. IPv6 es el mismo cambio a escala planetaria, y por eso lleva décadas sin cerrarse.'
+            },
+            {
+                topic: 'Las cuatro capas',
+                repaso: '#capas',
+                text: 'Ordena mentalmente las capas de TCP/IP de abajo arriba. ¿Cuál es correcta?',
+                options: {
+                    a: 'Acceso a la red → Internet → Transporte → Aplicación',
+                    b: 'Física → Enlace → Red → Aplicación',
+                    c: 'Internet → Acceso a la red → Transporte → Aplicación',
+                    d: 'Acceso a la red → Transporte → Internet → Aplicación'
+                },
+                answer: 'a',
+                feedback: 'La b son nombres de OSI y la d intercambia transporte e internet. Recuerda que la de red aquí se llama <strong>internet</strong>.'
+            },
+            {
+                topic: 'Las cuatro capas',
+                repaso: '#capas',
+                text: 'TCP/IP no define nada sobre su capa de acceso a la red. ¿Qué consecuencia tiene?',
+                options: {
+                    a: 'Que solo funciona sobre Ethernet',
+                    b: 'Que puede funcionar sobre cualquier tecnología, incluidas las inventadas después',
+                    c: 'Que necesita OSI para completarse',
+                    d: 'Que las redes inalámbricas quedan fuera del modelo'
+                },
+                answer: 'b',
+                feedback: 'Es la mejor decisión de diseño del modelo. Si en 1974 hubiera fijado cómo era la capa de abajo, habría fijado la tecnología de 1974.'
+            },
+            {
+                topic: 'Correspondencia con OSI',
+                repaso: '#correspondencia',
+                text: '¿Qué capas de OSI se corresponden con la capa de aplicación de TCP/IP?',
+                options: {
+                    a: 'Solo la 7',
+                    b: 'La 6 y la 7',
+                    c: 'La 5, la 6 y la 7',
+                    d: 'La 4, la 5, la 6 y la 7'
+                },
+                answer: 'c',
+                feedback: 'Las <strong>tres de arriba</strong>: sesión, presentación y aplicación. En la práctica el mismo protocolo se ocupa de las tres cosas.'
+            },
+            {
+                topic: 'Correspondencia con OSI',
+                repaso: '#correspondencia',
+                text: 'Sin memorizar la tabla, ¿cuál es la regla para reconstruirla?',
+                options: {
+                    a: 'Las capas del medio son idénticas; arriba OSI separa en tres y abajo en dos',
+                    b: 'Cada capa de TCP/IP equivale a dos de OSI',
+                    c: 'Las capas de arriba son idénticas y cambian las de abajo',
+                    d: 'No hay regla: hay que memorizarla'
+                },
+                answer: 'a',
+                feedback: 'Transporte y red/internet coinciden uno a uno. Solo cambian los <strong>extremos</strong>, y con eso se reconstruye la tabla entera.'
+            },
+            {
+                topic: 'Correspondencia con OSI',
+                repaso: '#capas',
+                text: 'En una ficha de producto lees «cortafuegos de capa 7». ¿A qué modelo se refiere?',
+                options: {
+                    a: 'A TCP/IP, porque es el que se usa de verdad',
+                    b: 'A OSI: TCP/IP solo tiene cuatro capas, así que no existe una capa 7',
+                    c: 'Al modelo híbrido de cinco capas',
+                    d: 'Es indistinto'
+                },
+                answer: 'b',
+                feedback: 'Un argumento definitivo: si el modelo tiene cuatro capas, <strong>no puede haber una séptima</strong>. Todo el vocabulario comercial es de OSI.'
+            },
+            {
+                topic: 'Por qué ganó TCP/IP',
+                repaso: '#gano',
+                text: 'OSI tenía detrás a la ISO, a los gobiernos y a las operadoras. ¿Por qué ganó TCP/IP?',
+                options: {
+                    a: 'Porque era técnicamente superior en todos los aspectos',
+                    b: 'Porque era gratis, más sencillo y, sobre todo, ya estaba funcionando',
+                    c: 'Porque la ISO retiró el modelo OSI',
+                    d: 'Porque lo impuso el Departamento de Defensa a todo el mundo'
+                },
+                answer: 'b',
+                feedback: 'Venía en BSD Unix con el código fuente, mientras que los documentos de la ISO se pagaban. Es el patrón de siempre: <strong>gana lo que ya funciona</strong>.'
+            },
+            {
+                topic: 'Por qué ganó TCP/IP',
+                repaso: '#gano',
+                text: '¿En qué sentido puede decirse que OSI no perdió del todo?',
+                options: {
+                    a: 'Sus protocolos siguen usándose en redes de empresa',
+                    b: 'Sobrevive como el vocabulario con el que la industria describe aparatos y problemas',
+                    c: 'Se usa en las redes de los operadores de telecomunicaciones',
+                    d: 'Sustituyó a TCP/IP en los años noventa'
+                },
+                answer: 'b',
+                feedback: 'Nadie usa sus protocolos, pero todo el mundo habla su idioma: capa 2, capa 3, capa 7. <strong>TCP/IP para funcionar, OSI para hablar.</strong>'
+            },
+            {
+                topic: 'El reloj de arena',
+                repaso: '#reloj',
+                text: '¿Qué hay en la cintura del reloj de arena y por qué importa?',
+                options: {
+                    a: 'TCP, porque garantiza la entrega',
+                    b: 'IP: como todo pasa por él, cualquier aplicación funciona sobre cualquier red',
+                    c: 'Ethernet, porque es la tecnología más extendida',
+                    d: 'HTTP, porque es el protocolo más usado'
+                },
+                answer: 'b',
+                feedback: 'Muchos protocolos arriba, muchas tecnologías abajo y <strong>uno solo en medio</strong>. Esa estrechez es justo lo que permite combinarlo todo con todo.'
+            },
+            {
+                topic: 'El reloj de arena',
+                repaso: '#reloj',
+                text: 'Cambiar HTTP por HTTP/2 fue relativamente rápido; cambiar IPv4 por IPv6 lleva décadas. ¿Por qué?',
+                options: {
+                    a: 'Porque IPv6 es mucho más complejo de programar',
+                    b: 'Porque IP está en la cintura: todo se apoya en él, así que hay que mover a la vez lo de arriba y lo de abajo',
+                    c: 'Porque IPv6 aún no está terminado',
+                    d: 'Porque no hay suficientes direcciones IPv6'
+                },
+                answer: 'b',
+                feedback: 'Un protocolo de aplicación solo afecta a quien lo usa. El de la cintura los afecta a todos, y por eso el cambio no puede hacerse por partes.'
+            },
+            {
+                topic: 'Mapa de protocolos',
+                repaso: '#pila',
+                text: '¿Sobre qué protocolo de transporte viaja DNS, y por qué?',
+                options: {
+                    a: 'Sobre TCP, porque es un servicio crítico que no puede fallar',
+                    b: 'Sobre UDP: son una consulta y una respuesta cortas, y montar una conexión costaría más que preguntar',
+                    c: 'Sobre IP directamente, sin capa de transporte',
+                    d: 'Sobre ICMP'
+                },
+                answer: 'b',
+                feedback: 'Que un servicio sea importante no significa que necesite TCP. Si la respuesta no llega, se vuelve a preguntar, y sale más barato que negociar una conexión.'
+            },
+            {
+                topic: 'Modelo híbrido',
+                repaso: '#hibrido',
+                text: '¿Qué toma de cada modelo el modelo híbrido de cinco capas?',
+                options: {
+                    a: 'La aplicación única de TCP/IP arriba y la separación física/enlace de OSI abajo',
+                    b: 'Las siete capas de OSI quitando dos',
+                    c: 'Las cuatro de TCP/IP más la capa de sesión',
+                    d: 'Es un modelo oficial de la ISO'
+                },
+                answer: 'a',
+                feedback: 'Lo simple donde la separación no aporta y lo preciso donde sí: distinguir un fallo de cable de uno de configuración cambia quién tiene que arreglarlo.'
+            },
+            {
+                topic: 'Recuperación · Día 2',
+                repaso: '../Dia_02/teoria.html#encapsulacion',
+                text: '<em>Repaso.</em> ¿Cómo se llama la PDU de la capa de red, y qué cabecera lleva?',
+                options: {
+                    a: 'Trama, con direcciones MAC',
+                    b: 'Segmento, con puertos',
+                    c: 'Paquete, con direcciones IP',
+                    d: 'Datagrama, con el FCS'
+                },
+                answer: 'c',
+                feedback: 'Datos → segmento → <strong>paquete</strong> → trama → bits. La trama es de capa 2 y el segmento de capa 4.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

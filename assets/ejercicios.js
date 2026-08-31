@@ -274,7 +274,7 @@ function pintarItem(e, i, item) {
     let etiqueta = '';
     if (item.tipo === 'desarrollo') {
         etiqueta = '<span class="etiqueta-ej">Autoevaluación</span>';
-    } else if (item.tipo === 'validado') {
+    } else if (item.tipo === 'validado' || item.libre) {
         etiqueta = '<span class="etiqueta-ej">Dato de tu equipo</span>';
     }
 
@@ -366,6 +366,20 @@ function corregirItem(e, i, item) {
 
     if (item.tipo === 'opcion') {
         const marcados = [...document.querySelectorAll(`input[name="${id}"]:checked`)].map(x => x.value);
+
+        /*
+         * `libre: true` → no hay una opción correcta. Se usa en los
+         * laboratorios, donde la respuesta depende de la máquina de cada uno:
+         * lo que se comprueba es que haya elegido, y la explicación cubre
+         * todos los casos posibles. No se pinta ninguna en verde ni en rojo.
+         */
+        if (item.libre) {
+            document.querySelectorAll(`input[name="${id}"]`).forEach(input => {
+                input.parentElement.classList.remove('correct', 'incorrect');
+            });
+            return { correcto: marcados.length > 0, respondido: marcados.length > 0 };
+        }
+
         const esperadas = Array.isArray(item.respuesta) ? item.respuesta : [item.respuesta];
         const ok = marcados.length === esperadas.length && esperadas.every(r => marcados.includes(r));
 
@@ -490,7 +504,9 @@ function mostrarFeedbackItem(e, i, item, resultado, revelarSolucion) {
 
     if (resultado.correcto) {
         fb.className = 'feedback-ej show correcto';
-        fb.innerHTML = `<strong>Correcto</strong>${explicacion}`;
+        // En los ítems `libre` no se ha juzgado nada: decir «Correcto» engañaría,
+        // porque cualquier opción valdría. La explicación cubre todos los casos.
+        fb.innerHTML = `<strong>${item.libre ? 'Anotado' : 'Correcto'}</strong>${explicacion}`;
     } else {
         fb.className = 'feedback-ej show incorrecto';
         // En los ítems validados el fallo es de formato, no de contenido:
@@ -510,6 +526,7 @@ function textoSolucion(item) {
         return `<p>Respuesta: <em>${item.respuesta}${item.unidad ? ' ' + item.unidad : ''}</em></p>`;
     }
     if (item.tipo === 'opcion') {
+        if (item.libre) return '';
         const esperadas = Array.isArray(item.respuesta) ? item.respuesta : [item.respuesta];
         return `<p>Opción correcta: <em>${esperadas.map(r => r.toUpperCase()).join(', ')}</em></p>`;
     }

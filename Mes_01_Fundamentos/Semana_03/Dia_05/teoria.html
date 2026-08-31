@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Síntesis y test semanal</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 5 — Síntesis y test semanal</h1>
+        <p>Viernes de evaluación · toda la semana en una hoja · test de 25 preguntas</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Síntesis:</strong> 36 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 24 min</div>
+        <div class="info-item"><strong>Test:</strong> 45 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 34 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Cómo aprovechar hoy</strong>
+            La síntesis <strong>no es teoría nueva</strong>: es lo mismo de los cuatro días, comprimido. Léela
+            deprisa y detente solo donde algo no te suene.
+            <br><br>
+            Después, las flashcards de toda la semana, y por último el <strong>test cronometrado</strong>. Al
+            corregirlo verás el <strong>desglose por día</strong>, y ahí sabrás exactamente qué repasar en la hoja de
+            recuperación.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#d1">Día 1 — Por qué capas, y las tres de abajo</a></li>
+                <li><a href="#d2">Día 2 — Las capas de arriba y la encapsulación</a></li>
+                <li><a href="#d3">Día 3 — TCP/IP</a></li>
+                <li><a href="#d4">Día 4 — Normalización</a></li>
+                <li><a href="#numeros">Los números de la semana</a></li>
+                <li><a href="#tablas">Las tres tablas que hay que saber</a></li>
+                <li><a href="#errores">Los ocho errores más frecuentes</a></li>
+                <li><a href="#repaso">Flashcards de toda la semana</a></li>
+                <li><a href="#quiz-inicio">Test semanal</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="d1">1. Día 1 — Por qué capas, y las tres de abajo</h2>
+
+            <div class="destacado">
+                <strong>La idea central</strong>
+                Una red es demasiado compleja para pensarla entera. Se divide en <strong>capas
+                independientes</strong>: cada una hace un trabajo concreto y le ofrece un <strong>servicio</strong> a
+                la de encima <strong>sin contarle cómo lo consigue</strong>.
+                <br><br>
+                Eso permite tres cosas: <strong>cambiar</strong> una capa sin tocar las demás, <strong>repartir</strong>
+                el trabajo entre fabricantes distintos y <strong>diagnosticar por capas</strong> en vez de a ciegas.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>Qué hace</th><th>Dirección</th><th>Alcance</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1 · Física</strong></td><td>Convierte bits en señales</td><td>—</td><td>Un cable</td></tr>
+                    <tr><td><strong>2 · Enlace</strong></td><td>Entrega dentro de la red local, y comprueba errores</td><td><strong>MAC</strong></td><td><strong>Un salto</strong></td></tr>
+                    <tr><td><strong>3 · Red</strong></td><td>Lleva el paquete de una red a otra: elige ruta</td><td><strong>IP</strong></td><td><strong>Extremo a extremo</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Las siete, de abajo arriba: <strong>Física, Enlace, Red, Transporte, Sesión, Presentación,
+            Aplicación</strong>. La mnemotecnia de la semana: <em>«Feo Enano Rojo Trepa Sin Parar Arriba»</em>.</p>
+
+            <div class="dato">
+                <strong>Lo que más se pregunta del Día 1</strong>
+                <p>El <strong>alcance</strong>. La capa 2 llega a <strong>un salto</strong>; la capa 3, de
+                <strong>extremo a extremo</strong>. De ahí sale la respuesta a la pregunta que arrastrabas desde la
+                Semana 2: la MAC cambia en cada salto y la IP no.</p>
+            </div>
+
+            <h2 id="d2">2. Día 2 — Las capas de arriba y la encapsulación</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>Qué hace</th><th>Recuerda</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>4 · Transporte</strong></td><td>Entrega <strong>al programa</strong> y trocea</td><td>Direcciona por <strong>puerto</strong>. TCP garantiza; UDP no</td></tr>
+                    <tr><td><strong>5 · Sesión</strong></td><td>Abre y cierra el diálogo</td><td>—</td></tr>
+                    <tr><td><strong>6 · Presentación</strong></td><td>Formato, compresión y <strong>cifrado</strong></td><td>Aquí está <strong>TLS</strong>, no en la 7</td></tr>
+                    <tr><td><strong>7 · Aplicación</strong></td><td>El protocolo del servicio</td><td>Son <strong>HTTP y DNS</strong>, no el navegador</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La encapsulación, en una frase</strong>
+                Cada capa <strong>añade su cabecera sin mirar</strong> lo que recibe de arriba: para ella, todo lo
+                anterior es contenido opaco.
+                <br><br>
+                <strong>Datos → segmento → paquete → trama → bits.</strong>
+                <br><br>
+                Y solo la <strong>capa 2</strong> añade algo al final, el <strong>FCS</strong>, porque para calcularlo
+                hay que haber visto la trama entera.
+            </div>
+
+            <div class="dato">
+                <strong>Comunicación entre pares</strong>
+                <p>Cada capa dialoga con su <strong>igual del otro extremo</strong>. La cabecera Ethernet la lee solo
+                el <strong>siguiente aparato</strong>; la IP, <strong>todos los routers</strong>; la TCP,
+                <strong>solo el destino</strong>.</p>
+                <p>Eso explica de una vez por qué las MAC cambian y las IP no: la cabecera de capa 2
+                <strong>se rehace en cada tramo</strong> y la de capa 3 <strong>viaja intacta</strong>.</p>
+            </div>
+
+            <h2 id="d3">3. Día 3 — TCP/IP</h2>
+
+            <div class="destacado">
+                <strong>Lo que hay que tener claro</strong>
+                <strong>TCP/IP es anterior a OSI</strong>: funcionando en 1983, mientras OSI se publicó en 1984. No
+                es una simplificación de OSI.
+                <br><br>
+                Ganó por ser <strong>gratis</strong> —venía con BSD Unix—, <strong>más sencillo</strong> y, sobre
+                todo, por <strong>estar ya funcionando</strong>.
+                <br><br>
+                Pero OSI <strong>sobrevive como vocabulario</strong>: «switch de capa 2», «cortafuegos de capa 7».
+                <strong>TCP/IP para funcionar, OSI para hablar.</strong>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>OSI</th><th>TCP/IP</th></tr></thead>
+                <tbody>
+                    <tr><td>7 Aplicación · 6 Presentación · 5 Sesión</td><td><strong>Aplicación</strong></td></tr>
+                    <tr><td>4 Transporte</td><td><strong>Transporte</strong></td></tr>
+                    <tr><td>3 Red</td><td><strong>Internet</strong></td></tr>
+                    <tr><td>2 Enlace · 1 Física</td><td><strong>Acceso a la red</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p><strong>La regla:</strong> las dos del <strong>medio</strong> son idénticas; arriba OSI separa en
+            <strong>tres</strong> y abajo en <strong>dos</strong>. Con eso se reconstruye la tabla entera.</p>
+
+            <div class="dato">
+                <strong>El reloj de arena</strong>
+                <p>Muchos protocolos de aplicación arriba, muchas tecnologías de red abajo, y <strong>uno solo en la
+                cintura: IP</strong>.</p>
+                <p>Esa estrechez permite que cualquier aplicación funcione sobre cualquier red. Y explica que
+                <strong>IPv6</strong> lleve desde 1998 sin terminar de desplegarse: cambiar la cintura obliga a mover
+                todo lo de arriba y lo de abajo a la vez.</p>
+            </div>
+
+            <h2 id="d4">4. Día 4 — Normalización</h2>
+
+            <div class="destacado">
+                <strong>La regla que resuelve casi todo</strong>
+                <strong>IEEE</strong> → capas 1 y 2: cables y tramas. 802.3 Ethernet, 802.11 Wi-Fi, 802.1Q VLAN. Y el
+                registro de <strong>OUI</strong>.
+                <br><br>
+                <strong>IETF</strong> → capas 3 a 7: IP, TCP, HTTP, DNS. Publica los <strong>RFC</strong>.
+                <br><br>
+                <strong>IANA</strong> → los <strong>números</strong>: puertos, números de protocolo, direcciones y
+                dominios.
+                <br><br>
+                Y aparte: la <strong>ISO</strong> publicó el modelo OSI, y el <strong>W3C</strong> define HTML, que
+                no es lo mismo que HTTP.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>De iure</strong></td><td>Lo aprueba un organismo. Estable y sin dueño, pero lento</td></tr>
+                    <tr><td><strong>De facto</strong></td><td>Se impone por el uso. Rápido, pero puede tener dueño</td></tr>
+                    <tr><td><strong>RFC</strong></td><td>Público, gratuito, numerado para siempre y <strong>nunca se modifica</strong>: se sustituye</td></tr>
+                    <tr><td><strong>MUST / SHOULD</strong></td><td>Obligatorio frente a recomendado. Ahí está la diferencia entre incompatible y opinable</td></tr>
+                    <tr><td><strong>Puertos</strong></td><td>0-1023 conocidos · 1024-49151 registrados · <strong>49152-65535 efímeros</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="numeros">5. Los números de la semana</h2>
+
+            <p>Si solo te llevas una cosa de la semana en la memoria, que sea esta tabla.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Número</th><th>Qué es</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>14</strong></td><td>Bytes de cabecera Ethernet</td></tr>
+                    <tr><td><strong>4</strong></td><td>Bytes de FCS, y van <strong>al final</strong></td></tr>
+                    <tr><td><strong>20</strong></td><td>Bytes de cabecera IP</td></tr>
+                    <tr><td><strong>20</strong></td><td>Bytes de cabecera TCP… <strong>como mínimo</strong>: con opciones llega a 32 o más</td></tr>
+                    <tr><td><strong>8</strong></td><td>Bytes de cabecera UDP</td></tr>
+                    <tr><td><strong>1500</strong></td><td>MTU de Ethernet</td></tr>
+                    <tr><td><strong>1460</strong></td><td>MSS con TCP: 1500 − 20 − 20</td></tr>
+                    <tr><td><strong>1518</strong></td><td>Trama Ethernet completa: 1500 + 14 + 4</td></tr>
+                    <tr><td><strong>1492</strong></td><td>MTU típico con PPPoE, que se lleva 8 bytes</td></tr>
+                    <tr><td><strong>96,2 %</strong></td><td>Eficiencia de una trama llena: 1460 ÷ 1518</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="tablas">6. Las tres tablas que hay que saber</h2>
+
+            <div class="destacado">
+                <strong>Tabla 1 — Qué hay en cada capa</strong>
+                <div class="tabla-wrap" style="margin-top:10px">
+                <table>
+                    <thead><tr><th>Capa</th><th>PDU</th><th>Dirección</th><th>Alcance</th><th>Protocolo</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>7</strong></td><td>Datos</td><td>—</td><td>Programa</td><td>HTTP, DNS</td></tr>
+                        <tr><td><strong>4</strong></td><td><strong>Segmento</strong></td><td><strong>Puerto</strong></td><td>Programa a programa</td><td>TCP, UDP</td></tr>
+                        <tr><td><strong>3</strong></td><td><strong>Paquete</strong></td><td><strong>IP</strong></td><td>Extremo a extremo</td><td>IP, ICMP</td></tr>
+                        <tr><td><strong>2</strong></td><td><strong>Trama</strong></td><td><strong>MAC</strong></td><td><strong>Un salto</strong></td><td>Ethernet, Wi-Fi</td></tr>
+                        <tr><td><strong>1</strong></td><td><strong>Bits</strong></td><td>—</td><td>Un cable</td><td>—</td></tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div class="destacado">
+                <strong>Tabla 2 — OSI frente a TCP/IP</strong>
+                Las dos del medio coinciden. Arriba, OSI separa en tres. Abajo, en dos. <em>(Está completa en el
+                apartado 3.)</em>
+            </div>
+
+            <div class="destacado">
+                <strong>Tabla 3 — Quién define qué</strong>
+                <strong>IEEE</strong> capas 1-2 · <strong>IETF</strong> capas 3-7 · <strong>IANA</strong> los números
+                · <strong>ISO</strong> el modelo OSI · <strong>W3C</strong> HTML.
+            </div>
+
+            <h2 id="errores">7. Los ocho errores más frecuentes</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th><th>Día</th></tr></thead>
+                <tbody>
+                    <tr><td>«El switch trabaja en capa 3»</td><td>En la <strong>2</strong>: mira MAC. El router es el de capa 3</td><td>1</td></tr>
+                    <tr><td>«El navegador es la capa 7»</td><td>La capa 7 es <strong>HTTP</strong>; el navegador es un programa que lo usa</td><td>2</td></tr>
+                    <tr><td>«El cifrado HTTPS es capa 7»</td><td>Lo pone <strong>TLS</strong>, capa <strong>6</strong></td><td>2</td></tr>
+                    <tr><td>«MTU y MSS son lo mismo»</td><td><strong>MSS = MTU − 40</strong>, descontando IP y TCP</td><td>2</td></tr>
+                    <tr><td>«TCP/IP simplificó OSI»</td><td>Al revés: TCP/IP <strong>es anterior</strong></td><td>3</td></tr>
+                    <tr><td>«Capa 4 es transporte»</td><td>En OSI sí; en <strong>TCP/IP la 4 es aplicación</strong></td><td>3</td></tr>
+                    <tr><td>«HTML y HTTP son del mismo organismo»</td><td>HTML es del <strong>W3C</strong>; HTTP, de la <strong>IETF</strong></td><td>4</td></tr>
+                    <tr><td>«Los RFC se van actualizando»</td><td><strong>Nunca</strong>: se publica otro que deja obsoleto al anterior</td><td>4</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Flashcards de toda la semana</h2>
+
+            <p>24 tarjetas con lo esencial de los cuatro días. Hazlas <strong>antes</strong> del test.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Test semanal</h2>
+            <p><strong>25 preguntas · 45 minutos</strong> · Cubre los cuatro días</p>
+            <p style="margin-top:6px; font-size:0.92em">Al corregir verás el <strong>desglose por día</strong>, con
+            enlace directo al apartado que convenga repasar. Después, la
+            <a href="ejercicios.html">hoja de recuperación</a>.</p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro arranca al llegar aquí, al pulsar «Empezar» o
+            al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Test</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Desglose por día</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Después del test</strong>
+            <p>Mira el desglose y quédate con <strong>el día que peor te haya salido</strong>. La hoja de
+            recuperación está organizada exactamente igual, por días, para que empieces por ahí.</p>
+            <p><a href="ejercicios.html"><strong>→ Ir a la hoja de recuperación</strong></a> (60 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>La semana que viene</strong>
+            <p><strong>Semana 4 — Dispositivos de red:</strong> hub, switch, router y punto de acceso. Y ahí se ve
+            para qué servía todo esto: cada aparato se define por <strong>la capa en la que trabaja</strong>.</p>
+            <p>Un hub es de capa 1, un switch de capa 2, un router de capa 3. Con lo de esta semana, esa frase ya no
+            es una etiqueta: es una descripción exacta de <strong>qué mira cada uno</strong> y <strong>hasta dónde
+            llega</strong>.</p>
+            <p>El viernes de esa semana, además del test semanal, toca el <strong>examen mensual</strong> del Mes 1.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Recuperación</a></span>
+        <span><a href="../Dia_04/teoria.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        flashcards: [
+            { frente: '¿Qué tres ventajas da dividir la red en <strong>capas</strong>?', dorso: '<strong>Cambiar</strong> una sin tocar las demás, <strong>repartir</strong> el trabajo entre fabricantes y <strong>diagnosticar</strong> por capas en lugar de a ciegas.' },
+            { frente: 'Las <strong>siete capas</strong> de OSI, de abajo arriba', dorso: 'Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación. <em>«Feo Enano Rojo Trepa Sin Parar Arriba.»</em>' },
+            { frente: 'Alcance de las capas <strong>2, 3 y 4</strong>', dorso: 'Capa 2: <strong>un salto</strong>. Capa 3: <strong>extremo a extremo</strong>, equipo a equipo. Capa 4: <strong>de programa a programa</strong>.' },
+            { frente: '¿Por qué la <strong>MAC</strong> cambia en cada salto y la <strong>IP</strong> no?', dorso: 'Porque la cabecera de capa 2 <strong>se rehace en cada tramo</strong> y la de capa 3 <strong>viaja intacta</strong> de extremo a extremo.' },
+            { frente: '¿Dónde mira un <strong>switch</strong> y dónde un <strong>router</strong>?', dorso: 'El switch mira la <strong>MAC</strong>: capa 2. El router mira la <strong>IP</strong>: capa 3.' },
+            { frente: 'Los nombres de la <strong>PDU</strong>, de arriba abajo', dorso: '<strong>Datos → segmento → paquete → trama → bits.</strong> Capas 5-7, 4, 3, 2 y 1.' },
+            { frente: '¿Qué es <strong>encapsular</strong>?', dorso: 'Que cada capa añada su cabecera a lo que recibe <strong>sin mirar dentro</strong>: todo lo anterior es contenido opaco.' },
+            { frente: '¿Qué capa añade algo <strong>al final</strong> y por qué?', dorso: 'La <strong>capa 2</strong>, con el <strong>FCS</strong>: para calcularlo hay que tener la trama entera montada.' },
+            { frente: '¿En qué capa está <strong>TLS</strong>?', dorso: 'En la <strong>6</strong>, presentación. HTTPS es <strong>HTTP (capa 7) sobre TLS (capa 6)</strong>.' },
+            { frente: '¿Es el navegador la capa 7?', dorso: 'No. La capa 7 son los <strong>protocolos</strong>: HTTP, DNS, SMTP. El navegador es un programa que los usa.' },
+            { frente: 'Tamaños de cabecera: <strong>Ethernet, IP, TCP, UDP</strong>', dorso: '<strong>14</strong> (+4 de FCS), <strong>20</strong>, <strong>20</strong> y <strong>8</strong>. Los 20 de TCP son el mínimo: con opciones llega a 32.' },
+            { frente: '<strong>MTU</strong>, <strong>MSS</strong> y trama completa en Ethernet', dorso: 'MTU <strong>1500</strong> · MSS <strong>1460</strong> (MTU − 40) · trama completa <strong>1518</strong>. Eficiencia: <strong>96,2 %</strong>.' },
+            { frente: '¿Por qué muchas líneas tienen MTU <strong>1492</strong>?', dorso: 'Por <strong>PPPoE</strong>, que añade <strong>8 bytes</strong> propios. Es encapsulación otra vez, esta vez del operador.' },
+            { frente: '¿Quién lee cada cabecera por el camino?', dorso: '<strong>Ethernet</strong>: solo el siguiente aparato. <strong>IP</strong>: todos los routers. <strong>TCP</strong>: solo el destino final.' },
+            { frente: 'Las <strong>cuatro capas</strong> de TCP/IP', dorso: '<strong>Acceso a la red → Internet → Transporte → Aplicación.</strong>' },
+            { frente: 'La regla de correspondencia <strong>OSI ↔ TCP/IP</strong>', dorso: 'Las dos del <strong>medio son idénticas</strong>. Arriba OSI separa en <strong>tres</strong> (5, 6 y 7) y abajo en <strong>dos</strong> (1 y 2).' },
+            { frente: '¿Qué es anterior, <strong>TCP/IP</strong> u <strong>OSI</strong>?', dorso: '<strong>TCP/IP</strong>: funcionando en 1983, frente a OSI publicado en 1984. No es una simplificación de OSI.' },
+            { frente: '¿Por qué ganó TCP/IP y en qué no perdió OSI?', dorso: 'Ganó por ser <strong>gratis, sencillo y estar ya funcionando</strong>. OSI sobrevive como <strong>vocabulario</strong>: «capa 2», «capa 7».' },
+            { frente: 'El <strong>reloj de arena</strong>', dorso: 'Muchos protocolos arriba, muchas tecnologías abajo, <strong>solo IP</strong> en la cintura. Por eso todo combina con todo, y por eso cambiar a IPv6 es tan lento.' },
+            { frente: '¿Sobre qué va <strong>DNS</strong> y por qué?', dorso: 'Sobre <strong>UDP</strong>, puerto 53: una consulta y una respuesta cortas, en las que montar una conexión costaría más que preguntar.' },
+            { frente: 'La regla de los <strong>organismos</strong>', dorso: '<strong>IEEE</strong> capas 1 y 2 · <strong>IETF</strong> capas 3 a 7, con los RFC · <strong>IANA</strong> los números. La <strong>ISO</strong> publicó OSI; el <strong>W3C</strong>, HTML.' },
+            { frente: '<strong>De iure</strong> frente a <strong>de facto</strong>', dorso: '<em>De iure</em>: lo aprueba un organismo; estable y sin dueño. <em>De facto</em>: se impone por el uso; rápido, pero puede tener dueño.' },
+            { frente: '¿Se modifica un <strong>RFC</strong> publicado?', dorso: '<strong>Nunca.</strong> Se publica uno nuevo que deja <em>obsoleto</em> al anterior. Así una referencia significa siempre lo mismo.' },
+            { frente: 'Los tres <strong>rangos de puertos</strong>', dorso: '<strong>0-1023</strong> bien conocidos · <strong>1024-49151</strong> registrados · <strong>49152-65535</strong> efímeros, los que el sistema da a los clientes.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Test semanal — Semana 3',
+        subtitulo: 'Arquitecturas y modelos · los cuatro días',
+        tiempo: '45 minutos',
+        minutos: 45,
+        questions: [
+
+            // ---------------------------------------------------------- Día 1
+            {
+                topic: 'Día 1 — Capas y OSI',
+                repaso: '../Dia_01/teoria.html#problema',
+                text: 'Un fabricante cambia la tecnología de la capa 1 de una red, de cable de cobre a fibra. ¿Qué hay que reprogramar en las capas de arriba?',
+                options: {
+                    a: 'Todas: un cambio de medio afecta a toda la pila',
+                    b: 'Nada: cada capa ofrece un servicio sin contar cómo lo consigue',
+                    c: 'Solo la capa 2',
+                    d: 'Solo las capas de aplicación'
+                },
+                answer: 'b',
+                feedback: 'Es la razón de ser del modelo de capas. Cuando apareció el Wi-Fi no hubo que reescribir ni los navegadores ni TCP: la capa de arriba solo pide un servicio, sin saber cómo se presta.'
+            },
+            {
+                topic: 'Día 1 — Capas y OSI',
+                repaso: '../Dia_01/teoria.html#capa2',
+                text: 'Un switch recibe una trama. ¿Qué dirección mira para decidir por dónde sacarla, y en qué capa trabaja?',
+                options: {
+                    a: 'La IP de destino; capa 3',
+                    b: 'La MAC de destino; capa 2',
+                    c: 'El puerto de destino; capa 4',
+                    d: 'El nombre de dominio; capa 7'
+                },
+                answer: 'b',
+                feedback: 'Switch → MAC → <strong>capa 2</strong>. Router → IP → capa 3. Es la distinción que abre la Semana 4.'
+            },
+            {
+                topic: 'Día 1 — Capas y OSI',
+                repaso: '../Dia_01/teoria.html#capa3',
+                text: 'Tu equipo envía un paquete a un servidor a seis routers de distancia. ¿Cuál es el alcance de la capa 2 en ese trayecto?',
+                options: {
+                    a: 'Todo el trayecto, de tu equipo al servidor',
+                    b: 'Un solo salto: de tu equipo al primer router',
+                    c: 'Hasta el último router antes del servidor',
+                    d: 'Depende del protocolo de aplicación'
+                },
+                answer: 'b',
+                feedback: 'La capa 2 entrega <strong>dentro de una red</strong>. La que va de extremo a extremo es la capa 3, con la dirección IP.'
+            },
+            {
+                topic: 'Día 1 — Capas y OSI',
+                repaso: '../Dia_01/teoria.html#osi',
+                text: 'Ordena mentalmente las capas de OSI de la 1 a la 7. ¿Cuál de estas secuencias es correcta?',
+                options: {
+                    a: 'Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación',
+                    b: 'Física, Red, Enlace, Transporte, Presentación, Sesión, Aplicación',
+                    c: 'Enlace, Física, Red, Transporte, Sesión, Presentación, Aplicación',
+                    d: 'Física, Enlace, Transporte, Red, Sesión, Presentación, Aplicación'
+                },
+                answer: 'a',
+                feedback: 'Las otras tres intercambian alguna pareja. <em>«Feo Enano Rojo Trepa Sin Parar Arriba.»</em>'
+            },
+            {
+                topic: 'Día 1 — Capas y OSI',
+                repaso: '../Dia_01/teoria.html#capa1',
+                text: 'Un usuario dice que «no le llega Internet». Compruebas y su cable está desenchufado. ¿En qué capa está el problema?',
+                options: {
+                    a: 'Capa 1',
+                    b: 'Capa 2',
+                    c: 'Capa 3',
+                    d: 'Capa 7'
+                },
+                answer: 'a',
+                feedback: 'Capa <strong>física</strong>. Y ese es justo el valor de diagnosticar por capas: sin enlace físico, no tiene sentido revisar la IP ni el navegador.'
+            },
+
+            // ---------------------------------------------------------- Día 2
+            {
+                topic: 'Día 2 — Encapsulación',
+                repaso: '../Dia_02/teoria.html#encapsulacion',
+                text: '¿Cuál es la secuencia de PDU al <strong>enviar</strong> un dato?',
+                options: {
+                    a: 'Datos → paquete → segmento → trama → bits',
+                    b: 'Datos → segmento → paquete → trama → bits',
+                    c: 'Bits → trama → paquete → segmento → datos',
+                    d: 'Datos → trama → segmento → paquete → bits'
+                },
+                answer: 'b',
+                feedback: 'Al enviar se baja la pila. La opción c es la secuencia al <em>recibir</em>, que es la inversa.'
+            },
+            {
+                topic: 'Día 2 — Encapsulación',
+                repaso: '../Dia_02/teoria.html#coste',
+                text: 'Con MTU de 1500 bytes, ¿cuál es el MSS de una conexión TCP?',
+                options: {
+                    a: '1500 bytes',
+                    b: '1480 bytes',
+                    c: '1460 bytes',
+                    d: '1518 bytes'
+                },
+                answer: 'c',
+                feedback: 'MSS = MTU − 20 (IP) − 20 (TCP) = <strong>1460</strong>. 1480 sería descontando solo IP; 1518 es la trama completa con cabecera Ethernet y FCS.'
+            },
+            {
+                topic: 'Día 2 — Encapsulación',
+                repaso: '../Dia_02/teoria.html#capa567',
+                text: 'En una web con candado, ¿en qué capa se cifra el contenido?',
+                options: {
+                    a: 'En la 7, porque forma parte de HTTPS',
+                    b: 'En la 6: lo hace TLS, y cifrar es una forma de representar los datos',
+                    c: 'En la 4, porque va sobre TCP',
+                    d: 'En la 3, junto con IP'
+                },
+                answer: 'b',
+                feedback: 'HTTPS no es un protocolo aparte: es <strong>HTTP sobre TLS</strong>. Por eso el paso a HTTPS no obligó a cambiar ni TCP ni IP.'
+            },
+            {
+                topic: 'Día 2 — Encapsulación',
+                repaso: '../Dia_02/teoria.html#desencapsulacion',
+                text: 'Un paquete atraviesa cuatro routers. ¿Quién lee la cabecera TCP?',
+                options: {
+                    a: 'Los cuatro routers',
+                    b: 'El primero y el último',
+                    c: 'Solo la capa 4 del equipo de destino',
+                    d: 'Ninguno: se descarta en el primer salto'
+                },
+                answer: 'c',
+                feedback: 'Es la <strong>comunicación entre pares</strong>. Los routers solo necesitan la cabecera IP para decidir por dónde reenviar.'
+            },
+            {
+                topic: 'Día 2 — Encapsulación',
+                repaso: '../Dia_02/teoria.html#mtu',
+                text: 'Mides el MTU real de tu línea con <code>ping -f</code> y sale 1492 en lugar de 1500. ¿Qué indica?',
+                options: {
+                    a: 'Que la tarjeta está mal configurada',
+                    b: 'Que hay PPPoE en el camino, que añade 8 bytes de cabecera propia',
+                    c: 'Que el cable está dañado',
+                    d: 'Que el servidor limita el tamaño'
+                },
+                answer: 'b',
+                feedback: 'La tarjeta declara el MTU de <strong>su enlace</strong>; lo que mides es el del <strong>camino completo</strong>, y ahí hay una capa más que se cobra sus 8 bytes.'
+            },
+            {
+                topic: 'Día 2 — Encapsulación',
+                repaso: '../Dia_02/teoria.html#encapsulacion',
+                text: '¿Qué hace la capa 3 con la cabecera TCP que ya lleva el segmento?',
+                options: {
+                    a: 'La lee para saber el puerto de destino',
+                    b: 'La sustituye por la suya',
+                    c: 'Nada: para ella es contenido, y le añade delante su propia cabecera',
+                    d: 'La mueve al final del paquete'
+                },
+                answer: 'c',
+                feedback: 'Cada capa <strong>envuelve sin abrir</strong>. Es exactamente lo que permite cambiar una capa sin tocar las demás.'
+            },
+
+            // ---------------------------------------------------------- Día 3
+            {
+                topic: 'Día 3 — TCP/IP',
+                repaso: '../Dia_03/teoria.html#correspondencia',
+                text: '¿Qué capas de OSI se corresponden con la capa de <strong>acceso a la red</strong> de TCP/IP?',
+                options: {
+                    a: 'Solo la 1',
+                    b: 'La 1 y la 2',
+                    c: 'La 1, la 2 y la 3',
+                    d: 'Solo la 2'
+                },
+                answer: 'b',
+                feedback: 'Física y enlace. Arriba, en cambio, TCP/IP funde <strong>tres</strong> capas de OSI en la de aplicación.'
+            },
+            {
+                topic: 'Día 3 — TCP/IP',
+                repaso: '../Dia_03/teoria.html#origen',
+                text: '¿Qué relación temporal hay entre TCP/IP y OSI?',
+                options: {
+                    a: 'TCP/IP se creó después, para simplificar OSI',
+                    b: 'TCP/IP ya funcionaba en 1983; OSI se publicó en 1984',
+                    c: 'Se publicaron el mismo año',
+                    d: 'OSI es de los años sesenta y TCP/IP de los noventa'
+                },
+                answer: 'b',
+                feedback: 'Es el dato que más se confunde. TCP/IP <strong>no simplificó OSI</strong>: es anterior, y OSI llegó cuando el otro ya estaba desplegado.'
+            },
+            {
+                topic: 'Día 3 — TCP/IP',
+                repaso: '../Dia_03/teoria.html#reloj',
+                text: '¿Por qué IPv6 lleva desde 1998 sin terminar de desplegarse, mientras que HTTP cambió de versión en pocos años?',
+                options: {
+                    a: 'Porque IPv6 está mal diseñado',
+                    b: 'Porque IP está en la cintura del reloj de arena: todo se apoya en él y hay que mover a la vez lo de arriba y lo de abajo',
+                    c: 'Porque no hay suficientes direcciones IPv6',
+                    d: 'Porque IPv6 aún no está terminado'
+                },
+                answer: 'b',
+                feedback: 'Un protocolo de aplicación solo afecta a quien lo usa. El de la cintura los afecta a todos a la vez, y por eso el cambio no puede hacerse por partes.'
+            },
+            {
+                topic: 'Día 3 — TCP/IP',
+                repaso: '../Dia_03/teoria.html#gano',
+                text: 'En una ficha de producto lees «cortafuegos de capa 7». ¿Qué modelo se está usando y cómo lo sabes?',
+                options: {
+                    a: 'TCP/IP, porque es el que se usa en la práctica',
+                    b: 'OSI: TCP/IP solo tiene cuatro capas, así que no existe una séptima',
+                    c: 'El modelo híbrido de cinco capas',
+                    d: 'No hay forma de saberlo'
+                },
+                answer: 'b',
+                feedback: 'El argumento es aritmético. Y resume la semana: <strong>TCP/IP para funcionar, OSI para hablar</strong>.'
+            },
+            {
+                topic: 'Día 3 — TCP/IP',
+                repaso: '../Dia_03/teoria.html#pila',
+                text: '¿Sobre qué protocolo de transporte viaja DNS, y por qué?',
+                options: {
+                    a: 'Sobre TCP, porque es un servicio crítico',
+                    b: 'Sobre UDP: una consulta y una respuesta cortas, en las que montar una conexión costaría más que preguntar',
+                    c: 'Sobre ICMP',
+                    d: 'Directamente sobre IP, sin capa de transporte'
+                },
+                answer: 'b',
+                feedback: 'Que un servicio sea importante no implica que necesite garantías de transporte. Si la respuesta no llega, se repite la pregunta.'
+            },
+
+            // ---------------------------------------------------------- Día 4
+            {
+                topic: 'Día 4 — Normalización',
+                repaso: '../Dia_04/teoria.html#organismos',
+                text: 'Necesitas la especificación de la trama Ethernet. ¿Qué organismo la publica?',
+                options: {
+                    a: 'La IETF',
+                    b: 'El IEEE',
+                    c: 'El W3C',
+                    d: 'IANA'
+                },
+                answer: 'b',
+                feedback: 'Capas 1 y 2 → <strong>IEEE</strong>, norma 802.3. Capas 3 a 7 → IETF. Números → IANA.'
+            },
+            {
+                topic: 'Día 4 — Normalización',
+                repaso: '../Dia_04/teoria.html#organismos',
+                text: 'HTTP y HTML aparecen juntos en cualquier web. ¿Los define el mismo organismo?',
+                options: {
+                    a: 'Sí, los dos el W3C',
+                    b: 'Sí, los dos la IETF',
+                    c: 'No: HTTP es de la IETF y HTML del W3C',
+                    d: 'No: HTTP es del W3C y HTML de la IETF'
+                },
+                answer: 'c',
+                feedback: 'HTTP es el <strong>protocolo</strong>; HTML, el <strong>formato</strong> del documento. Por HTTP se puede enviar un PDF sin una línea de HTML.'
+            },
+            {
+                topic: 'Día 4 — Normalización',
+                repaso: '../Dia_04/teoria.html#rfc',
+                text: 'Se detecta un fallo en un protocolo definido en un RFC. ¿Qué se hace?',
+                options: {
+                    a: 'Se corrige el documento original',
+                    b: 'Se publica un RFC nuevo que deja obsoleto al anterior; el viejo se conserva',
+                    c: 'Se retira y se borra del registro',
+                    d: 'Se añade una nota al pie'
+                },
+                answer: 'b',
+                feedback: 'Los RFC <strong>nunca se modifican</strong>. Así, quien programó «según el RFC 791» sabe que ese documento dice hoy lo mismo que en 1981.'
+            },
+            {
+                topic: 'Día 4 — Normalización',
+                repaso: '../Dia_04/teoria.html#iana',
+                text: 'Ayer viste conexiones con puertos locales como 58943. ¿A qué rango pertenecen y quién lo definió?',
+                options: {
+                    a: 'Bien conocidos; los define el IEEE',
+                    b: 'Registrados; los define la IETF',
+                    c: 'Efímeros (49152-65535); el reparto lo lleva IANA',
+                    d: 'No pertenecen a ningún rango'
+                },
+                answer: 'c',
+                feedback: 'El sistema coge uno libre de ese rango para cada conexión de salida y lo devuelve al terminar.'
+            },
+            {
+                topic: 'Día 4 — Normalización',
+                repaso: '../Dia_04/teoria.html#leer',
+                text: 'Un RFC dice que una implementación <strong>SHOULD</strong> hacer algo y tu equipo no lo hace. ¿Qué significa?',
+                options: {
+                    a: 'Que incumple el estándar y no es válido',
+                    b: 'Que es una recomendación: se puede incumplir, pero conviene saber por qué',
+                    c: 'Que es equivalente a MUST',
+                    d: 'Que el RFC está obsoleto'
+                },
+                answer: 'b',
+                feedback: 'Ahí está la diferencia entre una <strong>incompatibilidad</strong> y una decisión de diseño. Cuando dos equipos «casi» se entienden, suele haber un <em>SHOULD</em> por medio.'
+            },
+
+            // -------------------------------------------------- Integración
+            {
+                topic: 'Integración',
+                repaso: '../Dia_02/teoria.html#coste',
+                text: 'Una trama Ethernet lleva un paquete IP con un segmento TCP. Sumando las tres cabeceras y el FCS, ¿cuántos bytes no son datos de aplicación?',
+                options: {
+                    a: '40 bytes',
+                    b: '54 bytes',
+                    c: '58 bytes',
+                    d: '62 bytes'
+                },
+                answer: 'c',
+                feedback: '14 (Ethernet) + 4 (FCS) + 20 (IP) + 20 (TCP) = <strong>58</strong>. Sin contar el FCS son 54, que es lo que se ve en Wireshark porque la tarjeta lo quita antes.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_03/teoria.html#correspondencia',
+                text: 'Un número de puerto. ¿En qué capa de OSI está, en cuál de TCP/IP, y quién reparte los números?',
+                options: {
+                    a: 'OSI 4, TCP/IP transporte, IANA',
+                    b: 'OSI 4, TCP/IP aplicación, IEEE',
+                    c: 'OSI 3, TCP/IP internet, IANA',
+                    d: 'OSI 7, TCP/IP aplicación, IETF'
+                },
+                answer: 'a',
+                feedback: 'Las dos capas del medio coinciden en ambos modelos, así que el puerto es de transporte en los dos. Y el reparto de números es siempre de <strong>IANA</strong>.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_01/teoria.html#capa2',
+                text: 'Capturas tráfico con Wireshark y ves que la MAC de destino de tu petición web es la de tu router, no la del servidor. ¿Es correcto?',
+                options: {
+                    a: 'No: debería ser la del servidor',
+                    b: 'Sí: la MAC solo llega a un salto, así que la de destino es siempre la del siguiente aparato',
+                    c: 'No: indica que hay un problema de enrutamiento',
+                    d: 'Sí, pero solo porque se usa HTTP y no HTTPS'
+                },
+                answer: 'b',
+                feedback: 'Y es la comprobación práctica de lo del Día 1: la capa 2 tiene alcance de <strong>un salto</strong>, así que la MAC del servidor no aparece por ningún sitio de tu red.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_02/teoria.html#coste',
+                text: 'Una trama transporta 100 bytes de datos con las mismas cabeceras que una trama llena. ¿Qué ocurre con la eficiencia?',
+                options: {
+                    a: 'Se mantiene en torno al 96 %',
+                    b: 'Cae mucho: las cabeceras son de tamaño fijo y siguen ocupando 58 bytes',
+                    c: 'Mejora, porque el paquete es más ligero',
+                    d: 'No se puede calcular'
+                },
+                answer: 'b',
+                feedback: '100 ÷ 158 ≈ <strong>63 %</strong>. Por eso el tráfico de muchos paquetes cortos es tan ineficiente comparado con transferencias grandes.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

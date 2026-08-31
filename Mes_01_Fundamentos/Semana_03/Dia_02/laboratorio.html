@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: mide el MTU de tu línea</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">72 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Requisito:</strong> conexión a Internet</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Ayer recorriste las capas 1, 2 y 3 con comandos. Hoy vas a hacer algo distinto: <strong>medir</strong>
+            una propiedad de tu conexión que ningún panel te enseña, deducir de ella <strong>qué tecnología usa tu
+            operador</strong> y calcular cuánta de tu velocidad contratada se va en cabeceras.</p>
+            <p>Todo con la encapsulación que acabas de estudiar. El número que te salga <strong>no será el del
+            libro</strong>, y esa es justo la gracia.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>Necesitas <strong>conexión a Internet</strong>, porque vas a medir el camino completo.</li>
+                <li>Hazlo <strong>por cable</strong> si puedes. Por Wi-Fi funciona igual, pero si la señal es mala
+                puede haber pérdidas que confundan la medición.</li>
+                <li>Si tienes una <strong>VPN activa, apágala</strong>: añade su propia cabecera y falsearía el
+                resultado. Bueno, no lo falsearía: mediría el MTU <em>a través del túnel</em>, que es otra cosa.</li>
+                <li>Ningún comando de hoy modifica nada. Todos son de <strong>solo lectura</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — El MTU que declara tu tarjeta (8 min)</h2>
+
+            <p>Empieza por lo que tu equipo <em>cree</em> que tiene. Este es el MTU de la <strong>interfaz</strong>:
+            describe el primer enlace, el que va de tu equipo al router.</p>
+
+            <div class="so-tabs" data-grupo="mtu-if">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="mtu-if" data-so="win">
+                <div class="comando"><pre><code>Get-NetIPInterface -AddressFamily IPv4 | Select-Object InterfaceAlias, NlMtu, ConnectionState</code></pre></div>
+                <p>La columna <strong>NlMtu</strong> es el MTU. Fíjate en la fila de tu adaptador real
+                —<em>Ethernet</em> o <em>Wi-Fi</em>—, no en las de <em>Loopback</em> ni en las virtuales.</p>
+            </div>
+            <div class="so-panel" data-grupo="mtu-if" data-so="nix">
+                <div class="comando"><pre><code>ip link show | grep mtu</code></pre></div>
+                <p>Aparece como <code>mtu 1500</code> en cada interfaz. Ignora <code>lo</code>, que es el
+                loopback y suele tener un MTU enorme.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de una máquina Windows</strong>
+<pre><code>InterfaceAlias                     NlMtu ConnectionState
+--------------                     ----- ---------------
+Ethernet                            1500       Connected
+Wi-Fi                               1500      Disconnected
+Loopback Pseudo-Interface 1   4294967295       Connected</code></pre>
+                <p>Ese <strong>4294967295</strong> del loopback no es un error: es el mayor número que cabe en 32
+                bits. Como el tráfico de loopback nunca sale a un cable, no hay límite físico que respetar.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Ojo con lo que significa este número</strong>
+                Tu tarjeta declara <strong>1500 porque es Ethernet</strong>, y para el tramo hasta el router es
+                verdad. Pero eso <strong>no dice nada</strong> del resto del camino.
+                <br><br>
+                El MTU que de verdad importa es el del <strong>enlace más restrictivo</strong> de todo el trayecto, y
+                ese hay que medirlo. Es lo que vas a hacer ahora.
+            </div>
+
+            <h2>Parte 2 — Mide el MTU real del camino (22 min)</h2>
+
+            <p>El truco consiste en enviar un ping con un tamaño concreto de datos y prohibir que se fragmente. Si
+            cabe, responde. Si no cabe, el router lo descarta y avisa. Buscando el punto exacto en el que deja de
+            responder, obtienes el MTU.</p>
+
+            <div class="so-tabs" data-grupo="mtu-mide">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="mtu-mide" data-so="win">
+                <div class="comando"><pre><code>ping -f -l 1472 8.8.8.8</code></pre></div>
+                <p><code>-f</code> activa el bit <strong>DF</strong> («no fragmentar») y <code>-l</code> fija los
+                <strong>bytes de datos</strong>.</p>
+            </div>
+            <div class="so-panel" data-grupo="mtu-mide" data-so="nix">
+                <div class="comando"><pre><code>ping -M do -s 1472 -c 2 8.8.8.8</code></pre></div>
+                <p><code>-M do</code> activa el bit DF y <code>-s</code> fija los <strong>bytes de datos</strong>.
+                En macOS es <code>ping -D -s 1472 -c 2 8.8.8.8</code>.</p>
+            </div>
+
+            <div class="dato">
+                <strong>¿Por qué 1472 y no 1500?</strong>
+                <p>Porque <code>-l</code> cuenta <strong>solo los datos</strong>, y el ping viaja dentro de sus
+                propias cabeceras:</p>
+<pre><code>MTU                    1500 bytes
+  – cabecera IP          20
+  – cabecera ICMP         8
+                      ──────
+  Datos máximos        1472 bytes</code></pre>
+                <p>Es exactamente el mismo cálculo que hiciste en el ejercicio 4b, donde salían 1472 para UDP: la
+                cabecera de ICMP mide lo mismo que la de UDP, 8 bytes.</p>
+                <p>Así que <strong>1472 es el valor justo</strong>: si tu camino tiene MTU 1500, pasa. Si es de
+                1499 o menos, ya falla.</p>
+            </div>
+
+            <h3>Interpreta lo que sale</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Si ves…</th><th>Significa</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><code>Respuesta desde 8.8.8.8: bytes=1472</code></td>
+                        <td><strong>Cabe.</strong> Tu MTU es 1500 o más. Ya has terminado la medición</td>
+                    </tr>
+                    <tr>
+                        <td><code>Es necesario fragmentar el paquete pero se especificó DF</code></td>
+                        <td><strong>No cabe.</strong> Tu MTU es menor de 1500: sigue buscando</td>
+                    </tr>
+                    <tr>
+                        <td><code>Tiempo de espera agotado</code></td>
+                        <td>Ambiguo: puede que no quepa y el router no avise. Prueba con <code>1.1.1.1</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Si no cabe: búsqueda binaria</strong>
+                No vayas restando de uno en uno. Parte por la mitad cada vez y llegas en cinco o seis intentos:
+<pre><code>1472  →  falla     buscar entre 1400 y 1472
+1436  →  responde  buscar entre 1436 y 1472
+1454  →  falla     buscar entre 1436 y 1454
+1464  →  responde  buscar entre 1464 y 1472
+1465  →  falla     ← el máximo es 1464</code></pre>
+                Cuando encuentres el mayor valor que responde, súmale <strong>28</strong> —las cabeceras IP e
+                ICMP— y tendrás el <strong>MTU del camino</strong>.
+                <br><br>
+                En el ejemplo: 1464 + 28 = <strong>1492</strong>.
+            </div>
+
+            <div class="aviso">
+                <strong>Qué te dice el número</strong>
+                <ul>
+                    <li><strong>1500</strong> — camino Ethernet limpio. Habitual en fibra directa y en redes de
+                    empresa.</li>
+                    <li><strong>1492</strong> — hay <strong>PPPoE</strong>, que se cobra 8 bytes. Muy común en ADSL y
+                    en bastante fibra doméstica.</li>
+                    <li><strong>1480</strong> — suele indicar un <strong>túnel</strong> por medio.</li>
+                    <li><strong>1400-1460</strong> — casi siempre una <strong>VPN</strong> activa. Si la tienes
+                    encendida, apágala y repite.</li>
+                </ul>
+                Sea cual sea el tuyo, es correcto. Anótalo tal cual: en el cuestionario se valida el
+                <strong>formato</strong>, no un valor concreto.
+            </div>
+
+            <h2>Parte 3 — La capa 4, en directo (14 min)</h2>
+
+            <p>Ayer llegaste hasta la capa 3 con <code>ping</code>. Hoy toca la 4: comprobar si un
+            <strong>puerto</strong> concreto está abierto, que es cosa del transporte, no de la red.</p>
+
+            <div class="so-tabs" data-grupo="capa4">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="capa4" data-so="win">
+                <div class="comando"><pre><code>Test-NetConnection -ComputerName www.google.com -Port 443</code></pre></div>
+                <p>Fíjate en <strong>TcpTestSucceeded</strong>. Prueba después con el puerto <strong>81</strong>, que
+                no usa nadie, y compara.</p>
+            </div>
+            <div class="so-panel" data-grupo="capa4" data-so="nix">
+                <div class="comando"><pre><code>nc -zv www.google.com 443</code></pre></div>
+                <p>Si no tienes <code>nc</code>, sirve <code>curl -sI https://www.google.com | head -1</code>.
+                Prueba después con el puerto <strong>81</strong> y compara.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>ComputerName     : www.google.com
+RemoteAddress    : 142.250.200.100
+RemotePort       : 443
+PingSucceeded    : True
+TcpTestSucceeded : True</code></pre>
+                <p>Hay <strong>dos comprobaciones distintas</strong> ahí, y conviene verlas separadas:</p>
+                <ul>
+                    <li><strong>PingSucceeded</strong> es <strong>capa 3</strong>: la máquina existe y se llega a
+                    ella.</li>
+                    <li><strong>TcpTestSucceeded</strong> es <strong>capa 4</strong>: además hay un programa
+                    escuchando en ese puerto.</li>
+                </ul>
+                <p>Con el puerto 81 verás <code>PingSucceeded : True</code> pero <code>TcpTestSucceeded :
+                False</code>, y tardará unos segundos en rendirse. La máquina está ahí; lo que no hay es nadie
+                escuchando en ese piso.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Esto es diagnóstico real</strong>
+                Cuando un servicio no funciona, esta distinción es lo primero que se mira:
+                <br><br>
+                <strong>¿Falla el ping?</strong> Problema de capa 3 o inferior: cable, IP, ruta, cortafuegos de red.
+                <br>
+                <strong>¿Ping bien y puerto mal?</strong> La red funciona. El problema es el <strong>servicio</strong>:
+                está parado, escucha en otro puerto o lo bloquea el cortafuegos del servidor.
+                <br><br>
+                Saber en qué capa está el fallo evita revisar el cableado cuando lo que pasa es que el servicio no
+                arrancó.
+            </div>
+
+            <h2>Parte 4 — Recoge y razona</h2>
+
+            <p>Rellena con <strong>tus datos reales</strong>. Se comprueba que tengan la forma correcta, no que
+            coincidan con los míos.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has obtenido el <strong>MTU de tu interfaz</strong> y el <strong>MTU real del camino</strong>, y
+                sabes explicar por qué pueden no coincidir.</li>
+                <li>Sabes deducir del número qué tecnología hay debajo.</li>
+                <li>Distingues <strong>PingSucceeded</strong> de <strong>TcpTestSucceeded</strong> y sabes en qué
+                capa está cada uno.</li>
+                <li>Puedes calcular el MSS a partir de tu MTU sin mirar la teoría.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_01/laboratorio.html">← Laboratorio del Día 1</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Laboratorio: mide el MTU de tu línea',
+    subtitulo: 'Encapsulación medida con un comando · capa 3 frente a capa 4',
+    tiempo: '72 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: El MTU de tu interfaz',
+            tiempo: '8 min',
+            enunciado: '<p>Datos de la Parte 1.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> Nombre de tu adaptador de red activo (<code>InterfaceAlias</code> o el nombre en <code>ip link</code>).',
+                    placeholder: 'Ethernet',
+                    explicacion: 'Es el mismo adaptador que identificaste ayer en el laboratorio del Día 1. Todo lo que midas hoy se refiere a él.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>b)</strong> MTU que declara esa interfaz (<code>NlMtu</code>).',
+                    placeholder: '1500',
+                    explicacion: 'Casi con seguridad <strong>1500</strong>: es el valor de Ethernet, y describe el tramo de tu equipo al router. Guárdalo para compararlo con lo que midas después.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Ese número, ¿qué describe exactamente?',
+                    opciones: {
+                        a: 'El MTU de todo el camino hasta Internet',
+                        b: 'El MTU del primer enlace: de tu equipo al router',
+                        c: 'La velocidad de tu conexión',
+                        d: 'El tamaño máximo de fichero que puedes descargar'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Solo el <strong>primer tramo</strong>. Lo que limita de verdad es el enlace más restrictivo de todo el trayecto, y ese es el que vas a medir en el bloque siguiente.'
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: El MTU real del camino',
+            tiempo: '22 min',
+            enunciado: '<p>Datos de la Parte 2. Aquí es donde aparece tu número propio.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué pasó al ejecutar <code>ping -f -l 1472 8.8.8.8</code>?',
+                    opciones: {
+                        a: 'Respondió correctamente',
+                        b: 'Dijo que era necesario fragmentar pero se especificó DF',
+                        c: 'Se agotó el tiempo de espera'
+                    },
+                    respuesta: null,
+                    libre: true,
+                    explicacion: 'Las tres son resultados legítimos. Si <strong>respondió</strong>, tu camino tiene MTU 1500 y has terminado. Si dijo que <strong>hace falta fragmentar</strong>, tienes menos de 1500 y toca la búsqueda binaria. Si se <strong>agotó el tiempo</strong>, prueba contra <code>1.1.1.1</code>: algunos routers descartan sin avisar.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>b)</strong> Mayor valor de <code>-l</code> que sí obtuvo respuesta.',
+                    placeholder: '1464',
+                    explicacion: 'En una línea con PPPoE sale <strong>1464</strong>; en una Ethernet limpia, <strong>1472</strong>. Cualquiera de los dos es correcto: depende de tu operador, no de ti.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>c)</strong> Súmale 28 al valor anterior. Ese es el <strong>MTU real de tu camino</strong>.',
+                    placeholder: '1492',
+                    explicacion: 'Los 28 bytes son la cabecera IP (20) más la ICMP (8), que <code>-l</code> no cuenta. En el ejemplo: 1464 + 28 = <strong>1492</strong>.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Según el número que te ha salido, ¿qué hay debajo de tu conexión?',
+                    opciones: {
+                        a: '1500 — camino Ethernet limpio, sin encapsulación extra',
+                        b: '1492 — PPPoE, que añade 8 bytes',
+                        c: '1480 — hay un túnel por medio',
+                        d: 'Otro valor, probablemente por una VPN activa'
+                    },
+                    respuesta: null,
+                    libre: true,
+                    explicacion: 'Todas son respuestas reales según la línea. Lo importante es el razonamiento: <strong>la diferencia respecto a 1500 son bytes de cabecera que alguien está añadiendo</strong>. Ocho de diferencia apuntan a PPPoE; veinte, a un túnel; cien o más, casi siempre a una VPN.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Si tu MTU real es 1492, ¿cuántos bytes de datos de aplicación caben en un segmento TCP (el <strong>MSS</strong>)?',
+                    respuesta: 1452,
+                    tolerancia: 0.5,
+                    unidad: 'bytes',
+                    explicacion: '1492 − 20 (IP) − 20 (TCP) = <strong>1452</strong>. Ocho bytes menos que los 1460 del libro, que son exactamente los ocho que se lleva PPPoE.',
+                    pistas: [
+                        'Al MTU réstale las cabeceras de las capas 3 y 4.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>f)</strong> Tu tarjeta declara 1500 y el camino mide menos. Explica por qué <strong>no es un error de configuración</strong>, usando la encapsulación.',
+                    modelo: `<p>Porque son dos medidas de cosas distintas.</p>
+                             <p>El <strong>MTU de la interfaz</strong> describe el <strong>primer enlace</strong>: de
+                             mi equipo al router. Ese tramo es Ethernet puro y admite 1500, así que el 1500 que
+                             declara la tarjeta es correcto.</p>
+                             <p>El <strong>MTU del camino</strong> es el del <strong>enlace más restrictivo</strong>
+                             de todo el trayecto. En cuanto el tráfico sale del router hacia el operador, se encapsula
+                             otra vez —con PPPoE, por ejemplo— y esa capa adicional se lleva <strong>8 bytes</strong>
+                             de cada trama. Lo que antes cabía en 1500 ahora tiene que caber en 1492.</p>
+                             <p>Es la misma idea de toda la teoría de hoy, aplicada un nivel más abajo: <strong>otra
+                             capa que envuelve y se cobra su cabecera</strong>. Solo que esta vez la pone el operador
+                             y yo no la veo.</p>
+                             <p>Mi equipo lo descubre solo: envía paquetes de 1500, el router los descarta avisando de
+                             que hace falta fragmentar, y TCP ajusta el tamaño. Por eso normalmente todo funciona sin
+                             que nadie toque nada.</p>`,
+                    rubrica: [
+                        'Distingue MTU de interfaz y MTU del camino',
+                        'Explica que la interfaz solo describe el primer tramo',
+                        'Identifica la encapsulación adicional del operador como causa',
+                        'Cuantifica los 8 bytes de PPPoE',
+                        'Menciona que el descubrimiento del MTU del camino es automático'
+                    ],
+                    pistas: [
+                        '¿Cuántos enlaces hay entre tu equipo y el servidor?',
+                        '¿Qué mide cada uno de los dos números?',
+                        'La diferencia son bytes. ¿De quién son?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Capa 3 frente a capa 4',
+            tiempo: '14 min',
+            enunciado: '<p>Datos de la Parte 3.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'ipv4',
+                    pregunta: '<strong>a)</strong> Dirección IP que devolvió <code>www.google.com</code> (<code>RemoteAddress</code>).',
+                    placeholder: '142.250.200.100',
+                    explicacion: 'Cambiará según dónde estés: Google responde con el servidor más cercano. Si la comparas con la de un compañero de otra ciudad, es muy probable que no coincida.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Con el puerto <strong>443</strong>, ¿qué obtuviste?',
+                    opciones: {
+                        a: 'PingSucceeded True y TcpTestSucceeded True',
+                        b: 'PingSucceeded True y TcpTestSucceeded False',
+                        c: 'Ambos False'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Los dos en <strong>True</strong>: se llega a la máquina (capa 3) <em>y</em> hay un servidor web escuchando en el 443 (capa 4).'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Con el puerto <strong>81</strong>, ¿qué obtuviste?',
+                    opciones: {
+                        a: 'PingSucceeded True y TcpTestSucceeded True',
+                        b: 'PingSucceeded True y TcpTestSucceeded False',
+                        c: 'Ambos False'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La máquina sigue estando ahí —la capa 3 funciona igual de bien—, pero <strong>no hay nadie escuchando</strong> en ese puerto. El edificio existe; en ese piso no vive nadie.'
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>d)</strong> Completa el criterio de diagnóstico.',
+                    frase: 'Si el ping falla, el problema está en la capa {{0}} o inferior: cable, dirección o ruta. Si el ping funciona pero el puerto no responde, la red está bien y el problema está en el {{1}}: parado, en otro puerto o bloqueado por el {{2}}.',
+                    respuestas: [
+                        ['3', 'tres'],
+                        ['servicio', 'programa', 'servidor', 'proceso'],
+                        ['cortafuegos', 'firewall']
+                    ],
+                    explicacion: 'Este par de comprobaciones es lo primero que se hace ante cualquier incidencia. Ahorra revisar el cableado cuando lo que ocurre es que el servicio no arrancó.',
+                    pistas: [
+                        'El ping trabaja en la capa del direccionamiento IP.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre y cálculo',
+            tiempo: '10 min',
+            enunciado: '<p>Convierte la medición en un número que signifique algo.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Con MTU 1492, la trama Ethernet completa ocupa 1510 bytes y transporta 1452 útiles. ¿Qué eficiencia tiene, en porcentaje con un decimal?',
+                    respuesta: 96.2,
+                    tolerancia: 0.4,
+                    unidad: '%',
+                    explicacion: '1452 ÷ 1510 = 0,9616 → <strong>96,2 %</strong>. Prácticamente la misma que con MTU 1500: PPPoE quita 8 bytes de datos, pero también reduce el total, así que la proporción apenas cambia.',
+                    pistas: [
+                        'Datos útiles entre total, por 100.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Si tienes contratados 600 Mbps, ¿cuántos Mbps de <strong>datos útiles</strong> puedes esperar como máximo? Redondea al entero.',
+                    respuesta: 577,
+                    tolerancia: 6,
+                    unidad: 'Mbps',
+                    explicacion: '600 × 0,962 ≈ <strong>577 Mbps</strong>. Los 23 restantes son cabeceras. No es que el operador te engañe: la velocidad contratada es de <strong>tráfico</strong>, y las cabeceras son tráfico. Simplemente no son tuyas.',
+                    pistas: [
+                        'Aplica el porcentaje de eficiencia del apartado anterior.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>c)</strong> Resume en tus palabras qué has aprendido hoy que <strong>no sabías por la teoría sola</strong>.',
+                    modelo: `<p>Lo principal: que el <strong>1500 de los libros no es el número de mi línea</strong>. La
+                             teoría lo daba como el MTU de Ethernet, y lo es, pero en mi conexión real el camino
+                             completo admite menos porque el operador mete su propia encapsulación por debajo.</p>
+                             <p>También que <strong>la encapsulación se puede medir</strong>. No es un esquema de
+                             flechas: es una diferencia de 8 bytes que aparece en la pantalla cuando un ping deja de
+                             pasar. Ver el mensaje «es necesario fragmentar pero se especificó DF» es ver el bit DF
+                             funcionando de verdad.</p>
+                             <p>Y en el diagnóstico, que <strong>ping y puerto responden preguntas distintas</strong>.
+                             Antes habría dicho «no funciona»; ahora puedo decir si falla la red o el servicio, que es
+                             lo que determina a quién hay que avisar.</p>
+                             <p>Lo que me llevo como método: cuando un número del libro no cuadra con la realidad, casi
+                             siempre <strong>hay una capa más</strong> que no estaba contando.</p>`,
+                    rubrica: [
+                        'Menciona que el MTU real difiere del valor de libro',
+                        'Relaciona la diferencia con encapsulación del operador',
+                        'Destaca haber visto el bit DF en funcionamiento',
+                        'Distingue el diagnóstico de capa 3 y de capa 4',
+                        'Extrae una conclusión propia, no una repetición de la teoría'
+                    ],
+                    pistas: [
+                        'Compara el número que esperabas con el que te salió.',
+                        'Piensa qué podrías diagnosticar hoy que ayer no.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

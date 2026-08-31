@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio: recorrer las capas de tu propio equipo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Laboratorio Día 1</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">64 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Tipo:</strong> recorrido por capas</div>
+    </div>
+
+    <div class="content">
+
+        <div class="dato">
+            <strong>Objetivo del laboratorio</strong>
+            <p>Subir la pila <strong>capa por capa en tu propio equipo</strong>, comprobando qué información devuelve
+            cada nivel. Los comandos ya los conoces todos: lo nuevo es <strong>saber a qué capa pertenece cada
+            uno</strong>.</p>
+            <p>Al terminar tendrás un método de diagnóstico ordenado, no una colección de trucos.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            Todos los comandos son de <strong>solo lectura</strong>. Ninguno cambia la configuración. Trabaja sobre
+            <strong>tu propio equipo</strong> y tu propia red.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Capa 1 — ¿Hay señal?</h3>
+
+            <p>La pregunta de la capa física es la más simple de todas: <strong>¿está el cable haciendo su
+            trabajo?</strong> Se responde mirando si hay enlace y a qué velocidad ha negociado.</p>
+
+            <div class="so-tabs" data-grupo="c1">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="c1" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Format-Table Name, Status, LinkSpeed, MediaType -AutoSize</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="c1" data-so="nix">
+                <div class="comando"><pre><code>ip -brief link show
+ethtool eth0 | grep -E "Speed|Link detected"</code></pre></div>
+            </div>
+
+            <div class="destacado" style="margin-top:14px">
+                <strong>Qué te dice y qué no</strong>
+                Un puerto en estado <em>Up</em> con velocidad coherente demuestra que la <strong>capa 1
+                funciona</strong>: hay portadora, hay señal, los bits pueden viajar.
+                <br><br>
+                Lo que <strong>no</strong> demuestra es absolutamente nada más. Puede haber enlace perfecto y que no
+                funcione ni una sola cosa por encima. Por eso esta comprobación va la primera: es barata y descarta la
+                base.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Capa 2 — ¿Quiénes son mis vecinos?</h3>
+
+            <p>La capa de enlace solo alcanza <strong>un salto</strong>. Su pregunta es: ¿con quién puedo hablar
+            directamente, sin pasar por ningún router?</p>
+
+            <div class="so-tabs" data-grupo="c2">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+
+            <div class="so-panel activo" data-grupo="c2" data-so="win">
+                <div class="comando"><pre><code>getmac /v /fo list
+arp -a</code></pre></div>
+            </div>
+
+            <div class="so-panel" data-grupo="c2" data-so="nix">
+                <div class="comando"><pre><code>ip link show
+ip neigh show</code></pre></div>
+            </div>
+
+            <div class="dato" style="margin-top:14px">
+                <strong>Fíjate en el alcance</strong>
+                <p>Tu tabla ARP <strong>solo contiene equipos de tu red local</strong>. Por muchas páginas que hayas
+                abierto hoy, ahí no aparece ni un solo servidor de Internet.</p>
+                <p>Eso <em>es</em> el alcance de un salto, visto con tus propios datos: la capa 2 no conoce nada más
+                allá de su enlace.</p>
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Capa 3 — ¿Puedo salir de mi red?</h3>
+
+            <p>La capa de red pregunta: ¿sé llegar a otras redes? Se comprueba en dos escalones, primero el vecino
+            que da salida y después algo lejano.</p>
+
+            <div class="comando"><pre><code>ping 192.168.1.1
+ping 8.8.8.8
+tracert -d 8.8.8.8</code></pre></div>
+
+            <p>Cambia <code>192.168.1.1</code> por la puerta de enlace que te salga a ti. En Linux el último comando
+            es <code>traceroute -n 8.8.8.8</code>.</p>
+
+            <div class="destacado">
+                <strong><code>tracert</code> es la capa 3 dibujada</strong>
+                Cada línea de la traza es un <strong>router</strong>, es decir, un salto de capa 3. Y aquí se ve algo
+                que hasta ahora era pura teoría: entre tu equipo y el destino hay <strong>varias redes
+                distintas</strong>, y en cada una de ellas las direcciones MAC fueron otras.
+                <br><br>
+                La IP de destino, en cambio, fue la misma en todo el trayecto. Alcance de un salto frente a alcance
+                extremo a extremo, en una sola pantalla.
+            </div>
+
+            <div class="aviso">
+                <strong>Los asteriscos son normales</strong>
+                Es habitual que a partir de cierto punto salgan <code>*</code> y «tiempo de espera agotado». No
+                significa que la red esté rota: muchos routers están configurados para <strong>no responder</strong> a
+                estas sondas. Si el ping final funciona, el camino está bien.
+            </div>
+        </div>
+
+        <div class="paso-lab">
+            <h3>Capa 7 — ¿Funcionan los nombres?</h3>
+
+            <p>Saltamos hasta arriba, porque es donde vive el fallo más frecuente:</p>
+
+            <div class="comando"><pre><code>ping www.google.com</code></pre></div>
+
+            <p>Si el ping a <code>8.8.8.8</code> funcionó y este falla, tienes conectividad completa y lo que falla es
+            la <strong>resolución de nombres</strong>. Es la prueba de los dos ping de la Semana 2, ahora con nombre y
+            apellidos: capas 1 a 3 correctas, capa 7 caída.</p>
+
+            <div class="dato">
+                <strong>La capa 4 la verás mañana</strong>
+                <p>Falta comprobar el <strong>transporte</strong>, que es donde viven los puertos. Se hace con
+                <code>Test-NetConnection</code> y lo usarás en el laboratorio del Día 2, junto con la
+                encapsulación.</p>
+            </div>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Comprobar mis datos</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:24px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has recorrido las capas 1, 2, 3 y 7 en tu equipo, en ese orden.</li>
+                <li>Sabes decir qué comando informa de qué capa.</li>
+                <li>Has comprobado con tus datos que la tabla ARP solo contiene vecinos.</li>
+                <li>Puedes explicar qué descarta cada comprobación.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Laboratorio Día 1 — Las capas en tu equipo',
+    subtitulo: 'Capa 1 · capa 2 · capa 3 · capa 7',
+    tiempo: '64 min',
+    ejercicios: [
+
+        {
+            titulo: 'CAPA 1 — La señal',
+            tiempo: '12 min',
+            enunciado: '<p>Datos reales de tu interfaz activa.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>1.</strong> ¿En qué estado está tu interfaz activa y a qué velocidad ha negociado?',
+                    placeholder: 'Up, 1 Gbps',
+                    ancho: '300px',
+                    explicacion: 'Estado <em>Up</em> y una velocidad coherente con tu equipamiento demuestran que la capa 1 hace su trabajo. Si negocia por debajo de lo esperado, el problema es físico: cable a medias.',
+                    pistas: [
+                        'Son las columnas Status y LinkSpeed de Get-NetAdapter.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>2.</strong> ¿Qué información de esa salida pertenece a la capa 1 y cuál a la capa 2? Nómbralas.',
+                    placeholder: 'capa 1: ... / capa 2: ...',
+                    ancho: '520px',
+                    explicacion: 'De la misma salida: <strong>capa 1</strong> son el estado del enlace, la velocidad negociada y el tipo de medio; <strong>capa 2</strong> es la dirección MAC. Un solo comando toca dos capas, igual que la propia tarjeta.',
+                    pistas: [
+                        'La tarjeta trabaja en dos capas, así que su comando también informa de dos.',
+                        '¿A qué capa pertenecía la dirección MAC?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>3.</strong> Tu puerto está <em>Up</em> a 1 Gbps. ¿Qué has demostrado?',
+                    opciones: {
+                        a: 'Que la red funciona correctamente',
+                        b: 'Solo que la capa 1 funciona: hay señal y los bits pueden viajar',
+                        c: 'Que tienes acceso a Internet',
+                        d: 'Que el DNS está bien configurado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es justo el valor de razonar por capas: <strong>saber qué NO has demostrado</strong>. Puede haber enlace perfecto y no funcionar nada por encima.',
+                    pistas: [
+                        'Pregúntate qué información maneja la capa 1. ¿Sabe algo de direcciones?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'CAPA 2 — Los vecinos',
+            tiempo: '15 min',
+            enunciado: '<p>Alcance de un salto, comprobado con tu tabla ARP.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'mac',
+                    pregunta: '<strong>4.</strong> Escribe la dirección MAC de tu interfaz activa.',
+                    placeholder: '50-EB-F6-26-B4-2F',
+                    explicacion: 'Seis pares hexadecimales. Es el identificador de capa 2 de esa interfaz.',
+                    pistas: [
+                        'Sale en getmac o en la columna MacAddress de Get-NetAdapter.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>5.</strong> ¿Cuántas entradas <em>dinámicas</em> tiene tu tabla ARP?',
+                    ayuda: 'entradas',
+                    ancho: '120px',
+                    explicacion: 'Son los equipos de tu red local con los que has hablado hace poco. Las entradas <em>estáticas</em> no cuentan: son difusión y multicast, que se deducen por regla y no se aprenden preguntando.',
+                    pistas: [
+                        'Cuenta solo las que ponen «dinámico» en la columna Tipo.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>6.</strong> Busca en tu tabla ARP la dirección de algún servidor de Internet, por ejemplo <code>8.8.8.8</code>. ¿Aparece? Explica por qué.',
+                    placeholder: 'no aparece, porque...',
+                    ancho: '520px',
+                    explicacion: 'No aparece, y no puede aparecer: la tabla ARP es de <strong>capa 2</strong>, cuyo alcance es <strong>un salto</strong>. Solo contiene equipos de tu red local. Para hablar con 8.8.8.8 tu equipo usa la MAC de la <strong>puerta de enlace</strong>, no la del servidor, que le resulta inalcanzable.',
+                    pistas: [
+                        'Repasa cuál era el alcance de la capa 2.',
+                        'Si tu PC no conoce la MAC del servidor, ¿qué MAC pone como destino?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>7.</strong> ¿Qué capa comprueba realmente el comando <code>arp -a</code>?',
+                    opciones: {
+                        a: 'Solo la capa 1',
+                        b: 'La frontera entre la capa 2 y la 3: asocia direcciones IP con direcciones MAC',
+                        c: 'Solo la capa 4',
+                        d: 'La capa 7'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La tabla ARP es literalmente una tabla de correspondencias entre las dos capas: a la izquierda direcciones de capa 3, a la derecha de capa 2.',
+                    pistas: [
+                        'Mira las dos columnas de la salida: ¿de qué capa es cada una?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'CAPA 3 — Salir de la red',
+            tiempo: '18 min',
+            enunciado: '<p>El encaminamiento, visto con <code>ping</code> y <code>tracert</code>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'ip',
+                    pregunta: '<strong>8.</strong> ¿Cuál es tu puerta de enlace?',
+                    placeholder: '192.168.1.1',
+                    explicacion: 'Es el vecino de capa 2 al que entregas todo lo que va fuera de tu red. Recuerda que en algunos equipos Windows aparece aquí una IPv6 de enlace local: también es correcta.',
+                    pistas: [
+                        'Sale en ipconfig, como «Puerta de enlace predeterminada».'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 10,
+                    pregunta: '<strong>9.</strong> Pega la salida de <code>tracert -d 8.8.8.8</code>.',
+                    placeholder: 'Pega la traza completa',
+                    minimo: 60,
+                    debe: [['ms', 'tiempo', '*'], ['1', '2']],
+                    explicacion: 'Cada línea es un router: un salto de capa 3. Los asteriscos son normales; muchos routers no responden a estas sondas por configuración.',
+                    pistas: [
+                        'Puedes cortarla tras los primeros saltos si tarda mucho.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>10.</strong> ¿Cuántos saltos <strong>respondieron</strong> en tu traza?',
+                    ayuda: 'saltos',
+                    ancho: '120px',
+                    explicacion: 'Cada salto que responde es un router que ha decidido por dónde reenviar tu paquete. En cada uno de ellos las direcciones MAC fueron distintas, y la IP de destino la misma.',
+                    pistas: [
+                        'Cuenta las líneas con tiempos, no las que solo tienen asteriscos.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>11.</strong> Con tu traza delante: ¿cuántas veces cambió la <strong>MAC de destino</strong> y cuántas la <strong>IP de destino</strong> durante ese recorrido? Justifícalo.',
+                    modelo: `<p>La <strong>IP de destino no cambió ninguna vez</strong>: fue <code>8.8.8.8</code> desde
+                             que el paquete salió de mi equipo hasta que llegó. La dirección de capa 3 identifica el
+                             <strong>extremo</strong> del trayecto, y por eso se mantiene de punta a punta.</p>
+                             <p>La <strong>MAC de destino cambió en cada salto</strong>, tantas veces como routers
+                             atravesó. En el primer tramo fue la MAC de mi puerta de enlace; ese router descartó la
+                             trama entera y construyó otra nueva con la MAC del siguiente router, y así
+                             sucesivamente.</p>
+                             <p>El motivo es el <strong>alcance</strong> de cada capa. La capa 2 solo llega al vecino
+                             que tiene enfrente, así que su direccionamiento sirve para <em>un</em> tramo y hay que
+                             rehacerlo en cada uno. La capa 3 es la que sabe encaminar entre redes, así que su
+                             direccionamiento describe el viaje completo.</p>
+                             <p>Esto también explica por qué mi tabla ARP no contiene ninguna dirección de Internet:
+                             mi equipo nunca necesitó —ni pudo— conocer la MAC del servidor remoto. Le bastó con la de
+                             su puerta de enlace.</p>`,
+                    rubrica: [
+                        'La IP de destino no cambia en ningún salto',
+                        'La MAC de destino cambia en cada salto',
+                        'Relaciona ambos hechos con el alcance de cada capa',
+                        'Explica que el router descarta la trama y construye otra',
+                        'Conecta con el hecho de que la tabla ARP solo tiene vecinos'
+                    ],
+                    pistas: [
+                        'Cuenta los saltos de tu propia traza para dar el número.',
+                        'Recuerda qué hace exactamente un router con la trama que recibe.',
+                        'Une la respuesta con lo que observaste en la tabla ARP.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'CAPA 7 y método',
+            tiempo: '19 min',
+            enunciado: '<p>Arriba del todo, y después el método completo.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>12.</strong> ¿Funcionó <code>ping www.google.com</code>? Indica también a qué dirección IP se resolvió el nombre.',
+                    placeholder: 'sí, se resolvió a 142.251.x.x',
+                    ancho: '460px',
+                    explicacion: 'La primera línea del ping muestra la IP a la que se ha traducido el nombre. Ese dato, por sí solo, ya demuestra que el DNS respondió: la capa 7 funciona.',
+                    pistas: [
+                        'No hace falta que el ping responda: basta con ver si el nombre se tradujo.'
+                    ]
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>13.</strong> Relaciona cada comando con la capa de la que informa principalmente.',
+                    izquierda: [
+                        'Get-NetAdapter (LinkSpeed)',
+                        'arp -a',
+                        'tracert',
+                        'ping a un nombre'
+                    ],
+                    derecha: [
+                        'Capa 1 — hay señal y a qué velocidad',
+                        'Capa 2 — quiénes son mis vecinos',
+                        'Capa 3 — por qué routers paso',
+                        'Capa 7 — la resolución de nombres'
+                    ],
+                    pares: {
+                        'Get-NetAdapter (LinkSpeed)': 'Capa 1 — hay señal y a qué velocidad',
+                        'arp -a': 'Capa 2 — quiénes son mis vecinos',
+                        'tracert': 'Capa 3 — por qué routers paso',
+                        'ping a un nombre': 'Capa 7 — la resolución de nombres'
+                    },
+                    explicacion: 'Esta tabla es el resultado del laboratorio: los comandos que ya usabas, ordenados por capa. A partir de ahora diagnosticar es recorrerla de arriba abajo.',
+                    pistas: [
+                        'Ordénalos igual que los pasos del laboratorio: de abajo arriba.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>14.</strong> Redacta tu <strong>método de diagnóstico</strong> por capas, como si fuera una ficha para pegar en la pared: qué compruebas, en qué orden y qué descarta cada paso.',
+                    modelo: `<p><strong>Método: subir la pila.</strong> Cada comprobación descarta todo lo que hay por
+                             debajo, así que se empieza abajo y solo se sube cuando el nivel anterior está limpio.</p>
+                             <ol>
+                               <li><strong>Capa 1 — ¿hay señal?</strong> Estado del puerto y velocidad negociada.
+                               Si está caído, no hay nada más que mirar. Si negocia por debajo de lo que debería, el
+                               cable está a medias. <em>Descarta: cable, conector, puerto.</em></li>
+                               <li><strong>Capa 2 — ¿tengo vecinos?</strong> Tabla ARP y dirección MAC. Si no aparece
+                               ni la puerta de enlace, no se está hablando con nadie de la red local.
+                               <em>Descarta: switch, enlace local, red errónea.</em></li>
+                               <li><strong>Capa 3 — ¿salgo de mi red?</strong> Primero ping a la puerta de enlace, y
+                               si responde, ping a una IP externa. Antes conviene mirar que la IP no empiece por
+                               <code>169.254</code>, que significaría que no hubo DHCP.
+                               <em>Descarta: configuración IP, puerta de enlace, encaminamiento.</em></li>
+                               <li><strong>Capa 7 — ¿funcionan los nombres?</strong> Ping a un nombre. Si la IP
+                               respondía y el nombre no, el fallo es del <strong>DNS</strong> y solo del DNS.
+                               <em>Descarta: todo lo de abajo, ya validado.</em></li>
+                             </ol>
+                             <p>El orden importa por una razón concreta: <strong>cada capa se apoya en la de
+                             debajo</strong>, así que un fallo abajo hace fallar todo lo de arriba y genera síntomas
+                             engañosos. Empezar por el navegador cuando el latiguillo está suelto es la forma
+                             habitual de perder media hora.</p>
+                             <p>Cuatro comprobaciones, un par de minutos, y el problema queda localizado en una capa
+                             concreta en lugar de en «la red».</p>`,
+                    rubrica: [
+                        'Cuatro pasos en orden ascendente de capa',
+                        'Cada paso indica qué comando o comprobación se usa',
+                        'Cada paso dice explícitamente qué descarta',
+                        'Incluye la comprobación de APIPA en la capa 3',
+                        'Justifica el orden: cada capa se apoya en la de debajo'
+                    ],
+                    pistas: [
+                        'Usa los cuatro pasos del laboratorio como esqueleto.',
+                        'Para cada uno, escribe la pregunta que responde y el comando que la contesta.',
+                        'No olvides decir qué queda descartado tras cada paso: es lo que hace útil el método.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

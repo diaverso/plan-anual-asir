@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: Wireshark y los bytes de verdad</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Herramienta:</strong> Wireshark</div>
+        <div class="info-item"><strong>Requisito:</strong> instalarlo</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>El laboratorio que cierra la semana</strong>
+            <p>Llevas cuatro días contando bytes de cabecera sobre el papel: 14 de Ethernet, 20 de IP, 20 de TCP.
+            Hoy vas a <strong>verlos</strong> y a comprobar si las cuentas salen.</p>
+            <p>Y como el día va de normalización, no basta con mirar: de cada campo que veas habrá que decir
+            <strong>qué organismo lo definió y en qué documento</strong>. Los estándares dejan de ser una lista de
+            siglas cuando se ven convertidos en bytes concretos.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>Vas a capturar <strong>tu propio tráfico</strong>, en tu propio equipo. Eso es legítimo y es lo
+                que hace cualquier administrador para diagnosticar.</li>
+                <li>Capturar tráfico <strong>de una red que no administras</strong> —una wifi pública, la red de
+                otra empresa— es otra cosa muy distinta y puede ser ilegal. No lo hagas.</li>
+                <li>Usaremos <strong>http://</strong> y no https, porque con HTTPS el contenido va cifrado y no se
+                puede leer. Se ven igual todas las cabeceras de las capas de abajo, que es lo que interesa hoy.</li>
+                <li>Cierra lo que puedas antes de capturar: cuanto menos ruido, más fácil encontrar lo tuyo.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Instalar Wireshark (8 min)</h2>
+
+            <p><strong>Wireshark</strong> es un analizador de protocolos: captura las tramas que pasan por tu tarjeta
+            de red y las despieza campo por campo. Es gratuito, de código abierto y la herramienta estándar del
+            oficio.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Sistema</th><th>Cómo instalarlo</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Windows</strong></td>
+                        <td>Descarga el instalador de <a href="https://www.wireshark.org/download.html">wireshark.org/download.html</a> y acepta las opciones por defecto. Instala también <strong>Npcap</strong> cuando lo proponga: es el componente que permite capturar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Debian / Ubuntu</strong></td>
+                        <td><code>sudo apt install wireshark</code>. Responde <strong>sí</strong> a la pregunta de si los usuarios normales pueden capturar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>macOS</strong></td>
+                        <td><code>brew install --cask wireshark</code>, o el instalador de la web</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Comprueba que ha quedado bien</strong>
+                <p>Abre Wireshark. Si en la pantalla inicial aparece una <strong>lista de interfaces</strong> con
+                líneas que se mueven a la derecha de cada nombre, está listo: esas líneas son tráfico real pasando
+                ahora mismo.</p>
+                <p>Si la lista sale vacía, falta el componente de captura: en Windows, reinstala marcando Npcap; en
+                Linux, ejecuta <code>sudo dpkg-reconfigure wireshark-common</code> y responde que sí.</p>
+            </div>
+
+            <h2>Parte 2 — Capturar (14 min)</h2>
+
+            <h3>Elegir la interfaz correcta</h3>
+
+            <p>Es el primer obstáculo, y sorprende: en un equipo normal Wireshark ofrece <strong>diez o quince
+            interfaces</strong>, casi todas inútiles.</p>
+
+            <div class="dato">
+                <strong>Lo que aparece en un equipo real</strong>
+<pre><code>Conexión de área local* 8, 9, 10       ← virtuales, vacías
+vEthernet (WSL)                        ← máquina virtual
+Conexión de red Bluetooth              ← Bluetooth
+Wi-Fi                                  ← desconectada en este equipo
+Ethernet                               ← ESTA
+Adapter for loopback traffic           ← el equipo consigo mismo</code></pre>
+                <p>La buena es la que <strong>tiene tráfico</strong>: la de la línea que se mueve. Si dudas, es la
+                misma que identificaste en el laboratorio del Día 1 con <code>Get-NetAdapter</code>.</p>
+            </div>
+
+            <h3>Poner un filtro de captura</h3>
+
+            <p>Sin filtro capturarás miles de tramas por minuto y no encontrarás nada. Escribe esto en la casilla
+            de filtro <strong>de la pantalla inicial</strong>, justo debajo de la lista de interfaces:</p>
+
+            <div class="comando"><pre><code>tcp port 80</code></pre></div>
+
+            <p>Ahora haz doble clic en tu interfaz para empezar a capturar, y <strong>con la captura en marcha</strong>
+            genera tráfico desde una terminal:</p>
+
+            <div class="so-tabs" data-grupo="gen">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="gen" data-so="win">
+                <div class="comando"><pre><code>curl.exe -s -o NUL http://example.com</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="gen" data-so="nix">
+                <div class="comando"><pre><code>curl -s -o /dev/null http://example.com</code></pre></div>
+            </div>
+
+            <p>Para la captura con el botón rojo. Deberías tener alrededor de <strong>una docena de tramas</strong>.</p>
+
+            <div class="aviso">
+                <strong>Dos filtros que no son lo mismo</strong>
+                <strong>Filtro de captura</strong> (antes de empezar, sintaxis <code>tcp port 80</code>): decide
+                <strong>qué se guarda</strong>. Lo descartado se pierde para siempre.
+                <br><br>
+                <strong>Filtro de visualización</strong> (arriba, durante o después, sintaxis <code>http</code>):
+                decide <strong>qué se enseña</strong> de lo ya guardado. Se puede cambiar cuantas veces se quiera.
+                <br><br>
+                Se escriben distinto y es el error más común al empezar: <code>tcp port 80</code> no vale arriba, y
+                <code>http</code> no vale abajo.
+            </div>
+
+            <h3>Lo que deberías ver</h3>
+
+            <div class="dato">
+                <strong>Captura real, resumida</strong>
+<pre><code>Nº  Origen          Destino         Prot.  Bytes  Información
+ 1  192.168.1.70    104.20.23.154   TCP      66   59798 → 80 [SYN]
+ 2  104.20.23.154   192.168.1.70    TCP      66   80 → 59798 [SYN, ACK]
+ 3  192.168.1.70    104.20.23.154   TCP      54   59798 → 80 [ACK]
+ 4  192.168.1.70    104.20.23.154   HTTP    129   GET / HTTP/1.1
+ 5  104.20.23.154   192.168.1.70    TCP      60   80 → 59798 [ACK]
+ 6  104.20.23.154   192.168.1.70    TCP     922   HTTP/1.1 200 OK</code></pre>
+                <p>Las tres primeras tramas son el <strong>saludo de tres vías</strong> de TCP: el cliente propone
+                (SYN), el servidor acepta y propone a su vez (SYN, ACK) y el cliente confirma (ACK). Eso es lo que
+                significa que TCP sea «orientado a conexión»: <strong>hay una conversación previa</strong> antes de
+                mandar nada.</p>
+                <p>Y solo entonces, en la cuarta trama, sale la petición que querías hacer.</p>
+            </div>
+
+            <h2>Parte 3 — Leer una trama capa por capa (20 min)</h2>
+
+            <p>Selecciona la trama del <strong>GET</strong> y mira el panel de en medio. Ahí está la trama despiezada
+            en cuatro bloques desplegables, uno por capa. Ábrelos todos.</p>
+
+            <div class="destacado">
+                <strong>Los cuatro bloques son las cuatro capas</strong>
+                <div class="tabla-wrap" style="margin-top:10px">
+                <table>
+                    <thead><tr><th>Lo que pone Wireshark</th><th>Capa</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>Frame 4: 129 bytes on wire</code></td><td>La trama entera</td></tr>
+                        <tr><td><code>Ethernet II, Src: ..., Dst: ...</code></td><td><strong>2 · Enlace</strong></td></tr>
+                        <tr><td><code>Internet Protocol Version 4</code></td><td><strong>3 · Red</strong></td></tr>
+                        <tr><td><code>Transmission Control Protocol</code></td><td><strong>4 · Transporte</strong></td></tr>
+                        <tr><td><code>Hypertext Transfer Protocol</code></td><td><strong>7 · Aplicación</strong></td></tr>
+                    </tbody>
+                </table>
+                </div>
+                Es <strong>la encapsulación del Día 2</strong>, en pantalla y al revés: Wireshark ha ido quitando
+                envoltorios de fuera adentro, exactamente como hace el equipo de destino.
+            </div>
+
+            <h3>Bloque Ethernet: los bits que ya conocías</h3>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>Ethernet II, Src: ASUSTekCOMPU_26:b4:2f (50:eb:f6:26:b4:2f),
+             Dst: MitraStarTec_b8:6f:38 (e4:ab:89:b8:6f:38)
+    Destination: MitraStarTec_b8:6f:38 (e4:ab:89:b8:6f:38)
+        .... ..0. .... .... .... .... = LG bit: Globally unique (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)</code></pre>
+                <p>Tres cosas de la Semana 2, aquí convertidas en bytes:</p>
+                <ul>
+                    <li><strong>El fabricante aparece con su nombre.</strong> Wireshark ha cogido los tres primeros
+                    bytes —el <strong>OUI</strong>— y los ha buscado en el registro del IEEE.</li>
+                    <li><strong>Los bits I/G y U/L</strong> están ahí, marcados uno a uno. Wireshark los llama
+                    <strong>IG</strong> y <strong>LG</strong>. Ambos a cero: dirección individual y de fábrica.</li>
+                    <li><strong>Type: IPv4 (0x0800)</strong> es el <em>EtherType</em>: el campo que dice qué hay
+                    dentro. Ese número también está en un registro de IANA.</li>
+                </ul>
+                <p>Fíjate en el destino: <strong>no es la MAC del servidor</strong>, sino la de tu router. La MAC
+                del Día 1 que solo llega a un salto.</p>
+            </div>
+
+            <h3>Bloque IP: los 20 bytes y el bit DF</h3>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>Internet Protocol Version 4, Src: 192.168.1.70, Dst: 172.66.147.243
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Total Length: 115
+    Flags: 0x2, Don't fragment
+        .1.. .... = Don't fragment: Set
+    Time to Live: 128
+    Protocol: TCP (6)</code></pre>
+                <p>Aquí está media semana:</p>
+                <ul>
+                    <li><strong>Header Length: 20 bytes.</strong> Los 20 que llevas contando desde el Día 2, ahora
+                    verificados.</li>
+                    <li><strong>Don't fragment: Set.</strong> El bit <strong>DF</strong> que activaste a mano con
+                    <code>ping -f</code> para medir el MTU. Va activado <em>siempre</em>, no solo cuando lo pides.</li>
+                    <li><strong>Protocol: TCP (6).</strong> El número que identifica al protocolo de la capa de
+                    arriba, del registro de IANA.</li>
+                    <li><strong>Total Length: 115.</strong> El paquete IP completo: 20 de cabecera IP + 20 de TCP +
+                    75 de HTTP.</li>
+                </ul>
+            </div>
+
+            <div class="destacado">
+                <strong>Comprueba la cuenta del Día 2, ahora con datos reales</strong>
+<pre><code>Trama completa (Frame)          129 bytes
+  – cabecera Ethernet            14
+  – cabecera IP                  20
+  – cabecera TCP                 20
+                              ──────
+  Datos HTTP                     75 bytes</code></pre>
+                129 − 14 − 20 − 20 = <strong>75 bytes</strong> de petición HTTP. Los otros 54 son envoltorio.
+                <br><br>
+                Es exactamente el reparto que calculaste sobre el papel, salvo que aquí falta el <strong>FCS</strong>:
+                la tarjeta lo comprueba y lo quita antes de pasar la trama al sistema, así que Wireshark no llega a
+                verlo. Existe, pero para cuando el software mira, su trabajo ya está hecho.
+            </div>
+
+            <div class="aviso">
+                <strong>Una corrección a lo que estudiaste: los 20 bytes de TCP son el <em>mínimo</em></strong>
+                Mira ahora la primera trama, la del <strong>SYN</strong>, y fíjate en su cabecera TCP:
+<pre><code>Trama del GET  →  cabecera TCP: 20 bytes
+Trama del SYN  →  cabecera TCP: 32 bytes</code></pre>
+                No es un error. La cabecera TCP tiene <strong>20 bytes obligatorios y hasta 40 de opciones</strong>.
+                En el saludo inicial se usan 12 de esas opciones para negociar cosas como el <strong>MSS</strong> que
+                calculaste el martes.
+                <br><br>
+                Por eso el SYN mide 66 bytes y un ACK vacío 54: <strong>14 + 20 + 32</strong> frente a
+                <strong>14 + 20 + 20</strong>.
+                <br><br>
+                Cuando en el Día 2 se dijo «TCP son 20 bytes», era una simplificación razonable —lo es en la mayoría
+                de las tramas— pero la realidad tiene este matiz. Y solo se ve mirando una captura.
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: por qué unas tramas miden 54 y otras 60</summary>
+                <p>Si te fijas en los números, los ACK que <strong>envías</strong> miden 54 bytes y los que
+                <strong>recibes</strong> miden 60. Es el mismo tipo de trama.</p>
+                <p>La razón es que Ethernet exige un <strong>mínimo de 60 bytes</strong> por trama, y un ACK vacío se
+                queda en 54. La tarjeta añade 6 bytes de <strong>relleno</strong> para llegar al mínimo.</p>
+                <p>En las tramas que salen, ese relleno lo pone la tarjeta <em>después</em> de que Wireshark las vea,
+                así que aparecen con 54. En las que llegan, el relleno ya viene puesto, y se ven con 60.</p>
+                <p>El mínimo de 60 bytes no es un capricho: viene del Ethernet original de cable compartido, donde
+                una trama demasiado corta podía terminar de enviarse antes de que el emisor detectara una colisión.
+                Es un requisito de <strong>CSMA/CD</strong>, de la Semana 1, que sigue ahí décadas después aunque ya
+                casi no haya colisiones.</p>
+            </details>
+
+            <h2>Parte 4 — Encuentra el estándar (12 min)</h2>
+
+            <p>Y ahora lo que da sentido al día de hoy. Cada campo que acabas de ver lo definió alguien, en un
+            documento concreto. Reconstruye ese mapa en el cuestionario.</p>
+
+            <div class="dato">
+                <strong>Dónde comprobarlo</strong>
+                <ul>
+                    <li>Los RFC, gratis y completos, en <a href="https://www.rfc-editor.org/">rfc-editor.org</a>.</li>
+                    <li>El registro de puertos y de números de protocolo, en <a href="https://www.iana.org/protocols">iana.org/protocols</a>.</li>
+                    <li>Los OUI de fabricante, en <a href="https://maclookup.app/">maclookup.app</a>.</li>
+                </ul>
+                <p>No hace falta leerse un RFC entero: con abrir el 791 y ver el dibujo de la cabecera IP en la
+                primera página ya se entiende de qué va esto.</p>
+            </div>
+
+            <h2>Parte 5 — Recoge y razona</h2>
+
+            <p>Con <strong>tu captura</strong> delante.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Tienes una captura con el saludo de tres vías y una petición HTTP.</li>
+                <li>Sabes distinguir un <strong>filtro de captura</strong> de uno <strong>de visualización</strong>.</li>
+                <li>Has localizado en los bytes: el <strong>OUI</strong>, los bits <strong>I/G</strong> y
+                <strong>U/L</strong>, los <strong>20 bytes</strong> de IP y el bit <strong>DF</strong>.</li>
+                <li>La suma de la trama te cuadra: cabeceras + datos = tamaño total.</li>
+                <li>Sabes decir <strong>qué organismo</strong> definió cada campo.</li>
+            </ul>
+        </div>
+
+        <div class="dato">
+            <strong>Guarda la captura</strong>
+            <p><em>Archivo → Guardar como…</em> y ponle un nombre. Mañana, en la síntesis de la semana, te vendrá
+            bien tenerla a mano, y en el Mes 3 volverás sobre ella cuando se estudie Ethernet a fondo.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_03/laboratorio.html">← Laboratorio del Día 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Laboratorio: Wireshark y los bytes de verdad',
+    subtitulo: 'Capturar · leer una trama capa por capa · encontrar el estándar de cada campo',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: La captura',
+            tiempo: '14 min',
+            enunciado: '<p>Datos de las Partes 1 y 2.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> ¿Qué interfaz has elegido para capturar, y cómo supiste que era la correcta?',
+                    placeholder: 'Ethernet, era la única con tráfico',
+                    explicacion: 'La pista fiable es el <strong>tráfico</strong>: la línea que se mueve. En un equipo normal hay diez o quince interfaces y casi todas están vacías.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>b)</strong> ¿Cuántas tramas has capturado en total?',
+                    placeholder: '12',
+                    explicacion: 'Con el filtro <code>tcp port 80</code> y una sola petición suelen salir entre 10 y 15: el saludo, la petición, la respuesta troceada y el cierre.'
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa la diferencia entre los dos tipos de filtro.',
+                    frase: 'El filtro de {{0}} se pone antes de empezar y decide qué se guarda: lo descartado se pierde para siempre. El filtro de {{1}} se pone arriba y decide qué se muestra de lo ya guardado, así que se puede cambiar todas las veces que haga falta.',
+                    respuestas: [
+                        ['captura'],
+                        ['visualizacion', 'visualización', 'display', 'pantalla']
+                    ],
+                    explicacion: 'Además se escriben en <strong>sintaxis distinta</strong>: <code>tcp port 80</code> para capturar y <code>http</code> o <code>tcp.port == 80</code> para mostrar. Confundirlos es el error más común al empezar.',
+                    pistas: [
+                        'Uno decide qué se graba; el otro, qué se enseña.'
+                    ]
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>d)</strong> Ordena las primeras cuatro tramas de tu captura.',
+                    elementos: [
+                        'GET / HTTP/1.1',
+                        '[SYN]',
+                        '[ACK]',
+                        '[SYN, ACK]'
+                    ],
+                    orden: [
+                        '[SYN]',
+                        '[SYN, ACK]',
+                        '[ACK]',
+                        'GET / HTTP/1.1'
+                    ],
+                    explicacion: 'El <strong>saludo de tres vías</strong>: el cliente propone, el servidor acepta y propone a su vez, el cliente confirma. Y solo entonces se pide la página. Eso es lo que significa que TCP sea «orientado a conexión»: <strong>tres tramas de conversación antes de decir nada útil</strong>.',
+                    pistas: [
+                        'La petición web es lo último de los cuatro.',
+                        'El servidor responde con dos banderas a la vez.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: La trama capa por capa',
+            tiempo: '20 min',
+            enunciado: '<p>Con la trama del <strong>GET</strong> seleccionada y los cuatro bloques abiertos.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los bloques tal como los muestra Wireshark, de arriba abajo.',
+                    elementos: [
+                        'Internet Protocol Version 4',
+                        'Hypertext Transfer Protocol',
+                        'Ethernet II',
+                        'Transmission Control Protocol'
+                    ],
+                    orden: [
+                        'Ethernet II',
+                        'Internet Protocol Version 4',
+                        'Transmission Control Protocol',
+                        'Hypertext Transfer Protocol'
+                    ],
+                    explicacion: 'Es la <strong>desencapsulación</strong> del Día 2 en pantalla: Wireshark quita envoltorios de fuera adentro, igual que hace el equipo de destino. El primer bloque es la capa 2 y el último la capa 7.',
+                    pistas: [
+                        'Empieza por la capa más externa, la que envuelve a todas las demás.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> ¿Qué <strong>fabricante</strong> muestra Wireshark para la MAC de destino de esa trama?',
+                    placeholder: 'MitraStarTec',
+                    explicacion: 'Es tu <strong>router</strong>, no el servidor web: la MAC de destino solo llega a un salto. Ese nombre sale de buscar los tres primeros bytes —el <strong>OUI</strong>— en el registro del IEEE.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Los bits <strong>LG</strong> e <strong>IG</strong> de esa MAC están los dos a cero. ¿Qué significa?',
+                    opciones: {
+                        a: 'Que la trama está dañada',
+                        b: 'Que es una dirección de fábrica (no modificada) y de un solo destinatario (unicast)',
+                        c: 'Que es una dirección de difusión',
+                        d: 'Que la MAC es aleatoria'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Son los bits <strong>U/L</strong> e <strong>I/G</strong> de la Semana 2, que Wireshark llama LG e IG. A cero: <strong>global</strong> (asignada por el fabricante) e <strong>individual</strong> (no multicast ni broadcast).',
+                    pistas: [
+                        'Repasa qué distinguían esos dos bits en la Semana 2, Día 1.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>d)</strong> <code>Header Length</code> del bloque IP, en bytes.',
+                    placeholder: '20',
+                    explicacion: 'Los <strong>20 bytes</strong> que llevas contando desde el martes, ahora verificados en una trama real.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> En el bloque IP aparece <code>Don\'t fragment: Set</code>. ¿Qué implica?',
+                    opciones: {
+                        a: 'Que curl pidió expresamente no fragmentar',
+                        b: 'Que el bit DF va activado de serie, no solo cuando se pide con ping -f',
+                        c: 'Que la trama es demasiado grande',
+                        d: 'Que el paquete se ha fragmentado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El martes lo activaste <strong>a mano</strong> para medir el MTU, y podía parecer un truco de laboratorio. Aquí se ve que es el comportamiento normal: se prefiere descartar y descubrir el MTU del camino antes que fragmentar.',
+                    pistas: [
+                        '¿Pediste tú algo especial al ejecutar curl?'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>f)</strong> Tamaño total de la trama del GET, en bytes (<code>Frame ... bytes on wire</code>).',
+                    placeholder: '129',
+                    explicacion: 'El tuyo puede variar unos bytes según la versión de curl, porque el <code>User-Agent</code> forma parte de la petición y su longitud cambia.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>g)</strong> Resta a ese total las tres cabeceras (14 + 20 + 20). ¿Cuántos bytes de HTTP quedan? Comprueba si te cuadra con el <code>Total Length</code> del bloque IP.',
+                    modelo: `<p>Con una trama de <strong>129 bytes</strong>: 129 − 14 − 20 − 20 = <strong>75 bytes</strong>
+                             de petición HTTP. El resto, <strong>54 bytes</strong>, es envoltorio.</p>
+                             <p>Y cuadra con el otro dato: el <code>Total Length</code> del bloque IP era
+                             <strong>115</strong>, que es el paquete IP sin la cabecera Ethernet. En efecto,
+                             115 + 14 = 129. Y 115 − 20 − 20 = 75, el mismo número por otro camino.</p>
+                             <p>Que dos cálculos independientes den lo mismo confirma que la estructura es
+                             exactamente la que dice la teoría.</p>
+                             <p>Lo llamativo es la <strong>proporción</strong>: 54 bytes de cabeceras para 75 de
+                             contenido, casi la mitad del total. Muy lejos del 4 % de sobrecarga que calculamos el
+                             martes.</p>
+                             <p>No hay contradicción: aquel 4 % era para una trama <strong>llena</strong>, de 1518
+                             bytes. Las cabeceras son de tamaño fijo, así que cuanto más pequeño es el mensaje, más
+                             pesan. Es justo lo que respondí en el ejercicio de los 100 bytes, ahora comprobado en una
+                             trama de verdad.</p>`,
+                    rubrica: [
+                        'Hace la resta y da el número de bytes de HTTP',
+                        'Comprueba el resultado con el Total Length del bloque IP',
+                        'Observa que la proporción de cabeceras es aquí mucho mayor',
+                        'Explica que no contradice el 4 % porque aquel era para tramas llenas'
+                    ],
+                    pistas: [
+                        'Total menos las tres cabeceras.',
+                        'El Total Length de IP no incluye la cabecera Ethernet.',
+                        'Compara la proporción con la del ejercicio del martes y explica la diferencia.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>h)</strong> La cabecera TCP mide 20 bytes en el GET pero <strong>32</strong> en el SYN. ¿Por qué?',
+                    opciones: {
+                        a: 'Es un error de Wireshark',
+                        b: 'Los 20 bytes son el mínimo: el SYN añade 12 bytes de opciones para negociar la conexión',
+                        c: 'El SYN lleva datos dentro',
+                        d: 'Porque el SYN va sin cabecera IP'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La cabecera TCP tiene <strong>20 bytes obligatorios y hasta 40 de opciones</strong>. En el saludo se usan para negociar el <strong>MSS</strong> que calculaste el martes, entre otras cosas. Aquel «TCP son 20 bytes» era una simplificación razonable, y esta es la letra pequeña.',
+                    pistas: [
+                        '¿Qué tiene de especial la primera trama de una conexión?',
+                        '¿Qué se negocia justo al abrirla?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Encuentra el estándar',
+            tiempo: '12 min',
+            enunciado: '<p>El bloque que une el laboratorio con la teoría de hoy: cada campo lo definió alguien.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada campo de tu captura con quién lo define.',
+                    izquierda: [
+                        'El formato de la trama Ethernet',
+                        'Los 20 bytes de la cabecera IP',
+                        'El nombre del fabricante tras el OUI',
+                        'Que el puerto de destino sea el 80',
+                        'El texto GET / HTTP/1.1'
+                    ],
+                    derecha: [
+                        'IEEE, norma 802.3',
+                        'IETF, RFC 791',
+                        'IEEE, registro de OUI',
+                        'IANA, registro de puertos',
+                        'IETF, RFC 9110-9112'
+                    ],
+                    pares: {
+                        'El formato de la trama Ethernet': 'IEEE, norma 802.3',
+                        'Los 20 bytes de la cabecera IP': 'IETF, RFC 791',
+                        'El nombre del fabricante tras el OUI': 'IEEE, registro de OUI',
+                        'Que el puerto de destino sea el 80': 'IANA, registro de puertos',
+                        'El texto GET / HTTP/1.1': 'IETF, RFC 9110-9112'
+                    },
+                    explicacion: 'La regla del día, comprobada en una sola trama: lo de <strong>capas 1 y 2 es del IEEE</strong>, lo de <strong>capas 3 a 7 es de la IETF</strong> y los <strong>números repartidos</strong> son de IANA. Dos entradas del IEEE, dos de la IETF y una de IANA.',
+                    pistas: [
+                        'Dos filas corresponden al mismo organismo, aunque a documentos distintos.',
+                        'Solo una es de IANA, y no define ningún formato: reparte un número.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> En el bloque IP aparece <code>Protocol: TCP (6)</code>. ¿Qué es ese 6 y quién lo decidió?',
+                    opciones: {
+                        a: 'La versión de TCP; la decide el IEEE',
+                        b: 'El número que identifica a TCP dentro de la cabecera IP, del registro de IANA',
+                        c: 'El número de saltos que ha dado el paquete',
+                        d: 'Un identificador que elige el sistema operativo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Sin ese número, el destino no sabría si lo que hay tras la cabecera IP es TCP, UDP o ICMP. Es el mismo mecanismo que el <strong>EtherType 0x0800</strong> de la capa 2: cada capa deja escrito qué protocolo viene encima.',
+                    pistas: [
+                        'Compáralo con el campo Type de Ethernet, que valía 0x0800.'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa la regla de reparto.',
+                    frase: 'Lo relacionado con cables y tramas, es decir las capas 1 y 2, lo define el {{0}}. Los protocolos que viajan por Internet, de la capa 3 a la 7, los define la {{1}} en documentos llamados {{2}}. Y el reparto de números para que no se repitan lo lleva {{3}}.',
+                    respuestas: [
+                        ['ieee'],
+                        ['ietf'],
+                        ['rfc', 'rfcs'],
+                        ['iana']
+                    ],
+                    explicacion: 'Con esta regla se resuelve casi cualquier pregunta de examen sobre organismos, sin memorizar listas.',
+                    pistas: [
+                        'Los cuatro son siglas de cuatro o cinco letras.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre',
+            tiempo: '16 min',
+            enunciado: '<p>Lo que te llevas del laboratorio y de la semana.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Por qué el laboratorio usa <code>http://</code> y no <code>https://</code>?',
+                    opciones: {
+                        a: 'Porque HTTPS no se puede capturar',
+                        b: 'Porque con HTTPS el contenido va cifrado y no se leería, aunque las cabeceras de abajo se verían igual',
+                        c: 'Porque Wireshark no entiende el puerto 443',
+                        d: 'Porque HTTP es más moderno'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La captura de HTTPS funciona perfectamente: se ven las MAC, las IP, los puertos y el tamaño de todo. Lo único ilegible es el <strong>contenido</strong>, que es exactamente lo que TLS pretende. Y eso, en sí mismo, dice mucho sobre en qué capa actúa el cifrado.',
+                    pistas: [
+                        '¿Qué es lo que cifra TLS y qué deja al descubierto?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>b)</strong> Ver una trama real, ¿te ha cambiado algo de lo que creías entender? Sé concreto: cita al menos <strong>dos</strong> cosas que solo se aprecian mirando bytes.',
+                    modelo: `<p><strong>1. Los 20 bytes de TCP son un mínimo, no una constante.</strong> En el GET son
+                             20, pero en el SYN son <strong>32</strong>, porque el saludo lleva opciones para negociar
+                             el MSS y otras cosas. Sobre el papel eso no aparece: la teoría da un número redondo y uno
+                             asume que siempre es así.</p>
+                             <p><strong>2. El bit DF va activado siempre.</strong> El martes lo puse a mano con
+                             <code>ping -f</code> y parecía un truco para forzar un experimento. Aquí se ve que el
+                             tráfico normal ya lo lleva: descartar y descubrir el MTU es lo habitual, no la
+                             excepción.</p>
+                             <p><strong>3. La proporción de cabeceras depende del tamaño.</strong> En esta trama son
+                             54 bytes de envoltorio para 75 de contenido: casi la mitad. Muy lejos del 4 % que
+                             calculamos para una trama llena. Sabía la teoría, pero verlo en un caso real le da otra
+                             dimensión.</p>
+                             <p><strong>4. La MAC de destino es la del router.</strong> Lo había estudiado, pero
+                             leerlo con el nombre del fabricante de mi propio router al lado es lo que ha hecho que
+                             se me quede.</p>
+                             <p>En general, lo que más me ha cambiado es darme cuenta de que la teoría
+                             <strong>simplifica</strong>, y que hace falta mirar la realidad para saber
+                             <em>dónde</em> simplifica. No es que estuviera mal: es que un modelo, por definición,
+                             deja cosas fuera.</p>`,
+                    rubrica: [
+                        'Cita al menos dos observaciones concretas de la captura',
+                        'Al menos una corrige o matiza algo estudiado antes',
+                        'Usa números reales de su propia captura',
+                        'Extrae una conclusión propia sobre teoría y práctica'
+                    ],
+                    pistas: [
+                        'Compara el tamaño de la cabecera TCP entre dos tramas distintas.',
+                        '¿Esperabas ver el bit DF activado?',
+                        'Fíjate en la proporción entre cabeceras y contenido.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Mañana es viernes de evaluación. ¿Qué dos tablas conviene repasar?',
+                    opciones: {
+                        a: 'La de organismos y la de puertos',
+                        b: 'La correspondencia OSI ↔ TCP/IP y los tamaños de cabecera',
+                        c: 'La de topologías y la de medios',
+                        d: 'Ninguna: el test es de razonamiento'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Son las dos que atraviesan toda la semana y las que más aparecen en el test. La de organismos también entra, pero se resuelve con la regla IEEE / IETF / IANA en lugar de memorizando.',
+                    pistas: [
+                        '¿Qué dos cosas has usado los cuatro días?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

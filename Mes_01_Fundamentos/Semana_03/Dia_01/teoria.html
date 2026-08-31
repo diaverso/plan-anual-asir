@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Por qué se divide en capas: el modelo OSI (1 a 3)</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 1 — Por qué se divide en capas</h1>
+        <p>El modelo OSI y sus tres capas inferiores: física, enlace y red</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 3</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 62 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 24 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esto no se lee, se trabaja</strong>
+            Hay <strong>cuatro paradas</strong> de escritura y un laboratorio en el que vas a
+            <strong>situar en su capa cada cosa que ya sabes hacer</strong>: los comandos de las dos semanas
+            anteriores, ordenados por el nivel al que pertenecen.
+        </div>
+
+        <div class="destacado">
+            <strong>La semana que lo ordena todo</strong>
+            Llevas dos semanas acumulando piezas: tarjetas, cables, direcciones MAC, direcciones IP, puertos,
+            servicios. Las has estudiado por separado, como si fueran temas independientes.
+            <br><br>
+            No lo son. Son <strong>capas</strong> de una misma arquitectura, y esta semana descubres el mapa que las
+            coloca a todas en su sitio. A partir de aquí, cada cosa nueva del curso tendrá una capa asignada.
+            <br><br>
+            <em>Nota de alcance:</em> hoy se ven las <strong>tres capas inferiores</strong>. Las cuatro superiores y
+            la encapsulación son mañana; TCP/IP, el miércoles.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#problema">El problema que resuelven las capas</a></li>
+                <li><a href="#ventajas">Qué se gana al dividir en capas</a></li>
+                <li><a href="#osi">El modelo OSI: las siete capas</a></li>
+                <li><a href="#capa1">Capa 1 — Física</a></li>
+                <li><a href="#capa2">Capa 2 — Enlace de datos</a></li>
+                <li><a href="#capa3">Capa 3 — Red</a></li>
+                <li><a href="#yasabias">Lo que ya sabías, colocado en su capa</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="problema">1. El problema que resuelven las capas</h2>
+
+            <p>Imagina que tienes que escribir, desde cero, el programa que permite a dos ordenadores comunicarse.
+            Tendrías que resolver <strong>a la vez</strong> problemas que no tienen nada que ver entre sí:</p>
+
+            <ul>
+                <li>Cómo convertir un 1 en un voltaje, y cómo distinguirlo del ruido.</li>
+                <li>Cómo saber cuándo puedes transmitir sin pisar a otro equipo.</li>
+                <li>Cómo encontrar el camino hasta un ordenador que está en otro país.</li>
+                <li>Cómo darte cuenta de que se ha perdido un trozo y pedirlo otra vez.</li>
+                <li>Cómo representar una letra ñ para que llegue siendo una ñ.</li>
+                <li>Y qué significa todo eso para la aplicación del usuario.</li>
+            </ul>
+
+            <div class="aviso">
+                <strong>Por qué eso es inviable</strong>
+                Un programa así sería gigantesco, imposible de depurar y, sobre todo, <strong>habría que reescribirlo
+                entero cada vez que cambiara cualquier cosa</strong>.
+                <br><br>
+                ¿Cambias de cable de cobre a fibra? A reescribir. ¿Pasas de Wi-Fi a Ethernet? A reescribir. ¿Aparece
+                un protocolo nuevo? A reescribir. Y todo el que quisiera fabricar hardware de red tendría que
+                implementar la pila completa él solo.
+            </div>
+
+            <h3>La solución: separar en niveles independientes</h3>
+
+            <p>La respuesta lleva décadas siendo la misma en informática: <strong>partir el problema grande en
+            problemas pequeños e independientes</strong>, y hacer que cada uno hable solo con sus vecinos.</p>
+
+            <p>Cada nivel —cada <strong>capa</strong>— hace un trabajo concreto, y le ofrece un <strong>servicio</strong>
+            a la capa de encima sin contarle cómo lo consigue.</p>
+
+<figure class="figura">
+                <img src="../../../imagenes/m01_s03_d01_servicio_entre_capas.png"
+                     width="1400" height="788" loading="lazy"
+                     alt="Dos capas apiladas. La de arriba pide «Envía esto a 93.184.216.34» y una flecha baja hacia la de abajo, que responde eligiendo la ruta, troceando y señalizando. La frontera entre ambas es la interfaz.">
+                <figcaption>La capa de arriba pide un servicio; la de abajo decide cómo prestarlo.</figcaption>
+            </figure>
+
+            <pre><code>  Capa de arriba     "Envía esto a 93.184.216.34"
+        ↓                        no le importa cómo
+  Capa de abajo      se encarga: elige ruta, trocea, señaliza...</code></pre>
+
+            <div class="destacado">
+                <strong>La analogía que funciona: enviar un paquete</strong>
+                Cuando mandas un paquete por mensajería, tú escribes la dirección y lo entregas. <strong>No sabes ni
+                te importa</strong> si viajará en furgoneta, en tren o en avión, ni por qué almacenes pasará.
+                <br><br>
+                La empresa de transporte, por su parte, <strong>no abre tu paquete</strong>: no necesita saber qué
+                llevas dentro para entregarlo. Cada uno hace su trabajo y confía en el otro.
+                <br><br>
+                Eso es exactamente una arquitectura de capas: <strong>servicios bien definidos y contenidos
+                opacos</strong>.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="ventajas">2. Qué se gana al dividir en capas</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ventaja</th><th>En qué se nota</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Se puede cambiar una capa sin tocar las demás</strong></td>
+                        <td>Pasar de cobre a fibra cambia la capa 1. El navegador ni se entera</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Varios fabricantes pueden colaborar</strong></td>
+                        <td>Una tarjeta de una marca funciona con un switch de otra y un router de una tercera</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Se puede estudiar y depurar por partes</strong></td>
+                        <td>Es lo que llevas haciendo: «¿falla el cable o falla el DNS?»</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Se pueden reutilizar las capas de abajo</strong></td>
+                        <td>El correo, la web y una videollamada usan la misma capa 3 sin saber unos de otros</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Ya has usado esto sin saberlo</strong>
+                <p>La <strong>prueba de los dos ping</strong> del Día 5 de la Semana 2 —ping a una IP y ping a un
+                nombre— funciona <em>precisamente</em> porque las capas son independientes.</p>
+                <p>Al hacer ping a una dirección numérica saltas la resolución de nombres y ejercitas solo las capas
+                de abajo. Si responde, todas ellas están bien y el fallo está más arriba. Estabas
+                <strong>depurando por capas</strong> antes de saber que existían.</p>
+            </div>
+
+            <h2 id="osi">3. El modelo OSI: las siete capas</h2>
+
+            <p>El modelo <strong>OSI</strong> (<em>Open Systems Interconnection</em>) lo publicó la <strong>ISO</strong>
+            en 1984 como estándar internacional para que sistemas de fabricantes distintos pudieran entenderse.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Capa</th><th>De qué se encarga</th><th>Ejemplo que ya conoces</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>7</strong></td><td><strong>Aplicación</strong></td><td>El servicio que usa la persona</td><td>HTTP, DNS, SMTP</td></tr>
+                    <tr><td><strong>6</strong></td><td><strong>Presentación</strong></td><td>Formato, cifrado, compresión</td><td>TLS, UTF-8, JPEG</td></tr>
+                    <tr><td><strong>5</strong></td><td><strong>Sesión</strong></td><td>Abrir, mantener y cerrar el diálogo</td><td>Sesiones de inicio de sesión</td></tr>
+                    <tr><td><strong>4</strong></td><td><strong>Transporte</strong></td><td>Entrega extremo a extremo y <strong>puertos</strong></td><td>TCP, UDP</td></tr>
+                    <tr><td><strong>3</strong></td><td><strong>Red</strong></td><td>Direccionar y <strong>encaminar</strong> entre redes</td><td><strong>IP</strong>, el router</td></tr>
+                    <tr><td><strong>2</strong></td><td><strong>Enlace de datos</strong></td><td>Entrega dentro de <em>un</em> enlace, <strong>MAC</strong></td><td><strong>Ethernet</strong>, el switch</td></tr>
+                    <tr><td><strong>1</strong></td><td><strong>Física</strong></td><td>Bits sobre el medio: voltajes, luz, radio</td><td><strong>Cable UTP</strong>, fibra, RJ45</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Se numeran de abajo arriba</strong>
+                La capa <strong>1 es la de abajo</strong> (el cable) y la <strong>7 la de arriba</strong> (la
+                aplicación). Cuando alguien dice «esto es un problema de capa 2» se refiere al switch o a las MAC;
+                «de capa 3», al router o a las IP.
+                <br><br>
+                Ese vocabulario se usa a diario en el trabajo. Un «switch de capa 3» es un switch que además sabe
+                enrutar; un «cortafuegos de capa 7» es uno que entiende de HTTP y no solo de puertos.
+            </div>
+
+            <h3>Cómo memorizarlas</h3>
+
+            <div class="dato">
+                <strong>De abajo arriba, con una frase</strong>
+<figure class="figura">
+                <img src="../../../imagenes/m01_s03_d01_pila_osi_alcance.png"
+                     width="1086" height="1448" loading="lazy"
+                     alt="Las siete capas de OSI apiladas, de la física abajo a la aplicación arriba. A la derecha, tres llaves marcan el alcance: las capas 1 y 2 llegan a un solo salto, la 3 de extremo a extremo entre equipos y la 4 de programa a programa.">
+                <figcaption>Las siete capas y, a la derecha, hasta dónde llega cada una.</figcaption>
+            </figure>
+
+            <pre><code>  F  E  R  T  S  P  A
+  │  │  │  │  │  │  └── Aplicación
+  │  │  │  │  │  └───── Presentación
+  │  │  │  │  └──────── Sesión
+  │  │  │  └─────────── Transporte
+  │  │  └────────────── Red
+  │  └───────────────── Enlace
+  └──────────────────── Física
+
+  «Feo Enano Rojo Trepa Sin Parar Arriba»</code></pre>
+                <p>Lo importante no es la frase, sino que <strong>no dudes del orden</strong>: en un examen se
+                pregunta constantemente qué capa va antes que cuál.</p>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="capa1">4. Capa 1 — Física</h2>
+
+            <p>La capa más baja. Su único trabajo es <strong>poner bits en el medio y recuperarlos al otro
+            lado</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Capa física</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Unidad de datos</th><td><strong>Bit</strong></td></tr>
+                    <tr><th scope="row">De qué se ocupa</th><td>Voltajes, frecuencias, luz, conectores, pines, distancias</td></tr>
+                    <tr><th scope="row">Qué NO sabe</th><td><strong>Nada</strong> del significado. No sabe qué es una dirección, ni dónde empieza un mensaje</td></tr>
+                    <tr><th scope="row">Dispositivos</th><td>Cables, conectores RJ45, transceptores, <strong>hubs</strong>, repetidores</td></tr>
+                    <tr><th scope="row">Tú ya viste</th><td>Par trenzado, categorías, T568A/B, los 100 m, fibra</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Por qué el hub es un dispositivo de capa 1</strong>
+                Un hub <strong>repite bits eléctricamente</strong> por todos sus puertos. No lee direcciones, no
+                decide nada, no entiende lo que copia: solo amplifica y reenvía señal.
+                <br><br>
+                Por eso no puede separar dominios de colisión, como viste en la Semana 1: para separarlos habría que
+                <em>entender</em> las tramas, y eso ya es capa 2.
+            </div>
+
+            <h2 id="capa2">5. Capa 2 — Enlace de datos</h2>
+
+            <p>La capa 2 convierte un medio en bruto en un <strong>enlace fiable entre dos vecinos</strong>. Su
+            alcance es <strong>un solo salto</strong>: de aquí al aparato de al lado, no más.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Capa de enlace</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Unidad de datos</th><td><strong>Trama</strong> (<em>frame</em>)</td></tr>
+                    <tr><th scope="row">Direccionamiento</th><td><strong>Dirección MAC</strong>, 48 bits</td></tr>
+                    <tr><th scope="row">Alcance</th><td><strong>Un enlace</strong>: la red local, un salto</td></tr>
+                    <tr><th scope="row">De qué se ocupa</th><td>Delimitar dónde empieza y acaba la trama, control de acceso al medio, detección de errores</td></tr>
+                    <tr><th scope="row">Dispositivos</th><td><strong>Switch</strong>, puente, y la propia <strong>NIC</strong></td></tr>
+                    <tr><th scope="row">Ejemplos</th><td>Ethernet (802.3), Wi-Fi (802.11), PPP</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Sus dos subcapas</h3>
+
+            <p>La capa 2 se divide en dos mitades, y la distinción se pregunta en examen:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Subcapa</th><th>Qué hace</th><th>Mira hacia…</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>LLC</strong><br><em>Logical Link Control</em></td>
+                        <td>Habla con la capa 3 y le da igual qué hay debajo</td>
+                        <td><strong>Arriba</strong>, a la capa de red</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MAC</strong><br><em>Media Access Control</em></td>
+                        <td>Decide <strong>cuándo</strong> se transmite y pone las direcciones físicas</td>
+                        <td><strong>Abajo</strong>, al medio concreto</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Para qué sirve esa división</strong>
+                <p>Gracias a la <strong>LLC</strong>, la capa 3 puede funcionar igual sobre Ethernet, sobre Wi-Fi o
+                sobre fibra: el detalle de cada medio se queda encapsulado en la subcapa <strong>MAC</strong>.</p>
+                <p>Es la idea de capas aplicada <em>dentro</em> de una capa. Y explica por qué tu portátil pasa del
+                cable al Wi-Fi sin que ninguna aplicación se entere.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Detección, no corrección</strong>
+                Ethernet añade al final de cada trama un código de comprobación (<strong>FCS</strong>) que permite
+                <strong>detectar</strong> si la trama llegó corrompida. Si está mal, la <strong>descarta</strong>.
+                <br><br>
+                Lo que <em>no</em> hace es pedir que se la reenvíen: eso es trabajo de capas superiores. La capa 2 se
+                limita a no entregar basura hacia arriba.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="capa3">6. Capa 3 — Red</h2>
+
+            <p>La capa 3 es la que hace posible <strong>Internet</strong>: comunicar equipos que <em>no</em> están en
+            la misma red local, atravesando redes intermedias.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Capa de red</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Unidad de datos</th><td><strong>Paquete</strong></td></tr>
+                    <tr><th scope="row">Direccionamiento</th><td><strong>Dirección IP</strong>, jerárquica</td></tr>
+                    <tr><th scope="row">Alcance</th><td><strong>Extremo a extremo</strong>, por muchas redes</td></tr>
+                    <tr><th scope="row">De qué se ocupa</th><td><strong>Encaminar</strong>: elegir por dónde sale cada paquete</td></tr>
+                    <tr><th scope="row">Dispositivo</th><td><strong>Router</strong></td></tr>
+                    <tr><th scope="row">Ejemplos</th><td>IP, ICMP (el del <code>ping</code>), ARP</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La diferencia entre capa 2 y capa 3, en una frase</strong>
+                La <strong>capa 2 entrega dentro de una red</strong>. La <strong>capa 3 entrega entre redes</strong>.
+                <br><br>
+                Por eso, como viste en la Semana 2, las <strong>MAC cambian en cada salto</strong> —son de capa 2, y
+                cada salto es un enlace distinto— mientras que las <strong>IP no cambian nunca</strong>: son de capa 3
+                e identifican a los extremos del trayecto completo.
+                <br><br>
+                Aquella regla que memorizaste ahora tiene una explicación: no es un capricho, es la consecuencia
+                directa de a qué capa pertenece cada dirección.
+            </div>
+
+            <details>
+                <summary>💡 Ampliación: ¿de qué capa es exactamente ARP?</summary>
+                <p>Es la pregunta trampa clásica, y admite discusión. <strong>ARP</strong> traduce una dirección de
+                <em>capa 3</em> (IP) en una de <em>capa 2</em> (MAC), así que vive justo en la frontera.</p>
+                <p>La respuesta más habitual en los exámenes es <strong>capa 3</strong>, o «entre la 2 y la 3». Otros
+                lo sitúan en capa 2 porque sus mensajes viajan directamente en tramas Ethernet, sin cabecera IP.</p>
+                <p>Si te lo preguntan, la respuesta segura es: <em>«hace de puente entre la capa 2 y la 3»</em>, y
+                explicar por qué. Lo verás a fondo en la Semana 22.</p>
+            </details>
+
+            <h2 id="yasabias">7. Lo que ya sabías, colocado en su capa</h2>
+
+            <p>Esta tabla es el objetivo del día. Todo lo de las dos semanas anteriores, en su sitio:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>Lo que estudiaste</th><th>Dónde</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>3 · Red</strong></td>
+                        <td>Direcciones IP, públicas y privadas, NAT, puerta de enlace, <code>ping</code>, <code>tracert</code></td>
+                        <td>S1 D4 · S2 D1</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2 · Enlace</strong></td>
+                        <td>Direcciones MAC, OUI, tabla ARP, switch, dominios de colisión, CSMA/CD, dúplex</td>
+                        <td>S1 D2 · S1 D6 · S2 D1</td>
+                    </tr>
+                    <tr>
+                        <td><strong>1 · Física</strong></td>
+                        <td>Par trenzado, categorías, RJ45, T568A/B, fibra, los 100 m, hub, señal y ruido</td>
+                        <td>S1 D3 · S2 D2</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Y la NIC ocupa dos capas</strong>
+                <p>En el Día 1 de la Semana 2 se dijo que la tarjeta de red trabaja «a caballo entre dos capas».
+                Ahora ya se puede decir con precisión:</p>
+                <ul>
+                    <li><strong>Capa 1</strong>: conexión física y conversión de señal.</li>
+                    <li><strong>Capa 2</strong>: direccionamiento MAC y control de acceso al medio.</li>
+                </ul>
+                <p>Sus cuatro funciones se reparten exactamente dos y dos.</p>
+            </div>
+
+            <div data-checkpoint="3"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Las capas existen para poder <strong>cambiar una sin tocar las demás</strong> y para que
+                    varios fabricantes colaboren.</li>
+                    <li>OSI tiene <strong>7 capas</strong>, numeradas <strong>de abajo arriba</strong>: Física,
+                    Enlace, Red, Transporte, Sesión, Presentación, Aplicación.</li>
+                    <li><strong>Capa 1</strong>: bits, cables, hub. No entiende nada de lo que transporta.</li>
+                    <li><strong>Capa 2</strong>: <strong>tramas</strong>, direcciones <strong>MAC</strong>, switch.
+                    Alcance de <strong>un salto</strong>. Se divide en <strong>LLC</strong> (mira arriba) y
+                    <strong>MAC</strong> (mira abajo).</li>
+                    <li><strong>Capa 3</strong>: <strong>paquetes</strong>, direcciones <strong>IP</strong>, router.
+                    Alcance <strong>extremo a extremo</strong>.</li>
+                    <li>Capa 2 entrega <strong>dentro</strong> de una red; capa 3, <strong>entre</strong> redes. De
+                    ahí que las MAC cambien en cada salto y las IP no.</li>
+                    <li>Ethernet <strong>detecta</strong> errores con el FCS y descarta, pero <strong>no
+                    corrige</strong>.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«La capa 1 es la de arriba»</td><td>Es la de <strong>abajo</strong>: el cable. La 7 es la aplicación</td></tr>
+                    <tr><td>«El switch trabaja en capa 3»</td><td>Un switch normal es de <strong>capa 2</strong>: mira MAC, no IP</td></tr>
+                    <tr><td>«El hub es un switch pequeño»</td><td>El hub es de <strong>capa 1</strong>: repite bits sin entender nada</td></tr>
+                    <tr><td>«Trama y paquete son lo mismo»</td><td><strong>Trama</strong> es capa 2; <strong>paquete</strong> es capa 3</td></tr>
+                    <tr><td>«Ethernet corrige los errores»</td><td>Solo los <strong>detecta</strong> y descarta la trama</td></tr>
+                    <tr><td>«OSI es lo que usa Internet»</td><td>Internet usa <strong>TCP/IP</strong>. OSI es el modelo de referencia (miércoles)</td></tr>
+                    <tr><td>«La MAC y la IP hacen lo mismo»</td><td>Capas distintas: la MAC llega al vecino, la IP al otro extremo del mundo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 22 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>situar en su capa cada comando</strong> que ya sabes usar, comprobando en tu equipo qué
+            información devuelve cada nivel, y a diagnosticar una avería subiendo capa por capa.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 1</strong></a> (64 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 2</strong>
+            <p>Las <strong>cuatro capas de arriba</strong> —transporte, sesión, presentación y aplicación— y, sobre
+            todo, la <strong>encapsulación</strong>: cómo un dato va bajando de capa en capa poniéndose cabeceras, y
+            cómo se las quita al llegar.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> si un fichero de 1 MB se envía por la red, ¿crees que por el
+            cable viaja exactamente 1 MB, más, o menos? Piensa por qué.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_02/Dia_07/teoria.html">← Semana 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Explica <strong>con tus palabras</strong> por qué sería mala idea programar la comunicación de red como un único bloque, sin capas. Usa un ejemplo de algo que cambie.',
+                modelo: `<p>Porque cualquier cambio, por pequeño que fuera, obligaría a <strong>reescribirlo
+                         todo</strong>.</p>
+                         <p>Piensa en pasar de cable de cobre a fibra óptica. Con capas, eso solo afecta a la
+                         <strong>capa 1</strong>: cambian los voltajes por pulsos de luz, y nada más. El navegador, el
+                         protocolo de transporte y el direccionamiento IP siguen exactamente igual, porque ninguno
+                         sabe ni le importa por dónde viajan los bits.</p>
+                         <p>Sin capas, el mismo cambio tocaría el bloque entero, porque la parte que enciende un
+                         voltaje estaría enredada con la que decide la ruta y con la que dibuja la página. Habría que
+                         volver a probarlo todo y podría romperse cualquier cosa.</p>
+                         <p>Hay una segunda razón, tan importante como la primera: <strong>nadie podría fabricar solo
+                         una pieza</strong>. Hoy una tarjeta de red de una marca funciona con un switch de otra y un
+                         router de una tercera porque cada uno implementa unas capas concretas y respeta los servicios
+                         que ofrece a las vecinas. Sin esa separación, cada fabricante tendría que hacer la pila
+                         completa y nada sería compatible con nada.</p>
+                         <p>Y una tercera, muy práctica: <strong>no se podría diagnosticar</strong>. Preguntas como
+                         «¿falla el cable o falla el DNS?» solo tienen sentido si el problema está dividido en niveles
+                         que se pueden comprobar por separado.</p>`,
+                puntos: [
+                    'Cualquier cambio obligaría a reescribirlo todo',
+                    'Pone un ejemplo concreto, como pasar de cobre a fibra',
+                    'Explica que ese cambio solo afecta a la capa 1',
+                    'Menciona que varios fabricantes pueden colaborar gracias a las capas',
+                    'Añade que sin capas no se podría diagnosticar por partes'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Escribe las <strong>siete capas de OSI en orden</strong>, de la 1 a la 7, y al lado de cada una algo concreto que ya hayas estudiado.',
+                modelo: `<p>De abajo arriba, que es como se numeran:</p>
+                         <ol>
+                           <li><strong>Física</strong> — el cable UTP, las categorías, el conector RJ45, la fibra, el
+                           límite de 100 m, el hub.</li>
+                           <li><strong>Enlace de datos</strong> — las direcciones MAC, el OUI, la tabla ARP, el
+                           switch, los dominios de colisión, CSMA/CD.</li>
+                           <li><strong>Red</strong> — las direcciones IP, públicas y privadas, el NAT, la puerta de
+                           enlace, el router, <code>ping</code> y <code>tracert</code>.</li>
+                           <li><strong>Transporte</strong> — TCP y UDP, y los <strong>puertos</strong>: 22, 53, 80,
+                           443.</li>
+                           <li><strong>Sesión</strong> — abrir y mantener un diálogo; lo veré mañana.</li>
+                           <li><strong>Presentación</strong> — formato y cifrado: TLS, UTF-8.</li>
+                           <li><strong>Aplicación</strong> — HTTP, DNS, SMTP: los servicios que usa la persona.</li>
+                         </ol>
+                         <p>La regla para no perderse: <strong>la 1 es la de abajo</strong>, la del cable, y se sube
+                         hasta la 7, que es la del usuario. Una frase que ayuda: <em>«Feo Enano Rojo Trepa Sin Parar
+                         Arriba»</em>.</p>
+                         <p>Lo importante no es recitar los nombres, sino no dudar del <strong>orden</strong>: en los
+                         exámenes se pregunta constantemente qué capa está por encima o por debajo de cuál.</p>`,
+                puntos: [
+                    'Las siete en el orden correcto, del 1 al 7',
+                    'Empieza por Física y termina por Aplicación',
+                    'Asocia ejemplos concretos a las capas 1, 2 y 3',
+                    'Sitúa los puertos en la capa 4',
+                    'Señala que la numeración va de abajo arriba'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Un compañero pregunta: «si la MAC ya identifica a cada tarjeta del mundo, ¿por qué hace falta la capa 3?». Respóndele <strong>usando el concepto de alcance</strong>.',
+                modelo: `<p>Porque las dos direcciones tienen <strong>alcances distintos</strong>, y ese es justo el
+                         motivo de que sean capas separadas.</p>
+                         <p>La <strong>capa 2 entrega dentro de una red</strong>: su alcance es <strong>un solo
+                         salto</strong>, del equipo al aparato que tiene al lado. La MAC sirve para eso y solo para
+                         eso. Es un identificador <strong>plano</strong>: dice quién eres, pero no dónde estás.</p>
+                         <p>La <strong>capa 3 entrega entre redes</strong>: su alcance es <strong>extremo a
+                         extremo</strong>, atravesando todas las redes que hagan falta. Y para eso hace falta una
+                         dirección <strong>jerárquica</strong>, que se pueda agrupar: la IP se divide en parte de red
+                         y parte de host, así que un router guarda una sola entrada para toda una red en vez de una
+                         por equipo.</p>
+                         <p>Esto explica una regla que ya conocía pero que hasta ahora era pura memorización:
+                         <strong>las MAC cambian en cada salto y las IP no cambian nunca</strong>. No es un capricho:
+                         las MAC son de capa 2 y cada salto es un enlace nuevo, así que se reescriben; las IP son de
+                         capa 3 e identifican los extremos del trayecto completo, así que se mantienen.</p>
+                         <p>Dicho corto: <strong>la MAC te lleva hasta el vecino; la IP, hasta el otro lado del
+                         mundo</strong>. Hacen falta las dos porque resuelven problemas distintos.</p>`,
+                puntos: [
+                    'Distingue el alcance: un salto frente a extremo a extremo',
+                    'Explica que la MAC es plana y la IP jerárquica',
+                    'Relaciona la jerarquía con el tamaño de las tablas de rutas',
+                    'Deduce por qué las MAC cambian en cada salto y las IP no',
+                    'Cierra con una frase que resuma la diferencia'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 4.</strong> Sitúa en su capa estos cuatro elementos y justifica cada uno: un <strong>hub</strong>, un <strong>switch</strong>, un <strong>router</strong> y un <strong>cable Cat 6A</strong>.',
+                modelo: `<p><strong>Cable Cat 6A — capa 1.</strong> Es el medio: transporta señal eléctrica y nada
+                         más. No lee direcciones ni toma decisiones. Todo lo que se estudió sobre él —categorías,
+                         pares, distancia máxima— son propiedades físicas.</p>
+                         <p><strong>Hub — capa 1.</strong> Es la respuesta que más se falla, porque tiene puertos y
+                         parece un switch. Pero el hub <strong>repite bits eléctricamente</strong> por todos sus
+                         puertos sin mirar nada: no entiende qué copia. Por eso no puede separar dominios de
+                         colisión, y por eso desapareció.</p>
+                         <p><strong>Switch — capa 2.</strong> Lee la <strong>dirección MAC de destino</strong> de cada
+                         trama y decide por qué puerto sacarla. Eso ya es entender la estructura de lo que transporta,
+                         y por eso sí separa dominios de colisión: da un enlace punto a punto a cada puerto.</p>
+                         <p><strong>Router — capa 3.</strong> Lee la <strong>dirección IP</strong> y decide hacia qué
+                         red reenviar. Conecta redes distintas, y por eso es la frontera del dominio de difusión: no
+                         deja pasar las tramas de capa 2 dirigidas a todos.</p>
+                         <p>El criterio general que conviene retener: <strong>la capa de un dispositivo es la de la
+                         información más alta que sabe leer</strong>. El hub no lee nada, el switch lee MAC, el router
+                         lee IP. Por eso existen también «switches de capa 3», que son switches que además saben mirar
+                         la IP.</p>`,
+                puntos: [
+                    'Cable y hub en capa 1',
+                    'Switch en capa 2, porque lee direcciones MAC',
+                    'Router en capa 3, porque lee direcciones IP',
+                    'Explica por qué el hub no separa dominios de colisión',
+                    'Formula el criterio: la capa es la de la información más alta que sabe leer'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Para qué sirve dividir la red en <strong>capas</strong>?', dorso: 'Para poder <strong>cambiar una capa sin tocar las demás</strong>, que varios fabricantes colaboren, poder diagnosticar por partes y reutilizar las capas de abajo.' },
+            { frente: 'Las <strong>7 capas de OSI</strong>, de la 1 a la 7', dorso: '<strong>Física · Enlace · Red · Transporte · Sesión · Presentación · Aplicación.</strong> Se numeran de abajo arriba: la 1 es el cable, la 7 el usuario.' },
+            { frente: '¿Qué unidad de datos usa cada una de las tres primeras capas?', dorso: 'Capa 1: <strong>bit</strong>. Capa 2: <strong>trama</strong>. Capa 3: <strong>paquete</strong>.' },
+            { frente: '<strong>Capa 1</strong>: ¿de qué se ocupa y qué dispositivos hay?', dorso: 'De poner <strong>bits</strong> en el medio: voltajes, luz, conectores, distancias. Dispositivos: cables, conectores, transceptores, <strong>hub</strong> y repetidores.' },
+            { frente: '¿Por qué el <strong>hub</strong> es de capa 1?', dorso: 'Porque <strong>repite bits eléctricamente</strong> sin leer direcciones ni entender nada. Por eso no puede separar dominios de colisión.' },
+            { frente: '<strong>Capa 2</strong>: unidad, dirección y alcance', dorso: '<strong>Trama</strong>, dirección <strong>MAC</strong> y alcance de <strong>un solo salto</strong>: dentro de la red local. Su dispositivo es el <strong>switch</strong>.' },
+            { frente: 'Las dos subcapas de la capa 2', dorso: '<strong>LLC</strong>, que habla con la capa 3 y mira hacia arriba, y <strong>MAC</strong>, que decide cuándo transmitir y mira hacia el medio.' },
+            { frente: '¿Ethernet corrige los errores?', dorso: 'No: los <strong>detecta</strong> con el FCS y <strong>descarta</strong> la trama. Pedir la retransmisión es trabajo de capas superiores.' },
+            { frente: '<strong>Capa 3</strong>: unidad, dirección y alcance', dorso: '<strong>Paquete</strong>, dirección <strong>IP</strong> y alcance <strong>extremo a extremo</strong>, atravesando redes. Su dispositivo es el <strong>router</strong>.' },
+            { frente: 'Capa 2 frente a capa 3, en una frase', dorso: 'La capa 2 entrega <strong>dentro</strong> de una red; la capa 3, <strong>entre</strong> redes. La MAC te lleva al vecino; la IP, al otro lado del mundo.' },
+            { frente: '¿Por qué las MAC cambian en cada salto y las IP no?', dorso: 'Porque las MAC son de <strong>capa 2</strong> y cada salto es un enlace nuevo; las IP son de <strong>capa 3</strong> e identifican los <strong>extremos</strong> del trayecto.' },
+            { frente: '¿En qué capa está la tarjeta de red?', dorso: 'En <strong>dos</strong>: capa 1 (conexión física y señal) y capa 2 (direccionamiento MAC y acceso al medio). Sus cuatro funciones se reparten dos y dos.' },
+            { frente: '¿Cómo se decide la capa de un dispositivo?', dorso: 'Por <strong>la información más alta que sabe leer</strong>. Hub: nada. Switch: MAC. Router: IP.' },
+            { frente: '¿Quién publicó el modelo OSI y cuándo?', dorso: 'La <strong>ISO</strong>, en <strong>1984</strong>, para que sistemas de fabricantes distintos pudieran entenderse.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 1 — Por qué se divide en capas',
+        subtitulo: 'Modelo OSI · capas física, enlace y red',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'Por qué capas',
+                repaso: '#ventajas',
+                text: 'Una empresa sustituye todo su cableado de cobre por fibra óptica. ¿Qué capas hay que rehacer?',
+                options: {
+                    a: 'Todas, porque cambia el medio',
+                    b: 'Solo la capa 1: las demás no saben por dónde viajan los bits',
+                    c: 'Las capas 1 y 2',
+                    d: 'De la 1 a la 4'
+                },
+                answer: 'b',
+                feedback: 'Es la ventaja principal de dividir en capas: <strong>se puede cambiar una sin tocar las demás</strong>. El navegador, TCP y el direccionamiento IP siguen exactamente igual.'
+            },
+            {
+                topic: 'Orden de las capas',
+                repaso: '#osi',
+                text: '¿Cuál es el orden correcto, de la capa 1 a la 7?',
+                options: {
+                    a: 'Aplicación, Presentación, Sesión, Transporte, Red, Enlace, Física',
+                    b: 'Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación',
+                    c: 'Física, Red, Enlace, Transporte, Aplicación, Sesión, Presentación',
+                    d: 'Enlace, Física, Red, Sesión, Transporte, Presentación, Aplicación'
+                },
+                answer: 'b',
+                feedback: 'La <strong>1 es la de abajo</strong> (el cable) y la 7 la de arriba (la aplicación). La opción a es el mismo orden pero al revés: de la 7 a la 1.'
+            },
+            {
+                topic: 'Orden de las capas',
+                repaso: '#osi',
+                text: '¿Qué capa está <strong>inmediatamente por encima</strong> de la de red?',
+                options: {
+                    a: 'Enlace de datos',
+                    b: 'Sesión',
+                    c: 'Transporte',
+                    d: 'Presentación'
+                },
+                answer: 'c',
+                feedback: 'Red es la 3 y Transporte la 4. Enlace es la 2, o sea la de <em>debajo</em>. Este tipo de pregunta cae constantemente.'
+            },
+            {
+                topic: 'Capa 1 — Física',
+                repaso: '#capa1',
+                text: 'Un técnico dice que el hub es «un switch sencillo». ¿Qué le corriges?',
+                options: {
+                    a: 'Nada, es una buena descripción',
+                    b: 'Que el hub es de capa 1: repite bits sin leer direcciones, mientras que el switch lee MAC',
+                    c: 'Que el hub es de capa 3',
+                    d: 'Que el hub solo funciona con fibra'
+                },
+                answer: 'b',
+                feedback: 'La diferencia no es de tamaño sino de <strong>capa</strong>. El hub no entiende lo que copia, y por eso no puede separar dominios de colisión.'
+            },
+            {
+                topic: 'Capa 2 — Enlace',
+                repaso: '#capa2',
+                text: '¿Cuál es la unidad de datos de la capa de enlace?',
+                options: {
+                    a: 'Bit',
+                    b: 'Trama',
+                    c: 'Paquete',
+                    d: 'Segmento'
+                },
+                answer: 'b',
+                feedback: 'Bit es capa 1, <strong>trama</strong> capa 2, paquete capa 3 y segmento capa 4. Confundir trama con paquete es el error más repetido del tema.'
+            },
+            {
+                topic: 'Capa 2 — Enlace',
+                repaso: '#capa2',
+                text: 'De las dos subcapas de la capa 2, ¿cuál permite que la capa 3 funcione igual sobre Ethernet que sobre Wi-Fi?',
+                options: {
+                    a: 'La subcapa MAC',
+                    b: 'La subcapa LLC',
+                    c: 'Ninguna: hay que reprogramar la capa 3',
+                    d: 'Las dos por igual'
+                },
+                answer: 'b',
+                feedback: 'La <strong>LLC</strong> mira hacia arriba y ofrece a la capa 3 una interfaz común. El detalle de cada medio se queda encapsulado en la subcapa <strong>MAC</strong>, que mira hacia abajo.'
+            },
+            {
+                topic: 'Capa 2 — Enlace',
+                repaso: '#capa2',
+                text: 'Una trama llega corrompida y el FCS no cuadra. ¿Qué hace Ethernet?',
+                options: {
+                    a: 'La corrige con los bits de paridad',
+                    b: 'La descarta, sin pedir retransmisión',
+                    c: 'La entrega igualmente a la capa 3',
+                    d: 'Reinicia el enlace'
+                },
+                answer: 'b',
+                feedback: 'Ethernet <strong>detecta pero no corrige</strong>. Se limita a no entregar basura hacia arriba; recuperar lo perdido es trabajo de capas superiores.'
+            },
+            {
+                topic: 'Capa 3 — Red',
+                repaso: '#capa3',
+                text: '¿Cuál es el alcance de la capa 3, frente al de la capa 2?',
+                options: {
+                    a: 'Ambas llegan de extremo a extremo',
+                    b: 'La capa 2 llega de extremo a extremo y la 3 solo a un salto',
+                    c: 'La capa 2 llega a un salto y la 3 de extremo a extremo, entre redes',
+                    d: 'Ambas se limitan a la red local'
+                },
+                answer: 'c',
+                feedback: 'La capa 2 entrega <strong>dentro</strong> de una red; la capa 3, <strong>entre</strong> redes. De ahí que las MAC cambien en cada salto y las IP no.'
+            },
+            {
+                topic: 'Capa 3 — Red',
+                repaso: '#capa3',
+                text: '¿Por qué la dirección IP puede encaminar y la MAC no?',
+                options: {
+                    a: 'Porque la IP es más larga',
+                    b: 'Porque la IP es jerárquica (red + host) y permite agrupar; la MAC es plana',
+                    c: 'Porque la MAC se puede falsificar',
+                    d: 'Porque la MAC solo existe en Wi-Fi'
+                },
+                answer: 'b',
+                feedback: 'Con direcciones planas un router necesitaría una entrada por cada interfaz del planeta. La jerarquía permite una sola ruta para toda una red.'
+            },
+            {
+                topic: 'Situar en su capa',
+                repaso: '#yasabias',
+                text: 'La <strong>tabla ARP</strong> que consultaste en la Semana 2, ¿con qué capas tiene que ver?',
+                options: {
+                    a: 'Solo con la capa 1',
+                    b: 'Con la frontera entre la capa 2 y la capa 3: traduce una IP en una MAC',
+                    c: 'Solo con la capa 4',
+                    d: 'Con la capa 7'
+                },
+                answer: 'b',
+                feedback: 'ARP hace de puente: recibe una dirección de <strong>capa 3</strong> y devuelve una de <strong>capa 2</strong>. Es la pregunta trampa clásica del tema.'
+            },
+            {
+                topic: 'Situar en su capa',
+                repaso: '#yasabias',
+                text: 'De todo esto, ¿qué pertenece a la <strong>capa 1</strong>?',
+                options: {
+                    a: 'La dirección MAC',
+                    b: 'La categoría Cat 6A del cable',
+                    c: 'La puerta de enlace',
+                    d: 'El puerto 443'
+                },
+                answer: 'b',
+                feedback: 'La categoría del cable es una propiedad <strong>física</strong>. La MAC es capa 2, la puerta de enlace capa 3 y el puerto 443 capa 4.'
+            },
+            {
+                topic: 'Situar en su capa',
+                repaso: '#yasabias',
+                text: '¿En qué capa o capas trabaja una tarjeta de red?',
+                options: {
+                    a: 'Solo en la capa 1',
+                    b: 'Solo en la capa 2',
+                    c: 'En las capas 1 y 2',
+                    d: 'En las capas 1, 2 y 3'
+                },
+                answer: 'c',
+                feedback: 'Sus cuatro funciones se reparten dos y dos: conexión física y conversión de señal son <strong>capa 1</strong>; direccionamiento MAC y control de acceso al medio, <strong>capa 2</strong>.'
+            },
+            {
+                topic: 'Recuperación · Semana 2',
+                repaso: '../../Semana_02/Dia_02/teoria.html#categorias',
+                text: '<em>Repaso.</em> Hay que llevar 10 Gbps a 80 metros. ¿Qué categoría hace falta?',
+                options: {
+                    a: 'Cat 5e',
+                    b: 'Cat 6',
+                    c: 'Cat 6A',
+                    d: 'Cat 8'
+                },
+                answer: 'c',
+                feedback: 'Cat 6 solo alcanza 10 Gbps hasta unos 55 m y Cat 8 se queda en 30 m. Solo <strong>Cat 6A</strong> garantiza 10 Gbps a los 100 m completos.'
+            },
+            {
+                topic: 'Recuperación · Semana 2',
+                repaso: '../../Semana_02/Dia_05/teoria.html#sintomas',
+                text: '<em>Repaso.</em> <code>ping 8.8.8.8</code> responde, <code>ping google.com</code> falla. Con el vocabulario de hoy, ¿qué has demostrado?',
+                options: {
+                    a: 'Nada concluyente',
+                    b: 'Que las capas 1 a 3 funcionan: hay conectividad completa, y lo que falla es la resolución de nombres',
+                    c: 'Que solo funciona la capa 1',
+                    d: 'Que el problema está en el navegador'
+                },
+                answer: 'b',
+                feedback: 'El ping por IP ejercita las capas 1, 2 y 3. Lo que falla es el <strong>DNS</strong>, un servicio de capa 7. Es la prueba de los dos ping, explicada ahora por capas.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>
