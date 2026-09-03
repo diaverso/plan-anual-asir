@@ -40,7 +40,7 @@ Ninguno. Es el mes inicial del curso.
 | **[Semana 1](Semana_01/README.md)** | Introducción a las Redes | ✅ Disponible (7 días) |
 | **[Semana 2](Semana_02/README.md)** | Componentes de una red | ✅ Disponible (7 días) |
 | **[Semana 3](Semana_03/README.md)** | Arquitecturas y Modelos (OSI, TCP/IP) | ✅ Disponible (5 días) |
-| Semana 4 | Dispositivos de Red | ⏳ Pendiente |
+| **[Semana 4](Semana_04/README.md)** | Dispositivos de Red | ✅ Disponible (5 días) |
 
 Las **Semanas 1 y 2** se publicaron con **siete días** de 3 a 4 h y se conservan así. A partir de la **Semana 3** la semana tiene **cinco días**, de lunes a viernes: cuatro de contenido de 4 a 5 h y el viernes de evaluación.
 

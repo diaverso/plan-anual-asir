@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">74 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 4 es <strong>contar dominios</strong>. Es el tipo de pregunta que más cae en los exámenes de
+            este tema, y se resuelve con dos reglas: <em>un dominio de colisión por puerto de switch</em> y
+            <em>un dominio de broadcast por red</em>.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_03/Dia_05/ejercicios.html">← Semana 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Ejercicios',
+    subtitulo: 'Dispositivos por capa · hub y switch · dominios de colisión y broadcast',
+    tiempo: '74 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Cada dispositivo en su capa',
+            tiempo: '10 min',
+            enunciado: '<p>La clasificación que ordena toda la semana.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada dispositivo con la capa en la que trabaja y lo que mira.',
+                    izquierda: ['Repetidor', 'Hub', 'Puente', 'Switch', 'Router'],
+                    derecha: [
+                        'Capa 1 — no mira nada: regenera la señal de un enlace',
+                        'Capa 1 — no mira nada: repite por todos los puertos',
+                        'Capa 2 — mira la MAC, con pocos puertos y por software',
+                        'Capa 2 — mira la MAC, con muchos puertos y por hardware',
+                        'Capa 3 — mira la dirección IP'
+                    ],
+                    pares: {
+                        'Repetidor': 'Capa 1 — no mira nada: regenera la señal de un enlace',
+                        'Hub': 'Capa 1 — no mira nada: repite por todos los puertos',
+                        'Puente': 'Capa 2 — mira la MAC, con pocos puertos y por software',
+                        'Switch': 'Capa 2 — mira la MAC, con muchos puertos y por hardware',
+                        'Router': 'Capa 3 — mira la dirección IP'
+                    },
+                    explicacion: 'Fíjate en los pares: repetidor y hub hacen lo mismo con distinto número de puertos, y puente y switch también. La <strong>frontera de verdad</strong> está entre la capa 1 y la 2: entre repetir y decidir.',
+                    pistas: [
+                        'Hay dos dispositivos en la capa 1 y dos en la capa 2.',
+                        'Lo que separa las dos parejas es el número de puertos y dónde se toma la decisión.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un switch también convierte señales en bits, igual que un hub. ¿Por qué se dice entonces que es «de capa 2»?',
+                    opciones: {
+                        a: 'Porque los fabricantes lo anuncian así',
+                        b: 'Porque un dispositivo se clasifica por la capa más alta que mira, e incluye las capacidades de las inferiores',
+                        c: 'Porque no puede trabajar en capa 1',
+                        d: 'Porque solo funciona con cable, no con fibra'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Para llegar a la capa 2 hay que pasar por la 1. Lo que distingue a un dispositivo no es lo que comparte con el de abajo, sino <strong>lo que sabe hacer además</strong>.',
+                    pistas: [
+                        '¿Puede un router entender direcciones MAC?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: El comportamiento del hub',
+            tiempo: '12 min',
+            enunciado: '<p>Por qué repetir a ciegas es un problema en tres frentes distintos.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa la descripción del hub.',
+                    frase: 'Un hub trabaja en la capa {{0}} y por eso no puede leer la dirección {{1}} de destino. Lo que entra por un puerto sale por {{2}} los demás, y el filtrado acaba haciéndolo la {{3}} de cada equipo, cuando la trama ya ha viajado por el cable.',
+                    respuestas: [
+                        ['1', 'uno', 'fisica', 'física'],
+                        ['mac', 'fisica', 'física'],
+                        ['todos'],
+                        ['tarjeta', 'tarjeta de red', 'nic', 'tarjeta red']
+                    ],
+                    explicacion: 'Ahí está el problema entero: el filtrado <strong>existe</strong>, pero ocurre demasiado tarde para evitar el consumo de ancho de banda, las colisiones y la exposición del tráfico.',
+                    pistas: [
+                        'El segundo hueco son tres letras.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un hub de <strong>16 puertos a 100 Mbps</strong>, con los 16 equipos transmitiendo. ¿Cuánto ancho de banda le corresponde a cada uno, en Mbps?',
+                    respuesta: 6.25,
+                    tolerancia: 0.3,
+                    unidad: 'Mbps',
+                    explicacion: '100 ÷ 16 = <strong>6,25 Mbps</strong>. Y eso es la <em>cota superior</em>: cada colisión es tiempo en el que nadie transmite, así que en la práctica se queda por debajo.',
+                    pistas: [
+                        'El ancho de banda de un hub se reparte entre todos los puertos activos.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>c)</strong> Marca <strong>todos</strong> los problemas que tiene una red con hub.',
+                    opciones: {
+                        a: 'El ancho de banda se comparte entre todos los equipos',
+                        b: 'Solo puede funcionar en semidúplex',
+                        c: 'Cualquier equipo puede leer el tráfico de los demás en modo promiscuo',
+                        d: 'No admite más de cuatro equipos'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'La d es falsa: había hubs de 24 puertos. El problema no era el número de equipos que <em>admitía</em>, sino que el rendimiento se desplomaba a medida que se añadían.',
+                    pistas: [
+                        'Tres de las cuatro son ciertas.',
+                        'Una habla de un límite que en realidad no existía.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Qué topología física y lógica tiene una red cableada con un hub central?',
+                    opciones: {
+                        a: 'Física de bus, lógica de estrella',
+                        b: 'Física de estrella, lógica de bus',
+                        c: 'Física y lógica de estrella',
+                        d: 'Física y lógica de anillo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los cables dibujan una estrella, pero eléctricamente todos comparten el mismo medio, que es la definición de un bus. Es el ejemplo canónico de que las dos topologías no tienen por qué coincidir.',
+                    pistas: [
+                        'Mira primero cómo van los cables, y después cómo circula la señal.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Del puente al switch',
+            tiempo: '10 min',
+            enunciado: '<p>La idea que separa la capa 1 de la capa 2.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Un puente une dos segmentos. Llega una trama del segmento A dirigida a un equipo que también está en A. ¿Qué hace?',
+                    opciones: {
+                        a: 'La reenvía al segmento B por si acaso',
+                        b: 'No la deja pasar: origen y destino están del mismo lado, así que cruzarla solo molestaría al otro segmento',
+                        c: 'La descarta y avisa al emisor',
+                        d: 'La reenvía a los dos segmentos'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Eso es <strong>filtrar</strong>, y es justo lo que un hub no puede hacer. El tráfico local se queda en su segmento, y por eso el puente crea <strong>dos dominios de colisión</strong> donde antes había uno.',
+                    pistas: [
+                        '¿Necesita el destinatario que la trama cruce al otro lado para recibirla?'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>b)</strong> Completa la definición: «Un switch es un puente con muchos puertos y hecho en ______».',
+                    respuestas: ['hardware', 'silicio', 'un chip', 'asic', 'circuito', 'un asic'],
+                    explicacion: 'La idea del puente es de los años ochenta. Lo que la hizo universal no fue una idea nueva, sino que la decisión pasara de hacerse por <strong>software</strong> a hacerse en un <strong>circuito dedicado</strong>, lo bastante barato para ponerlo en 48 puertos.',
+                    pistas: [
+                        '¿Qué cambió para que aplicar la idea a 48 puertos saliera a cuenta?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>c)</strong> Explica por qué el paso de hub a switch mejoró <strong>a la vez</strong> el rendimiento y la seguridad, siendo el mismo cambio técnico.',
+                    modelo: `<p>Porque los dos problemas tenían <strong>la misma causa</strong>: que la trama llegara
+                             físicamente a equipos que no eran su destino.</p>
+                             <p>En el <strong>rendimiento</strong>, eso significaba que cada trama ocupaba todos los
+                             cables a la vez, que el ancho de banda se repartía entre todos y que dos equipos que
+                             transmitieran a la vez colisionaban.</p>
+                             <p>En la <strong>seguridad</strong>, significaba que el tráfico ajeno pasaba por tu
+                             cable, y que no leerlo dependía solo de que tu tarjeta decidiera descartarlo, cosa que se
+                             desactiva con el modo promiscuo.</p>
+                             <p>Al mirar la MAC de destino y enviar la trama <strong>solo por el puerto que
+                             toca</strong>, el switch elimina la causa común. El ancho de banda deja de compartirse,
+                             las colisiones desaparecen y el tráfico ajeno ya no llega. Un solo cambio técnico
+                             —decidir en vez de repetir— resuelve tres problemas que parecían independientes.</p>`,
+                    rubrica: [
+                        'Identifica la causa común: la trama llega a quien no es su destino',
+                        'Explica las consecuencias en rendimiento',
+                        'Explica las consecuencias en seguridad',
+                        'Concluye que un único cambio resuelve ambos'
+                    ],
+                    pistas: [
+                        '¿Qué tienen en común los tres problemas del hub?',
+                        'Piensa en qué deja de ocurrir cuando el switch decide el puerto de salida.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Contar dominios',
+            tiempo: '20 min',
+            enunciado: `
+                <p>El ejercicio que más cae. Dos reglas y ya:</p>
+                <ul>
+                    <li>Un <strong>hub</strong> es <strong>un solo</strong> dominio de colisión, tenga los puertos que tenga.</li>
+                    <li>Un <strong>switch</strong> crea <strong>un dominio de colisión por puerto activo</strong>.</li>
+                    <li>Ninguno de los dos separa dominios de <strong>broadcast</strong>.</li>
+                </ul>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Rellena la tabla. En todos los casos hay un equipo por puerto.',
+                    esquina: 'Escenario',
+                    cabecera: ['Dominios de colisión', 'Dominios de broadcast'],
+                    filas: [
+                        {
+                            etiqueta: 'Un <strong>hub</strong> de 8 puertos',
+                            celdas: [
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Un <strong>switch</strong> de 8 puertos',
+                            celdas: [
+                                { respuestas: ['8', 'ocho'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Un <strong>switch</strong> de 24 puertos',
+                            celdas: [
+                                { respuestas: ['24', 'veinticuatro'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Un <strong>repetidor</strong> que une dos tramos',
+                            celdas: [
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La columna de la derecha es siempre <strong>1</strong>: ninguno de estos aparatos separa dominios de broadcast. Toda la diferencia está en la columna de la izquierda, y ahí es donde se ve qué aparato <strong>decide</strong> y cuál solo <strong>repite</strong>.',
+                    pistas: [
+                        'Una de las dos columnas tiene el mismo valor en las cuatro filas.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un switch de <strong>12 puertos</strong>. En 10 puertos hay un equipo, y en el puerto 11 hay un <strong>hub</strong> con 4 equipos colgando. El puerto 12 está vacío. ¿Cuántos <strong>dominios de colisión</strong> hay?',
+                    respuesta: 11,
+                    tolerancia: 0.5,
+                    unidad: 'dominios',
+                    explicacion: '<strong>10</strong> de los equipos directos + <strong>1</strong> del puerto con el hub (los 4 equipos comparten ese dominio entre ellos) = <strong>11</strong>. El puerto vacío no cuenta: sin nada conectado no hay dominio.',
+                    pistas: [
+                        'Cada puerto activo del switch es un dominio.',
+                        'El hub no crea cuatro dominios: sus cuatro equipos comparten uno.',
+                        '¿Cuenta un puerto sin nada enchufado?'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> En ese mismo escenario, ¿cuántos <strong>dominios de broadcast</strong> hay?',
+                    respuesta: 1,
+                    tolerancia: 0.5,
+                    unidad: 'dominios',
+                    explicacion: '<strong>Uno.</strong> Ni el switch ni el hub separan la difusión, así que una trama a <code>FF:FF:FF:FF:FF:FF</code> llega a los 14 equipos. Para que hubiera más de uno haría falta un <strong>router</strong> o <strong>VLAN</strong>.',
+                    pistas: [
+                        '¿Alguno de los dos aparatos del escenario sabe filtrar la difusión?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> En ese escenario, ¿qué diferencia práctica hay entre los 10 equipos directos y los 4 del hub?',
+                    opciones: {
+                        a: 'Ninguna: todos tienen la misma velocidad',
+                        b: 'Los 4 del hub comparten el ancho de banda de ese puerto entre ellos y pueden colisionar; los 10 directos, no',
+                        c: 'Los 4 del hub no pueden salir a Internet',
+                        d: 'Los 10 directos comparten ancho de banda y los del hub no'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El switch aísla ese puerto del resto de la red, pero <strong>dentro</strong> del hub sigue habiendo medio compartido, semidúplex y colisiones. Es un trozo de red antigua metido en una moderna.',
+                    pistas: [
+                        '¿Qué ocurre dentro del hub, entre sus propios equipos?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Situaciones reales',
+            tiempo: '12 min',
+            enunciado: '<p>Diagnóstico y decisiones con lo de hoy.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Una oficina con 20 equipos va lentísima. Al mirar el armario ves un aparato de 24 puertos sin ninguna luz de configuración, muy antiguo, y todos los equipos van a 100 Mbps en semidúplex. ¿Qué sospechas?',
+                    opciones: {
+                        a: 'Que el cableado es de categoría insuficiente',
+                        b: 'Que es un hub: el semidúplex generalizado y la lentitud con muchos equipos encajan con un medio compartido',
+                        c: 'Que hay un bucle en la red',
+                        d: 'Que faltan direcciones IP'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El <strong>semidúplex</strong> es la pista definitiva: con un switch moderno, los enlaces se negocian en dúplex completo. Si todo está en semidúplex, es que el medio se comparte.',
+                    pistas: [
+                        '¿Qué modo de transmisión obliga a usar un hub, y por qué?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Te piden justificar el gasto de sustituir ese aparato por un switch de 24 puertos a 1 Gbps. ¿Cuál es el argumento más fuerte?',
+                    opciones: {
+                        a: 'Que el switch es más moderno',
+                        b: 'Que cada equipo pasaría de compartir 100 Mbps entre 20 a tener 1 Gbps dedicado, y además se acabarían las colisiones y la exposición del tráfico',
+                        c: 'Que el switch consume menos electricidad',
+                        d: 'Que los hubs ya no tienen soporte'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con números: de unos <strong>5 Mbps</strong> por equipo (100 ÷ 20) a <strong>1000 Mbps</strong> dedicados. Es un factor de 200, y encima se resuelven las colisiones y el problema de seguridad.',
+                    pistas: [
+                        'Calcula lo que tiene ahora cada equipo y lo que tendría después.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>c)</strong> En esa oficina hay además una impresora que emite mucho tráfico de difusión anunciándose. ¿Resolvería el switch ese problema? Justifícalo.',
+                    modelo: `<p>No, y es importante saberlo antes de prometer resultados.</p>
+                             <p>El switch resolvería el problema del <strong>rendimiento</strong> —ancho de banda
+                             dedicado, sin colisiones— y el de la <strong>seguridad</strong>, porque el tráfico
+                             unicast dejaría de pasar por cables ajenos.</p>
+                             <p>Pero el tráfico de <strong>difusión</strong> lo seguiría recibiendo todo el mundo. Un
+                             switch no puede filtrar una trama dirigida a <code>FF:FF:FF:FF:FF:FF</code>, porque esa
+                             dirección significa literalmente «para todos»: filtrarla sería incumplir lo que
+                             significa. Los 20 equipos seguirían recibiendo cada anuncio de la impresora.</p>
+                             <p>En una red de 20 equipos eso es asumible y probablemente ni se note. En una de 500 sí
+                             sería un problema serio, y la solución pasaría por <strong>VLAN</strong> —separando la
+                             red en dominios de broadcast distintos— o por un <strong>router</strong>. Es justamente
+                             el límite del switch y el motivo de que exista el resto del temario.</p>`,
+                    rubrica: [
+                        'Responde que no lo resuelve',
+                        'Explica que el switch no puede filtrar la difusión, y por qué',
+                        'Distingue lo que sí mejora: rendimiento y seguridad del unicast',
+                        'Propone VLAN o router como solución real'
+                    ],
+                    pistas: [
+                        '¿Qué tipo de dominio separa un switch y cuál no?',
+                        '¿Qué haría falta para separar dominios de broadcast?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Integración con lo anterior',
+            tiempo: '10 min',
+            enunciado: '<p>Enlaza el tema de hoy con las tres semanas anteriores.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para cada afirmación, indica si es <em>verdadero</em> o <em>falso</em>.',
+                    esquina: 'Afirmación',
+                    cabecera: ['V / F'],
+                    filas: [
+                        { etiqueta: 'Un switch reduce el número de dominios de <strong>broadcast</strong>', celdas: [{ respuestas: ['f', 'falso'], placeholder: 'V/F' }] },
+                        { etiqueta: 'Un hub obliga a trabajar en <strong>semidúplex</strong>', celdas: [{ respuestas: ['v', 'verdadero'], placeholder: 'V/F' }] },
+                        { etiqueta: 'Un repetidor <strong>regenera</strong> la señal, no la amplifica', celdas: [{ respuestas: ['v', 'verdadero'], placeholder: 'V/F' }] },
+                        { etiqueta: 'Un switch puede leer la dirección <strong>IP</strong> de destino', celdas: [{ respuestas: ['f', 'falso'], placeholder: 'V/F' }] },
+                        { etiqueta: 'Con switch, dos conversaciones distintas pueden ir <strong>a la vez</strong>', celdas: [{ respuestas: ['v', 'verdadero'], placeholder: 'V/F' }] }
+                    ],
+                    explicacion: 'Las dos falsas son las que más se preguntan. La primera confunde los dos tipos de dominio; la cuarta sube al switch una capa que no le corresponde: <strong>mira MAC, no IP</strong>.',
+                    pistas: [
+                        'Hay dos falsas.',
+                        'Una de las falsas confunde las capas 2 y 3.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> <em>Integración con la Semana 3.</em> Una trama sale de tu equipo hacia un servidor de Internet y pasa por un switch. Explica qué hace el switch con cada cabecera de la trama y qué <strong>no</strong> mira.',
+                    modelo: `<p>El switch lee <strong>únicamente la cabecera Ethernet</strong>, que es la de su capa.
+                             De ella coge la <strong>MAC de destino</strong> para decidir por qué puerto sacar la
+                             trama, y la <strong>MAC de origen</strong> para aprender en qué puerto está quien la ha
+                             enviado.</p>
+                             <p>Todo lo demás —la cabecera IP, la cabecera TCP y los datos— es para él
+                             <strong>contenido opaco</strong>. Ni lo mira ni lo entiende ni le hace falta. Es la
+                             encapsulación del Día 2 de la Semana 3 vista desde el otro lado: cada capa solo abre
+                             <em>su</em> envoltorio.</p>
+                             <p>Y hay un detalle que enlaza con lo de la MAC de un salto: en esa trama, la MAC de
+                             destino <strong>no es la del servidor</strong>, sino la del router de mi red. El switch
+                             la reenvía hacia el puerto donde está el router, y ahí termina su trabajo.</p>
+                             <p>Después el router sí abrirá la cabecera IP, descartará la trama Ethernet entera y
+                             construirá una nueva. Pero eso ya es capa 3, y es lo del miércoles.</p>`,
+                    rubrica: [
+                        'Dice que solo lee la cabecera Ethernet',
+                        'Menciona los dos usos: MAC de destino para reenviar y de origen para aprender',
+                        'Señala que IP, TCP y datos son contenido opaco para él',
+                        'Recuerda que la MAC de destino es la del router, no la del servidor',
+                        'Relaciona con la encapsulación de la Semana 3'
+                    ],
+                    pistas: [
+                        '¿Qué cabecera corresponde a la capa del switch?',
+                        '¿Para qué le sirve la MAC de origen, además de la de destino?',
+                        '¿De quién es la MAC de destino en esa trama?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Dispositivos de capa 1 y 2: del repetidor al switch</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 1 — Del repetidor al switch</h1>
+        <p>Los dispositivos de capa 1 y 2 · por qué el hub desapareció</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 60 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 31 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>La semana en que todo lo anterior sirve para algo</strong>
+            Tres semanas de conceptos: señales, MAC, capas, encapsulación. Esta semana esos conceptos se convierten
+            en <strong>aparatos que se compran, se instalan y se configuran</strong>.
+            <br><br>
+            Y hay una idea que ordena las cuatro sesiones: <strong>cada dispositivo se define por la capa en la que
+            trabaja</strong>. Eso determina qué mira, qué decide y hasta dónde llega.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            La semana pasada terminaste sabiendo que un switch es «de capa 2» y un router «de capa 3». Esta semana
+            eso deja de ser una etiqueta: vas a ver <strong>exactamente qué campo lee cada uno</strong> y qué
+            consecuencias tiene.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#porcapa">La idea que ordena toda la semana</a></li>
+                <li><a href="#repetidor">El repetidor: capa 1</a></li>
+                <li><a href="#hub">El hub: un repetidor con muchos puertos</a></li>
+                <li><a href="#problema">El problema del hub</a></li>
+                <li><a href="#puente">El puente: el primer aparato que entiende</a></li>
+                <li><a href="#switch">El switch</a></li>
+                <li><a href="#comparativa">Comparativa y dominios</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="porcapa">1. La idea que ordena toda la semana</h2>
+
+            <p>Si tuvieras que quedarte con una sola frase de esta semana, sería esta:</p>
+
+            <div class="destacado">
+                <strong>Un dispositivo de red se define por la capa más alta que es capaz de mirar</strong>
+                Y de ahí sale <strong>todo</strong> lo demás: qué información usa para decidir, qué puede hacer y
+                qué no, cuánto cuesta y cuándo hace falta.
+                <div class="tabla-wrap" style="margin-top:12px">
+                <table>
+                    <thead><tr><th>Capa</th><th>Qué mira</th><th>Dispositivo</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>1 · Física</strong></td><td>Nada: solo señales</td><td>Repetidor, <strong>hub</strong></td></tr>
+                        <tr><td><strong>2 · Enlace</strong></td><td>La dirección <strong>MAC</strong></td><td>Puente, <strong>switch</strong>, punto de acceso</td></tr>
+                        <tr><td><strong>3 · Red</strong></td><td>La dirección <strong>IP</strong></td><td><strong>Router</strong>, switch de capa 3</td></tr>
+                        <tr><td><strong>4 a 7</strong></td><td>Puertos y contenido</td><td>Cortafuegos, proxy, balanceador</td></tr>
+                    </tbody>
+                </table>
+                </div>
+                Hoy verás las dos primeras filas; el miércoles, la tercera; el jueves, la cuarta.
+            </div>
+
+            <div class="dato">
+                <strong>Por qué «la capa más alta»</strong>
+                <p>Un switch también toca la capa 1: recibe señales y las convierte en bits, igual que un hub. Lo
+                que lo distingue no es lo que comparte con el aparato de abajo, sino <strong>lo que sabe hacer
+                además</strong>.</p>
+                <p>Por eso un router, que mira direcciones IP, también entiende de MAC y de señales: para llegar a
+                la capa 3 hay que pasar por las dos de abajo. Cada dispositivo <strong>incluye</strong> las
+                capacidades de los inferiores.</p>
+            </div>
+
+            <h2 id="repetidor">2. El repetidor: capa 1</h2>
+
+            <p>El aparato más simple de todos. Recibe una señal por un lado y la <strong>vuelve a emitir</strong>
+            por el otro, con su amplitud original.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Repetidor</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Capa</th><td><strong>1 · Física</strong></td></tr>
+                    <tr><th scope="row">Qué mira</th><td><strong>Nada.</strong> No entiende direcciones, ni tramas, ni datos</td></tr>
+                    <tr><th scope="row">Qué hace</th><td>Regenerar la señal para salvar la distancia máxima del medio</td></tr>
+                    <tr><th scope="row">Para qué sirve</th><td>Alargar un enlace más allá de los 100 m del par trenzado</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Esto ya lo sabes: es la regeneración del Día 3 de la Semana 1</strong>
+                Allí viste la diferencia entre <strong>amplificar</strong> una señal analógica —que amplifica también
+                el ruido— y <strong>regenerar</strong> una digital, que reconstruye los bits limpios y vuelve a
+                emitirlos desde cero.
+                <br><br>
+                Un repetidor hace exactamente eso, y por eso es un aparato de capa 1: trabaja con la
+                <strong>señal</strong>, no con lo que la señal significa. No sabe si lo que pasa por él es una
+                petición web o un ataque.
+            </div>
+
+            <h2 id="hub">3. El hub: un repetidor con muchos puertos</h2>
+
+            <p>Un <strong>hub</strong> —o concentrador— es exactamente eso: un repetidor con varios puertos. Lo que
+            entra por uno <strong>sale por todos los demás</strong>.</p>
+
+            <div class="destacado">
+                <strong>El comportamiento del hub, en una frase</strong>
+                <strong>Repite a ciegas.</strong> No mira la dirección de destino porque <em>no puede</em>: la
+                dirección MAC está en la capa 2 y el hub no llega ahí.
+                <br><br>
+                Si el equipo A envía algo al equipo B, la trama llega también a C, a D y a todos los demás. Ellos la
+                reciben, miran la MAC de destino, ven que no es la suya y <strong>la descartan</strong>.
+                <br><br>
+                Es decir: el filtrado existe, pero lo hace <strong>cada tarjeta de red al final</strong>, no el hub.
+                El tráfico ya ha ocupado todos los cables para entonces.
+            </div>
+
+            <div class="dato">
+                <strong>Y con eso ya se explica media clase de la Semana 1</strong>
+                <p>Una red con hub tiene topología <strong>física de estrella</strong> —todos los cables van al
+                aparato central— pero topología <strong>lógica de bus</strong>: eléctricamente todos comparten el
+                mismo medio.</p>
+                <p>Es el ejemplo que se usó en el Día 5 de la Semana 1 para explicar que las dos topologías no
+                tienen por qué coincidir. Ahora ya sabes por qué: el hub no separa nada, solo reparte cables.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="problema">4. El problema del hub</h2>
+
+            <p>Repetir a ciegas tiene tres consecuencias, y las tres son graves.</p>
+
+            <h3>Problema 1: un solo dominio de colisión</h3>
+
+            <p>Como todos comparten el medio, si dos equipos transmiten a la vez las señales <strong>chocan</strong>.
+            Hay que aplicar CSMA/CD: detectar la colisión, callarse, esperar un tiempo aleatorio y reintentar.</p>
+
+            <div class="aviso">
+                <strong>El reparto del ancho de banda</strong>
+                Un hub de 8 puertos a 100 Mbps <strong>no</strong> da 100 Mbps a cada equipo: da
+                <strong>100 Mbps entre todos</strong>. Repartidos, salen unos <strong>12,5 Mbps</strong> por equipo,
+                y eso en el mejor de los casos.
+                <br><br>
+                Peor aún: cuantos más equipos, más colisiones, y cada colisión es tiempo perdido en el que
+                <strong>nadie</strong> transmite. El rendimiento no baja de forma proporcional: se
+                <strong>desploma</strong>.
+                <br><br>
+                Es el cálculo que hiciste en el Día 2 de la Semana 1, ahora con nombre y apellidos.
+            </div>
+
+            <h3>Problema 2: solo puede funcionar en semidúplex</h3>
+
+            <p>Si un equipo transmitiera y recibiera a la vez, se pisaría a sí mismo. Con un hub, todo el mundo
+            trabaja en <strong>semidúplex</strong>: o se habla, o se escucha.</p>
+
+            <h3>Problema 3: cualquiera puede leerlo todo</h3>
+
+            <div class="destacado">
+                <strong>El problema de seguridad</strong>
+                Si la trama de A para B pasa físicamente por el cable de C, entonces <strong>C puede leerla</strong>.
+                Basta con poner su tarjeta en <em>modo promiscuo</em> —que significa «no descartes lo que no es para
+                ti»— y capturar con un analizador.
+                <br><br>
+                En una red con hub, <strong>cualquier equipo puede espiar a todos los demás</strong> sin tocar nada
+                ni pedir permiso a nadie.
+                <br><br>
+                <em>En el laboratorio de hoy vas a comprobar que en tu red eso ya no ocurre</em>, y vas a medir
+                exactamente cuánto tráfico ajeno te llega.
+            </div>
+
+            <h2 id="puente">5. El puente: el primer aparato que entiende</h2>
+
+            <p>El <strong>puente</strong> —o <em>bridge</em>— fue la solución intermedia, y aunque hoy no se compra,
+            entender su idea es entender el switch.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Puente</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Capa</th><td><strong>2 · Enlace</strong></td></tr>
+                    <tr><th scope="row">Qué mira</th><td>La dirección <strong>MAC</strong> de destino</td></tr>
+                    <tr><th scope="row">Puertos</th><td>Pocos: normalmente <strong>dos</strong></td></tr>
+                    <tr><th scope="row">Qué hace</th><td>Une dos segmentos y <strong>decide si deja pasar</strong> cada trama</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>La idea del puente</strong>
+                <p>Un puente une dos tramos de red y aprende <strong>qué direcciones MAC están a cada lado</strong>.
+                Cuando llega una trama, mira su destino:</p>
+                <ul>
+                    <li>Si está <strong>en el mismo lado</strong> del que vino, no la deja pasar: los dos equipos ya
+                    se oyen entre sí, y cruzarla solo molestaría al otro segmento.</li>
+                    <li>Si está <strong>al otro lado</strong>, la reenvía.</li>
+                </ul>
+                <p>Con eso, el tráfico local de cada tramo <strong>se queda en su tramo</strong>. Se acabó que todo
+                choque contra todo: ahora hay <strong>dos dominios de colisión</strong> en lugar de uno.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Aquí está la idea que lo cambió todo</strong>
+                Un aparato que <strong>decide</strong> en función de la dirección de destino en lugar de repetir a
+                ciegas. Eso es lo que separa la capa 1 de la capa 2, y es exactamente lo que hace un switch.
+                <br><br>
+                De hecho, la definición más honesta de un switch es: <strong>un puente con muchos puertos y hecho en
+                hardware</strong>. La idea es de los años ochenta; lo que cambió fue el precio de aplicarla a 48
+                puertos a la vez.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="switch">6. El switch</h2>
+
+            <p>El aparato central de cualquier red local de hoy. Un switch tiene <strong>un dominio de colisión por
+            puerto</strong>, y eso lo cambia absolutamente todo.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Switch</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Capa</th><td><strong>2 · Enlace</strong></td></tr>
+                    <tr><th scope="row">Qué mira</th><td>La dirección <strong>MAC</strong> de origen y de destino</td></tr>
+                    <tr><th scope="row">Cómo decide</th><td>Con su <strong>tabla MAC</strong>, que construye solo</td></tr>
+                    <tr><th scope="row">Dominios de colisión</th><td><strong>Uno por puerto</strong></td></tr>
+                    <tr><th scope="row">Dominios de broadcast</th><td><strong>Uno solo</strong>: no los separa</td></tr>
+                    <tr><th scope="row">Dúplex</th><td><strong>Completo</strong>: se puede enviar y recibir a la vez</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Las tres consecuencias, una por cada problema del hub</strong>
+                <strong>1. El ancho de banda deja de repartirse.</strong> Un switch de 8 puertos a 100 Mbps da 100
+                Mbps <strong>a cada uno</strong>. Y como cada puerto es su propio dominio de colisión, dos
+                conversaciones distintas ocurren <strong>a la vez</strong> sin estorbarse.
+                <br><br>
+                <strong>2. Se acabaron las colisiones.</strong> Con un solo equipo por puerto y dúplex completo, no
+                hay con quién chocar. CSMA/CD sigue existiendo en el estándar, pero en la práctica
+                <strong>ya no se usa</strong>.
+                <br><br>
+                <strong>3. El tráfico ajeno deja de pasar por tu cable.</strong> Si la trama de A para B no llega a
+                tu puerto, no puedes leerla ni queriendo. Espiar deja de ser trivial.
+            </div>
+
+            <div class="aviso">
+                <strong>Pero el switch <em>no</em> separa dominios de broadcast</strong>
+                Este es el matiz que más se pregunta y más se falla.
+                <br><br>
+                Cuando llega una trama dirigida a <code>FF:FF:FF:FF:FF:FF</code> —la dirección de difusión que viste
+                en la Semana 2— el switch <strong>la manda por todos los puertos</strong>. No puede hacer otra cosa:
+                esa dirección significa literalmente «para todos».
+                <br><br>
+                Así que un switch de 24 puertos crea <strong>24 dominios de colisión</strong> pero
+                <strong>un solo dominio de broadcast</strong>. Para separar dominios de broadcast hacen falta
+                <strong>VLAN</strong> o un <strong>router</strong>, y eso es el miércoles.
+            </div>
+
+            <div class="dato">
+                <strong>Comprueba que lo has entendido</strong>
+                <p>Un switch de <strong>24 puertos</strong> con 24 equipos conectados:</p>
+                <ul>
+                    <li>Dominios de colisión: <strong>24</strong>, uno por puerto.</li>
+                    <li>Dominios de broadcast: <strong>1</strong>.</li>
+                </ul>
+                <p>Y un <strong>hub</strong> de 24 puertos, en las mismas condiciones:</p>
+                <ul>
+                    <li>Dominios de colisión: <strong>1</strong>.</li>
+                    <li>Dominios de broadcast: <strong>1</strong>.</li>
+                </ul>
+                <p>Es la forma más rápida de resumir la diferencia entre los dos aparatos, y sale en los exámenes
+                una y otra vez.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="comparativa">7. Comparativa y dominios</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Repetidor / Hub</th><th>Puente</th><th>Switch</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Capa</th><td><strong>1</strong></td><td>2</td><td><strong>2</strong></td></tr>
+                    <tr><th scope="row">Qué mira</th><td>Nada</td><td>MAC</td><td>MAC</td></tr>
+                    <tr><th scope="row">Puertos típicos</th><td>4 a 24</td><td>2</td><td>5 a 48</td></tr>
+                    <tr><th scope="row">Dominios de colisión</th><td><strong>1</strong></td><td>Uno por puerto</td><td><strong>Uno por puerto</strong></td></tr>
+                    <tr><th scope="row">Dominios de broadcast</th><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+                    <tr><th scope="row">Dúplex</th><td>Semidúplex</td><td>Depende</td><td><strong>Completo</strong></td></tr>
+                    <tr><th scope="row">Ancho de banda</th><td>Compartido</td><td>Por segmento</td><td><strong>Dedicado por puerto</strong></td></tr>
+                    <tr><th scope="row">Decide en</th><td>—</td><td>Software</td><td><strong>Hardware</strong> (ASIC)</td></tr>
+                    <tr><th scope="row">¿Se compra hoy?</th><td><strong>No</strong></td><td>No</td><td><strong>Sí</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Por qué el hub desapareció del todo</strong>
+                No fue solo que el switch fuera mejor: es que <strong>dejó de ser más caro</strong>.
+                <br><br>
+                Mientras decidir por MAC exigía software, un switch costaba mucho más que un hub y solo se ponía
+                donde compensara. Cuando esa decisión pasó a hacerse en un <strong>circuito dedicado</strong>, el
+                coste se desplomó y ya no hubo ningún motivo para fabricar hubs.
+                <br><br>
+                Hoy es prácticamente imposible comprar uno nuevo. Si alguien dice «hub» refiriéndose al aparato de
+                su casa, casi seguro que es un <strong>switch</strong>. La palabra sobrevivió al aparato.
+            </div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Un dispositivo se define por <strong>la capa más alta que mira</strong>, e incluye las capacidades de las de abajo.</li>
+                    <li><strong>Repetidor y hub: capa 1.</strong> Repiten a ciegas porque no pueden ver la MAC.</li>
+                    <li>Un hub crea <strong>un solo dominio de colisión</strong>: ancho de banda compartido, semidúplex y tráfico visible para todos.</li>
+                    <li>Con hub, la topología física es de <strong>estrella</strong> pero la lógica es de <strong>bus</strong>.</li>
+                    <li>El <strong>puente</strong> introdujo la idea clave: <strong>decidir</strong> según la MAC de destino.</li>
+                    <li>Un <strong>switch</strong> es un puente con muchos puertos y hecho en hardware.</li>
+                    <li>Switch: <strong>un dominio de colisión por puerto</strong>, dúplex completo, ancho de banda dedicado.</li>
+                    <li>Pero <strong>un solo dominio de broadcast</strong>: no los separa. Para eso hacen falta VLAN o un router.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«El hub filtra el tráfico que no es para ti»</td><td>No puede: <strong>no ve la MAC</strong>. Filtra la tarjeta de red del destinatario, cuando ya ha llegado</td></tr>
+                    <tr><td>«Un switch separa dominios de broadcast»</td><td><strong>No.</strong> Crea uno por puerto de <em>colisión</em>, pero de broadcast sigue habiendo <strong>uno</strong></td></tr>
+                    <tr><td>«Un hub de 8 puertos a 100 Mbps da 100 a cada uno»</td><td>Da <strong>100 entre todos</strong>: unos 12,5 Mbps por equipo</td></tr>
+                    <tr><td>«Hub y switch es lo mismo con otro nombre»</td><td>Capa <strong>1</strong> frente a capa <strong>2</strong>: uno repite y el otro decide</td></tr>
+                    <tr><td>«El switch trabaja en capa 3»</td><td>En la <strong>2</strong>: mira MAC. El de capa 3 es el router</td></tr>
+                    <tr><td>«Un repetidor amplifica la señal»</td><td>La <strong>regenera</strong>: reconstruye los bits limpios. Amplificar aumentaría también el ruido</td></tr>
+                    <tr><td>«Con switch ya no hay colisiones nunca»</td><td>Con un equipo por puerto y dúplex completo, no. Con un hub colgado de un puerto, <strong>sí</strong></td></tr>
+                    <tr><td>«El puente y el switch son cosas distintas»</td><td>Misma idea: el switch es un puente con muchos puertos y en hardware</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 22 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>demostrar con una captura</strong> que tu red usa un switch y no un hub: capturarás
+            todo el tráfico visible en tu cable y contarás cuánto de él es tuyo, cuánto es difusión y cuánto es de
+            otros equipos.</p>
+            <p>El resultado es contundente y explica de golpe las dos columnas de la tabla comparativa.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 1</strong></a> (70 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 2</strong>
+            <p><strong>El switch por dentro</strong>: cómo construye su tabla MAC sin que nadie se la configure, qué
+            hace cuando no conoce un destino, y por qué eso convierte el arranque de una red en una sucesión de
+            gritos.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> un switch recién enchufado no conoce ninguna MAC. ¿Cómo crees
+            que averigua quién está en cada puerto, si nadie se lo dice?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_03/Dia_05/teoria.html">← Semana 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Un hub no filtra nada, pero tu equipo tampoco procesa las tramas ajenas que le llegan. Explica <strong>quién filtra</strong> entonces, y por qué eso no resuelve el problema.',
+                modelo: `<p>Filtra la <strong>tarjeta de red</strong> del equipo que recibe. Cuando llega una trama,
+                         la NIC mira la dirección MAC de destino, comprueba que no es la suya y la
+                         <strong>descarta</strong> sin molestar al sistema operativo.</p>
+                         <p>Así que el filtrado existe, pero ocurre <strong>al final del recorrido</strong>, no en el
+                         aparato central. Y ahí está el problema: para cuando la tarjeta descarta la trama,
+                         <strong>esa trama ya ha viajado por el cable</strong>. Ha ocupado ancho de banda, ha podido
+                         chocar con otra y ha llegado físicamente a un equipo que no tenía por qué verla.</p>
+                         <p>De ahí salen los tres problemas del hub. El <strong>rendimiento</strong>, porque el medio
+                         se ocupa con tráfico que no va a ese equipo. Las <strong>colisiones</strong>, porque todos
+                         comparten el mismo medio. Y la <strong>seguridad</strong>, porque descartar es una decisión
+                         voluntaria de la tarjeta: si alguien la pone en modo promiscuo, deja de descartar y lo lee
+                         todo.</p>
+                         <p>Un switch resuelve los tres a la vez porque filtra <strong>antes de enviar</strong>: lo
+                         que no va a tu puerto, sencillamente no sale por él.</p>`,
+                puntos: [
+                    'Identifica a la tarjeta de red como la que descarta',
+                    'Señala que ocurre al final, cuando la trama ya ha viajado',
+                    'Deriva de ahí los problemas de rendimiento y colisiones',
+                    'Explica que el descarte es voluntario: el modo promiscuo lo desactiva'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Se dice que «un switch es un puente con muchos puertos». Explica qué idea del puente heredó el switch y por qué el puente no se impuso en su momento.',
+                modelo: `<p>La idea que heredó es la esencial: <strong>decidir en función de la dirección MAC de
+                         destino</strong> en lugar de repetir a ciegas. El puente aprende qué direcciones hay a cada
+                         lado y, cuando llega una trama, decide si la deja pasar o si la retiene porque origen y
+                         destino están en el mismo segmento.</p>
+                         <p>Eso ya era lo importante: separar el tráfico local para que no moleste al resto, y crear
+                         <strong>más de un dominio de colisión</strong>.</p>
+                         <p>Lo que impidió que se impusiera fue <strong>la escala y el precio</strong>. Un puente
+                         tenía dos puertos y tomaba la decisión por software, lo cual era lento y caro. Servía para
+                         unir dos tramos de una red, pero no para dar un puerto dedicado a cada equipo: habrían hecho
+                         falta muchísimos puentes.</p>
+                         <p>El switch es la misma idea cuando se abarata lo suficiente como para aplicarla
+                         <strong>a 48 puertos a la vez y en hardware</strong>. No hubo una idea nueva: hubo una idea
+                         vieja que por fin salía a cuenta.</p>`,
+                puntos: [
+                    'La idea heredada: decidir por MAC de destino en lugar de repetir',
+                    'Menciona que el puente ya separaba dominios de colisión',
+                    'Explica la limitación: pocos puertos y decisión por software',
+                    'Concluye que el switch es la misma idea al abaratarse el hardware'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Un switch de 16 puertos con 16 equipos. Di cuántos dominios de colisión y cuántos de broadcast hay, y explica <strong>por qué</strong> los dos números son distintos.',
+                modelo: `<p><strong>16 dominios de colisión</strong> y <strong>1 dominio de broadcast</strong>.</p>
+                         <p>Los de colisión son 16 porque el switch <strong>decide</strong> por qué puerto sale cada
+                         trama. Como el tráfico de un puerto no llega a los demás, dos equipos no pueden chocar entre
+                         sí: cada cable es un medio independiente. Con dúplex completo, ni siquiera hay colisión
+                         posible dentro de un puerto.</p>
+                         <p>El de broadcast es uno solo porque la difusión es <strong>un caso especial que el switch
+                         no puede filtrar</strong>. Una trama dirigida a <code>FF:FF:FF:FF:FF:FF</code> significa
+                         literalmente «para todos», así que el switch la manda por todos los puertos. No es una
+                         limitación técnica: es que filtrarla sería incumplir lo que la dirección significa.</p>
+                         <p>La conclusión práctica es que <strong>el switch resuelve el problema del rendimiento pero
+                         no el del ruido de difusión</strong>. Si en esa red hay mucho tráfico de broadcast, lo
+                         reciben los 16 equipos por igual, tengan o nada que ver con él.</p>
+                         <p>Para separar dominios de broadcast hacen falta <strong>VLAN</strong> o un
+                         <strong>router</strong>, que es lo del miércoles.</p>`,
+                puntos: [
+                    'Da los dos números correctos: 16 y 1',
+                    'Explica que el switch decide el puerto de salida, y por eso aísla colisiones',
+                    'Explica que la difusión no se puede filtrar por definición',
+                    'Concluye que hacen falta VLAN o un router para separar broadcast'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿Qué define la categoría de un dispositivo de red?', dorso: '<strong>La capa más alta que es capaz de mirar.</strong> Y cada dispositivo incluye las capacidades de las capas inferiores.' },
+            { frente: 'Capa y comportamiento de un <strong>hub</strong>', dorso: '<strong>Capa 1.</strong> Repite por todos los puertos <strong>a ciegas</strong>, porque no puede ver la dirección MAC.' },
+            { frente: '¿Quién descarta las tramas ajenas en una red con hub?', dorso: 'La <strong>tarjeta de red</strong> del destinatario, cuando la trama ya ha viajado por el cable. Por eso el hub no resuelve nada.' },
+            { frente: 'Un <strong>hub</strong> de 8 puertos a 100 Mbps, ¿cuánto da a cada equipo?', dorso: '<strong>100 Mbps entre todos</strong>: unos <strong>12,5 Mbps</strong> cada uno, y menos aún con colisiones.' },
+            { frente: 'Topología física y lógica de una red con <strong>hub</strong>', dorso: 'Física de <strong>estrella</strong> (todos los cables al centro) pero lógica de <strong>bus</strong> (todos comparten el medio).' },
+            { frente: '¿Por qué un hub es un problema de <strong>seguridad</strong>?', dorso: 'Porque la trama pasa físicamente por el cable de todos. En <strong>modo promiscuo</strong>, cualquier equipo puede leer el tráfico de los demás.' },
+            { frente: '¿Cuál fue la idea clave del <strong>puente</strong>?', dorso: '<strong>Decidir</strong> según la MAC de destino en lugar de repetir a ciegas: si origen y destino están del mismo lado, no deja pasar la trama.' },
+            { frente: 'Define un <strong>switch</strong> en una frase', dorso: 'Un <strong>puente con muchos puertos y hecho en hardware</strong>. La idea es de los ochenta; lo que cambió fue el precio.' },
+            { frente: 'Dominios de un <strong>switch</strong> de 24 puertos', dorso: '<strong>24 dominios de colisión</strong> (uno por puerto) y <strong>1 dominio de broadcast</strong>.' },
+            { frente: 'Dominios de un <strong>hub</strong> de 24 puertos', dorso: '<strong>1 de colisión</strong> y <strong>1 de broadcast</strong>. Esa primera cifra es toda la diferencia.' },
+            { frente: '¿Separa un switch los dominios de <strong>broadcast</strong>?', dorso: '<strong>No.</strong> Una trama a <code>FF:FF:FF:FF:FF:FF</code> significa «para todos», así que la envía por todos los puertos. Hacen falta <strong>VLAN o un router</strong>.' },
+            { frente: '¿Por qué con switch desaparecen las colisiones?', dorso: 'Porque hay <strong>un equipo por puerto</strong> y <strong>dúplex completo</strong>: no hay con quién chocar. CSMA/CD sigue en el estándar, pero no se usa.' },
+            { frente: '<strong>Repetidor</strong>: ¿amplifica o regenera?', dorso: '<strong>Regenera</strong>: reconstruye los bits limpios y los vuelve a emitir. Amplificar aumentaría también el ruido.' },
+            { frente: '¿Por qué desapareció el hub?', dorso: 'No solo porque el switch fuera mejor: porque <strong>dejó de ser más caro</strong>. Al pasar la decisión a hardware, no quedó motivo para fabricar hubs.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 1 — Del repetidor al switch',
+        subtitulo: 'Dispositivos de capa 1 y 2 · dominios · por qué murió el hub',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'Dispositivos por capa',
+                repaso: '#porcapa',
+                text: 'Un router entiende de direcciones IP, pero también de MAC y de señales. ¿Cómo se clasifica entonces?',
+                options: {
+                    a: 'Como dispositivo de capa 1, que es la más básica que usa',
+                    b: 'Como dispositivo de capa 3: se clasifica por la capa más alta que mira',
+                    c: 'Como dispositivo de las tres capas a la vez',
+                    d: 'Depende del fabricante'
+                },
+                answer: 'b',
+                feedback: 'Se clasifica por <strong>la capa más alta</strong>. Para llegar a la 3 hay que pasar por las dos de abajo, así que cada dispositivo incluye las capacidades de los inferiores.'
+            },
+            {
+                topic: 'El hub',
+                repaso: '#hub',
+                text: 'El equipo A envía una trama al equipo B a través de un hub de 8 puertos. ¿Qué ocurre?',
+                options: {
+                    a: 'El hub consulta su tabla y la envía solo al puerto de B',
+                    b: 'El hub la repite por los otros 7 puertos, y las tarjetas de los demás la descartan',
+                    c: 'El hub la descarta porque no conoce a B',
+                    d: 'El hub la envía a B y avisa a los demás'
+                },
+                answer: 'b',
+                feedback: 'El hub <strong>no puede</strong> consultar ninguna tabla: la MAC está en la capa 2 y él no llega ahí. Repite a ciegas, y el filtrado lo hace cada tarjeta al final.'
+            },
+            {
+                topic: 'El hub',
+                repaso: '#hub',
+                text: 'Una red cableada con un hub central, ¿qué topología tiene?',
+                options: {
+                    a: 'Física de bus y lógica de estrella',
+                    b: 'Física de estrella y lógica de bus',
+                    c: 'Física y lógica de estrella',
+                    d: 'Física y lógica de bus'
+                },
+                answer: 'b',
+                feedback: 'Los cables van todos al centro (<strong>estrella física</strong>), pero eléctricamente todos comparten el mismo medio (<strong>bus lógico</strong>). Es el ejemplo clásico de que las dos topologías no coinciden.'
+            },
+            {
+                topic: 'El problema del hub',
+                repaso: '#problema',
+                text: 'Un hub de 10 puertos a 100 Mbps con 10 equipos trabajando. ¿Cuánto ancho de banda tiene cada uno, como máximo?',
+                options: {
+                    a: '100 Mbps cada uno',
+                    b: 'Unos 10 Mbps: los 100 se reparten entre todos',
+                    c: '1000 Mbps en total',
+                    d: '50 Mbps cada uno'
+                },
+                answer: 'b',
+                feedback: '100 ÷ 10 = <strong>10 Mbps</strong>, y eso <em>en el mejor caso</em>: cada colisión es tiempo en el que nadie transmite, así que en la práctica es menos.'
+            },
+            {
+                topic: 'El problema del hub',
+                repaso: '#problema',
+                text: '¿Por qué una red con hub es un problema de seguridad?',
+                options: {
+                    a: 'Porque los hubs no tienen contraseña',
+                    b: 'Porque la trama pasa por el cable de todos, y en modo promiscuo cualquiera puede leerla',
+                    c: 'Porque los hubs no cifran el tráfico',
+                    d: 'No lo es: cada tarjeta descarta lo que no es suyo'
+                },
+                answer: 'b',
+                feedback: 'La d describe el comportamiento normal, pero descartar es una decisión <strong>voluntaria</strong> de la tarjeta. En modo promiscuo deja de descartar y lo captura todo.'
+            },
+            {
+                topic: 'El puente',
+                repaso: '#puente',
+                text: '¿Cuál fue la aportación esencial del puente frente al hub?',
+                options: {
+                    a: 'Tener más puertos',
+                    b: 'Regenerar mejor la señal',
+                    c: 'Decidir si dejar pasar una trama según su MAC de destino, en lugar de repetirla a ciegas',
+                    d: 'Trabajar en capa 3'
+                },
+                answer: 'c',
+                feedback: 'Ahí está la frontera entre la capa 1 y la 2: uno <strong>repite</strong> y el otro <strong>decide</strong>. Es exactamente lo que hace un switch.'
+            },
+            {
+                topic: 'El switch',
+                repaso: '#switch',
+                text: 'Un switch de 16 puertos con 16 equipos conectados. ¿Cuántos dominios de colisión y de broadcast crea?',
+                options: {
+                    a: '16 de colisión y 16 de broadcast',
+                    b: '16 de colisión y 1 de broadcast',
+                    c: '1 de colisión y 1 de broadcast',
+                    d: '1 de colisión y 16 de broadcast'
+                },
+                answer: 'b',
+                feedback: 'Uno de colisión <strong>por puerto</strong>, pero <strong>un solo</strong> dominio de broadcast. Es la pregunta que más cae de todo el tema.'
+            },
+            {
+                topic: 'El switch',
+                repaso: '#switch',
+                text: '¿Por qué un switch no puede separar dominios de broadcast?',
+                options: {
+                    a: 'Porque no tiene suficiente memoria',
+                    b: 'Porque una trama a FF:FF:FF:FF:FF:FF significa «para todos»: filtrarla sería incumplir lo que la dirección significa',
+                    c: 'Porque solo los modelos caros pueden hacerlo',
+                    d: 'Sí puede, si se configura'
+                },
+                answer: 'b',
+                feedback: 'No es una limitación técnica, es el significado de la dirección. Para separar broadcast hacen falta <strong>VLAN</strong> o un <strong>router</strong>.'
+            },
+            {
+                topic: 'El switch',
+                repaso: '#switch',
+                text: 'Un switch de 8 puertos a 1 Gbps. ¿Qué velocidad tiene cada equipo conectado?',
+                options: {
+                    a: '125 Mbps: se reparte entre los 8',
+                    b: '1 Gbps cada uno, y dos conversaciones distintas pueden ir a la vez',
+                    c: '1 Gbps entre todos',
+                    d: '500 Mbps por ser dúplex'
+                },
+                answer: 'b',
+                feedback: 'Es la diferencia esencial con el hub: el ancho de banda es <strong>dedicado por puerto</strong>, no compartido, porque cada puerto es su propio dominio de colisión.'
+            },
+            {
+                topic: 'Comparativa',
+                repaso: '#comparativa',
+                text: 'Conectas un hub antiguo a uno de los puertos de tu switch, y cuelgas 4 equipos del hub. ¿Qué ocurre con las colisiones?',
+                options: {
+                    a: 'No hay colisiones: el switch las evita',
+                    b: 'Esos 4 equipos comparten un dominio de colisión entre ellos, aunque el resto de la red no se ve afectado',
+                    c: 'Toda la red vuelve a tener un solo dominio de colisión',
+                    d: 'El switch no admite un hub conectado'
+                },
+                answer: 'b',
+                feedback: 'El switch aísla ese puerto del resto, pero <strong>dentro</strong> del hub se mantiene el medio compartido. Ese puerto es un dominio de colisión con 4 equipos dentro.'
+            },
+            {
+                topic: 'Comparativa',
+                repaso: '#comparativa',
+                text: '¿Por qué dejaron de fabricarse hubs?',
+                options: {
+                    a: 'Porque una norma los prohibió',
+                    b: 'Porque al pasar la decisión por MAC a hardware, el switch se abarató y no quedó motivo para preferir un hub',
+                    c: 'Porque no admitían más de 4 puertos',
+                    d: 'Porque no funcionaban con cable de par trenzado'
+                },
+                answer: 'b',
+                feedback: 'Mientras decidir por MAC exigía software, el switch era caro. Al hacerse en un circuito dedicado, la ventaja del hub —el precio— desapareció.'
+            },
+            {
+                topic: 'Comparativa',
+                repaso: '#repetidor',
+                text: 'Un repetidor, ¿amplifica o regenera la señal? ¿Y por qué importa?',
+                options: {
+                    a: 'Amplifica: aumenta la potencia de la señal recibida',
+                    b: 'Regenera: reconstruye los bits limpios, porque amplificar aumentaría también el ruido',
+                    c: 'Ninguna de las dos: solo la reenvía tal cual',
+                    d: 'Depende de si es de cobre o de fibra'
+                },
+                answer: 'b',
+                feedback: 'Es la ventaja de lo digital que viste en la Semana 1: como solo hay dos valores posibles, se puede decidir cuál era el original y emitirlo desde cero, sin arrastrar el ruido.'
+            },
+            {
+                topic: 'Recuperación · Semana 3',
+                repaso: '../../Semana_03/Dia_01/teoria.html#capa2',
+                text: '<em>Repaso.</em> ¿Cuál es el alcance de la capa 2, y qué implica para la MAC de destino de una trama?',
+                options: {
+                    a: 'Extremo a extremo: la MAC de destino es la del servidor final',
+                    b: 'Un salto: la MAC de destino es la del siguiente aparato, no la del destino final',
+                    c: 'De programa a programa',
+                    d: 'Depende del protocolo de aplicación'
+                },
+                answer: 'b',
+                feedback: 'Lo comprobaste en Wireshark el jueves pasado: la MAC de destino de tu petición web era la de tu <strong>router</strong>, no la del servidor.'
+            },
+            {
+                topic: 'Recuperación · Semana 2',
+                repaso: '../../Semana_02/Dia_01/teoria.html',
+                text: '<em>Repaso.</em> ¿Qué dirección MAC significa «para todos los equipos de la red»?',
+                options: {
+                    a: '00:00:00:00:00:00',
+                    b: 'FF:FF:FF:FF:FF:FF',
+                    c: '01:00:5E:00:00:01',
+                    d: 'La del router'
+                },
+                answer: 'b',
+                feedback: 'Todo unos: la dirección de <strong>difusión</strong>. Es justamente la que un switch no puede filtrar, y por eso no separa dominios de broadcast.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

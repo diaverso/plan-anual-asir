@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — El switch por dentro: la tabla MAC</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 2 — El switch por dentro</h1>
+        <p>La tabla MAC · aprender, inundar, reenviar y filtrar</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 65 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 14 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 24 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 55 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>La pregunta de ayer</strong>
+            Un switch recién enchufado <strong>no conoce ninguna MAC</strong>. Nadie se las configura, no hay ningún
+            fichero que rellenar y aun así, a los pocos segundos, ya está entregando cada trama en su puerto.
+            <br><br>
+            Hoy verás cómo lo consigue. Y es más ingenioso —y más sencillo— de lo que parece.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Ayer demostraste con una captura que el switch <strong>filtra</strong>: de más de mil tramas, ninguna
+            era tráfico unicast de otro equipo.
+            <br><br>
+            Esa medición dejaba una pregunta abierta: <strong>¿cómo sabe el switch por dónde sacar cada trama?</strong>
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#vacia">El switch recién encendido</a></li>
+                <li><a href="#aprender">Aprender: la dirección de origen</a></li>
+                <li><a href="#tabla">La tabla MAC</a></li>
+                <li><a href="#decisiones">Las tres decisiones</a></li>
+                <li><a href="#ejemplo">Ejemplo completo, paso a paso</a></li>
+                <li><a href="#caducidad">Por qué las entradas caducan</a></li>
+                <li><a href="#arp">ARP: la pregunta que lo hace posible</a></li>
+                <li><a href="#modos">Cómo de rápido: los modos de conmutación</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="vacia">1. El switch recién encendido</h2>
+
+            <p>Enchufas un switch nuevo, conectas ocho equipos y funciona. Nadie le ha dicho quién está dónde.</p>
+
+            <div class="destacado">
+                <strong>El punto de partida: no sabe nada</strong>
+                Su tabla está <strong>vacía</strong>. No conoce ni una sola dirección MAC, ni sabe cuántos equipos
+                hay, ni si hay alguno.
+                <br><br>
+                Y sin embargo <strong>no necesita que nadie se lo diga</strong>: lo va a averiguar él solo, a partir
+                del propio tráfico que atraviesa sus puertos. A eso se le llama que el switch es un dispositivo
+                <strong>de aprendizaje automático</strong>, en el sentido literal y nada moderno de la expresión.
+            </div>
+
+            <h2 id="aprender">2. Aprender: la dirección de origen</h2>
+
+            <p>Aquí está el truco, y cabe en una frase:</p>
+
+            <div class="destacado">
+                <strong>Para <em>decidir</em> mira la MAC de destino. Para <em>aprender</em> mira la de origen.</strong>
+                Cuando llega una trama por el puerto 3 con origen <code>AA:AA:AA:AA:AA:AA</code>, el switch deduce
+                algo que es evidente en cuanto se dice en voz alta:
+                <br><br>
+                <em>«Si esta trama ha entrado por el puerto 3, entonces quien la ha enviado está en el puerto 3.»</em>
+                <br><br>
+                Y lo apunta. Así de simple. No hace falta preguntar nada ni configurar nada: <strong>cada trama que
+                pasa trae, gratis, la información de dónde está su emisor</strong>.
+            </div>
+
+            <div class="dato">
+                <strong>Por qué esto funciona tan bien</strong>
+                <p>Porque en una red <strong>todo el mundo habla</strong>. Un equipo que está encendido envía tráfico
+                constantemente: peticiones, respuestas, anuncios, comprobaciones. En cuanto emite <strong>una sola
+                trama</strong>, el switch ya sabe dónde está.</p>
+                <p>Y si un equipo nunca hablara, daría igual que el switch no lo conociera: tampoco habría nadie
+                intentando responderle.</p>
+                <p>Fíjate en la asimetría, que es lo elegante del mecanismo: <strong>el switch aprende de las tramas
+                que pasan hacia otro sitio</strong>. No necesita que le hablen a él.</p>
+            </div>
+
+            <h2 id="tabla">3. La tabla MAC</h2>
+
+            <p>Lo que el switch apunta se guarda en una tabla que tiene varios nombres: <strong>tabla MAC</strong>,
+            <strong>tabla CAM</strong> o tabla de reenvío. Las tres significan lo mismo.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Dirección MAC</th><th>Puerto</th><th>Antigüedad</th></tr></thead>
+                <tbody>
+                    <tr><td><code>50:eb:f6:26:b4:2f</code></td><td>1</td><td>12 s</td></tr>
+                    <tr><td><code>e4:ab:89:b8:6f:38</code></td><td>4</td><td>3 s</td></tr>
+                    <tr><td><code>c0:c9:e3:e4:e8:97</code></td><td>7</td><td>145 s</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Un puerto puede tener varias MAC, pero una MAC solo un puerto</strong>
+                Si conectas un <strong>switch a otro switch</strong>, por ese único puerto llegarán las tramas de
+                todos los equipos del otro lado. El switch apuntará <strong>muchas MAC asociadas al mismo
+                puerto</strong>, y es perfectamente normal.
+                <br><br>
+                Al revés no: una misma MAC no puede estar en dos puertos a la vez. Si el switch ve la misma dirección
+                entrando por un puerto distinto, <strong>actualiza la entrada</strong> y da por bueno el nuevo. Es lo
+                que permite que muevas un portátil de una toma a otra y siga funcionando al instante.
+            </div>
+
+            <div class="dato">
+                <strong>Por qué se llama «tabla CAM»</strong>
+                <p>CAM son las siglas de <em>Content Addressable Memory</em>, memoria direccionable por contenido. Es
+                un tipo de memoria especial que, en lugar de decirle «dame lo que hay en la posición 5», le dices
+                «dime en qué posición está <em>este</em> contenido» y responde en un solo ciclo.</p>
+                <p>Es lo que permite que un switch busque una MAC entre miles <strong>sin recorrer la tabla</strong>,
+                y por tanto que decida en microsegundos. Es la pieza de hardware que hizo posible el switch, y la
+                razón de que un puente por software no pudiera competir.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="decisiones">4. Las tres decisiones</h2>
+
+            <p>Con la tabla en la mano, cuando llega una trama el switch mira su <strong>MAC de destino</strong> y
+            solo puede hacer tres cosas.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Situación</th><th>Qué hace</th><th>Nombre</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>La MAC está en la tabla, en <strong>otro</strong> puerto</td>
+                        <td>La envía <strong>solo</strong> por ese puerto</td>
+                        <td><strong>Reenviar</strong></td>
+                    </tr>
+                    <tr>
+                        <td>La MAC está en la tabla, en el <strong>mismo</strong> puerto por el que entró</td>
+                        <td><strong>No hace nada</strong>: la descarta</td>
+                        <td><strong>Filtrar</strong></td>
+                    </tr>
+                    <tr>
+                        <td>La MAC <strong>no está</strong> en la tabla, o es de difusión</td>
+                        <td>La envía por <strong>todos</strong> los puertos menos por el que entró</td>
+                        <td><strong>Inundar</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Filtrar: la decisión que parece rara</strong>
+                Si la trama va dirigida a alguien que está <strong>en el mismo puerto</strong> por el que ha entrado,
+                el switch la descarta.
+                <br><br>
+                Y tiene todo el sentido: si los dos están al otro lado del mismo cable, <strong>ya se han oído
+                directamente</strong>. Reenviarla sería mandar por la red una trama que su destinatario ya tiene.
+                <br><br>
+                Es exactamente la idea del puente de ayer, y ocurre cuando hay un hub o un switch colgado de ese
+                puerto.
+            </div>
+
+            <div class="aviso">
+                <strong>Inundar: cuando el switch se comporta como un hub</strong>
+                Si el switch <strong>no sabe</strong> dónde está el destinatario, no puede adivinarlo. Hace lo único
+                que garantiza la entrega: mandarlo por todos los puertos y confiar en que llegue.
+                <br><br>
+                Se llama <strong>inundación de unicast desconocido</strong>, y es lo que explicaba las pocas tramas
+                ajenas que quizá viste ayer en el laboratorio.
+                <br><br>
+                Ocurre en dos casos normales: un equipo que <strong>acaba de encenderse</strong> y todavía no ha
+                hablado, o uno cuya entrada ha <strong>caducado</strong> por llevar rato callado. En ambos, dura lo
+                que tarde ese equipo en responder: en cuanto conteste, el switch aprende su puerto de la MAC de
+                origen de la respuesta.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="ejemplo">5. Ejemplo completo, paso a paso</h2>
+
+            <p>Un switch de 4 puertos, recién encendido, con la tabla vacía. Cuatro equipos: A en el puerto 1, B en
+            el 2, C en el 3 y D en el 4.</p>
+
+            <div class="dato">
+                <strong>Paso 1 — A envía a B</strong>
+<pre><code>Tabla antes:  (vacía)
+
+Llega por el puerto 1, origen A, destino B
+  → APRENDE:  A está en el puerto 1
+  → ¿Dónde está B? No lo sé
+  → INUNDA: la envía por los puertos 2, 3 y 4
+
+Tabla después:   A → 1</code></pre>
+                <p>B recibe la trama, pero también C y D, que la descartan. El switch se ha comportado como un hub,
+                pero <strong>ya ha aprendido algo</strong>.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Paso 2 — B responde a A</strong>
+<pre><code>Tabla antes:  A → 1
+
+Llega por el puerto 2, origen B, destino A
+  → APRENDE:  B está en el puerto 2
+  → ¿Dónde está A? En el puerto 1
+  → REENVÍA: solo por el puerto 1
+
+Tabla después:   A → 1
+                 B → 2</code></pre>
+                <p>Esta vez <strong>C y D no ven nada</strong>. Con una sola trama de ida y otra de vuelta, la
+                conversación entre A y B ya es privada.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Paso 3 — C envía a A</strong>
+<pre><code>Tabla antes:  A → 1,  B → 2
+
+Llega por el puerto 3, origen C, destino A
+  → APRENDE:  C está en el puerto 3
+  → ¿Dónde está A? En el puerto 1
+  → REENVÍA: solo por el puerto 1
+
+Tabla después:   A → 1
+                 B → 2
+                 C → 3</code></pre>
+            </div>
+
+            <div class="destacado">
+                <strong>Lo que hay que sacar del ejemplo</strong>
+                <strong>Solo la primera trama hacia un destino desconocido se inunda.</strong> A partir de la
+                respuesta, todo va dirigido.
+                <br><br>
+                Por eso una red se «ordena» sola en cuestión de segundos: cada equipo que dice algo, aunque sea una
+                sola vez, queda registrado para siempre —o hasta que caduque—.
+                <br><br>
+                Y fíjate en que <strong>D no ha hablado nunca</strong>: sigue sin estar en la tabla. Cuando alguien
+                le escriba, esa primera trama se inundará. Su silencio es lo único que lo mantiene fuera.
+            </div>
+
+            <h2 id="caducidad">6. Por qué las entradas caducan</h2>
+
+            <p>Las entradas de la tabla no son eternas: tienen un <strong>temporizador de envejecimiento</strong>,
+            típicamente de <strong>5 minutos</strong>. Si una MAC no se vuelve a ver como origen en ese tiempo, se
+            borra.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Si no caducaran…</th><th>Con caducidad</th></tr></thead>
+                <tbody>
+                    <tr><td>La tabla se llenaría de equipos apagados hace meses</td><td>Solo contiene lo que está <strong>vivo</strong></td></tr>
+                    <tr><td>Mover un equipo de toma dejaría una entrada falsa</td><td>La entrada vieja <strong>desaparece sola</strong></td></tr>
+                    <tr><td>La memoria del switch, que es limitada, se agotaría</td><td>Se reutiliza continuamente</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Un efecto secundario que se nota</strong>
+                <p>Si un equipo pasa cinco minutos completamente callado, su entrada desaparece. La siguiente trama
+                que le envíen se <strong>inundará</strong> por toda la red hasta que él responda.</p>
+                <p>Eso explica las tramas ajenas sueltas de la captura de ayer: no eran un fallo, era el
+                funcionamiento normal de una red donde algunos equipos hablan poco.</p>
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: qué pasa si alguien llena la tabla a propósito</summary>
+                <p>La tabla tiene un tamaño limitado: unos pocos miles de entradas en un switch pequeño.</p>
+                <p>Existe un ataque, llamado <strong>MAC flooding</strong>, que consiste en generar tráfico con
+                miles de direcciones MAC de origen <strong>inventadas</strong>. El switch, que aprende de lo que ve,
+                las va apuntando todas hasta <strong>llenar la tabla</strong>.</p>
+                <p>Cuando ya no cabe nada, no puede aprender direcciones nuevas ni conservar las legítimas al
+                caducar. Y sin entradas, ¿qué hace con cada trama? <strong>Inundarla.</strong> El switch queda
+                degradado a hub, y el atacante puede volver a leer el tráfico de todos.</p>
+                <p>La defensa se llama <strong>port security</strong>: limitar cuántas MAC distintas se admiten por
+                puerto y desactivar el puerto si se supera. Es otra opción exclusiva de los switches
+                <strong>gestionables</strong>, y otra razón más para comprarlos.</p>
+            </details>
+
+            <h2 id="arp">7. ARP: la pregunta que lo hace posible</h2>
+
+            <p>Falta una pieza. El switch trabaja con direcciones MAC, pero cuando abres una página web tú no
+            escribes ninguna MAC: escribes un nombre, que se traduce a una <strong>IP</strong>.</p>
+
+            <div class="destacado">
+                <strong>El hueco que llena ARP</strong>
+                Tu equipo sabe la <strong>IP</strong> del destinatario, pero para construir la trama necesita su
+                <strong>MAC</strong>, que no tiene.
+                <br><br>
+                <strong>ARP</strong> es el protocolo que resuelve exactamente eso, y funciona preguntando a
+                gritos:
+                <br><br>
+                <strong>La pregunta va en difusión:</strong> «¿Quién tiene la IP 192.168.1.50? Que me lo diga a mí,
+                que soy 192.168.1.70.» Como va a <code>FF:FF:FF:FF:FF:FF</code>, el switch la <strong>inunda</strong>
+                y llega a todos.
+                <br><br>
+                <strong>La respuesta va en unicast:</strong> solo contesta el equipo que tiene esa IP, y contesta
+                directamente al que preguntó. El switch la <strong>reenvía</strong> por un solo puerto.
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de una captura de ARP</strong>
+<pre><code>1  TpLink_e4:e8:97      → Broadcast   ARP  Announcement for 192.168.1.119
+2  XiaomiMobile_dc:34:12 → Broadcast   ARP  Who has 192.168.1.1? Tell 192.168.1.214
+3  ASUSTek_26:b4:2f      → Broadcast   ARP  Who has 192.168.1.121? Tell 192.168.1.70
+...
+61 ASUSTek_26:b4:2f      → Proxmox_fd:d4:34  ARP  192.168.1.70 is at 50:eb:f6:26:b4:2f</code></pre>
+                <p>Las tres primeras van <strong>a Broadcast</strong>: son preguntas. La última va dirigida a un
+                equipo concreto: es una respuesta.</p>
+                <p>Fíjate en la línea 2: es el <strong>móvil de otra persona</strong> preguntando por el router.
+                Puedo verla porque va en difusión.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>El detalle que une los dos días</strong>
+                En esa captura hubo <strong>64 preguntas ARP</strong> visibles… pero solo <strong>5
+                respuestas</strong>, y las cinco eran mías: o las enviaba yo, o iban dirigidas a mí.
+                <br><br>
+                <strong>Ves las preguntas de todo el mundo, pero solo tus propias respuestas.</strong>
+                <br><br>
+                Y eso es exactamente lo que mediste ayer: las preguntas van en <strong>difusión</strong> y el switch
+                las inunda; las respuestas van en <strong>unicast</strong> y el switch las filtra. Los dos
+                laboratorios miden lo mismo desde dos ángulos.
+            </div>
+
+            <div class="dato">
+                <strong>La tabla ARP: la versión doméstica de la tabla MAC</strong>
+                <p>Tu equipo también guarda lo que aprende, en su <strong>tabla ARP</strong> o caché de vecinos: una
+                lista de qué MAC corresponde a cada IP. Así no tiene que preguntar cada vez.</p>
+                <p>Es la misma idea que la tabla del switch, con dos diferencias: relaciona <strong>IP con
+                MAC</strong> en lugar de MAC con puerto, y la construye <strong>preguntando</strong> en vez de
+                escuchando.</p>
+                <p>En el laboratorio de hoy vas a mirar la tuya.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="modos">8. Cómo de rápido: los modos de conmutación</h2>
+
+            <p>Una última decisión de diseño: ¿cuánto espera el switch antes de reenviar una trama?</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th><em>Store-and-forward</em></th><th><em>Cut-through</em></th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Qué espera</th><td>La trama <strong>entera</strong></td><td>Solo los primeros <strong>6 bytes</strong>: la MAC de destino</td></tr>
+                    <tr><th scope="row">Comprueba el FCS</th><td><strong>Sí</strong></td><td>No: para cuando lo lee, ya la ha enviado</td></tr>
+                    <tr><th scope="row">Tramas dañadas</th><td>Las <strong>descarta</strong></td><td>Las <strong>propaga</strong></td></tr>
+                    <tr><th scope="row">Retardo</th><td>Mayor y variable con el tamaño</td><td><strong>Mínimo</strong> y constante</td></tr>
+                    <tr><th scope="row">Dónde se usa</th><td><strong>Lo normal</strong>: casi todos los switches</td><td>Entornos donde cada microsegundo cuenta</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El compromiso, en una frase</strong>
+                <strong>Store-and-forward</strong> espera a tenerlo todo para poder <strong>comprobar el FCS</strong>
+                —el código de comprobación de la Semana 2— y descartar lo que llegue dañado. Cuesta un poco de
+                retardo, pero garantiza que no se propague basura.
+                <br><br>
+                <strong>Cut-through</strong> empieza a reenviar en cuanto sabe adónde va. Es más rápido, pero para
+                cuando podría comprobar el FCS <strong>ya ha enviado la trama</strong>. Si estaba dañada, la ha
+                repartido igual.
+                <br><br>
+                Hoy gana <em>store-and-forward</em> casi siempre: los switches son tan rápidos que la diferencia de
+                retardo dejó de importar, mientras que propagar tramas corruptas sigue siendo igual de malo.
+            </div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>El switch <strong>aprende de la MAC de origen</strong> y <strong>decide con la de destino</strong>. Esa asimetría es todo el mecanismo.</li>
+                    <li>La <strong>tabla MAC</strong> o CAM relaciona <strong>MAC con puerto</strong>. Se construye sola.</li>
+                    <li>Un puerto puede tener <strong>muchas MAC</strong>; una MAC, <strong>un solo puerto</strong>.</li>
+                    <li>Tres decisiones: <strong>reenviar</strong> (la conoce), <strong>filtrar</strong> (está en el mismo puerto) e <strong>inundar</strong> (no la conoce o es difusión).</li>
+                    <li>Solo la <strong>primera</strong> trama hacia un destino desconocido se inunda.</li>
+                    <li>Las entradas <strong>caducan</strong> a los ~5 minutos de silencio.</li>
+                    <li><strong>ARP</strong> traduce IP a MAC: pregunta en <strong>difusión</strong>, responde en <strong>unicast</strong>.</li>
+                    <li>Por eso ves las preguntas ARP de todos, pero solo tus respuestas.</li>
+                    <li><strong>Store-and-forward</strong> comprueba el FCS; <strong>cut-through</strong> es más rápido pero propaga tramas dañadas.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«El switch aprende de la MAC de destino»</td><td>De la de <strong>origen</strong>. La de destino es para decidir, no para aprender</td></tr>
+                    <tr><td>«Hay que configurar la tabla MAC»</td><td>Se construye <strong>sola</strong> con el tráfico que pasa</td></tr>
+                    <tr><td>«Si no conoce el destino, descarta la trama»</td><td>La <strong>inunda</strong>: prefiere molestar a todos antes que perderla</td></tr>
+                    <tr><td>«Un switch nunca se comporta como un hub»</td><td>Sí lo hace: con difusión y con <strong>unicast desconocido</strong></td></tr>
+                    <tr><td>«Cada puerto tiene una sola MAC»</td><td>Si hay otro switch colgando, ese puerto tendrá <strong>muchas</strong></td></tr>
+                    <tr><td>«La tabla MAC guarda direcciones IP»</td><td>Guarda <strong>MAC y puerto</strong>. La que relaciona IP con MAC es la tabla <strong>ARP</strong>, y está en los equipos</td></tr>
+                    <tr><td>«ARP lo hace el switch»</td><td>Lo hacen los <strong>equipos</strong>. El switch solo transporta esas tramas como cualquier otra</td></tr>
+                    <tr><td>«Cut-through es mejor porque es más rápido»</td><td>Es más rápido pero <strong>propaga tramas dañadas</strong>. Hoy se prefiere <em>store-and-forward</em></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 24 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>ver el aprendizaje en directo</strong>: capturar tráfico ARP y comprobar con tus propios
+            números que las preguntas van en difusión y las respuestas en unicast. Y a leer la tabla ARP de tu
+            equipo, que es su versión de la tabla del switch.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 2</strong></a> (76 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 3</strong>
+            <p><strong>El router</strong>: el aparato que sí separa dominios de broadcast. Qué mira, cómo decide y
+            por qué su tabla —a diferencia de la del switch— <strong>no</strong> se construye sola.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> el switch aprende solo escuchando. ¿Crees que un router puede
+            hacer lo mismo para saber por dónde se va a una red que está a diez saltos?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> Explica por qué el switch aprende de la MAC de <strong>origen</strong> y no de la de destino. ¿Qué pasaría si intentara aprender de la de destino?',
+                modelo: `<p>Porque la MAC de origen es la única que le da información <strong>fiable y
+                         comprobada</strong> sobre dónde está un equipo.</p>
+                         <p>Cuando una trama entra por el puerto 3, el switch <strong>sabe con certeza</strong> que
+                         quien la envió está al otro lado de ese cable: la trama ha llegado físicamente por ahí. Es
+                         una deducción que no puede fallar.</p>
+                         <p>Con la MAC de destino no tendría nada de eso. El destino es
+                         <strong>a dónde quiere ir la trama</strong>, no de dónde viene. Si el switch apuntara
+                         «destino B llegó por el puerto 3», estaría registrando que B está en el puerto 3
+                         cuando en realidad el puerto 3 es donde está <strong>A</strong>, que es quien
+                         escribe a B. La tabla quedaría exactamente al revés y el switch enviaría cada trama al sitio
+                         equivocado.</p>
+                         <p>La asimetría es lo elegante del mecanismo: <strong>de la trama que pasa, una dirección
+                         sirve para aprender y la otra para decidir</strong>, y son distintas. Además, el switch
+                         aprende de tráfico que ni siquiera va dirigido a él: no necesita que nadie le hable, solo que
+                         hablen a través de él.</p>`,
+                puntos: [
+                    'La MAC de origen es información comprobada: la trama llegó físicamente por ese puerto',
+                    'La de destino indica adónde va, no de dónde viene',
+                    'Explica que aprender del destino invertiría la tabla',
+                    'Señala la asimetría: una dirección para aprender, otra para decidir'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> Un switch de 8 puertos lleva horas funcionando y su tabla está completa. Un equipo del puerto 5 lleva 10 minutos apagado. Alguien le envía una trama. Cuenta qué ocurre, paso a paso.',
+                modelo: `<p><strong>1. La entrada ya no existe.</strong> Como lleva 10 minutos sin emitir nada y el
+                         temporizador de envejecimiento ronda los 5 minutos, su MAC se ha <strong>borrado</strong> de
+                         la tabla. Para el switch, ese equipo ya no está en ninguna parte.</p>
+                         <p><strong>2. Llega la trama y el switch no encuentra el destino.</strong> Busca la MAC en su
+                         tabla y no aparece.</p>
+                         <p><strong>3. Inunda.</strong> Al no saber por dónde sacarla, la envía por
+                         <strong>todos</strong> los puertos menos por el que entró. Es la <em>inundación de unicast
+                         desconocido</em>. Durante esa trama, el switch se comporta exactamente como un hub.</p>
+                         <p><strong>4. Los demás la descartan.</strong> Los equipos de los otros puertos la reciben,
+                         ven que la MAC de destino no es la suya y la tiran. Alguien capturando con Wireshark en esos
+                         puertos <strong>sí la vería</strong>: son las tramas ajenas sueltas del laboratorio de
+                         ayer.</p>
+                         <p><strong>5. Si el equipo está apagado, no pasa nada más</strong>: nadie responde y el
+                         switch sigue sin aprender. Cada trama que le manden se volverá a inundar. Si estuviera
+                         encendido y respondiera, esa respuesta entraría por el puerto 5 y el switch
+                         <strong>volvería a aprender</strong> su ubicación de la MAC de origen, con lo que la
+                         siguiente trama ya iría dirigida.</p>`,
+                puntos: [
+                    'La entrada ha caducado por el temporizador de envejecimiento',
+                    'El switch no encuentra la MAC en la tabla',
+                    'Inunda por todos los puertos menos el de entrada',
+                    'Menciona que eso explica las tramas ajenas del laboratorio anterior',
+                    'Explica que al responder el equipo, el switch vuelve a aprender'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> En una captura hay 64 preguntas ARP visibles pero solo 5 respuestas, y las 5 son tuyas. Explica por qué, uniendo lo de ayer y lo de hoy.',
+                modelo: `<p>Porque las preguntas y las respuestas de ARP <strong>viajan de forma distinta</strong>, y
+                         el switch las trata en consecuencia.</p>
+                         <p>La <strong>pregunta</strong> va en <strong>difusión</strong>, a
+                         <code>FF:FF:FF:FF:FF:FF</code>. Tiene que ser así: quien pregunta no sabe la MAC del
+                         destinatario —es justo lo que está pidiendo— así que no puede dirigirla a nadie. Y el switch
+                         no puede filtrar una difusión, de modo que la <strong>inunda</strong> por todos los puertos.
+                         Por eso me llegan las preguntas de todo el mundo, incluidas las del móvil de otra
+                         persona.</p>
+                         <p>La <strong>respuesta</strong> va en <strong>unicast</strong>, dirigida solo a quien
+                         preguntó: ahora sí se conoce su MAC, porque venía en la propia pregunta. El switch la
+                         <strong>reenvía por un solo puerto</strong>, así que solo veo las respuestas en las que yo
+                         soy parte.</p>
+                         <p>Es la misma medición del laboratorio de ayer vista desde otro ángulo: el switch filtra el
+                         100 % del unicast ajeno y el 0 % de la difusión. Aquí se ve con un único protocolo, en el
+                         que ambas cosas conviven: las preguntas son el tráfico que se inunda y las respuestas el que
+                         se filtra.</p>
+                         <p>Y explica algo más: el tráfico ARP es una parte importante del ruido de difusión de
+                         cualquier red, porque <strong>todo el mundo pregunta y todos lo oyen</strong>.</p>`,
+                puntos: [
+                    'La pregunta va en difusión porque se desconoce la MAC del destinatario',
+                    'El switch inunda la difusión y por eso llegan todas',
+                    'La respuesta va en unicast y el switch la reenvía a un solo puerto',
+                    'Conecta con la medición del laboratorio anterior',
+                    'Observa que ARP contribuye al ruido de difusión de la red'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿De qué dirección <strong>aprende</strong> un switch, y con cuál <strong>decide</strong>?', dorso: 'Aprende de la MAC de <strong>origen</strong>; decide con la de <strong>destino</strong>. Esa asimetría es todo el mecanismo.' },
+            { frente: '¿Qué relaciona la <strong>tabla MAC</strong> de un switch?', dorso: '<strong>Dirección MAC ↔ puerto</strong>. No guarda direcciones IP: eso es la tabla ARP, y está en los equipos.' },
+            { frente: '¿Cómo se configura la tabla MAC?', dorso: '<strong>No se configura</strong>: se construye sola con el tráfico que atraviesa el switch. Cada trama trae gratis la ubicación de su emisor.' },
+            { frente: '¿Por qué se llama tabla <strong>CAM</strong>?', dorso: '<em>Content Addressable Memory</em>: memoria que busca <strong>por contenido</strong> en un solo ciclo, sin recorrer la tabla. Es lo que permite decidir en microsegundos.' },
+            { frente: 'Las <strong>tres decisiones</strong> de un switch', dorso: '<strong>Reenviar</strong> (conoce el destino), <strong>filtrar</strong> (el destino está en el mismo puerto de entrada) e <strong>inundar</strong> (no lo conoce, o es difusión).' },
+            { frente: '¿Qué hace un switch si <strong>no conoce</strong> la MAC de destino?', dorso: 'La <strong>inunda</strong> por todos los puertos menos el de entrada. Se llama <em>inundación de unicast desconocido</em>: prefiere molestar a todos antes que perder la trama.' },
+            { frente: '¿Cuándo <strong>filtra</strong> (descarta) un switch una trama?', dorso: 'Cuando el destino está en el <strong>mismo puerto</strong> por el que entró: los dos ya se han oído directamente, así que reenviarla sobraría.' },
+            { frente: '¿Puede un puerto tener varias MAC?', dorso: '<strong>Sí</strong>, si hay otro switch o un hub colgando. Al revés no: una MAC solo puede estar en un puerto, y si aparece en otro, el switch <strong>actualiza</strong>.' },
+            { frente: '¿Cuántas tramas se inundan hacia un destino nuevo?', dorso: '<strong>Solo la primera.</strong> En cuanto el destinatario responde, el switch aprende su puerto de la MAC de origen y el resto va dirigido.' },
+            { frente: '¿Cada cuánto <strong>caducan</strong> las entradas y por qué?', dorso: 'A los <strong>5 minutos</strong> de silencio, aproximadamente. Así la tabla solo contiene equipos vivos y mover uno de toma no deja entradas falsas.' },
+            { frente: '¿Qué hace <strong>ARP</strong> y en qué sentido va cada mensaje?', dorso: 'Traduce <strong>IP a MAC</strong>. La <strong>pregunta</strong> va en difusión (no se sabe a quién dirigirla) y la <strong>respuesta</strong> en unicast.' },
+            { frente: '¿Por qué ves las preguntas ARP de otros pero no sus respuestas?', dorso: 'Porque las preguntas son <strong>difusión</strong> y el switch las inunda; las respuestas son <strong>unicast</strong> y las filtra.' },
+            { frente: 'Tabla <strong>MAC</strong> frente a tabla <strong>ARP</strong>', dorso: 'La MAC está en el <strong>switch</strong> y relaciona MAC con puerto, escuchando. La ARP está en los <strong>equipos</strong> y relaciona IP con MAC, preguntando.' },
+            { frente: '<strong>Store-and-forward</strong> frente a <strong>cut-through</strong>', dorso: 'El primero espera la trama entera y <strong>comprueba el FCS</strong>; el segundo reenvía tras leer la MAC de destino, es más rápido pero <strong>propaga tramas dañadas</strong>.' },
+            { frente: '¿Qué es el <strong>MAC flooding</strong>?', dorso: 'Llenar la tabla del switch con MAC inventadas para que no quepan las legítimas. Sin entradas, el switch <strong>inunda todo</strong> y queda degradado a hub. Se defiende con <em>port security</em>.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 2 — El switch por dentro',
+        subtitulo: 'Tabla MAC · aprender, reenviar, filtrar e inundar · ARP',
+        tiempo: '24 minutos',
+        minutos: 24,
+        questions: [
+            {
+                topic: 'Aprendizaje',
+                repaso: '#aprender',
+                text: 'Llega una trama por el puerto 3 con origen AA:AA:… y destino BB:BB:… ¿Qué aprende el switch?',
+                options: {
+                    a: 'Que BB:BB:… está en el puerto 3',
+                    b: 'Que AA:AA:… está en el puerto 3',
+                    c: 'Las dos cosas',
+                    d: 'Nada: solo aprende de las tramas dirigidas a él'
+                },
+                answer: 'b',
+                feedback: 'Aprende de la <strong>MAC de origen</strong>: si la trama entró por el puerto 3, quien la envió está en el puerto 3. Del destino no puede deducir nada, porque indica adónde <em>va</em>.'
+            },
+            {
+                topic: 'Aprendizaje',
+                repaso: '#aprender',
+                text: '¿Qué habría que configurar en un switch nuevo para que empiece a entregar bien las tramas?',
+                options: {
+                    a: 'La lista de direcciones MAC de cada puerto',
+                    b: 'Nada: construye su tabla solo, con el tráfico que pasa por él',
+                    c: 'Las direcciones IP de los equipos',
+                    d: 'La puerta de enlace'
+                },
+                answer: 'b',
+                feedback: 'Un switch no gestionable se enchufa y funciona. Cada trama que pasa trae gratis la ubicación de su emisor, así que la tabla se llena sola en segundos.'
+            },
+            {
+                topic: 'La tabla MAC',
+                repaso: '#tabla',
+                text: '¿Qué dos datos relaciona la tabla MAC de un switch?',
+                options: {
+                    a: 'Dirección IP y dirección MAC',
+                    b: 'Dirección MAC y número de puerto',
+                    c: 'Dirección IP y número de puerto',
+                    d: 'Nombre de equipo y dirección MAC'
+                },
+                answer: 'b',
+                feedback: 'La opción a describe la tabla <strong>ARP</strong>, que está en los equipos, no en el switch. Un switch no entiende de direcciones IP: es un dispositivo de capa 2.'
+            },
+            {
+                topic: 'La tabla MAC',
+                repaso: '#tabla',
+                text: 'En la tabla de un switch aparecen 12 direcciones MAC distintas asociadas al puerto 1. ¿Qué indica?',
+                options: {
+                    a: 'Un error: un puerto solo puede tener una MAC',
+                    b: 'Que en ese puerto hay otro switch o un hub, con varios equipos detrás',
+                    c: 'Que hay un ataque en curso',
+                    d: 'Que la tabla está corrupta'
+                },
+                answer: 'b',
+                feedback: 'Es completamente normal. Un puerto puede tener <strong>muchas</strong> MAC; lo que no puede es una MAC estar en dos puertos a la vez.'
+            },
+            {
+                topic: 'Las tres decisiones',
+                repaso: '#decisiones',
+                text: 'El switch conoce el destino y está en un puerto distinto del de entrada. ¿Qué hace?',
+                options: {
+                    a: 'Inunda por todos los puertos',
+                    b: 'Reenvía solo por ese puerto',
+                    c: 'Filtra: descarta la trama',
+                    d: 'La devuelve al origen'
+                },
+                answer: 'b',
+                feedback: 'Es el caso normal, y es <strong>reenviar</strong>. Que ocurra la inmensa mayoría de las veces es lo que hace que un switch filtre el tráfico ajeno.'
+            },
+            {
+                topic: 'Las tres decisiones',
+                repaso: '#decisiones',
+                text: 'El destino de la trama está en el <strong>mismo</strong> puerto por el que ha entrado. ¿Qué hace el switch?',
+                options: {
+                    a: 'La reenvía por ese mismo puerto',
+                    b: 'La inunda',
+                    c: 'La descarta: los dos equipos ya se han oído directamente',
+                    d: 'Genera un error'
+                },
+                answer: 'c',
+                feedback: 'Se llama <strong>filtrar</strong>. Si origen y destino están al otro lado del mismo cable, el destinatario ya tiene la trama: reenviarla sería trabajo inútil.'
+            },
+            {
+                topic: 'Las tres decisiones',
+                repaso: '#decisiones',
+                text: 'El switch no encuentra la MAC de destino en su tabla. ¿Qué hace?',
+                options: {
+                    a: 'Descarta la trama y avisa al emisor',
+                    b: 'La envía por todos los puertos menos por el de entrada',
+                    c: 'Pregunta a los demás switches',
+                    d: 'Espera a que el destino se anuncie'
+                },
+                answer: 'b',
+                feedback: '<strong>Inundación de unicast desconocido.</strong> Prefiere molestar a todos antes que perder la trama; durante ese instante se comporta como un hub.'
+            },
+            {
+                topic: 'Ejemplo y caducidad',
+                repaso: '#ejemplo',
+                text: 'Switch recién encendido, tabla vacía. A envía a B, y B responde a A. ¿Cuántas de esas dos tramas se han inundado?',
+                options: {
+                    a: 'Las dos',
+                    b: 'Solo la primera: al responder B, el switch ya conocía a A',
+                    c: 'Ninguna',
+                    d: 'Solo la segunda'
+                },
+                answer: 'b',
+                feedback: 'La primera se inunda porque B es desconocido; pero al pasar esa trama el switch aprendió dónde está A, así que la respuesta ya va dirigida. Por eso una red se ordena en segundos.'
+            },
+            {
+                topic: 'Ejemplo y caducidad',
+                repaso: '#caducidad',
+                text: '¿Por qué caducan las entradas de la tabla MAC a los pocos minutos?',
+                options: {
+                    a: 'Para ahorrar electricidad',
+                    b: 'Para que la tabla contenga solo equipos vivos y para que mover un equipo de toma no deje entradas falsas',
+                    c: 'Porque las MAC cambian cada cierto tiempo',
+                    d: 'Es un fallo de diseño heredado'
+                },
+                answer: 'b',
+                feedback: 'Y tiene un efecto secundario visible: un equipo que pase 5 minutos callado provocará que la siguiente trama dirigida a él se <strong>inunde</strong>.'
+            },
+            {
+                topic: 'ARP',
+                repaso: '#arp',
+                text: '¿Qué problema resuelve ARP?',
+                options: {
+                    a: 'Traducir nombres de dominio a direcciones IP',
+                    b: 'Averiguar la MAC que corresponde a una IP conocida, para poder construir la trama',
+                    c: 'Asignar direcciones IP automáticamente',
+                    d: 'Cifrar el tráfico de la red local'
+                },
+                answer: 'b',
+                feedback: 'La opción a es <strong>DNS</strong> y la c es <strong>DHCP</strong>. ARP resuelve el hueco entre la capa 3, que sabe la IP, y la capa 2, que necesita la MAC.'
+            },
+            {
+                topic: 'ARP',
+                repaso: '#arp',
+                text: '¿Por qué la <strong>pregunta</strong> ARP tiene que ir en difusión?',
+                options: {
+                    a: 'Por eficiencia: así llega antes',
+                    b: 'Porque quien pregunta no conoce la MAC del destinatario, que es justo lo que está pidiendo',
+                    c: 'Porque lo exige el switch',
+                    d: 'Para que el router se entere'
+                },
+                answer: 'b',
+                feedback: 'No puede dirigirla a nadie porque no sabe a quién. Por eso grita a todos. La <strong>respuesta</strong>, en cambio, ya puede ir en unicast: la MAC de quien preguntó venía en la pregunta.'
+            },
+            {
+                topic: 'ARP',
+                repaso: '#arp',
+                text: 'En una captura ves 64 preguntas ARP pero solo 5 respuestas, todas tuyas. ¿Por qué?',
+                options: {
+                    a: 'Porque la mayoría de las preguntas se quedan sin respuesta',
+                    b: 'Porque las preguntas van en difusión y el switch las inunda, mientras que las respuestas van en unicast y las filtra',
+                    c: 'Porque Wireshark no captura bien las respuestas',
+                    d: 'Porque las respuestas van cifradas'
+                },
+                answer: 'b',
+                feedback: 'Es el laboratorio de ayer visto con un solo protocolo: en ARP conviven el tráfico que se inunda y el que se filtra.'
+            },
+            {
+                topic: 'Modos de conmutación',
+                repaso: '#modos',
+                text: '¿Cuál es la ventaja de <em>store-and-forward</em> frente a <em>cut-through</em>?',
+                options: {
+                    a: 'Es más rápido',
+                    b: 'Espera la trama entera, así que puede comprobar el FCS y descartar las dañadas',
+                    c: 'Consume menos memoria',
+                    d: 'Funciona sin tabla MAC'
+                },
+                answer: 'b',
+                feedback: '<em>Cut-through</em> reenvía tras leer los 6 bytes de la MAC de destino: para cuando podría comprobar el FCS, <strong>ya ha enviado la trama</strong>. Si estaba dañada, la ha propagado.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: '../Dia_01/teoria.html#switch',
+                text: '<em>Repaso.</em> Un switch de 12 puertos con 12 equipos. ¿Dominios de colisión y de broadcast?',
+                options: {
+                    a: '12 y 12',
+                    b: '12 y 1',
+                    c: '1 y 1',
+                    d: '1 y 12'
+                },
+                answer: 'b',
+                feedback: 'Uno de colisión <strong>por puerto</strong>, pero un solo dominio de broadcast. Y hoy has visto por qué: la difusión se <strong>inunda</strong> siempre.'
+            },
+            {
+                topic: 'Recuperación · Semana 2',
+                repaso: '../../Semana_02/Dia_01/teoria.html',
+                text: '<em>Repaso.</em> ¿Qué parte de una dirección MAC identifica al fabricante, y quién la reparte?',
+                options: {
+                    a: 'Los últimos 3 bytes; los reparte IANA',
+                    b: 'Los primeros 3 bytes (el OUI); los reparte el IEEE',
+                    c: 'El primer byte; lo elige el fabricante',
+                    d: 'Toda la dirección; la reparte el fabricante'
+                },
+                answer: 'b',
+                feedback: 'El <strong>OUI</strong>. Es lo que permite que Wireshark muestre «TpLinkTechno» o «XiaomiMobile» en lugar de una tira de hexadecimal, como habrás visto en la captura ARP.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

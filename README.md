@@ -30,10 +30,11 @@ Además: **modo oscuro**, seguimiento de progreso guardado en el navegador y des
 | **Mes 1 · Semana 1** (7 días completos) | ✅ Terminada — teoría, quizzes, ejercicios y **6 laboratorios** |
 | **Mes 1 · Semana 2** (7 días completos) | ✅ Terminada — **6 laboratorios**, un **proyecto de diseño** y test semanal |
 | **Mes 1 · Semana 3** (5 días completos) | ✅ Terminada — **OSI**, **encapsulación**, **TCP/IP** y **normalización**, con 4 laboratorios: medición del **MTU** real y análisis con **Wireshark** |
+| **Mes 1 · Semana 4** (5 días completos) | ✅ Terminada — **hub, switch, router y punto de acceso**, con 4 laboratorios que demuestran la teoría con capturas reales, más el **examen mensual** |
 | Mes 1 · Semanas 3-4 | ⏳ Material en formato antiguo, pendiente de convertir |
 | Meses 2 a 12 | ⏳ Planificados en el calendario, sin desarrollar |
 
-Lo publicado suma unas **70 horas** de trabajo. La **Semana 2** culmina en un **proyecto**: diseñar la red completa de una empresa a partir de sus requisitos, justificando cada decisión.
+Lo publicado suma unas **92 horas** de trabajo: el **Mes 1 está completo**. La **Semana 2** culmina en un **proyecto**: diseñar la red completa de una empresa a partir de sus requisitos, justificando cada decisión.
 
 > Nota: los tipos de red y las topologías que el calendario original asignaba a la Semana 2 ya se cubrieron en la Semana 1, así que la Semana 2 desarrolla la otra mitad de su título: los **componentes** de una red.
 

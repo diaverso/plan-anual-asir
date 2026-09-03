@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: tu entorno inalámbrico y la elección de equipos</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">72 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Requisito:</strong> adaptador Wi-Fi</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Dos partes muy distintas. Primero, <strong>analizar tu propio entorno inalámbrico</strong>: qué normas
+            admite tu equipo, en qué banda estás y qué canales usan tus vecinos.</p>
+            <p>Y después, la parte que más se parece a un trabajo real: <strong>elegir los dispositivos</strong> de
+            una oficina a partir de sus requisitos, justificando cada decisión.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>Necesitas un <strong>adaptador Wi-Fi</strong>, aunque esté desconectado: casi todo lo de hoy
+                funciona igual.</li>
+                <li>Si tu equipo no tiene Wi-Fi, salta a la Parte 3: es la mitad del laboratorio y no lo
+                necesita.</li>
+                <li>Ningún comando modifica nada.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Qué admite tu equipo (14 min)</h2>
+
+            <p>Empieza por lo que tu propio adaptador es capaz de hacer. Este comando funciona
+            <strong>aunque el Wi-Fi esté desconectado</strong> y sin permisos especiales.</p>
+
+            <div class="so-tabs" data-grupo="drivers">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="drivers" data-so="win">
+                <div class="comando"><pre><code>netsh wlan show drivers</code></pre></div>
+                <p>Busca la línea <strong>Tipos de radio admitidos</strong>.</p>
+            </div>
+            <div class="so-panel" data-grupo="drivers" data-so="nix">
+                <div class="comando"><pre><code>iw list | grep -A8 "Band"</code></pre></div>
+                <p>Si no tienes <code>iw</code>: <code>sudo apt install iw</code>.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>Proveedor                : Intel Corporation
+Tipos de radio admitidos : 802.11b 802.11g 802.11n 802.11a 802.11ac 802.11ax</code></pre>
+                <p>Ahí está la historia entera del Wi-Fi en una línea. Traducido a los nombres de ayer:</p>
+                <ul>
+                    <li><strong>802.11b y g</strong>: las generaciones antiguas, solo 2,4 GHz.</li>
+                    <li><strong>802.11a</strong>: la primera de 5 GHz, de 1999.</li>
+                    <li><strong>802.11n</strong> = <strong>Wi-Fi 4</strong>.</li>
+                    <li><strong>802.11ac</strong> = <strong>Wi-Fi 5</strong>.</li>
+                    <li><strong>802.11ax</strong> = <strong>Wi-Fi 6</strong>, la más moderna que admite este equipo.</li>
+                </ul>
+                <p>Un adaptador admite <strong>todas las anteriores</strong> además de la suya: por eso un portátil
+                nuevo puede conectarse al router antiguo de una casa. Es la <strong>compatibilidad hacia
+                atrás</strong> que garantizan los estándares del IEEE.</p>
+            </div>
+
+            <h2>Parte 2 — Tu entorno inalámbrico (24 min)</h2>
+
+            <h3>Si estás conectado por Wi-Fi</h3>
+
+            <div class="comando"><pre><code>netsh wlan show interfaces</code></pre></div>
+
+            <p>Fíjate en <strong>SSID</strong>, <strong>BSSID</strong>, <strong>Canal</strong>, <strong>Tipo de
+            radio</strong> y <strong>Señal</strong>. Ahí está, con tus datos, todo el vocabulario de ayer.</p>
+
+            <div class="dato">
+                <strong>Si te sale «desconectado»</strong>
+<pre><code>Nombre           : Wi-Fi
+Estado           : desconectado
+Estado de radio  : Hardware Activado</code></pre>
+                <p>Es lo que ocurre si estás por cable, como en el equipo donde se preparó este laboratorio. No es un
+                problema: los apartados del cuestionario están pensados para las dos situaciones.</p>
+                <p>Si quieres los datos completos, conéctate un momento por Wi-Fi y repite el comando.</p>
+            </div>
+
+            <h3>Escanear las redes cercanas</h3>
+
+            <div class="comando"><pre><code>netsh wlan show networks mode=bssid</code></pre></div>
+
+            <div class="aviso">
+                <strong>Aviso importante para Windows 11</strong>
+                Este comando <strong>falla</strong> si no tienes activados los servicios de ubicación. El error es
+                confuso porque parece un problema de permisos de administrador:
+<pre><code>Los comandos de shell de red necesitan permiso de ubicación
+para acceder a la información de WLAN. Active los servicios de
+ubicación en la página Ubicación en la configuración de privacidad.</code></pre>
+                <strong>Por qué:</strong> las redes Wi-Fi cercanas permiten deducir <strong>dónde estás</strong> con
+                bastante precisión, así que Windows trata ese escaneo como un dato de ubicación.
+                <br><br>
+                Para activarlo: <em>Configuración → Privacidad y seguridad → Ubicación</em>. Si prefieres no
+                hacerlo, sáltate esta parte: el resto del laboratorio funciona igual, y en el cuestionario puedes
+                indicarlo.
+            </div>
+
+            <div class="dato">
+                <strong>Qué buscar en el escaneo</strong>
+                <ul>
+                    <li><strong>Cuántas redes</strong> hay a tu alrededor.</li>
+                    <li>Qué <strong>canales</strong> usan las de 2,4 GHz. ¿Se concentran en el 1, el 6 y el 11?</li>
+                    <li>Si alguna red aparece con <strong>varios BSSID</strong>: son varios APs con el mismo
+                    nombre.</li>
+                    <li>El <strong>cifrado</strong> de cada una. ¿Queda alguna abierta?</li>
+                </ul>
+            </div>
+
+            <h2>Parte 3 — Elige los dispositivos (26 min)</h2>
+
+            <p>La parte que más se parece a un encargo real. Lee el caso y decide.</p>
+
+            <div class="destacado">
+                <strong>El caso: Gestoría Ribera se muda</strong>
+                Vuelve la empresa del proyecto de la Semana 2, ahora en una oficina nueva de <strong>dos
+                plantas</strong>:
+                <ul>
+                    <li><strong>34 puestos de trabajo</strong> por cable: 20 en la planta baja y 14 en la primera.</li>
+                    <li><strong>2 servidores</strong> en un armario de la planta baja.</li>
+                    <li><strong>4 impresoras</strong> en red, dos por planta.</li>
+                    <li>Wi-Fi para <strong>portátiles y visitas</strong>, con cobertura en las dos plantas.</li>
+                    <li><strong>3 cámaras</strong> de seguridad IP, en techos <strong>sin enchufe cerca</strong>.</li>
+                    <li>Los datos de clientes deben quedar <strong>separados</strong> de la red de visitas.</li>
+                    <li>Salida a Internet por fibra.</li>
+                </ul>
+            </div>
+
+            <div class="aviso">
+                <strong>Antes de responder, piensa en estas cuatro cosas</strong>
+                <ol>
+                    <li><strong>Cuenta los puertos</strong> que hacen falta en cada planta, y no olvides los que
+                    consumen los propios enlaces entre aparatos.</li>
+                    <li>¿Qué aparato hace falta para <strong>separar</strong> la red de visitas de la de clientes?
+                    Hay dos formas de conseguirlo, y una es más barata.</li>
+                    <li>¿Cómo alimentas unas cámaras <strong>en un techo sin enchufe</strong>?</li>
+                    <li>Un solo punto de acceso, ¿cubre dos plantas? Piensa en lo que dice la teoría sobre las
+                    frecuencias y los obstáculos.</li>
+                </ol>
+            </div>
+
+            <h2>Parte 4 — Recoge y decide</h2>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sabes qué normas 802.11 admite tu equipo y a qué nombres comerciales corresponden.</li>
+                <li>Distingues <strong>SSID</strong> de <strong>BSSID</strong> con datos reales.</li>
+                <li>Has propuesto una solución completa para la gestoría, <strong>justificando</strong> cada
+                aparato.</li>
+                <li>Sabes calcular puertos contando también los enlaces entre switches.</li>
+            </ul>
+        </div>
+
+        <details class="ampliacion">
+            <summary>💡 Ampliación: dibuja la topología con FossFLOW</summary>
+            <p>Si quieres entregar un plano de la solución, puedes dibujarlo a mano —basta y es perfectamente
+            válido— o usar <strong>FossFLOW</strong>, una herramienta web para diagramas de red isométricos.</p>
+            <p>Instancia pública: <a href="https://fossflow.apps.icarosoft.com/">fossflow.apps.icarosoft.com</a> ·
+            código en <a href="https://github.com/victortassinari/FossFLOW">GitHub</a>.</p>
+            <p><strong>Dos avisos:</strong></p>
+            <ul>
+                <li><strong>No guarda sola.</strong> Trabaja en memoria de sesión: usa <em>Export File</em> o
+                perderás el trabajo al cerrar la pestaña.</li>
+                <li><strong>No uses «Server Storage».</strong> Ese botón sube tu diagrama al servidor de un tercero.</li>
+            </ul>
+            <p>Y que quede claro: FossFLOW <strong>dibuja</strong>, no simula. Lo que se evalúa es el plano y su
+            justificación, no la herramienta con la que lo hayas hecho.</p>
+        </details>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_03/laboratorio.html">← Laboratorio del Día 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Laboratorio: tu entorno inalámbrico y la elección de equipos',
+    subtitulo: 'Qué admite tu adaptador · canales de tus vecinos · elegir los equipos de una oficina',
+    tiempo: '72 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Tu adaptador',
+            tiempo: '14 min',
+            enunciado: '<p>Datos de la Parte 1.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> ¿Qué <strong>tipos de radio</strong> admite tu adaptador? Cópialos tal cual.',
+                    placeholder: '802.11b 802.11g 802.11n 802.11a 802.11ac 802.11ax',
+                    explicacion: 'Si tu equipo no tiene Wi-Fi, escribe «sin adaptador». Un adaptador admite <strong>todas las generaciones anteriores</strong> además de la suya: por eso un portátil nuevo funciona con un router viejo.'
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>b)</strong> ¿A qué nombre comercial corresponde <code>802.11ax</code>?',
+                    respuestas: ['wi-fi 6', 'wifi 6', 'wi fi 6', 'wifi6', 'wi-fi6'],
+                    explicacion: 'n = Wi-Fi 4, ac = Wi-Fi 5, <strong>ax = Wi-Fi 6</strong>. Los nombres numerados los puso la Wi-Fi Alliance en 2018 porque con las letras nadie sabía cuál era más nueva.',
+                    pistas: [
+                        'Los nombres comerciales van del 4 en adelante.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Tu adaptador admite 802.11ax pero tu router es de 802.11n. ¿Qué pasa?',
+                    opciones: {
+                        a: 'No se pueden conectar',
+                        b: 'Se conectan a 802.11n: se negocia la generación más alta que ambos admitan',
+                        c: 'Se conectan a 802.11ax igualmente',
+                        d: 'Hay que configurarlo a mano'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la <strong>compatibilidad hacia atrás</strong> que garantizan los estándares. Y explica algo útil: comprar un adaptador Wi-Fi 6 <strong>no mejora nada</strong> si el punto de acceso sigue siendo Wi-Fi 4.',
+                    pistas: [
+                        '¿Qué generaciones tienen los dos en común?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Tu entorno inalámbrico',
+            tiempo: '20 min',
+            enunciado: '<p>Datos de la Parte 2. Si tu Wi-Fi está desconectado, contesta lo que puedas.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> Estado de tu interfaz Wi-Fi. Si estás conectado, escribe el <strong>SSID</strong> y el <strong>canal</strong>; si no, escribe «desconectado».',
+                    placeholder: 'desconectado',
+                    explicacion: 'Las dos respuestas son válidas. Si estás por cable, tu Wi-Fi puede estar apagado y no pasa nada: el resto del laboratorio no depende de ello.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Has podido ejecutar el escaneo de redes cercanas?',
+                    opciones: {
+                        a: 'Sí, y he visto la lista de redes con sus canales',
+                        b: 'No: me pedía activar los servicios de ubicación',
+                        c: 'No: mi equipo no tiene adaptador Wi-Fi'
+                    },
+                    respuesta: null,
+                    libre: true,
+                    explicacion: 'Si te pidió la <strong>ubicación</strong>, es el comportamiento normal de Windows 11: las redes Wi-Fi cercanas permiten deducir dónde estás con bastante precisión, así que el escaneo se considera un dato de ubicación. Es un buen ejemplo de que la información de red también es información personal.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>c)</strong> Si has podido escanear: ¿cuántas redes Wi-Fi detecta tu equipo? (Escribe <code>0</code> si no has podido.)',
+                    placeholder: '12',
+                    explicacion: 'En un piso de ciudad suelen aparecer entre diez y treinta. Todas las de 2,4 GHz se están repartiendo <strong>tres canales</strong>, y ahí está la explicación de por qué esa banda va mal en zonas densas.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Una red aparece con <strong>tres BSSID distintos</strong> bajo el mismo SSID. ¿Qué significa?',
+                    opciones: {
+                        a: 'Que hay un error en el escaneo',
+                        b: 'Que esa red tiene tres puntos de acceso, todos con el mismo nombre',
+                        c: 'Que la red emite en tres canales a la vez por un solo AP',
+                        d: 'Que hay tres redes distintas con el mismo nombre por casualidad'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un <strong>SSID</strong> y varios <strong>BSSID</strong>: es lo normal en oficinas y en casas con repetidores. Para el usuario es «una red»; para el equipo, tres aparatos entre los que hace <strong>roaming</strong>.',
+                    pistas: [
+                        '¿Qué es exactamente un BSSID?'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>e)</strong> Completa la conclusión sobre los canales.',
+                    frase: 'En la banda de 2,4 GHz hay 13 canales numerados, pero solo {{0}} no se solapan: el 1, el {{1}} y el 11. Por eso, en un edificio con muchas redes, todas compiten por muy pocos canales. La solución más eficaz es pasarse a la banda de {{2}} GHz, aunque llegue menos lejos.',
+                    respuestas: [
+                        ['3', 'tres'],
+                        ['6', 'seis'],
+                        ['5', 'cinco']
+                    ],
+                    explicacion: 'Y no compiten solo con otras redes Wi-Fi: en 2,4 GHz también emiten microondas, Bluetooth y mandos inalámbricos, que interfieren sin seguir ninguna regla de cortesía.',
+                    pistas: [
+                        'Los tres canales sin solapar van de 5 en 5.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Elige los dispositivos de la gestoría',
+            tiempo: '26 min',
+            enunciado: '<p>El caso de la Parte 3. Justifica cada decisión.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> En la <strong>planta baja</strong> hay 20 puestos, 2 servidores y 2 impresoras. Sumando además <strong>un puerto para subir a la primera planta</strong> y otro para el router, ¿cuántos puertos hacen falta como mínimo?',
+                    respuesta: 26,
+                    tolerancia: 0.5,
+                    unidad: 'puertos',
+                    explicacion: '20 + 2 + 2 + 1 (enlace con la planta de arriba) + 1 (router) = <strong>26</strong>. Es el error clásico: contar solo los equipos y <strong>olvidar los enlaces entre aparatos</strong>, que también ocupan puerto.',
+                    pistas: [
+                        'Suma equipos, servidores e impresoras.',
+                        'No olvides los dos puertos que consumen las conexiones con otros aparatos.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Con esos 26 puertos necesarios, ¿qué switch comprarías para la planta baja?',
+                    opciones: {
+                        a: 'Uno de 24 puertos: es lo más ajustado',
+                        b: 'Uno de 48 puertos: cubre la necesidad y deja margen para crecer',
+                        c: 'Dos de 16 puertos encadenados',
+                        d: 'Uno de 8 puertos y varios hubs'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Uno de 24 <strong>no llega</strong>: hacen falta 26. Y una red siempre crece, así que quedarse justo obliga a encadenar switches al poco tiempo. La d es directamente inaceptable: <strong>los hubs no se usan</strong>.',
+                    pistas: [
+                        'Compara el número que has calculado con los tamaños habituales: 8, 16, 24, 48.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Hay que separar la red de <strong>visitas</strong> de la de <strong>datos de clientes</strong>. ¿Cuál es la solución más razonable?',
+                    opciones: {
+                        a: 'Instalar un segundo router y una segunda instalación de cable',
+                        b: 'Usar switches gestionables y crear dos VLAN sobre el cableado existente',
+                        c: 'Poner contraseñas distintas en cada equipo',
+                        d: 'Ocultar el SSID de la red de visitas'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Las <strong>VLAN</strong> separan dominios de broadcast sin duplicar cableado ni comprar un router por red. La a funcionaría pero es mucho más cara; la c y la d <strong>no separan nada</strong>: siguen estando en la misma red.',
+                    pistas: [
+                        '¿Qué función de un switch gestionable separa dominios de broadcast?'
+                    ]
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>d)</strong> Las 3 cámaras van en techos <strong>sin enchufe cerca</strong>. ¿Qué tecnología resuelve el problema? (Siglas)',
+                    respuestas: ['poe', 'power over ethernet', '802.3af', 'poe 802.3af'],
+                    explicacion: '<strong>PoE</strong>, norma <strong>802.3af</strong>: alimenta el aparato por el propio cable de red. Hay que comprobar que el switch tenga puertos PoE y suficiente <strong>presupuesto de potencia</strong> para todos los aparatos que vaya a alimentar.',
+                    pistas: [
+                        'Se estudió en la Semana 3, con las normas del IEEE 802.',
+                        'Alimentación por el cable de red.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> ¿Cuántos puntos de acceso pondrías para cubrir las dos plantas?',
+                    opciones: {
+                        a: 'Uno solo, potente, en la planta baja',
+                        b: 'Al menos uno por planta, con el mismo SSID y canales distintos',
+                        c: 'Uno por despacho',
+                        d: 'Ninguno: basta con el Wi-Fi del router'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un forjado entre plantas atenúa muchísimo la señal, sobre todo en 5 GHz. <strong>Mismo SSID</strong> para que el roaming sea transparente, y <strong>canales distintos</strong> para que los dos APs no se estorben.',
+                    pistas: [
+                        '¿Qué le hace un suelo de hormigón a una señal de radio?',
+                        '¿Qué pasaría si los dos APs usaran el canal 6?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 8,
+                    pregunta: '<strong>f)</strong> Escribe tu <strong>propuesta completa</strong> para la gestoría: qué aparatos, cuántos y por qué. Incluye una justificación por cada decisión.',
+                    modelo: `<p><strong>Planta baja: un switch gestionable de 48 puertos con PoE.</strong> Hacen falta
+                             26 puertos (20 puestos + 2 servidores + 2 impresoras + enlace a la planta de arriba +
+                             router), así que uno de 24 se queda corto. El de 48 deja margen para crecer, que es lo
+                             que siempre acaba pasando. <strong>Gestionable</strong> por las VLAN, y con
+                             <strong>PoE</strong> para las cámaras y los puntos de acceso.</p>
+                             <p><strong>Primera planta: un switch gestionable de 24 puertos.</strong> Necesita 14
+                             puestos + 2 impresoras + el enlace con la planta baja = 17, más el punto de acceso si va
+                             por PoE = 18. Uno de 24 encaja bien y deja algo de margen. Gestionable también, porque
+                             las VLAN tienen que existir en <strong>toda</strong> la red: de nada sirve separar en una
+                             planta y no en la otra.</p>
+                             <p><strong>Dos puntos de acceso, uno por planta</strong>, con el mismo SSID para que el
+                             roaming sea transparente y <strong>canales distintos</strong> para que no se estorben. Si
+                             admiten PoE, se alimentan del switch y se pueden colocar en el techo, que es donde mejor
+                             cubren, sin depender de dónde haya enchufes.</p>
+                             <p><strong>Un router con salida de fibra</strong>, que además hará de cortafuegos entre
+                             la red interna e Internet. Es también el que enrutará entre las VLAN, salvo que se opte
+                             por un switch de capa 3.</p>
+                             <p><strong>Dos VLAN como mínimo</strong>: una para los datos de clientes y otra para
+                             visitas y el Wi-Fi de invitados. Es la respuesta al requisito de separación, y separa de
+                             verdad porque son <strong>dominios de broadcast distintos</strong>. Si el presupuesto lo
+                             permite, una tercera para las cámaras, que no tienen por qué ver nada de la red
+                             ofimática.</p>
+                             <p><strong>Tres cámaras IP alimentadas por PoE</strong> desde el switch de la planta
+                             baja, comprobando que el <strong>presupuesto de potencia</strong> del switch dé para las
+                             tres cámaras más los puntos de acceso.</p>
+                             <p>Lo que descartaría explícitamente: switches <strong>no gestionables</strong>, porque
+                             sin VLAN no hay forma de cumplir el requisito de separación sin duplicar la instalación;
+                             y cualquier <strong>hub</strong>, que ni se fabrica ni tendría sentido.</p>`,
+                    rubrica: [
+                        'Dimensiona los switches contando también los enlaces entre aparatos',
+                        'Justifica que sean gestionables por las VLAN',
+                        'Propone dos VLAN para cumplir el requisito de separación',
+                        'Incluye PoE y lo relaciona con cámaras y puntos de acceso',
+                        'Propone un AP por planta con mismo SSID y canales distintos',
+                        'Menciona el router y su papel de frontera con Internet',
+                        'Descarta explícitamente alguna opción y explica por qué'
+                    ],
+                    pistas: [
+                        'Ve requisito por requisito: puestos, separación, cámaras sin enchufe, Wi-Fi en dos plantas.',
+                        'Para cada aparato, di el número de puertos o unidades y por qué ese y no otro.',
+                        'Termina diciendo qué has descartado y por qué.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre',
+            tiempo: '12 min',
+            enunciado: '<p>Lo que te llevas del día y de la semana.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la tabla que resume la semana: cada dispositivo con su capa.',
+                    esquina: 'Dispositivo',
+                    cabecera: ['Capa OSI'],
+                    filas: [
+                        { etiqueta: '<strong>Hub</strong>', celdas: [{ respuestas: ['1', 'uno'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>Switch</strong>', celdas: [{ respuestas: ['2', 'dos'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>Punto de acceso</strong>', celdas: [{ respuestas: ['2', 'dos'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>Router</strong>', celdas: [{ respuestas: ['3', 'tres'], placeholder: 'nº' }] },
+                        { etiqueta: '<strong>Proxy</strong>', celdas: [{ respuestas: ['7', 'siete'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'Es la tabla del lunes, ya completa. Que el <strong>punto de acceso</strong> comparta capa con el switch es lo que explica que no separe dominios de broadcast, y que un móvil por Wi-Fi esté en la misma red que un equipo por cable.',
+                    pistas: [
+                        'Dos de los cinco están en la misma capa.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> Un cliente dice: «pon Wi-Fi en toda la oficina y quitamos los cables, que así ahorramos». Responde con lo aprendido esta semana.',
+                    modelo: `<p>Ahorraría en instalación, pero pagaría el precio en rendimiento y fiabilidad, y en
+                             algunos puestos no sería aceptable.</p>
+                             <p><strong>El medio pasa a ser compartido.</strong> Con cable, cada puesto tiene su
+                             propio dominio de colisión y su gigabit dedicado. Por Wi-Fi, todos los que estén en el
+                             mismo AP y canal <strong>se reparten</strong> la capacidad y se esperan unos a otros con
+                             CSMA/CA.</p>
+                             <p><strong>El rendimiento real es la mitad</strong> de la cifra anunciada, frente al
+                             96 % de Ethernet conmutado. Y basta con que un portátil viejo o alejado negocie una
+                             velocidad baja para que <strong>ralentice a todos</strong>, porque ocupa el canal más
+                             tiempo.</p>
+                             <p><strong>Hay elementos que no deberían ir por Wi-Fi</strong> en ningún caso: los dos
+                             servidores, que reciben tráfico de 34 personas, y probablemente las cámaras, que emiten
+                             vídeo de forma continua y saturarían el canal.</p>
+                             <p><strong>Y en seguridad</strong>, la señal sale del edificio: cualquiera desde la calle
+                             puede recibirla. Se resuelve con WPA3, pero es una superficie de ataque que con el cable
+                             sencillamente no existe.</p>
+                             <p>Mi propuesta sería la <strong>mixta</strong>, que es la que estaba: cable para los
+                             puestos fijos, los servidores y las impresoras, y Wi-Fi para portátiles y visitas, que es
+                             donde aporta lo que el cable no puede dar, que es <strong>movilidad</strong>. El ahorro
+                             de quitar el cableado se lo comerían las quejas de rendimiento en pocas semanas.</p>`,
+                    rubrica: [
+                        'Explica que el medio inalámbrico es compartido y el cableado no',
+                        'Cita el rendimiento real: la mitad de lo nominal',
+                        'Menciona que un cliente lento perjudica a todos',
+                        'Identifica qué equipos no deberían ir por Wi-Fi y por qué',
+                        'Añade el argumento de seguridad',
+                        'Propone una solución mixta razonada'
+                    ],
+                    pistas: [
+                        '¿Qué diferencia hay entre el medio de un switch y el de un AP?',
+                        '¿Qué equipos de la oficina sufrirían más el cambio?',
+                        'Termina con una propuesta concreta, no solo con objeciones.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">80 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 3 es una <strong>simulación paso a paso</strong>: irás rellenando la tabla MAC de un switch
+            trama a trama. Es la mejor forma de comprobar si has entendido el mecanismo o solo lo has leído.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/ejercicios.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Ejercicios',
+    subtitulo: 'Tabla MAC · aprender, reenviar, filtrar e inundar · ARP',
+    tiempo: '80 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: El mecanismo de aprendizaje',
+            tiempo: '12 min',
+            enunciado: '<p>La asimetría que lo explica todo.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa el mecanismo.',
+                    frase: 'Un switch <strong>aprende</strong> mirando la dirección MAC de {{0}} de cada trama, y deduce que quien la envió está en el puerto por el que ha {{1}}. En cambio, para <strong>decidir</strong> por dónde sacarla mira la dirección MAC de {{2}}. La tabla que construye relaciona cada MAC con un {{3}}.',
+                    respuestas: [
+                        ['origen', 'origen o emisor', 'emisor'],
+                        ['entrado', 'llegado', 'entrado la trama'],
+                        ['destino', 'destino o receptor'],
+                        ['puerto', 'numero de puerto', 'número de puerto']
+                    ],
+                    explicacion: 'De las dos direcciones que lleva cada trama, <strong>una sirve para aprender y la otra para decidir</strong>. Esa asimetría es todo el mecanismo del switch.',
+                    pistas: [
+                        'Las dos primeras respuestas están relacionadas: la trama llega de alguien, por algún sitio.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué pasaría si un switch aprendiera de la MAC de <strong>destino</strong> en lugar de la de origen?',
+                    opciones: {
+                        a: 'Nada: sería equivalente',
+                        b: 'La tabla quedaría al revés: apuntaría que el destinatario está en el puerto donde en realidad está el emisor',
+                        c: 'Aprendería el doble de rápido',
+                        d: 'Solo funcionaría con tramas de difusión'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El destino indica <strong>adónde va</strong> la trama, no de dónde viene. Solo la de origen está avalada por un hecho comprobable: esa trama ha entrado físicamente por ese puerto.',
+                    pistas: [
+                        '¿Qué sabe con certeza el switch cuando una trama entra por un puerto?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Necesita el switch que los equipos le hablen <em>a él</em> para aprender dónde están?',
+                    opciones: {
+                        a: 'Sí: cada equipo debe registrarse al conectarse',
+                        b: 'No: aprende de cualquier trama que lo atraviese, aunque vaya dirigida a otro',
+                        c: 'Sí, pero solo la primera vez',
+                        d: 'Solo si es un switch gestionable'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es lo elegante del diseño: el switch <strong>no participa</strong> en ninguna conversación, solo necesita que ocurran a través suyo. No hay registro, ni protocolo de anuncio, ni configuración.',
+                    pistas: [
+                        '¿De qué tramas puede extraer información útil?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Las tres decisiones',
+            tiempo: '12 min',
+            enunciado: '<p>Reenviar, filtrar o inundar. No hay una cuarta opción.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada situación con la decisión que toma el switch.',
+                    izquierda: [
+                        'Conoce el destino y está en otro puerto',
+                        'Conoce el destino y está en el mismo puerto de entrada',
+                        'No conoce la MAC de destino',
+                        'La MAC de destino es FF:FF:FF:FF:FF:FF'
+                    ],
+                    derecha: [
+                        'Reenviar: la envía solo por ese puerto',
+                        'Filtrar: la descarta, porque ya se han oído directamente',
+                        'Inundar: la envía por todos los puertos menos el de entrada',
+                        'Inundar: la difusión va dirigida a todos por definición'
+                    ],
+                    pares: {
+                        'Conoce el destino y está en otro puerto': 'Reenviar: la envía solo por ese puerto',
+                        'Conoce el destino y está en el mismo puerto de entrada': 'Filtrar: la descarta, porque ya se han oído directamente',
+                        'No conoce la MAC de destino': 'Inundar: la envía por todos los puertos menos el de entrada',
+                        'La MAC de destino es FF:FF:FF:FF:FF:FF': 'Inundar: la difusión va dirigida a todos por definición'
+                    },
+                    explicacion: 'Dos situaciones distintas llevan a la misma decisión —inundar— pero por motivos opuestos: en una <strong>no sabe</strong> adónde enviarla, y en la otra <strong>sabe perfectamente</strong> que va para todos.',
+                    pistas: [
+                        'Dos de las cuatro terminan en la misma decisión.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué al inundar se excluye siempre el puerto de entrada?',
+                    opciones: {
+                        a: 'Para ahorrar ancho de banda',
+                        b: 'Porque quien la envió ya la tiene: devolvérsela no aporta nada y podría causar bucles',
+                        c: 'Porque ese puerto está ocupado',
+                        d: 'No se excluye: se envía también por él'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es una regla constante: <strong>nunca se devuelve una trama por donde ha venido</strong>. Ni al inundar, ni al reenviar.',
+                    pistas: [
+                        '¿Quién está al otro lado del puerto de entrada, y qué tiene ya?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un switch inunda una trama unicast. ¿Es un fallo?',
+                    opciones: {
+                        a: 'Sí: significa que está mal configurado',
+                        b: 'No: es el comportamiento normal cuando no conoce el destino, y dura hasta que ese equipo responda',
+                        c: 'Sí: indica que la tabla está corrupta',
+                        d: 'No, pero solo ocurre en switches no gestionables'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Se llama <strong>inundación de unicast desconocido</strong>. Ante la duda, el switch prefiere molestar a todos antes que perder la trama. Y se corrige solo: en cuanto el destinatario conteste, aprende su puerto.',
+                    pistas: [
+                        '¿Qué alternativa tendría el switch: inundar o descartar?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Simula el switch, trama a trama',
+            tiempo: '22 min',
+            enunciado: `
+                <p>Un switch de <strong>4 puertos</strong>, recién encendido y con la <strong>tabla vacía</strong>.
+                Los equipos son <strong>A</strong> (puerto 1), <strong>B</strong> (puerto 2), <strong>C</strong>
+                (puerto 3) y <strong>D</strong> (puerto 4).</p>
+                <p>Ve resolviendo en orden: cada apartado parte del estado que dejó el anterior.</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> <strong>Trama 1: C envía a A.</strong> Rellena qué ocurre.',
+                    esquina: 'Pregunta',
+                    cabecera: ['Respuesta'],
+                    filas: [
+                        { etiqueta: '¿Qué MAC aprende el switch?', celdas: [{ respuestas: ['c', 'la de c', 'c en el puerto 3', 'la de c, puerto 3'], placeholder: 'A / B / C / D' }] },
+                        { etiqueta: '¿En qué puerto la apunta?', celdas: [{ respuestas: ['3', 'puerto 3', 'tres'], placeholder: 'nº' }] },
+                        { etiqueta: '¿Qué decisión toma? (reenviar / filtrar / inundar)', celdas: [{ respuestas: ['inundar', 'inunda', 'inundarla'], placeholder: 'decisión' }] }
+                    ],
+                    explicacion: 'Aprende <strong>C en el puerto 3</strong>, porque la trama entró por ahí. Pero <strong>A es desconocido</strong>, así que no le queda otra que <strong>inundar</strong> por los puertos 1, 2 y 4.',
+                    pistas: [
+                        'El switch aprende del emisor, no del destinatario.',
+                        '¿Estaba A en la tabla antes de esta trama?'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> <strong>Trama 2: A responde a C.</strong> La tabla ya contiene <code>C → 3</code>.',
+                    esquina: 'Pregunta',
+                    cabecera: ['Respuesta'],
+                    filas: [
+                        { etiqueta: '¿Qué MAC aprende ahora?', celdas: [{ respuestas: ['a', 'la de a', 'a en el puerto 1'], placeholder: 'A / B / C / D' }] },
+                        { etiqueta: '¿Qué decisión toma?', celdas: [{ respuestas: ['reenviar', 'reenvia', 'reenvía', 'reenviarla'], placeholder: 'decisión' }] },
+                        { etiqueta: '¿Por qué puertos sale la trama? (escribe los números)', celdas: [{ respuestas: ['3', 'puerto 3', 'solo el 3', 'el 3'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'Aprende <strong>A en el puerto 1</strong> y, como ya conocía a C, <strong>reenvía</strong> solo por el puerto 3. B y D no ven nada. Con dos tramas, la conversación entre A y C ya es privada.',
+                    pistas: [
+                        '¿Conocía el switch a C tras la trama anterior?'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>c)</strong> <strong>Trama 3: B envía una difusión.</strong> La tabla contiene <code>C → 3</code> y <code>A → 1</code>.',
+                    esquina: 'Pregunta',
+                    cabecera: ['Respuesta'],
+                    filas: [
+                        { etiqueta: '¿Qué MAC aprende?', celdas: [{ respuestas: ['b', 'la de b', 'b en el puerto 2'], placeholder: 'A / B / C / D' }] },
+                        { etiqueta: '¿Qué decisión toma?', celdas: [{ respuestas: ['inundar', 'inunda', 'inundarla'], placeholder: 'decisión' }] },
+                        { etiqueta: '¿Cuántas entradas tiene ya la tabla?', celdas: [{ respuestas: ['3', 'tres'], placeholder: 'nº' }] }
+                    ],
+                    explicacion: 'Aprende <strong>B en el puerto 2</strong>, y la tabla pasa a tener <strong>3 entradas</strong>. Inunda, pero esta vez <strong>no por desconocimiento</strong>: una difusión va dirigida a todos por definición, así que la inundaría aunque conociera a todo el mundo.',
+                    pistas: [
+                        'Aquí el switch inunda por un motivo distinto al del apartado a.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Tras las tres tramas, ¿qué equipo <strong>sigue sin estar</strong> en la tabla y por qué?',
+                    opciones: {
+                        a: 'A, porque solo ha respondido',
+                        b: 'D, porque no ha enviado ninguna trama todavía',
+                        c: 'B, porque su trama era de difusión',
+                        d: 'Ninguno: los cuatro están'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El switch solo aprende de quien <strong>habla</strong>. D ha estado callado, así que sigue siendo desconocido: la próxima trama dirigida a él se inundará.',
+                    pistas: [
+                        'Repasa de qué dirección aprende el switch.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> De las tres tramas, ¿cuántas ha recibido el equipo <strong>D</strong>?',
+                    respuesta: 2,
+                    tolerancia: 0.5,
+                    unidad: 'tramas',
+                    explicacion: 'Recibió la <strong>trama 1</strong> (inundada por destino desconocido) y la <strong>trama 3</strong> (difusión). No recibió la 2, que fue reenviada solo al puerto 3. Las descartó las dos, porque ninguna era para él.',
+                    pistas: [
+                        'D recibe todo lo que se inunda, sea por el motivo que sea.',
+                        '¿Cuántas de las tres tramas se inundaron?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Caducidad y casos límite',
+            tiempo: '12 min',
+            enunciado: '<p>Lo que pasa cuando la tabla envejece o se llena.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Un equipo lleva 10 minutos encendido pero completamente callado. Alguien le envía una trama. ¿Qué ocurre?',
+                    opciones: {
+                        a: 'Se reenvía directamente a su puerto',
+                        b: 'Se inunda, porque su entrada ha caducado, y al responder el switch vuelve a aprender dónde está',
+                        c: 'Se descarta',
+                        d: 'El switch pregunta por él con ARP'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El temporizador de envejecimiento ronda los <strong>5 minutos</strong>. La d es un error frecuente: <strong>ARP lo hacen los equipos</strong>, no el switch.',
+                    pistas: [
+                        '¿Cuánto dura una entrada sin refrescarse?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué es bueno que las entradas caduquen?',
+                    opciones: {
+                        a: 'Para que el switch consuma menos',
+                        b: 'Para que la tabla contenga solo equipos vivos y para que mover un equipo de toma no deje una entrada falsa',
+                        c: 'Porque las direcciones MAC cambian con el tiempo',
+                        d: 'Para obligar a reconfigurar la red periódicamente'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La memoria del switch es limitada y la red cambia constantemente. La caducidad hace que la tabla se adapte sola, sin que nadie intervenga.',
+                    pistas: [
+                        '¿Qué pasaría con un equipo que cambias de toma si la entrada vieja no desapareciera?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>c)</strong> Un atacante genera tráfico con miles de MAC de origen inventadas. Explica qué le pasa al switch y por qué eso le interesa al atacante.',
+                    modelo: `<p>Se llama <strong>MAC flooding</strong>, y aprovecha el propio mecanismo de aprendizaje
+                             en contra del switch.</p>
+                             <p>Como el switch aprende de <strong>toda</strong> MAC de origen que ve, sin comprobar
+                             nada, va apuntando las miles de direcciones falsas hasta <strong>llenar la tabla</strong>,
+                             que tiene un tamaño limitado.</p>
+                             <p>Cuando ya no cabe nada más, no puede aprender direcciones nuevas ni volver a apuntar
+                             las legítimas cuando caduquen. Y sin entradas en la tabla, ante cada trama solo le queda
+                             una opción: <strong>inundarla</strong>.</p>
+                             <p>Ahí está el interés del atacante: el switch queda <strong>degradado a hub</strong>, y
+                             todo el tráfico de la red vuelve a pasar por su cable, donde puede leerlo. Es una forma
+                             de recuperar la situación que el switch había eliminado.</p>
+                             <p>La defensa se llama <strong>port security</strong>: limitar cuántas MAC distintas se
+                             admiten por puerto y desactivarlo si se supera el límite. Es una opción de los switches
+                             <strong>gestionables</strong>, y una razón de peso para comprarlos.</p>`,
+                    rubrica: [
+                        'Explica que el switch aprende sin comprobar nada y llena la tabla',
+                        'Señala que sin entradas libres no puede aprender ni conservar las legítimas',
+                        'Concluye que entonces inunda todo y queda degradado a hub',
+                        'Identifica el objetivo del atacante: volver a ver el tráfico ajeno',
+                        'Menciona port security como defensa'
+                    ],
+                    pistas: [
+                        '¿Comprueba el switch que una MAC de origen sea real?',
+                        '¿Qué hace un switch cuando su tabla no tiene la entrada que necesita?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: ARP',
+            tiempo: '12 min',
+            enunciado: '<p>La pieza que une la capa 3 con la capa 2.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué problema resuelve ARP?',
+                    opciones: {
+                        a: 'Traducir nombres de dominio en direcciones IP',
+                        b: 'Averiguar la MAC correspondiente a una IP conocida, para poder construir la trama',
+                        c: 'Repartir direcciones IP automáticamente',
+                        d: 'Encontrar la ruta hacia una red remota'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La a es <strong>DNS</strong>, la c es <strong>DHCP</strong> y la d es el <strong>enrutamiento</strong>, que es mañana. ARP cubre el hueco entre saber la IP y necesitar la MAC.',
+                    pistas: [
+                        'Piensa qué le falta a tu equipo justo antes de poder enviar la trama.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Completa cómo viaja cada mensaje de ARP.',
+                    esquina: 'Mensaje',
+                    cabecera: ['¿Difusión o unicast?', '¿Por qué?'],
+                    filas: [
+                        {
+                            etiqueta: 'La <strong>pregunta</strong> («who has»)',
+                            celdas: [
+                                { respuestas: ['difusion', 'difusión', 'broadcast'], placeholder: 'tipo' },
+                                { respuestas: ['no se sabe la mac', 'no conoce la mac', 'porque no sabe la mac', 'se desconoce la mac', 'no sabe a quien dirigirla', 'no sabe a quién dirigirla'], placeholder: 'motivo' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'La <strong>respuesta</strong> («is at»)',
+                            celdas: [
+                                { respuestas: ['unicast', 'unidifusion', 'unidifusión', 'dirigida'], placeholder: 'tipo' },
+                                { respuestas: ['ya se sabe la mac', 'venia en la pregunta', 'venía en la pregunta', 'conoce la mac', 'la mac venia en la pregunta', 'sabe a quien responder', 'sabe a quién responder'], placeholder: 'motivo' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'No es una decisión de diseño arbitraria: es la <strong>única</strong> forma posible. No se puede dirigir un mensaje a alguien cuya dirección es precisamente lo que estás preguntando.',
+                    pistas: [
+                        'Piensa qué información falta al empezar y cuál ya se tiene al contestar.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué diferencia hay entre la tabla MAC y la tabla ARP?',
+                    opciones: {
+                        a: 'Ninguna: son dos nombres para lo mismo',
+                        b: 'La MAC está en el switch y relaciona MAC con puerto; la ARP está en los equipos y relaciona IP con MAC',
+                        c: 'La MAC está en los equipos y la ARP en el switch',
+                        d: 'La ARP solo existe en los routers'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Y también se llenan de forma opuesta: la del switch <strong>escuchando</strong>, la del equipo <strong>preguntando</strong>. Las dos existen por lo mismo: no volver a averiguar lo ya sabido.',
+                    pistas: [
+                        '¿Puede un switch entender direcciones IP?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Integración',
+            tiempo: '10 min',
+            enunciado: '<p>Une los dos días de esta semana con las anteriores.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>a)</strong> Marca <strong>todas</strong> las situaciones en que un switch se comporta igual que un hub.',
+                    opciones: {
+                        a: 'Cuando la trama va a la dirección de difusión',
+                        b: 'Cuando no conoce la MAC de destino',
+                        c: 'Cuando su tabla se ha llenado por un ataque de MAC flooding',
+                        d: 'Siempre que la trama tiene errores de FCS'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'La d es falsa: en <em>store-and-forward</em>, una trama con FCS incorrecto se <strong>descarta</strong>, no se inunda. Las otras tres son las tres formas de que un switch acabe inundando.',
+                    pistas: [
+                        'Tres de las cuatro llevan a inundar.',
+                        '¿Qué hace un switch con una trama que llega dañada?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> Ayer mediste que casi ninguna trama ajena llega a tu cable, y hoy que ves 64 preguntas ARP pero solo tus 5 respuestas. Explica por qué <strong>las dos mediciones dicen lo mismo</strong>.',
+                    modelo: `<p>Porque las dos miden el mismo comportamiento del switch desde ángulos distintos:
+                             <strong>filtra el unicast y no puede filtrar la difusión</strong>.</p>
+                             <p>La medición de ayer lo veía en el conjunto del tráfico: de más de mil tramas, las
+                             ajenas eran cero, pero sí llegaban 23 de difusión y 145 de multicast. Es decir, filtró el
+                             100 % del unicast que no me incumbía y el 0 % del tráfico dirigido a grupos.</p>
+                             <p>La de hoy lo ve <strong>dentro de un solo protocolo</strong>, y por eso es más
+                             elegante. ARP usa los dos tipos de tráfico: pregunta en difusión y responde en unicast.
+                             Como resultado, me llegan las preguntas de todos los equipos —64— pero solo las
+                             respuestas en las que participo yo —5—.</p>
+                             <p>Si el switch filtrara la difusión, no vería las preguntas ajenas. Si no filtrara el
+                             unicast, vería todas las respuestas. Que ocurra exactamente una cosa y no la otra
+                             confirma las dos reglas a la vez, en la misma captura.</p>
+                             <p>Y esa es la razón de fondo de que un switch cree un dominio de colisión por puerto
+                             pero un solo dominio de broadcast: no son dos hechos independientes que hay que
+                             memorizar, son <strong>la misma cosa dicha de dos maneras</strong>.</p>`,
+                    rubrica: [
+                        'Identifica el comportamiento común: filtra unicast, inunda difusión',
+                        'Resume qué midió cada laboratorio',
+                        'Señala que ARP contiene los dos tipos de tráfico a la vez',
+                        'Razona qué se vería si el switch se comportara de otro modo',
+                        'Conecta con los dominios de colisión y broadcast'
+                    ],
+                    pistas: [
+                        '¿Qué tipo de tráfico filtra el switch y cuál no?',
+                        '¿Qué tienen de especial las preguntas ARP frente a las respuestas?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

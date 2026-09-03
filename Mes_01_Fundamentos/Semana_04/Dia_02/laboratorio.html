@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: el aprendizaje en directo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">76 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> Wireshark y terminal</div>
+        <div class="info-item"><strong>Requisito:</strong> red local con más equipos</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Ayer mediste el <strong>resultado</strong> del filtrado. Hoy vas a ver el <strong>mecanismo</strong>:
+            cómo se averigua quién es quién en una red.</p>
+            <p>Vas a leer la tabla ARP de tu equipo, provocar preguntas ARP a voluntad y comprobar con tus propios
+            números la afirmación de la teoría: <strong>ves las preguntas de todo el mundo, pero solo tus
+            respuestas</strong>.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>Necesitas <strong>otros equipos en la red</strong>: el router cuenta, y cualquier móvil
+                conectado también.</li>
+                <li>Ninguno de los comandos de hoy modifica nada.</li>
+                <li>Vas a hacer ping a direcciones IP de tu propia red que probablemente no existan. Es una
+                comprobación normal de administración, no un escaneo agresivo.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Tu tabla ARP (14 min)</h2>
+
+            <p>Tu equipo guarda lo que va aprendiendo sobre sus vecinos. Míralo.</p>
+
+            <div class="so-tabs" data-grupo="arp">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="arp" data-so="win">
+                <div class="comando"><pre><code>Get-NetNeighbor -AddressFamily IPv4 -State Reachable,Stale |
+    Select-Object IPAddress, LinkLayerAddress, State |
+    Sort-Object IPAddress</code></pre></div>
+                <p>También sirve el clásico <code>arp -a</code>, más corto pero con menos información.</p>
+            </div>
+            <div class="so-panel" data-grupo="arp" data-so="nix">
+                <div class="comando"><pre><code>ip neigh show</code></pre></div>
+                <p>En macOS: <code>arp -a</code>.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>IPAddress      LinkLayerAddress     State
+---------      ----------------     -----
+192.168.1.140  AE-4A-44-72-C8-09    Stale
+192.168.1.158  40-49-0F-AC-CF-1D    Reachable
+192.168.1.159  CC-98-8B-B2-96-23    Reachable
+192.168.1.204  18-81-0E-DE-9B-26    Stale
+192.168.1.214  64-64-4A-DC-34-12    Stale
+192.168.1.238  7C-A6-B0-1C-75-59    Stale</code></pre>
+                <p>Cada línea es un vecino con el que este equipo ha hablado hace poco. La columna
+                <strong>State</strong> es interesante:</p>
+                <ul>
+                    <li><strong>Reachable</strong>: confirmado hace muy poco.</li>
+                    <li><strong>Stale</strong>: se aprendió hace rato y no se ha vuelto a comprobar. Sigue siendo
+                    válido, pero el sistema lo verificará antes de fiarse del todo.</li>
+                </ul>
+            </div>
+
+            <div class="destacado">
+                <strong>Esto es la versión doméstica de la tabla del switch</strong>
+                Misma idea, dos diferencias:
+                <div class="tabla-wrap" style="margin-top:10px">
+                <table>
+                    <thead><tr><th></th><th>Tabla MAC (switch)</th><th>Tabla ARP (tu equipo)</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Relaciona</th><td>MAC ↔ <strong>puerto</strong></td><td><strong>IP</strong> ↔ MAC</td></tr>
+                        <tr><th scope="row">Cómo se llena</th><td><strong>Escuchando</strong> el tráfico que pasa</td><td><strong>Preguntando</strong> con ARP</td></tr>
+                        <tr><th scope="row">Dónde está</th><td>En el switch</td><td>En cada equipo</td></tr>
+                        <tr><th scope="row">Caduca</th><td>Sí, unos 5 min</td><td>Sí, unos minutos</td></tr>
+                    </tbody>
+                </table>
+                </div>
+                Las dos existen por lo mismo: <strong>no volver a averiguar lo que ya se sabe</strong>.
+            </div>
+
+            <h2>Parte 2 — Provoca preguntas ARP (20 min)</h2>
+
+            <p>Ahora vamos a generar tráfico ARP a voluntad. El truco es pedirle a tu equipo que hable con
+            direcciones IP <strong>que no están en su tabla</strong>: se verá obligado a preguntar.</p>
+
+            <ol>
+                <li>Abre Wireshark y empieza a capturar en tu interfaz con el filtro de captura <code>arp</code>.</li>
+                <li>Con la captura en marcha, ejecuta los pings de abajo. Elige direcciones de tu red que
+                <strong>no aparezcan</strong> en la tabla de la Parte 1.</li>
+                <li>Después haz un ping normal a tu <strong>puerta de enlace</strong>.</li>
+                <li>Deja correr la captura unos <strong>30 segundos más</strong> sin hacer nada: el tráfico ARP de
+                los demás equipos seguirá llegando solo.</li>
+                <li>Para la captura.</li>
+            </ol>
+
+            <div class="so-tabs" data-grupo="gen">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="gen" data-so="win">
+                <div class="comando"><pre><code>120..124 | ForEach-Object { ping -n 1 -w 400 192.168.1.$_ }</code></pre></div>
+                <p>Cambia <code>192.168.1</code> por el de tu red y elige números libres. <code>-w 400</code> hace que
+                no espere más de 0,4 segundos por cada uno.</p>
+            </div>
+            <div class="so-panel" data-grupo="gen" data-so="nix">
+                <div class="comando"><pre><code>for i in 120 121 122 123 124; do ping -c 1 -W 1 192.168.1.$i; done</code></pre></div>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de la captura</strong>
+<pre><code>1  TpLink_e4:e8:97       → Broadcast   ARP  Announcement for 192.168.1.119
+2  XiaomiMobile_dc:34:12 → Broadcast   ARP  Who has 192.168.1.1? Tell 192.168.1.214
+3  ASUSTek_26:b4:2f      → Broadcast   ARP  Who has 192.168.1.121? Tell 192.168.1.70
+4  ASUSTek_26:b4:2f      → Broadcast   ARP  Who has 192.168.1.122? Tell 192.168.1.70
+7  ASUSTek_26:b4:2f      → Broadcast   ARP  Who has 192.168.1.121? Tell 192.168.1.70
+...
+61 ASUSTek_26:b4:2f      → Proxmox_fd:d4:34  ARP  192.168.1.70 is at 50:eb:f6:26:b4:2f</code></pre>
+                <p>Tres cosas que mirar:</p>
+                <ul>
+                    <li>Las líneas 3 y 4 son <strong>mis</strong> preguntas, provocadas por los pings. Van a
+                    <strong>Broadcast</strong>.</li>
+                    <li>La línea 2 es el <strong>móvil de otra persona</strong> preguntando por el router. La veo
+                    porque va en difusión.</li>
+                    <li>La línea 7 repite la pregunta 3. Como nadie contestó —esa IP no existe— mi equipo
+                    <strong>insiste</strong> antes de rendirse.</li>
+                </ul>
+            </div>
+
+            <h2>Parte 3 — Cuenta preguntas y respuestas (22 min)</h2>
+
+            <p>Aquí está el experimento del día. Aplica estos <strong>filtros de visualización</strong> y anota el
+            número de <em>Displayed</em>.</p>
+
+            <div class="destacado">
+                <strong>Los filtros</strong>
+                <div class="tabla-wrap" style="margin-top:12px">
+                <table>
+                    <thead><tr><th>Filtro</th><th>Qué cuenta</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>arp.opcode == 1</code></td><td><strong>Preguntas</strong> («who has»), que van en difusión</td></tr>
+                        <tr><td><code>arp.opcode == 2</code></td><td><strong>Respuestas</strong> («is at»), que van en unicast</td></tr>
+                        <tr><td><code>arp.opcode == 2 and eth.addr == TU:MAC</code></td><td>Respuestas <strong>en las que participas tú</strong></td></tr>
+                    </tbody>
+                </table>
+                </div>
+                Los códigos de operación de ARP son solo dos: <strong>1 pregunta</strong> y <strong>2
+                respuesta</strong>. Están fijados en el RFC 826, de 1982.
+            </div>
+
+            <div class="destacado">
+                <strong>Resultado real de una captura de 25 segundos</strong>
+<pre><code>Preguntas ARP  (opcode 1, difusión)   64
+Respuestas ARP (opcode 2, unicast)     5
+  … de ellas, en las que participo yo   5</code></pre>
+                <p><strong>Las cinco respuestas visibles eran mías.</strong> Ni una sola respuesta ajena.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Ahí está la demostración</strong>
+                Sesenta y cuatro preguntas de toda la red, pero <strong>solo las respuestas que me incumben</strong>.
+                <br><br>
+                No es que los demás no reciban respuesta: claro que la reciben. Es que esas respuestas van en
+                <strong>unicast</strong> y el switch las entrega <strong>solo por el puerto del que preguntó</strong>.
+                A mi cable no llegan.
+                <br><br>
+                Es exactamente lo que mediste ayer, pero ahora con los dos comportamientos <strong>dentro del mismo
+                protocolo</strong>: ARP inunda cuando pregunta y filtra cuando responde.
+            </div>
+
+            <h2>Parte 4 — Interpreta (20 min)</h2>
+
+            <div class="dato">
+                <strong>Por qué se repiten las preguntas</strong>
+                <p>Si has hecho ping a direcciones que no existen, verás la misma pregunta repetida dos o tres veces
+                con un segundo de diferencia.</p>
+                <p>Es lo normal: ARP no tiene forma de saber si el silencio significa «no existe» o «se ha perdido la
+                trama», así que <strong>insiste</strong> antes de rendirse. Solo entonces el ping falla con
+                <em>host inaccesible</em>.</p>
+                <p>Y fíjate en el detalle: ese ping no ha fallado por un problema de capa 3, sino porque
+                <strong>no se ha podido resolver la capa 2</strong>. Sin MAC no hay trama que enviar.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Lo que esto añade sobre el ruido de difusión</strong>
+                Todas esas preguntas —las tuyas y las de los demás— llegan a <strong>todos</strong> los equipos de la
+                red. Cada uno la lee, comprueba si la IP preguntada es la suya y, casi siempre, la descarta.
+                <br><br>
+                En una red de 10 equipos no se nota. En una de 500, con todo el mundo preguntando por todo el mundo,
+                el ARP es una parte importante del <strong>ruido de difusión</strong> que todos tienen que procesar.
+                <br><br>
+                Es uno de los motivos por los que las redes grandes se dividen en <strong>VLAN</strong>: no solo por
+                seguridad, también para que ese ruido no lo aguanten 500 equipos.
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: si ARP se fía de cualquiera, ¿no es peligroso?</summary>
+                <p>Sí, y mucho. ARP fue diseñado en 1982 sin ninguna autenticación: <strong>cualquiera puede
+                responder a cualquier pregunta</strong>, y quien pregunta se cree la primera respuesta que llega.</p>
+                <p>De ahí sale el <strong>ARP spoofing</strong>: un atacante responde «la IP del router soy yo» y a
+                partir de ese momento las víctimas le envían a él todo el tráfico destinado a Internet. Él lo reenvía
+                al router de verdad, así que nadie nota nada, mientras lee todo lo que pasa.</p>
+                <p>Es la forma moderna de conseguir lo que antes daba gratis un hub, y la razón de que existan
+                defensas como <strong>Dynamic ARP Inspection</strong> en los switches gestionables.</p>
+                <p>No lo verás en profundidad hasta el Mes 11, pero conviene saber desde ya que la comodidad de que
+                todo funcione solo tiene ese precio.</p>
+            </details>
+
+            <h2>Parte 5 — Recoge tus datos</h2>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sabes leer tu tabla ARP y explicar en qué se parece y en qué se diferencia de la tabla del
+                switch.</li>
+                <li>Has provocado preguntas ARP y sabes por qué se repiten.</li>
+                <li>Tienes tus números de preguntas y respuestas, y sabes qué demuestran.</li>
+                <li>Puedes explicar por qué un ping a una IP inexistente falla en la <strong>capa 2</strong>.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_01/laboratorio.html">← Laboratorio del Día 1</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Laboratorio: el aprendizaje en directo',
+    subtitulo: 'Tabla ARP · provocar preguntas · preguntas en difusión, respuestas en unicast',
+    tiempo: '76 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Tu tabla ARP',
+            tiempo: '14 min',
+            enunciado: '<p>Datos de la Parte 1.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>a)</strong> ¿Cuántos vecinos aparecen en tu tabla ARP?',
+                    placeholder: '6',
+                    explicacion: 'Son los equipos con los que el tuyo ha hablado hace poco. Que aparezcan pocos no significa que la red esté vacía: solo se apunta con quien se ha tenido conversación.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'mac',
+                    pregunta: '<strong>b)</strong> Escribe la MAC de uno de esos vecinos.',
+                    placeholder: 'cc:98:8b:b2:96:23',
+                    explicacion: 'Si buscas su OUI —los tres primeros bytes— en <a href="https://maclookup.app/">maclookup.app</a> sabrás de qué fabricante es el aparato. Es una forma rápida de identificar qué hay conectado a una red.'
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>c)</strong> Relaciona cada tabla con lo que guarda y cómo se llena.',
+                    izquierda: ['Tabla MAC (en el switch)', 'Tabla ARP (en tu equipo)'],
+                    derecha: [
+                        'MAC ↔ puerto, y se llena escuchando el tráfico que pasa',
+                        'IP ↔ MAC, y se llena preguntando en difusión'
+                    ],
+                    pares: {
+                        'Tabla MAC (en el switch)': 'MAC ↔ puerto, y se llena escuchando el tráfico que pasa',
+                        'Tabla ARP (en tu equipo)': 'IP ↔ MAC, y se llena preguntando en difusión'
+                    },
+                    explicacion: 'Las dos existen por el mismo motivo —<strong>no volver a averiguar lo ya sabido</strong>— pero resuelven problemas distintos y con métodos opuestos: una escucha, la otra pregunta.',
+                    pistas: [
+                        'Una está en un aparato de red y la otra en cada ordenador.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Una entrada aparece como <code>Stale</code>. ¿Qué significa?',
+                    opciones: {
+                        a: 'Que es incorrecta y hay que borrarla',
+                        b: 'Que se aprendió hace rato y no se ha vuelto a confirmar; sigue siendo válida pero se verificará antes de fiarse',
+                        c: 'Que ese equipo está apagado',
+                        d: 'Que la MAC ha cambiado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es el mismo principio del envejecimiento de la tabla del switch: la información de red <strong>caduca</strong>, porque los equipos se apagan, se mueven y cambian.',
+                    pistas: [
+                        'Compara con la caducidad de las entradas de la tabla MAC.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Preguntas y respuestas',
+            tiempo: '22 min',
+            enunciado: '<p>Datos de las Partes 2 y 3. El experimento del día.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>a)</strong> <code>arp.opcode == 1</code> — ¿cuántas <strong>preguntas</strong> ARP has capturado?',
+                    placeholder: '64',
+                    explicacion: 'Incluye las tuyas y las de todos los demás equipos de la red. Todas van en difusión, así que todas te llegan.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>b)</strong> <code>arp.opcode == 2</code> — ¿cuántas <strong>respuestas</strong>?',
+                    placeholder: '5',
+                    explicacion: 'Muchísimas menos. Y no porque las preguntas se queden sin contestar, sino porque las respuestas <strong>no pasan por tu cable</strong> salvo que te incumban.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>c)</strong> De esas respuestas, ¿cuántas te incluyen a ti como origen o destino? (Filtro <code>arp.opcode == 2 and eth.addr == TU:MAC</code>)',
+                    placeholder: '5',
+                    explicacion: 'Si este número coincide con el anterior, has demostrado que <strong>todas</strong> las respuestas que ves son tuyas: el switch filtra el 100 % de las ajenas.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Por qué ves muchas más preguntas que respuestas?',
+                    opciones: {
+                        a: 'Porque la mayoría de preguntas no obtienen respuesta',
+                        b: 'Porque las preguntas van en difusión y el switch las inunda, mientras que las respuestas van en unicast y las filtra',
+                        c: 'Porque las respuestas viajan más rápido y no da tiempo a capturarlas',
+                        d: 'Porque Wireshark descarta las respuestas'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Las preguntas ajenas <strong>sí</strong> obtienen respuesta: lo que pasa es que esa respuesta va directamente de un puerto a otro, sin pasar por el tuyo.',
+                    pistas: [
+                        '¿Qué hace el switch con una trama de difusión? ¿Y con una unicast que no va a tu puerto?'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>e)</strong> Completa el porqué del diseño de ARP.',
+                    frase: 'La pregunta ARP tiene que ir en {{0}} porque quien pregunta no conoce todavía la {{1}} del destinatario: es justamente lo que está pidiendo. La respuesta, en cambio, puede ir en {{2}}, porque la dirección de quien preguntó venía dentro de la propia pregunta.',
+                    respuestas: [
+                        ['difusion', 'difusión', 'broadcast'],
+                        ['mac', 'direccion mac', 'dirección mac'],
+                        ['unicast', 'unidifusion', 'unidifusión', 'dirigida']
+                    ],
+                    explicacion: 'No es una decisión arbitraria: es la <strong>única</strong> forma posible de arrancar la conversación. No se puede dirigir un mensaje a alguien cuya dirección es lo que estás preguntando.',
+                    pistas: [
+                        'Piensa en qué información falta al principio y cuál ya se tiene al final.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Interpretación',
+            tiempo: '20 min',
+            enunciado: '<p>Qué significa lo que has medido.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Has hecho ping a una IP que no existe y ves la misma pregunta ARP repetida tres veces. ¿Por qué?',
+                    opciones: {
+                        a: 'Porque la red está saturada',
+                        b: 'Porque ARP no sabe si el silencio significa «no existe» o «se perdió la trama», así que insiste antes de rendirse',
+                        c: 'Porque el switch la devuelve',
+                        d: 'Porque el ping envía tres paquetes'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es un comportamiento sensato ante la incertidumbre. Solo tras varios intentos sin respuesta, el ping falla.',
+                    pistas: [
+                        '¿Puede distinguir tu equipo entre «no hay nadie» y «no me ha llegado la respuesta»?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Ese ping ha fallado. ¿En qué capa está realmente el problema?',
+                    opciones: {
+                        a: 'En la capa 3: la IP de destino no responde',
+                        b: 'En la capa 2: no se ha podido averiguar la MAC, así que ni siquiera se ha llegado a construir la trama',
+                        c: 'En la capa 4: el puerto está cerrado',
+                        d: 'En la capa 1: el cable está mal'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es un matiz fino y muy útil: el paquete IP <strong>nunca llegó a enviarse</strong>. Sin MAC de destino no hay trama en la que meterlo. El fallo ocurre una capa más abajo de lo que parece.',
+                    pistas: [
+                        '¿Qué necesita tu equipo para poder construir la trama, y qué le faltaba?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> Con lo medido hoy y ayer, explica qué relación hay entre el <strong>tráfico ARP</strong> y el hecho de que las redes grandes se dividan en VLAN.',
+                    modelo: `<p>El tráfico ARP es una de las principales fuentes de <strong>ruido de difusión</strong>
+                             de una red, porque las preguntas van obligatoriamente a todos.</p>
+                             <p>Cada vez que un equipo quiere hablar con otro cuya MAC no tiene en su tabla,
+                             <strong>pregunta a gritos</strong>. Esa pregunta llega a todos los equipos del dominio de
+                             broadcast, que la leen, comprueban si la IP es la suya y casi siempre la descartan. Ese
+                             trabajo lo hacen todos, para nada.</p>
+                             <p>Con 10 equipos da igual: en mi captura fueron 64 preguntas en 25 segundos, algo
+                             perfectamente asumible. Pero el problema no crece de forma lineal: cuantos más equipos
+                             hay, más conversaciones nuevas se inician y <strong>más equipos tienen que procesar cada
+                             pregunta</strong>. En una red de 500 equipos, cada uno pasa el día descartando preguntas
+                             que no le incumben.</p>
+                             <p>Y el switch no puede ayudar: ya vi ayer que filtra el 100 % del unicast ajeno pero el
+                             0 % de la difusión, porque filtrar una difusión sería incumplir lo que esa dirección
+                             significa.</p>
+                             <p>De ahí las <strong>VLAN</strong>: dividen la red en varios dominios de broadcast, de
+                             modo que una pregunta ARP solo molesta a los equipos de su grupo. Se suele presentar como
+                             una medida de seguridad, y lo es, pero <strong>el motivo original es de
+                             rendimiento</strong>.</p>`,
+                    rubrica: [
+                        'Explica que las preguntas ARP van en difusión y las procesan todos',
+                        'Señala que el trabajo es inútil para casi todos los receptores',
+                        'Razona que el problema escala mal con el tamaño de la red',
+                        'Recuerda que el switch no puede filtrar la difusión',
+                        'Concluye que las VLAN dividen dominios de broadcast, por rendimiento además de por seguridad'
+                    ],
+                    pistas: [
+                        '¿A cuántos equipos llega cada pregunta ARP?',
+                        '¿Qué pasa con ese número cuando la red crece?',
+                        '¿Puede el switch hacer algo al respecto?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre',
+            tiempo: '20 min',
+            enunciado: '<p>Une el mecanismo del switch con lo que has observado.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena lo que ocurre cuando tu equipo, recién encendido, quiere hablar con otro de su red por primera vez.',
+                    elementos: [
+                        'El switch reenvía la respuesta solo por tu puerto',
+                        'Tu equipo envía una pregunta ARP en difusión',
+                        'El destinatario responde en unicast con su MAC',
+                        'El switch inunda la pregunta por todos los puertos',
+                        'Tu equipo ya puede construir la trama y enviar los datos'
+                    ],
+                    orden: [
+                        'Tu equipo envía una pregunta ARP en difusión',
+                        'El switch inunda la pregunta por todos los puertos',
+                        'El destinatario responde en unicast con su MAC',
+                        'El switch reenvía la respuesta solo por tu puerto',
+                        'Tu equipo ya puede construir la trama y enviar los datos'
+                    ],
+                    explicacion: 'Cinco pasos, y en el segundo y el cuarto se ve el switch haciendo sus <strong>dos comportamientos opuestos</strong> con el mismo protocolo: inundar la difusión y reenviar el unicast.',
+                    pistas: [
+                        'Empieza por lo que hace tu equipo cuando le falta un dato.',
+                        'Cada mensaje pasa por el switch, así que hay un paso suyo tras cada uno.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> Explica qué aprende <strong>el switch</strong> durante ese intercambio ARP, aunque ninguno de los dos mensajes vaya dirigido a él.',
+                    modelo: `<p>Aprende <strong>las dos ubicaciones</strong>, y lo hace sin que nadie le diga nada.</p>
+                             <p>Cuando pasa <strong>mi pregunta</strong>, el switch mira su MAC de <strong>origen</strong>
+                             —la mía— y apunta que estoy en el puerto por el que ha entrado. Ojo: la MAC de destino de
+                             esa trama es la de difusión, que no le sirve para aprender nada, y además le obliga a
+                             inundarla.</p>
+                             <p>Cuando pasa <strong>la respuesta</strong>, mira su MAC de origen —la del otro equipo—
+                             y apunta en qué puerto está él. Y como la de destino ya la conoce, porque acaba de
+                             aprenderla con mi pregunta, puede <strong>reenviarla directamente</strong> a mi puerto sin
+                             inundar.</p>
+                             <p>El resultado es que, con solo dos tramas, el switch ha aprendido las dos direcciones y
+                             la conversación entre nosotros ya es privada a partir de ahí.</p>
+                             <p>Es el mecanismo del que hablaba la teoría: el switch aprende de tráfico que
+                             <strong>no va dirigido a él</strong>. No necesita participar en las conversaciones, solo
+                             que ocurran a través suyo.</p>`,
+                    rubrica: [
+                        'Explica que aprende mi MAC de la pregunta, por su dirección de origen',
+                        'Señala que la MAC de destino de la pregunta es la de difusión y no sirve para aprender',
+                        'Explica que aprende la del otro equipo de la respuesta',
+                        'Observa que la respuesta ya puede reenviarse sin inundar',
+                        'Concluye que aprende de tráfico que no le va dirigido'
+                    ],
+                    pistas: [
+                        '¿Qué dirección usa el switch para aprender?',
+                        'Fíjate en que la pregunta va a la dirección de difusión: ¿le sirve de algo?',
+                        '¿Por qué la respuesta ya no necesita inundarse?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

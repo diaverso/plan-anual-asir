@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Wi-Fi y el resto de dispositivos</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 4 — Wi-Fi y el resto de dispositivos</h1>
+        <p>El punto de acceso · cortafuegos, proxy y balanceador · cómo elegir</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 62 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 24 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 41 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>El día que cierra el catálogo</strong>
+            Hoy se completan las cuatro filas de la tabla del lunes: el <strong>punto de acceso</strong> en la capa 2
+            y los aparatos de las <strong>capas 4 a 7</strong>. Y termina con lo que de verdad se pregunta en un
+            trabajo: <strong>cuál comprar y por qué</strong>.
+        </div>
+
+        <div class="destacado">
+            <strong>La pregunta de ayer</strong>
+            El switch acabó con las colisiones dando <strong>un cable a cada equipo</strong>. ¿Puede hacerse lo
+            mismo con el Wi-Fi?
+            <br><br>
+            <strong>No.</strong> Y esa imposibilidad explica casi todo lo que tiene de particular una red
+            inalámbrica.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#ap">El punto de acceso</a></li>
+                <li><a href="#colisiones">Por qué vuelven las colisiones</a></li>
+                <li><a href="#compartido">Las consecuencias del medio compartido</a></li>
+                <li><a href="#estandares">802.11 y las generaciones de Wi-Fi</a></li>
+                <li><a href="#canales">Bandas, canales e interferencia</a></li>
+                <li><a href="#ssid">SSID, BSSID y roaming</a></li>
+                <li><a href="#otros">Los dispositivos de las capas de arriba</a></li>
+                <li><a href="#elegir">Cómo elegir un dispositivo</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="ap">1. El punto de acceso</h2>
+
+            <p>Un <strong>punto de acceso</strong> —AP, de <em>access point</em>— conecta equipos inalámbricos a una
+            red cableada. Es la puerta entre el aire y el cable.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Punto de acceso</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Capa</th><td><strong>2 · Enlace</strong>, igual que un switch</td></tr>
+                    <tr><th scope="row">Qué mira</th><td>La dirección <strong>MAC</strong></td></tr>
+                    <tr><th scope="row">Qué une</th><td>Los equipos inalámbricos con la red cableada</td></tr>
+                    <tr><th scope="row">Dominios de broadcast</th><td><strong>No los separa</strong>: los inalámbricos están en la misma red que los cableados</td></tr>
+                    <tr><th scope="row">Dominios de colisión</th><td><strong>Uno solo</strong> para todos sus clientes</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Un AP es, en el fondo, un switch para el aire… con un problema</strong>
+                Trabaja en la misma capa que un switch, mira lo mismo y tampoco separa dominios de broadcast. Por eso
+                tu móvil por Wi-Fi puede imprimir en la impresora conectada por cable: <strong>están en la misma
+                red</strong>.
+                <br><br>
+                Pero hay una diferencia decisiva, y es la de la última fila de la tabla: <strong>un solo dominio de
+                colisión</strong>. En eso se parece más a un <strong>hub</strong> que a un switch.
+            </div>
+
+            <h2 id="colisiones">2. Por qué vuelven las colisiones</h2>
+
+            <p>Un switch elimina las colisiones porque <strong>da un cable a cada equipo</strong>. Cada puerto es un
+            medio independiente, y dos conversaciones distintas pueden ir a la vez sin enterarse una de la otra.</p>
+
+            <div class="aviso">
+                <strong>Con el aire eso no se puede hacer</strong>
+                No hay forma de darle a cada equipo «su trozo de aire». <strong>El medio es uno solo y lo comparten
+                todos</strong> los que estén en el alcance y en el mismo canal.
+                <br><br>
+                Es exactamente la situación del hub del lunes, pero por una razón física, no por una limitación del
+                aparato: <strong>un AP mejor no lo arregla</strong>. Si dos equipos transmiten a la vez en el mismo
+                canal, sus señales se mezclan y ninguna se entiende.
+            </div>
+
+            <div class="destacado">
+                <strong>Y por eso el Wi-Fi usa CSMA/CA en vez de CSMA/CD</strong>
+                En Ethernet con hub se usaba <strong>CSMA/CD</strong>, con <strong>D de <em>detección</em></strong>:
+                transmito, y si detecto una colisión, paro y reintento.
+                <br><br>
+                En Wi-Fi eso <strong>no es posible</strong>. Una antena no puede escuchar mientras transmite: su
+                propia señal es millones de veces más fuerte que la que intenta oír. <strong>Es imposible detectar la
+                colisión mientras ocurre.</strong>
+                <br><br>
+                La alternativa es <strong>CSMA/CA</strong>, con <strong>A de <em>evitación</em></strong>: como no
+                puedo detectar el choque, tengo que <strong>evitarlo antes</strong>. Escucho si el canal está libre,
+                espero un tiempo aleatorio adicional y, si sigue libre, transmito. Y como no puedo saber si ha
+                llegado, el receptor tiene que <strong>confirmar</strong> cada trama.
+            </div>
+
+            <div class="dato">
+                <strong>Lo que cuesta esa prudencia</strong>
+                <p>Todo eso —esperar, confirmar cada trama, reintentar— es tiempo en el que no se transmiten datos.
+                Por eso el rendimiento real del Wi-Fi es aproximadamente la <strong>mitad</strong> de la velocidad
+                nominal.</p>
+                <p>Un enlace que anuncia 300 Mbps entrega en la práctica unos 150 en el mejor de los casos. No es
+                publicidad engañosa exactamente: la cifra grande es la velocidad de <em>señalización</em>, y la mitad
+                se va en el protocolo que evita las colisiones.</p>
+                <p>Compáralo con Ethernet conmutado, donde el rendimiento real ronda el <strong>96 %</strong> de la
+                nominal, como calculaste en la Semana 3.</p>
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: el problema del nodo oculto</summary>
+                <p>Hay una situación que hace todo esto todavía peor. Imagina tres equipos en línea: A, el AP en
+                medio, y C al otro lado. A y C están <strong>demasiado lejos para oírse entre ellos</strong>, aunque
+                los dos oigan bien al AP.</p>
+                <p>A escucha el canal, lo oye libre y transmite. C hace lo mismo <strong>a la vez</strong>, porque
+                tampoco oye a A. Los dos han cumplido las reglas y aun así <strong>sus señales chocan en el
+                AP</strong>.</p>
+                <p>Se llama <strong>nodo oculto</strong>, y es un problema que en un medio cableado sencillamente no
+                existe: ahí todos oyen a todos. Existe un mecanismo opcional para mitigarlo —RTS/CTS, en el que se
+                pide permiso al AP antes de transmitir— pero añade aún más sobrecarga, así que a menudo no se
+                usa.</p>
+            </details>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="compartido">3. Las consecuencias del medio compartido</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Consecuencia</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>El ancho de banda <strong>se reparte</strong></td>
+                        <td>Como en un hub: 10 equipos activos en un AP se reparten su capacidad</td>
+                    </tr>
+                    <tr>
+                        <td>Funciona en <strong>semidúplex</strong></td>
+                        <td>No se puede transmitir y recibir a la vez en el mismo canal</td>
+                    </tr>
+                    <tr>
+                        <td>Cualquiera <strong>puede capturar</strong> el tráfico</td>
+                        <td>La señal va por el aire: no hay cable que aislar. Por eso el <strong>cifrado</strong> es imprescindible</td>
+                    </tr>
+                    <tr>
+                        <td>La velocidad <strong>depende de la distancia</strong></td>
+                        <td>A más lejos, peor señal, y se negocia una velocidad menor</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>El detalle que sorprende: un equipo lento ralentiza a todos</strong>
+                Si un móvil viejo en el extremo de la casa negocia una velocidad muy baja, <strong>ocupa el canal
+                mucho más tiempo</strong> para enviar la misma cantidad de datos.
+                <br><br>
+                Y como el canal es <strong>uno solo y compartido</strong>, todos los demás están esperando mientras
+                tanto. Un solo cliente lento puede hundir el rendimiento de toda la red inalámbrica.
+                <br><br>
+                Es la diferencia más práctica con un switch: allí, un equipo a 100 Mbps no afecta en absoluto al de
+                al lado que va a 1 Gbps, porque cada uno tiene su cable.
+            </div>
+
+            <div class="destacado">
+                <strong>Por qué el cifrado no es opcional en Wi-Fi</strong>
+                En una red cableada con switch, el lunes comprobaste que el tráfico ajeno <strong>ni siquiera llega a
+                tu cable</strong>. La protección es física.
+                <br><br>
+                En Wi-Fi no hay nada de eso: la señal se emite al aire y <strong>cualquiera con una antena la
+                recibe</strong>, esté o no conectado a la red. No hace falta enchufarse a nada ni entrar en el
+                edificio.
+                <br><br>
+                Por eso el cifrado —hoy <strong>WPA3</strong>, y WPA2 en equipos algo más antiguos— es lo único que
+                separa una red inalámbrica de una conversación pública. Una red Wi-Fi abierta es, literalmente, una
+                red sin privacidad.
+            </div>
+
+            <h2 id="estandares">4. 802.11 y las generaciones de Wi-Fi</h2>
+
+            <p>La norma es <strong>IEEE 802.11</strong>, del organismo que viste la semana pasada. Cada letra tras el
+            número es una revisión, y desde 2018 tienen además un nombre comercial más fácil de recordar.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Norma</th><th>Nombre comercial</th><th>Banda</th><th>Velocidad nominal</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>802.11n</strong></td><td>Wi-Fi 4</td><td>2,4 y 5 GHz</td><td>Hasta 600 Mbps</td></tr>
+                    <tr><td><strong>802.11ac</strong></td><td>Wi-Fi 5</td><td>Solo 5 GHz</td><td>Varios Gbps</td></tr>
+                    <tr><td><strong>802.11ax</strong></td><td><strong>Wi-Fi 6</strong></td><td>2,4 y 5 GHz</td><td>Varios Gbps</td></tr>
+                    <tr><td><strong>802.11be</strong></td><td>Wi-Fi 7</td><td>2,4, 5 y 6 GHz</td><td>Decenas de Gbps</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Los nombres comerciales son de la Wi-Fi Alliance, no del IEEE</strong>
+                <p>Como viste la semana pasada, <strong>Wi-Fi es una marca</strong> y 802.11 es la norma. Los nombres
+                numerados se inventaron en 2018 precisamente porque «802.11ax» no se le queda a nadie, y porque las
+                letras no dejaban claro cuál era más nueva: ¿es mejor <em>ac</em> o <em>n</em>?</p>
+                <p>Fíjate en que <strong>Wi-Fi 6 no es simplemente «más rápido»</strong>. Su mejora principal es
+                gestionar <strong>muchos clientes a la vez</strong> con menos esperas, que es exactamente el problema
+                del medio compartido. Es una solución al problema de este día, no a la velocidad bruta.</p>
+            </div>
+
+            <h2 id="canales">5. Bandas, canales e interferencia</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>2,4 GHz</th><th>5 GHz</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Alcance</th><td><strong>Mayor</strong></td><td>Menor</td></tr>
+                    <tr><th scope="row">Atraviesa paredes</th><td><strong>Mejor</strong></td><td>Peor</td></tr>
+                    <tr><th scope="row">Velocidad</th><td>Menor</td><td><strong>Mayor</strong></td></tr>
+                    <tr><th scope="row">Saturación</th><td><strong>Alta</strong>: la usa todo el mundo</td><td>Menor</td></tr>
+                    <tr><th scope="row">Canales sin solapar</th><td><strong>Solo 3</strong>: 1, 6 y 11</td><td>Muchos más</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El compromiso: alcance o velocidad</strong>
+                Es física, no ingeniería: las <strong>frecuencias más bajas llegan más lejos y atraviesan mejor los
+                obstáculos</strong>; las más altas transportan más datos pero se detienen antes.
+                <br><br>
+                Por eso los equipos modernos ofrecen las dos bandas y eligen según la situación: <strong>5 GHz cerca
+                del AP</strong>, donde interesa velocidad, y <strong>2,4 GHz lejos</strong>, donde lo que hace falta
+                es llegar.
+            </div>
+
+            <div class="aviso">
+                <strong>Los tres canales de la banda de 2,4 GHz</strong>
+                Aunque en 2,4 GHz hay 13 canales numerados, <strong>se solapan entre sí</strong>: cada uno ocupa un
+                ancho que invade a sus vecinos.
+                <br><br>
+                Solo <strong>1, 6 y 11</strong> están lo bastante separados para no interferirse. Son los únicos tres
+                canales realmente independientes.
+                <br><br>
+                Consecuencia práctica: en un edificio con veinte redes Wi-Fi, todas se reparten <strong>tres</strong>
+                canales. Y no solo compiten entre ellas: en esa banda también emiten los microondas, el Bluetooth y
+                muchos mandos. Es la razón principal de que el Wi-Fi de 2,4 GHz funcione mal en zonas densas, y de
+                que 5 GHz vaya mejor aunque llegue menos lejos.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="ssid">6. SSID, BSSID y roaming</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Término</th><th>Qué es</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>SSID</strong></td><td>El <strong>nombre</strong> de la red: lo que ves en la lista de redes</td></tr>
+                    <tr><td><strong>BSSID</strong></td><td>La <strong>dirección MAC</strong> del punto de acceso concreto</td></tr>
+                    <tr><td><strong>Roaming</strong></td><td>Cambiar de un AP a otro <strong>sin perder la conexión</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Un SSID, varios BSSID</strong>
+                <p>En una oficina grande hay muchos puntos de acceso, todos con <strong>el mismo SSID</strong>. Para
+                el usuario es «la red de la empresa», una sola.</p>
+                <p>Pero cada AP tiene su propio <strong>BSSID</strong>, que es su MAC. Cuando te mueves y la señal de
+                uno se debilita, tu equipo <strong>se cambia al siguiente</strong> sin que la conexión se corte.</p>
+                <p>Por eso conviene distinguir los dos términos: el SSID es lo que ve la persona, y el BSSID es a
+                <strong>qué aparato concreto</strong> estás conectado. Cuando el Wi-Fi va mal en una zona, la
+                pregunta útil no es «¿a qué red estás conectado?», sino «¿a qué AP?».</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Ocultar el SSID no es una medida de seguridad</strong>
+                Hay una opción para que la red no aparezca en la lista. Suena bien y no sirve de nada.
+                <br><br>
+                El AP y sus clientes siguen intercambiando el nombre en otras tramas, así que <strong>cualquier
+                herramienta de análisis lo revela en segundos</strong>. Lo único que consigue es molestar a los
+                usuarios legítimos, que tienen que escribirlo a mano.
+                <br><br>
+                Es un buen ejemplo de <strong>seguridad por oscuridad</strong>: esconder algo no es protegerlo. Lo
+                que protege de verdad es el <strong>cifrado</strong>.
+            </div>
+
+            <h2 id="otros">7. Los dispositivos de las capas de arriba</h2>
+
+            <p>Se completa la tabla del lunes con la última fila: aparatos que miran <strong>más allá</strong> de la
+            dirección IP.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Dispositivo</th><th>Capa</th><th>Qué hace</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Cortafuegos</strong></td>
+                        <td>3 a 7</td>
+                        <td><strong>Permite o bloquea</strong> tráfico según reglas: direcciones, puertos y, los modernos, también contenido</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Proxy</strong></td>
+                        <td>7</td>
+                        <td><strong>Intermediario</strong>: pide las páginas en tu nombre. Filtra, registra y guarda copias en caché</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Balanceador</strong></td>
+                        <td>4 o 7</td>
+                        <td><strong>Reparte</strong> las peticiones entre varios servidores</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Ahora se entiende el vocabulario comercial</strong>
+                <p>Un <strong>cortafuegos de capa 4</strong> decide mirando direcciones IP y puertos: «bloquea todo
+                lo que vaya al puerto 445». Es rápido y sencillo.</p>
+                <p>Un <strong>cortafuegos de capa 7</strong> mira <em>dentro</em> del contenido: puede distinguir una
+                petición web legítima de un intento de ataque, aunque las dos vayan al puerto 443. Es mucho más
+                potente y bastante más lento.</p>
+                <p>Cuando la semana pasada viste que decir «capa 7» solo tiene sentido en OSI, era exactamente esto:
+                el vocabulario de los productos. Ahora ya sabes leer una ficha técnica.</p>
+            </div>
+
+            <h2 id="elegir">8. Cómo elegir un dispositivo</h2>
+
+            <p>La parte que de verdad se pregunta en un trabajo. Y la decisión más frecuente es esta:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Switch <strong>no gestionable</strong></th><th>Switch <strong>gestionable</strong></th></tr></thead>
+                <tbody>
+                    <tr><th scope="row">Configuración</th><td><strong>Ninguna</strong>: se enchufa y funciona</td><td>Tiene interfaz de administración</td></tr>
+                    <tr><th scope="row">VLAN</th><td>No</td><td><strong>Sí</strong></td></tr>
+                    <tr><th scope="row">Port mirroring</th><td>No</td><td><strong>Sí</strong>: permite analizar tráfico</td></tr>
+                    <tr><th scope="row">Port security</th><td>No</td><td><strong>Sí</strong>: defensa contra MAC flooding</td></tr>
+                    <tr><th scope="row">Monitorización</th><td>No</td><td>Sí: estadísticas y avisos por puerto</td></tr>
+                    <tr><th scope="row">Precio</th><td>Bajo</td><td>Bastante mayor</td></tr>
+                    <tr><th scope="row">Cuándo</th><td>Casa, oficinas pequeñas</td><td><strong>Cualquier red profesional</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Las tres funciones que justifican el precio</strong>
+                Todas han salido ya esta semana, y ninguna es un capricho:
+                <br><br>
+                <strong>VLAN</strong>, para separar dominios de broadcast sin comprar un router por cada red. Es la
+                solución al problema del lunes y del martes.
+                <br><br>
+                <strong>Port mirroring</strong>, para poder analizar el tráfico de un puerto. Sin él, el switch que
+                protege tu red también te impide diagnosticarla.
+                <br><br>
+                <strong>Port security</strong>, para limitar cuántas MAC se admiten por puerto. Es la defensa contra
+                el <em>MAC flooding</em> que vimos el martes.
+            </div>
+
+            <div class="aviso">
+                <strong>Los criterios prácticos al comprar</strong>
+                <ul>
+                    <li><strong>Número de puertos</strong>: cuenta los equipos y <strong>añade margen</strong>. Una
+                    red siempre crece, y quedarse sin puertos obliga a encadenar switches.</li>
+                    <li><strong>Velocidad</strong>: hoy 1 Gbps es lo normal. Fíjate sobre todo en el
+                    <strong>enlace hacia arriba</strong>, que soporta el tráfico de todos los demás.</li>
+                    <li><strong>PoE</strong> (802.3af): alimenta cámaras, teléfonos IP y puntos de acceso
+                    <strong>por el propio cable de red</strong>. Se agradece muchísimo al montar un AP en un techo
+                    donde no hay enchufe.</li>
+                    <li><strong>Formato</strong>: de sobremesa o de <strong>rack</strong>, para armario.</li>
+                    <li><strong>Ventilación</strong>: los switches con ventilador hacen ruido. En una oficina, mejor
+                    sin él.</li>
+                </ul>
+            </div>
+
+            <div class="dato">
+                <strong>Dónde colocar los puntos de acceso</strong>
+                <p>La ubicación importa más que el modelo. Tres reglas que se incumplen constantemente:</p>
+                <ul>
+                    <li><strong>En alto y en el centro</strong> de la zona a cubrir, no en una esquina ni dentro de
+                    un armario metálico.</li>
+                    <li><strong>Lejos de microondas</strong> y de estructuras metálicas grandes, que absorben la
+                    señal.</li>
+                    <li>Con <strong>canales distintos</strong> en APs vecinos: si dos APs cercanos usan el canal 6,
+                    compiten entre ellos y se estorban.</li>
+                </ul>
+                <p>Y una idea contraintuitiva: <strong>más potencia no siempre es mejor</strong>. Un AP que emite muy
+                fuerte hace que los clientes lejanos sigan enganchados a él en lugar de cambiarse a otro más cercano,
+                con lo que negocian velocidades bajísimas y ralentizan a todos los demás.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <div class="destacado">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Un <strong>punto de acceso</strong> es de <strong>capa 2</strong>, como un switch, y tampoco separa dominios de broadcast.</li>
+                    <li>Pero tiene <strong>un solo dominio de colisión</strong>: en eso se parece a un hub, y es por física, no por el aparato.</li>
+                    <li>Wi-Fi usa <strong>CSMA/CA</strong> porque una antena <strong>no puede detectar</strong> colisiones mientras transmite.</li>
+                    <li>El rendimiento real ronda la <strong>mitad</strong> de la velocidad nominal.</li>
+                    <li>Un <strong>cliente lento ralentiza a todos</strong>: ocupa más tiempo el canal compartido.</li>
+                    <li>El <strong>cifrado</strong> no es opcional: la señal va por el aire y cualquiera la recibe.</li>
+                    <li><strong>2,4 GHz</strong> llega más lejos; <strong>5 GHz</strong> va más rápido. En 2,4 solo hay <strong>3 canales</strong> sin solapar: 1, 6 y 11.</li>
+                    <li><strong>SSID</strong> es el nombre de la red; <strong>BSSID</strong> es la MAC de un AP concreto.</li>
+                    <li>Ocultar el SSID <strong>no aporta seguridad</strong>.</li>
+                    <li><strong>Gestionable</strong> significa VLAN, port mirroring y port security. Por eso cuesta más.</li>
+                </ul>
+            </div>
+
+            <h3>Errores frecuentes</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Un punto de acceso es un router»</td><td>Es de <strong>capa 2</strong>. El router de casa <em>lleva</em> un AP dentro, pero son funciones distintas</td></tr>
+                    <tr><td>«Con Wi-Fi moderno no hay colisiones»</td><td>El medio es compartido por <strong>física</strong>: ningún AP puede dar «un aire» a cada equipo</td></tr>
+                    <tr><td>«Wi-Fi usa CSMA/CD»</td><td>Usa <strong>CSMA/CA</strong>: no se puede <em>detectar</em> la colisión, hay que <em>evitarla</em></td></tr>
+                    <tr><td>«300 Mbps de Wi-Fi son 300 Mbps reales»</td><td>Son unos <strong>150</strong>: la mitad se va en el protocolo que evita colisiones</td></tr>
+                    <tr><td>«5 GHz siempre es mejor»</td><td>Va más rápido pero <strong>llega menos lejos</strong> y atraviesa peor las paredes</td></tr>
+                    <tr><td>«En 2,4 GHz hay 13 canales disponibles»</td><td>Hay 13 numerados pero solo <strong>3 sin solapar</strong>: 1, 6 y 11</td></tr>
+                    <tr><td>«Ocultar el SSID protege la red»</td><td>Se descubre en segundos. Lo que protege es el <strong>cifrado</strong></td></tr>
+                    <tr><td>«Más potencia en el AP es siempre mejor»</td><td>Retiene clientes lejanos a velocidades bajísimas, y esos <strong>ralentizan a todos</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 24 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a mirar <strong>qué normas 802.11 admite tu equipo</strong>, analizar el entorno inalámbrico que
+            te rodea y, con una tabla de decisión, <strong>elegir los dispositivos</strong> de una oficina real.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 4</strong></a> (72 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 5 — viernes doble</strong>
+            <p>Síntesis de la semana, <strong>test semanal</strong> y, además, el <strong>examen mensual</strong> del
+            Mes 1, que integra las cuatro semanas.</p>
+            <p><em>Prepáralo:</em> repasa la tabla de <strong>dispositivos por capa</strong> y el recuento de
+            <strong>dominios</strong>, que es lo que más cae de esta semana.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/teoria.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+
+        checkpoints: [
+            {
+                pregunta: '<strong>Parada 1.</strong> El switch eliminó las colisiones dando un cable a cada equipo. Explica por qué esa solución <strong>no se puede aplicar</strong> al Wi-Fi, y qué se hace en su lugar.',
+                modelo: `<p>Porque la solución del switch consistía en <strong>dar un medio independiente a cada
+                         equipo</strong>: cada cable es suyo, y lo que pasa por uno no afecta a los demás.</p>
+                         <p>Con el aire eso es imposible. <strong>No se puede repartir el aire</strong>: todos los
+                         equipos que estén en el alcance del AP y en el mismo canal comparten exactamente el mismo
+                         medio. Si dos transmiten a la vez, sus señales se mezclan y ninguna se entiende.</p>
+                         <p>Y lo importante es que <strong>no es una limitación del aparato</strong>: un AP mejor o
+                         más caro no lo arregla, porque el problema es físico. Por eso un punto de acceso, aun siendo
+                         de capa 2 como el switch, tiene <strong>un solo dominio de colisión</strong>, igual que un
+                         hub.</p>
+                         <p>Lo que se hace en su lugar es intentar que las colisiones <strong>no lleguen a
+                         ocurrir</strong>, con <strong>CSMA/CA</strong>: escuchar si el canal está libre, esperar
+                         además un tiempo aleatorio y solo entonces transmitir, con confirmación del receptor.</p>
+                         <p>No se puede usar CSMA/CD, con detección, porque una antena <strong>no puede escuchar
+                         mientras transmite</strong>: su propia señal tapa por completo cualquier otra. Es imposible
+                         detectar el choque mientras se produce, así que solo queda prevenirlo.</p>`,
+                puntos: [
+                    'La solución del switch era dar un medio independiente a cada equipo',
+                    'El aire no se puede repartir: el medio es único y compartido',
+                    'Señala que es un límite físico, no del aparato',
+                    'Explica CSMA/CA: evitar en lugar de detectar',
+                    'Justifica por qué no se puede detectar: la antena no oye mientras transmite'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 2.</strong> En un edificio hay veinte redes Wi-Fi en la banda de 2,4 GHz. Explica por qué todas van mal y qué se puede hacer.',
+                modelo: `<p>Porque en esa banda solo hay <strong>tres canales que no se solapen</strong>: el 1, el 6
+                         y el 11. Aunque haya 13 numerados, los demás invaden a sus vecinos.</p>
+                         <p>Así que veinte redes se están repartiendo <strong>tres canales</strong>. En cada uno hay
+                         seis o siete redes que <strong>comparten el medio</strong> sin saberlo: cuando una transmite,
+                         las demás tienen que esperar, porque el mecanismo CSMA/CA detecta el canal ocupado.</p>
+                         <p>Y no compiten solo entre ellas: en 2,4 GHz también emiten los <strong>microondas, el
+                         Bluetooth</strong> y muchos mandos inalámbricos, que añaden interferencia sin seguir ninguna
+                         regla de cortesía.</p>
+                         <p>Lo que se puede hacer, por orden de eficacia:</p>
+                         <ul>
+                           <li><strong>Pasarse a 5 GHz</strong>, donde hay muchos más canales y bastante menos
+                           saturación. Es la medida que más se nota, a cambio de menos alcance.</li>
+                           <li>Elegir el canal <strong>menos ocupado</strong> de los tres, mirando qué usan los
+                           vecinos.</li>
+                           <li><strong>Bajar la potencia</strong> si hay varios APs propios, para que no se estorben
+                           entre ellos.</li>
+                         </ul>
+                         <p>Lo que <strong>no</strong> sirve de nada es comprar un AP más potente: emitir más fuerte
+                         en un canal saturado añade ruido para todos, incluido uno mismo.</p>`,
+                puntos: [
+                    'Solo hay tres canales sin solapar en 2,4 GHz',
+                    'Explica que las redes del mismo canal comparten el medio y se esperan',
+                    'Menciona interferencias no Wi-Fi: microondas, Bluetooth',
+                    'Propone pasar a 5 GHz como medida principal',
+                    'Advierte de que más potencia no soluciona nada'
+                ]
+            },
+            {
+                pregunta: '<strong>Parada 3.</strong> Una empresa de 60 personas quiere ahorrar comprando switches <strong>no gestionables</strong>. Da tres argumentos concretos, de los vistos esta semana, para desaconsejarlo.',
+                modelo: `<p><strong>1. No podrán separar la red en VLAN.</strong> Con 60 equipos en un único dominio
+                         de broadcast, todo el ruido de difusión —el ARP incluido— lo procesan los 60. Y además no
+                         hay ninguna separación entre departamentos: contabilidad y visitas están en la misma red.
+                         Sin VLAN, la única forma de separar sería comprar un router por cada red, que sale bastante
+                         más caro.</p>
+                         <p><strong>2. No podrán diagnosticar.</strong> El lunes comprobamos que un switch impide ver
+                         el tráfico ajeno, lo cual es estupendo hasta que hay que analizar por qué falla un servidor.
+                         Sin <strong>port mirroring</strong>, no hay forma legítima de capturar ese tráfico: el propio
+                         switch que protege la red impide administrarla.</p>
+                         <p><strong>3. No tendrán defensa ante un MAC flooding.</strong> Sin <strong>port
+                         security</strong>, cualquiera que enchufe un portátil puede llenar la tabla del switch con
+                         MAC inventadas, degradarlo a hub y ponerse a leer el tráfico de todos. En una empresa con
+                         datos de nóminas o clientes, eso no es un riesgo teórico.</p>
+                         <p>A eso añadiría un cuarto argumento: <strong>sin monitorización no se sabe qué pasa</strong>.
+                         Un switch gestionable avisa de errores y saturación por puerto; uno no gestionable no dice
+                         nada, así que los problemas se descubren cuando alguien se queja.</p>
+                         <p>El ahorro es real, pero es un ahorro <strong>en la pieza sobre la que se apoya todo lo
+                         demás</strong>. Para 60 personas no compensa.</p>`,
+                puntos: [
+                    'VLAN: separar dominios de broadcast y departamentos',
+                    'Port mirroring: sin él no se puede diagnosticar',
+                    'Port security: defensa ante MAC flooding',
+                    'Añade monitorización o algún argumento propio',
+                    'Cierra valorando el ahorro frente al riesgo'
+                ]
+            }
+        ],
+
+        flashcards: [
+            { frente: '¿En qué capa trabaja un <strong>punto de acceso</strong>?', dorso: 'En la <strong>capa 2</strong>, como un switch: mira la MAC y <strong>no separa</strong> dominios de broadcast. Por eso el móvil por Wi-Fi ve la impresora por cable.' },
+            { frente: '¿En qué se parece un AP a un <strong>hub</strong>?', dorso: 'En que tiene <strong>un solo dominio de colisión</strong>: el aire es un medio compartido y no se puede repartir.' },
+            { frente: '¿Por qué Wi-Fi usa <strong>CSMA/CA</strong> y no CSMA/CD?', dorso: 'Porque una antena <strong>no puede escuchar mientras transmite</strong>: su propia señal tapa las demás. Como no se puede <em>detectar</em> la colisión, hay que <em>evitarla</em>.' },
+            { frente: 'Rendimiento real de un enlace Wi-Fi', dorso: 'En torno a la <strong>mitad</strong> de la velocidad nominal. Lo demás se va en esperas, confirmaciones y reintentos. En Ethernet conmutado el rendimiento ronda el 96 %.' },
+            { frente: '¿Por qué un cliente Wi-Fi lento perjudica a todos?', dorso: 'Porque <strong>ocupa el canal más tiempo</strong> para enviar lo mismo, y el canal es único y compartido. Con cable no pasa: cada equipo tiene el suyo.' },
+            { frente: '¿Por qué el cifrado es obligatorio en Wi-Fi?', dorso: 'Porque la señal va por el aire y <strong>cualquiera con una antena la recibe</strong>, sin conectarse a nada. No hay protección física como en el cable.' },
+            { frente: '<strong>2,4 GHz</strong> frente a <strong>5 GHz</strong>', dorso: '2,4 llega <strong>más lejos</strong> y atraviesa mejor las paredes; 5 es <strong>más rápida</strong> y está menos saturada. Es física: menor frecuencia, mayor alcance.' },
+            { frente: '¿Cuántos canales sin solapar hay en 2,4 GHz?', dorso: '<strong>Tres</strong>: el <strong>1, el 6 y el 11</strong>. Hay 13 numerados, pero los demás se invaden entre sí.' },
+            { frente: '<strong>SSID</strong> frente a <strong>BSSID</strong>', dorso: 'El <strong>SSID</strong> es el nombre de la red, lo que ve la persona. El <strong>BSSID</strong> es la <strong>MAC</strong> de un punto de acceso concreto.' },
+            { frente: '¿Sirve de algo <strong>ocultar el SSID</strong>?', dorso: '<strong>No.</strong> Se descubre en segundos con cualquier analizador y solo molesta a los usuarios legítimos. Es seguridad por oscuridad.' },
+            { frente: '802.11n, ac y ax: ¿nombres comerciales?', dorso: '<strong>Wi-Fi 4, 5 y 6.</strong> Los puso la Wi-Fi Alliance en 2018 porque las letras no dejaban claro cuál era más nueva.' },
+            { frente: '¿Cuál es la mejora principal de <strong>Wi-Fi 6</strong>?', dorso: 'Gestionar <strong>muchos clientes a la vez</strong> con menos esperas: ataca el problema del medio compartido, no solo la velocidad bruta.' },
+            { frente: 'Los tres dispositivos de las capas de arriba', dorso: '<strong>Cortafuegos</strong> (permite o bloquea, capas 3-7), <strong>proxy</strong> (intermediario, capa 7) y <strong>balanceador</strong> (reparte peticiones, capa 4 o 7).' },
+            { frente: 'Tres funciones que solo tiene un switch <strong>gestionable</strong>', dorso: '<strong>VLAN</strong> (separar dominios de broadcast), <strong>port mirroring</strong> (poder analizar tráfico) y <strong>port security</strong> (defensa ante MAC flooding).' },
+            { frente: '¿Qué es <strong>PoE</strong> y para qué sirve?', dorso: 'Norma <strong>802.3af</strong>: alimentar un aparato <strong>por el propio cable de red</strong>. Imprescindible para montar cámaras o puntos de acceso donde no hay enchufe.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Día 4 — Wi-Fi y el resto de dispositivos',
+        subtitulo: 'Punto de acceso · CSMA/CA · canales · cortafuegos y proxy · criterios de compra',
+        tiempo: '24 minutos',
+        minutos: 24,
+        questions: [
+            {
+                topic: 'El punto de acceso',
+                repaso: '#ap',
+                text: '¿En qué capa trabaja un punto de acceso?',
+                options: {
+                    a: 'Capa 1, como un hub',
+                    b: 'Capa 2, como un switch: mira la MAC',
+                    c: 'Capa 3, como un router',
+                    d: 'Capa 7'
+                },
+                answer: 'b',
+                feedback: 'Capa 2. Por eso tampoco separa dominios de broadcast, y tu móvil por Wi-Fi está en la <strong>misma red</strong> que los equipos por cable.'
+            },
+            {
+                topic: 'El punto de acceso',
+                repaso: '#ap',
+                text: '¿En qué se parece un punto de acceso a un hub?',
+                options: {
+                    a: 'En que no puede ver las direcciones MAC',
+                    b: 'En que tiene un solo dominio de colisión: el medio es compartido',
+                    c: 'En que trabaja en capa 1',
+                    d: 'En nada: es un switch inalámbrico'
+                },
+                answer: 'b',
+                feedback: 'Sí ve las MAC —es capa 2— pero no puede dar un medio independiente a cada cliente. La limitación es <strong>física</strong>, no del aparato.'
+            },
+            {
+                topic: 'CSMA/CA',
+                repaso: '#colisiones',
+                text: '¿Por qué el Wi-Fi no puede usar CSMA/CD, con detección de colisiones?',
+                options: {
+                    a: 'Porque sería demasiado lento',
+                    b: 'Porque una antena no puede escuchar mientras transmite: su propia señal tapa cualquier otra',
+                    c: 'Porque el estándar no lo permite',
+                    d: 'Porque en Wi-Fi no hay colisiones'
+                },
+                answer: 'b',
+                feedback: 'Detectar una colisión exige oír <em>mientras</em> se transmite, y eso en radio es imposible. De ahí la <strong>A de evitación</strong>: prevenir en vez de detectar.'
+            },
+            {
+                topic: 'CSMA/CA',
+                repaso: '#colisiones',
+                text: 'Un enlace Wi-Fi anuncia 300 Mbps. ¿Qué rendimiento real cabe esperar?',
+                options: {
+                    a: 'Unos 300 Mbps',
+                    b: 'Unos 150 Mbps: cerca de la mitad se va en el protocolo que evita colisiones',
+                    c: 'Unos 30 Mbps',
+                    d: 'Depende solo del proveedor de Internet'
+                },
+                answer: 'b',
+                feedback: 'Esperas, confirmaciones y reintentos consumen la mitad. Compáralo con Ethernet conmutado, donde el rendimiento real ronda el <strong>96 %</strong>.'
+            },
+            {
+                topic: 'Medio compartido',
+                repaso: '#compartido',
+                text: 'Un móvil viejo, lejos del AP, negocia una velocidad muy baja. ¿Cómo afecta a los demás?',
+                options: {
+                    a: 'No les afecta: cada cliente va a su ritmo',
+                    b: 'Los ralentiza: ocupa el canal compartido mucho más tiempo para enviar lo mismo',
+                    c: 'Mejora la red, porque usa menos ancho de banda',
+                    d: 'Solo afecta si usa otra banda'
+                },
+                answer: 'b',
+                feedback: 'Es la diferencia práctica con un switch, donde un equipo lento no molesta a nadie porque tiene su propio cable.'
+            },
+            {
+                topic: 'Medio compartido',
+                repaso: '#compartido',
+                text: '¿Por qué el cifrado es imprescindible en Wi-Fi y no tanto en una red cableada con switch?',
+                options: {
+                    a: 'Porque el Wi-Fi es más lento',
+                    b: 'Porque la señal va por el aire y cualquiera con una antena la recibe, sin conectarse a nada',
+                    c: 'Porque lo exige la ley',
+                    d: 'Porque los APs no tienen tabla MAC'
+                },
+                answer: 'b',
+                feedback: 'Con switch, el lunes comprobaste que el tráfico ajeno <strong>ni llega a tu cable</strong>: la protección es física. En el aire no hay nada que aislar.'
+            },
+            {
+                topic: 'Estándares 802.11',
+                repaso: '#estandares',
+                text: '¿Qué norma corresponde a Wi-Fi 6?',
+                options: {
+                    a: '802.11n',
+                    b: '802.11ac',
+                    c: '802.11ax',
+                    d: '802.3af'
+                },
+                answer: 'c',
+                feedback: 'n = Wi-Fi 4, ac = Wi-Fi 5, <strong>ax = Wi-Fi 6</strong>. La opción d no es ni siquiera inalámbrica: es <strong>PoE</strong>, alimentación por cable Ethernet.'
+            },
+            {
+                topic: 'Estándares 802.11',
+                repaso: '#estandares',
+                text: '¿Cuál es la mejora principal de Wi-Fi 6 frente a Wi-Fi 5?',
+                options: {
+                    a: 'Solo la velocidad máxima',
+                    b: 'Gestionar muchos clientes a la vez con menos esperas',
+                    c: 'Mayor alcance en todas las condiciones',
+                    d: 'No necesita cifrado'
+                },
+                answer: 'b',
+                feedback: 'Ataca directamente el problema del <strong>medio compartido</strong>, que es lo que de verdad limita una red con muchos dispositivos.'
+            },
+            {
+                topic: 'Bandas y canales',
+                repaso: '#canales',
+                text: 'Necesitas cubrir una zona alejada, al otro lado de dos paredes. ¿Qué banda eliges?',
+                options: {
+                    a: '5 GHz, porque es más rápida',
+                    b: '2,4 GHz, porque llega más lejos y atraviesa mejor los obstáculos',
+                    c: 'Da igual: el alcance es el mismo',
+                    d: '6 GHz siempre'
+                },
+                answer: 'b',
+                feedback: 'Es física pura: las frecuencias <strong>más bajas</strong> llegan más lejos y penetran mejor. Se paga con menos velocidad y más saturación.'
+            },
+            {
+                topic: 'Bandas y canales',
+                repaso: '#canales',
+                text: '¿Cuántos canales realmente independientes hay en la banda de 2,4 GHz?',
+                options: {
+                    a: '13',
+                    b: '11',
+                    c: '3: el 1, el 6 y el 11',
+                    d: '1'
+                },
+                answer: 'c',
+                feedback: 'Hay 13 numerados, pero se <strong>solapan</strong>. Por eso en un edificio con veinte redes todas se pelean por tres canales, y además con microondas y Bluetooth.'
+            },
+            {
+                topic: 'SSID y BSSID',
+                repaso: '#ssid',
+                text: '¿Qué diferencia hay entre SSID y BSSID?',
+                options: {
+                    a: 'Ninguna: son sinónimos',
+                    b: 'El SSID es el nombre de la red; el BSSID es la MAC de un punto de acceso concreto',
+                    c: 'El SSID es la MAC y el BSSID el nombre',
+                    d: 'El BSSID solo existe en redes cableadas'
+                },
+                answer: 'b',
+                feedback: 'En una oficina hay <strong>un SSID y muchos BSSID</strong>. Cuando el Wi-Fi va mal en una zona, la pregunta útil no es a qué red estás conectado, sino <strong>a qué AP</strong>.'
+            },
+            {
+                topic: 'SSID y BSSID',
+                repaso: '#ssid',
+                text: 'Un compañero propone ocultar el SSID para proteger la red. ¿Qué le dices?',
+                options: {
+                    a: 'Buena idea: así nadie la encuentra',
+                    b: 'Que no aporta seguridad: se descubre en segundos con un analizador y solo molesta a los usuarios legítimos',
+                    c: 'Que solo funciona en 5 GHz',
+                    d: 'Que hay que ocultarlo y además quitar el cifrado'
+                },
+                answer: 'b',
+                feedback: 'Es <strong>seguridad por oscuridad</strong>: esconder algo no es protegerlo. Lo que protege de verdad es el cifrado, hoy WPA3.'
+            },
+            {
+                topic: 'Dispositivos de capas altas',
+                repaso: '#otros',
+                text: 'Un cortafuegos que distingue una petición web legítima de un ataque, aunque ambas vayan al puerto 443. ¿De qué capa es?',
+                options: {
+                    a: 'De capa 3: mira direcciones IP',
+                    b: 'De capa 4: mira puertos',
+                    c: 'De capa 7: mira dentro del contenido',
+                    d: 'De capa 2'
+                },
+                answer: 'c',
+                feedback: 'Si las dos van al mismo puerto, mirar puertos no basta: hay que <strong>abrir el contenido</strong>. Más potente y bastante más lento.'
+            },
+            {
+                topic: 'Cómo elegir',
+                repaso: '#elegir',
+                text: '¿Qué justifica pagar más por un switch gestionable?',
+                options: {
+                    a: 'Que tiene más puertos',
+                    b: 'VLAN, port mirroring y port security: separar dominios de broadcast, poder diagnosticar y defenderse del MAC flooding',
+                    c: 'Que es más rápido',
+                    d: 'Que consume menos'
+                },
+                answer: 'b',
+                feedback: 'Las tres han salido esta semana como problemas concretos. Un switch gestionable es, básicamente, el que permite resolverlos.'
+            },
+            {
+                topic: 'Recuperación · Día 3',
+                repaso: '../Dia_03/teoria.html#longest',
+                text: '<em>Repaso.</em> Un paquete a 10.1.5.7 con dos rutas: <code>10.1.5.0/24</code> métrica 90 y <code>0.0.0.0/0</code> métrica 2. ¿Cuál gana?',
+                options: {
+                    a: 'La 0.0.0.0/0, por métrica',
+                    b: 'La 10.1.5.0/24, porque el prefijo más largo se aplica antes que la métrica',
+                    c: 'Se reparte entre las dos',
+                    d: 'Ninguna'
+                },
+                answer: 'b',
+                feedback: 'La métrica <strong>solo desempata entre rutas igual de específicas</strong>. Es el error más repetido del tema del router.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

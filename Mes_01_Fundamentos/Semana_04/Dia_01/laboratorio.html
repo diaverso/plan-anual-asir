@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio: demuestra que tu red usa un switch</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Herramienta:</strong> Wireshark</div>
+        <div class="info-item"><strong>Requisito:</strong> red con más equipos</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>La teoría dice que un hub reparte todo a todos y un switch no. Hoy vas a
+            <strong>demostrarlo con números</strong> en tu propia red.</p>
+            <p>Capturarás <strong>todo</strong> lo que pasa por tu cable durante unos minutos y lo clasificarás en
+            cuatro montones: lo tuyo, la difusión, el multicast y <strong>lo de los demás</strong>. Ese último
+            número es el que decide la cuestión.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>Necesitas la <strong>captura sin filtro</strong>. Hoy queremos ver <em>todo</em> lo que llega a
+                la tarjeta, también lo que no es para ti.</li>
+                <li>El experimento sale mejor si en la red hay <strong>más equipos activos</strong>: móviles, un
+                televisor, otro ordenador. Cuantos más haya, más contundente es el resultado.</li>
+                <li>Sigues capturando <strong>tu propio tráfico en tu propia red</strong>. Eso es legítimo.</li>
+                <li>Si estás por <strong>Wi-Fi</strong>, el resultado será distinto y el jueves entenderás por qué.
+                Hazlo por cable si puedes.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Prepara la captura (10 min)</h2>
+
+            <p>Primero necesitas <strong>tu propia dirección MAC</strong>, porque todos los filtros de después giran
+            en torno a ella.</p>
+
+            <div class="so-tabs" data-grupo="mac">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="mac" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter -Name Ethernet | Select-Object Name, MacAddress, LinkSpeed</code></pre></div>
+                <p>Windows la muestra con <strong>guiones</strong> (<code>50-EB-F6-26-B4-2F</code>) pero Wireshark
+                la quiere con <strong>dos puntos</strong> y en minúsculas
+                (<code>50:eb:f6:26:b4:2f</code>). Es el error más habitual de este laboratorio.</p>
+            </div>
+            <div class="so-panel" data-grupo="mac" data-so="nix">
+                <div class="comando"><pre><code>ip link show | grep -A1 "state UP"</code></pre></div>
+                <p>La MAC aparece tras <code>link/ether</code>, ya con el formato que Wireshark espera.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>Name       MacAddress         LinkSpeed
+----       ----------         ---------
+Ethernet   50-EB-F6-26-B4-2F  1 Gbps</code></pre>
+                <p>Apunta la tuya <strong>en minúsculas y con dos puntos</strong>. La vas a escribir cuatro veces.</p>
+            </div>
+
+            <h2>Parte 2 — Captura sin filtro (15 min)</h2>
+
+            <div class="aviso">
+                <strong>Hoy no se pone filtro de captura</strong>
+                El jueves pasado usaste <code>tcp port 80</code> para quedarte solo con lo tuyo. Hoy es al revés:
+                queremos <strong>todo</strong>, incluido lo que no va dirigido a ti. Si filtras, destruyes justo el
+                dato que buscas.
+            </div>
+
+            <ol>
+                <li>Abre Wireshark y haz <strong>doble clic en tu interfaz</strong> (la que tiene tráfico), sin
+                escribir nada en la casilla de filtro.</li>
+                <li>Déjala capturando <strong>2 o 3 minutos</strong>. Cuanto más tiempo, mejor.</li>
+                <li>Mientras tanto, <strong>genera tráfico tuyo</strong> para tener con qué comparar: abre un par de
+                páginas web y ejecuta un ping.</li>
+                <li>Si tienes un móvil o un televisor en la misma red, <strong>úsalos también</strong>: eso genera
+                tráfico ajeno, que es la otra mitad del experimento.</li>
+                <li>Para la captura con el botón rojo.</li>
+            </ol>
+
+            <p>Deberías tener del orden de <strong>varios cientos o miles</strong> de tramas. En la barra inferior
+            aparece el total, junto a <em>Packets</em>.</p>
+
+            <h2>Parte 3 — Clasifica lo capturado (25 min)</h2>
+
+            <p>Ahora, con la captura ya hecha, ve escribiendo estos <strong>filtros de visualización</strong> arriba
+            y anotando el número que aparece en la barra inferior junto a <strong><em>Displayed</em></strong>.</p>
+
+            <div class="destacado">
+                <strong>Los cuatro filtros</strong>
+                Sustituye <code>TU:MAC</code> por la tuya, en minúsculas y con dos puntos.
+                <div class="tabla-wrap" style="margin-top:12px">
+                <table>
+                    <thead><tr><th>#</th><th>Filtro</th><th>Qué cuenta</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1</strong></td>
+                            <td><code>eth.addr == TU:MAC</code></td>
+                            <td>Tramas <strong>tuyas</strong>: enviadas o recibidas por ti</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2</strong></td>
+                            <td><code>eth.dst == ff:ff:ff:ff:ff:ff</code></td>
+                            <td><strong>Difusión</strong>: dirigidas a todos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3</strong></td>
+                            <td><code>eth.dst.ig == 1</code></td>
+                            <td><strong>Difusión + multicast</strong>: el bit I/G de la Semana 2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4</strong></td>
+                            <td><code>!(eth.addr == TU:MAC) and !(eth.dst.ig == 1)</code></td>
+                            <td><strong>De otros equipos</strong>: la pregunta del día</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div class="dato">
+                <strong>El filtro 3 usa un bit que ya conoces</strong>
+                <p><code>eth.dst.ig</code> es el <strong>bit I/G</strong> de la dirección MAC, el que estudiaste en
+                el Día 1 de la Semana 2 y viste marcado en Wireshark el jueves pasado.</p>
+                <p>Vale <strong>0</strong> para direcciones individuales —un solo destinatario— y <strong>1</strong>
+                para las de grupo, que incluyen tanto el multicast como la difusión.</p>
+                <p>Por eso el filtro 4 se lee así: «ni mías, ni dirigidas a un grupo». Lo que queda son tramas
+                <strong>unicast dirigidas a otro equipo</strong> que, sin embargo, han llegado a tu tarjeta.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Resultado real de una captura de 18 segundos</strong>
+<pre><code>Total capturado                        1015 tramas
+  1. mías (eth.addr == mi MAC)           870
+  2. difusión (ff:ff:ff:ff:ff:ff)         23
+  3. difusión + multicast                145
+  4. DE OTROS EQUIPOS                      0</code></pre>
+                <p>Y eso en una red con seis o siete aparatos conectados y usándose.</p>
+            </div>
+
+            <h2>Parte 4 — Interpreta lo que has medido (20 min)</h2>
+
+            <div class="destacado">
+                <strong>Qué demuestra ese cero</strong>
+                Que hay un <strong>switch</strong> entre tú y los demás equipos. Aunque estén usando la red
+                activamente, <strong>ni una sola de sus tramas llega a tu cable</strong>, porque el switch mira la
+                MAC de destino y las manda solo por el puerto que toca.
+                <br><br>
+                <strong>Con un hub, el resultado sería el opuesto:</strong> verías el tráfico de todos, y el montón
+                número 4 sería el más grande de los cuatro.
+                <br><br>
+                Ese número es, literalmente, la diferencia entre la capa 1 y la capa 2.
+            </div>
+
+            <div class="aviso">
+                <strong>¿Y si a ti no te sale exactamente cero?</strong>
+                También es normal, y tiene explicación. Si te salen <strong>unas pocas</strong> tramas ajenas —dos,
+                cinco, diez— casi seguro que son de <em>inundación de unicast desconocido</em>: cuando el switch
+                <strong>no sabe</strong> en qué puerto está una MAC, hace lo único que puede hacer, que es enviarla
+                por todos.
+                <br><br>
+                Ocurre al arrancar un equipo o cuando una entrada de la tabla ha caducado por inactividad.
+                <strong>Mañana verás exactamente cómo funciona ese mecanismo.</strong>
+                <br><br>
+                Lo que <strong>no</strong> sería normal es que ese montón fuera comparable al de las tuyas: eso sí
+                indicaría un hub, o una red configurada para duplicar tráfico hacia tu puerto.
+            </div>
+
+            <div class="dato">
+                <strong>Y fíjate en la difusión, que sí llega</strong>
+                <p>Las 23 tramas de broadcast y las 145 de multicast <strong>sí</strong> han llegado a tu tarjeta, y
+                ninguna era para ti.</p>
+                <p>Ahí está, medida, la frase de la teoría: <strong>el switch separa dominios de colisión pero no de
+                broadcast</strong>. Filtra el 100 % del tráfico unicast ajeno y el 0 % del de difusión.</p>
+                <p>En una red pequeña eso da igual. En una de 500 equipos, ese ruido lo reciben los 500, y por eso
+                existen las VLAN.</p>
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: entonces, ¿cómo se analiza el tráfico de otro equipo?</summary>
+                <p>Es un problema real: si tienes que diagnosticar el tráfico de un servidor, el switch te lo impide
+                igual que impide espiar.</p>
+                <p>La solución legítima se llama <strong>port mirroring</strong> o SPAN: se configura el switch para
+                que <strong>copie</strong> todo el tráfico de un puerto hacia otro, donde está el equipo que
+                analiza.</p>
+                <p>Es una opción que solo tienen los <strong>switches gestionables</strong>, y es una de las razones
+                principales para comprar uno. El jueves verás esa distinción con detalle.</p>
+                <p>Lo interesante es lo que implica: en una red bien montada, <strong>capturar el tráfico ajeno
+                requiere acceso administrativo al switch</strong>. Ha pasado de ser algo que cualquiera podía hacer
+                enchufando un cable a algo que deja rastro y exige permisos.</p>
+            </details>
+
+            <h2>Parte 5 — Recoge tus datos</h2>
+
+            <p>Con <strong>tus números</strong>. Se comprueba la forma del dato, no que coincida con el mío.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Tienes los <strong>cuatro números</strong> de tu propia captura.</li>
+                <li>Sabes explicar qué demuestra el cuarto.</li>
+                <li>Entiendes por qué la <strong>difusión sí</strong> te llega y el unicast ajeno no.</li>
+                <li>Sabes qué es el <strong>bit I/G</strong> y por qué sirve para separar los montones.</li>
+                <li>Puedes predecir cómo cambiarían los cuatro números si hubiera un hub.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../../Semana_03/Dia_05/teoria.html">← Semana 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Laboratorio: demuestra que tu red usa un switch',
+    subtitulo: 'Capturar sin filtro · clasificar en cuatro montones · interpretar el resultado',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Preparación',
+            tiempo: '10 min',
+            enunciado: '<p>Datos de las Partes 1 y 2.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'mac',
+                    pregunta: '<strong>a)</strong> Tu dirección MAC, <strong>en el formato que quiere Wireshark</strong>: minúsculas y separada por dos puntos.',
+                    placeholder: '50:eb:f6:26:b4:2f',
+                    explicacion: 'Windows la muestra con guiones y mayúsculas; Wireshark la quiere con dos puntos. Es la causa número uno de que los filtros de este laboratorio devuelvan cero tramas.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>b)</strong> Total de tramas capturadas (<em>Packets</em>, en la barra inferior).',
+                    placeholder: '1015',
+                    explicacion: 'Si tienes menos de un centenar, la captura ha sido demasiado corta o la red está muy tranquila. Repite dejándola más tiempo: los porcentajes se ven mejor con más muestras.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué hoy no se pone filtro de captura?',
+                    opciones: {
+                        a: 'Porque los filtros de captura no funcionan sin permisos',
+                        b: 'Porque queremos ver también lo que no va dirigido a nosotros, que es justo el dato del experimento',
+                        c: 'Porque con filtro la captura va más lenta',
+                        d: 'Porque el filtro solo sirve para HTTP'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un filtro de captura <strong>descarta para siempre</strong> lo que no coincide. Si filtráramos por lo nuestro, estaríamos tirando exactamente las tramas que queremos contar.',
+                    pistas: [
+                        '¿Qué diferencia hay entre el filtro de captura y el de visualización?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Los cuatro montones',
+            tiempo: '25 min',
+            enunciado: '<p>Datos de la Parte 3. Anota el número de <em>Displayed</em> con cada filtro.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>a)</strong> Filtro 1 — <code>eth.addr == TU:MAC</code>. ¿Cuántas tramas <strong>tuyas</strong>?',
+                    placeholder: '870',
+                    explicacion: 'Debería ser la gran mayoría de la captura. <code>eth.addr</code> busca en <strong>los dos</strong> campos, origen y destino, así que cuenta lo que envías y lo que recibes.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>b)</strong> Filtro 2 — <code>eth.dst == ff:ff:ff:ff:ff:ff</code>. ¿Cuántas de <strong>difusión</strong>?',
+                    placeholder: '23',
+                    explicacion: 'Suelen ser pocas pero constantes: peticiones ARP, anuncios de servicios y descubrimiento de dispositivos. Todas te llegan aunque ninguna sea para ti.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>c)</strong> Filtro 3 — <code>eth.dst.ig == 1</code>. ¿Cuántas de <strong>difusión + multicast</strong>?',
+                    placeholder: '145',
+                    explicacion: 'Este número incluye el anterior. La diferencia entre los dos es el <strong>multicast</strong>: televisores, altavoces e impresoras anunciándose a grupos concretos.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>d)</strong> Filtro 4 — el largo. ¿Cuántas tramas <strong>de otros equipos</strong>? (Escribe <code>0</code> si no aparece ninguna.)',
+                    placeholder: '0',
+                    explicacion: 'Este es el número del día. Si es <strong>cero o casi cero</strong>, acabas de demostrar que hay un switch: el tráfico entre otros equipos no pasa por tu cable.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Con los datos de ejemplo (1015 totales, 870 tuyas), ¿qué porcentaje de la captura era tráfico tuyo? Redondea al entero.',
+                    respuesta: 86,
+                    tolerancia: 2,
+                    unidad: '%',
+                    explicacion: '870 ÷ 1015 ≈ <strong>86 %</strong>. Casi todo lo que llega a tu tarjeta es tuyo. El resto es, casi en su totalidad, tráfico de <strong>difusión y multicast</strong>, no de otros equipos.',
+                    pistas: [
+                        'Tuyas entre el total, por cien.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>f)</strong> ¿Qué mide exactamente <code>eth.dst.ig</code>?',
+                    opciones: {
+                        a: 'Si la dirección la asignó el fabricante o se ha modificado',
+                        b: 'El bit I/G: vale 0 en direcciones individuales y 1 en las de grupo (multicast y difusión)',
+                        c: 'Si la trama va a Internet o se queda en la red local',
+                        d: 'El tamaño de la trama'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es el bit <strong>I/G</strong> de la Semana 2, el mismo que viste marcado en Wireshark el jueves pasado. La opción a describe el <strong>otro</strong> bit, el U/L.',
+                    pistas: [
+                        'Son los dos bits de la MAC que estudiaste en la Semana 2. Uno distingue individual de grupo.'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Interpretación',
+            tiempo: '20 min',
+            enunciado: '<p>Lo importante no es medir, es saber qué significa lo medido.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Tu filtro 4 ha dado cero o casi cero. ¿Qué demuestra?',
+                    opciones: {
+                        a: 'Que no hay más equipos conectados a la red',
+                        b: 'Que hay un switch: mira la MAC de destino y solo envía por el puerto correspondiente',
+                        c: 'Que los demás equipos tienen el tráfico cifrado',
+                        d: 'Que Wireshark no captura bien'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La a queda descartada por los propios datos: las tramas de difusión y multicast <strong>prueban que hay otros equipos activos</strong>. Lo que no llega es su tráfico unicast, y eso solo lo explica un switch.',
+                    pistas: [
+                        '¿Cómo sabes, por la propia captura, que sí hay otros equipos en la red?'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Predice cómo cambiaría cada montón si sustituyeras el switch por un hub. Escribe <em>igual</em>, <em>sube</em> o <em>baja</em>.',
+                    esquina: 'Montón',
+                    cabecera: ['Con un hub…'],
+                    filas: [
+                        { etiqueta: 'Tramas <strong>tuyas</strong>', celdas: [{ respuestas: ['igual', 'parecido', 'similar', 'lo mismo'], placeholder: 'igual/sube/baja' }] },
+                        { etiqueta: 'Tramas de <strong>difusión</strong>', celdas: [{ respuestas: ['igual', 'parecido', 'similar', 'lo mismo'], placeholder: 'igual/sube/baja' }] },
+                        { etiqueta: 'Tramas <strong>de otros equipos</strong>', celdas: [{ respuestas: ['sube', 'subiria', 'subiría', 'aumenta', 'aumentaria', 'aumentaría', 'muchas'], placeholder: 'igual/sube/baja' }] }
+                    ],
+                    explicacion: 'Solo cambia el tercer montón, pero cambia radicalmente: <strong>pasaría a ser el más grande de todos</strong>, porque verías el tráfico de todos los equipos de la red. La difusión ya llegaba antes, así que ahí no habría diferencia.',
+                    pistas: [
+                        'Un hub repite todo por todos los puertos. ¿Qué montón deja de estar vacío?'
+                    ]
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa la conclusión con tus propios datos en mente.',
+                    frase: 'El switch ha filtrado el {{0}} % del tráfico unicast dirigido a otros equipos, pero el {{1}} % del tráfico de difusión. Por eso se dice que un switch separa dominios de {{2}} pero no dominios de {{3}}.',
+                    respuestas: [
+                        ['100', 'cien'],
+                        ['0', 'cero', 'ninguno'],
+                        ['colision', 'colisión', 'colisiones'],
+                        ['broadcast', 'difusion', 'difusión']
+                    ],
+                    explicacion: 'Esa frase de la teoría, que sonaba abstracta, es literalmente el resultado de tu medición: dos porcentajes opuestos en la misma captura.',
+                    pistas: [
+                        'Los dos primeros huecos son los dos extremos posibles.'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>d)</strong> Un compañero dice que su filtro 4 le ha dado <strong>7 tramas</strong>. ¿Es un problema? Explica qué puede estar pasando.',
+                    modelo: `<p>No es un problema: siete tramas sobre un total de cientos o miles es <strong>ruido
+                             residual</strong>, no el comportamiento de un hub. Con un hub ese montón sería
+                             comparable al de las tramas propias, no un puñado suelto.</p>
+                             <p>La explicación más probable es la <strong>inundación de unicast desconocido</strong>.
+                             Cuando llega al switch una trama cuya MAC de destino <strong>no está en su tabla</strong>,
+                             no puede saber por qué puerto sacarla, así que hace lo único posible: enviarla por
+                             <strong>todos</strong>, igual que haría un hub. Esa trama llega también a mi puerto, y
+                             mi tarjeta la descarta, pero Wireshark ya la ha visto.</p>
+                             <p>Eso ocurre en situaciones normales: cuando un equipo acaba de encenderse y el switch
+                             todavía no sabe dónde está, o cuando una entrada de la tabla ha <strong>caducado</strong>
+                             porque ese equipo llevaba un rato callado.</p>
+                             <p>Lo que <strong>sí</strong> sería sospechoso es que el montón fuera grande y constante.
+                             Eso apuntaría a un hub de verdad, a un <em>port mirroring</em> configurado hacia mi
+                             puerto, o a un ataque de saturación de la tabla del switch para forzarlo a inundar.</p>`,
+                    rubrica: [
+                        'Concluye que siete tramas no indican un hub',
+                        'Explica la inundación de unicast desconocido',
+                        'Da una causa normal: equipo recién encendido o entrada caducada',
+                        'Distingue qué resultado sí sería sospechoso'
+                    ],
+                    pistas: [
+                        'Compara la magnitud: siete frente a cientos.',
+                        '¿Qué puede hacer un switch si no sabe dónde está una MAC?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre',
+            tiempo: '15 min',
+            enunciado: '<p>Lo que te llevas del experimento.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Tienes que analizar el tráfico de un servidor desde tu equipo, y el switch te lo impide. ¿Cuál es la solución legítima?',
+                    opciones: {
+                        a: 'Sustituir el switch por un hub',
+                        b: 'Configurar port mirroring en el switch para que copie el tráfico de ese puerto al tuyo',
+                        c: 'Poner la tarjeta en modo promiscuo',
+                        d: 'No se puede hacer'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El modo promiscuo no sirve de nada aquí: solo evita que <strong>tu tarjeta</strong> descarte, pero si la trama no llega a tu puerto no hay nada que descartar. El <em>port mirroring</em> es una opción de los <strong>switches gestionables</strong>.',
+                    pistas: [
+                        'Si la trama no llega físicamente a tu cable, ¿de qué sirve configurar tu tarjeta?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> Explica, con los números de tu captura, por qué el paso del hub al switch fue una mejora <strong>de seguridad</strong> y no solo de rendimiento.',
+                    modelo: `<p>Con un hub, cualquier equipo de la red recibe físicamente el tráfico de todos los
+                             demás. Que no lo lea depende únicamente de que su tarjeta <strong>decida
+                             descartarlo</strong>, y esa decisión se desactiva con una casilla: el modo promiscuo.</p>
+                             <p>Es decir: la privacidad dependía de la <strong>buena voluntad de cada equipo</strong>.
+                             Bastaba con enchufar un portátil a un puerto libre para leer contraseñas, correos y
+                             cualquier cosa que viajara sin cifrar. Sin tocar nada, sin permisos y sin dejar
+                             rastro.</p>
+                             <p>Mi captura demuestra que con un switch eso ya no es posible: de más de mil tramas,
+                             <strong>ninguna</strong> era tráfico unicast de otro equipo. No es que no pudiera
+                             leerlas: es que <strong>no llegan a mi cable</strong>. La protección es física, no una
+                             decisión de mi tarjeta.</p>
+                             <p>Y lo que queda expuesto es coherente con eso: la difusión sí me llega, porque va
+                             dirigida a todos por definición.</p>
+                             <p>El matiz importante es que <strong>capturar tráfico ajeno pasó de ser trivial a
+                             requerir acceso administrativo al switch</strong>, mediante port mirroring. Sigue siendo
+                             posible, pero ahora hace falta permiso y deja rastro en la configuración.</p>`,
+                    rubrica: [
+                        'Explica que con hub el filtrado dependía de la voluntad de cada tarjeta',
+                        'Menciona el modo promiscuo como forma trivial de saltárselo',
+                        'Usa sus propios números para mostrar que ahora no llega tráfico ajeno',
+                        'Señala que la protección es física y no configurable desde el equipo espía',
+                        'Concluye que espiar ahora exige acceso al switch y deja rastro'
+                    ],
+                    pistas: [
+                        '¿De qué dependía, con un hub, que un equipo no leyera lo ajeno?',
+                        'Cita tu número del filtro 4.',
+                        '¿Qué haría falta hoy para conseguir lo mismo?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

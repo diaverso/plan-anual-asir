@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Hoja de recuperación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 5 — Hoja de recuperación</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">40 min</span></div>
+        <div class="info-item"><strong>Bloques:</strong> 5, uno por día</div>
+        <div class="info-item"><strong>Uso:</strong> empieza por el que peor te salió</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Hoy la recuperación es más corta, y con motivo</strong>
+            Después de esta hoja te queda el <strong>examen mensual</strong>, que son otros 70 minutos. Así que aquí
+            solo están los <strong>puntos críticos</strong> de cada día, no un repaso completo.
+            <br><br>
+            Mira el desglose del test, <strong>empieza por el bloque que peor te haya salido</strong> y, si vas bien
+            de tiempo, haz también el de integración.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Y ahora sí, el examen mensual</strong>
+            <p>Con la semana consolidada, toca el <strong>examen mensual del Mes 1</strong>: 25 preguntas que
+            integran las cuatro semanas, con desglose por semana al corregir.</p>
+            <p><a href="../../examen_mensual.html"><strong>→ Abrir el examen mensual</strong></a> (70 min)</p>
+            <p style="font-size:0.92em">Se abre en una página con su propio formato, anterior al resto del material:
+            no comparte el tema oscuro ni guarda el resultado en el panel. Apunta tu nota a mano.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Síntesis y test</a> · <a href="../../examen_mensual.html">Examen mensual</a></span>
+        <span><a href="../Dia_04/ejercicios.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 5 — Hoja de recuperación',
+    subtitulo: 'Los puntos críticos de cada día · empieza por el que peor te salió',
+    tiempo: '40 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE A — Día 1: hub, switch y dominios',
+            tiempo: '10 min',
+            enunciado: '<p>Lo que más cae de este día: contar dominios.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Con <strong>12 equipos</strong> conectados, ¿cuántos dominios crea cada aparato?',
+                    esquina: 'Aparato',
+                    cabecera: ['Colisión', 'Broadcast'],
+                    filas: [
+                        {
+                            etiqueta: '<strong>Hub</strong> de 12 puertos',
+                            celdas: [
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>Switch</strong> de 12 puertos',
+                            celdas: [
+                                { respuestas: ['12', 'doce'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>Punto de acceso</strong> con 12 clientes',
+                            celdas: [
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La columna de broadcast es <strong>siempre 1</strong>: ninguno de los tres la separa. Y el punto de acceso coincide con el hub en la de colisión, aunque sea de capa 2, porque <strong>el aire no se puede repartir</strong>.',
+                    pistas: [
+                        'Una columna entera tiene el mismo valor en las tres filas.',
+                        'Dos de las tres filas son idénticas.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un switch de 16 puertos: 12 con un equipo cada uno, uno con un <strong>hub de 5 equipos</strong>, y 3 vacíos. ¿Cuántos <strong>dominios de colisión</strong> hay?',
+                    respuesta: 13,
+                    tolerancia: 0.5,
+                    unidad: 'dominios',
+                    explicacion: '<strong>12</strong> de los equipos directos + <strong>1</strong> del puerto con el hub (sus 5 equipos comparten uno) = <strong>13</strong>. Los <strong>puertos vacíos no cuentan</strong>: sin nada conectado no hay dominio.',
+                    pistas: [
+                        'El hub no crea cinco dominios: sus equipos comparten uno.',
+                        '¿Cuentan los puertos sin nada enchufado?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué un switch <strong>no</strong> separa dominios de broadcast?',
+                    opciones: {
+                        a: 'Por falta de memoria',
+                        b: 'Porque una trama a FF:FF:FF:FF:FF:FF significa «para todos»: filtrarla sería incumplir lo que la dirección significa',
+                        c: 'Porque solo los gestionables pueden',
+                        d: 'Sí los separa, uno por puerto'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'No es una limitación técnica sino de significado. Para separar dominios de broadcast hacen falta <strong>VLAN</strong> o un <strong>router</strong>.',
+                    pistas: [
+                        '¿Qué significa literalmente esa dirección?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE B — Día 2: la tabla MAC y ARP',
+            tiempo: '10 min',
+            enunciado: '<p>El mecanismo del switch, en corto.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa el mecanismo de aprendizaje.',
+                    frase: 'El switch aprende de la MAC de {{0}} y decide con la de {{1}}. Si no conoce el destino, {{2}} la trama por todos los puertos menos el de entrada. Las entradas de la tabla {{3}} tras unos minutos de silencio.',
+                    respuestas: [
+                        ['origen', 'emisor'],
+                        ['destino', 'destinatario'],
+                        ['inunda', 'inundar', 'la inunda'],
+                        ['caducan', 'expiran', 'se borran', 'desaparecen']
+                    ],
+                    explicacion: 'Cuatro palabras y todo el mecanismo. La asimetría entre <strong>origen para aprender</strong> y <strong>destino para decidir</strong> es lo que hace que la tabla se construya sola.',
+                    pistas: [
+                        'Los dos primeros huecos son las dos direcciones de una trama.'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Switch de 4 puertos, tabla vacía. <strong>C (puerto 3) envía a A (puerto 1)</strong>. Rellena.',
+                    esquina: 'Pregunta',
+                    cabecera: ['Respuesta'],
+                    filas: [
+                        { etiqueta: '¿Qué MAC aprende?', celdas: [{ respuestas: ['c', 'la de c'], placeholder: 'A/B/C/D' }] },
+                        { etiqueta: '¿Qué decisión toma?', celdas: [{ respuestas: ['inundar', 'inunda', 'inundarla'], placeholder: 'decisión' }] }
+                    ],
+                    explicacion: 'Aprende <strong>C</strong>, porque es el origen. Y como <strong>A todavía es desconocido</strong>, tiene que <strong>inundar</strong>. Solo la primera trama hacia un destino nuevo se inunda: la respuesta de A ya irá dirigida.',
+                    pistas: [
+                        'El switch aprende del emisor, no del destinatario.',
+                        '¿Estaba A en la tabla antes de esta trama?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué ves las preguntas ARP de otros equipos pero no sus respuestas?',
+                    opciones: {
+                        a: 'Porque esas preguntas se quedan sin respuesta',
+                        b: 'Porque las preguntas van en difusión y el switch las inunda; las respuestas van en unicast y las filtra',
+                        c: 'Porque las respuestas van cifradas',
+                        d: 'Porque Wireshark las descarta'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'En ARP conviven los <strong>dos comportamientos del switch</strong> dentro del mismo protocolo. Por eso el laboratorio dio 64 preguntas frente a solo 5 respuestas.',
+                    pistas: [
+                        '¿Cómo viaja una pregunta ARP, y cómo una respuesta?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE C — Día 3: el router y las rutas',
+            tiempo: '10 min',
+            enunciado: '<p>El punto crítico: el prefijo más largo.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Tabla: <code>A) 0.0.0.0/0 métrica 1</code> · <code>B) 172.16.0.0/16 métrica 30</code> · <code>C) 172.16.8.0/24 métrica 90</code>. ¿Qué ruta gana para cada destino?',
+                    esquina: 'Destino',
+                    cabecera: ['Ruta'],
+                    filas: [
+                        { etiqueta: '<code>172.16.8.44</code>', celdas: [{ respuestas: ['c'], placeholder: 'letra' }] },
+                        { etiqueta: '<code>172.16.30.9</code>', celdas: [{ respuestas: ['b'], placeholder: 'letra' }] },
+                        { etiqueta: '<code>1.1.1.1</code>', celdas: [{ respuestas: ['a'], placeholder: 'letra' }] }
+                    ],
+                    explicacion: 'La primera es la clave: encaja con las <strong>tres</strong> rutas y gana la <strong>C</strong>, la del prefijo más largo, <strong>a pesar de tener la peor métrica</strong>. La segunda ya no entra en el /24, así que gana B.',
+                    pistas: [
+                        'Apunta primero todas las rutas que encajan con cada destino.',
+                        '172.16.8.44 encaja con las tres.',
+                        'Compara los números tras la barra, no las métricas.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál es el orden correcto de los criterios de decisión?',
+                    opciones: {
+                        a: 'Primero la métrica más baja, y si empatan, el prefijo más largo',
+                        b: 'Primero el prefijo más largo, y solo si empatan, la métrica más baja',
+                        c: 'Siempre la primera ruta de la tabla',
+                        d: 'Siempre la ruta por defecto'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Invertir el orden es <strong>el error más repetido</strong> del tema. Una métrica excelente no salva a una ruta menos específica.',
+                    pistas: [
+                        '¿Qué información es más valiosa: la más precisa o la más barata?'
+                    ]
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>c)</strong> Un paquete cruza tres routers. Indica si cada dato <em>cambia</em> o se <em>mantiene</em>.',
+                    esquina: 'Dato',
+                    cabecera: ['¿Cambia o se mantiene?'],
+                    filas: [
+                        { etiqueta: 'Direcciones <strong>MAC</strong>', celdas: [{ respuestas: ['cambia', 'cambian'], placeholder: 'cambia/mantiene' }] },
+                        { etiqueta: 'Direcciones <strong>IP</strong>', celdas: [{ respuestas: ['mantiene', 'se mantiene', 'no cambia', 'igual', 'se mantienen'], placeholder: 'cambia/mantiene' }] },
+                        { etiqueta: '<strong>TTL</strong>', celdas: [{ respuestas: ['cambia', 'baja', 'disminuye'], placeholder: 'cambia/mantiene' }] }
+                    ],
+                    explicacion: 'Las MAC cambian porque el router <strong>rehace la cabecera Ethernet entera</strong>. Las IP se mantienen porque la cabecera IP viaja intacta. El <strong>TTL</strong> es la excepción: el único campo IP que el router modifica.',
+                    pistas: [
+                        '¿Qué cabecera se descarta en cada router y cuál se reenvía?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE D — Día 4: Wi-Fi y elección',
+            tiempo: '5 min',
+            enunciado: '<p>Los dos puntos que más se preguntan.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Por qué el Wi-Fi usa CSMA/CA y no CSMA/CD?',
+                    opciones: {
+                        a: 'Porque es más rápido',
+                        b: 'Porque una antena no puede escuchar mientras transmite, así que es imposible detectar la colisión: hay que evitarla',
+                        c: 'Porque lo exige el cifrado',
+                        d: 'Porque en Wi-Fi no hay colisiones'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La señal que emite la propia antena es millones de veces más fuerte que la que intenta oír. De ahí la <strong>A de evitación</strong>, y de ahí que el rendimiento real sea la mitad del nominal.',
+                    pistas: [
+                        '¿Puede una antena oír un susurro mientras grita?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca <strong>todas</strong> las funciones que solo tiene un switch gestionable.',
+                    opciones: {
+                        a: 'VLAN',
+                        b: 'Port mirroring',
+                        c: 'Port security',
+                        d: 'Puertos más rápidos'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'La velocidad depende del <strong>hardware</strong> del puerto, no de que sea gestionable. Las otras tres resuelven problemas concretos vistos esta semana: separar redes, poder diagnosticar y defenderse del MAC flooding.',
+                    pistas: [
+                        'Tres de las cuatro son correctas.',
+                        'Una confunde «configurable» con «rápido».'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE E — Integración del mes',
+            tiempo: '5 min',
+            enunciado: '<p>El último ejercicio antes del examen mensual. Cruza las cuatro semanas.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: 'Una trama sale de tu portátil hacia un servidor de Internet. Cuenta qué le pasa al atravesar el <strong>switch</strong> y el <strong>router</strong>, nombrando en cada paso lo aprendido en las semanas anteriores.',
+                    modelo: `<p><strong>Antes de salir</strong>, mi equipo consulta su tabla de rutas (Semana 4, Día
+                             3). La IP del servidor no está en mi red, así que gana la ruta <code>0.0.0.0/0</code>, y
+                             el siguiente salto es la puerta de enlace. Necesita su MAC, y si no la tiene la pide con
+                             <strong>ARP</strong> (Día 2).</p>
+                             <p>Construye la trama <strong>encapsulando</strong> (Semana 3): los datos HTTP, más 20
+                             bytes de TCP, más 20 de IP, más 14 de Ethernet y 4 de FCS. Lleva la <strong>IP del
+                             servidor</strong> pero la <strong>MAC del router</strong>, porque la capa 2 solo alcanza
+                             un salto.</p>
+                             <p><strong>En el switch</strong> (Día 1 y 2): mira solo la cabecera Ethernet. Aprende mi
+                             MAC del campo de <strong>origen</strong> y busca la del router en su tabla para
+                             <strong>reenviar</strong> por un único puerto. Todo lo demás —IP, TCP, datos— es para él
+                             contenido opaco. No separa dominios de broadcast, así que sigo estando en la misma red
+                             que todos mis vecinos.</p>
+                             <p><strong>En el router</strong> (Día 3): comprueba el FCS, <strong>descarta la cabecera
+                             Ethernet entera</strong>, lee la IP, descuenta uno al <strong>TTL</strong>, consulta su
+                             tabla aplicando el <strong>prefijo más largo</strong> y construye una
+                             <strong>trama nueva</strong> hacia el siguiente salto, con nuevo FCS. Aquí es donde
+                             termina mi dominio de broadcast: una difusión mía no habría pasado de este punto.</p>
+                             <p>Lo que resume el mes: las <strong>MAC han cambiado</strong> en cada tramo y las
+                             <strong>IP siguen intactas</strong>; el switch ha hecho un trabajo mínimo y el router
+                             siete pasos; y cada aparato ha mirado <strong>exactamente la cabecera de su capa</strong>
+                             y ninguna más.</p>`,
+                    rubrica: [
+                        'Empieza por la consulta a la tabla de rutas y el ARP',
+                        'Describe la encapsulación con los tamaños de cabecera',
+                        'Señala que la trama lleva IP del servidor y MAC del router',
+                        'Explica el trabajo del switch: solo capa 2, aprende y reenvía',
+                        'Explica el trabajo del router: desencapsula, TTL, tabla, trama nueva',
+                        'Cierra con qué cambia y qué se mantiene a lo largo del camino'
+                    ],
+                    pistas: [
+                        '¿Qué decide tu equipo antes incluso de construir la trama?',
+                        '¿Qué cabecera mira cada aparato, y cuáles ignora?',
+                        'Termina diciendo qué direcciones han cambiado al final.'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

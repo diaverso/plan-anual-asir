@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">76 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 6 cierra la semana con la <strong>tabla completa de dispositivos por capa</strong>. Si te
+            sale entera y sabes justificar cada fila, mañana el test irá bien.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/ejercicios.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Ejercicios',
+    subtitulo: 'Punto de acceso · CSMA/CA · bandas y canales · dispositivos de capas altas · elegir',
+    tiempo: '76 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: El punto de acceso',
+            tiempo: '12 min',
+            enunciado: '<p>Un aparato de capa 2 con un problema de capa 1.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Compara los tres aparatos que ya conoces. Escribe el número de dominios que crea cada uno con <strong>8 equipos</strong> conectados.',
+                    esquina: 'Aparato',
+                    cabecera: ['Dominios de colisión', 'Dominios de broadcast'],
+                    filas: [
+                        {
+                            etiqueta: '<strong>Hub</strong> de 8 puertos',
+                            celdas: [
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>Switch</strong> de 8 puertos',
+                            celdas: [
+                                { respuestas: ['8', 'ocho'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>Punto de acceso</strong> con 8 clientes',
+                            celdas: [
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' },
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'El punto de acceso se comporta como el <strong>hub</strong> en la columna de colisión, aunque sea un aparato de capa 2 como el switch. Y no por falta de calidad: es que <strong>el aire no se puede repartir</strong>.',
+                    pistas: [
+                        'Una de las tres filas coincide exactamente con otra.',
+                        'La columna de broadcast es la misma en los tres casos.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Tu móvil por Wi-Fi imprime en una impresora conectada por cable al switch. ¿Por qué funciona sin configurar nada?',
+                    opciones: {
+                        a: 'Porque el punto de acceso hace de router entre las dos',
+                        b: 'Porque el AP es de capa 2 y no separa dominios de broadcast: los dos están en la misma red',
+                        c: 'Porque la impresora tiene Wi-Fi también',
+                        d: 'Porque el móvil usa un protocolo especial'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El AP une el aire con el cable <strong>sin separar nada</strong>: es una sola red. Si hiciera de router, harían falta dos redes distintas y una ruta entre ellas.',
+                    pistas: [
+                        '¿Qué capa separa dominios de broadcast, y en cuál trabaja un AP?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Se puede eliminar las colisiones en Wi-Fi comprando un AP mejor?',
+                    opciones: {
+                        a: 'Sí, los modelos Wi-Fi 6 las eliminan',
+                        b: 'No: el medio es compartido por física, y ningún aparato puede dar «un aire» a cada equipo',
+                        c: 'Sí, si se configura en modo dúplex completo',
+                        d: 'Sí, usando la banda de 5 GHz'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Wi-Fi 6 mejora mucho la <strong>gestión</strong> de muchos clientes a la vez, pero no elimina el problema de raíz. La limitación no está en el aparato: está en el medio.',
+                    pistas: [
+                        '¿Cómo eliminó el switch las colisiones, y se puede hacer lo mismo con el aire?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: CSMA/CA',
+            tiempo: '12 min',
+            enunciado: '<p>Evitar en lugar de detectar.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa la comparación entre los dos métodos.',
+                    frase: 'Ethernet con hub usaba CSMA/CD, donde la D significa {{0}}: se transmite y, si se detecta un choque, se para. En Wi-Fi eso es imposible porque una antena no puede {{1}} mientras transmite. Por eso se usa CSMA/CA, donde la A significa {{2}}: se comprueba que el canal esté libre, se espera un tiempo {{3}} y solo entonces se transmite.',
+                    respuestas: [
+                        ['deteccion', 'detección', 'detectar'],
+                        ['escuchar', 'oir', 'oír', 'recibir'],
+                        ['evitacion', 'evitación', 'evitar'],
+                        ['aleatorio', 'al azar', 'random']
+                    ],
+                    explicacion: 'La razón física es contundente: la señal que emite la propia antena es <strong>millones de veces más fuerte</strong> que la que intenta escuchar. Es como intentar oír un susurro mientras gritas.',
+                    pistas: [
+                        'CD y CA se diferencian en una sola palabra cada una.'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un enlace Wi-Fi anuncia <strong>600 Mbps</strong>. ¿Qué rendimiento real cabe esperar, en Mbps?',
+                    respuesta: 300,
+                    tolerancia: 60,
+                    unidad: 'Mbps',
+                    explicacion: 'Alrededor de <strong>300 Mbps</strong>, la mitad. El resto se va en esperas, confirmaciones y reintentos del CSMA/CA. Compáralo con Ethernet conmutado, donde el rendimiento real ronda el <strong>96 %</strong> de la nominal.',
+                    pistas: [
+                        '¿Qué proporción de la velocidad nominal entrega el Wi-Fi en la práctica?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué el receptor tiene que <strong>confirmar</strong> cada trama en Wi-Fi, cosa que no ocurre en Ethernet conmutado?',
+                    opciones: {
+                        a: 'Porque el estándar lo exige sin motivo técnico',
+                        b: 'Porque el emisor no puede saber por sí mismo si su trama llegó o chocó, ya que no puede escuchar mientras transmite',
+                        c: 'Porque el aire pierde muchas tramas',
+                        d: 'Porque lo pide el cifrado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la consecuencia lógica de no poder detectar colisiones: si no puedes comprobarlo tú, alguien tiene que <strong>decírtelo</strong>. Y esa confirmación es más tráfico que ocupa el canal compartido.',
+                    pistas: [
+                        'Si no puedes detectar el choque tú mismo, ¿cómo te enteras de que la trama llegó?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Bandas, canales y cobertura',
+            tiempo: '14 min',
+            enunciado: '<p>Decisiones de despliegue.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la comparación entre las dos bandas. Escribe <em>2,4</em> o <em>5</em>.',
+                    esquina: 'Característica',
+                    cabecera: ['¿Qué banda es mejor?'],
+                    filas: [
+                        { etiqueta: 'Llega <strong>más lejos</strong>', celdas: [{ respuestas: ['2,4', '2.4', '24', '2,4 ghz', '2.4 ghz'], placeholder: '2,4 / 5' }] },
+                        { etiqueta: 'Atraviesa <strong>mejor las paredes</strong>', celdas: [{ respuestas: ['2,4', '2.4', '24', '2,4 ghz', '2.4 ghz'], placeholder: '2,4 / 5' }] },
+                        { etiqueta: 'Ofrece <strong>más velocidad</strong>', celdas: [{ respuestas: ['5', '5 ghz'], placeholder: '2,4 / 5' }] },
+                        { etiqueta: 'Está <strong>menos saturada</strong>', celdas: [{ respuestas: ['5', '5 ghz'], placeholder: '2,4 / 5' }] },
+                        { etiqueta: 'Tiene <strong>más canales sin solapar</strong>', celdas: [{ respuestas: ['5', '5 ghz'], placeholder: '2,4 / 5' }] }
+                    ],
+                    explicacion: 'El patrón es claro: <strong>2,4 GHz llega</strong> y <strong>5 GHz corre</strong>. Es física de las ondas: menor frecuencia, mayor alcance y mejor penetración; mayor frecuencia, más capacidad y menos distancia.',
+                    pistas: [
+                        'Las dos primeras filas tienen la misma respuesta, y las tres últimas también.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Vas a instalar tres puntos de acceso en una misma planta, en la banda de 2,4 GHz. ¿Qué canales les asignas?',
+                    opciones: {
+                        a: 'El 1, el 2 y el 3',
+                        b: 'El 1, el 6 y el 11',
+                        c: 'Todos el 6, para que no se confundan',
+                        d: 'El canal automático en los tres'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Son los <strong>únicos tres que no se solapan</strong>. Con la a, los tres APs se interferirían entre ellos; con la c estarían compartiendo el mismo medio, que es exactamente lo que hay que evitar.',
+                    pistas: [
+                        '¿Cuántos canales realmente independientes hay en esa banda?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> El Wi-Fi va mal en una oficina. Alguien propone comprar un AP «de más potencia». ¿Es buena idea?',
+                    opciones: {
+                        a: 'Sí: más potencia siempre da mejor cobertura',
+                        b: 'No necesariamente: retiene a clientes lejanos que negocian velocidades bajísimas, y esos ocupan el canal más tiempo y ralentizan a todos',
+                        c: 'Sí, pero solo en 5 GHz',
+                        d: 'Da igual: la potencia no influye'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es contraintuitivo pero importante: en un canal saturado, emitir más fuerte <strong>añade ruido para todos</strong>. Suele funcionar mejor poner <strong>más APs con menos potencia</strong> que uno solo gritando.',
+                    pistas: [
+                        '¿Qué pasa con un cliente lejano que sigue enganchado a un AP muy potente en vez de cambiarse a otro más cercano?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: SSID, BSSID y seguridad',
+            tiempo: '12 min',
+            enunciado: '<p>Los nombres y lo que protege de verdad.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada término con su definición.',
+                    izquierda: ['SSID', 'BSSID', 'Roaming', 'WPA3'],
+                    derecha: [
+                        'El nombre de la red, lo que aparece en la lista',
+                        'La dirección MAC de un punto de acceso concreto',
+                        'Cambiar de un AP a otro sin perder la conexión',
+                        'El cifrado que protege el tráfico inalámbrico'
+                    ],
+                    pares: {
+                        'SSID': 'El nombre de la red, lo que aparece en la lista',
+                        'BSSID': 'La dirección MAC de un punto de acceso concreto',
+                        'Roaming': 'Cambiar de un AP a otro sin perder la conexión',
+                        'WPA3': 'El cifrado que protege el tráfico inalámbrico'
+                    },
+                    explicacion: 'La distinción útil en el día a día es <strong>SSID frente a BSSID</strong>: cuando el Wi-Fi falla en una zona concreta, lo que hay que preguntar no es a qué red estás conectado, sino <strong>a qué AP</strong>.',
+                    pistas: [
+                        'Dos de los cuatro son identificadores; los otros dos, un comportamiento y una tecnología.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca <strong>todas</strong> las medidas que sí protegen una red Wi-Fi.',
+                    opciones: {
+                        a: 'Usar cifrado WPA3, o WPA2 si el equipo es más antiguo',
+                        b: 'Usar una contraseña larga y no trivial',
+                        c: 'Ocultar el SSID',
+                        d: 'Separar la red de invitados en una VLAN distinta'
+                    },
+                    respuesta: ['a', 'b', 'd'],
+                    explicacion: 'La c es <strong>seguridad por oscuridad</strong>: el nombre se descubre en segundos con cualquier analizador, porque el AP y sus clientes lo intercambian en otras tramas. Solo molesta a los usuarios legítimos.',
+                    pistas: [
+                        'Tres de las cuatro son eficaces.',
+                        'Una de ellas consiste en esconder algo que en realidad sigue viajando por el aire.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué el cifrado es más crítico en Wi-Fi que en una red cableada con switch?',
+                    opciones: {
+                        a: 'Porque el Wi-Fi tiene más errores de transmisión',
+                        b: 'Porque la señal se emite al aire y cualquiera dentro del alcance la recibe, sin necesidad de conectarse ni entrar en el edificio',
+                        c: 'Porque los APs no tienen tabla MAC',
+                        d: 'Porque el cable ya va cifrado de fábrica'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con switch, el lunes comprobaste que el tráfico ajeno <strong>ni siquiera llega a tu cable</strong>: la protección es física. En el aire no hay nada que aislar, así que el cifrado es lo único que queda.',
+                    pistas: [
+                        'Recuerda tu medición del lunes: ¿cuántas tramas ajenas llegaban a tu cable?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Los dispositivos de las capas altas',
+            tiempo: '14 min',
+            enunciado: '<p>La última fila de la tabla del lunes.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada dispositivo con su función.',
+                    izquierda: ['Cortafuegos', 'Proxy', 'Balanceador', 'Switch de capa 3'],
+                    derecha: [
+                        'Permite o bloquea tráfico según reglas de direcciones, puertos o contenido',
+                        'Pide las páginas en nombre del usuario: filtra, registra y guarda copias en caché',
+                        'Reparte las peticiones entrantes entre varios servidores',
+                        'Conmuta por MAC y además enruta entre las VLAN de la propia red'
+                    ],
+                    pares: {
+                        'Cortafuegos': 'Permite o bloquea tráfico según reglas de direcciones, puertos o contenido',
+                        'Proxy': 'Pide las páginas en nombre del usuario: filtra, registra y guarda copias en caché',
+                        'Balanceador': 'Reparte las peticiones entrantes entre varios servidores',
+                        'Switch de capa 3': 'Conmuta por MAC y además enruta entre las VLAN de la propia red'
+                    },
+                    explicacion: 'Los tres primeros miran <strong>por encima de la capa 3</strong>: no se limitan a decidir por dónde va el tráfico, sino <strong>si debe pasar</strong> y <strong>a quién</strong>.',
+                    pistas: [
+                        'Uno decide si pasa, otro pide por ti, otro reparte y otro combina dos capas.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué diferencia hay entre un cortafuegos de capa 4 y uno de capa 7?',
+                    opciones: {
+                        a: 'Ninguna: son nombres comerciales del mismo producto',
+                        b: 'El de capa 4 decide por direcciones y puertos; el de capa 7 mira dentro del contenido y puede distinguir dos peticiones que van al mismo puerto',
+                        c: 'El de capa 7 es más rápido',
+                        d: 'El de capa 4 solo funciona con UDP'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Si un ataque y una petición legítima van las dos al puerto 443, mirar puertos no basta. El de capa 7 es mucho más potente y bastante <strong>más lento</strong>, porque tiene que abrir y entender el contenido.',
+                    pistas: [
+                        '¿Puede un cortafuegos de capa 4 distinguir dos peticiones que van al mismo puerto?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuándo tiene sentido un <strong>switch de capa 3</strong> en lugar de un router?',
+                    opciones: {
+                        a: 'Para conectar la empresa a Internet',
+                        b: 'Para enrutar rápido entre las VLAN internas de una red grande, con muchos puertos iguales',
+                        c: 'Para sustituir a todos los switches de capa 2',
+                        d: 'Nunca: siempre es mejor un router'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Está optimizado para ir rápido <strong>dentro</strong> de la organización. Para salir a Internet sigue haciendo falta un <strong>router</strong>, que además aporta NAT, cortafuegos y VPN.',
+                    pistas: [
+                        '¿Dónde está optimizado cada uno: dentro de la red o en su frontera?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: La tabla completa y la elección',
+            tiempo: '12 min',
+            enunciado: '<p>Cierre de la semana.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> La tabla que resume la semana entera. Completa la capa y qué mira cada dispositivo.',
+                    esquina: 'Dispositivo',
+                    cabecera: ['Capa OSI', 'Qué mira'],
+                    filas: [
+                        {
+                            etiqueta: '<strong>Repetidor / Hub</strong>',
+                            celdas: [
+                                { respuestas: ['1', 'uno'], placeholder: 'nº' },
+                                { respuestas: ['nada', 'la señal', 'la senal', 'solo la señal', 'ninguna'], placeholder: 'qué' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>Switch / Punto de acceso</strong>',
+                            celdas: [
+                                { respuestas: ['2', 'dos'], placeholder: 'nº' },
+                                { respuestas: ['mac', 'la mac', 'direccion mac', 'dirección mac'], placeholder: 'qué' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>Router</strong>',
+                            celdas: [
+                                { respuestas: ['3', 'tres'], placeholder: 'nº' },
+                                { respuestas: ['ip', 'la ip', 'direccion ip', 'dirección ip'], placeholder: 'qué' }
+                            ]
+                        },
+                        {
+                            etiqueta: '<strong>Cortafuegos / Proxy</strong>',
+                            celdas: [
+                                { respuestas: ['7', 'siete', '4-7', '4 a 7'], placeholder: 'nº' },
+                                { respuestas: ['puertos y contenido', 'el contenido', 'contenido', 'puertos', 'puertos y datos'], placeholder: 'qué' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Cuatro filas y toda la semana dentro. Fíjate en que <strong>switch y punto de acceso comparten fila</strong>: misma capa y mismo criterio de decisión. Lo que los diferencia no es lo que miran, sino el <strong>medio</strong> por el que transmiten.',
+                    pistas: [
+                        'Es la tabla con la que empezó el lunes, ya completa.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    multiple: true,
+                    pregunta: '<strong>b)</strong> Marca <strong>todas</strong> las razones válidas para pagar un switch gestionable en una empresa.',
+                    opciones: {
+                        a: 'Permite crear VLAN y separar dominios de broadcast',
+                        b: 'Permite port mirroring, sin el cual no se puede analizar el tráfico de un puerto',
+                        c: 'Permite port security, defensa contra el MAC flooding',
+                        d: 'Aumenta la velocidad de los puertos'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'La d es falsa: la velocidad depende del <strong>hardware</strong> del puerto, no de que sea gestionable. Un switch no gestionable de 1 Gbps es igual de rápido que uno gestionable de 1 Gbps.',
+                    pistas: [
+                        'Tres de las cuatro son ciertas.',
+                        'Una confunde «configurable» con «rápido».'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> Resume la semana: ¿por qué es útil clasificar los dispositivos <strong>por capas</strong> en lugar de aprenderse cada uno por separado?',
+                    modelo: `<p>Porque la capa no es una etiqueta: <strong>determina todo lo demás</strong>, y saberla
+                             permite <em>deducir</em> el comportamiento en lugar de memorizarlo.</p>
+                             <p>En cuanto sé que un aparato es de <strong>capa 2</strong>, sé que mira MAC, que no
+                             entiende de IP y que <strong>no puede separar dominios de broadcast</strong>. Eso vale
+                             para el switch y también para el punto de acceso, aunque uno use cable y el otro aire.
+                             No he tenido que aprender dos comportamientos: he aplicado el mismo dos veces.</p>
+                             <p>Si es de <strong>capa 3</strong>, sé que mira IP, que sí corta la difusión y que
+                             tendrá una dirección por cada red que une. Y sé que hará más trabajo por paquete, porque
+                             tiene que abrir una cabecera más.</p>
+                             <p>También sirve para <strong>diagnosticar</strong>. Si el problema es que la difusión
+                             llega donde no debe, ya sé que ningún aparato de capa 2 lo va a resolver, por caro que
+                             sea. Si el problema es rendimiento dentro de una red, no necesito un router.</p>
+                             <p>Y sirve para <strong>leer el mercado</strong>: «cortafuegos de capa 7», «switch de
+                             capa 3», «balanceador de capa 4» son descripciones precisas de qué mira cada producto,
+                             no jerga comercial.</p>
+                             <p>La excepción interesante es el <strong>punto de acceso</strong>, que siendo de capa 2
+                             se comporta como un hub en cuanto a colisiones. Y ni siquiera eso rompe la regla: no es
+                             por su capa, es por el <strong>medio</strong>. Saber distinguir qué viene de la capa y
+                             qué del medio es, probablemente, lo que más me llevo de la semana.</p>`,
+                    rubrica: [
+                        'Explica que la capa permite deducir el comportamiento en lugar de memorizarlo',
+                        'Usa el caso de switch y AP compartiendo capa',
+                        'Aplica la idea al diagnóstico de problemas',
+                        'Menciona que explica el vocabulario comercial',
+                        'Señala la excepción del AP y la atribuye al medio, no a la capa'
+                    ],
+                    pistas: [
+                        '¿Qué puedes deducir de un aparato con solo saber su capa?',
+                        '¿Cómo ayuda eso cuando algo falla?',
+                        '¿Hay algún caso que no encaje del todo?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

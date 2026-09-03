@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: tu propia tabla de rutas</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 4</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> terminal</div>
+        <div class="info-item"><strong>Requisito:</strong> ninguno especial</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Los routers no son los únicos que tienen tabla de rutas: <strong>tu equipo también tiene una</strong>,
+            y funciona con exactamente las mismas reglas.</p>
+            <p>Hoy vas a leerla, identificar la ruta por defecto, aplicar el <strong>prefijo más largo</strong> a
+            casos reales y comprobar sobre el terreno por qué cierto tráfico sale por un sitio y cierto otro por
+            otro.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Tu tabla de rutas (18 min)</h2>
+
+            <div class="so-tabs" data-grupo="rutas">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="rutas" data-so="win">
+                <div class="comando"><pre><code>Get-NetRoute -AddressFamily IPv4 |
+    Select-Object DestinationPrefix, NextHop, RouteMetric, ifIndex |
+    Sort-Object DestinationPrefix</code></pre></div>
+                <p>También existe el clásico <code>route print</code>, más difícil de leer.</p>
+            </div>
+            <div class="so-panel" data-grupo="rutas" data-so="nix">
+                <div class="comando"><pre><code>ip route show</code></pre></div>
+                <p>En macOS: <code>netstat -rn -f inet</code>.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>DestinationPrefix   NextHop       RouteMetric  ifIndex
+-----------------   -------       -----------  -------
+0.0.0.0/0           192.168.1.1             0       20
+127.0.0.0/8         0.0.0.0               256        1
+127.0.0.1/32        0.0.0.0               256        1
+172.26.112.0/20     0.0.0.0               256       64
+192.168.1.0/24      0.0.0.0               256       20</code></pre>
+                <p>Cinco líneas, y cada una cuenta algo:</p>
+                <ul>
+                    <li><code>0.0.0.0/0</code> con <strong>NextHop 192.168.1.1</strong>: la <strong>ruta por
+                    defecto</strong>. Todo lo que no encaje en ninguna otra se le entrega al router.</li>
+                    <li><code>192.168.1.0/24</code> con NextHop <code>0.0.0.0</code>: la <strong>red local</strong>.
+                    Ese cero significa «no hay siguiente salto, está <strong>directamente conectada</strong>».</li>
+                    <li><code>127.0.0.0/8</code>: el <strong>loopback</strong>, el equipo hablando consigo mismo.</li>
+                    <li><code>172.26.112.0/20</code> en otro <code>ifIndex</code>: <strong>una segunda red</strong> en
+                    el mismo equipo. En este caso es la de WSL, el subsistema Linux de Windows.</li>
+                </ul>
+            </div>
+
+            <div class="destacado">
+                <strong>Fíjate en esa cuarta línea, que es la más interesante</strong>
+                Este equipo está en <strong>dos redes a la vez</strong>: la de casa (<code>192.168.1.0/24</code>) y
+                una virtual (<code>172.26.112.0/20</code>).
+                <br><br>
+                Eso significa que <strong>tu propio ordenador tiene que tomar decisiones de enrutamiento</strong>: si
+                le pides que hable con <code>172.26.115.5</code>, no puede mandarlo al router de casa; tiene que
+                sacarlo por la interfaz virtual.
+                <br><br>
+                Es exactamente el trabajo de un router, hecho por tu equipo, con las mismas reglas. Si no tienes WSL
+                ni máquinas virtuales, verás menos líneas: tres o cuatro. También está bien.
+            </div>
+
+            <h2>Parte 2 — Aplica el prefijo más largo (20 min)</h2>
+
+            <p>Ahora usa <strong>tu propia tabla</strong> para decidir, a mano, por dónde saldría cada paquete. Es lo
+            mismo que hace tu equipo miles de veces por segundo.</p>
+
+            <div class="dato">
+                <strong>El método, en tres pasos</strong>
+                <ol>
+                    <li>Busca <strong>todas</strong> las rutas que encajen con la dirección de destino. Recuerda que
+                    <code>0.0.0.0/0</code> encaja siempre.</li>
+                    <li>De esas, quédate con la del <strong>prefijo más largo</strong>: el número más alto tras la
+                    barra.</li>
+                    <li>Si hay empate en longitud, gana la de <strong>métrica más baja</strong>.</li>
+                </ol>
+            </div>
+
+            <div class="destacado">
+                <strong>Ejemplo resuelto con la tabla de arriba</strong>
+<pre><code>Destino: 192.168.1.50
+  Encajan:  0.0.0.0/0        (encaja con todo)
+            192.168.1.0/24   (empieza por 192.168.1)
+  Gana:     192.168.1.0/24   ← prefijo más largo
+  Resultado: red local, se entrega directamente sin pasar por el router
+
+Destino: 8.8.8.8
+  Encajan:  0.0.0.0/0        (y solo esa)
+  Gana:     0.0.0.0/0
+  Resultado: se entrega a 192.168.1.1, la puerta de enlace</code></pre>
+            </div>
+
+            <div class="aviso">
+                <strong>La comprobación que lo confirma</strong>
+                Puedes verificar tu razonamiento sin fiarte de él. Windows tiene un comando que te dice
+                <strong>qué ruta elegiría</strong> para un destino concreto:
+                <div class="comando" style="margin-top:10px"><pre><code>Find-NetRoute -RemoteIPAddress 8.8.8.8</code></pre></div>
+                En Linux, el equivalente es <code>ip route get 8.8.8.8</code>.
+                <br><br>
+                Pruébalo con una IP de tu red y con una de fuera, y compara con lo que habías deducido tú.
+            </div>
+
+            <h2>Parte 3 — Comprueba dónde termina tu red (12 min)</h2>
+
+            <p>La teoría dice que la difusión <strong>no cruza el router</strong>. Compruébalo mirando quién puede
+            aparecer en tu tabla ARP.</p>
+
+            <div class="so-tabs" data-grupo="vecinos">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="vecinos" data-so="win">
+                <div class="comando"><pre><code>Get-NetNeighbor -AddressFamily IPv4 -State Reachable,Stale |
+    Select-Object IPAddress, LinkLayerAddress</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="vecinos" data-so="nix">
+                <div class="comando"><pre><code>ip neigh show</code></pre></div>
+            </div>
+
+            <div class="destacado">
+                <strong>Lo que vas a observar</strong>
+                <strong>Todas</strong> las direcciones de tu tabla ARP pertenecen a <strong>tu propia red</strong>.
+                Ni una sola será de Internet, por mucho que lleves horas navegando.
+                <br><br>
+                Y tiene que ser así: ARP pregunta con una <strong>difusión</strong>, que se detiene en el router. No
+                hay forma de que averigües la MAC de un servidor de Google, porque tu pregunta nunca llegaría hasta
+                allí.
+                <br><br>
+                <strong>No la necesitas.</strong> Para hablar con ese servidor le entregas la trama a tu puerta de
+                enlace, y de ahí en adelante ya no es asunto tuyo. Es la definición práctica de «el alcance de la
+                capa 2 es un salto».
+            </div>
+
+            <h2>Parte 4 — Recoge tus datos</h2>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="destacado" style="margin-top:30px">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sabes leer una tabla de rutas y distinguir la <strong>ruta por defecto</strong> de las redes
+                directamente conectadas.</li>
+                <li>Sabes qué significa un <strong>NextHop de 0.0.0.0</strong>.</li>
+                <li>Aplicas el <strong>prefijo más largo</strong> a mano y compruebas con
+                <code>Find-NetRoute</code>.</li>
+                <li>Puedes explicar por qué en tu tabla ARP <strong>nunca</strong> aparecerá una IP de Internet.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_02/laboratorio.html">← Laboratorio del Día 2</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Laboratorio: tu propia tabla de rutas',
+    subtitulo: 'Leer la tabla · aplicar el prefijo más largo · dónde termina tu red',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Tu tabla de rutas',
+            tiempo: '18 min',
+            enunciado: '<p>Datos de la Parte 1.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'ip',
+                    pregunta: '<strong>a)</strong> ¿Cuál es el <code>NextHop</code> de tu ruta <code>0.0.0.0/0</code>?',
+                    placeholder: '192.168.1.1',
+                    explicacion: 'Es tu <strong>puerta de enlace</strong>, y pertenece a tu propia red: es el lado del router que da a tu lado. Coincide con lo que anotaste en el laboratorio del Día 1 de la Semana 3.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> Escribe la ruta de tu <strong>red local</strong>, con su prefijo (por ejemplo <code>192.168.1.0/24</code>).',
+                    placeholder: '192.168.1.0/24',
+                    explicacion: 'Su <code>NextHop</code> será <code>0.0.0.0</code>, que significa <strong>directamente conectada</strong>: para llegar a esas direcciones no hace falta ningún intermediario.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué significa que una ruta tenga <code>NextHop</code> igual a <code>0.0.0.0</code>?',
+                    opciones: {
+                        a: 'Que la ruta está desactivada',
+                        b: 'Que esa red está directamente conectada: no hay que entregarle el paquete a nadie para que siga',
+                        c: 'Que el siguiente salto es Internet',
+                        d: 'Que es un error de configuración'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la diferencia entre «esto lo tengo aquí al lado» y «esto se lo doy a otro para que lo lleve». La ruta por defecto sí tiene <code>NextHop</code>, porque hay alguien a quien entregarle el paquete.',
+                    pistas: [
+                        '¿Necesitas un intermediario para hablar con un equipo de tu propia red?'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>d)</strong> ¿Cuántas rutas tiene tu tabla en total?',
+                    placeholder: '5',
+                    explicacion: 'Si tienes máquinas virtuales, WSL o Docker verás bastantes más, porque cada uno añade su propia red. Un equipo sin nada de eso suele tener tres o cuatro.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> ¿Aparece en tu tabla alguna red que <strong>no</strong> sea ni la local ni el loopback (127.x)?',
+                    opciones: {
+                        a: 'Sí, al menos una más (WSL, VirtualBox, Docker, VPN…)',
+                        b: 'No: solo la local, el loopback y la ruta por defecto'
+                    },
+                    respuesta: null,
+                    libre: true,
+                    explicacion: 'Las dos respuestas son normales. Si tienes una red extra, tu equipo está <strong>en dos redes a la vez</strong> y tiene que decidir por cuál sale cada paquete: está haciendo de router. Si no la tienes, la decisión es más simple pero las reglas son idénticas.'
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Aplica el prefijo más largo',
+            tiempo: '20 min',
+            enunciado: `
+                <p>Usa <strong>esta</strong> tabla de ejemplo, no la tuya, para que las respuestas se puedan
+                corregir:</p>
+<pre><code>0.0.0.0/0         → 192.168.1.1    métrica 0
+127.0.0.0/8       → directa        métrica 256
+172.26.112.0/20   → directa        métrica 256
+192.168.1.0/24    → directa        métrica 256</code></pre>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para cada destino, indica qué ruta gana.',
+                    esquina: 'Destino',
+                    cabecera: ['Ruta que gana'],
+                    filas: [
+                        { etiqueta: '<code>192.168.1.200</code>', celdas: [{ respuestas: ['192.168.1.0/24', '192.168.1.0 /24', 'la local', '192.168.1.0'], placeholder: 'ruta' }] },
+                        { etiqueta: '<code>8.8.8.8</code>', celdas: [{ respuestas: ['0.0.0.0/0', '0.0.0.0 /0', 'la por defecto', 'por defecto', 'defecto', '0.0.0.0'], placeholder: 'ruta' }] },
+                        { etiqueta: '<code>172.26.115.5</code>', celdas: [{ respuestas: ['172.26.112.0/20', '172.26.112.0 /20', '172.26.112.0'], placeholder: 'ruta' }] },
+                        { etiqueta: '<code>127.0.0.1</code>', celdas: [{ respuestas: ['127.0.0.0/8', '127.0.0.0 /8', 'loopback', 'el loopback', '127.0.0.0'], placeholder: 'ruta' }] }
+                    ],
+                    explicacion: 'En los cuatro casos gana el <strong>prefijo más largo</strong> de entre los que encajan. Fíjate en que <code>0.0.0.0/0</code> encajaba en <strong>los cuatro</strong>, pero solo gana cuando no hay nada mejor.',
+                    pistas: [
+                        'Empieza mirando qué rutas encajan con cada destino, y recuerda que la ruta por defecto encaja siempre.',
+                        '172.26.115.5 está dentro de 172.26.112.0/20: el /20 abarca de 172.26.112.0 a 172.26.127.255.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Para <code>8.8.8.8</code>, la ruta ganadora tiene métrica 0 y las demás 256. ¿Ha ganado por la métrica?',
+                    opciones: {
+                        a: 'Sí: 0 es mejor que 256',
+                        b: 'No: ha ganado porque era la única que encajaba. La métrica solo desempata entre rutas que encajan igual de bien',
+                        c: 'Sí, y además por el prefijo',
+                        d: 'No se puede saber'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es una trampa útil: la métrica de la ruta por defecto suele ser buenísima, y eso confunde. Pero solo se llega a comparar métricas <strong>entre rutas de la misma longitud de prefijo</strong>.',
+                    pistas: [
+                        '¿Qué otras rutas encajaban con 8.8.8.8?'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Se añade la ruta <code>192.168.1.128/25 → 192.168.1.9</code>. ¿Por dónde sale ahora un paquete a <code>192.168.1.200</code>?',
+                    opciones: {
+                        a: 'Por la red local, como antes',
+                        b: 'Por 192.168.1.9: la nueva ruta es más específica (/25 frente a /24) y 200 está en su rango',
+                        c: 'Por la ruta por defecto',
+                        d: 'Se descarta por conflicto'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un <code>/25</code> parte la red en dos mitades; la segunda va de .128 a .255, y 200 está ahí. Esto demuestra para qué sirve el prefijo más largo: <strong>una regla general con excepciones concretas</strong>, sin contradicción.',
+                    pistas: [
+                        '¿Es 200 mayor o menor que 128?',
+                        'Compara la longitud de los dos prefijos.'
+                    ]
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>d)</strong> Ejecuta <code>Find-NetRoute -RemoteIPAddress 8.8.8.8</code> (o <code>ip route get 8.8.8.8</code>) y escribe la <strong>IP de origen</strong> que dice que usará tu equipo.',
+                    placeholder: '192.168.1.70',
+                    explicacion: 'Es tu propia dirección en la red por la que va a salir. Si tuvieras varias interfaces activas, este comando te diría <strong>cuál elige</strong> el sistema, que es justo el tipo de duda que resuelve en un diagnóstico real.'
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Dónde termina tu red',
+            tiempo: '12 min',
+            enunciado: '<p>Datos de la Parte 3.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Mira tu tabla ARP. ¿Alguna de las direcciones IP es de Internet?',
+                    opciones: {
+                        a: 'No: todas pertenecen a mi propia red',
+                        b: 'Sí, hay alguna dirección pública'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Y no puede ser de otra forma: ARP pregunta mediante una <strong>difusión</strong>, que el router no reenvía. Tu pregunta nunca saldría de tu red, así que jamás podrías conocer la MAC de un servidor remoto.',
+                    pistas: [
+                        '¿Cómo viaja una pregunta ARP, y qué hace el router con ese tipo de tráfico?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> Entonces, ¿cómo consigue tu equipo enviar datos a un servidor de Internet cuya MAC no puede conocer?',
+                    modelo: `<p>No la necesita, y ahí está la clave: <strong>nunca le envía una trama al
+                             servidor</strong>. Se la envía a su <strong>puerta de enlace</strong>.</p>
+                             <p>Cuando mi equipo consulta su tabla de rutas para <code>8.8.8.8</code>, la ruta
+                             ganadora es la <code>0.0.0.0/0</code>, cuyo siguiente salto es <code>192.168.1.1</code>.
+                             Esa dirección <strong>sí está en mi red</strong>, así que su MAC sí puedo averiguarla con
+                             ARP.</p>
+                             <p>Entonces construye una trama con una combinación que al principio despista: la
+                             <strong>IP de destino es la del servidor</strong> (8.8.8.8), pero la <strong>MAC de
+                             destino es la del router</strong>. Una dirección apunta al destino final y la otra solo
+                             al siguiente salto.</p>
+                             <p>Eso es exactamente lo que vi en Wireshark la semana pasada, cuando la MAC de destino
+                             de mi petición web resultó ser la de mi router. Entonces me llamó la atención; ahora
+                             entiendo por qué es la única posibilidad.</p>
+                             <p>Y es la definición práctica de los dos alcances: la <strong>capa 2 llega a un
+                             salto</strong>, así que su dirección apunta al vecino; la <strong>capa 3 llega de extremo
+                             a extremo</strong>, así que la suya apunta al final del trayecto. Cada capa direcciona
+                             hasta donde alcanza.</p>`,
+                    rubrica: [
+                        'Explica que la trama se envía a la puerta de enlace, no al servidor',
+                        'Señala que la puerta de enlace sí está en la red local y su MAC sí se puede resolver',
+                        'Describe la trama: IP del servidor pero MAC del router',
+                        'Conecta con lo observado en Wireshark la semana anterior',
+                        'Relaciona con los alcances de las capas 2 y 3'
+                    ],
+                    pistas: [
+                        '¿A quién le entregas realmente la trama?',
+                        '¿Qué dirección lleva la cabecera IP y cuál la cabecera Ethernet?'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre',
+            tiempo: '10 min',
+            enunciado: '<p>Lo que te llevas.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa el resumen de la decisión de enrutamiento.',
+                    frase: 'Ante un paquete, el equipo busca todas las rutas que encajan con la dirección de destino y se queda con la del prefijo más {{0}}. La ruta {{1}} encaja siempre, pero solo gana cuando ninguna otra sirve. Si dos rutas son igual de específicas, desempata la {{2}} más baja.',
+                    respuestas: [
+                        ['largo', 'especifico', 'específico', 'alto'],
+                        ['por defecto', 'defecto', '0.0.0.0/0', 'predeterminada'],
+                        ['metrica', 'métrica', 'metrica']
+                    ],
+                    explicacion: 'Tres frases que resuelven cualquier ejercicio de tabla de rutas, hoy y en el Mes 7 cuando configures rutas estáticas de verdad.',
+                    pistas: [
+                        'El primero y el tercero son los dos criterios, en su orden correcto.'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un equipo tiene bien puesta la IP y la máscara, pero <strong>mal</strong> la puerta de enlace. ¿Qué le pasará?',
+                    opciones: {
+                        a: 'No funcionará nada',
+                        b: 'Hablará bien con los equipos de su red, pero no podrá salir a ninguna otra ni a Internet',
+                        c: 'Solo fallará el DNS',
+                        d: 'Funcionará todo con normalidad'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es un diagnóstico clásico y ahora sabes explicarlo: para su propia red usa la ruta <strong>directamente conectada</strong>, que no necesita puerta de enlace. Todo lo demás cae en la <strong>ruta por defecto</strong>, que apunta a un sitio equivocado.',
+                    pistas: [
+                        '¿Qué ruta se usa para hablar con un equipo de tu misma red? ¿Interviene la puerta de enlace?'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>
