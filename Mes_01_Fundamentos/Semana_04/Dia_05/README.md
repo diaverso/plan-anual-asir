@@ -61,6 +61,8 @@ Integra las **cuatro semanas** del mes, con este reparto:
 | 3 — Arquitecturas y modelos | 9 |
 | 4 — Dispositivos de red | 6 |
 
+Y se abre con un **repaso de todo lo que has fallado este mes**: las preguntas concretas de los quizzes diarios y de los tests semanales de las cuatro semanas, agrupadas por día, con su respuesta correcta, la explicación y un enlace al apartado que conviene releer. Se genera solo, con el progreso que ya tienes guardado.
+
 > ⚠️ **Sobre el formato.** El examen mensual se creó antes que el resto del material y conserva su propia hoja de estilos: **no tiene tema oscuro ni guarda el resultado en el panel de progreso**. Apunta tu nota a mano. Funciona correctamente y se autocorrige, con desglose por semana.
 
 ---

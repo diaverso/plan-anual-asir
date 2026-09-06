@@ -97,7 +97,7 @@ Esta semana los laboratorios **demuestran la teoría con números**, no la ilust
 - **Quiz diario** al final de cada teoría, con recuperación de días anteriores.
 - **Ejercicios** autocorregibles, con recuento de dominios y decisiones de enrutamiento.
 - **Laboratorios** con datos reales del propio equipo.
-- **Viernes:** test semanal de 26 preguntas con desglose por día **y examen mensual** del Mes 1.
+- **Viernes:** test semanal de 26 preguntas con desglose por día **y examen mensual** del Mes 1, que se abre con un **repaso de todos los fallos acumulados del mes**.
 
 Criterios: 70 % test, 30 % ejercicios prácticos. Aprobado: 5/10.
 

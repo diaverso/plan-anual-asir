@@ -136,6 +136,51 @@ const PARProgreso = (function () {
             .slice(0, limite || MAX_REPASO);
     }
 
+    /*
+     * Repaso mensual: todas las preguntas falladas de un mes, agrupadas por
+     * actividad y ordenadas por semana y dia.
+     *
+     * A diferencia de `fallosPendientes`, que alimenta el recordatorio corto
+     * del principio de cada teoria, esta se usa en el examen mensual: no
+     * excluye la actividad actual, no mezcla los fallos en una lista plana y
+     * admite un tope mucho mas alto, porque cubre cuatro semanas.
+     *
+     * `mes` acepta 1, '1' o 'Mes_01'. Devuelve:
+     *   [{ clave, semana, dia, archivo, fecha, fallos: [...] }, ...]
+     */
+    function fallosDelMes(mes, limite) {
+        const n = String(mes).match(/\d+/);
+        if (!n) return [];
+        const prefijo = 'Mes_' + String(parseInt(n[0], 10)).padStart(2, '0');
+        const detalle = leer(CLAVE_DETALLE, {});
+        let restantes = limite || 40;
+
+        return Object.keys(detalle)
+            .filter(k => k.indexOf(prefijo) === 0)
+            .filter(k => detalle[k].fallos && detalle[k].fallos.length)
+            .map(k => {
+                const s = k.match(/Semana_(\d+)/i);
+                const d = k.match(/Dia_(\d+)/i);
+                return {
+                    clave: k,
+                    semana: s ? parseInt(s[1], 10) : 0,
+                    dia: d ? parseInt(d[1], 10) : 0,
+                    archivo: k.split('/').pop(),
+                    fecha: detalle[k].fecha || 0,
+                    fallos: detalle[k].fallos
+                };
+            })
+            // por semana y dia, para que el repaso siga el orden del temario
+            .sort((a, b) => (a.semana - b.semana) || (a.dia - b.dia)
+                          || a.archivo.localeCompare(b.archivo))
+            .map(a => {
+                const cabe = a.fallos.slice(0, Math.max(restantes, 0));
+                restantes -= cabe.length;
+                return Object.assign({}, a, { fallos: cabe });
+            })
+            .filter(a => a.fallos.length);
+    }
+
     function detalle() {
         return leer(CLAVE_DETALLE, {});
     }
@@ -233,6 +278,7 @@ const PARProgreso = (function () {
     return {
         registrar: registrar,
         fallosPendientes: fallosPendientes,
+        fallosDelMes: fallosDelMes,
         exportar: exportar,
         analizarCopia: analizarCopia,
         importar: importar,

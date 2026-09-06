@@ -66,6 +66,91 @@
             padding: 30px;
         }
 
+        /* ---- Repaso de lo fallado durante el mes ---------------------------
+         * Bloque autocontenido: usa la misma paleta que el resto del examen
+         * para no romper su identidad visual.                              */
+        .repaso-mes {
+            background: #fff8e6;
+            border-left: 5px solid #e8a33d;
+            border-radius: 10px;
+            padding: 22px 25px;
+            margin-bottom: 30px;
+        }
+        .repaso-mes > h2 {
+            margin: 0 0 6px;
+            font-size: 1.25em;
+            color: #7a5100;
+        }
+        .repaso-mes .intro {
+            color: #6b5320;
+            margin-bottom: 18px;
+            line-height: 1.55;
+        }
+        .repaso-mes .vacio {
+            color: #6b5320;
+            line-height: 1.55;
+            margin: 0;
+        }
+        .repaso-dia {
+            background: white;
+            border: 1px solid #f0dcb4;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .repaso-dia > summary {
+            cursor: pointer;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #7a5100;
+            list-style: none;
+        }
+        .repaso-dia > summary::-webkit-details-marker { display: none; }
+        .repaso-dia > summary::before {
+            content: '▸';
+            display: inline-block;
+            margin-right: 10px;
+            transition: transform .2s;
+        }
+        .repaso-dia[open] > summary::before { transform: rotate(90deg); }
+        .repaso-dia > summary:hover { background: #fffaf0; }
+        .repaso-dia .cuantas {
+            float: right;
+            font-weight: 400;
+            font-size: .9em;
+            color: #a07b30;
+        }
+        .repaso-item {
+            border-top: 1px solid #f4e7cd;
+            padding: 14px 16px 16px;
+        }
+        .repaso-item .preg {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .repaso-item .sol {
+            color: #157347;
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+        .repaso-item .porque {
+            color: #555;
+            font-size: .95em;
+            line-height: 1.55;
+        }
+        .repaso-item .volver {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: .9em;
+            color: #4e6ae7;
+        }
+        .repaso-mes .aviso-borrado {
+            margin-top: 16px;
+            font-size: .9em;
+            color: #6b5320;
+        }
+
         .question {
             background: #f8f9fa;
             padding: 25px;
@@ -274,21 +359,26 @@
 
         .progress-bar {
             background: #e9ecef;
-            height: 30px;
-            border-radius: 15px;
+            height: 18px;
+            border-radius: 9px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 6px;
         }
 
         .progress-fill {
             background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
             height: 100%;
             transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
+        }
+
+        /* La etiqueta va FUERA del relleno: dentro se recortaba con
+         * porcentajes bajos y quedaba texto blanco sobre fondo gris. */
+        .progress-texto {
+            display: block;
+            margin-bottom: 20px;
+            font-size: .92em;
+            font-weight: 600;
+            color: #495057;
         }
 
         @media (max-width: 768px) {
@@ -341,8 +431,11 @@
         </div>
 
         <div class="content">
+            <div id="repasoMes"></div>
+
             <div class="progress-bar">
-                <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                <span class="progress-texto" id="progressTexto"></span>
             </div>
 
             <div id="quiz"></div>
@@ -367,6 +460,8 @@
             </div>
         </div>
     </div>
+
+    <script src="../assets/progreso.js"></script>
 
     <script>
         // Banco de preguntas del examen mensual: cubre las 4 semanas del Mes 1.
@@ -818,7 +913,7 @@
 
             document.getElementById('results').classList.add('show');
             document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressBar').textContent = percentage + '%';
+            document.getElementById('progressTexto').textContent = percentage + '% contestado';
 
             // Scroll to results
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
@@ -849,7 +944,7 @@
 
             // Reset progress bar
             document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('progressBar').textContent = '0%';
+            document.getElementById('progressTexto').textContent = '';
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -867,10 +962,107 @@
 
             const percentage = Math.round((answered / total) * 100);
             document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressBar').textContent = percentage + '%';
+            document.getElementById('progressTexto').textContent = percentage + '% contestado';
         }
 
         renderQuiz();
+
+        /* ================================================================
+         * REPASO DE LO FALLADO DURANTE EL MES
+         *
+         * Antes de examinarse, el alumno ve todas las preguntas que fallo
+         * en los quizzes y tests de las cuatro semanas de este mes, con su
+         * respuesta correcta y un enlace al apartado de teoria.
+         *
+         * Los datos salen de localStorage via PARProgreso.fallosDelMes().
+         * Solo se registran fallos de quiz y test: los ejercicios guardan
+         * la nota, no que apartado se fallo.
+         * ================================================================ */
+        const MES_DE_ESTE_EXAMEN = 1;
+
+        function escaparTexto(t) {
+            const d = document.createElement('div');
+            d.textContent = t == null ? '' : String(t);
+            return d.innerHTML;
+        }
+
+        function nombreActividad(a) {
+            const tipo = a.archivo === 'teoria' ? 'Quiz' : a.archivo;
+            if (!a.semana) return tipo;
+            if (!a.dia) return 'Semana ' + a.semana + ' — ' + tipo;
+            return 'Semana ' + a.semana + ' · Día ' + a.dia;
+        }
+
+        // El examen esta en Mes_01_Fundamentos/, asi que las rutas de repaso
+        // guardadas (relativas a la pagina del dia) hay que reconstruirlas.
+        function enlaceRepaso(clave, repaso) {
+            if (!repaso) return '';
+            const dir = clave.split('/').slice(1, -1).join('/');   // Semana_0X/Dia_0Y
+            if (!dir) return '';
+            if (repaso.charAt(0) === '#') return dir + '/teoria.html' + repaso;
+            // rutas como ../Dia_01/teoria.html#ancla o ../../Semana_03/...
+            const base = dir.split('/');
+            const partes = repaso.split('/');
+            while (partes.length && partes[0] === '..') { partes.shift(); base.pop(); }
+            return base.concat(partes).join('/');
+        }
+
+        function pintarRepasoMes() {
+            const cont = document.getElementById('repasoMes');
+            if (!cont || typeof PARProgreso === 'undefined') return;
+
+            let actividades = [];
+            try { actividades = PARProgreso.fallosDelMes(MES_DE_ESTE_EXAMEN, 60) || []; }
+            catch (e) { return; }
+
+            const total = actividades.reduce((n, a) => n + a.fallos.length, 0);
+
+            if (!total) {
+                cont.innerHTML =
+                    '<div class="repaso-mes">' +
+                    '<h2>🧠 Repaso de lo que fallaste este mes</h2>' +
+                    '<p class="vacio">No hay nada guardado todavía. Este apartado se rellena solo ' +
+                    'con las preguntas que falles en los <strong>quizzes diarios y los tests ' +
+                    'semanales</strong> del mes. Si haces el examen en otro navegador o después de ' +
+                    'borrar los datos de navegación, aparecerá vacío.</p>' +
+                    '</div>';
+                return;
+            }
+
+            const bloques = actividades.map(function (a) {
+                const items = a.fallos.map(function (f) {
+                    const destino = enlaceRepaso(a.clave, f.repaso);
+                    return '<div class="repaso-item">' +
+                        '<div class="preg">' + escaparTexto(f.texto) + '</div>' +
+                        '<div class="sol">✔ ' + escaparTexto(f.solucion) + '</div>' +
+                        (f.porque ? '<div class="porque">' + f.porque + '</div>' : '') +
+                        (destino ? '<a class="volver" href="' + destino +
+                                   '">→ Repasar este apartado</a>' : '') +
+                        '</div>';
+                }).join('');
+
+                return '<details class="repaso-dia">' +
+                    '<summary>' + escaparTexto(nombreActividad(a)) +
+                    '<span class="cuantas">' + a.fallos.length +
+                    (a.fallos.length === 1 ? ' fallo' : ' fallos') + '</span></summary>' +
+                    items + '</details>';
+            }).join('');
+
+            cont.innerHTML =
+                '<div class="repaso-mes">' +
+                '<h2>🧠 Repaso de lo que fallaste este mes</h2>' +
+                '<p class="intro">Antes de empezar el examen, repasa las <strong>' + total +
+                '</strong> preguntas que fallaste en los quizzes y tests de este mes. ' +
+                'Están ordenadas por semana y por día. Pulsa en cada una para desplegarla.</p>' +
+                bloques +
+                '<p class="aviso-borrado">Este repaso se genera con el progreso guardado en ' +
+                'este navegador. Al repetir un quiz, sus fallos se sustituyen por los de la ' +
+                'última vez.</p>' +
+                '</div>';
+        }
+
+        pintarRepasoMes();
+
     </script>
 </body>
 </html>

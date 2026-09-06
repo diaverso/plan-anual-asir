@@ -102,6 +102,13 @@
                 lo cruza</strong>. Se detiene ahí.
             </div>
 
+            <figure class="figura">
+                <img src="../../../imagenes/m01_s04_d01_dominios.png"
+                     width="1024" height="637" loading="lazy"
+                     alt="Un router del que cuelgan tres switches, y de cada switch tres equipos. Cada cable individual aparece rodeado por un óvalo verde discontinuo: son doce dominios de colisión. Cada switch con sus tres equipos aparece rodeado por un rectángulo naranja que no incluye al router: son tres dominios de broadcast.">
+                <figcaption>Los óvalos verdes rodean cables; los rectángulos naranjas se detienen en el router, porque ahí acaba cada red.</figcaption>
+            </figure>
+
             <h2 id="router">2. Qué es un router</h2>
 
             <div class="tabla-wrap">
@@ -253,7 +260,14 @@
             <p>Aquí se juntan la Semana 3 y esta. Un router no «deja pasar» las tramas: las
             <strong>deshace y las rehace</strong>.</p>
 
-<pre><code>1. Llega la trama          →  comprueba el FCS y quita la cabecera Ethernet
+<figure class="figura">
+                <img src="../../../imagenes/m01_s04_d03_router_rehace_trama.png"
+                     width="1024" height="439" loading="lazy"
+                     alt="Una trama entra en el router con cuatro bloques: ETH 1, IP, TCP y Datos. Dentro del router se enumeran los cuatro pasos: quitar la cabecera Ethernet, leer la IP y descontar el TTL, consultar la tabla de rutas y construir una trama nueva. La trama que sale es igual salvo el primer bloque, que ahora pone ETH 2.">
+                <figcaption>De los cuatro bloques solo cambia el primero: la cabecera Ethernet se rehace y la IP viaja intacta.</figcaption>
+            </figure>
+
+            <pre><code>1. Llega la trama          →  comprueba el FCS y quita la cabecera Ethernet
 2. Mira la cabecera IP     →  ¿a qué red va la dirección de destino?
 3. Consulta la tabla       →  prefijo más largo que encaje
 4. Descuenta el TTL        →  si llega a 0, descarta y avisa
@@ -358,6 +372,13 @@
                 </tbody>
             </table>
             </div>
+
+            <figure class="figura">
+                <img src="../../../imagenes/m01_s04_d04_router_domestico.png"
+                     width="1024" height="765" loading="lazy"
+                     alt="Una caja grande rotulada como lo que llamamos el router, con cuatro bloques dentro: módem, router de capa 3, switch de capa 2 y punto de acceso de capa 2. Fuera de la caja, en un recuadro discontinuo, se añaden DHCP, NAT y cortafuegos.">
+                <figcaption>Cuatro funciones distintas en una sola caja. Al diagnosticar, conviene saber cuál de las cuatro está fallando.</figcaption>
+            </figure>
 
             <div class="aviso">
                 <strong>Y el «router» de tu casa no es solo un router</strong>
