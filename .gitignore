@@ -3,6 +3,8 @@
 # privada durante la elaboración del curso.
 pdf/
 pdf_markdown/
+# Mapa de fuentes: cita nombres de archivo y rangos de esos markdown
+fuentes.md
 
 # --- Ficheros de trabajo local ---
 backup/
