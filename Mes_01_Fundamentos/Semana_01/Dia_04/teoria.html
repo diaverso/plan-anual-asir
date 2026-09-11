@@ -70,6 +70,12 @@
             </table>
             </div>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s01_d04_escalas_red.png"
+         width="1400" height="788" loading="lazy"
+         alt="Cuatro barras horizontales de longitud creciente comparan el alcance de cada tipo de red: PAN con diez metros, LAN con un kilómetro, MAN con cincuenta kilómetros y WAN sin límite, esta última difuminada en su extremo.">
+    <figcaption>Cada salto de categoría multiplica el alcance. La escala real es logarítmica: las barras solo sugieren el crecimiento.</figcaption>
+</figure>
 <pre><code>PAN:  [Persona] ←Bluetooth→ [Dispositivos]
        └──────── 10 m ────────┘
 
@@ -199,6 +205,12 @@ WAN:  [Países / Continentes]
             <p>La solución consiste en enviar el tráfico por una red pública (Internet) pero <strong>cifrado</strong>,
             formando un <em>túnel</em>: aunque alguien intercepte los paquetes, no puede leer su contenido.</p>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s01_d04_vpn_tunel.png"
+         width="1400" height="787" loading="lazy"
+         alt="Dos filas muestran el mismo trayecto entre dos sedes a través de Internet. Arriba, sin VPN, dentro de la nube se leen fragmentos de datos y un ojo rojo indica que el tráfico es legible. Abajo, con VPN, la línea atraviesa la nube dentro de un tubo opaco cerrado con un candado verde.">
+    <figcaption>El tráfico recorre exactamente el mismo Internet. Lo que cambia es que dentro del túnel nadie puede leerlo.</figcaption>
+</figure>
 <pre><code>Sin VPN:   [Sede A] ─── tráfico legible ─── Internet ─── [Sede B]
                           (cualquiera puede leerlo)
 

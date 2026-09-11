@@ -72,6 +72,12 @@
 
             <p>Alguien tiene que traducir de un mundo al otro. Ese alguien es la NIC.</p>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s02_d01_nic_frontera.png"
+         width="1024" height="572" loading="lazy"
+         alt="Una línea discontinua separa el interior del equipo de su exterior. Dentro, la memoria y la CPU intercambian bytes con la tarjeta de red. La tarjeta, situada justo sobre la línea, intercambia señales con el medio, que queda fuera. Una flecha señala la tarjeta indicando que ahí se decide cuándo transmitir.">
+    <figcaption>La tarjeta es la frontera: dentro hay bytes, fuera hay señal. Y es ella quien decide cuándo transmitir.</figcaption>
+</figure>
 <pre><code>   DENTRO DEL EQUIPO                    │                 FUERA
                                         │
   ┌──────────┐   bytes    ┌─────────┐   │   señal    ┌──────────────┐
@@ -407,6 +413,12 @@
 
             <p>En una comunicación real se usan las dos a la vez, cada una en su ámbito:</p>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s02_d01_ip_extremo_mac_salto.png"
+         width="1024" height="572" loading="lazy"
+         alt="Un trayecto con cuatro elementos en fila: un PC, dos routers y un servidor web. Una llave superior abarca todo el recorrido e indica que la IP de origen y destino no cambia. Debajo, tres llaves independientes, una por salto, indican que en cada tramo la MAC es distinta.">
+    <figcaption>La IP dice adónde va el paquete; la MAC, solo quién se lo pasa a quién en este tramo.</figcaption>
+</figure>
 <pre><code>Tu PC quiere abrir una web alojada en 93.184.216.34
 
   IP origen:   192.168.1.70      ─┐  no cambian en todo el trayecto:

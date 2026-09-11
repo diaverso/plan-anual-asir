@@ -168,6 +168,12 @@
             <p>El tamaño de un servidor de rack se mide en <strong>unidades</strong> (U): 1U ≈ 4,4 cm de alto. Un
             armario típico tiene <strong>42U</strong>. Es la misma unidad del rack que viste en el Día 2.</p>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s02_d04_armario_42u.png"
+         width="687" height="1024" loading="lazy"
+         alt="Armario de 42 unidades visto de frente, con una regla numerada en el lateral. De arriba abajo: un patch panel de 1U, un switch de 1U, un hueco, dos servidores de 2U, un servidor de 1U, otro hueco y un SAI de 3U en la parte inferior. La altura de cada equipo es proporcional a sus unidades.">
+    <figcaption>La U no es una medida cualquiera: un equipo de 2U ocupa exactamente el doble que uno de 1U. Lo pesado va abajo.</figcaption>
+</figure>
 <pre><code>   ARMARIO 42U
 
   ┌────────────────────┐
@@ -375,6 +381,12 @@
             </table>
             </div>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s02_d04_hipervisor_tipos.png"
+         width="1024" height="572" loading="lazy"
+         alt="Dos pilas de capas apoyadas en la misma base. En el tipo 1, de abajo arriba: hardware, hipervisor y tres máquinas virtuales. En el tipo 2: hardware, sistema operativo, hipervisor y dos máquinas virtuales. La pila del tipo 2 es más alta porque tiene una capa más.">
+    <figcaption>La capa de más del tipo 2 es un sistema operativo entero por debajo. Eso es lo que cuesta rendimiento.</figcaption>
+</figure>
 <pre><code>      TIPO 1                          TIPO 2
 
   ┌────┬────┬────┐              ┌────┬────┐
