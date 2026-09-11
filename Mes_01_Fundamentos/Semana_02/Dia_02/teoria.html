@@ -147,6 +147,12 @@
 
             <p>El receptor no mide la tensión de cada hilo, sino la <strong>diferencia</strong> entre ambos.</p>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s02_d02_cancelacion_ruido.png"
+         width="1400" height="788" loading="lazy"
+         alt="Tres viñetas. En la primera, dos hilos trenzados llevan la misma señal en espejo, más uno y menos uno. En la segunda, una interferencia golpea a los dos hilos por igual y los valores pasan a más seis y más cuatro. En la tercera, el receptor resta los dos hilos y obtiene dos, la misma diferencia que al principio, con lo que recupera la señal limpia.">
+    <figcaption>El ruido suma lo mismo a los dos hilos, así que al restarlos desaparece. Trenzar los hilos es lo que garantiza que les afecte por igual.</figcaption>
+</figure>
 <pre><code>Sin interferencia:      hilo A = +1      hilo B = −1      diferencia = 2
 Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                                                           ────────────
@@ -379,6 +385,12 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
             <p>Pero al unir dos PC, ambos transmitirían por 1-2 y escucharían por 3-6: los dos hablarían a la vez a un
             hilo donde nadie escucha. El cable cruzado invierte los pares y arregla el desencuentro.</p>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s02_d02_directo_vs_cruzado.png"
+         width="1400" height="788" loading="lazy"
+         alt="Dos cables comparados. En el directo, entre un PC y un switch, cuatro líneas paralelas unen cada pin con el mismo pin del otro extremo: 1 con 1, 2 con 2, 3 con 3 y 6 con 6. En el cruzado, entre dos PC, las líneas se cruzan: los pines 1 y 2, que transmiten, llegan a los pines 3 y 6 del otro extremo, que reciben, y viceversa.">
+    <figcaption>Lo que transmite un extremo tiene que llegar a lo que recibe el otro. Entre PC y switch eso ya lo resuelve el switch; entre dos PC, lo tiene que resolver el cable.</figcaption>
+</figure>
 <pre><code>PC ─────────── SWITCH          PC ───────╳─── PC
  TX 1,2 ──────► 1,2 RX          TX 1,2 ──╲╱──► 3,6 RX
  RX 3,6 ◄────── 3,6 TX          RX 3,6 ◄─╱╲── 1,2 TX

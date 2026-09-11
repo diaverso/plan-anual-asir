@@ -53,22 +53,20 @@ ya nacieron con sus imágenes.
 Auditoría del 9 de septiembre de 2026: **40 bloques ASCII con simbología de
 diagrama**, de los cuales 18 piden imagen y el resto se queda como está.
 
-Estado a 10 de septiembre de 2026: **15 insertadas, 3 por regenerar**.
+Estado a 11 de septiembre de 2026: **las 18 insertadas**.
 
-Las tres rechazadas se revisaron a ojo y tienen errores que un alumno
-aprendería mal. **No se suben al repositorio** hasta tener la versión buena:
+Tres se rechazaron en la primera tanda por errores que un alumno aprendería
+mal, y se regeneraron con el prompt corregido: `cadena_comunicacion` (faltaban
+los papeles en la fila de la petición), `directo_vs_cruzado` (TX y RX en los
+cuatro pines) y `cancelacion_ruido` (un conector RJ-45 sin sentido y ondas que
+no estaban en espejo).
 
-| Archivo | Fallo |
-|---|---|
-| `m01_s01_d02_cadena_comunicacion.png` | Los papeles (fuente, transmisor…) solo aparecen en la fila de la respuesta, y hay texto superpuesto en «Navegador» |
-| `m01_s02_d02_directo_vs_cruzado.png` | TX y RX asignados a los cuatro pines; en el cruzado las líneas convergen en un punto en vez de cruzar dos pares |
-| `m01_s02_d02_cancelacion_ruido.png` | La tercera viñeta copia un conector RJ-45 con TX/RX que no pinta nada; las ondas +1 y −1 no están en espejo |
-
-Dos de las insertadas tienen defectos **cosméticos** que no cambian lo que
+Tres de las insertadas tienen defectos **cosméticos** que no cambian lo que
 enseñan, y se pueden regenerar cuando convenga:
 
 - `m01_s02_d02_recorrido_cableado.png`: la etiqueta «PC» sale dos veces.
 - `m01_s02_d04_armario_42u.png`: la regla lateral tiene números desordenados.
+- `m01_s02_d02_directo_vs_cruzado.png`: el conector derecho repite el número de cada pin.
 
 Doce de las dieciocho llegaron como **JPEG con extensión `.png`**. Se
 convirtieron a PNG real: JPEG emborrona justo las líneas finas y el texto.
