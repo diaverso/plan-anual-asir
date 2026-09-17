@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Ejercicios: anatomía de una señal</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">78 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 4 es el cálculo que más cae de este tema: <strong>cuántos armónicos llegan</strong> por un
+            medio. Se resuelve siempre en dos pasos: primero la frecuencia del primer armónico, y después cuántas
+            veces cabe en el ancho de banda.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/ejercicios.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Ejercicios',
+    subtitulo: 'Parámetros de una señal · Fourier · armónicos · los dos anchos de banda',
+    tiempo: '78 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: El vocabulario de las señales',
+            tiempo: '8 min',
+            enunciado: '<p>Relaciona cada término con lo que significa.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada concepto con su definición.',
+                    izquierda: ['Amplitud', 'Frecuencia', 'Periodo', 'Fase', 'Armónico', 'Ancho de banda (Hz)'],
+                    derecha: [
+                        'Valor máximo que alcanza la señal',
+                        'Número de repeticiones por segundo',
+                        'Duración de una repetición completa',
+                        'Desplazamiento de la señal en el tiempo',
+                        'Senoidal cuya frecuencia es múltiplo de la fundamental',
+                        'Rango de frecuencias de una señal o de un medio'
+                    ],
+                    pares: {
+                        'Amplitud': 'Valor máximo que alcanza la señal',
+                        'Frecuencia': 'Número de repeticiones por segundo',
+                        'Periodo': 'Duración de una repetición completa',
+                        'Fase': 'Desplazamiento de la señal en el tiempo',
+                        'Armónico': 'Senoidal cuya frecuencia es múltiplo de la fundamental',
+                        'Ancho de banda (Hz)': 'Rango de frecuencias de una señal o de un medio'
+                    },
+                    explicacion: 'Periodo y frecuencia describen lo mismo desde dos lados: uno cuánto dura y el otro cuántas veces cabe en un segundo.',
+                    pistas: ['Frecuencia y periodo son inversos: uno se mide en Hz y el otro en segundos.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿En qué unidad se mide cada uno? Marca las afirmaciones <strong>correctas</strong>.',
+                    multiple: true,
+                    opciones: {
+                        a: 'La amplitud de una señal eléctrica, en voltios',
+                        b: 'La frecuencia, en segundos',
+                        c: 'La fase, en grados',
+                        d: 'El periodo, en hercios',
+                        e: 'El ancho de banda de un cable, en MHz'
+                    },
+                    respuesta: ['a', 'c', 'e'],
+                    explicacion: 'La b y la d están intercambiadas: la frecuencia va en <strong>hercios</strong> y el periodo en <strong>segundos</strong>.',
+                    pistas: ['Hay dos afirmaciones que tienen las unidades cruzadas entre sí.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: De frecuencia a periodo y vuelta',
+            tiempo: '12 min',
+            enunciado: '<p>Usa <strong>f = 1/T</strong> y <strong>T = 1/f</strong>. Cuidado con los prefijos: 1 ms = 0,001 s y 1 kHz = 1 000 Hz.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> La red eléctrica funciona a 50 Hz. ¿Cuánto dura cada ciclo, en milisegundos?',
+                    respuesta: 20,
+                    unidad: 'ms',
+                    explicacion: 'T = 1/50 = 0,02 s = <strong>20 ms</strong>.',
+                    pistas: ['Calcula 1/50 en segundos y multiplica por 1 000.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Una señal se repite cada 4 ms. ¿Cuál es su frecuencia, en hercios?',
+                    respuesta: 250,
+                    unidad: 'Hz',
+                    explicacion: '4 ms = 0,004 s. f = 1/0,004 = <strong>250 Hz</strong>.',
+                    pistas: ['Primero pasa los milisegundos a segundos.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Un tono de 1 kHz. ¿Cuánto dura un periodo, en milisegundos?',
+                    respuesta: 1,
+                    unidad: 'ms',
+                    explicacion: '1 kHz = 1 000 Hz. T = 1/1 000 s = <strong>1 ms</strong>. Es una equivalencia que conviene recordar: kHz ↔ ms.',
+                    pistas: ['1 kHz son 1 000 repeticiones por segundo.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Una señal de 2,4 GHz, la de una red Wi-Fi. ¿Cuánto dura un periodo, en <strong>nanosegundos</strong>? Redondea a dos decimales.',
+                    respuesta: 0.42,
+                    tolerancia: 0.01,
+                    unidad: 'ns',
+                    explicacion: '2,4 GHz = 2,4·10<sup>9</sup> Hz. T = 1/(2,4·10<sup>9</sup>) ≈ 4,17·10<sup>−10</sup> s ≈ <strong>0,42 ns</strong>. Menos de medio nanosegundo: por eso la electrónica de radio es tan delicada.',
+                    pistas: ['1 GHz = 10<sup>9</sup> Hz, y 1 ns = 10<sup>−9</sup> s.', 'Con esas dos equivalencias, T en ns = 1 / (frecuencia en GHz).']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Una señal está desplazada <strong>un cuarto de periodo</strong> respecto a otra igual. ¿Cuántos grados de fase son?',
+                    respuesta: 90,
+                    unidad: '°',
+                    explicacion: 'Un periodo completo son 360°. Un cuarto: 360 / 4 = <strong>90°</strong>.',
+                    pistas: ['¿Cuántos grados tiene un periodo entero?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Fourier y la onda cuadrada',
+            tiempo: '14 min',
+            enunciado: '<p>Una onda cuadrada tiene una fundamental de <strong>1 kHz</strong>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la frecuencia y la amplitud relativa de sus cuatro primeros armónicos <strong>con energía</strong>. Escribe las amplitudes como fracción, por ejemplo <em>1/3</em>.',
+                    esquina: 'Armónico',
+                    cabecera: ['Frecuencia (kHz)', 'Amplitud relativa'],
+                    filas: [
+                        { etiqueta: '1.º (fundamental)', celdas: [{ fijo: '1' }, { fijo: '1' }] },
+                        { etiqueta: 'Siguiente', celdas: [{ respuestas: ['3'], placeholder: 'kHz' }, { respuestas: ['1/3', '0,33', '0.33', '0,333'], placeholder: 'fracción' }] },
+                        { etiqueta: 'Siguiente', celdas: [{ respuestas: ['5'], placeholder: 'kHz' }, { respuestas: ['1/5', '0,2', '0.2'], placeholder: 'fracción' }] },
+                        { etiqueta: 'Siguiente', celdas: [{ respuestas: ['7'], placeholder: 'kHz' }, { respuestas: ['1/7', '0,14', '0.14', '0,143'], placeholder: 'fracción' }] }
+                    ],
+                    explicacion: 'Solo aparecen los <strong>impares</strong> (1, 3, 5, 7 kHz), y la amplitud cae como 1/n. El de 2 kHz y el de 4 kHz existen como frecuencias posibles, pero en una onda cuadrada tienen amplitud cero.',
+                    pistas: ['¿Qué armónicos tiene una onda cuadrada?', 'La amplitud del armónico n es 1/n respecto a la fundamental.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Qué porcentaje de la amplitud de la fundamental tiene el <strong>9.º armónico</strong>? Redondea a un decimal.',
+                    respuesta: 11.1,
+                    tolerancia: 0.1,
+                    unidad: '%',
+                    explicacion: '1/9 ≈ 0,111 → <strong>11,1 %</strong>. Pesa casi nueve veces menos que la fundamental: por eso perderlo apenas cambia la forma de la señal.',
+                    pistas: ['Amplitud relativa = 1/n. Pásalo a porcentaje.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un medio deja pasar la fundamental y corta todo lo demás. ¿Qué llega al otro extremo?',
+                    opciones: {
+                        a: 'La onda cuadrada, algo más débil',
+                        b: 'Nada',
+                        c: 'Una onda cuadrada de 3 kHz',
+                        d: 'Una senoidal de 1 kHz: una ola suave, sin escalones'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Si solo pasa la fundamental, llega exactamente eso: <strong>una senoidal</strong>. Los escalones los construían los armónicos que se han perdido. Lo viste en el visualizador de la teoría.',
+                    pistas: ['¿Qué forma tiene la fundamental por sí sola?']
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>d)</strong> Completa.',
+                    frase: 'Según Fourier, una señal periódica es una suma de señales {{0}}. La que se repite al mismo ritmo que la señal se llama {{1}}, y las demás tienen frecuencias que son {{2}} de ella.',
+                    respuestas: [
+                        ['senoidales', 'sinusoidales', 'seno', 'senos'],
+                        ['fundamental', 'armonico fundamental', 'primer armonico'],
+                        ['multiplos', 'múltiplos', 'multiplos exactos']
+                    ],
+                    explicacion: 'Fundamental + armónicos múltiplos de ella: es el enunciado completo del teorema.',
+                    pistas: ['Los armónicos son 2f, 3f, 4f…']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Cuántos armónicos llegan',
+            tiempo: '18 min',
+            enunciado: `<p>Se transmite repetidamente el byte <code>01100010</code>. Recuerda los dos pasos:</p>
+                        <ol>
+                            <li>Primer armónico = velocidad ÷ 8</li>
+                            <li>Armónicos que llegan = ancho de banda del medio ÷ primer armónico, <strong>redondeando hacia abajo</strong></li>
+                        </ol>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Por un medio de <strong>3 000 Hz</strong>, como la línea telefónica. Completa la tabla sin mirar la de la teoría.',
+                    esquina: 'Velocidad',
+                    cabecera: ['Primer armónico (Hz)', 'Armónicos que llegan'],
+                    filas: [
+                        { etiqueta: '1 200 bps', celdas: [{ respuestas: ['150'] }, { respuestas: ['20'] }] },
+                        { etiqueta: '4 800 bps', celdas: [{ respuestas: ['600'] }, { respuestas: ['5'] }] },
+                        { etiqueta: '9 600 bps', celdas: [{ respuestas: ['1200', '1 200', '1.200'] }, { respuestas: ['2'] }] },
+                        { etiqueta: '19 200 bps', celdas: [{ respuestas: ['2400', '2 400', '2.400'] }, { respuestas: ['1'] }] }
+                    ],
+                    explicacion: 'Por ejemplo, 9 600 / 8 = 1 200 Hz, y 3 000 / 1 200 = 2,5 → <strong>2</strong>. El medio corta en 3 000 Hz, y el tercer armónico estaría en 3 600.',
+                    pistas: ['Divide la velocidad entre 8.', 'Redondea hacia abajo: medio armónico no llega.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Ahora un medio de <strong>4 000 Hz</strong>, a 2 400 bps. ¿Cuántos armónicos llegan?',
+                    respuesta: 13,
+                    explicacion: '2 400 / 8 = 300 Hz. 4 000 / 300 = 13,33 → <strong>13</strong>. El 14.º estaría en 4 200 Hz, fuera del límite.',
+                    pistas: ['Primero el primer armónico.', '4 000 ÷ 300 no es exacto. ¿Hacia dónde redondeas?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Quieres enviar a 9 600 bps y necesitas que lleguen al menos <strong>3 armónicos</strong>. ¿Qué ancho de banda mínimo necesita el medio?',
+                    respuesta: 3600,
+                    unidad: 'Hz',
+                    explicacion: 'El primer armónico está en 1 200 Hz, así que el tercero está en 3 × 1 200 = <strong>3 600 Hz</strong>. El medio tiene que llegar al menos hasta ahí. Es justo lo que le falta a la línea telefónica.',
+                    pistas: ['¿A qué frecuencia está el tercer armónico?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Con el mismo criterio de 3 armónicos, ¿qué ancho de banda necesitarías para <strong>38 400 bps</strong>?',
+                    respuesta: 14400,
+                    unidad: 'Hz',
+                    explicacion: '38 400 / 8 = 4 800 Hz; tres armónicos llegan hasta 3 × 4 800 = <strong>14 400 Hz</strong>. Casi cinco veces lo que tiene la línea telefónica.',
+                    pistas: ['Mismo razonamiento que el apartado anterior.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> Si duplicas la velocidad sin cambiar de medio, ¿qué pasa con el número de armónicos que llegan?',
+                    opciones: {
+                        a: 'Se reduce aproximadamente a la mitad',
+                        b: 'Se duplica',
+                        c: 'No cambia',
+                        d: 'Se reduce a cero'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'El primer armónico dobla su frecuencia, así que caben la mitad en el mismo ancho de banda. Mira la tabla: 80, 40, 20, 10, 5…',
+                    pistas: ['Observa cómo cambia la columna de armónicos en la tabla de la teoría.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Los dos anchos de banda',
+            tiempo: '10 min',
+            enunciado: '<p>Decide en cada caso de qué ancho de banda se habla.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Escribe <em>Hz</em> o <em>bps</em> para cada frase.',
+                    esquina: 'Frase',
+                    cabecera: ['¿Qué ancho de banda?'],
+                    filas: [
+                        { etiqueta: '«Contrata 1 Gb de ancho de banda simétrico»', celdas: [{ respuestas: ['bps'], placeholder: 'Hz / bps' }] },
+                        { etiqueta: '«Un cable de categoría 6 trabaja hasta 250 MHz»', celdas: [{ respuestas: ['hz'], placeholder: 'Hz / bps' }] },
+                        { etiqueta: '«La voz humana ocupa unos pocos kilohercios»', celdas: [{ respuestas: ['hz'], placeholder: 'Hz / bps' }] },
+                        { etiqueta: '«Este enlace se satura a 100 megas»', celdas: [{ respuestas: ['bps'], placeholder: 'Hz / bps' }] },
+                        { etiqueta: '«El canal Wi-Fi mide 20 MHz»', celdas: [{ respuestas: ['hz'], placeholder: 'Hz / bps' }] }
+                    ],
+                    explicacion: 'La pista casi siempre está en la unidad. «Megas» en boca de un operador son megabits por segundo; «MHz» es siempre frecuencia.',
+                    pistas: ['Busca la unidad: hercios o bits.', '«Megas» y «Gb» de un operador hablan de velocidad.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál es la relación correcta entre ambos?',
+                    opciones: {
+                        a: '1 Hz = 1 bps siempre',
+                        b: 'El ancho de banda en Hz del medio limita los bps que se pueden conseguir, pero la relación depende de la codificación',
+                        c: 'Son independientes',
+                        d: 'Los bps se calculan multiplicando los Hz por 8'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Mañana verás que con la misma señal se pueden meter más bits en cada cambio. Por eso no hay una regla fija entre Hz y bps.',
+                    pistas: ['Piensa en la tarea de calentamiento: 1 Gbps por un cable de unos 100 MHz.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Explícalo',
+            tiempo: '16 min',
+            enunciado: '<p>Responde por escrito antes de ver la solución.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>a)</strong> Un compañero dice: «Si mi módem va lento por la línea telefónica, basta con comprar uno más rápido». Explícale, usando Fourier, por qué eso tiene un límite que no depende del módem.',
+                    modelo: `<p>Una señal digital no es una sola onda, sino una <strong>suma de armónicos</strong>, y el
+                             medio solo deja pasar los que están por debajo de su límite. La línea telefónica corta en
+                             torno a <strong>3 000 Hz</strong>.</p>
+                             <p>Si el módem envía más deprisa, los pulsos son más estrechos y <strong>todos los
+                             armónicos suben de frecuencia</strong>. Cada vez caben menos por debajo de los 3 000 Hz: 20 a
+                             1 200 bps, 5 a 4 800 bps, 2 a 9 600 bps y ninguno a 38 400 bps.</p>
+                             <p>Cuando llegan demasiado pocos, el receptor ya no distingue un 1 de un 0. Ese límite lo pone
+                             <strong>el ancho de banda de la línea</strong>, no el módem. Un módem más rápido enviaría
+                             armónicos que la línea no deja pasar.</p>
+                             <p>Para ir más rápido por ese mismo cable hace falta aprovechar mejor las frecuencias
+                             disponibles, que es lo que harán la codificación y la modulación de los próximos días.</p>`,
+                    rubrica: [
+                        'Explica que la señal es una suma de armónicos',
+                        'Explica que el medio corta a partir de cierta frecuencia',
+                        'Relaciona más velocidad con armónicos más altos',
+                        'Concluye que el límite lo pone el medio y no el módem',
+                        'Apunta alguna salida: codificar o modular mejor'
+                    ],
+                    pistas: ['¿Qué les pasa a los armónicos al subir la velocidad?', '¿Quién decide qué frecuencias pasan?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> Tu tarjeta Ethernet trabaja a 1 Gbps por un cable que deja pasar unos 100 MHz. Con lo que sabes hoy, ¿por qué parece imposible? Lanza al menos una hipótesis de cómo lo consiguen.',
+                    modelo: `<p>Parece imposible porque si cada bit fuera un pulso de dos niveles, 1 Gbps serían mil
+                             millones de pulsos por segundo, y los armónicos que dan forma a esos pulsos estarían en
+                             frecuencias <strong>muy por encima de 100 MHz</strong>. El cable los cortaría.</p>
+                             <p>Hipótesis razonables:</p>
+                             <ul>
+                                 <li><strong>Meter más de un bit en cada cambio de la señal</strong>, usando más de dos
+                                 niveles de tensión. Así hacen falta menos cambios por segundo y la señal ocupa menos
+                                 frecuencias.</li>
+                                 <li><strong>Usar varios pares a la vez</strong>: el cable tiene cuatro, así que cada uno
+                                 solo tiene que llevar una parte.</li>
+                             </ul>
+                             <p>Las dos son correctas, y mañana verás las cifras exactas.</p>`,
+                    rubrica: [
+                        'Explica que dos niveles a 1 Gbps exigirían frecuencias muy altas',
+                        'Propone usar más de dos niveles o más bits por cambio',
+                        'Propone repartir los datos entre varios pares'
+                    ],
+                    pistas: ['¿Tiene que ser siempre un bit por cada cambio de la señal?', '¿Cuántos pares tiene un cable de red?']
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

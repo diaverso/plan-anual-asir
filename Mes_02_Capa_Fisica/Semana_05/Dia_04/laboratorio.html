@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: canal con ruido</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">62 min</span></div>
+        <div class="info-item"><strong>Herramienta:</strong> el canal con ruido de esta página</div>
+        <div class="info-item"><strong>Material:</strong> calculadora</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Vas a bajar poco a poco la relación señal/ruido de un canal hasta encontrar <strong>dónde empieza a
+            equivocarse el receptor</strong>. Después añadirás <strong>ruido impulsivo</strong> y descubrirás algo que no
+            se arregla subiendo la potencia. Y terminarás con una cuenta de Shannon cuyo resultado ya conoces.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>El ruido del simulador es <strong>pseudoaleatorio con semilla fija</strong>: mientras no pulses
+                <em>Otra muestra de ruido</em>, todos los alumnos ven exactamente la misma señal. Por eso las respuestas
+                de las partes 1 y 2 se pueden corregir automáticamente.</li>
+                <li><strong>No pulses</strong> <em>Otra muestra de ruido</em> hasta la parte 3. Si lo haces antes,
+                recarga la página.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <div class="senal" data-senal="ruido"></div>
+
+            <h2>Parte 1 — ¿Cuándo empiezan los errores? (15 min)</h2>
+
+            <ol>
+                <li>Deja el ruido impulsivo <strong>desactivado</strong> y el canal en 3 100 Hz.</li>
+                <li>Baja la S/N <strong>de 1 en 1</strong> desde 30 dB, usando las flechas del teclado sobre el
+                control.</li>
+                <li>Anota en qué valor aparece el <strong>primer bit erróneo</strong>, marcado con una franja roja.</li>
+                <li>Sigue bajando y anota los errores a 0 dB y a −6 dB.</li>
+            </ol>
+
+            <h2>Parte 2 — El ruido impulsivo (15 min)</h2>
+
+            <ol>
+                <li>Pon la S/N en <strong>30 dB</strong> y activa <em>Añadir ruido impulsivo</em>.</li>
+                <li>Mira la gráfica: aparecen picos muy altos en algunos puntos.</li>
+                <li>Anota los errores a 30 dB y a 10 dB.</li>
+            </ol>
+
+            <h2>Parte 3 — Otras muestras y Shannon (20 min)</h2>
+
+            <ol>
+                <li>Desactiva el ruido impulsivo y pon la S/N en <strong>3 dB</strong>.</li>
+                <li>Pulsa <em>Otra muestra de ruido</em> cinco veces, anotando los errores de cada una.</li>
+                <li>Después usa el selector de ancho de banda y la S/N para responder a las preguntas de Shannon.</li>
+            </ol>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Sabes a qué S/N empiezan los errores con ruido normal.</li>
+                <li>Puedes explicar por qué el ruido impulsivo no se arregla subiendo la S/N.</li>
+                <li>Has relacionado el resultado de Shannon con la velocidad de tu tarjeta.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_03/laboratorio.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Laboratorio: canal con ruido',
+    subtitulo: 'Dónde empiezan los errores · el ruido impulsivo · Shannon con números reales',
+    tiempo: '62 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: ¿Cuándo empiezan los errores?',
+            tiempo: '15 min',
+            enunciado: '<p>Con el ruido impulsivo <strong>desactivado</strong>, parte 1.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Bajando desde 30 dB, ¿en qué S/N aparece el <strong>primer</strong> bit erróneo?',
+                    respuesta: 3,
+                    unidad: 'dB',
+                    explicacion: 'A <strong>3 dB</strong>, con la señal solo el doble de potente que el ruido. Desde 30 hasta 4 dB, cero errores.',
+                    pistas: ['Baja de 1 en 1 y mira el contador de «Bits erróneos».']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Anota los errores.',
+                    esquina: 'S/N',
+                    cabecera: ['Bits erróneos (de 40)'],
+                    filas: [
+                        { etiqueta: '10 dB', celdas: [{ respuestas: ['0'] }] },
+                        { etiqueta: '0 dB', celdas: [{ respuestas: ['8'] }] },
+                        { etiqueta: '−6 dB', celdas: [{ respuestas: ['16'] }] }
+                    ],
+                    explicacion: 'A 0 dB, señal y ruido tienen la misma potencia: uno de cada cinco bits sale mal. A −6 dB, el ruido es cuatro veces más potente que la señal, y el receptor acierta poco más que tirando una moneda.',
+                    pistas: ['Escribe solo el primer número del contador.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué forma tiene la relación entre S/N y errores?',
+                    opciones: {
+                        a: 'Los errores suben poco a poco desde 30 dB',
+                        b: 'Los errores son siempre los mismos',
+                        c: 'Hay un margen amplio sin ningún error, y por debajo de cierto valor los errores se disparan',
+                        d: 'Los errores bajan al bajar la S/N'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Es el comportamiento típico de lo digital: mientras el ruido no cruce el umbral, <strong>no pasa nada</strong>. Cuando empieza a cruzarlo, la situación empeora muy deprisa.',
+                    pistas: ['Compara lo que pasa entre 30 y 4 dB con lo que pasa entre 3 y −6 dB.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: El ruido impulsivo',
+            tiempo: '15 min',
+            enunciado: '<p>Con el ruido impulsivo <strong>activado</strong>, parte 2.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Anota los errores.',
+                    esquina: 'S/N',
+                    cabecera: ['Bits erróneos (de 40)'],
+                    filas: [
+                        { etiqueta: '30 dB', celdas: [{ respuestas: ['1'] }] },
+                        { etiqueta: '10 dB', celdas: [{ respuestas: ['1'] }] }
+                    ],
+                    explicacion: 'Con ruido normal, a 30 y a 10 dB había <strong>cero</strong> errores. Con impulsivo hay uno en los dos casos.',
+                    pistas: ['Comprueba que la casilla está marcada.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué subir la S/N de 10 a 30 dB no elimina ese error?',
+                    opciones: {
+                        a: 'Porque el pico impulsivo es mucho más fuerte que la señal: la S/N mide el ruido de fondo, no esos picos aislados',
+                        b: 'Porque el simulador tiene un fallo',
+                        c: 'Porque a 30 dB hay más ruido',
+                        d: 'Porque el ruido impulsivo solo afecta a los unos'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'El ruido impulsivo son pulsos <strong>breves y de gran amplitud</strong>. Mejorar la relación con el ruido de fondo no los hace más pequeños. Por eso el libro advierte de que Shannon no tiene en cuenta el ruido impulsivo.',
+                    pistas: ['Mira la altura de los picos comparada con la de la señal.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> En una red real con ruido impulsivo de un motor, ¿qué solución atacaría el problema de raíz?',
+                    opciones: {
+                        a: 'Subir la potencia de la tarjeta',
+                        b: 'Usar más niveles',
+                        c: 'Bajar la velocidad',
+                        d: 'Alejar el cable de la fuente, apantallarlo o pasar a fibra'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Si el problema viene de fuera, hay que <strong>impedir que entre</strong>: distancia, apantallamiento o un medio inmune.',
+                    pistas: ['¿De dónde viene el ruido impulsivo?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Otras muestras y Shannon',
+            tiempo: '20 min',
+            enunciado: '<p>Parte 3. Ahora sí puedes pulsar <em>Otra muestra de ruido</em>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> A 3 dB y sin ruido impulsivo, anota los errores de las cinco muestras, separados por comas.',
+                    ayuda: 'por ejemplo 1, 0, 2, 1, 3',
+                    explicacion: 'Cada muestra da un número distinto: el ruido es aleatorio. Lo que se mantiene es el <strong>orden de magnitud</strong>.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué conclusión sacas de que las cinco muestras den resultados distintos?',
+                    opciones: {
+                        a: 'Que el simulador no es fiable',
+                        b: 'Que con ruido aleatorio los errores se describen con una probabilidad, no con un número exacto: hay que medir muchas veces',
+                        c: 'Que la S/N cambia sola',
+                        d: 'Que el receptor está mal diseñado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Por eso los equipos de certificación de cableado, que verás en la Semana 8, envían millones de bits y dan una <strong>tasa</strong> de errores, no un recuento de una sola prueba.',
+                    pistas: ['¿Es el ruido predecible?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Pon el canal en <strong>3 100 Hz</strong> y la S/N en <strong>20 dB</strong>. ¿Qué capacidad de Shannon muestra, en kbps?',
+                    respuesta: 20.6,
+                    tolerancia: 0.1,
+                    unidad: 'kbps',
+                    explicacion: '3 100 · log<sub>2</sub>(101) ≈ <strong>20,6 kbps</strong>. Es el orden de magnitud de los últimos módems de línea telefónica.',
+                    pistas: ['Lee el panel «Capacidad de Shannon».']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Ahora el canal de <strong>100 MHz</strong>, el de un cable de categoría 5e, con una S/N de <strong>30 dB</strong>. ¿Qué capacidad muestra, en Mbps?',
+                    respuesta: 996.7,
+                    tolerancia: 0.5,
+                    unidad: 'Mbps',
+                    explicacion: '100 MHz · log<sub>2</sub>(1 001) ≈ <strong>997 Mbps</strong>: prácticamente <strong>1 Gbps</strong>. El número del martes.',
+                    pistas: ['Cambia el selector y la S/N, y lee el panel.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>e)</strong> ¿Qué relación ves entre este resultado y los 1 Gbps de tu tarjeta del martes? ¿Significa que 1000BASE-T trabaja justo en el límite de Shannon?',
+                    modelo: `<p>El resultado coincide casi exactamente con la velocidad de Gigabit Ethernet: un canal de
+                             100 MHz con 30 dB de S/N tiene un techo de unos 1 000 Mbps.</p>
+                             <p>Pero no significa que 1000BASE-T trabaje en ese límite con un solo canal: recuerda que
+                             usa <strong>cuatro pares</strong>, así que dispone de cuatro canales, cada uno con su propio
+                             techo de Shannon. Reparte los datos entre ellos y cada par lleva solo 250 Mbps, bastante
+                             por debajo de su límite.</p>
+                             <p>Ese margen es precisamente lo que le permite funcionar con cables reales, que tienen
+                             atenuación, diafonía y ruido impulsivo, cosas que Shannon no contempla.</p>`,
+                    rubrica: [
+                        'Observa que el resultado coincide con 1 Gbps',
+                        'Recuerda que 1000BASE-T usa cuatro pares',
+                        'Explica que cada par trabaja por debajo de su límite',
+                        'Relaciona el margen con las perturbaciones reales'
+                    ],
+                    pistas: ['¿Cuántos pares usaba 1000BASE-T?', '¿Cuánto lleva cada par?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre de la semana',
+            tiempo: '12 min',
+            enunciado: '<p>Mañana es el test. Junta los cuatro días.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena las ideas de la semana en el orden en que se construyen unas sobre otras.',
+                    elementos: [
+                        'Con más niveles, cada cambio lleva más bits',
+                        'El ruido pone un techo que ningún número de niveles supera',
+                        'Una señal digital es una suma de armónicos',
+                        'Una portadora permite usar medios que no admiten la banda base',
+                        'El medio solo deja pasar algunas frecuencias'
+                    ],
+                    orden: [
+                        'Una señal digital es una suma de armónicos',
+                        'El medio solo deja pasar algunas frecuencias',
+                        'Con más niveles, cada cambio lleva más bits',
+                        'Una portadora permite usar medios que no admiten la banda base',
+                        'El ruido pone un techo que ningún número de niveles supera'
+                    ],
+                    explicacion: 'Lunes y parte del lunes, martes, miércoles y jueves: cada idea resuelve el problema que dejó la anterior.',
+                    pistas: ['Sigue el orden de los días de la semana.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>b)</strong> En cinco líneas: ¿de qué depende la velocidad máxima de un medio de transmisión?',
+                    modelo: `<p>De dos cosas: su <strong>ancho de banda</strong>, que limita cuántos cambios por segundo caben
+                             (Nyquist), y su <strong>relación señal/ruido</strong>, que limita cuántos niveles distintos
+                             se pueden distinguir. Shannon las junta en una sola fórmula. La codificación y la modulación
+                             sirven para acercarse a ese límite, pero nunca para superarlo.</p>`,
+                    rubrica: [
+                        'Menciona el ancho de banda',
+                        'Menciona la relación señal/ruido',
+                        'Relaciona cada uno con Nyquist o Shannon',
+                        'Explica que codificar y modular no superan el límite'
+                    ],
+                    pistas: ['¿Qué dos magnitudes aparecen en la fórmula de Shannon?']
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/senales.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

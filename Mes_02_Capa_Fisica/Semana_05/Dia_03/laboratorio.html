@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: la radio de tu equipo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">79 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> modulador y PowerShell</div>
+        <div class="info-item"><strong>Requisito:</strong> adaptador Wi-Fi (para la parte 3)</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Primero, con el <strong>modulador</strong>, pondrás los mismos bits sobre una portadora de tres formas
+            distintas y los situarás en una constelación. Después averiguarás <strong>qué normas Wi-Fi admite tu
+            adaptador</strong> y hasta cuántos bits por símbolo puede llegar a usar.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>La parte 3 necesita un <strong>adaptador Wi-Fi</strong>, aunque no esté conectado a ninguna red. Si
+                tu equipo no tiene, usa los datos de ejemplo.</li>
+                <li>El comando de la parte 3 es de <strong>Windows</strong>. En Linux el equivalente es
+                <code>iw list</code>, del paquete <code>iw</code>; no se ha podido comprobar en este curso porque
+                requiere una tarjeta Wi-Fi real.</li>
+                <li>El comando <strong>no necesita</strong> permisos de administrador ni los servicios de ubicación:
+                solo lee las capacidades del controlador.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Las tres modulaciones (20 min)</h2>
+
+            <div class="senal" data-senal="modulacion" data-bits="1011"></div>
+
+            <ol>
+                <li>Con los bits <code>1011</code>, observa las tres filas de ondas.</li>
+                <li>Cambia los ciclos por bit de 3 a <strong>1</strong> y luego a <strong>6</strong>. Fíjate en qué
+                técnica cambia más de aspecto.</li>
+                <li>Escribe <code>0000</code> y después <code>1111</code>. ¿En qué fila se nota más la diferencia
+                entre las dos?</li>
+            </ol>
+
+            <h2>Parte 2 — La constelación (15 min)</h2>
+
+            <ol>
+                <li>Vuelve a 3 ciclos por bit y escribe <code>1011001001011110</code>: son 16 bits.</li>
+                <li>Mira la constelación: los puntos resaltados son los símbolos enviados, y el número indica en qué
+                orden.</li>
+                <li>Anota la etiqueta de cada punto resaltado.</li>
+            </ol>
+
+            <h2>Parte 3 — La radio de tu equipo (25 min)</h2>
+
+            <div class="comando"><pre><code>netsh wlan show drivers | Select-String "Controlador|Driver|Tipos de radio|Radio types"</code></pre></div>
+
+            <p>Ejecútalo en <strong>PowerShell</strong>. El filtro busca las líneas en español y en inglés, así que
+            sirve con cualquier idioma de Windows.</p>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>    Controlador                : Intel(R) Wi-Fi 6 AX201 160MHz
+    Tipos de radio admitidos    : 802.11b 802.11g 802.11n 802.11a 802.11ac 802.11ax</code></pre>
+                <p>Este adaptador es <strong>Wi-Fi 6</strong>: admite todas las normas, desde la 802.11b hasta la
+                802.11ax. Busca en tu salida la <strong>más reciente</strong>, que es la que marca lo máximo que puede
+                hacer tu tarjeta.</p>
+            </div>
+
+            <p>Necesitarás la tabla de la teoría. Te la dejamos aquí:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Norma</th><th>Técnica</th><th>Modulación máxima</th><th>Bits por símbolo</th></tr></thead>
+                <tbody>
+                    <tr><td>802.11b</td><td>DSSS</td><td>—</td><td>—</td></tr>
+                    <tr><td>802.11a / g</td><td>OFDM</td><td>64-QAM</td><td>6</td></tr>
+                    <tr><td>802.11n (Wi-Fi 4)</td><td>OFDM</td><td>64-QAM</td><td>6</td></tr>
+                    <tr><td>802.11ac (Wi-Fi 5)</td><td>OFDM</td><td>256-QAM</td><td>8</td></tr>
+                    <tr><td>802.11ax (Wi-Fi 6)</td><td>OFDM</td><td>1024-QAM</td><td>10</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Distingues ASK, FSK y PSK en el modulador sin leer la etiqueta de la fila.</li>
+                <li>Has situado cuatro símbolos en la constelación.</li>
+                <li>Sabes qué norma más reciente admite tu adaptador y cuántos bits por símbolo puede usar.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_02/laboratorio.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/laboratorio.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Laboratorio: la radio de tu equipo',
+    subtitulo: 'Las tres modulaciones · la constelación · qué admite tu adaptador Wi-Fi',
+    tiempo: '79 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Las tres modulaciones',
+            tiempo: '20 min',
+            enunciado: '<p>Con lo observado en la <strong>parte 1</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Con 3 ciclos por bit, ¿cuántos ciclos completos tiene un <strong>1</strong> en la fila FSK?',
+                    respuesta: 6,
+                    unidad: 'ciclos',
+                    explicacion: 'En este modulador el 1 lleva el <strong>doble</strong> de frecuencia que el 0: 6 ciclos frente a 3.',
+                    pistas: ['Lee la etiqueta que hay debajo del control de ciclos.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Al escribir <code>0000</code> y luego <code>1111</code>, ¿en qué fila es <strong>más difícil</strong> ver la diferencia a simple vista?',
+                    opciones: {
+                        a: 'ASK',
+                        b: 'PSK',
+                        c: 'FSK',
+                        d: 'En las tres se ve igual de claro'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'En PSK, una ristra de bits iguales es una senoidal normal en los dos casos: solo cambia <strong>dónde empieza</strong>. Sin una referencia de fase, el receptor no sabría cuál es cuál. En ASK cambia la altura y en FSK el número de ciclos, que se ven a la primera.',
+                    pistas: ['¿Qué hace PSK cuando no hay ningún cambio de bit?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> En la fila PSK con <code>1011</code>, ¿dónde aparecen los saltos bruscos de la onda?',
+                    opciones: {
+                        a: 'En todos los límites entre bits',
+                        b: 'En mitad de cada bit',
+                        c: 'No hay saltos',
+                        d: 'Solo donde el bit cambia: entre el 1 y el 0, y entre el 0 y el 1'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Entre los dos unos del final la fase no cambia, así que la onda continúa sin salto. Solo hay salto donde <strong>el bit cambia</strong>, porque ahí se invierte la fase.',
+                    pistas: ['Mira el límite entre el tercer y el cuarto bit.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Al pasar de 1 a 6 ciclos por bit, ¿qué ocurre con el ancho de banda de la señal modulada?',
+                    opciones: {
+                        a: 'No cambia',
+                        b: 'Baja',
+                        c: 'Sube la frecuencia de la portadora, así que la señal ocupa frecuencias más altas',
+                        d: 'Desaparece'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Más ciclos por bit es una portadora de <strong>mayor frecuencia</strong> para la misma velocidad. La modulación permite <strong>elegir dónde</strong> del espectro colocar la señal, y ese es precisamente su propósito.',
+                    pistas: ['Más ciclos en el mismo tiempo es más frecuencia.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: La constelación',
+            tiempo: '15 min',
+            enunciado: '<p>Con los bits <code>1011001001011110</code>, <strong>parte 2</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> ¿Cuántos símbolos QAM-16 se envían?',
+                    respuesta: 4,
+                    unidad: 'símbolos',
+                    explicacion: '16 bits / 4 bits por símbolo = <strong>4</strong>.',
+                    pistas: ['Mira «Símbolos en QAM-16».']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Escribe la etiqueta del punto resaltado para cada número.',
+                    esquina: 'Orden',
+                    cabecera: ['Etiqueta'],
+                    filas: [
+                        { etiqueta: '1', celdas: [{ respuestas: ['1011'] }] },
+                        { etiqueta: '2', celdas: [{ respuestas: ['0010'] }] },
+                        { etiqueta: '3', celdas: [{ respuestas: ['0101'] }] },
+                        { etiqueta: '4', celdas: [{ respuestas: ['1110'] }] }
+                    ],
+                    explicacion: 'Son los 16 bits en grupos de cuatro: 1011 · 0010 · 0101 · 1110.',
+                    pistas: ['Divide los 16 bits en grupos de 4, en orden.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuántos símbolos habría hecho falta para esos mismos 16 bits con ASK, FSK o PSK binarias?',
+                    opciones: { a: '16', b: '4', c: '8', d: '2' },
+                    respuesta: 'a',
+                    explicacion: 'Con dos estados, un bit por símbolo: <strong>16</strong>. QAM-16 envía lo mismo con la cuarta parte de símbolos.',
+                    pistas: ['¿Cuántos bits lleva un símbolo con dos estados?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: La radio de tu equipo',
+            tiempo: '25 min',
+            enunciado: '<p>Con la salida del comando de la <strong>parte 3</strong>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> Nombre de tu controlador Wi-Fi.',
+                    ayuda: 'por ejemplo Intel(R) Wi-Fi 6 AX201',
+                    explicacion: 'El nombre comercial suele indicar ya la generación: «Wi-Fi 6» es 802.11ax.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> Tipos de radio que admite, tal como aparecen.',
+                    ayuda: 'por ejemplo 802.11b 802.11g 802.11n 802.11a 802.11ac 802.11ax',
+                    explicacion: 'Los adaptadores modernos admiten también las normas antiguas, para poder conectarse a puntos de acceso viejos.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál es la norma más reciente que admite tu adaptador?',
+                    libre: true,
+                    opciones: {
+                        a: '802.11ax (Wi-Fi 6) o posterior',
+                        b: '802.11ac (Wi-Fi 5)',
+                        c: '802.11n (Wi-Fi 4)',
+                        d: '802.11g o anterior',
+                        e: 'No tengo adaptador Wi-Fi: uso los datos de ejemplo'
+                    },
+                    explicacion: 'Si tu respuesta es la e, contesta el resto con el adaptador de ejemplo, que es Wi-Fi 6.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Con esa norma, ¿cuántos bits por símbolo puede usar como máximo? Usa la tabla. Si usas los datos de ejemplo, responde para Wi-Fi 6.',
+                    respuesta: 10,
+                    unidad: 'bits',
+                    explicacion: 'Wi-Fi 6 llega a 1024-QAM: <strong>10 bits</strong>. Si tu adaptador es Wi-Fi 5, serían 8; si es Wi-Fi 4, 6. La corrección automática toma como referencia el adaptador de ejemplo.',
+                    pistas: ['Busca tu norma en la tabla.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Con los mismos símbolos por segundo, ¿cuántas veces más bits transmite 1024-QAM que 64-QAM? Redondea a dos decimales.',
+                    respuesta: 1.67,
+                    tolerancia: 0.01,
+                    unidad: 'veces',
+                    explicacion: '10 / 6 ≈ <strong>1,67</strong>. Un 67 % más, a cambio de una constelación con 16 veces más puntos: por eso 1024-QAM solo se usa cuando la señal es excelente.',
+                    pistas: ['Divide los bits por símbolo de una entre los de la otra.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>f)</strong> Tu adaptador admite 1024-QAM. ¿Significa eso que siempre la usa?',
+                    opciones: {
+                        a: 'Sí, siempre que esté conectado a Wi-Fi 6',
+                        b: 'No: solo cuando la señal es excelente; con peor señal la tasa adaptativa elige una modulación más robusta',
+                        c: 'Sí, porque es la más rápida',
+                        d: 'No: solo la usa con cable'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Que la admita marca el <strong>máximo posible</strong>. En cada momento el equipo elige según la calidad de la señal, y además necesita que el punto de acceso también la admita.',
+                    pistas: ['Recuerda el caso práctico de los ejercicios.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre',
+            tiempo: '19 min',
+            enunciado: '<p>Junta lo del laboratorio con la teoría.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>a)</strong> Un compañero tiene un portátil con Wi-Fi 4 y otro con Wi-Fi 6, conectados al mismo router Wi-Fi 6, en la misma mesa. El de Wi-Fi 6 va bastante más rápido. Explica una causa relacionada con la modulación.',
+                    modelo: `<p>Aunque la señal que reciben sea igual de buena, cada adaptador tiene un límite distinto
+                             de modulación. El de <strong>Wi-Fi 4</strong> llega como máximo a <strong>64-QAM</strong>, es
+                             decir, 6 bits por símbolo. El de <strong>Wi-Fi 6</strong> puede usar
+                             <strong>1024-QAM</strong>, con 10 bits por símbolo.</p>
+                             <p>Estando cerca del router, con una señal excelente, el portátil Wi-Fi 6 aprovecha la
+                             constelación grande y mete más bits en cada símbolo. El de Wi-Fi 4 no puede, aunque la señal
+                             lo permitiría.</p>
+                             <p>La velocidad final depende también de otros factores, como el ancho del canal o el
+                             número de antenas, pero la modulación máxima es uno de los motivos.</p>`,
+                    rubrica: [
+                        'Identifica la modulación máxima de cada norma',
+                        'Da los bits por símbolo de cada una',
+                        'Explica que con buena señal el Wi-Fi 6 usa la constelación grande',
+                        'Reconoce que hay otros factores'
+                    ],
+                    pistas: ['Usa la tabla de normas.', '¿Qué puede hacer cada uno con una señal excelente?']
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/senales.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

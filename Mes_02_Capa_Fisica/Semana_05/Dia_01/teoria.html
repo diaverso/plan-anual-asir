@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Anatomía de una señal: Fourier y el ancho de banda</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 1 — Anatomía de una señal</h1>
+        <p>Amplitud, frecuencia y fase · Fourier · el ancho de banda que se mide en hercios</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 64 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 46 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Empieza el Mes 2: abrimos la capa física</strong>
+            Hasta ahora la capa 1 era una caja negra: «aquí se transmiten los bits». Este mes se abre esa caja.
+            <br><br>
+            Y la primera pregunta es la más importante de todas: <strong>¿por qué un cable tiene una velocidad
+            máxima?</strong> Si un bit es solo «tensión alta» o «tensión baja», ¿qué impide enviarlos cada vez más
+            deprisa?
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            En la <a href="../../../Mes_01_Fundamentos/Semana_01/Dia_03/teoria.html#senales">Semana 1</a> viste
+            que el medio atenúa y ensucia la señal, y que lo digital gana porque se puede regenerar. Hoy vas a ver
+            <strong>qué es exactamente</strong> lo que el medio le quita a una señal, y por qué eso pone un techo a
+            la velocidad.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#senal">Qué es una señal, en concreto</a></li>
+                <li><a href="#parametros">Los tres parámetros: amplitud, frecuencia y fase</a></li>
+                <li><a href="#fourier">Fourier: una señal cuadrada son muchas ondas</a></li>
+                <li><a href="#anchobanda">Los dos «anchos de banda»</a></li>
+                <li><a href="#pulsos">Más velocidad, más frecuencias</a></li>
+                <li><a href="#medio">El medio como filtro: la tabla de la línea telefónica</a></li>
+                <li><a href="#semana">El mapa de la semana</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="senal">1. Qué es una señal, en concreto</h2>
+
+            <p>Para que un bit viaje hay que convertirlo en algo físico que cambie con el tiempo: una
+            <strong>tensión</strong> en un cable de cobre, una <strong>intensidad de luz</strong> en una fibra o una
+            <strong>onda de radio</strong> en el aire. Eso que cambia es la <strong>señal</strong>.</p>
+
+            <p>Dentro de un ordenador el convenio es sencillo: por ejemplo, <strong>+5 V</strong> para un 1 y
+            <strong>0 V</strong> para un 0. Pero el libro de la asignatura avisa de algo que conviene no olvidar:</p>
+
+            <div class="dato">
+                <strong>En la realidad la señal nunca es perfecta</strong>
+                <p>Los niveles no coinciden exactamente con los valores teóricos y las subidas y bajadas no son
+                instantáneas. Por eso los circuitos no trabajan con <em>valores</em> exactos, sino con
+                <strong>rangos</strong>: se considera un 1 cualquier tensión entre 4 y 6 V, y un 0 cualquiera entre
+                −1 y +1 V.</p>
+            </div>
+
+            <p>Esa imperfección tiene una causa concreta, y entenderla es el objetivo de hoy. Para llegar a ella
+            primero hay que saber describir una señal.</p>
+
+            <h2 id="parametros">2. Los tres parámetros: amplitud, frecuencia y fase</h2>
+
+            <p>La señal más sencilla que existe es la <strong>senoidal</strong>: una onda suave que sube y baja
+            siempre igual. Se describe por completo con tres números.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Parámetro</th><th>Qué es</th><th>Unidad</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Amplitud</strong></td><td>El valor máximo que alcanza la señal. Cuánto «sube»</td><td>voltios (V)</td></tr>
+                    <tr><td><strong>Frecuencia</strong></td><td>Cuántas veces se repite la señal en un segundo</td><td>hercios (Hz)</td></tr>
+                    <tr><td><strong>Fase</strong></td><td>Cuánto está desplazada en el tiempo respecto a un punto de referencia</td><td>grados (°) o fracción de periodo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<pre><code>  amplitud
+     ▲          ← periodo T →
+   A ┤    ╭─╮           ╭─╮
+     │   ╱   ╲         ╱   ╲
+   0 ┼──╱─────╲───────╱─────╲──────▶ tiempo
+     │         ╲     ╱       ╲
+  −A ┤          ╰─╯           ╰─
+     └──┬── fase: dónde empieza respecto al origen</code></pre>
+
+            <h3>Frecuencia y periodo</h3>
+
+            <p>El <strong>periodo</strong> (T) es lo que dura una repetición completa. Frecuencia y periodo son
+            inversos: si algo se repite 50 veces por segundo, cada repetición dura 1/50 de segundo.</p>
+
+            <div class="destacado">
+                <strong>f = 1 / T &nbsp;&nbsp;·&nbsp;&nbsp; T = 1 / f</strong>
+                <p>El ejemplo del libro: una señal que se repite <strong>cada 2 segundos</strong> tiene una frecuencia
+                de 1/2 = <strong>0,5 Hz</strong>.</p>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Múltiplo</th><th>Equivale a</th><th>Un ejemplo cercano</th></tr></thead>
+                <tbody>
+                    <tr><td>1 Hz</td><td>1 vez por segundo</td><td>Un reloj que hace tic</td></tr>
+                    <tr><td>50 Hz</td><td>periodo de 20 ms</td><td>La corriente del enchufe en España</td></tr>
+                    <tr><td>1 kHz</td><td>1 000 Hz</td><td>Un pitido agudo</td></tr>
+                    <tr><td>1 MHz</td><td>1 000 000 Hz</td><td>La radio de onda media</td></tr>
+                    <tr><td>1 GHz</td><td>10<sup>9</sup> Hz</td><td>El Wi-Fi funciona a 2,4 y 5 GHz</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>La fase</h3>
+
+            <p>Dos señales pueden tener la misma amplitud y la misma frecuencia y aun así ser distintas, porque
+            una va <strong>adelantada</strong> respecto a la otra. Esa diferencia es la fase. Un periodo completo
+            son 360°, así que un desplazamiento de medio periodo son <strong>180°</strong>: donde una sube, la
+            otra baja.</p>
+
+            <p>Hoy la fase parece un detalle. El miércoles no lo será: <strong>cambiar la fase</strong> es una de
+            las tres formas de meter bits en una onda, y la que usan las redes Wi-Fi.</p>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="fourier">3. Fourier: una señal cuadrada son muchas ondas</h2>
+
+            <p>A principios del siglo XIX el matemático francés <strong>Jean-Baptiste Fourier</strong> demostró algo
+            que parece un truco y es la base de toda esta semana:</p>
+
+            <div class="dato">
+                <strong>Teorema de Fourier</strong>
+                <p>Cualquier señal periódica se puede construir <strong>sumando señales senoidales</strong>: una
+                <strong>fundamental</strong>, que se repite al mismo ritmo que la señal, y una serie de
+                <strong>armónicos</strong>, cuyas frecuencias son múltiplos exactos de la fundamental.</p>
+            </div>
+
+            <p>Aplicado a nuestros bits: una señal digital, con sus escalones bruscos, <strong>no es una
+            onda</strong>. Es una suma de senoidales, en principio infinitas.</p>
+
+            <h3>El caso de la onda cuadrada</h3>
+
+            <p>Una onda cuadrada que alterna entre dos niveles tiene una receta especialmente limpia:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Armónico</th><th>Frecuencia</th><th>Amplitud relativa</th></tr></thead>
+                <tbody>
+                    <tr><td>Fundamental (1.º)</td><td>f</td><td>1</td></tr>
+                    <tr><td>2.º</td><td>2f</td><td><strong>0</strong> — no existe</td></tr>
+                    <tr><td>3.º</td><td>3f</td><td>1/3</td></tr>
+                    <tr><td>4.º</td><td>4f</td><td><strong>0</strong></td></tr>
+                    <tr><td>5.º</td><td>5f</td><td>1/5</td></tr>
+                    <tr><td>7.º</td><td>7f</td><td>1/7</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Dos cosas que hay que retener:</p>
+            <ul>
+                <li>Solo tiene armónicos <strong>impares</strong>.</li>
+                <li>Cada armónico pesa <strong>menos</strong> que el anterior. Por eso el libro dice que los que menos
+                contribuyen a la forma de la señal son los de <strong>mayor frecuencia y menor amplitud</strong>.</li>
+            </ul>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s05_d01_suma_armonicos.png"
+         width="1400" height="1050" loading="lazy"
+         alt="Tres filas muestran una onda cuadrada de referencia y la señal que se obtiene sumando armónicos. Con solo la fundamental sale una senoidal suave. Con la fundamental y los armónicos tercero y quinto aparece una forma casi cuadrada con ondulaciones. Con muchos armónicos la onda es prácticamente cuadrada. A la derecha de cada fila, un gráfico de barras con la amplitud de cada armónico, cada vez más baja.">
+    <figcaption>Cada armónico que se suma afila los escalones. Para la cuadrada perfecta harían falta infinitos.</figcaption>
+</figure>
+<pre><code>Solo la fundamental:          ╭──╮    ╭──╮        parece una ola, no un escalón
+                             ╯    ╰──╯    ╰──
+
+Fundamental + 3.º + 5.º:      ╭┬┬╮    ╭┬┬╮        ya se intuyen los escalones
+                            ──╯    ╰┴┴╯    ╰┴┴
+
+Muchos armónicos:             ┌──┐    ┌──┐        casi cuadrada
+                            ──┘  └────┘  └────</code></pre>
+
+            <p>Cuantos más armónicos se suman, más se parece a la cuadrada. Y ahora viene la idea clave:
+            <strong>para la cuadrada perfecta harían falta infinitos</strong>. Ningún medio los deja pasar todos.
+            Pruébalo:</p>
+
+            <div class="senal" data-senal="fourier"></div>
+
+            <div class="aviso">
+                <strong>Lo que tienes que observar</strong>
+                Mueve el <em>ancho de banda del medio</em> hacia la izquierda. Con un límite por debajo de 600 Hz solo
+                pasa la fundamental y la señal que llega es una ola suave. Súbelo hasta 1 000 Hz y aparecen el 3.º y
+                el 5.º: los escalones ya se reconocen. <strong>La forma de la señal que llega depende de cuántos
+                armónicos deja pasar el medio.</strong>
+            </div>
+
+            <h2 id="anchobanda">4. Los dos «anchos de banda»</h2>
+
+            <p>Aquí hay que detenerse, porque vas a encontrar la expresión <strong>ancho de banda</strong> con dos
+            significados distintos, y las propias fuentes de la asignatura usan uno u otro según les conviene.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Ancho de banda en <strong>hercios</strong></th><th>Ancho de banda en <strong>bits por segundo</strong></th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Qué mide</strong></td><td>El <strong>rango de frecuencias</strong> que forman una señal, o que un medio deja pasar</td><td>La <strong>cantidad de datos</strong> que pueden fluir en un tiempo determinado</td></tr>
+                    <tr><td><strong>Unidad</strong></td><td>Hz, kHz, MHz</td><td>bps, kbps, Mbps, Gbps</td></tr>
+                    <tr><td><strong>Quién lo usa así</strong></td><td>La física de señales, el libro de la asignatura, los fabricantes de cable</td><td>El currículo Cisco, los operadores, tú en la Semana 1</td></tr>
+                    <tr><td><strong>Ejemplo</strong></td><td>«Este cable admite hasta 100 MHz»</td><td>«Tengo 600 megas de fibra»</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>No se contradicen: una es la causa de la otra</strong>
+                <p>El ancho de banda en <strong>Hz</strong> es una propiedad física del medio. El ancho de banda en
+                <strong>bps</strong> es lo que consigues transmitir por él. <strong>Más hercios permiten más bits por
+                segundo</strong>, y el jueves verás la fórmula exacta que los relaciona.</p>
+                <p>Cuando leas «ancho de banda», mira la <strong>unidad</strong>: es la única pista fiable de cuál de
+                los dos significa.</p>
+            </div>
+
+            <p>El libro lo explica con una imagen muy útil: el ancho de banda de un medio es como el
+            <strong>diámetro de una tubería</strong>. Es una característica del propio medio, no se puede cambiar
+            desde fuera, y determina cuánto cabe por él.</p>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="pulsos">5. Más velocidad, más frecuencias</h2>
+
+            <p>Ahora junta las dos piezas. Si una señal digital es una suma de armónicos, ¿qué le pasa cuando la
+            envías <strong>más rápido</strong>?</p>
+
+            <p>Cada bit dura menos, así que los pulsos son <strong>más estrechos</strong>. Y la conclusión que saca el
+            libro de Fourier es tajante:</p>
+
+            <div class="dato">
+                <strong>Cuanto más estrechos son los pulsos, mayor ancho de banda tiene la señal</strong>
+                <p>Para dibujar un escalón más brusco hacen falta armónicos de frecuencia más alta.</p>
+            </div>
+
+            <h3>El primer armónico depende de la velocidad</h3>
+
+            <p>Imagina que envías una y otra vez el mismo byte, <code>01100010</code>. Esa secuencia de 8 bits es un
+            periodo completo de la señal. Si transmites a <strong>b</strong> bits por segundo, los 8 bits tardan
+            8/b segundos, y la fundamental es su inversa:</p>
+
+            <div class="destacado">
+                <strong>frecuencia del primer armónico = b / 8</strong>
+                <p>A 300 bps: 300 / 8 = <strong>37,5 Hz</strong>. A 2 400 bps: 2 400 / 8 = <strong>300 Hz</strong>.</p>
+                <p><strong>Doblar la velocidad dobla la frecuencia de todos los armónicos.</strong> La señal entera se
+                estira hacia arriba en el espectro.</p>
+            </div>
+
+<pre><code>b = 300 bps     armónicos en  37,5 · 75 · 112,5 · 150 · …   Hz   (muy juntos, muy abajo)
+b = 2 400 bps   armónicos en  300  · 600 · 900   · 1 200 …  Hz   (ocho veces más separados)</code></pre>
+
+            <h2 id="medio">6. El medio como filtro: la tabla de la línea telefónica</h2>
+
+            <p>Un medio deja pasar las frecuencias <strong>hasta cierto límite</strong> y corta las de arriba. Se
+            comporta como un <strong>filtro</strong>. Así que el número de armónicos que llegan al otro extremo es
+            simplemente:</p>
+
+            <div class="destacado">
+                <strong>armónicos que llegan = ancho de banda del medio ÷ frecuencia del primer armónico</strong>
+                <p>Redondeando siempre <strong>hacia abajo</strong>: un armónico o cabe entero o no cabe.</p>
+            </div>
+
+            <p>El libro lo aplica a la <strong>red telefónica</strong>, que deja pasar unos <strong>3 000 Hz</strong>,
+            enviando el byte <code>01100010</code> a velocidades cada vez mayores:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Velocidad (bps)</th><th>Primer armónico (Hz)</th><th>Armónicos que llegan</th></tr></thead>
+                <tbody>
+                    <tr><td>300</td><td>37,5</td><td>80</td></tr>
+                    <tr><td>600</td><td>75</td><td>40</td></tr>
+                    <tr><td>1 200</td><td>150</td><td>20</td></tr>
+                    <tr><td>2 400</td><td>300</td><td>10</td></tr>
+                    <tr><td>4 800</td><td>600</td><td>5</td></tr>
+                    <tr><td>9 600</td><td>1 200</td><td>2</td></tr>
+                    <tr><td>19 200</td><td>2 400</td><td>1</td></tr>
+                    <tr><td>38 400</td><td>4 800</td><td><strong>0</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Compruébalo con cualquier fila: 3 000 ÷ 300 = 10. A 38 400 bps el primer armónico ya está en
+            4 800 Hz, <strong>por encima del límite</strong>: no llega absolutamente nada que se parezca a la
+            señal.</p>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s05_d01_medio_filtro.png"
+         width="1400" height="788" loading="lazy"
+         alt="Espectro de una señal con doce armónicos de amplitud decreciente. Una línea roja marca el límite del medio tras el quinto: los cinco primeros, en azul, llegan al receptor; los siete siguientes, en gris claro, se pierden por el camino.">
+    <figcaption>El medio se comporta como un filtro: lo que queda por encima de su límite no llega.</figcaption>
+</figure>
+<pre><code>             amplitud
+                ▲   │ límite del medio (3 000 Hz)
+                █   │
+                █ ▆ │
+                █ █ ▄ ▃  · ·        ← los que pasan llegan; los grises se pierden
+                ┴─┴─┴─┴─│─┴─┴──▶ frecuencia
+                        │</code></pre>
+
+            <div class="aviso">
+                <strong>La tabla no dice cuándo empiezan los errores</strong>
+                Que lleguen 2 armónicos no significa que el receptor se equivoque, ni que lleguen 5 significa que
+                acierte. Depende de la forma de los bits. Averiguar <strong>en qué fila empieza a fallar</strong> es
+                justo lo que harás en el laboratorio.
+            </div>
+
+            <p>Y esto responde a la pregunta con la que empezó el día:</p>
+
+            <div class="dato">
+                <strong>Por qué un medio tiene velocidad máxima</strong>
+                <p>Cuanto más rápido se transmite, más arriba están los armónicos. Llega un momento en que los que
+                dan forma a los bits quedan por encima del límite del medio, y el receptor ya no puede distinguir un
+                1 de un 0.</p>
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: el medio no es la única causa</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>En esta explicación el medio es un filtro perfecto: deja pasar todo lo que está por debajo del
+                    límite y nada de lo que está por encima. Los medios reales son más torpes. Atenúan
+                    <strong>un poco más cada frecuencia</strong> según sube, y además retrasan unas frecuencias más
+                    que otras, lo que deforma la señal aunque todos los armónicos lleguen.</p>
+                    <p>Esa deformación es la <strong>distorsión</strong> que viste en la
+                    <a href="../../../Mes_01_Fundamentos/Semana_01/Dia_02/teoria.html#perturbaciones">Semana 1</a>, y el
+                    jueves se suma al ruido.</p>
+                </div>
+            </details>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="semana">7. El mapa de la semana</h2>
+
+            <p>Si el medio solo deja pasar ciertas frecuencias, hay tres formas de enfrentarse a él. Cada una es un
+            día de esta semana:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Día</th><th>La idea</th><th>La pregunta</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Martes</strong></td><td>Poner los bits en el cable de forma más inteligente: <strong>codificación</strong></td><td>¿Se puede meter más de un bit en cada cambio de la señal?</td></tr>
+                    <tr><td><strong>Miércoles</strong></td><td>Trasladar la señal a las frecuencias que el medio sí deja pasar: <strong>modulación</strong></td><td>¿Cómo se envían bits por un medio pensado para voz, o por el aire?</td></tr>
+                    <tr><td><strong>Jueves</strong></td><td>Aceptar que hay un límite y calcularlo: <strong>ruido y capacidad</strong></td><td>¿Cuántos bits por segundo caben, como máximo, en un canal?</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Una senoidal se describe por <strong>amplitud, frecuencia y fase</strong>. Frecuencia y periodo
+                    son inversos: <strong>f = 1/T</strong>.</li>
+                    <li><strong>Fourier</strong>: toda señal periódica es una suma de senoidales, una fundamental y sus
+                    armónicos.</li>
+                    <li>La onda cuadrada solo tiene armónicos <strong>impares</strong>, cada vez más débiles.</li>
+                    <li>El <strong>ancho de banda en Hz</strong> es un rango de frecuencias; en <strong>bps</strong>, una
+                    cantidad de datos. Lo primero limita lo segundo.</li>
+                    <li>Más velocidad → pulsos más estrechos → <strong>armónicos más altos</strong>.</li>
+                    <li>El medio actúa como un <strong>filtro</strong>: armónicos que llegan = ancho de banda ÷ primer
+                    armónico.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Una señal digital es una onda cuadrada, y ya está»</td><td>Es una <strong>suma de senoidales</strong>. Por eso un medio puede dejar pasar una parte y no otra</td></tr>
+                    <tr><td>«El ancho de banda se mide en Mbps»</td><td>A veces. En física de señales se mide en <strong>Hz</strong>. Mira siempre la unidad</td></tr>
+                    <tr><td>«Si mi cable es de 100 MHz, transmite 100 Mbps»</td><td>Hercios y bits por segundo <strong>no se convierten uno en otro</strong> con una regla fija. Depende de cómo se codifique</td></tr>
+                    <tr><td>«La onda cuadrada tiene todos los armónicos»</td><td>Solo los <strong>impares</strong></td></tr>
+                    <tr><td>«Los armónicos altos son los más importantes»</td><td>Al revés: son los que <strong>menos</strong> aportan, porque tienen menos amplitud</td></tr>
+                    <tr><td>«Enviar más deprisa solo exige una tarjeta más rápida»</td><td>Exige un medio que deje pasar <strong>frecuencias más altas</strong></td></tr>
+                    <tr><td>«Frecuencia y periodo son lo mismo»</td><td>Son <strong>inversos</strong>: 50 Hz son 20 ms</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 22 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a <strong>reproducir la tabla de la línea telefónica</strong> fila a fila y a descubrir lo que la
+            tabla no dice: a qué velocidad el receptor empieza a equivocarse, y qué ancho de banda necesitaría para
+            no hacerlo.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 1</strong></a> (78 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 2</strong>
+            <p><strong>Codificación</strong>: cómo se ponen los bits en el cable, qué pasa con cien ceros seguidos y
+            por qué <strong>baudios</strong> y <strong>bits por segundo</strong> no son lo mismo.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> tu tarjeta Ethernet va a 1 Gbps por un cable que deja pasar
+            unos 100 MHz. Con lo de hoy, parece imposible. ¿Qué crees que hacen para conseguirlo?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../../Mes_01_Fundamentos/Semana_04/Dia_05/teoria.html">← Mes 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Dos señales senoidales tienen la <strong>misma amplitud y la misma frecuencia</strong>, pero no son iguales. ¿Qué puede diferenciarlas? Y una de ellas se repite 200 veces por segundo: ¿cuánto dura cada repetición?',
+                modelo: 'Las diferencia la <strong>fase</strong>: una va desplazada en el tiempo respecto a la otra. Si el desplazamiento es de medio periodo, son 180° y una sube cuando la otra baja. Una señal de 200 Hz tiene un periodo de 1/200 s = <strong>5 ms</strong>.',
+                puntos: [
+                    'Identifica la fase como el parámetro que queda',
+                    'Explica la fase como un desplazamiento en el tiempo',
+                    'Calcula el periodo como la inversa de la frecuencia: 5 ms'
+                ]
+            },
+            {
+                pregunta: 'Un compañero dice: «Mi cable es de 100 MHz y mi fibra de 600 megas, así que la fibra tiene seis veces más ancho de banda». ¿Qué está mezclando?',
+                modelo: 'Está comparando dos <strong>anchos de banda distintos</strong>. Los 100 MHz del cable son un <strong>rango de frecuencias</strong>, en hercios: lo que el medio deja pasar. Los 600 «megas» de la fibra son una <strong>velocidad</strong>, en bits por segundo. No se pueden comparar directamente, porque son magnitudes diferentes. Los hercios limitan los bits por segundo, pero la relación depende de cómo se codifique la señal.',
+                puntos: [
+                    'Distingue el ancho de banda en Hz del ancho de banda en bps',
+                    'Identifica cuál de los dos es cada dato por su unidad',
+                    'Explica que no se pueden comparar directamente',
+                    'Menciona que los Hz limitan los bps, sin ser lo mismo'
+                ]
+            },
+            {
+                pregunta: 'Explica con tus palabras, sin fórmulas, por qué por la línea telefónica no llega nada reconocible a 38 400 bps.',
+                modelo: 'Al enviar más rápido, los pulsos son más estrechos y todos los armónicos de la señal suben de frecuencia. A 38 400 bps el byte se repite 4 800 veces por segundo, así que <strong>el primer armónico ya está en 4 800 Hz</strong>. La línea telefónica corta todo lo que pasa de unos 3 000 Hz, de modo que <strong>ni siquiera la fundamental</strong> llega al otro extremo. Sin ningún armónico no queda nada de la forma de los bits.',
+                puntos: [
+                    'Relaciona más velocidad con pulsos más estrechos',
+                    'Explica que los armónicos suben de frecuencia',
+                    'Compara el primer armónico con el límite del medio',
+                    'Concluye que no llega ningún armónico'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué tres parámetros describen una señal senoidal?', dorso: '<strong>Amplitud</strong> (V), <strong>frecuencia</strong> (Hz) y <strong>fase</strong> (°).' },
+            { frente: '¿Qué relación hay entre frecuencia y periodo?', dorso: 'Son inversos: <strong>f = 1/T</strong>. 50 Hz → 20 ms.' },
+            { frente: 'Una señal se repite cada 2 s. ¿Su frecuencia?', dorso: '<strong>0,5 Hz</strong>. Es el ejemplo del libro.' },
+            { frente: '¿Qué es la fase?', dorso: 'El <strong>desplazamiento en el tiempo</strong> de una señal. Un periodo son 360°; medio, 180°.' },
+            { frente: '¿Qué dice el teorema de Fourier?', dorso: 'Toda señal periódica es una <strong>suma de senoidales</strong>: una fundamental y armónicos múltiplos de ella.' },
+            { frente: '¿Qué armónicos tiene una onda cuadrada?', dorso: 'Solo los <strong>impares</strong>: 1, 3, 5, 7…, con amplitudes 1, 1/3, 1/5, 1/7…' },
+            { frente: '¿Qué armónicos aportan menos a la forma de la señal?', dorso: 'Los de <strong>mayor frecuencia</strong>, porque tienen menos amplitud.' },
+            { frente: 'Ancho de banda en Hz', dorso: 'El <strong>rango de frecuencias</strong> que forman una señal o que deja pasar un medio.' },
+            { frente: 'Ancho de banda en bps', dorso: 'La <strong>cantidad de datos</strong> que fluyen por segundo. El de Hz limita a este.' },
+            { frente: '¿Qué pasa con los armónicos si doblas la velocidad?', dorso: '<strong>Doblan su frecuencia</strong>: toda la señal sube en el espectro.' },
+            { frente: 'Primer armónico al repetir un byte a b bps', dorso: '<strong>b / 8</strong>. A 2 400 bps, 300 Hz.' },
+            { frente: '¿Cuántos armónicos llegan por un medio?', dorso: '<strong>Ancho de banda ÷ primer armónico</strong>, redondeando hacia abajo. 3 000 ÷ 300 = 10.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 1: Anatomía de una señal',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'Parámetros',
+                repaso: '#parametros',
+                text: 'Una señal tarda 2 segundos en completar cada repetición. ¿Cuál es su frecuencia?',
+                options: { a: '2 Hz', b: '20 Hz', c: '200 ms', d: '0,5 Hz' },
+                answer: 'd',
+                feedback: 'f = 1/T = 1/2 = <strong>0,5 Hz</strong>. «200 ms» no es una frecuencia: es una duración, y además no es la de esta señal.'
+            },
+            {
+                topic: 'Parámetros',
+                repaso: '#parametros',
+                text: 'La corriente del enchufe oscila a 50 Hz. ¿Cuánto dura cada ciclo?',
+                options: { a: '50 ms', b: '20 ms', c: '5 ms', d: '0,5 s' },
+                answer: 'b',
+                feedback: 'T = 1/f = 1/50 s = 0,02 s = <strong>20 ms</strong>.'
+            },
+            {
+                topic: 'Parámetros',
+                repaso: '#parametros',
+                text: 'Dos señales tienen la misma amplitud y la misma frecuencia, pero donde una sube la otra baja. ¿En qué se diferencian?',
+                options: { a: 'En la fase: están desplazadas 180°', b: 'En la amplitud', c: 'En el periodo', d: 'En nada: son la misma señal' },
+                answer: 'a',
+                feedback: 'Medio periodo de desplazamiento son <strong>180°</strong>. El miércoles verás que ese desplazamiento sirve para codificar bits.'
+            },
+            {
+                topic: 'Fourier',
+                repaso: '#fourier',
+                text: '¿Qué afirma el teorema de Fourier aplicado a una señal digital periódica?',
+                options: {
+                    a: 'Que se transmite sin deformarse si el cable es bueno',
+                    b: 'Que solo tiene una frecuencia',
+                    c: 'Que es una suma de senoidales: una fundamental y armónicos múltiplos de ella',
+                    d: 'Que no puede transmitirse por un medio analógico'
+                },
+                answer: 'c',
+                feedback: 'Es la idea base de la semana: una señal con escalones <strong>no es una onda</strong>, sino muchas sumadas.'
+            },
+            {
+                topic: 'Fourier',
+                repaso: '#fourier',
+                text: 'Una onda cuadrada tiene una fundamental de 1 kHz. ¿Cuál de estas frecuencias NO forma parte de ella?',
+                options: { a: '1 kHz', b: '2 kHz', c: '3 kHz', d: '5 kHz' },
+                answer: 'b',
+                feedback: 'La onda cuadrada solo tiene armónicos <strong>impares</strong>: 1, 3, 5, 7 kHz… El 2.º tiene amplitud cero.'
+            },
+            {
+                topic: 'Fourier',
+                repaso: '#fourier',
+                text: 'Si un medio tiene que dejar fuera algunos armónicos de una señal, ¿cuáles hacen menos daño al perderse?',
+                options: {
+                    a: 'Los de frecuencia más alta, porque tienen menos amplitud',
+                    b: 'La fundamental',
+                    c: 'Los de frecuencia más baja',
+                    d: 'Todos hacen el mismo daño'
+                },
+                answer: 'a',
+                feedback: 'La amplitud cae como 1/n: el 9.º armónico pesa nueve veces menos que la fundamental. Por eso los medios pueden recortar por arriba y la señal sigue siendo reconocible.'
+            },
+            {
+                topic: 'Ancho de banda',
+                repaso: '#anchobanda',
+                text: 'Un fabricante anuncia un cable «de 250 MHz». ¿Qué significa ese dato?',
+                options: {
+                    a: 'Que transmite a 250 megabits por segundo',
+                    b: 'Que mide 250 metros como máximo',
+                    c: 'Que deja pasar señales con frecuencias de hasta 250 MHz',
+                    d: 'Que tiene 250 pares de hilos'
+                },
+                answer: 'c',
+                feedback: 'La unidad lo delata: <strong>hercios</strong>. Es el ancho de banda como rango de frecuencias. Cuántos bps se consiguen depende de la codificación, y la Semana 6 lo relaciona con las categorías de cable.'
+            },
+            {
+                topic: 'Ancho de banda',
+                repaso: '#anchobanda',
+                text: '¿Qué relación hay entre el ancho de banda en Hz de un medio y el ancho de banda en bps que se consigue por él?',
+                options: {
+                    a: 'Son la misma cosa con distinta unidad',
+                    b: 'Ninguna: son magnitudes independientes',
+                    c: 'Se convierten multiplicando por 8',
+                    d: 'El de Hz limita al de bps: más hercios permiten más bits por segundo'
+                },
+                answer: 'd',
+                feedback: 'Son magnitudes distintas pero <strong>relacionadas</strong>. El jueves verás la fórmula que las une.'
+            },
+            {
+                topic: 'Velocidad y armónicos',
+                repaso: '#pulsos',
+                text: 'Transmites la misma secuencia de bits primero a 1 200 bps y luego a 4 800 bps. ¿Qué le pasa a la señal?',
+                options: {
+                    a: 'Nada: los bits son los mismos',
+                    b: 'Los pulsos son más estrechos y todos sus armónicos suben de frecuencia, cuatro veces',
+                    c: 'Los armónicos bajan de frecuencia',
+                    d: 'Pierde los armónicos pares'
+                },
+                answer: 'b',
+                feedback: 'Cuadruplicar la velocidad cuadruplica la frecuencia de cada armónico. Por eso la señal más rápida necesita un medio con más ancho de banda.'
+            },
+            {
+                topic: 'Velocidad y armónicos',
+                repaso: '#pulsos',
+                text: 'Se repite el byte 01100010 a 2 400 bps. ¿A qué frecuencia está el primer armónico?',
+                options: { a: '2 400 Hz', b: '19 200 Hz', c: '300 Hz', d: '37,5 Hz' },
+                answer: 'c',
+                feedback: 'Los 8 bits forman un periodo: 2 400 / 8 = <strong>300 Hz</strong>.'
+            },
+            {
+                topic: 'El medio como filtro',
+                repaso: '#medio',
+                text: 'Un medio deja pasar hasta 3 000 Hz y el primer armónico de la señal está en 600 Hz. ¿Cuántos armónicos llegan?',
+                options: { a: '6', b: '3', c: '1 800', d: '5' },
+                answer: 'd',
+                feedback: '3 000 ÷ 600 = <strong>5</strong>. Es la fila de 4 800 bps de la tabla del libro.'
+            },
+            {
+                topic: 'El medio como filtro',
+                repaso: '#medio',
+                text: 'Por la línea telefónica, a 38 400 bps, no llega ningún armónico. ¿Por qué?',
+                options: {
+                    a: 'Porque el primer armónico, a 4 800 Hz, ya está por encima del límite de unos 3 000 Hz',
+                    b: 'Porque la línea telefónica solo admite señales analógicas',
+                    c: 'Porque hay demasiado ruido',
+                    d: 'Porque la tarjeta no puede ir tan rápido'
+                },
+                answer: 'a',
+                feedback: 'Si ni siquiera la fundamental cabe, no llega nada. Es exactamente el límite de velocidad del medio que buscábamos.'
+            },
+            {
+                topic: 'Recuperación · Semana 1',
+                repaso: '../../../Mes_01_Fundamentos/Semana_01/Dia_03/teoria.html#ruido',
+                text: '<em>Repaso.</em> ¿Por qué una señal digital puede recorrer distancias enormes y una analógica no?',
+                options: {
+                    a: 'Porque la digital no se atenúa',
+                    b: 'Porque la digital viaja más rápido',
+                    c: 'Porque la digital se puede regenerar: el receptor decide si era 1 o 0 y emite una señal limpia',
+                    d: 'Porque la analógica usa más ancho de banda'
+                },
+                answer: 'c',
+                feedback: 'Las dos se degradan. La diferencia es que la digital <strong>se reconstruye</strong>, y hoy has visto por qué eso funciona: mientras lleguen suficientes armónicos, el 1 y el 0 se siguen distinguiendo.'
+            },
+            {
+                topic: 'Recuperación · Semana 1',
+                repaso: '../../../Mes_01_Fundamentos/Semana_01/Dia_03/teoria.html#unidades',
+                text: '<em>Repaso.</em> ¿Cuántos bps son 1 Mbps?',
+                options: { a: '1 024 bps', b: '1 000 000 bps', c: '1 000 bps', d: '1 048 576 bps' },
+                answer: 'b',
+                feedback: 'En velocidades los prefijos son <strong>decimales</strong>: 1 Mbps = 10<sup>6</sup> bps. Lo mismo vale para los hercios: 1 MHz = 10<sup>6</sup> Hz.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/senales.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Ejercicios: codificación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">76 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 4 es el cálculo que más cae: pasar de <strong>baudios a bps</strong> y al revés. La clave está
+            siempre en los <strong>bits por símbolo</strong>, que salen del número de niveles.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/ejercicios.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/ejercicios.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Ejercicios',
+    subtitulo: 'Banda base · NRZ y Manchester · sincronismo · baudios y bps',
+    tiempo: '76 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Conceptos',
+            tiempo: '8 min',
+            enunciado: '<p>El vocabulario del día.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada término con su definición.',
+                    izquierda: ['Banda base', 'Codificación', 'Señalización', 'Baudio', 'Símbolo', 'Sincronismo'],
+                    derecha: [
+                        'Enviar la señal digital directamente, sin portadora',
+                        'Decidir qué patrón representa cada bit',
+                        'Generar la señal física: eléctrica, óptica o de radio',
+                        'Un cambio de valor de la señal por segundo',
+                        'Cada valor que toma la señal durante un intervalo',
+                        'Que emisor y receptor coincidan en el ritmo de los bits'
+                    ],
+                    pares: {
+                        'Banda base': 'Enviar la señal digital directamente, sin portadora',
+                        'Codificación': 'Decidir qué patrón representa cada bit',
+                        'Señalización': 'Generar la señal física: eléctrica, óptica o de radio',
+                        'Baudio': 'Un cambio de valor de la señal por segundo',
+                        'Símbolo': 'Cada valor que toma la señal durante un intervalo',
+                        'Sincronismo': 'Que emisor y receptor coincidan en el ritmo de los bits'
+                    },
+                    explicacion: 'Codificación y señalización son dos pasos distintos de la capa física, aunque en la práctica los hace el mismo circuito.',
+                    pistas: ['El baudio y el símbolo están relacionados: los baudios cuentan símbolos por segundo.']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> ¿Síncrona o asíncrona? Escribe una de las dos palabras.',
+                    esquina: 'Caso',
+                    cabecera: ['Tipo'],
+                    filas: [
+                        { etiqueta: 'Se envía una señal de reloj por un hilo aparte', celdas: [{ respuestas: ['sincrona', 'síncrona'], placeholder: 'síncrona / asíncrona' }] },
+                        { etiqueta: 'Cada carácter lleva un bit de inicio y uno de parada', celdas: [{ respuestas: ['asincrona', 'asíncrona'], placeholder: 'síncrona / asíncrona' }] },
+                        { etiqueta: 'El reloj va dentro de la señal, como en Manchester', celdas: [{ respuestas: ['sincrona', 'síncrona'], placeholder: 'síncrona / asíncrona' }] }
+                    ],
+                    explicacion: 'Manchester es síncrona aunque no use un hilo aparte: el reloj viaja <strong>embebido</strong> en las transiciones.',
+                    pistas: ['¿Hay alguna forma de que el receptor conozca el ritmo sin marcas de inicio y fin?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Codifica a mano',
+            tiempo: '15 min',
+            enunciado: `<p>Describe cada bit con la notación de la tabla:</p>
+                        <ul>
+                            <li>En <strong>NRZ</strong>: <strong>A</strong> (nivel alto) o <strong>B</strong> (nivel bajo). El 1 es alto.</li>
+                            <li>En <strong>Manchester</strong>: <strong>AB</strong> (de alto a bajo) o <strong>BA</strong> (de bajo a alto).</li>
+                        </ul>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Codifica la secuencia <code>1011</code>.',
+                    esquina: 'Bit',
+                    cabecera: ['NRZ', 'Manchester'],
+                    filas: [
+                        { etiqueta: '1', celdas: [{ respuestas: ['a'] }, { respuestas: ['ba'] }] },
+                        { etiqueta: '0', celdas: [{ respuestas: ['b'] }, { respuestas: ['ab'] }] },
+                        { etiqueta: '1', celdas: [{ respuestas: ['a'] }, { respuestas: ['ba'] }] },
+                        { etiqueta: '1', celdas: [{ respuestas: ['a'] }, { respuestas: ['ba'] }] }
+                    ],
+                    explicacion: 'En Manchester el 1 es <strong>de bajo a alto</strong> y el 0 <strong>de alto a bajo</strong>. Fíjate en que dos unos seguidos obligan a la señal a bajar en la frontera entre ambos para poder volver a subir.',
+                    pistas: ['Manchester: 0 = de alto a bajo; 1 = de bajo a alto.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> En NRZ, ¿cuántas transiciones tiene <code>1011</code>?',
+                    respuesta: 2,
+                    explicacion: 'A → B → A → A: cambia dos veces, al entrar y al salir del 0.',
+                    pistas: ['Solo hay transición cuando el bit cambia respecto al anterior.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> En Manchester, ¿cuántas transiciones tiene <code>1011</code>? Cuenta también las que hay entre bits.',
+                    respuesta: 5,
+                    explicacion: 'Una en mitad de cada bit (4) y otra en la frontera entre los dos unos del final, para poder volver a empezar abajo (1). Total: <strong>5</strong>. Entre el 1 y el 0, y entre el 0 y el 1, no hace falta: la señal ya está en el nivel de partida.',
+                    pistas: ['Escribe la secuencia completa: BA AB BA BA.', 'Mira cada frontera: ¿termina un bit en el mismo nivel en que empieza el siguiente?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Un receptor Manchester ve esta secuencia de transiciones centrales: <strong>bajada, subida, subida, bajada</strong>. ¿Qué bits son?',
+                    opciones: { a: '1001', b: '0110', c: '0101', d: '1100' },
+                    respuesta: 'b',
+                    explicacion: 'Bajada = 0, subida = 1. Por tanto: <strong>0110</strong>.',
+                    pistas: ['Traduce cada transición por separado.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Sincronismo',
+            tiempo: '10 min',
+            enunciado: '<p>Por qué importa que la señal cambie.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para una secuencia de <strong>32 ceros</strong>, ¿cuántas transiciones hace cada código?',
+                    esquina: 'Código',
+                    cabecera: ['Transiciones'],
+                    filas: [
+                        { etiqueta: 'NRZ', celdas: [{ respuestas: ['0'] }] },
+                        { etiqueta: 'Manchester', celdas: [{ respuestas: ['63'] }] }
+                    ],
+                    explicacion: 'NRZ: ninguna, la señal es plana. Manchester: 32 bajadas centrales, más 31 subidas en las fronteras para volver a empezar arriba. <strong>63</strong>. Con 16 ceros el codificador de la teoría daba 31, que sigue la misma regla: 2n − 1.',
+                    pistas: ['Con 16 ceros el codificador de la teoría daba 31.', 'Cada bit tiene su bajada, y entre dos ceros hay que volver a subir.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál de estas secuencias pone más en riesgo el sincronismo de un receptor NRZ?',
+                    opciones: {
+                        a: '11111111',
+                        b: '01010101',
+                        c: '11001100',
+                        d: '10101010'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Ocho bits iguales seguidos: <strong>ninguna transición</strong>. Las alternadas son el caso más favorable para NRZ.',
+                    pistas: ['¿Cuál de ellas no cambia nunca?']
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa.',
+                    frase: 'Manchester mantiene el sincronismo porque tiene una {{0}} en mitad de cada bit, pero a cambio necesita aproximadamente el {{1}} de ancho de banda que NRZ.',
+                    respuestas: [
+                        ['transicion', 'transición', 'cambio'],
+                        ['doble', '2x', 'dos veces']
+                    ],
+                    explicacion: 'Más transiciones implican armónicos más altos. Es el precio de llevar el reloj dentro.',
+                    pistas: ['Recuerda la relación del lunes entre cambios y frecuencias.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Baudios y bps',
+            tiempo: '18 min',
+            enunciado: '<p>Usa <strong>bits por símbolo = log<sub>2</sub>(niveles)</strong> y <strong>bps = baudios × bits por símbolo</strong>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la tabla.',
+                    esquina: 'Caso',
+                    cabecera: ['Niveles', 'Bits por símbolo', 'Baudios', 'bps'],
+                    filas: [
+                        { etiqueta: 'A', celdas: [{ fijo: '2' }, { respuestas: ['1'] }, { fijo: '4 800' }, { respuestas: ['4800', '4 800', '4.800'] }] },
+                        { etiqueta: 'B', celdas: [{ fijo: '4' }, { respuestas: ['2'] }, { fijo: '2 400' }, { respuestas: ['4800', '4 800', '4.800'] }] },
+                        { etiqueta: 'C', celdas: [{ fijo: '8' }, { respuestas: ['3'] }, { fijo: '1 600' }, { respuestas: ['4800', '4 800', '4.800'] }] },
+                        { etiqueta: 'D', celdas: [{ respuestas: ['16'] }, { respuestas: ['4'] }, { fijo: '1 200' }, { fijo: '4 800' }] }
+                    ],
+                    explicacion: 'Los cuatro casos transmiten <strong>4 800 bps</strong>, pero cada uno con la mitad de cambios por segundo que el anterior. Menos baudios significa armónicos más bajos: por eso los códigos multinivel caben en medios más estrechos.',
+                    pistas: ['log<sub>2</sub>16 = 4, porque 2<sup>4</sup> = 16.', 'En la fila D, ¿cuántos bits por símbolo hacen falta para pasar de 1 200 baudios a 4 800 bps?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un módem transmite 9 600 bps usando 16 niveles. ¿A cuántos baudios trabaja?',
+                    respuesta: 2400,
+                    unidad: 'baudios',
+                    explicacion: '16 niveles → 4 bits por símbolo. 9 600 / 4 = <strong>2 400 baudios</strong>.',
+                    pistas: ['Despeja: baudios = bps ÷ bits por símbolo.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Quieres 6 000 bps y el medio solo admite 2 000 baudios. ¿Cuántos niveles necesitas como mínimo?',
+                    respuesta: 8,
+                    unidad: 'niveles',
+                    explicacion: 'Hacen falta 6 000 / 2 000 = 3 bits por símbolo, y 2<sup>3</sup> = <strong>8 niveles</strong>.',
+                    pistas: ['Primero los bits por símbolo.', 'Luego, ¿cuántos niveles dan esos bits?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> En Manchester, cada bit puede producir dos cambios de nivel. ¿Qué relación hay entre baudios y bps?',
+                    opciones: {
+                        a: 'Los bps son el doble que los baudios',
+                        b: 'Son iguales',
+                        c: 'No se pueden relacionar',
+                        d: 'Los baudios pueden llegar al doble que los bps'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Es el caso que menciona el libro en el que la velocidad en bps es <strong>menor</strong> que en baudios. La señal cambia más veces por segundo que bits transmite.',
+                    pistas: ['¿Cuántos cambios puede haber dentro de un solo bit?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Ethernet por dentro',
+            tiempo: '12 min',
+            enunciado: '<p>Las cifras de Gigabit Ethernet que viste en la teoría.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> 1000BASE-T usa 4 pares a 125 millones de baudios cada uno, con 2 bits por símbolo. ¿Cuántos Mbps lleva <strong>cada par</strong>?',
+                    respuesta: 250,
+                    unidad: 'Mbps',
+                    explicacion: '125 × 2 = <strong>250 Mbps</strong> por par. Por cuatro pares, 1 000 Mbps.',
+                    pistas: ['bps = baudios × bits por símbolo.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Si cada par cambia 125 millones de veces por segundo, ¿a qué frecuencia está como máximo la fundamental, en MHz? Recuerda que un periodo completo necesita dos cambios.',
+                    respuesta: 62.5,
+                    tolerancia: 0.1,
+                    unidad: 'MHz',
+                    explicacion: 'El caso peor es que la señal alterne en cada símbolo: un periodo son dos símbolos, así que la fundamental está en 125 / 2 = <strong>62,5 MHz</strong>, por debajo de los 100 MHz del cable.',
+                    pistas: ['Un periodo completo necesita una subida y una bajada.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué dos ideas permiten a 1000BASE-T meter 1 Gbps en ese cable? Marca las dos.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Usar los cuatro pares a la vez',
+                        b: 'Usar Manchester',
+                        c: 'Llevar más de un bit por símbolo',
+                        d: 'Comprimir los datos',
+                        e: 'Aumentar la amplitud de la señal'
+                    },
+                    respuesta: ['a', 'c'],
+                    explicacion: 'Repartir entre pares divide la carga; llevar varios bits por símbolo reduce los cambios. Manchester haría justo lo contrario: <strong>más</strong> cambios por bit.',
+                    pistas: ['Descarta la que aumentaría el número de cambios.']
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>d)</strong> Relaciona cada medio con su forma de señalizar, según el currículo Cisco.',
+                    izquierda: ['Cobre', 'Fibra óptica', 'Inalámbrico'],
+                    derecha: [
+                        'Cambios de intensidad y fase del campo electromagnético',
+                        'Un pulso de luz es un 1; su ausencia, un 0',
+                        'Ondas de radio'
+                    ],
+                    pares: {
+                        'Cobre': 'Cambios de intensidad y fase del campo electromagnético',
+                        'Fibra óptica': 'Un pulso de luz es un 1; su ausencia, un 0',
+                        'Inalámbrico': 'Ondas de radio'
+                    },
+                    explicacion: 'Los tres medios del mes, con su forma de poner los bits.',
+                    pistas: ['¿Qué transporta la fibra?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Explícalo',
+            tiempo: '13 min',
+            enunciado: '<p>Responde por escrito antes de ver la solución.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>a)</strong> Diseñas un enlace y dudas entre una señal de 2 niveles y otra de 16 niveles a la misma velocidad en baudios. Compáralas: velocidad, ancho de banda que ocupan y comportamiento con ruido.',
+                    modelo: `<p>Con los mismos baudios, las dos señales cambian el mismo número de veces por segundo, así que
+                             ocupan un <strong>ancho de banda parecido</strong>.</p>
+                             <p>La diferencia está en lo que lleva cada cambio. La de 2 niveles lleva <strong>1 bit</strong>
+                             por símbolo; la de 16 niveles, <strong>4 bits</strong>. Por tanto, la de 16 niveles transmite
+                             <strong>cuatro veces más bps</strong> por el mismo medio.</p>
+                             <p>El precio es el ruido. En la de 16 niveles los escalones están muy juntos, y una
+                             perturbación pequeña basta para que el receptor confunda un nivel con el vecino. La de 2
+                             niveles tiene los dos valores muy separados y tolera mucho más ruido.</p>
+                             <p>Elegiría 16 niveles si el medio es limpio y la de 2 si hay mucho ruido. El jueves se verá
+                             cómo cuantificar esa decisión.</p>`,
+                    rubrica: [
+                        'Explica que ocupan un ancho de banda similar',
+                        'Calcula que la de 16 niveles lleva 4 bits por símbolo',
+                        'Concluye que transmite cuatro veces más bps',
+                        'Explica que es más sensible al ruido',
+                        'Propone un criterio de elección'
+                    ],
+                    pistas: ['¿Qué determina el ancho de banda: los baudios o los bps?', '¿Qué pasa con la distancia entre niveles?']
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

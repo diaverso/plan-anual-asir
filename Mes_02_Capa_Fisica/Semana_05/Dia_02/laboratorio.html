@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: tu tarjeta a 1 Gbps</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> codificador y PowerShell o terminal</div>
+        <div class="info-item"><strong>Permisos:</strong> sin administrador</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Primero, con el <strong>codificador</strong>, medirás cuánto sincronismo gana Manchester y cuántas
+            transiciones le cuesta. Después consultarás <strong>qué velocidades admite tu propia tarjeta</strong> y
+            harás la cuenta que resuelve la contradicción del lunes.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>Hoy <strong>solo se lee</strong> la configuración de la tarjeta. <strong>No la cambies</strong>:
+                forzar otra velocidad o dúplex cortaría tu conexión, y si el otro extremo no coincide puede dejarla
+                funcionando mal sin que te des cuenta.</li>
+                <li>Si te conectas por <strong>Wi-Fi</strong>, la parte 3 no aplica a tu adaptador inalámbrico.
+                Consulta la tarjeta Ethernet aunque no tenga cable, o usa los datos de ejemplo.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Sincronismo en el codificador (20 min)</h2>
+
+            <div class="senal" data-senal="codificacion"></div>
+
+            <p>Prueba estas secuencias, una a una, y anota los valores del panel inferior:</p>
+            <ol>
+                <li><code>01001101</code></li>
+                <li><code>0000000000000000</code> (dieciséis ceros)</li>
+                <li><code>0101010101010101</code></li>
+                <li><code>1111111111111111</code> (dieciséis unos)</li>
+            </ol>
+
+            <h2>Parte 2 — Baudios y bps (10 min)</h2>
+
+            <p>Mira la última fila del codificador, la de <strong>4 niveles</strong>. Escribe distintas secuencias y
+            observa cómo agrupa los bits de dos en dos.</p>
+
+            <h2>Parte 3 — Tu tarjeta (25 min)</h2>
+
+            <p>Primero, la velocidad y el dúplex con los que está funcionando ahora mismo:</p>
+
+            <div class="so-tabs" data-grupo="neg">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="neg" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object Name, LinkSpeed, FullDuplex</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="neg" data-so="nix">
+                <div class="comando"><pre><code>for i in /sys/class/net/*; do echo "$(basename $i): $(cat $i/speed 2>/dev/null) Mbps $(cat $i/duplex 2>/dev/null)"; done</code></pre></div>
+            </div>
+
+            <p>Después, <strong>todas las velocidades que admite</strong>. Sustituye <code>Ethernet</code> por el
+            nombre de tu adaptador si es distinto:</p>
+
+            <div class="so-tabs" data-grupo="val">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="val" data-so="win">
+                <div class="comando"><pre><code>(Get-NetAdapterAdvancedProperty -Name Ethernet | Where-Object RegistryKeyword -eq '*SpeedDuplex').ValidDisplayValues</code></pre></div>
+                <p>Se filtra por <code>*SpeedDuplex</code>, el nombre interno de la propiedad, para que el comando
+                funcione igual con Windows en español o en inglés.</p>
+            </div>
+            <div class="so-panel" data-grupo="val" data-so="nix">
+                <div class="comando"><pre><code>sudo ethtool eth0 | grep -A6 "Supported link modes"</code></pre></div>
+                <p><code>ethtool</code> no suele venir instalado: <code>sudo apt install ethtool</code>. Cambia
+                <code>eth0</code> por el nombre de tu interfaz. En una máquina virtual o en WSL la tarjeta es
+                virtual y no mostrará modos reales.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>Name     LinkSpeed FullDuplex
+----     --------- ----------
+Ethernet 1 Gbps          True
+
+Negociación automática
+10 Mbps Dúplex medio
+10 Mbps Dúplex completo
+100 Mbps Dúplex medio
+100 Mbps Dúplex completo
+Dúplex completo a 1,0 Gbps
+Dúplex completo a 2,5 Gbps</code></pre>
+                <p>Dos detalles de esta salida que merece la pena mirar despacio: la tarjeta <strong>admite 2,5
+                Gbps</strong> y sin embargo funciona a 1 Gbps, y a partir de 1 Gbps <strong>ya no ofrece dúplex
+                medio</strong>.</p>
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has medido las transiciones de NRZ y Manchester con cuatro secuencias distintas.</li>
+                <li>Has anotado la velocidad, el dúplex y las opciones de tu tarjeta.</li>
+                <li>Puedes explicar con cifras cómo consigue 1 Gbps el par trenzado.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_01/laboratorio.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/laboratorio.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Laboratorio: tu tarjeta a 1 Gbps',
+    subtitulo: 'Sincronismo en el codificador · las velocidades reales de tu tarjeta',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Sincronismo',
+            tiempo: '20 min',
+            enunciado: '<p>Con los valores del codificador, <strong>parte 1</strong>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Anota las transiciones y el tramo más largo sin cambios en NRZ.',
+                    esquina: 'Secuencia',
+                    cabecera: ['Transiciones NRZ', 'Transiciones Manchester', 'Tramo más largo (bits)'],
+                    filas: [
+                        { etiqueta: '01001101', celdas: [{ respuestas: ['5'] }, { respuestas: ['10'] }, { respuestas: ['2'] }] },
+                        { etiqueta: '16 ceros', celdas: [{ respuestas: ['0'] }, { respuestas: ['31'] }, { respuestas: ['16'] }] },
+                        { etiqueta: '0101…01', celdas: [{ respuestas: ['15'] }, { respuestas: ['16'] }, { respuestas: ['1'] }] },
+                        { etiqueta: '16 unos', celdas: [{ respuestas: ['0'] }, { respuestas: ['31'] }, { respuestas: ['16'] }] }
+                    ],
+                    explicacion: 'Con 16 bits iguales, NRZ es una línea plana durante los 16: <strong>el peor caso para el sincronismo</strong>. Manchester hace 31 transiciones con ellos. Y con la secuencia alternada, curiosamente, los dos códigos se parecen: 15 frente a 16.',
+                    pistas: ['Escribe cada secuencia en el campo «Bits a enviar» y copia las cifras del panel.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál de las cuatro secuencias es la más exigente en ancho de banda para <strong>Manchester</strong>?',
+                    opciones: {
+                        a: '01001101',
+                        b: 'Las de bits iguales: 16 ceros o 16 unos',
+                        c: 'La alternada',
+                        d: 'Todas exigen lo mismo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con bits iguales Manchester tiene que cambiar <strong>dos veces por bit</strong>: 31 transiciones en 16 bits. Es justo el caso en que NRZ no cambia nada. Cada código sufre en el caso contrario del otro.',
+                    pistas: ['Busca la fila con más transiciones de Manchester.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Con la secuencia alternada, NRZ hace 15 transiciones. ¿Tiene problemas de sincronismo en ese caso?',
+                    opciones: {
+                        a: 'No: cambia en cada bit, y el receptor puede ajustar su reloj en cada cambio',
+                        b: 'Sí, siempre los tiene',
+                        c: 'Sí, porque le faltan transiciones centrales',
+                        d: 'Depende de la tarjeta'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'El problema de NRZ no es de todas las secuencias, sino de las <strong>largas ristras iguales</strong>. Pero un emisor no controla qué datos le tocan, así que tiene que prepararse para el peor caso.',
+                    pistas: ['¿Qué necesita el receptor para no perder la cuenta?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Baudios y bps',
+            tiempo: '10 min',
+            enunciado: '<p>Con la fila de <strong>4 niveles</strong>, parte 2.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Con 16 bits, ¿cuántos símbolos usa la señal de 4 niveles?',
+                    respuesta: 8,
+                    explicacion: 'Cada símbolo lleva 2 bits: 16 / 2 = <strong>8</strong>. La mitad de cambios que en NRZ para los mismos bits.',
+                    pistas: ['Mira «Símbolos con 4 niveles» en el panel.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Escribe <code>1011001</code> (7 bits). ¿Cuántos símbolos salen?',
+                    respuesta: 4,
+                    explicacion: 'Tres parejas completas y un bit suelto, que el codificador completa con un cero: <strong>4</strong> símbolos. En una transmisión real también hay que rellenar cuando los bits no son múltiplo de los que lleva cada símbolo.',
+                    pistas: ['¿Qué hace el codificador con el último bit, que no tiene pareja?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> En la fila de 4 niveles, la secuencia <code>01010101…</code> produce una línea completamente plana. ¿Por qué?',
+                    opciones: {
+                        a: 'Porque el codificador falla con ese patrón',
+                        b: 'Porque cuatro niveles no pueden representar esa secuencia',
+                        c: 'Porque el 0 y el 1 se anulan',
+                        d: 'Porque todas las parejas son 01, así que todos los símbolos tienen el mismo nivel'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Al agrupar de dos en dos, <code>01 01 01 01</code> son ocho símbolos iguales. La señal multinivel también puede tener largas ristras sin cambios, y por eso necesita sus propias técnicas de sincronismo.',
+                    pistas: ['Agrupa la secuencia de dos en dos.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Tu tarjeta',
+            tiempo: '25 min',
+            enunciado: '<p>Con la salida de los comandos de la <strong>parte 3</strong>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> Velocidad a la que funciona ahora tu adaptador cableado.',
+                    ayuda: 'por ejemplo 1 Gbps',
+                    explicacion: 'Es la velocidad <strong>negociada</strong> con el otro extremo: tu router o tu switch.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Funciona en dúplex completo?',
+                    libre: true,
+                    opciones: {
+                        a: 'Sí: FullDuplex es True',
+                        b: 'No: FullDuplex es False',
+                        c: 'No tengo adaptador cableado'
+                    },
+                    explicacion: 'Con un switch actual lo normal es dúplex completo. Si ves semidúplex en un enlace moderno, sospecha de un cable o una configuración forzada: es una causa clásica de lentitud.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>c)</strong> La velocidad <strong>máxima</strong> que aparece en la lista de opciones.',
+                    ayuda: 'por ejemplo 2,5 Gbps',
+                    explicacion: 'Es lo que <strong>la tarjeta</strong> es capaz de hacer. Si es mayor que la negociada, el límite lo pone el otro extremo o el cable.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> En la salida de ejemplo, la tarjeta admite 2,5 Gbps pero funciona a 1 Gbps. ¿Cuál es la explicación más probable?',
+                    opciones: {
+                        a: 'La tarjeta está averiada',
+                        b: 'Windows limita la velocidad a 1 Gbps',
+                        c: 'El router o switch del otro extremo solo llega a 1 Gbps, y los dos negocian la máxima velocidad común',
+                        d: 'El cable de categoría 5e no admite más de 100 Mbps'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'La <strong>negociación automática</strong> elige lo mejor que admiten <strong>los dos extremos</strong> y el cable. Un router doméstico con puertos de 1 Gbps limita a cualquier tarjeta más rápida.',
+                    pistas: ['¿Con quién negocia la tarjeta la velocidad?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> En la lista de ejemplo hay «10 Mbps Dúplex medio» y «100 Mbps Dúplex medio», pero a 1 Gbps solo aparece dúplex completo. ¿Qué te sugiere?',
+                    opciones: {
+                        a: 'Que es un error del controlador',
+                        b: 'Que a 1 Gbps no hay colisiones porque la señal es más rápida',
+                        c: 'Que el dúplex medio es más rápido',
+                        d: 'Que a 1 Gbps el semidúplex no se usa en la práctica: los enlaces rápidos son punto a punto con un switch'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'El semidúplex tiene sentido con medios compartidos, como los hubs del Mes 1. Los enlaces de 1 Gbps en adelante van siempre a un switch, punto a punto, y ahí el dúplex completo es lo lógico.',
+                    pistas: ['¿Dónde se necesitaba el semidúplex, según la Semana 4?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>f)</strong> Fast Ethernet (100BASE-TX) transmite 100 Mbps, pero con 4B/5B cada 4 bits se convierten en 5. ¿Cuántos millones de símbolos por segundo salen al cable?',
+                    respuesta: 125,
+                    unidad: 'millones',
+                    explicacion: '100 × 5 / 4 = <strong>125 millones</strong>. Curiosamente, la misma cifra que cada par de Gigabit Ethernet. <em>El detalle de 4B/5B procede de la norma IEEE 802.3.</em>',
+                    pistas: ['Por cada 4 bits de datos salen 5.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cierre',
+            tiempo: '15 min',
+            enunciado: '<p>Junta lo de hoy con la contradicción del lunes.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>a)</strong> Explica, con las cifras de hoy, cómo consigue tu tarjeta transmitir 1 Gbps por un cable que deja pasar unos 100 MHz, cuando el lunes parecía imposible.',
+                    modelo: `<p>El lunes la cuenta suponía <strong>un solo par y dos niveles</strong>: mil millones de bits
+                             serían mil millones de cambios, y una señal alternada tendría su fundamental en 500 MHz, muy
+                             por encima del cable.</p>
+                             <p>1000BASE-T rompe las dos suposiciones:</p>
+                             <ul>
+                                 <li>Usa <strong>los cuatro pares a la vez</strong>, así que cada uno solo lleva 250 Mbps.</li>
+                                 <li>Usa una señal de <strong>varios niveles</strong> que lleva 2 bits por símbolo, así que esos
+                                 250 Mbps se transmiten con <strong>125 millones de baudios</strong>.</li>
+                             </ul>
+                             <p>Con 125 millones de cambios por segundo, la fundamental más alta está en 62,5 MHz,
+                             <strong>por debajo de los 100 MHz</strong> del cable. La clave está en separar los bps de los
+                             baudios: lo que limita el medio son los cambios, no los bits.</p>`,
+                    rubrica: [
+                        'Explica la suposición del lunes: un par y dos niveles',
+                        'Menciona el reparto entre cuatro pares',
+                        'Menciona los 2 bits por símbolo',
+                        'Da la cifra de 125 millones de baudios o 62,5 MHz',
+                        'Concluye que el medio limita los cambios, no los bits'
+                    ],
+                    pistas: ['¿Qué dos suposiciones hacía la cuenta del lunes?', 'Usa las palabras baudios y bps.']
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/senales.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

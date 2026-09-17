@@ -75,3 +75,38 @@ Se quedan en ASCII, conforme a la regla: los desgloses de la MAC en OUI y bits
 U/L e I/G, la resta que cancela el ruido en cifras, el cálculo de la MTU, la
 búsqueda binaria del tamaño máximo, la lista de interfaces de `ipconfig`, el
 conteo de dominios y las listas de pasos.
+
+---
+
+## Pendientes de la Semana 5 (Mes 2)
+
+Doce diagramas pedidos el 17 de septiembre de 2026. **Ocho insertados y cuatro por regenerar**, que no se
+suben al repositorio hasta tener la versión buena:
+
+- **1** `parametros_senal`: dibuja dos ondas desplazadas en lugar de una, y la flecha de fase no mide
+  la distancia entre picos equivalentes.
+- **6** `manchester`: el sexto bit, un 1, está dibujado como una bajada; la flecha de debajo sí dice 1.
+- **7** `gigabit_4pares`: dibuja señales de dos niveles con el rótulo «2 bits por cambio», que es
+  justo lo que dos niveles no pueden llevar.
+- **12** `relacion_senal_ruido`: los ejes llevan el texto «Amplitude», en inglés.
+
+Defectos menores en dos de las insertadas: en `modulador` la secuencia de bits tiene una muesca y no casa
+exactamente con la señal modulada; en `ask_fsk_psk` los ciclos del 0 en la fila PSK salen algo más juntos.
+
+| # | Archivo de destino | Dónde va |
+|--:|---|---|
+| 1 | `m02_s05_d01_parametros_senal.png` | D1 · amplitud, periodo y fase |
+| 2 | `m02_s05_d01_suma_armonicos.png` | D1 · la onda cuadrada como suma de armónicos |
+| 3 | `m02_s05_d01_medio_filtro.png` | D1 · el medio como filtro |
+| 4 | `m02_s05_d02_niveles_rangos.png` | D2 · zonas del 1, del 0 y prohibida |
+| 5 | `m02_s05_d02_nrz.png` | D2 · la secuencia 01001101 en NRZ |
+| 6 | `m02_s05_d02_manchester.png` | D2 · la misma secuencia en Manchester |
+| 7 | `m02_s05_d02_gigabit_4pares.png` | D2 · 1000BASE-T: 4 pares × 125 Mbaud × 2 bits |
+| 8 | `m02_s05_d03_modulador.png` | D3 · moduladora + portadora → señal modulada |
+| 9 | `m02_s05_d03_ask_fsk_psk.png` | D3 · los mismos bits en ASK, FSK y PSK |
+| 10 | `m02_s05_d03_constelacion_qam16.png` | D3 · constelación QAM-16 |
+| 11 | `m02_s05_d04_atenuacion.png` | D4 · la señal perdiendo amplitud con la distancia |
+| 12 | `m02_s05_d04_relacion_senal_ruido.png` | D4 · el mismo ruido sobre una señal débil y una fuerte |
+
+Se quedan en ASCII: la fórmula de Shannon desarrollada, la comparación de los dos límites en cifras
+y los desgloses numéricos.

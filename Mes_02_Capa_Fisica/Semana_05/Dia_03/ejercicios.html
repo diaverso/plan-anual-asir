@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Ejercicios: modulación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">84 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6, con caso práctico</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 6 es un <strong>caso práctico</strong> que usa lo de los tres días: armónicos, baudios y
+            modulación. Resérvale al menos 25 minutos.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/ejercicios.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/ejercicios.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Ejercicios',
+    subtitulo: 'Portadora y módem · ASK, FSK y PSK · multibit y QAM · caso práctico',
+    tiempo: '84 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Conceptos',
+            tiempo: '8 min',
+            enunciado: '<p>El vocabulario del día.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada término con su definición.',
+                    izquierda: ['Portadora', 'Moduladora', 'Módem', 'Constelación', 'Tasa adaptativa', 'OFDM'],
+                    derecha: [
+                        'Onda con las características que necesita el medio',
+                        'Señal que lleva la información',
+                        'Aparato que modula y demodula',
+                        'Diagrama con un punto por cada símbolo posible',
+                        'Cambiar de modulación según la calidad de la señal',
+                        'Dividir el canal en muchas portadoras estrechas'
+                    ],
+                    pares: {
+                        'Portadora': 'Onda con las características que necesita el medio',
+                        'Moduladora': 'Señal que lleva la información',
+                        'Módem': 'Aparato que modula y demodula',
+                        'Constelación': 'Diagrama con un punto por cada símbolo posible',
+                        'Tasa adaptativa': 'Cambiar de modulación según la calidad de la señal',
+                        'OFDM': 'Dividir el canal en muchas portadoras estrechas'
+                    },
+                    explicacion: 'Portadora y moduladora son las dos entradas del modulador; la señal modulada es su salida.',
+                    pistas: ['La portadora no lleva información por sí sola.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Reconoce la técnica',
+            tiempo: '12 min',
+            enunciado: '<p>A partir de lo que cambia en la señal, deduce la técnica. Escribe <em>ASK</em>, <em>FSK</em> o <em>PSK</em>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> ¿Qué técnica es cada una?',
+                    esquina: 'Descripción',
+                    cabecera: ['Técnica'],
+                    filas: [
+                        { etiqueta: 'El 1 tiene más ciclos por bit que el 0', celdas: [{ respuestas: ['fsk'], placeholder: 'ASK / FSK / PSK' }] },
+                        { etiqueta: 'El 0 es una onda de menor altura', celdas: [{ respuestas: ['ask'], placeholder: 'ASK / FSK / PSK' }] },
+                        { etiqueta: 'La onda da un salto brusco en cada cambio de bit, sin cambiar altura ni ritmo', celdas: [{ respuestas: ['psk'], placeholder: 'ASK / FSK / PSK' }] },
+                        { etiqueta: 'El 0 se representa con ausencia de señal', celdas: [{ respuestas: ['ask'], placeholder: 'ASK / FSK / PSK' }] },
+                        { etiqueta: 'Dos tonos distintos, uno para cada bit', celdas: [{ respuestas: ['fsk'], placeholder: 'ASK / FSK / PSK' }] }
+                    ],
+                    explicacion: 'La ausencia de señal es el caso extremo de ASK: amplitud cero. Y «dos tonos» es FSK, que es como sonaban los módems antiguos.',
+                    pistas: ['Pregúntate qué parámetro cambia: altura, ritmo o posición de la onda.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿En qué técnicas se mantiene <strong>constante la amplitud</strong>? Marca todas.',
+                    multiple: true,
+                    opciones: { a: 'ASK', b: 'FSK', c: 'PSK' },
+                    respuesta: ['b', 'c'],
+                    explicacion: 'Solo ASK lleva la información en la amplitud. Por eso FSK y PSK resisten mejor una perturbación que altere la altura de la señal.',
+                    pistas: ['¿En cuál de ellas la amplitud es precisamente la información?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> En una FSK, el 0 usa 1 200 Hz y el 1 usa 2 200 Hz. ¿Se podría usar 2 200 Hz para el 0 y 1 200 Hz para el 1?',
+                    opciones: {
+                        a: 'Sí: basta con que las dos frecuencias sean distintas y emisor y receptor usen el mismo convenio',
+                        b: 'No: el 1 siempre tiene que ser la frecuencia más alta',
+                        c: 'Solo si se usa también ASK',
+                        d: 'No: las frecuencias las fija la portadora'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'El libro insiste: se puede usar <strong>cualquier</strong> valor para cada bit, <strong>siempre que sean distintos</strong>. Lo que importa es el acuerdo entre los dos extremos.',
+                    pistas: ['¿Qué exige el libro de los valores del 0 y del 1?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Los cuatro casos',
+            tiempo: '10 min',
+            enunciado: '<p>Clasifica cada situación según el tipo de información y de portadora.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada situación con su caso.',
+                    izquierda: [
+                        'Una emisora de radio FM',
+                        'Un módem enviando datos por la línea telefónica',
+                        'La voz en la telefonía móvil digital',
+                        'Una tarjeta Ethernet con Manchester'
+                    ],
+                    derecha: [
+                        'Analógica sobre portadora analógica',
+                        'Digital sobre portadora analógica',
+                        'Analógica sobre portadora digital',
+                        'Digital sobre digital: banda base'
+                    ],
+                    pares: {
+                        'Una emisora de radio FM': 'Analógica sobre portadora analógica',
+                        'Un módem enviando datos por la línea telefónica': 'Digital sobre portadora analógica',
+                        'La voz en la telefonía móvil digital': 'Analógica sobre portadora digital',
+                        'Una tarjeta Ethernet con Manchester': 'Digital sobre digital: banda base'
+                    },
+                    explicacion: 'La tarjeta Ethernet no modula: codifica en banda base. Es el caso que el libro dice que «no existe como tal».',
+                    pistas: ['Para cada caso, pregúntate: ¿qué es la información? ¿Y la portadora?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál es, según el libro, el caso de modulación más común?',
+                    opciones: {
+                        a: 'Analógica sobre analógica',
+                        b: 'Digital sobre analógica',
+                        c: 'Analógica sobre digital',
+                        d: 'Digital sobre digital'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es el de todos los accesos a Internet por medios analógicos, y el de cualquier enlace de datos por radio.',
+                    pistas: ['¿Qué caso incluye ASK, FSK y PSK?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Multibit y QAM',
+            tiempo: '16 min',
+            enunciado: '<p>Usa <strong>bits por símbolo = log<sub>2</sub>(estados)</strong> y <strong>bps = símbolos por segundo × bits por símbolo</strong>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la tabla.',
+                    esquina: 'Modulación',
+                    cabecera: ['Estados', 'Bits por símbolo'],
+                    filas: [
+                        { etiqueta: 'PSK binaria', celdas: [{ fijo: '2' }, { respuestas: ['1'] }] },
+                        { etiqueta: 'QAM-16', celdas: [{ fijo: '16' }, { respuestas: ['4'] }] },
+                        { etiqueta: 'QAM-64', celdas: [{ fijo: '64' }, { respuestas: ['6'] }] },
+                        { etiqueta: 'QAM-256', celdas: [{ fijo: '256' }, { respuestas: ['8'] }] },
+                        { etiqueta: 'QAM-1024', celdas: [{ fijo: '1 024' }, { respuestas: ['10'] }] }
+                    ],
+                    explicacion: 'Cada vez que se duplica el número de estados, se gana <strong>un solo bit</strong>. De QAM-16 a QAM-1024 hay 64 veces más puntos, pero solo 2,5 veces más bits.',
+                    pistas: ['¿A qué potencia hay que elevar 2 para obtener cada número de estados?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Una modulación combina <strong>4 amplitudes y 4 fases</strong>. ¿Cuántos bits lleva cada símbolo?',
+                    respuesta: 4,
+                    explicacion: '4 × 4 = 16 estados, y log<sub>2</sub>16 = <strong>4 bits</strong>. Es una QAM-16.',
+                    pistas: ['Primero cuenta los estados: cada amplitud se puede combinar con cada fase.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Quieres llevar <strong>5 bits por símbolo</strong>. ¿Cuántos puntos necesita la constelación?',
+                    respuesta: 32,
+                    unidad: 'puntos',
+                    explicacion: '2<sup>5</sup> = <strong>32</strong> puntos: una QAM-32.',
+                    pistas: ['Al revés que antes: 2 elevado al número de bits.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Un enlace usa QAM-64 a 5 millones de símbolos por segundo. ¿Cuántos Mbps transmite?',
+                    respuesta: 30,
+                    unidad: 'Mbps',
+                    explicacion: '5 × 6 = <strong>30 Mbps</strong>.',
+                    pistas: ['QAM-64 lleva 6 bits por símbolo.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Ese mismo enlace, por culpa del ruido, pasa a QAM-16 sin cambiar los símbolos por segundo. ¿Cuántos Mbps transmite ahora?',
+                    respuesta: 20,
+                    unidad: 'Mbps',
+                    explicacion: '5 × 4 = <strong>20 Mbps</strong>. Ha perdido un tercio de la velocidad, pero se ha vuelto mucho más robusto: es la <strong>tasa adaptativa</strong>.',
+                    pistas: ['Solo cambian los bits por símbolo.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Lee la constelación',
+            tiempo: '12 min',
+            enunciado: `<p>Una QAM-16 en rejilla de 4 × 4, como la del modulador. Cada eje usa estos valores para cada pareja de bits:</p>
+                        <div class="tabla-wrap"><table>
+                            <thead><tr><th>Pareja</th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead>
+                            <tbody><tr><td>Valor</td><td>−3</td><td>−1</td><td>+1</td><td>+3</td></tr></tbody>
+                        </table></div>
+                        <p>Los <strong>dos primeros bits</strong> dan la coordenada horizontal (I) y los <strong>dos últimos</strong>, la vertical (Q).</p>`,
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Sitúa cada símbolo.',
+                    esquina: 'Símbolo',
+                    cabecera: ['I', 'Q'],
+                    filas: [
+                        { etiqueta: '1011', celdas: [{ respuestas: ['3', '+3'] }, { respuestas: ['1', '+1'] }] },
+                        { etiqueta: '0010', celdas: [{ respuestas: ['-3', '−3'] }, { respuestas: ['3', '+3'] }] },
+                        { etiqueta: '0101', celdas: [{ respuestas: ['-1', '−1'] }, { respuestas: ['-1', '−1'] }] }
+                    ],
+                    explicacion: '1011 → I = «10» = +3, Q = «11» = +1. Puedes comprobarlo escribiendo los bits en el modulador de la teoría.',
+                    pistas: ['Separa cada símbolo en dos parejas.', 'Usa la tabla del enunciado para cada pareja.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> De estos cuatro puntos, ¿cuál tiene <strong>mayor amplitud</strong>?',
+                    opciones: {
+                        a: '(+1, +1)',
+                        b: '(−1, +3)',
+                        c: '(+1, −1)',
+                        d: '(+3, +3)'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'La amplitud es la <strong>distancia al centro</strong>. (+3, +3) es la esquina, el punto más alejado.',
+                    pistas: ['¿Qué representa la distancia al centro?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> (+1, +1) y (+3, +3) están en la misma diagonal. ¿En qué se diferencian?',
+                    opciones: {
+                        a: 'Solo en la fase',
+                        b: 'En la amplitud y en la fase',
+                        c: 'Solo en la amplitud: tienen el mismo ángulo',
+                        d: 'En nada'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Misma dirección desde el centro, mismo ángulo y por tanto <strong>misma fase</strong>. Solo cambia la distancia.',
+                    pistas: ['¿Tienen el mismo ángulo?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> ¿Cuántos símbolos QAM-16 hacen falta para enviar 3 bytes?',
+                    respuesta: 6,
+                    unidad: 'símbolos',
+                    explicacion: '3 bytes = 24 bits, y 24 / 4 = <strong>6 símbolos</strong>.',
+                    pistas: ['Pasa los bytes a bits.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Caso práctico — el enlace entre dos edificios',
+            tiempo: '26 min',
+            enunciado: `<p>Una empresa tiene dos naves separadas 300 metros por un río. No puede tender cable, así que
+                        instala un <strong>enlace de radio</strong> entre los tejados. El fabricante anuncia
+                        <strong>«hasta 300 Mbps»</strong>.</p>
+                        <p>Tras la instalación, el enlace va a 300 Mbps en días despejados, baja a unos
+                        <strong>180 Mbps</strong> cuando llueve mucho, y un día de tormenta llega a caer a
+                        <strong>60 Mbps</strong>. No se corta nunca.</p>`,
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Por qué este enlace tiene que usar modulación?',
+                    opciones: {
+                        a: 'Porque 300 metros es demasiado para Ethernet',
+                        b: 'Porque va por el aire, y una señal en banda base no se propaga por radio',
+                        c: 'Porque así va cifrado',
+                        d: 'No tiene por qué'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Todo enlace de radio es modulado: la antena necesita una portadora.',
+                    pistas: ['¿Qué medio usa?']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Supón que el equipo mantiene siempre los <strong>mismos símbolos por segundo</strong> y que en día despejado usa QAM-1024. ¿Cuántos bits por símbolo usa en cada situación?',
+                    esquina: 'Situación',
+                    cabecera: ['Velocidad', 'Bits por símbolo'],
+                    filas: [
+                        { etiqueta: 'Despejado', celdas: [{ fijo: '300 Mbps' }, { fijo: '10' }] },
+                        { etiqueta: 'Lluvia intensa', celdas: [{ fijo: '180 Mbps' }, { respuestas: ['6'] }] },
+                        { etiqueta: 'Tormenta', celdas: [{ fijo: '60 Mbps' }, { respuestas: ['2'] }] }
+                    ],
+                    explicacion: 'Con 10 bits se consiguen 300 Mbps, así que cada bit por símbolo vale 30 Mbps. 180 / 30 = 6 bits (QAM-64); 60 / 30 = 2 bits (4 estados).',
+                    pistas: ['¿Cuántos Mbps aporta cada bit por símbolo en día despejado?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántos millones de símbolos por segundo usa el enlace?',
+                    respuesta: 30,
+                    unidad: 'millones',
+                    explicacion: '300 Mbps / 10 bits por símbolo = <strong>30 millones</strong> de símbolos por segundo.',
+                    pistas: ['símbolos por segundo = bps ÷ bits por símbolo.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 7,
+                    pregunta: '<strong>d)</strong> El jefe de sistemas cree que el equipo está averiado porque «un día va a 300 y otro a 60». Redacta la explicación que le darías, usando lo aprendido en la semana.',
+                    modelo: `<p>El equipo no está averiado: está haciendo lo que debe, que es aplicar la <strong>tasa
+                             adaptativa</strong>.</p>
+                             <p>El enlace modula los bits sobre una portadora usando QAM. En día despejado la señal llega
+                             limpia y puede usar una constelación de <strong>1 024 puntos</strong>, con 10 bits por
+                             símbolo: 300 Mbps.</p>
+                             <p>La lluvia debilita y ensucia la señal. Con más ruido relativo, los puntos de una
+                             constelación tan grande, que están muy juntos, se confundirían y aparecerían errores. Para
+                             evitarlo, el equipo pasa a constelaciones con <strong>menos puntos</strong> y más separados:
+                             6 bits por símbolo con lluvia y 2 en la tormenta. Los símbolos por segundo son los mismos,
+                             pero cada uno lleva menos bits, y la velocidad baja.</p>
+                             <p>Prefiere ir más lento a perder datos. La prueba de que funciona es que <strong>el enlace
+                             nunca se corta</strong>.</p>
+                             <p>Si la empresa necesita garantizar una velocidad mínima con cualquier tiempo, hay que
+                             dimensionar pensando en el <strong>peor caso</strong>: el anuncio de «hasta 300 Mbps» es el
+                             mejor posible, no el habitual.</p>`,
+                    rubrica: [
+                        'Descarta la avería e identifica la tasa adaptativa',
+                        'Relaciona la lluvia con más ruido y peor señal',
+                        'Explica que las constelaciones grandes tienen los puntos más juntos',
+                        'Explica que baja a menos bits por símbolo con los mismos símbolos por segundo',
+                        'Da una recomendación: dimensionar para el peor caso'
+                    ],
+                    pistas: [
+                        '¿Qué le pasa a una constelación de muchos puntos cuando hay ruido?',
+                        '¿Qué hace el equipo para no cometer errores?',
+                        '¿Qué significa realmente «hasta 300 Mbps»?'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>e)</strong> Integración: relaciona este caso con el laboratorio del lunes. ¿En qué se parece bajar de QAM-1024 a QAM-16 a bajar la velocidad por la línea telefónica?',
+                    modelo: `<p>En los dos casos se renuncia a velocidad para que el receptor siga entendiendo los bits.
+                             El lunes, al subir la velocidad, dejaban de llegar los armónicos necesarios y aparecían
+                             errores; la solución era <strong>bajar la velocidad</strong> hasta una que el medio
+                             admitiera. Aquí el problema es el ruido y no el ancho de banda, pero la lógica es la misma:
+                             el medio impone un límite y se transmite <strong>lo máximo que todavía se lee bien</strong>.</p>`,
+                    rubrica: [
+                        'Identifica que en ambos casos se sacrifica velocidad por fiabilidad',
+                        'Distingue la causa: ancho de banda el lunes, ruido aquí',
+                        'Concluye que se busca la máxima velocidad que se lee bien'
+                    ],
+                    pistas: ['¿Qué hacía el receptor del lunes a 9 600 bps?']
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

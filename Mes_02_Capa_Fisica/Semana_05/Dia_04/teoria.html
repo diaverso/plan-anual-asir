@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Perturbaciones y capacidad: decibelios, Nyquist y Shannon</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 4 — Perturbaciones y capacidad</h1>
+        <p>Lo que ensucia la señal · decibelios · los límites de Nyquist y Shannon</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 60 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 14 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>La pregunta de ayer</strong>
+            Si más puntos en la constelación dan más bits por símbolo, <strong>¿por qué no usar un millón de
+            puntos?</strong> Hoy tienes la respuesta, y viene con una fórmula de 1948 que pone el techo a cualquier
+            canal de comunicación que exista.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            En la <a href="../../../Mes_01_Fundamentos/Semana_01/Dia_02/teoria.html#perturbaciones">Semana 1</a>
+            viste en una tabla que el medio atenúa, mete ruido y distorsiona. Hoy cada una de esas palabras se
+            convierte en algo que se <strong>mide</strong> y se <strong>calcula</strong>.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#problemas">Cuándo hay un error de transmisión</a></li>
+                <li><a href="#atenuacion">La atenuación</a></li>
+                <li><a href="#decibelios">Los decibelios</a></li>
+                <li><a href="#interferencias">Diafonía, interferencias y ruido impulsivo</a></li>
+                <li><a href="#snr">La relación señal/ruido</a></li>
+                <li><a href="#nyquist">Nyquist: la capacidad de un canal ideal</a></li>
+                <li><a href="#shannon">Shannon: la capacidad de un canal real</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="problemas">1. Cuándo hay un error de transmisión</h2>
+
+            <p>Al atravesar un medio, la señal que llega nunca es exactamente la que salió. El libro de la asignatura
+            lo plantea así:</p>
+
+            <div class="dato">
+                <strong>Error de transmisión</strong>
+                <p>Si la diferencia entre la señal enviada y la recibida es pequeña, el receptor la interpreta bien. Si
+                es <strong>demasiado grande</strong>, la interpreta mal: se produce un <strong>error de
+                transmisión</strong>.</p>
+            </div>
+
+            <p>No todas las señales ni todos los medios sufren igual. Por eso, cuando se puede, se elige con cuidado la
+            combinación de señal y medio que da mejores condiciones. Para elegir hay que conocer los problemas.</p>
+
+            <h2 id="atenuacion">2. La atenuación</h2>
+
+            <p>Es el problema más importante a largas distancias: la <strong>pérdida de amplitud</strong> de la señal a
+            medida que avanza. Igual que un sonido se oye más débil cuanto más lejos está.</p>
+
+            <ul>
+                <li>Su efecto es <strong>proporcional a la longitud</strong> del cable. A partir de cierta distancia, la
+                señal es tan débil que no se reconoce.</li>
+                <li><strong>No cambia la frecuencia ni la fase</strong>: solo reduce la amplitud.</li>
+                <li>En el cobre, el currículo de Cisco la atribuye a la <strong>impedancia</strong> del cable: cuanto
+                más recorre la señal, más se deteriora.</li>
+            </ul>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s05_d04_atenuacion.png"
+         width="1024" height="572" loading="lazy"
+         alt="Una misma senoidal dibujada a la salida del cable y a 50, 100 y 150 metros. Conserva la frecuencia y la posición de los picos, pero su amplitud disminuye en cada tramo, y a 150 metros ya no se reconoce.">
+    <figcaption>La atenuación solo quita amplitud, pero con la distancia suficiente la señal desaparece.</figcaption>
+</figure>
+<pre><code>  salida        a 50 m        a 100 m        a 150 m
+  ╭─╮ ╭─╮       ╭╮  ╭╮
+  │ │ │ │       ││  ││        ∩  ∩  ∩         ‿‿‿‿‿    ← ya no se reconoce
+ ─╯ ╰─╯ ╰─     ─╯╰──╯╰─     ──╯╰─╯╰──       ─────
+  misma frecuencia, misma fase · solo baja la amplitud</code></pre>
+
+            <h3>Cómo se combate</h3>
+
+            <p>Colocando en el camino dispositivos activos que devuelven a la señal la amplitud perdida:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Señal</th><th>Dispositivo</th><th>Qué hace</th></tr></thead>
+                <tbody>
+                    <tr><td>Digital</td><td><strong>Repetidor</strong></td><td>Restaura la señal original: la amplifica y <strong>elimina el ruido añadido</strong></td></tr>
+                    <tr><td>Analógica</td><td><strong>Amplificador</strong></td><td>La amplifica, <strong>ruido incluido</strong></td></tr>
+                    <tr><td>Inalámbrica</td><td><strong>Punto de acceso</strong></td><td>Hace de repetidor para las redes sin cables</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Es la misma diferencia entre regenerar y amplificar que viste en la
+            <a href="../../../Mes_01_Fundamentos/Semana_04/Dia_01/teoria.html#repetidor">Semana 4</a>.</p>
+
+            <h2 id="decibelios">3. Los decibelios</h2>
+
+            <p>La atenuación, y también el ruido, se miden en <strong>decibelios (dB)</strong>. Es una unidad que
+            expresa una <strong>relación</strong> entre dos potencias, en escala logarítmica:</p>
+
+            <div class="destacado">
+                <strong>valor en dB = 10 · log<sub>10</sub>(relación de potencias)</strong>
+                <p>Se usa porque las relaciones reales van de 2 a 10 000 000, y en decibelios caben en números
+                manejables: de 3 a 70.</p>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Relación de potencias</th><th>En dB</th><th>Cómo recordarlo</th></tr></thead>
+                <tbody>
+                    <tr><td>× 2</td><td>≈ 3 dB</td><td><strong>3 dB es el doble</strong></td></tr>
+                    <tr><td>× 10</td><td>10 dB</td><td>Cada 10 dB, un cero más</td></tr>
+                    <tr><td>× 100</td><td>20 dB</td><td></td></tr>
+                    <tr><td>× 1 000</td><td>30 dB</td><td></td></tr>
+                    <tr><td>× 10 000</td><td>40 dB</td><td>El ejemplo del libro</td></tr>
+                    <tr><td>× 1/2</td><td>≈ −3 dB</td><td>La mitad</td></tr>
+                    <tr><td>× 1/100</td><td>−20 dB</td><td>Queda el 1 %</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>La propiedad más útil: los dB se suman</strong>
+                Si una señal atraviesa tres tramos de cable que atenúan 6 dB cada uno, la atenuación total es
+                6 + 6 + 6 = <strong>18 dB</strong>. En escala lineal habría que multiplicar las relaciones. Por eso los
+                técnicos trabajan siempre en decibelios.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="interferencias">4. Diafonía, interferencias y ruido impulsivo</h2>
+
+            <p>La atenuación quita señal. Las perturbaciones de este apartado <strong>añaden</strong> algo que no
+            estaba.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Perturbación</th><th>Qué es</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Diafonía</strong> (<em>crosstalk</em>)</td><td>Interferencia entre dos hilos de cobre próximos: la señal de uno se «cuela» en el otro por inducción electromagnética</td><td>Oír de fondo otra conversación en el teléfono</td></tr>
+                    <tr><td><strong>EMI</strong> y <strong>RFI</strong></td><td>Interferencia electromagnética y de radiofrecuencia, de fuentes externas</td><td>Ondas de radio, luces fluorescentes, motores eléctricos</td></tr>
+                    <tr><td><strong>Ruido impulsivo</strong></td><td>Pulsos <strong>breves, irregulares y de gran amplitud</strong>, aleatorios y casi siempre externos</td><td>Una moto que pasa junto a una radio; una lavadora o un frigorífico que arrancan el motor</td></tr>
+                    <tr><td><strong>Ruido térmico</strong></td><td>El que producen los propios componentes por el simple hecho de estar a una temperatura. Está siempre y no se puede eliminar</td><td>El «fondo» de cualquier canal</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Cómo se combaten</h3>
+
+            <ul>
+                <li><strong>Trenzando los pares</strong>, lo que el currículo de Cisco llama <strong>anulación</strong>:
+                en dos hilos juntos los campos eléctricos son opuestos y se contrarrestan. Variar el número de vueltas
+                de cada par reduce además la diafonía entre pares. Lo viste en la
+                <a href="../../../Mes_01_Fundamentos/Semana_02/Dia_02/teoria.html#partrenzado">Semana 2</a>.</li>
+                <li><strong>Apantallando</strong> el cable, con una malla o una lámina metálica.</li>
+                <li>Usando <strong>fibra óptica</strong>, que según Cisco es <strong>inmune a EMI y RFI</strong>: la luz
+                no se ve afectada por los campos electromagnéticos.</li>
+            </ul>
+
+            <h2 id="snr">5. La relación señal/ruido</h2>
+
+            <p>Aquí está la idea clave del día. El ruido <strong>no afecta igual a todas las señales</strong>. El libro
+            lo explica con un ejemplo muy claro:</p>
+
+            <div class="dato">
+                <strong>Un mismo ruido, dos señales</strong>
+                <p>Unos picos de ruido de <strong>1 V</strong> estropean mucho una señal de 1 V, pero apenas afectan a una
+                de <strong>100 V</strong>. Igual que un teléfono que suena en un concierto pasa desapercibido, y en una
+                sala en silencio no.</p>
+            </div>
+
+<pre><code>  SEÑAL DÉBIL                        SEÑAL FUERTE
+                                      ┌────────┐      ┌────────
+  ┌~~~~┐   ┌~~~~┐   ← el ruido         │        │      │
+~~┘    └~~~┘    └~~    casi la tapa   │        │      │   ← el mismo ruido
+                                      │        │      │     apenas se nota
+                                   ───┘        └──────┘
+  S/N baja: errores                  S/N alta: se lee sin problemas</code></pre>
+
+            <p>Lo que importa no es el ruido, sino <strong>cuánto más fuerte es la señal que el ruido</strong>. Eso es la
+            <strong>relación señal/ruido</strong>, que se escribe <strong>S/N</strong>:</p>
+
+            <div class="destacado">
+                <strong>S/N = potencia de la señal ÷ potencia del ruido</strong>
+                <p>Y en decibelios: <strong>(S/N)<sub>dB</sub> = 10 · log<sub>10</sub>(S/N)</strong></p>
+                <p>Una S/N de <strong>40 dB</strong> significa que la señal es <strong>10 000 veces</strong> más potente
+                que el ruido.</p>
+            </div>
+
+            <p>Cuanto <strong>mayor</strong> es la S/N, mejor. Con una S/N baja, el ruido mueve la señal lo suficiente
+            para que el receptor confunda un valor con otro. Y ahora se entiende la tarea de ayer:</p>
+
+            <div class="aviso">
+                <strong>Por qué no un millón de puntos</strong>
+                Con más puntos en la constelación, los puntos quedan más juntos. Para distinguirlos, el ruido tiene que
+                ser mucho más pequeño que la distancia entre ellos: hace falta una <strong>S/N enorme</strong>. Con la S/N
+                de un canal real, a partir de cierto número de puntos el receptor ya no los distingue. <strong>El ruido
+                pone el límite.</strong>
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: potencias y amplitudes</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>El libro ilustra la S/N con <strong>amplitudes</strong> para simplificar: una señal de 3 V con un ruido
+                    de 2 V da una relación de 1,5; una de 20 V, una de 10. La conclusión es correcta: la segunda soporta
+                    mucho mejor el ruido.</p>
+                    <p>En sentido estricto, la S/N es una relación de <strong>potencias</strong>, y la potencia crece con el
+                    cuadrado de la amplitud. Para los cálculos de hoy basta con recordar la fórmula de arriba y trabajar
+                    siempre con potencias.</p>
+                </div>
+            </details>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="nyquist">6. Nyquist: la capacidad de un canal ideal</h2>
+
+            <p>En 1924, Harry Nyquist calculó la velocidad máxima de un canal <strong>ideal</strong>: sin ruido ni
+            distorsión, pero con un ancho de banda limitado.</p>
+
+            <div class="destacado">
+                <strong>Teorema de Nyquist</strong>
+                <p style="font-size:1.2em">C = 2 · W · log<sub>2</sub>(M)</p>
+                <p><strong>C</strong>: capacidad máxima, en bps · <strong>W</strong>: ancho de banda del canal, en Hz ·
+                <strong>M</strong>: número de niveles de la señal</p>
+            </div>
+
+            <p>El ejemplo del libro: un canal sin ruido de <strong>3 kHz</strong> con una señal
+            <strong>binaria</strong> (M = 2) no puede superar 2 × 3 000 × 1 = <strong>6 000 bps</strong>.</p>
+
+            <p>La fórmula junta los dos primeros días de la semana:</p>
+            <ul>
+                <li>El factor <strong>2 · W</strong> son los símbolos por segundo que caben en el canal: el lunes viste
+                que el ancho de banda limita los cambios.</li>
+                <li>El factor <strong>log<sub>2</sub>(M)</strong> son los bits de cada símbolo: el martes viste que más
+                niveles llevan más bits.</li>
+            </ul>
+
+            <div class="dato">
+                <strong>El mismo Nyquist de la Semana 1</strong>
+                <p>En la <a href="../../../Mes_01_Fundamentos/Semana_01/Dia_03/teoria.html#digitalizacion">Semana 1</a>
+                apareció como teorema del <strong>muestreo</strong>: para reconstruir una señal hay que tomar al menos
+                dos muestras por cada ciclo de su frecuencia máxima. Aquí es la misma idea vista al revés: en un canal de
+                ancho W caben, como mucho, <strong>2W símbolos por segundo</strong>.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Según Nyquist, bastaría con subir M</strong>
+                Con la fórmula de Nyquist, más niveles dan siempre más capacidad, sin límite. Eso solo es verdad en un
+                canal <strong>sin ruido</strong>, que no existe. El libro lo dice: el interés de Nyquist es que fija una
+                <strong>cota superior</strong> para comparar, pero los canales reales nunca la alcanzan.
+            </div>
+
+            <h2 id="shannon">7. Shannon: la capacidad de un canal real</h2>
+
+            <p>En 1948, Claude Shannon llevó el trabajo de Nyquist al caso real: un canal con <strong>ruido
+            aleatorio</strong>.</p>
+
+            <div class="destacado">
+                <strong>Fórmula de Shannon</strong>
+                <p style="font-size:1.2em">C = W · log<sub>2</sub>(1 + S/N)</p>
+                <p><strong>S/N</strong> va en valor <strong>lineal</strong>, no en decibelios. Si te la dan en dB, conviértela
+                primero.</p>
+            </div>
+
+            <p>El ejemplo del libro: un canal de <strong>4 000 Hz</strong> con una S/N de <strong>3 dB</strong>, que en
+            lineal es 2, nunca puede transmitir mucho más de:</p>
+
+<pre><code>C = 4 000 · log₂(1 + 2) = 4 000 · log₂(3) ≈ 4 000 · 1,585 ≈ 6 340 bps ≈ 6,3 kbps</code></pre>
+
+            <p>Y el libro añade la frase importante: <strong>sin importar cuántos niveles de señal se usen</strong>.</p>
+
+            <div class="dato">
+                <strong>La respuesta definitiva a la tarea de ayer</strong>
+                <p>Shannon no tiene M: el número de niveles <strong>no aparece</strong>. Por muchos puntos que pongas en la
+                constelación, la capacidad no supera ese valor. Lo que la limita es el <strong>ancho de banda</strong> y la
+                <strong>relación señal/ruido</strong>.</p>
+            </div>
+
+            <h3>Los dos límites a la vez</h3>
+
+            <p>En un caso real se calculan los dos y <strong>manda el menor</strong>:</p>
+
+<pre><code>Canal de 3 000 Hz, señal de 16 niveles, S/N de 20 dB (lineal 100)
+
+  Nyquist:  2 · 3 000 · log₂(16)    = 24 000 bps   ← lo que permiten los niveles
+  Shannon:  3 000 · log₂(1 + 100)   ≈ 19 975 bps   ← lo que permite el ruido
+                                      ───────────
+  Capacidad real, como mucho:         ≈ 20 000 bps   manda Shannon</code></pre>
+
+            <p>Pruébalo con el canal de abajo. Baja la S/N y observa a la vez dos cosas: cuándo aparecen los errores y
+            cómo cae la capacidad de Shannon.</p>
+
+            <div class="senal" data-senal="ruido"></div>
+
+            <div class="aviso">
+                <strong>Shannon es un techo, no una promesa</strong>
+                Según el libro, la capacidad de Shannon es <strong>inalcanzable</strong>: supone condiciones que no se dan y
+                <strong>no tiene en cuenta el ruido impulsivo, la atenuación ni la distorsión</strong>. Sirve para saber
+                hasta dónde se puede llegar como máximo, no cuánto se va a conseguir.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li><strong>Atenuación</strong>: pérdida de amplitud proporcional a la distancia. Se combate con
+                    repetidores y amplificadores.</li>
+                    <li><strong>Diafonía, EMI, RFI y ruido impulsivo</strong> añaden señal que no estaba. Se combaten
+                    trenzando, apantallando o usando fibra.</li>
+                    <li><strong>dB = 10 · log<sub>10</sub>(relación)</strong>. 3 dB es el doble; cada 10 dB, un cero más.
+                    Los dB se suman.</li>
+                    <li>Lo que importa es la <strong>S/N</strong>: cuánto más fuerte es la señal que el ruido.</li>
+                    <li><strong>Nyquist</strong>, canal ideal: C = 2 · W · log<sub>2</sub>M.</li>
+                    <li><strong>Shannon</strong>, canal con ruido: C = W · log<sub>2</sub>(1 + S/N), con S/N lineal. No
+                    depende de los niveles.</li>
+                    <li>Se calculan los dos y <strong>manda el menor</strong>. Shannon es un techo inalcanzable.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«La atenuación cambia la frecuencia de la señal»</td><td>Solo reduce la <strong>amplitud</strong></td></tr>
+                    <tr><td>«Un amplificador limpia la señal»</td><td>La amplifica <strong>con su ruido</strong>. El que limpia es el repetidor, y solo en digital</td></tr>
+                    <tr><td>«En Shannon se usa la S/N en dB»</td><td>Se usa en valor <strong>lineal</strong>: 20 dB son 100</td></tr>
+                    <tr><td>«6 dB es el doble que 3 dB, así que la potencia se duplica dos veces… y eso es ×6»</td><td>Es <strong>×4</strong>: los dB se suman, las relaciones se multiplican</td></tr>
+                    <tr><td>«Con más niveles siempre se gana capacidad»</td><td>Solo según Nyquist. Con ruido, Shannon pone un techo que los niveles no superan</td></tr>
+                    <tr><td>«Un buen equipo alcanza la capacidad de Shannon»</td><td>Es un límite teórico <strong>inalcanzable</strong></td></tr>
+                    <tr><td>«La fibra también sufre EMI»</td><td>Es <strong>inmune</strong> a EMI y RFI</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos · Ten a mano una calculadora</p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Con el canal con ruido buscarás <strong>dónde empiezan los errores</strong>, descubrirás un tipo de ruido
+            que no se arregla subiendo la potencia, y harás una cuenta de Shannon que devuelve un número muy
+            conocido.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 4</strong></a> (62 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 5</strong>
+            <p><strong>Síntesis y test semanal</strong> de los cuatro días. Repasa hoy lo que peor te haya salido en los
+            quizzes de la semana.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/teoria.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Una señal de 50 mW atraviesa un cable que la atenúa <strong>20 dB</strong>. ¿Con cuánta potencia llega? ¿Y si después atraviesa otro tramo que la atenúa 10 dB más?',
+                modelo: '20 dB es una relación de 100, así que llega <strong>la centésima parte</strong>: 50 / 100 = <strong>0,5 mW</strong>. Con otro tramo de 10 dB, la atenuación total es 20 + 10 = <strong>30 dB</strong>, una relación de 1 000: llega 50 / 1 000 = <strong>0,05 mW</strong>. Los dB se suman; las relaciones se multiplican.',
+                puntos: [
+                    'Convierte 20 dB en una relación de 100',
+                    'Calcula 0,5 mW',
+                    'Suma los dB de los dos tramos: 30 dB',
+                    'Calcula 0,05 mW'
+                ]
+            },
+            {
+                pregunta: 'Dos enlaces sufren exactamente el mismo ruido. En uno la señal llega con 100 veces la potencia del ruido y en el otro con 2 veces. ¿Cuál es la S/N de cada uno en dB? ¿Cuál tendrá más errores y por qué?',
+                modelo: 'El primero tiene S/N = 100, es decir, <strong>20 dB</strong>. El segundo, S/N = 2, unos <strong>3 dB</strong>. Tendrá más errores el <strong>segundo</strong>: con la señal solo el doble de fuerte que el ruido, este la desplaza lo suficiente como para que el receptor confunda un valor con otro. En el primero, el mismo ruido es insignificante frente a la señal. Lo que importa no es el ruido en sí, sino la relación.',
+                puntos: [
+                    'Calcula 20 dB para la relación de 100',
+                    'Calcula unos 3 dB para la relación de 2',
+                    'Identifica el segundo como el de más errores',
+                    'Explica que importa la relación y no el ruido absoluto'
+                ]
+            },
+            {
+                pregunta: 'Un canal de 1 000 Hz tiene una S/N de 1 000 (30 dB). Calcula su capacidad con Shannon. ¿Serviría de algo usar una señal de 1 024 niveles?',
+                modelo: 'C = 1 000 · log<sub>2</sub>(1 + 1 000) ≈ 1 000 · 9,97 ≈ <strong>9 970 bps</strong>. Con Nyquist, 1 024 niveles darían 2 · 1 000 · 10 = 20 000 bps, pero el ruido limita a unos 10 000. Usar 1 024 niveles <strong>no serviría</strong>: los niveles estarían tan juntos que el ruido los confundiría. Manda Shannon, y con este ruido bastaría con unos 32 niveles, que ya dan 2 · 1 000 · 5 = 10 000 bps.',
+                puntos: [
+                    'Aplica Shannon con la S/N lineal',
+                    'Obtiene unos 10 000 bps',
+                    'Compara con el resultado de Nyquist',
+                    'Concluye que manda Shannon y los niveles extra no ayudan'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué es la atenuación?', dorso: 'La <strong>pérdida de amplitud</strong> con la distancia. No cambia frecuencia ni fase.' },
+            { frente: 'Repetidor frente a amplificador', dorso: 'El <strong>repetidor</strong> restaura la señal digital y elimina el ruido. El <strong>amplificador</strong> amplifica también el ruido.' },
+            { frente: 'Fórmula de los decibelios', dorso: '<strong>dB = 10 · log<sub>10</sub>(relación de potencias)</strong>.' },
+            { frente: '3 dB, 10 dB y 20 dB', dorso: '<strong>×2</strong>, <strong>×10</strong> y <strong>×100</strong>.' },
+            { frente: '¿Cómo se combinan varias atenuaciones en dB?', dorso: 'Se <strong>suman</strong>. Tres tramos de 6 dB son 18 dB.' },
+            { frente: '¿Qué es la diafonía?', dorso: 'Interferencia entre <strong>dos hilos próximos</strong>: la señal de uno se cuela en el otro.' },
+            { frente: '¿Qué es el ruido impulsivo?', dorso: 'Pulsos <strong>breves, irregulares y fuertes</strong>, normalmente externos: motores, aparatos que arrancan.' },
+            { frente: '¿Qué medio es inmune a EMI y RFI?', dorso: 'La <strong>fibra óptica</strong>.' },
+            { frente: '¿Qué es la S/N?', dorso: 'Potencia de la <strong>señal</strong> dividida entre la del <strong>ruido</strong>. Cuanto mayor, mejor.' },
+            { frente: 'Fórmula de Nyquist', dorso: '<strong>C = 2 · W · log<sub>2</sub>M</strong>. Canal ideal, sin ruido.' },
+            { frente: 'Fórmula de Shannon', dorso: '<strong>C = W · log<sub>2</sub>(1 + S/N)</strong>, con S/N lineal. Canal con ruido.' },
+            { frente: 'Si Nyquist y Shannon dan valores distintos, ¿cuál vale?', dorso: 'El <strong>menor</strong>. Y aun así es un techo teórico.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 4: Perturbaciones y capacidad',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Atenuación',
+                repaso: '#atenuacion',
+                text: '¿Qué le hace la atenuación a una señal?',
+                options: {
+                    a: 'Le cambia la frecuencia',
+                    b: 'Le reduce la amplitud, sin cambiar la frecuencia ni la fase',
+                    c: 'Le añade ruido',
+                    d: 'Le cambia la fase'
+                },
+                answer: 'b',
+                feedback: 'Solo baja la amplitud, y tanto más cuanto más largo es el recorrido.'
+            },
+            {
+                topic: 'Atenuación',
+                repaso: '#atenuacion',
+                text: 'En un enlace analógico largo se colocan amplificadores cada cierta distancia. ¿Qué problema tiene?',
+                options: {
+                    a: 'Ninguno',
+                    b: 'Que cambian la frecuencia',
+                    c: 'Que solo funcionan con fibra',
+                    d: 'Que amplifican también el ruido acumulado, que va creciendo tramo a tramo'
+                },
+                answer: 'd',
+                feedback: 'Un amplificador no distingue señal de ruido. En digital, el repetidor sí puede restaurar la señal limpia.'
+            },
+            {
+                topic: 'Decibelios',
+                repaso: '#decibelios',
+                text: 'Una relación de potencias de 1 000, ¿cuántos dB son?',
+                options: { a: '30 dB', b: '3 dB', c: '10 dB', d: '1 000 dB' },
+                answer: 'a',
+                feedback: '10 · log<sub>10</sub>(1 000) = 10 · 3 = <strong>30 dB</strong>. Cada 10 dB, un cero más.'
+            },
+            {
+                topic: 'Decibelios',
+                repaso: '#decibelios',
+                text: 'Una señal atraviesa dos tramos que la atenúan 3 dB cada uno. ¿Qué fracción de su potencia llega?',
+                options: { a: 'La mitad', b: 'Un sexto', c: 'Una cuarta parte', d: 'Un tercio' },
+                answer: 'c',
+                feedback: '3 + 3 = 6 dB. Cada 3 dB es la mitad, así que la mitad de la mitad: <strong>una cuarta parte</strong>.'
+            },
+            {
+                topic: 'Interferencias',
+                repaso: '#interferencias',
+                text: 'Al hablar por teléfono se oye de fondo otra conversación. ¿Qué fenómeno es?',
+                options: { a: 'Atenuación', b: 'Diafonía', c: 'Ruido térmico', d: 'Distorsión' },
+                answer: 'b',
+                feedback: 'Es el ejemplo del libro: la señal de un par se cuela en otro próximo. <strong>Diafonía</strong>.'
+            },
+            {
+                topic: 'Interferencias',
+                repaso: '#interferencias',
+                text: 'Los errores de una red aparecen de forma irregular y coinciden con el arranque de una máquina del taller. ¿Qué tipo de ruido sospechas?',
+                options: { a: 'Ruido térmico', b: 'Diafonía', c: 'Atenuación', d: 'Ruido impulsivo' },
+                answer: 'd',
+                feedback: 'Pulsos breves, fuertes, aleatorios y de origen externo, provocados por conmutaciones de motores: <strong>ruido impulsivo</strong>.'
+            },
+            {
+                topic: 'Interferencias',
+                repaso: '#interferencias',
+                text: 'Hay que tender un enlace junto a unos grandes motores eléctricos. ¿Qué medio evita por completo sus interferencias?',
+                options: { a: 'Fibra óptica', b: 'Par trenzado sin apantallar', c: 'Cable coaxial', d: 'Wi-Fi' },
+                answer: 'a',
+                feedback: 'La fibra es <strong>inmune a EMI y RFI</strong>: transporta luz, no corriente.'
+            },
+            {
+                topic: 'Señal/ruido',
+                repaso: '#snr',
+                text: 'Un mismo ruido de 1 V afecta a dos señales, de 1 V y de 100 V. ¿Cuál se ve más afectada?',
+                options: { a: 'La de 100 V', b: 'Las dos igual', c: 'La de 1 V', d: 'Ninguna' },
+                answer: 'c',
+                feedback: 'Lo que cuenta es la <strong>relación</strong>. Con la señal igual de fuerte que el ruido, el receptor no puede distinguirlos.'
+            },
+            {
+                topic: 'Señal/ruido',
+                repaso: '#snr',
+                text: 'Un enlace tiene una S/N de 40 dB. ¿Qué significa?',
+                options: {
+                    a: 'Que el ruido es 40 veces mayor que la señal',
+                    b: 'Que la señal es 40 veces más potente que el ruido',
+                    c: 'Que hay 40 errores por segundo',
+                    d: 'Que la señal es 10 000 veces más potente que el ruido'
+                },
+                answer: 'd',
+                feedback: '40 dB = 10<sup>4</sup> = <strong>10 000</strong>. Es el ejemplo del libro.'
+            },
+            {
+                topic: 'Nyquist',
+                repaso: '#nyquist',
+                text: 'Un canal ideal de 3 kHz transmite una señal de 4 niveles. ¿Cuál es su capacidad máxima según Nyquist?',
+                options: { a: '12 000 bps', b: '6 000 bps', c: '24 000 bps', d: '3 000 bps' },
+                answer: 'a',
+                feedback: 'C = 2 · 3 000 · log<sub>2</sub>4 = 2 · 3 000 · 2 = <strong>12 000 bps</strong>.'
+            },
+            {
+                topic: 'Nyquist',
+                repaso: '#nyquist',
+                text: '¿Qué supone el teorema de Nyquist sobre el canal?',
+                options: {
+                    a: 'Que tiene ruido aleatorio',
+                    b: 'Que es de fibra',
+                    c: 'Que es ideal: sin ruido ni distorsiones',
+                    d: 'Que usa modulación'
+                },
+                answer: 'c',
+                feedback: 'Por eso es una <strong>cota superior</strong>: ningún canal real la alcanza.'
+            },
+            {
+                topic: 'Shannon',
+                repaso: '#shannon',
+                text: 'Para aplicar Shannon a un canal con S/N de 20 dB, ¿qué valor pones en la fórmula?',
+                options: { a: '20', b: '100', c: '2', d: '200' },
+                answer: 'b',
+                feedback: 'Shannon usa la S/N <strong>lineal</strong>: 20 dB son 100.'
+            },
+            {
+                topic: 'Shannon',
+                repaso: '#shannon',
+                text: 'Un canal da 24 000 bps según Nyquist y 20 000 bps según Shannon. ¿Cuál es su capacidad máxima real?',
+                options: {
+                    a: 'Unos 20 000 bps, y en la práctica algo menos',
+                    b: '24 000 bps',
+                    c: '44 000 bps',
+                    d: '4 000 bps'
+                },
+                answer: 'a',
+                feedback: 'Manda el <strong>menor</strong>. Y Shannon es un techo inalcanzable, así que la velocidad real será algo inferior.'
+            },
+            {
+                topic: 'Recuperación · Día 3',
+                repaso: '../Dia_03/teoria.html#wifi',
+                text: '<em>Repaso.</em> Con lo de hoy, ¿por qué la tasa adaptativa del Wi-Fi baja de modulación cuando te alejas del punto de acceso?',
+                options: {
+                    a: 'Porque cambia el ancho de banda del canal',
+                    b: 'Porque la distancia cambia la frecuencia',
+                    c: 'Porque la S/N empeora, y con menos S/N los puntos de una constelación grande se confunden',
+                    d: 'Para ahorrar batería'
+                },
+                answer: 'c',
+                feedback: 'Al alejarte, la señal se atenúa y la S/N baja. Shannon rebaja la capacidad, y el equipo elige una constelación que el ruido no pueda confundir.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/senales.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

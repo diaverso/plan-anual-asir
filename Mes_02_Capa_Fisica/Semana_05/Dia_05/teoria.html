@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Síntesis y test semanal: conceptos de transmisión</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 5 — Síntesis y evaluación</h1>
+        <p>Conceptos de transmisión · test de la semana</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Síntesis:</strong> 32 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 22 min</div>
+        <div class="info-item"><strong>Test semanal:</strong> 42 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 03 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Viernes de evaluación</strong>
+            Primero la síntesis y las flashcards: son los cincuenta minutos que más se notan en el test. Después el
+            <strong>test semanal</strong>, con desglose por día, y la <strong>hoja de recuperación</strong>.
+            <br><br>
+            Ten una <strong>calculadora</strong> a mano: el test tiene cuentas de decibelios, Nyquist y Shannon.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#idea">La idea de la semana</a></li>
+                <li><a href="#d1">Día 1 — Anatomía de una señal</a></li>
+                <li><a href="#d2">Día 2 — Codificación</a></li>
+                <li><a href="#d3">Día 3 — Modulación</a></li>
+                <li><a href="#d4">Día 4 — Perturbaciones y capacidad</a></li>
+                <li><a href="#formulas">Las fórmulas de la semana</a></li>
+                <li><a href="#errores">Los errores más frecuentes</a></li>
+                <li><a href="#repaso">Flashcards de toda la semana</a></li>
+                <li><a href="#quiz-inicio">Test semanal</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="idea">1. La idea de la semana</h2>
+
+            <p>La semana empezó con una pregunta: <strong>¿por qué un medio tiene una velocidad máxima?</strong> Cada
+            día añadió una pieza:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Día</th><th>La pieza</th><th>La consecuencia</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Lunes</strong></td><td>Una señal digital es una <strong>suma de armónicos</strong>, y el medio solo deja pasar algunos</td><td>Más velocidad → armónicos más altos → llega un punto en que no caben</td></tr>
+                    <tr><td><strong>Martes</strong></td><td>Cada cambio de la señal puede llevar <strong>más de un bit</strong></td><td>Se pueden enviar más bps sin más cambios por segundo</td></tr>
+                    <tr><td><strong>Miércoles</strong></td><td>Una <strong>portadora</strong> lleva la señal a las frecuencias que el medio admite</td><td>Se pueden usar la línea telefónica y el aire, con QAM</td></tr>
+                    <tr><td><strong>Jueves</strong></td><td>El <strong>ruido</strong> impide distinguir niveles demasiado juntos</td><td>Shannon pone un techo que ningún número de niveles supera</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>En una frase</strong>
+                <p>La velocidad máxima de un medio la ponen su <strong>ancho de banda</strong> y su <strong>relación
+                señal/ruido</strong>. Codificar y modular sirven para acercarse a ese límite, nunca para superarlo.</p>
+            </div>
+
+            <h2 id="d1">2. Día 1 — Anatomía de una señal</h2>
+
+            <ul>
+                <li>Una senoidal se describe por <strong>amplitud</strong> (V), <strong>frecuencia</strong> (Hz) y
+                <strong>fase</strong> (°). <strong>f = 1/T</strong>.</li>
+                <li><strong>Fourier</strong>: toda señal periódica es una fundamental más armónicos múltiplos de ella. La
+                onda cuadrada solo tiene los <strong>impares</strong>, con amplitud 1/n.</li>
+                <li><strong>Dos anchos de banda</strong>: en <strong>Hz</strong>, un rango de frecuencias; en
+                <strong>bps</strong>, una cantidad de datos. El primero limita al segundo.</li>
+                <li>Repitiendo un byte a b bps, el primer armónico está en <strong>b/8</strong>. Armónicos que llegan =
+                ancho de banda ÷ primer armónico, redondeando hacia abajo.</li>
+            </ul>
+
+            <p><a href="../Dia_01/teoria.html">→ Volver a la teoría del Día 1</a></p>
+
+            <h2 id="d2">3. Día 2 — Codificación</h2>
+
+            <ul>
+                <li><strong>Banda base</strong>: la señal digital va directamente al medio. Típica de las LAN.</li>
+                <li><strong>NRZ</strong>: un nivel para cada bit. Pierde el <strong>sincronismo</strong> con ristras
+                largas de bits iguales.</li>
+                <li><strong>Manchester</strong>: 0 de alto a bajo, 1 de bajo a alto, en mitad del bit. Lleva el reloj
+                dentro, a costa del doble de ancho de banda.</li>
+                <li><strong>Baudios</strong> cuentan cambios; <strong>bps</strong>, bits. bps = baudios ×
+                log<sub>2</sub>(niveles).</li>
+                <li><strong>1000BASE-T</strong>: 4 pares × 125 millones de baudios × 2 bits = 1 Gbps.</li>
+            </ul>
+
+            <p><a href="../Dia_02/teoria.html">→ Volver a la teoría del Día 2</a></p>
+
+            <h2 id="d3">4. Día 3 — Modulación</h2>
+
+            <ul>
+                <li>Se modula cuando el medio <strong>no admite la banda base</strong>. La <strong>moduladora</strong>
+                lleva la información; la <strong>portadora</strong>, las características del medio. El
+                <strong>módem</strong> hace los dos sentidos.</li>
+                <li><strong>ASK</strong> cambia la amplitud; <strong>FSK</strong>, la frecuencia; <strong>PSK</strong>,
+                la fase.</li>
+                <li>El caso más común: <strong>información digital sobre portadora analógica</strong>.</li>
+                <li><strong>QAM</strong> cambia amplitud y fase. Con N puntos, log<sub>2</sub>N bits por símbolo. En la
+                <strong>constelación</strong>, distancia = amplitud y ángulo = fase.</li>
+                <li><strong>Tasa adaptativa</strong>: con peor señal, menos puntos y menos velocidad.</li>
+            </ul>
+
+            <p><a href="../Dia_03/teoria.html">→ Volver a la teoría del Día 3</a></p>
+
+            <h2 id="d4">5. Día 4 — Perturbaciones y capacidad</h2>
+
+            <ul>
+                <li><strong>Atenuación</strong>: pérdida de amplitud con la distancia. <strong>Diafonía</strong>, EMI,
+                RFI y <strong>ruido impulsivo</strong> añaden señal que no estaba.</li>
+                <li><strong>dB = 10 · log<sub>10</sub>(relación)</strong>: 3 dB es el doble; cada 10 dB, un cero. Los dB
+                se suman.</li>
+                <li><strong>S/N</strong>: lo que importa es cuánto más fuerte es la señal que el ruido.</li>
+                <li><strong>Nyquist</strong> para un canal ideal y <strong>Shannon</strong> para uno con ruido. Manda el
+                menor.</li>
+            </ul>
+
+            <p><a href="../Dia_04/teoria.html">→ Volver a la teoría del Día 4</a></p>
+
+            <h2 id="formulas">6. Las fórmulas de la semana</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Fórmula</th><th>Para qué</th><th>Ojo con</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>f = 1 / T</strong></td><td>Pasar de frecuencia a periodo</td><td>Los prefijos: kHz ↔ ms, GHz ↔ ns</td></tr>
+                    <tr><td><strong>f<sub>1</sub> = b / n</strong></td><td>Primer armónico al repetir n bits a b bps</td><td>Con el byte del libro, n = 8</td></tr>
+                    <tr><td><strong>armónicos = W / f<sub>1</sub></strong></td><td>Cuántos armónicos pasan por un medio</td><td>Redondear <strong>hacia abajo</strong></td></tr>
+                    <tr><td><strong>bits/símbolo = log<sub>2</sub>(M)</strong></td><td>Niveles o puntos de una constelación</td><td>QAM-16 lleva 4 bits, no 16</td></tr>
+                    <tr><td><strong>bps = baudios × log<sub>2</sub>(M)</strong></td><td>Pasar de baudios a bps</td><td>Con 2 niveles son iguales</td></tr>
+                    <tr><td><strong>dB = 10 · log<sub>10</sub>(relación)</strong></td><td>Atenuación y S/N</td><td>Los dB se suman</td></tr>
+                    <tr><td><strong>C = 2 · W · log<sub>2</sub>(M)</strong></td><td>Nyquist: canal ideal</td><td>El <strong>factor 2</strong></td></tr>
+                    <tr><td><strong>C = W · log<sub>2</sub>(1 + S/N)</strong></td><td>Shannon: canal con ruido</td><td>La S/N en <strong>lineal</strong>, nunca en dB</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="errores">7. Los errores más frecuentes</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Si mi cable es de 100 MHz, transmite 100 Mbps»</td><td>Hz y bps no se convierten con una regla fija: depende de la codificación</td></tr>
+                    <tr><td>«La onda cuadrada tiene todos los armónicos»</td><td>Solo los <strong>impares</strong></td></tr>
+                    <tr><td>«Baudios y bps son lo mismo»</td><td>Solo con <strong>dos niveles</strong></td></tr>
+                    <tr><td>«Manchester es más rápido que NRZ»</td><td>Necesita <strong>más ancho de banda</strong>; lo que gana es sincronismo</td></tr>
+                    <tr><td>«En PSK cambia la frecuencia»</td><td>Cambia la <strong>fase</strong></td></tr>
+                    <tr><td>«QAM-64 lleva 64 bits»</td><td>Lleva <strong>6</strong></td></tr>
+                    <tr><td>«En Shannon, 20 dB se pone como 20»</td><td>Se pone como <strong>100</strong></td></tr>
+                    <tr><td>«Con más niveles siempre hay más capacidad»</td><td>Solo según Nyquist. El ruido pone un techo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Flashcards de toda la semana</h2>
+
+            <p>24 tarjetas con lo esencial de los cuatro días. Hazlas <strong>antes</strong> del test.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Test semanal</h2>
+            <p><strong>24 preguntas · 42 minutos</strong> · Cubre los cuatro días de la semana</p>
+            <p style="margin-top:6px; font-size:0.92em">Al corregir verás el <strong>desglose por día</strong>. Después,
+            la <a href="ejercicios.html">hoja de recuperación</a>.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Test</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Desglose por día</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: la hoja de recuperación</strong>
+            <p>Un bloque por día y uno de integración. Empieza por el día con <strong>peor resultado</strong> en el
+            desglose.</p>
+            <p><a href="ejercicios.html"><strong>→ Ir a la hoja de recuperación</strong></a> (55 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>La semana que viene</strong>
+            <p><strong>Semana 6 — Medios cableados</strong>: par trenzado, coaxial y fibra óptica. Todo lo de esta
+            semana se aplica allí de forma directa: el ancho de banda de cada cable, su atenuación y por qué la fibra
+            no sufre interferencias.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Recuperación</a></span>
+        <span><a href="../Dia_04/teoria.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        flashcards: [
+            { frente: 'Tres parámetros de una senoidal', dorso: '<strong>Amplitud</strong>, <strong>frecuencia</strong> y <strong>fase</strong>.' },
+            { frente: '50 Hz, ¿qué periodo?', dorso: '<strong>20 ms</strong>. f = 1/T.' },
+            { frente: 'Teorema de Fourier', dorso: 'Toda señal periódica es una <strong>fundamental</strong> más <strong>armónicos</strong> múltiplos de ella.' },
+            { frente: 'Armónicos de la onda cuadrada', dorso: 'Solo los <strong>impares</strong>, con amplitud 1/n.' },
+            { frente: 'Ancho de banda en Hz frente a bps', dorso: 'Hz: <strong>rango de frecuencias</strong>. bps: <strong>cantidad de datos</strong>. El primero limita al segundo.' },
+            { frente: 'Primer armónico repitiendo un byte a 2 400 bps', dorso: '<strong>300 Hz</strong> (2 400 / 8).' },
+            { frente: '¿Por qué hay velocidad máxima?', dorso: 'Más velocidad sube los armónicos; al final <strong>no caben</strong> en el ancho de banda del medio.' },
+            { frente: 'NRZ', dorso: 'Un <strong>nivel</strong> para cada bit. Problema: el <strong>sincronismo</strong>.' },
+            { frente: 'Manchester', dorso: '0: <strong>alto → bajo</strong>. 1: <strong>bajo → alto</strong>. En mitad del bit.' },
+            { frente: 'Síncrona frente a asíncrona', dorso: 'Con <strong>reloj</strong>, o sin él y con marcas de <strong>inicio y fin</strong>.' },
+            { frente: 'Baudio', dorso: 'Número de <strong>cambios de la señal</strong> por segundo.' },
+            { frente: 'bps con 8 niveles a 1 000 baudios', dorso: '<strong>3 000 bps</strong>.' },
+            { frente: '1000BASE-T en una línea', dorso: '<strong>4 pares × 125 Mbaud × 2 bits</strong> = 1 Gbps.' },
+            { frente: 'Moduladora y portadora', dorso: 'La <strong>moduladora</strong> lleva la información; la <strong>portadora</strong> se adapta al medio.' },
+            { frente: 'ASK, FSK, PSK', dorso: 'Cambian la <strong>amplitud</strong>, la <strong>frecuencia</strong> y la <strong>fase</strong>.' },
+            { frente: 'Caso de modulación más común', dorso: '<strong>Digital sobre portadora analógica</strong>.' },
+            { frente: 'Bits por símbolo de QAM-256', dorso: '<strong>8</strong>.' },
+            { frente: 'Qué representa un punto de una constelación', dorso: 'Un <strong>símbolo</strong>: su distancia es la amplitud y su ángulo, la fase.' },
+            { frente: 'Tasa adaptativa', dorso: 'Cambiar a una modulación <strong>más robusta y más lenta</strong> cuando la señal empeora.' },
+            { frente: 'Atenuación', dorso: 'Pérdida de <strong>amplitud</strong> con la distancia.' },
+            { frente: '20 dB y 3 dB', dorso: '<strong>×100</strong> y <strong>×2</strong>.' },
+            { frente: 'Medio inmune a EMI y RFI', dorso: 'La <strong>fibra óptica</strong>.' },
+            { frente: 'Nyquist', dorso: '<strong>C = 2 · W · log<sub>2</sub>M</strong>. Canal ideal.' },
+            { frente: 'Shannon', dorso: '<strong>C = W · log<sub>2</sub>(1 + S/N)</strong>, S/N lineal. Manda el menor de los dos.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Test semanal — Semana 5: Conceptos de transmisión',
+        tiempo: '42 minutos',
+        minutos: 42,
+        questions: [
+            {
+                topic: 'Día 1 — Anatomía de una señal',
+                repaso: '../Dia_01/teoria.html#parametros',
+                text: 'Una señal tiene un periodo de 5 ms. ¿Cuál es su frecuencia?',
+                options: { a: '5 Hz', b: '50 Hz', c: '200 Hz', d: '500 Hz' },
+                answer: 'c',
+                feedback: 'f = 1 / 0,005 = <strong>200 Hz</strong>.'
+            },
+            {
+                topic: 'Día 1 — Anatomía de una señal',
+                repaso: '../Dia_01/teoria.html#fourier',
+                text: 'Una onda cuadrada tiene su fundamental en 500 Hz. ¿Cuál es el siguiente armónico con energía?',
+                options: { a: '1 000 Hz', b: '750 Hz', c: '2 000 Hz', d: '1 500 Hz' },
+                answer: 'd',
+                feedback: 'Solo tiene armónicos impares: el siguiente es el 3.º, a <strong>1 500 Hz</strong>.'
+            },
+            {
+                topic: 'Día 1 — Anatomía de una señal',
+                repaso: '../Dia_01/teoria.html#anchobanda',
+                text: 'Un cable «de 500 MHz» y una conexión «de 500 megas». ¿Qué afirmación es correcta?',
+                options: {
+                    a: 'Son la misma medida',
+                    b: 'La primera es un rango de frecuencias; la segunda, una velocidad en bits por segundo',
+                    c: 'La primera es una velocidad; la segunda, una frecuencia',
+                    d: 'Las dos son frecuencias'
+                },
+                answer: 'b',
+                feedback: 'MHz es frecuencia; los «megas» de un operador son Mbps. Los dos se llaman ancho de banda.'
+            },
+            {
+                topic: 'Día 1 — Anatomía de una señal',
+                repaso: '../Dia_01/teoria.html#medio',
+                text: 'Se repite un byte a 1 200 bps por un medio de 3 000 Hz. ¿Cuántos armónicos llegan?',
+                options: { a: '20', b: '10', c: '150', d: '2,5' },
+                answer: 'a',
+                feedback: '1 200 / 8 = 150 Hz; 3 000 / 150 = <strong>20</strong>.'
+            },
+            {
+                topic: 'Día 1 — Anatomía de una señal',
+                repaso: '../Dia_01/teoria.html#pulsos',
+                text: 'Al duplicar la velocidad de transmisión por el mismo medio, ¿qué pasa con los armónicos que llegan?',
+                options: {
+                    a: 'Se reducen aproximadamente a la mitad',
+                    b: 'Se duplican',
+                    c: 'No cambian',
+                    d: 'Desaparecen todos'
+                },
+                answer: 'a',
+                feedback: 'El primer armónico dobla su frecuencia, así que caben la mitad.'
+            },
+            {
+                topic: 'Día 2 — Codificación',
+                repaso: '../Dia_02/teoria.html#sincronismo',
+                text: 'Un enlace NRZ falla cuando transmite ficheros con largas secuencias de ceros. ¿Qué problema es?',
+                options: { a: 'Atenuación', b: 'Pérdida de sincronismo', c: 'Diafonía', d: 'Colisiones' },
+                answer: 'b',
+                feedback: 'Sin cambios en la señal, el receptor pierde la cuenta de los bits.'
+            },
+            {
+                topic: 'Día 2 — Codificación',
+                repaso: '../Dia_02/teoria.html#manchester',
+                text: 'En Manchester, las transiciones centrales de cuatro bits son: subida, bajada, bajada, subida. ¿Qué bits son?',
+                options: { a: '0110', b: '1010', c: '1001', d: '0011' },
+                answer: 'c',
+                feedback: 'Subida = 1, bajada = 0: <strong>1001</strong>.'
+            },
+            {
+                topic: 'Día 2 — Codificación',
+                repaso: '../Dia_02/teoria.html#manchester',
+                text: '¿Qué precio paga Manchester por mantener el sincronismo?',
+                options: {
+                    a: 'Necesita un hilo más',
+                    b: 'Transmite la mitad de bits',
+                    c: 'Solo funciona con fibra',
+                    d: 'Necesita aproximadamente el doble de ancho de banda que NRZ'
+                },
+                answer: 'd',
+                feedback: 'Más transiciones por bit, armónicos más altos.'
+            },
+            {
+                topic: 'Día 2 — Codificación',
+                repaso: '../Dia_02/teoria.html#baudios',
+                text: 'Una señal de 16 niveles transmite a 2 000 baudios. ¿Cuántos bps son?',
+                options: { a: '8 000 bps', b: '2 000 bps', c: '4 000 bps', d: '32 000 bps' },
+                answer: 'a',
+                feedback: '16 niveles → 4 bits. 2 000 × 4 = <strong>8 000 bps</strong>.'
+            },
+            {
+                topic: 'Día 2 — Codificación',
+                repaso: '../Dia_02/teoria.html#ethernet',
+                text: 'En 1000BASE-T, ¿cuántos Mbps lleva cada uno de los cuatro pares?',
+                options: { a: '125 Mbps', b: '500 Mbps', c: '1 000 Mbps', d: '250 Mbps' },
+                answer: 'd',
+                feedback: '125 millones de baudios × 2 bits = <strong>250 Mbps</strong> por par.'
+            },
+            {
+                topic: 'Día 3 — Modulación',
+                repaso: '../Dia_03/teoria.html#portadora',
+                text: 'En una modulación, ¿qué señal determina la frecuencia a la que viaja la información?',
+                options: { a: 'La moduladora', b: 'La portadora', c: 'El ruido', d: 'La señal en banda base' },
+                answer: 'b',
+                feedback: 'La modulada tiene la información de la moduladora con las características, frecuencia incluida, de la <strong>portadora</strong>.'
+            },
+            {
+                topic: 'Día 3 — Modulación',
+                repaso: '../Dia_03/teoria.html#tres',
+                text: 'Una señal modulada mantiene constante la amplitud y la frecuencia. ¿Qué técnica usa?',
+                options: { a: 'ASK', b: 'FSK', c: 'PSK', d: 'NRZ' },
+                answer: 'c',
+                feedback: 'Solo queda la <strong>fase</strong>.'
+            },
+            {
+                topic: 'Día 3 — Modulación',
+                repaso: '../Dia_03/teoria.html#casos',
+                text: 'La voz de un móvil se transmite por una red digital. ¿Qué caso de modulación es?',
+                options: {
+                    a: 'Analógica sobre portadora digital',
+                    b: 'Analógica sobre portadora analógica',
+                    c: 'Digital sobre portadora analógica',
+                    d: 'Banda base'
+                },
+                answer: 'a',
+                feedback: 'La voz es analógica y la red, digital. Es el ejemplo del libro.'
+            },
+            {
+                topic: 'Día 3 — Modulación',
+                repaso: '../Dia_03/teoria.html#qam',
+                text: 'Quieres 6 bits por símbolo. ¿Cuántos puntos necesita la constelación?',
+                options: { a: '6', b: '12', c: '64', d: '36' },
+                answer: 'c',
+                feedback: '2<sup>6</sup> = <strong>64</strong>: QAM-64.'
+            },
+            {
+                topic: 'Día 3 — Modulación',
+                repaso: '../Dia_03/teoria.html#wifi',
+                text: 'Un enlace de radio pasa de QAM-256 a QAM-16 un día de lluvia, sin cambiar los símbolos por segundo. ¿Qué fracción de su velocidad conserva?',
+                options: { a: 'Un dieciseisavo', b: 'Un cuarto', c: 'Toda', d: 'La mitad' },
+                answer: 'd',
+                feedback: 'Pasa de 8 a 4 bits por símbolo: <strong>la mitad</strong>. No un dieciseisavo: la velocidad depende de los bits, no del número de puntos.'
+            },
+            {
+                topic: 'Día 4 — Perturbaciones y capacidad',
+                repaso: '../Dia_04/teoria.html#decibelios',
+                text: 'Una señal de 100 mW atraviesa un cable que la atenúa 20 dB. ¿Con cuánta potencia llega?',
+                options: { a: '80 mW', b: '1 mW', c: '5 mW', d: '0,2 mW' },
+                answer: 'b',
+                feedback: '20 dB es una relación de 100: 100 / 100 = <strong>1 mW</strong>.'
+            },
+            {
+                topic: 'Día 4 — Perturbaciones y capacidad',
+                repaso: '../Dia_04/teoria.html#interferencias',
+                text: 'En un mazo de cables sin trenzar, la señal de un par aparece en el de al lado. ¿Qué es y cómo se reduce?',
+                options: {
+                    a: 'Diafonía; trenzando los pares',
+                    b: 'Atenuación; con repetidores',
+                    c: 'Ruido térmico; enfriando el cable',
+                    d: 'Ruido impulsivo; con fibra'
+                },
+                answer: 'a',
+                feedback: 'Es <strong>diafonía</strong>, y el trenzado la reduce por anulación.'
+            },
+            {
+                topic: 'Día 4 — Perturbaciones y capacidad',
+                repaso: '../Dia_04/teoria.html#snr',
+                text: 'La señal llega con 8 mW y el ruido es de 0,08 mW. ¿Cuál es la S/N en dB?',
+                options: { a: '10 dB', b: '100 dB', c: '8 dB', d: '20 dB' },
+                answer: 'd',
+                feedback: '8 / 0,08 = 100, es decir, <strong>20 dB</strong>.'
+            },
+            {
+                topic: 'Día 4 — Perturbaciones y capacidad',
+                repaso: '../Dia_04/teoria.html#nyquist',
+                text: 'Un canal ideal de 2 000 Hz usa una señal de 8 niveles. ¿Capacidad según Nyquist?',
+                options: { a: '6 000 bps', b: '16 000 bps', c: '12 000 bps', d: '24 000 bps' },
+                answer: 'c',
+                feedback: '2 · 2 000 · 3 = <strong>12 000 bps</strong>.'
+            },
+            {
+                topic: 'Día 4 — Perturbaciones y capacidad',
+                repaso: '../Dia_04/teoria.html#shannon',
+                text: 'Un canal de 5 000 Hz tiene una S/N lineal de 3. ¿Capacidad según Shannon?',
+                options: { a: '5 000 bps', b: '10 000 bps', c: '15 000 bps', d: '20 000 bps' },
+                answer: 'b',
+                feedback: '5 000 · log<sub>2</sub>(1 + 3) = 5 000 · 2 = <strong>10 000 bps</strong>.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '#idea',
+                text: 'Un fabricante quiere duplicar la velocidad de un enlace sin cambiar el medio. ¿Qué afirmación es correcta?',
+                options: {
+                    a: 'Solo es posible si el enlace trabaja por debajo del límite de Shannon del medio',
+                    b: 'Basta con usar más niveles, siempre funciona',
+                    c: 'Basta con duplicar la frecuencia de la señal',
+                    d: 'Es imposible en cualquier caso'
+                },
+                answer: 'a',
+                feedback: 'El techo lo pone el medio: ancho de banda y S/N. Si ya se está cerca de él, no hay margen.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_02/teoria.html#ethernet',
+                text: '¿Por qué 1000BASE-T no usa Manchester?',
+                options: {
+                    a: 'Porque Manchester no funciona con cobre',
+                    b: 'Porque Manchester es asíncrono',
+                    c: 'Porque Manchester solo tiene dos niveles y es más lento de procesar',
+                    d: 'Porque duplicaría los cambios por segundo, y los armónicos no cabrían en el ancho de banda del cable'
+                },
+                answer: 'd',
+                feedback: 'Une el lunes y el martes: más cambios, armónicos más altos, y el cable solo deja pasar unos 100 MHz.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_04/teoria.html#shannon',
+                text: 'Un canal tiene muy buena S/N pero muy poco ancho de banda. ¿Qué es lo más eficaz para aprovecharlo?',
+                options: {
+                    a: 'Usar una señal de dos niveles',
+                    b: 'Usar muchos niveles o una constelación grande, porque la buena S/N permite distinguirlos',
+                    c: 'Usar Manchester',
+                    d: 'No se puede aprovechar'
+                },
+                answer: 'b',
+                feedback: 'Con poco ancho de banda caben pocos símbolos por segundo, así que conviene que <strong>cada uno lleve muchos bits</strong>. La buena S/N lo hace posible.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_03/teoria.html#porque',
+                text: '¿Por qué los módems de la línea telefónica necesitaban modulación y no les bastaba con una buena codificación en banda base?',
+                options: {
+                    a: 'Porque la banda base es más lenta siempre',
+                    b: 'Porque la codificación no existía entonces',
+                    c: 'Porque la línea telefónica estaba pensada para señales analógicas de voz en una banda concreta',
+                    d: 'Por motivos de seguridad'
+                },
+                answer: 'c',
+                feedback: 'La línea deja pasar una banda de frecuencias de voz. Hay que colocar la señal en esa banda con una portadora.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

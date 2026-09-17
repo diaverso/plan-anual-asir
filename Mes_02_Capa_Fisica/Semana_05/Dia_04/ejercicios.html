@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios: perturbaciones y capacidad</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Material:</strong> calculadora</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            Los ejercicios 4 y 5 son los cálculos de Nyquist y Shannon. Antes de empezar, recuerda los dos errores que
+            más se cometen: usar la S/N <strong>en dB</strong> dentro de Shannon y olvidar el <strong>factor 2</strong>
+            de Nyquist.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/ejercicios.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/ejercicios.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Ejercicios',
+    subtitulo: 'Perturbaciones · decibelios · relación señal/ruido · Nyquist y Shannon',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Identifica la perturbación',
+            tiempo: '8 min',
+            enunciado: '<p>Cada síntoma apunta a una causa.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Relaciona cada situación con la perturbación que la explica.',
+                    izquierda: [
+                        'La señal llega cada vez más débil a medida que se alarga el cable',
+                        'En un mazo de cables, la señal de un par aparece en el de al lado',
+                        'Errores esporádicos cada vez que arranca un compresor',
+                        'Errores en un cable que pasa junto a unas luces fluorescentes',
+                        'Un fondo de ruido que existe siempre, sin causa externa'
+                    ],
+                    derecha: [
+                        'Atenuación',
+                        'Diafonía',
+                        'Ruido impulsivo',
+                        'EMI',
+                        'Ruido térmico'
+                    ],
+                    pares: {
+                        'La señal llega cada vez más débil a medida que se alarga el cable': 'Atenuación',
+                        'En un mazo de cables, la señal de un par aparece en el de al lado': 'Diafonía',
+                        'Errores esporádicos cada vez que arranca un compresor': 'Ruido impulsivo',
+                        'Errores en un cable que pasa junto a unas luces fluorescentes': 'EMI',
+                        'Un fondo de ruido que existe siempre, sin causa externa': 'Ruido térmico'
+                    },
+                    explicacion: 'El compresor y los fluorescentes son los dos externos, pero se diferencian en la forma: el arranque produce <strong>pulsos breves</strong>; el fluorescente, una interferencia <strong>continua</strong>.',
+                    pistas: ['¿Qué diferencia hay entre un pulso breve y una interferencia constante?']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> ¿Qué solución aplicarías? Escribe <em>trenzar</em>, <em>apantallar</em>, <em>fibra</em> o <em>repetidor</em>.',
+                    esquina: 'Problema',
+                    cabecera: ['Solución'],
+                    filas: [
+                        { etiqueta: 'Un enlace digital de 400 m que llega demasiado débil', celdas: [{ respuestas: ['repetidor'], placeholder: 'solución' }] },
+                        { etiqueta: 'Un enlace que tiene que pasar por una sala de motores y no puede tener ninguna interferencia', celdas: [{ respuestas: ['fibra'], placeholder: 'solución' }] },
+                        { etiqueta: 'Reducir la diafonía entre los hilos de un mismo par', celdas: [{ respuestas: ['trenzar'], placeholder: 'solución' }] },
+                        { etiqueta: 'Mejorar un cable de cobre en un entorno con mucha EMI, sin cambiar de medio', celdas: [{ respuestas: ['apantallar'], placeholder: 'solución' }] }
+                    ],
+                    explicacion: 'La fibra es la única solución que <strong>elimina</strong> la interferencia. Apantallar la reduce sin salir del cobre.',
+                    pistas: ['¿Qué medio es inmune a EMI y RFI?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Decibelios',
+            tiempo: '14 min',
+            enunciado: '<p>Usa <strong>dB = 10 · log<sub>10</sub>(relación)</strong>, y recuerda que 3 dB es el doble y cada 10 dB un cero más.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la tabla.',
+                    esquina: 'Relación de potencias',
+                    cabecera: ['En dB'],
+                    filas: [
+                        { etiqueta: '10', celdas: [{ respuestas: ['10'] }] },
+                        { etiqueta: '100', celdas: [{ respuestas: ['20'] }] },
+                        { etiqueta: '10 000', celdas: [{ respuestas: ['40'] }] },
+                        { etiqueta: '2', celdas: [{ respuestas: ['3', '3,01', '3.01'] }] },
+                        { etiqueta: '1/100', celdas: [{ respuestas: ['-20', '−20'] }] }
+                    ],
+                    explicacion: 'Cada potencia de diez suma 10 dB. Las relaciones menores que 1, es decir, las pérdidas, dan valores negativos.',
+                    pistas: ['log<sub>10</sub>(100) = 2.', 'log<sub>10</sub>(1/100) = −2.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Qué relación de potencias corresponde a <strong>60 dB</strong>?',
+                    respuesta: 1000000,
+                    explicacion: '60 / 10 = 6 ceros: <strong>1 000 000</strong>.',
+                    pistas: ['Cada 10 dB, un cero.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Una señal sale con 20 mW y el cable la atenúa <strong>10 dB</strong>. ¿Con cuántos mW llega?',
+                    respuesta: 2,
+                    unidad: 'mW',
+                    explicacion: '10 dB es una relación de 10: 20 / 10 = <strong>2 mW</strong>.',
+                    pistas: ['Una atenuación divide la potencia.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Un enlace tiene tres tramos que atenúan 4 dB, 7 dB y 9 dB. ¿Cuál es la atenuación total?',
+                    respuesta: 20,
+                    unidad: 'dB',
+                    explicacion: '4 + 7 + 9 = <strong>20 dB</strong>: llega la centésima parte de la potencia.',
+                    pistas: ['Los decibelios se suman.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Una señal atraviesa un cable que la atenúa <strong>9 dB</strong>. ¿Qué fracción de la potencia llega? Escríbela como número decimal.',
+                    respuesta: 0.125,
+                    tolerancia: 0.005,
+                    explicacion: '9 dB = 3 + 3 + 3: la mitad de la mitad de la mitad, <strong>1/8 = 0,125</strong>.',
+                    pistas: ['Descompón 9 dB en bloques de 3 dB.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: La relación señal/ruido',
+            tiempo: '10 min',
+            enunciado: '<p>Lo que importa es la relación, no el ruido.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Una señal llega con 50 mW y el ruido es de 0,05 mW. ¿Cuál es la S/N lineal?',
+                    respuesta: 1000,
+                    explicacion: '50 / 0,05 = <strong>1 000</strong>.',
+                    pistas: ['Divide la potencia de la señal entre la del ruido.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Y en decibelios?',
+                    respuesta: 30,
+                    unidad: 'dB',
+                    explicacion: '10 · log<sub>10</sub>(1 000) = <strong>30 dB</strong>.',
+                    pistas: ['1 000 tiene tres ceros.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Dos enlaces tienen el mismo ruido. Uno recibe la señal con 20 dB de S/N y el otro con 5 dB. ¿Cuál es más fiable?',
+                    opciones: {
+                        a: 'El de 20 dB',
+                        b: 'El de 5 dB',
+                        c: 'Los dos igual, porque el ruido es el mismo',
+                        d: 'No se puede saber'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Mayor S/N, más separación entre señal y ruido y menos errores. El ruido absoluto no basta para comparar.',
+                    pistas: ['¿Cuanto mayor, mejor o peor?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Para mejorar la S/N de un enlace sin cambiar el ruido, ¿qué harías?',
+                    opciones: {
+                        a: 'Usar más niveles',
+                        b: 'Aumentar la velocidad',
+                        c: 'Usar Manchester',
+                        d: 'Aumentar la potencia de la señal o acortar el recorrido para que se atenúe menos'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'La S/N sube si la señal que <strong>llega</strong> es más fuerte: más potencia de salida o menos atenuación por el camino.',
+                    pistas: ['¿Qué parte de la división puedes cambiar?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Nyquist',
+            tiempo: '12 min',
+            enunciado: '<p><strong>C = 2 · W · log<sub>2</sub>(M)</strong>. Canal ideal, sin ruido.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la capacidad, en bps.',
+                    esquina: 'Canal',
+                    cabecera: ['W (Hz)', 'Niveles M', 'Capacidad (bps)'],
+                    filas: [
+                        { etiqueta: 'A', celdas: [{ fijo: '3 000' }, { fijo: '2' }, { respuestas: ['6000', '6 000', '6.000'] }] },
+                        { etiqueta: 'B', celdas: [{ fijo: '3 000' }, { fijo: '16' }, { respuestas: ['24000', '24 000', '24.000'] }] },
+                        { etiqueta: 'C', celdas: [{ fijo: '4 000' }, { fijo: '8' }, { respuestas: ['24000', '24 000', '24.000'] }] },
+                        { etiqueta: 'D', celdas: [{ fijo: '1 000 000' }, { fijo: '4' }, { respuestas: ['4000000', '4 000 000', '4.000.000'] }] }
+                    ],
+                    explicacion: 'La fila A es el ejemplo del libro. Fíjate en B y C: con distintos anchos de banda y niveles se llega a la misma capacidad.',
+                    pistas: ['log<sub>2</sub>16 = 4 y log<sub>2</sub>8 = 3.', 'No olvides el 2 del principio.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Necesitas 18 000 bps por un canal ideal de 3 000 Hz. ¿Cuántos niveles hacen falta como mínimo?',
+                    respuesta: 8,
+                    unidad: 'niveles',
+                    explicacion: '18 000 = 2 · 3 000 · log<sub>2</sub>M → log<sub>2</sub>M = 3 → M = <strong>8</strong>.',
+                    pistas: ['Despeja log<sub>2</sub>M.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántos símbolos por segundo caben, como máximo, en un canal de 3 000 Hz?',
+                    respuesta: 6000,
+                    unidad: 'símbolos/s',
+                    explicacion: '<strong>2 · W = 6 000</strong>. Es la parte de la fórmula que no depende de los niveles.',
+                    pistas: ['¿Qué parte de la fórmula cuenta símbolos?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Shannon y los dos límites',
+            tiempo: '16 min',
+            enunciado: '<p><strong>C = W · log<sub>2</sub>(1 + S/N)</strong>, con la S/N <strong>lineal</strong>. Redondea a enteros salvo que se indique otra cosa.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> El ejemplo del libro: canal de 4 000 Hz con S/N de 3 dB (lineal 2). ¿Capacidad en bps?',
+                    respuesta: 6340,
+                    tolerancia: 20,
+                    unidad: 'bps',
+                    explicacion: '4 000 · log<sub>2</sub>3 ≈ 4 000 · 1,585 ≈ <strong>6 340 bps</strong>, unos 6,3 kbps.',
+                    pistas: ['log<sub>2</sub>3 ≈ 1,585.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Canal de 3 000 Hz con S/N de <strong>30 dB</strong>. ¿Capacidad en bps? Usa log<sub>2</sub>(1 001) ≈ 9,97.',
+                    respuesta: 29910,
+                    tolerancia: 30,
+                    unidad: 'bps',
+                    explicacion: '30 dB = 1 000. 3 000 · log<sub>2</sub>(1 001) ≈ 3 000 · 9,97 ≈ <strong>29 910 bps</strong>. Si usaras 30 en lugar de 1 000, obtendrías unos 14 900: el error típico.',
+                    pistas: ['Primero pasa 30 dB a lineal.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Canal de 1 MHz con S/N de 15 (lineal). ¿Capacidad en Mbps?',
+                    respuesta: 4,
+                    unidad: 'Mbps',
+                    explicacion: '1 + 15 = 16 y log<sub>2</sub>16 = 4. 1 MHz · 4 = <strong>4 Mbps</strong>. Un caso de números redondos para comprobar que dominas la fórmula.',
+                    pistas: ['1 + 15 es una potencia de 2.']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>d)</strong> Un canal de 3 000 Hz, con S/N de 20 dB, transmite con 16 niveles. Calcula los dos límites y di cuál manda. Usa log<sub>2</sub>(101) ≈ 6,66.',
+                    esquina: 'Límite',
+                    cabecera: ['Capacidad (bps)'],
+                    filas: [
+                        { etiqueta: 'Nyquist', celdas: [{ respuestas: ['24000', '24 000', '24.000'] }] },
+                        { etiqueta: 'Shannon', celdas: [{ respuestas: ['19980', '19 980', '19.980', '19975', '19 975', '20000', '20 000'] }] },
+                        { etiqueta: '¿Cuál manda?', celdas: [{ respuestas: ['shannon'], placeholder: 'Nyquist / Shannon' }] }
+                    ],
+                    explicacion: 'Nyquist da 24 000 bps, pero el ruido limita a unos 19 980. <strong>Manda Shannon</strong>, el menor. Es el ejemplo de la teoría.',
+                    pistas: ['Nyquist: 2 · 3 000 · 4.', 'Shannon: 3 000 · 6,66.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> En ese canal pasas de 16 a 1 024 niveles. ¿Qué pasa con la capacidad máxima real?',
+                    opciones: {
+                        a: 'Sube a 60 000 bps, como dice Nyquist',
+                        b: 'No sube: sigue limitada a unos 20 000 bps por el ruido',
+                        c: 'Baja a cero',
+                        d: 'Se duplica'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Nyquist subiría a 60 000, pero Shannon no depende de los niveles. El techo sigue en unos 20 000 bps, y con 1 024 niveles tan juntos habría muchos más errores.',
+                    pistas: ['¿Aparece M en la fórmula de Shannon?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Explícalo',
+            tiempo: '10 min',
+            enunciado: '<p>Responde por escrito antes de ver la solución.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    filas: 6,
+                    pregunta: '<strong>a)</strong> Un proveedor promete que su nuevo módem, con una constelación de 4 096 puntos, sacará el triple de velocidad por la misma línea telefónica. Evalúa la promesa usando Nyquist y Shannon.',
+                    modelo: `<p>Según <strong>Nyquist</strong>, más puntos sí dan más capacidad: 4 096 puntos son 12 bits por
+                             símbolo, así que la cota de un canal ideal crece mucho.</p>
+                             <p>Pero la línea telefónica <strong>no es un canal ideal</strong>: tiene ruido. Y
+                             <strong>Shannon</strong>, que tiene en cuenta ese ruido, da una capacidad que <strong>no
+                             depende del número de puntos</strong>, solo del ancho de banda y de la relación
+                             señal/ruido. Si la línea no cambia, su techo de Shannon tampoco.</p>
+                             <p>Con 4 096 puntos, además, los puntos estarían tan juntos que el ruido de la línea los
+                             confundiría constantemente. En la práctica el módem tendría que bajar a constelaciones más
+                             pequeñas.</p>
+                             <p>La promesa solo sería posible si la línea actual trabajara muy por debajo de su límite de
+                             Shannon. Si ya está cerca, <strong>no se puede triplicar la velocidad</strong> sin mejorar la
+                             línea: más ancho de banda o menos ruido.</p>`,
+                    rubrica: [
+                        'Calcula o menciona los 12 bits por símbolo',
+                        'Explica que Nyquist sí aumentaría con más puntos',
+                        'Explica que Shannon no depende del número de puntos',
+                        'Menciona que los puntos juntos se confunden con el ruido',
+                        'Concluye que el límite lo pone la línea: ancho de banda y S/N'
+                    ],
+                    pistas: ['¿Qué dice cada fórmula sobre los niveles?', '¿Qué habría que cambiar para subir el techo de Shannon?']
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

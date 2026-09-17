@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio de Fourier</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">78 min</span></div>
+        <div class="info-item"><strong>Herramienta:</strong> el visualizador de esta página</div>
+        <div class="info-item"><strong>Opcional:</strong> auriculares</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>El libro trae una tabla con los armónicos que llegan por la línea telefónica a cada velocidad. Hoy la
+            vas a <strong>reproducir tú</strong>, y a contestar lo que la tabla no dice: <strong>a qué velocidad
+            empieza a equivocarse el receptor</strong>, y qué haría falta para que no lo hiciera.</p>
+            <p>Terminarás mirando tu propia tarjeta de red, que es donde todo esto deja de ser teoría.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>El visualizador <strong>calcula</strong> la señal en tu navegador: no necesita conexión ni instalar
+                nada.</li>
+                <li>La parte 2 es para <strong>escuchar</strong> y es opcional. Si la haces, <strong>baja el volumen
+                antes de pulsar</strong>: una onda cuadrada suena áspera.</li>
+                <li>El visualizador mueve el ancho de banda en saltos de 100 Hz en el modo de bits. Si una respuesta
+                no te cuadra por pocos hercios, es por eso.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <div class="senal" data-senal="fourier"></div>
+
+            <h2>Parte 1 — La onda cuadrada (15 min)</h2>
+
+            <p>Deja la señal en <strong>Onda cuadrada</strong> y la frecuencia fundamental en <strong>200 Hz</strong>.</p>
+
+            <ol>
+                <li>Pon el ancho de banda del medio a <strong>150 Hz</strong>. Mira los dos gráficos.</li>
+                <li>Súbelo poco a poco hasta <strong>1 000 Hz</strong>, fijándote en qué momento aparece cada barra
+                azul y cómo cambia la forma de la señal.</li>
+                <li>Sigue hasta <strong>3 000 Hz</strong> y observa qué pasa en las esquinas de cada escalón.</li>
+            </ol>
+
+            <h2>Parte 2 — Escúchalo (10 min, opcional)</h2>
+
+            <ol>
+                <li>Con la onda cuadrada a <strong>200 Hz</strong>, pon el medio en <strong>300 Hz</strong>: solo pasa
+                la fundamental.</li>
+                <li><strong>Baja el volumen</strong> y pulsa <em>Escuchar la señal que llega</em>.</li>
+                <li>Sin parar el sonido, sube el ancho de banda hasta <strong>3 000 Hz</strong> y vuelve a bajarlo.</li>
+                <li>Pulsa <em>Parar</em> cuando acabes.</li>
+            </ol>
+
+            <p>Lo que oyes al subir el límite son los armónicos entrando uno a uno. La nota no cambia; cambia el
+            <strong>timbre</strong>.</p>
+
+            <h2>Parte 3 — Reproduce la tabla del libro (25 min)</h2>
+
+            <ol>
+                <li>Cambia la señal a <strong>Los bits 01100010</strong>. El medio se coloca en <strong>3 000 Hz</strong>,
+                como la línea telefónica.</li>
+                <li>Recorre las ocho velocidades con el control <em>Velocidad de transmisión</em>.</li>
+                <li>En cada una anota el <strong>primer armónico</strong>, los <strong>armónicos que caben</strong> y
+                los <strong>bits que entiende el receptor</strong>. Un bit en rojo está mal leído; una
+                <code>?</code> significa que el receptor no ha podido decidir.</li>
+            </ol>
+
+            <h2>Parte 4 — Arregla el enlace (15 min)</h2>
+
+            <p>Pon la velocidad en <strong>9 600 bps</strong> y ve subiendo el ancho de banda del medio hasta que el
+            receptor lea <strong>los ocho bits bien</strong>.</p>
+
+            <h2>Parte 5 — Tu tarjeta de red (8 min)</h2>
+
+            <p>Consulta a qué velocidad trabaja tu conexión ahora mismo.</p>
+
+            <div class="so-tabs" data-grupo="vel">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="vel" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object Name, LinkSpeed</code></pre></div>
+                <p>Ejecútalo en <strong>PowerShell</strong>. No hace falta abrirlo como administrador.</p>
+            </div>
+            <div class="so-panel" data-grupo="vel" data-so="nix">
+                <div class="comando"><pre><code>for i in /sys/class/net/*; do echo "$(basename $i): $(cat $i/speed 2>/dev/null)"; done</code></pre></div>
+                <p>El número está en <strong>Mbps</strong>. Un <code>-1</code> significa que la interfaz está caída o
+                que no informa de su velocidad, algo habitual en las virtuales y en el Wi-Fi.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real</strong>
+<pre><code>Name                  LinkSpeed
+----                  ---------
+Ethernet              1 Gbps
+Ethernet 3            1 Gbps
+vEthernet (WSL)       10 Gbps
+Ethernet 2            600 Mbps</code></pre>
+                <p>Puede que aparezcan varios adaptadores <strong>virtuales</strong>, como el de WSL o el de
+                VirtualBox: su «velocidad» no depende de ningún cable. Fíjate en el físico, normalmente llamado
+                <em>Ethernet</em> o <em>Wi-Fi</em>.</p>
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has reproducido la tabla de la línea telefónica y sabes en qué fila empiezan los errores.</li>
+                <li>Has encontrado el ancho de banda que arregla el enlace de 9 600 bps.</li>
+                <li>Has anotado la velocidad real de tu tarjeta y sabes por qué no encaja con lo de hoy.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/laboratorio.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Laboratorio de Fourier',
+    subtitulo: 'La señal que llega depende del medio · reproducir la tabla de la línea telefónica',
+    tiempo: '78 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: La onda cuadrada',
+            tiempo: '15 min',
+            enunciado: '<p>Responde con lo observado en la <strong>parte 1</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Con la fundamental a 200 Hz y el medio a <strong>150 Hz</strong>, ¿cuántos armónicos caben?',
+                    respuesta: 0,
+                    explicacion: 'Ni la fundamental cabe: 200 Hz está por encima del límite. No llega nada, y la señal recibida es una línea plana.',
+                    pistas: ['¿A qué frecuencia está la fundamental?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Con el medio a <strong>1 000 Hz</strong>, ¿cuántos armónicos <strong>con energía</strong> llegan?',
+                    respuesta: 3,
+                    explicacion: 'Caben cinco frecuencias (200, 400, 600, 800 y 1 000 Hz), pero la onda cuadrada solo tiene los impares: 200, 600 y 1 000 Hz. Son <strong>3</strong>. El visualizador lo muestra como «5 (3 con energía)».',
+                    pistas: ['Cuenta solo las barras azules que se ven.', 'La onda cuadrada no tiene armónicos pares.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Al llegar a 3 000 Hz, la señal ya es casi cuadrada, pero en las esquinas aparecen pequeñas oscilaciones. ¿Qué indican?',
+                    opciones: {
+                        a: 'Que hay ruido en el cable',
+                        b: 'Que el visualizador tiene un error',
+                        c: 'Que sobran armónicos',
+                        d: 'Que siguen faltando los armónicos más altos: con un número finito, el escalón nunca queda perfecto'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'En esta simulación no hay ruido. Esas ondulaciones son la huella de los armónicos que <strong>no</strong> han pasado. Para un escalón perfecto harían falta infinitos.',
+                    pistas: ['¿Cuántos armónicos hacen falta para una cuadrada perfecta?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Lo que se oye',
+            tiempo: '10 min',
+            enunciado: '<p>Solo si has hecho la <strong>parte 2</strong>. Si no puedes escuchar, responde con lo que ves en los gráficos al mover el mismo control.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿He podido escuchar la señal?',
+                    libre: true,
+                    opciones: {
+                        a: 'Sí, con auriculares o altavoces',
+                        b: 'No: he respondido mirando los gráficos'
+                    },
+                    explicacion: 'Las dos formas valen para este bloque.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Al pasar de 300 Hz a 3 000 Hz de ancho de banda, ¿qué cambia en el sonido?',
+                    opciones: {
+                        a: 'La nota es la misma, pero pasa de sonar suave y limpia a sonar áspera, como un zumbido',
+                        b: 'La nota se hace más aguda',
+                        c: 'Se oye más bajo',
+                        d: 'No cambia nada'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'La nota la marca la <strong>fundamental</strong>, que no cambia. Los armónicos cambian el <strong>timbre</strong>: por eso un violín y una flauta tocando la misma nota no suenan igual.',
+                    pistas: ['¿Cambia la fundamental al mover el ancho de banda?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: La tabla de la línea telefónica',
+            tiempo: '25 min',
+            enunciado: '<p>Con la señal <strong>01100010</strong> y el medio en <strong>3 000 Hz</strong>, parte 3.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Anota lo que muestra el visualizador en cada velocidad. En la última columna cuenta cuántos de los 8 bits lee <strong>bien</strong> el receptor: no cuentan ni los rojos ni las interrogaciones.',
+                    esquina: 'Velocidad',
+                    cabecera: ['Primer armónico (Hz)', 'Caben', 'Bits bien leídos'],
+                    filas: [
+                        { etiqueta: '2 400 bps', celdas: [{ respuestas: ['300'] }, { respuestas: ['10'] }, { respuestas: ['8'] }] },
+                        { etiqueta: '4 800 bps', celdas: [{ respuestas: ['600'] }, { respuestas: ['5'] }, { respuestas: ['8'] }] },
+                        { etiqueta: '9 600 bps', celdas: [{ respuestas: ['1200', '1 200', '1.200'] }, { respuestas: ['2'] }, { respuestas: ['7'] }] },
+                        { etiqueta: '19 200 bps', celdas: [{ respuestas: ['2400', '2 400', '2.400'] }, { respuestas: ['1'] }, { respuestas: ['2'] }] },
+                        { etiqueta: '38 400 bps', celdas: [{ respuestas: ['4800', '4 800', '4.800'] }, { respuestas: ['0'] }, { respuestas: ['0'] }] }
+                    ],
+                    explicacion: 'Las dos primeras columnas coinciden con la tabla del libro. La tercera es lo nuevo: hasta 4 800 bps el receptor lee los 8; a 9 600 lee <code>01100?10</code>, con una duda; a 19 200 lee <code>????000?</code> y solo acierta 2; a 38 400 no acierta ninguno.',
+                    pistas: ['Compara lo leído con 01100010, posición a posición.', 'En «Caben», escribe solo el primer número.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿A qué velocidad aparece el <strong>primer error</strong> en la lectura?',
+                    respuesta: 9600,
+                    unidad: 'bps',
+                    explicacion: 'A <strong>9 600 bps</strong>, con solo dos armónicos, el receptor ya no sabe decidir el sexto bit. A 4 800, con cinco, lo leía todo bien.',
+                    pistas: ['Busca la primera fila con una interrogación.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántos armónicos parece necesitar como mínimo esta señal para leerse bien? Mira las filas donde acierta y donde falla.',
+                    respuesta: 3,
+                    explicacion: 'Con 2 falla y con 5 acierta. Si pruebas medios intermedios verás que con <strong>3</strong> ya lo lee todo. No es una ley universal: depende del patrón de bits.',
+                    pistas: ['Con 2 falla y con 5 acierta. Prueba lo que hay en medio.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> A 300 bps llegan 80 armónicos. ¿Tiene alguna ventaja práctica frente a los 5 de 4 800 bps?',
+                    opciones: {
+                        a: 'Sí: la señal llega mucho mejor y hay menos errores',
+                        b: 'No en cuanto a errores, porque con 5 ya se lee bien; pero se transmite dieciséis veces más despacio',
+                        c: 'Sí: consume menos ancho de banda',
+                        d: 'No: con 80 armónicos se producen interferencias'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Una vez que llegan los armónicos necesarios, los demás no aportan nada que el receptor necesite. El buen diseño busca la <strong>máxima velocidad</strong> que todavía se lee bien, no la señal más bonita.',
+                    pistas: ['¿Leía bien el receptor a 4 800 bps?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Arregla el enlace',
+            tiempo: '15 min',
+            enunciado: '<p>Velocidad en <strong>9 600 bps</strong>, parte 4.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> ¿Qué ancho de banda mínimo, según el visualizador, hace que se lean bien los ocho bits?',
+                    respuesta: 3600,
+                    unidad: 'Hz',
+                    explicacion: 'A partir de <strong>3 600 Hz</strong> cabe el tercer armónico (3 × 1 200) y la lectura es correcta. Coincide con el cálculo del ejercicio 4 de hoy.',
+                    pistas: ['Súbelo de 100 en 100 desde 3 000.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Con la misma regla de tres armónicos, ¿qué velocidad <strong>máxima</strong> se leería bien por la línea telefónica de 3 000 Hz? Usa solo las velocidades de la tabla.',
+                    respuesta: 4800,
+                    unidad: 'bps',
+                    explicacion: 'A 9 600 bps el tercer armónico está en 3 600 Hz, fuera. A 4 800 bps está en 1 800 Hz, dentro. La máxima de la tabla es <strong>4 800 bps</strong>.',
+                    pistas: ['¿En qué velocidad el tercer armónico sigue por debajo de 3 000 Hz?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 5,
+                    pregunta: '<strong>c)</strong> En la vida real no se puede cambiar el ancho de banda de la línea telefónica. ¿Qué otras dos cosas se te ocurren para transmitir más rápido por ella?',
+                    modelo: `<p>Si el medio no cambia, hay que <strong>cambiar la señal</strong>:</p>
+                             <ul>
+                                 <li><strong>Meter más bits en cada cambio</strong> usando más de dos niveles. Así se
+                                 envían más bits por segundo sin estrechar tanto los pulsos. Es la idea de mañana.</li>
+                                 <li><strong>Modular</strong>: trasladar la información a una portadora cuya frecuencia
+                                 esté justo dentro de la banda que la línea deja pasar, y cambiarle amplitud,
+                                 frecuencia o fase. Es lo que hacían los módems, y es el tema del miércoles.</li>
+                             </ul>
+                             <p>Lo que <strong>no</strong> funciona es simplemente enviar más deprisa: ya has visto que
+                             los armónicos se salen de la banda.</p>`,
+                    rubrica: [
+                        'Propone usar más niveles o más bits por cambio',
+                        'Propone modular una portadora',
+                        'Descarta subir la velocidad sin más'
+                    ],
+                    pistas: ['¿Tiene que haber un cambio de la señal por cada bit?', '¿Y si la señal no fuera una sucesión de escalones?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 5: Tu tarjeta de red',
+            tiempo: '13 min',
+            enunciado: '<p>Con la salida del comando de la <strong>parte 5</strong>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> Nombre del adaptador <strong>físico</strong> que usas para conectarte.',
+                    ayuda: 'por ejemplo Ethernet o Wi-Fi',
+                    explicacion: 'Descarta los virtuales, como <em>vEthernet (WSL)</em> o los de VirtualBox: no tienen cable detrás.'
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> Su velocidad, tal como la muestra el comando.',
+                    ayuda: 'por ejemplo 1 Gbps',
+                    explicacion: 'Es una velocidad en <strong>bits por segundo</strong>: el ancho de banda «de los operadores».'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Si tu tarjeta va a 1 Gbps con un solo par y dos niveles, ¿a qué frecuencia estaría el primer armónico de una señal que alterna 1 y 0 sin parar?',
+                    opciones: {
+                        a: '1 Gbps',
+                        b: 'A 100 MHz',
+                        c: 'A 500 MHz, porque un periodo completo son dos bits',
+                        d: 'A 1 000 Hz'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Un 1 y un 0 forman un periodo, así que la fundamental es la mitad de la velocidad: <strong>500 MHz</strong>. Eso ya es cinco veces lo que deja pasar un cable de 100 MHz, y sin contar los armónicos. Mañana verás cómo se resuelve.',
+                    pistas: ['Con 01010101…, ¿cuántos bits dura un periodo?', 'Si un periodo son dos bits, la frecuencia es velocidad ÷ 2.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    filas: 4,
+                    pregunta: '<strong>d)</strong> Cierre: resume en tres frases qué has aprendido hoy sobre la velocidad máxima de un medio.',
+                    modelo: `<p>Una señal digital es una suma de armónicos, y el medio solo deja pasar los que están por
+                             debajo de su ancho de banda. Cuanto más rápido se transmite, más altos están los armónicos
+                             y menos llegan. Cuando llegan demasiado pocos, el receptor no distingue los bits, y esa es
+                             la velocidad máxima del medio.</p>`,
+                    rubrica: [
+                        'Menciona que la señal es una suma de armónicos',
+                        'Relaciona el ancho de banda del medio con los armónicos que pasan',
+                        'Relaciona la velocidad con la frecuencia de los armónicos',
+                        'Explica cuándo aparecen los errores'
+                    ],
+                    pistas: ['Usa las palabras armónico, ancho de banda y velocidad.']
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/senales.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

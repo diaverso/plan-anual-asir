@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Codificación: NRZ, Manchester, baudios y bps</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 2 — Codificación</h1>
+        <p>Cómo se ponen los bits en el cable · NRZ y Manchester · baudios frente a bps</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 62 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 33 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>La contradicción de ayer</strong>
+            Tu tarjeta trabaja a <strong>1 Gbps</strong> por un cable que deja pasar unos <strong>100 MHz</strong>.
+            Con dos niveles y un solo par, una señal que alterna 1 y 0 tendría ya su primer armónico en 500 MHz.
+            <br><br>
+            Y sin embargo funciona. Hoy vas a ver por qué: todo depende de <strong>cómo se ponen los bits en el
+            cable</strong>.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Ayer viste que el medio actúa como un filtro y que cuantos más cambios por segundo tiene la señal, más
+            arriba están sus armónicos. Hoy la pregunta es: <strong>¿cuántos cambios hacen falta de verdad para
+            enviar un número de bits?</strong>
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#bandabase">Banda base: la señal tal cual</a></li>
+                <li><a href="#niveles">Niveles y rangos</a></li>
+                <li><a href="#nrz">NRZ: el código más sencillo</a></li>
+                <li><a href="#sincronismo">El problema del sincronismo</a></li>
+                <li><a href="#manchester">Manchester: una transición en cada bit</a></li>
+                <li><a href="#baudios">Baudios frente a bits por segundo</a></li>
+                <li><a href="#ethernet">Cómo lo hace Ethernet</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="bandabase">1. Banda base: la señal tal cual</h2>
+
+            <p>Hay dos formas de enviar bits por un medio: ponerlos en él <strong>directamente</strong>, como niveles
+            de tensión o pulsos de luz, o <strong>subirlos a una onda portadora</strong>. Lo primero se llama
+            <strong>transmisión en banda base</strong>, y es el tema de hoy. Lo segundo es la modulación, y es el de
+            mañana.</p>
+
+            <div class="dato">
+                <strong>Cuándo se usa cada una</strong>
+                <p>Según el libro de la asignatura: para <strong>distancias cortas y medios de calidad</strong> se
+                transmite en digital, en banda base. Si la distancia es <strong>larga</strong> o el medio es
+                <strong>peor</strong>, conviene adaptar la señal mediante modulación.</p>
+                <p>Una red local por cable es el caso típico de banda base.</p>
+            </div>
+
+            <p>El currículo de Cisco separa dos pasos dentro de la capa física, y conviene tenerlos claros:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Paso</th><th>Qué hace</th><th>Ejemplo</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Codificación</strong></td><td>Convierte el flujo de bits en un <strong>código</strong>: decide qué patrón representa cada bit</td><td>«un 1 es una subida en mitad del bit»</td></tr>
+                    <tr><td><strong>Señalización</strong></td><td><strong>Genera la señal física</strong> que lleva ese código: eléctrica, óptica o de radio</td><td>una tensión que pasa de −2,5 V a +2,5 V</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="niveles">2. Niveles y rangos</h2>
+
+            <p>El convenio más simple: <strong>+5 V para el 1 y 0 V para el 0</strong>. Pero ayer viste que la señal
+            real llega deformada, así que el receptor no puede esperar valores exactos. Trabaja con
+            <strong>rangos</strong>:</p>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s05_d02_niveles_rangos.png"
+         width="1400" height="788" loading="lazy"
+         alt="Tres franjas de tensión: entre +6 y +4 V se lee un 1; entre +1 y −1 V se lee un 0; entre ambas, una zona rayada en la que el receptor no puede decidir. Una señal real alterna entre las dos zonas válidas, y en un punto roza la zona prohibida, marcado con una interrogación.">
+    <figcaption>El receptor no espera valores exactos, sino rangos. Entre ellos queda una zona en la que no puede decidir.</figcaption>
+</figure>
+<pre><code>  +6 V ┐
+       │  zona del 1        cualquier valor entre 4 y 6 V se lee como 1
+  +4 V ┘
+       ·
+       ·  zona prohibida    aquí el receptor no puede decidir
+       ·
+  +1 V ┐
+       │  zona del 0        cualquier valor entre −1 y +1 V se lee como 0
+  −1 V ┘</code></pre>
+
+            <p>Entre ambas zonas queda un hueco en el que la señal <strong>no debería caer nunca</strong>. Si cae, el
+            receptor duda: son las interrogaciones que viste ayer en el laboratorio.</p>
+
+            <h2 id="nrz">3. NRZ: el código más sencillo</h2>
+
+            <p><strong>NRZ</strong> significa <em>Non Return to Zero</em>, «sin retorno a cero». La regla es la más
+            directa posible:</p>
+
+            <div class="destacado">
+                <strong>NRZ</strong>
+                <p>El 0 es <strong>un nivel</strong> de tensión y el 1 es <strong>otro</strong>. La señal se mantiene en
+                ese nivel durante todo el bit, sin volver a cero entre uno y otro.</p>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s05_d02_nrz.png"
+         width="1400" height="525" loading="lazy"
+         alt="La secuencia 01001101 codificada en NRZ: nivel bajo para cada 0 y alto para cada 1, sin cambios dentro de ningún bit. Entre los dos ceros seguidos y entre los dos unos seguidos la señal no cambia.">
+    <figcaption>En NRZ la señal solo cambia cuando cambia el bit: los bits iguales seguidos no dejan ninguna marca.</figcaption>
+</figure>
+<pre><code>           0     1     0     0     1     1     0     1
+               ┌─────┐           ┌───────────┐     ┌─────
+NRZ            │     │           │           │     │
+         ──────┘     └───────────┘           └─────┘</code></pre>
+
+            <p>Ventajas: es sencillo y hace <strong>como mucho un cambio por bit</strong>, así que ocupa poco ancho de
+            banda. Pero tiene un problema grave, y se ve mejor con un ejemplo.</p>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="sincronismo">4. El problema del sincronismo</h2>
+
+            <p>Imagina que llegan <strong>cien ceros seguidos</strong> en NRZ. La señal es una línea plana durante
+            todo ese tiempo. ¿Cómo sabe el receptor si han sido cien, noventa y nueve o ciento uno?</p>
+
+            <p>Solo puede <strong>contar tiempo</strong> con su propio reloj. Y dos relojes nunca van exactamente a la
+            misma velocidad: tras una larga ristra sin cambios, el receptor se desfasa. El libro lo llama
+            <strong>pérdida de sincronismo</strong>: el receptor no sabe exactamente cuántos ceros o unos está
+            recibiendo.</p>
+
+            <div class="dato">
+                <strong>Síncrona y asíncrona</strong>
+                <p>Hay dos formas de que emisor y receptor se pongan de acuerdo en el ritmo:</p>
+                <ul>
+                    <li><strong>Asíncrona</strong>: no hay señal de reloj. Cada bloque lleva
+                    <strong>indicadores de comienzo y de fin</strong> para que el receptor se reajuste.</li>
+                    <li><strong>Síncrona</strong>: las señales se envían <strong>junto con una señal de
+                    reloj</strong>.</li>
+                </ul>
+                <p>Enviar el reloj por separado cuesta otro hilo. La solución elegante es <strong>meter el reloj dentro
+                de la propia señal</strong>.</p>
+            </div>
+
+            <h2 id="manchester">5. Manchester: una transición en cada bit</h2>
+
+            <p>La codificación <strong>Manchester</strong> no representa el bit con un nivel, sino con un
+            <strong>cambio</strong> en mitad del bit:</p>
+
+            <div class="destacado">
+                <strong>Manchester</strong>
+                <p><strong>0</strong>: transición de <strong>alto a bajo</strong> en mitad del bit.<br>
+                <strong>1</strong>: transición de <strong>bajo a alto</strong> en mitad del bit.</p>
+                <p>El libro de la asignatura llama a esta misma idea <strong>codificación bifase</strong>.</p>
+            </div>
+
+<pre><code>           0     1     0     0     1     1     0     1
+         ───┐     ┌─────┐  ┌──┐     ┌──┐  ┌─────┐     ┌──
+Manch.      │     │     │  │  │     │  │  │     │     │
+            └─────┘     └──┘  └─────┘  └──┘     └─────┘
+           ↓     ↑     ↓     ↓     ↑     ↑     ↓     ↑
+         la flecha es la transición central: ↑ = 1, ↓ = 0</code></pre>
+
+            <p>Como <strong>siempre</strong> hay una transición en mitad de cada bit, el receptor puede
+            <strong>sincronizar su reloj</strong> con ella, pasen los bits que pasen. Cien ceros seguidos son cien
+            bajadas, perfectamente contables.</p>
+
+            <p>Pruébalo con el codificador. Elige <em>Dieciséis ceros seguidos</em> y compara las dos filas:</p>
+
+            <div class="senal" data-senal="codificacion"></div>
+
+            <div class="aviso">
+                <strong>El precio de Manchester</strong>
+                Con dieciséis ceros, NRZ hace <strong>0 transiciones</strong> y Manchester <strong>31</strong>. Más
+                cambios por segundo significa, como viste ayer, <strong>armónicos más altos</strong>: Manchester necesita
+                aproximadamente el <strong>doble de ancho de banda</strong> que NRZ para la misma velocidad. Gana
+                sincronismo a cambio de frecuencias.
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: la otra bifase del libro y dónde se usó Manchester</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>El libro describe dos variantes. La que has visto, que llama <strong>Bifase L</strong>, y la
+                    <strong>Bifase M</strong>, en la que el 0 se representa con una transición en mitad del intervalo y
+                    el 1 sin transición.</p>
+                    <p>Manchester fue la codificación de la Ethernet original a 10 Mbps, incluida la de par trenzado
+                    (10BASE-T). Las versiones más rápidas la abandonaron precisamente por su coste en ancho de banda.
+                    <em>Este dato procede de la norma IEEE 802.3, no de la bibliografía de la asignatura.</em></p>
+                </div>
+            </details>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="baudios">6. Baudios frente a bits por segundo</h2>
+
+            <p>Aquí está la llave de la contradicción. Hay dos velocidades distintas, y el libro las define así:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Medida</th><th>Qué cuenta</th><th>Unidad</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Bits por segundo</strong></td><td>Cuántos <strong>bits</strong> se transmiten en un segundo</td><td>bps</td></tr>
+                    <tr><td><strong>Baudios</strong></td><td>Cuántas veces por segundo <strong>cambia de valor la señal</strong></td><td>baudios</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Cada valor que toma la señal durante un intervalo se llama <strong>símbolo</strong>. Si solo hay dos
+            niveles, cada símbolo lleva un bit y las dos velocidades coinciden. Pero no tiene por qué ser así.</p>
+
+            <h3>Más niveles, más bits por símbolo</h3>
+
+            <p>Con <strong>4 niveles</strong>, cada símbolo puede representar dos bits (00, 01, 10 u 11). Con
+            <strong>8 niveles</strong>, tres. La regla general:</p>
+
+            <div class="destacado">
+                <strong>bits por símbolo = log<sub>2</sub>(número de niveles)</strong>
+                <p><strong>bps = baudios × bits por símbolo</strong></p>
+                <p>El ejemplo del libro: con 8 tensiones distintas, del 0 al 7, cada valor lleva <strong>3 bits</strong>,
+                y la velocidad en bps es <strong>tres veces</strong> la velocidad en baudios.</p>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Niveles</th><th>Bits por símbolo</th><th>A 1 000 baudios</th></tr></thead>
+                <tbody>
+                    <tr><td>2</td><td>1</td><td>1 000 bps</td></tr>
+                    <tr><td>4</td><td>2</td><td>2 000 bps</td></tr>
+                    <tr><td>8</td><td>3</td><td>3 000 bps</td></tr>
+                    <tr><td>16</td><td>4</td><td>4 000 bps</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Mira la última fila del codificador: con 4 niveles, <strong>16 bits caben en 8 símbolos</strong>. La
+            señal cambia la mitad de veces, así que sus armónicos están a la mitad de frecuencia.</p>
+
+            <div class="aviso">
+                <strong>Nada sale gratis</strong>
+                Con más niveles, los escalones entre uno y otro son <strong>más pequeños</strong>. Una perturbación que
+                no confundiría un 0 con un 1 sí puede confundir el nivel 2 con el 3. El libro lo advierte: estas señales
+                son <strong>más sensibles al ruido</strong>. El jueves verás hasta dónde se puede estirar.
+            </div>
+
+            <h3>Y al revés: menos bps que baudios</h3>
+
+            <p>El libro también avisa de que la velocidad en bps puede ser <strong>menor</strong> que en baudios. Es
+            justo lo que pasa en Manchester: cada bit puede llevar <strong>dos cambios</strong> de nivel, así que la
+            señal cambia más veces por segundo que bits transmite.</p>
+
+            <h2 id="ethernet">7. Cómo lo hace Ethernet</h2>
+
+            <p>El currículo de Cisco resume qué técnicas usa cada medio:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Medio</th><th>Codificación</th><th>Señalización</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Cobre</strong></td><td>Manchester · NRZ · 4B/5B con MLT-3 · 8B/10B · PAM5</td><td>Cambios en el campo electromagnético: intensidad y fase</td></tr>
+                    <tr><td><strong>Fibra óptica</strong></td><td>Pulsos de luz</td><td>Un pulso es un 1; la ausencia de pulso, un 0</td></tr>
+                    <tr><td><strong>Inalámbrico</strong></td><td>DSSS · OFDM</td><td>Ondas de radio</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Resolviendo la contradicción: Gigabit Ethernet</h3>
+
+            <p>La Ethernet de 1 Gbps por par trenzado usa <strong>PAM5</strong>, una señal de <strong>cinco
+            niveles</strong>, y la combina con otra idea: <strong>usar los cuatro pares a la vez</strong>.</p>
+
+<pre><code>  4 pares × 125 millones de baudios × 2 bits por símbolo = 1 000 Mbps
+
+  cada par lleva:   250 Mbps   pero solo cambia 125 millones de veces por segundo
+  fundamental máx:  62,5 MHz   por debajo de los ~100 MHz del cable</code></pre>
+
+            <div class="dato">
+                <strong>La contradicción, resuelta</strong>
+                <p>Mil millones de bits no significa mil millones de cambios. Repartiendo entre cuatro pares y llevando
+                más de un bit por símbolo, <strong>cada par cambia solo 125 millones de veces por segundo</strong>, y
+                la señal cabe en el cable.</p>
+                <p><em>Las cifras de 125 millones de baudios y 2 bits por símbolo proceden de la norma IEEE 802.3 para
+                1000BASE-T. La bibliografía de la asignatura nombra PAM5, pero no da estos valores.</em></p>
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: qué es 4B/5B</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>La tabla de Cisco menciona <strong>4B/5B</strong>. La idea es otra forma de atacar el problema del
+                    sincronismo: cada grupo de <strong>4 bits</strong> se sustituye por un código de <strong>5
+                    bits</strong> elegido de forma que nunca haya demasiados ceros seguidos.</p>
+                    <p>Se pierde un 20 % de capacidad, pero se garantiza que la señal cambie a menudo. Fast Ethernet a
+                    100 Mbps lo usa: los 100 Mbps se convierten en 125 millones de símbolos por segundo.
+                    <em>Detalle procedente de la norma IEEE 802.3.</em></p>
+                </div>
+            </details>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li><strong>Banda base</strong>: la señal digital se pone directamente en el medio. Es lo normal en
+                    redes locales por cable.</li>
+                    <li><strong>Codificación</strong> elige el patrón; <strong>señalización</strong> genera la señal
+                    física.</li>
+                    <li><strong>NRZ</strong>: un nivel para cada bit. Sencillo, pero pierde el sincronismo con ristras
+                    largas.</li>
+                    <li><strong>Manchester</strong>: una transición en mitad de cada bit. Lleva el reloj dentro, a costa
+                    del doble de ancho de banda.</li>
+                    <li><strong>Baudios</strong> cuentan cambios de la señal; <strong>bps</strong>, bits.
+                    bps = baudios × log<sub>2</sub>(niveles).</li>
+                    <li>Más niveles, más bits por símbolo y <strong>más sensibilidad al ruido</strong>.</li>
+                    <li>Gigabit Ethernet: <strong>4 pares</strong> y <strong>varios niveles</strong> por par.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Baudios y bits por segundo son lo mismo»</td><td>Solo con <strong>dos niveles</strong>. Con más, hay más bits que baudios</td></tr>
+                    <tr><td>«Manchester es más rápido que NRZ»</td><td>Al revés: a igual velocidad necesita <strong>más ancho de banda</strong>. Lo que gana es sincronismo</td></tr>
+                    <tr><td>«En Manchester el 1 es nivel alto»</td><td>El bit es la <strong>transición</strong> central, no el nivel</td></tr>
+                    <tr><td>«Con más niveles siempre es mejor»</td><td>Más bits por símbolo, pero <strong>más errores</strong> con el mismo ruido</td></tr>
+                    <tr><td>«1 Gbps son mil millones de cambios por segundo»</td><td>En 1000BASE-T son 125 millones por par, con 4 pares y 2 bits por símbolo</td></tr>
+                    <tr><td>«Codificar y modular son lo mismo»</td><td>Codificar es poner los bits en <strong>banda base</strong>; modular, subirlos a una <strong>portadora</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 22 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Con el codificador comprobarás cuánto sincronismo gana Manchester y cuánto le cuesta. Después
+            consultarás <strong>qué velocidades admite tu propia tarjeta</strong> y harás la cuenta de Gigabit
+            Ethernet con tus datos.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 2</strong></a> (70 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 3</strong>
+            <p><strong>Modulación</strong>: qué hacer cuando el medio es el aire o una línea pensada para voz. Se sube
+            la información a una onda portadora y se le cambia la amplitud, la frecuencia o la fase.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> hoy has usado el nivel de la señal para llevar bits. ¿Qué otras
+            propiedades de una onda, de las que viste ayer, podrían llevar información?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Escribe cómo se vería la secuencia <strong>1100</strong> en NRZ, describiendo los niveles bit a bit. ¿Cuántas veces cambia la señal?',
+                modelo: 'Con el 1 en nivel alto: <strong>alto, alto, bajo, bajo</strong>. La señal solo cambia <strong>una vez</strong>, entre el segundo y el tercer bit. En NRZ no hay ningún cambio dentro de un bit: se mantiene el nivel durante todo el intervalo.',
+                puntos: [
+                    'Asigna un nivel a cada bit, sin transiciones internas',
+                    'Mantiene el nivel entre bits iguales',
+                    'Cuenta un solo cambio'
+                ]
+            },
+            {
+                pregunta: 'Un enlace NRZ envía una trama con doscientos ceros seguidos y el receptor la recibe con un bit de más. ¿Qué ha pasado, y cómo lo evitaría Manchester?',
+                modelo: 'Ha habido <strong>pérdida de sincronismo</strong>. Durante doscientos ceros la señal NRZ es una línea plana, así que el receptor solo puede contar tiempo con su propio reloj, que va ligeramente distinto del del emisor. Al final se desfasa y cuenta uno de más. Manchester pone una <strong>transición en mitad de cada bit</strong>: doscientos ceros son doscientas bajadas que el receptor puede contar y con las que puede reajustar su reloj.',
+                puntos: [
+                    'Identifica la pérdida de sincronismo',
+                    'Explica que NRZ no cambia con bits iguales seguidos',
+                    'Explica que los relojes de emisor y receptor no son idénticos',
+                    'Explica que Manchester tiene una transición en cada bit'
+                ]
+            },
+            {
+                pregunta: 'Una señal tiene <strong>16 niveles</strong> y cambia <strong>2 400 veces por segundo</strong>. ¿Cuántos baudios y cuántos bps son? ¿Qué inconveniente tiene frente a una de 2 niveles?',
+                modelo: 'Son <strong>2 400 baudios</strong>, porque es el número de cambios por segundo. Con 16 niveles cada símbolo lleva log<sub>2</sub>16 = 4 bits, así que son <strong>9 600 bps</strong>. El inconveniente es que los niveles están <strong>mucho más juntos</strong>: una perturbación pequeña puede hacer que el receptor confunda un nivel con el vecino. Es más sensible al ruido.',
+                puntos: [
+                    'Identifica 2 400 baudios',
+                    'Calcula 4 bits por símbolo',
+                    'Obtiene 9 600 bps',
+                    'Menciona la mayor sensibilidad al ruido'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué es la transmisión en banda base?', dorso: 'Poner la señal digital <strong>directamente</strong> en el medio, sin portadora. Típica de las LAN por cable.' },
+            { frente: 'Codificación frente a señalización', dorso: 'La <strong>codificación</strong> decide el patrón de cada bit; la <strong>señalización</strong> genera la señal física.' },
+            { frente: '¿Cómo codifica NRZ?', dorso: 'Un <strong>nivel</strong> para el 0 y otro para el 1, mantenidos durante todo el bit.' },
+            { frente: '¿Qué problema tiene NRZ?', dorso: 'La <strong>pérdida de sincronismo</strong> con ristras largas de bits iguales.' },
+            { frente: '¿Cómo codifica Manchester un 0 y un 1?', dorso: '<strong>0</strong>: de alto a bajo en mitad del bit. <strong>1</strong>: de bajo a alto.' },
+            { frente: '¿Qué gana y qué pierde Manchester?', dorso: 'Gana <strong>sincronismo</strong>: lleva el reloj dentro. Pierde <strong>ancho de banda</strong>: necesita el doble.' },
+            { frente: 'Síncrona frente a asíncrona', dorso: '<strong>Síncrona</strong>: con señal de reloj. <strong>Asíncrona</strong>: sin reloj, con indicadores de comienzo y fin.' },
+            { frente: '¿Qué mide el baudio?', dorso: 'Las veces por segundo que <strong>cambia de valor</strong> la señal.' },
+            { frente: 'Fórmula que une baudios y bps', dorso: '<strong>bps = baudios × log<sub>2</sub>(niveles)</strong>.' },
+            { frente: 'Con 8 niveles, ¿cuántos bits por símbolo?', dorso: '<strong>3</strong>, y los bps son el triple de los baudios.' },
+            { frente: '¿Por qué no se usan siempre muchos niveles?', dorso: 'Porque los niveles quedan más juntos y la señal es <strong>más sensible al ruido</strong>.' },
+            { frente: '¿Cómo consigue 1 Gbps el par trenzado?', dorso: '<strong>4 pares</strong> a la vez, con varios niveles por par (PAM5): 125 millones de baudios × 2 bits en cada uno.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 2: Codificación',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'Banda base',
+                repaso: '#bandabase',
+                text: '¿En qué situación es más apropiada la transmisión en banda base?',
+                options: {
+                    a: 'En un enlace de radio de varios kilómetros',
+                    b: 'En una red local por cable, con distancias cortas y un medio de calidad',
+                    c: 'Por la línea telefónica convencional',
+                    d: 'Por satélite'
+                },
+                answer: 'b',
+                feedback: 'Distancias cortas y buen medio: banda base. Para distancias largas o medios peores se recurre a la <strong>modulación</strong>.'
+            },
+            {
+                topic: 'Banda base',
+                repaso: '#bandabase',
+                text: 'Una tarjeta decide que cada 1 se representará con una subida en mitad del bit, y luego genera una tensión que pasa de −2,5 V a +2,5 V. ¿Cómo se llaman esos dos pasos?',
+                options: {
+                    a: 'Modulación y demodulación',
+                    b: 'Muestreo y cuantificación',
+                    c: 'Codificación y señalización',
+                    d: 'Encapsulación y desencapsulación'
+                },
+                answer: 'c',
+                feedback: 'Elegir el patrón es <strong>codificar</strong>; generar la señal física es <strong>señalizar</strong>.'
+            },
+            {
+                topic: 'Niveles',
+                repaso: '#niveles',
+                text: 'Un receptor considera 1 cualquier valor entre 4 y 6 V, y 0 entre −1 y +1 V. Llega una señal de 2,5 V. ¿Qué ocurre?',
+                options: {
+                    a: 'Cae en la zona prohibida: el receptor no puede decidir',
+                    b: 'Lo lee como 1',
+                    c: 'Lo lee como 0',
+                    d: 'Lo lee como el bit anterior'
+                },
+                answer: 'a',
+                feedback: 'Entre las dos zonas hay un hueco en el que la señal no debería caer nunca. Es la interrogación del laboratorio de ayer.'
+            },
+            {
+                topic: 'NRZ',
+                repaso: '#nrz',
+                text: '¿Cuántas transiciones tiene la secuencia 11110000 codificada en NRZ?',
+                options: { a: '0', b: '8', c: '16', d: '1' },
+                answer: 'd',
+                feedback: 'NRZ solo cambia cuando cambia el bit: pasa de 1 a 0 <strong>una vez</strong>, en la mitad de la secuencia.'
+            },
+            {
+                topic: 'Sincronismo',
+                repaso: '#sincronismo',
+                text: '¿Por qué una larga ristra de ceros es un problema en NRZ?',
+                options: {
+                    a: 'Porque consume mucha energía',
+                    b: 'Porque la señal no cambia y el receptor puede perder la cuenta de cuántos bits han llegado',
+                    c: 'Porque los ceros no se pueden transmitir en NRZ',
+                    d: 'Porque produce colisiones'
+                },
+                answer: 'b',
+                feedback: 'Sin cambios, el receptor solo cuenta tiempo con su propio reloj, y acaba desfasándose: <strong>pérdida de sincronismo</strong>.'
+            },
+            {
+                topic: 'Sincronismo',
+                repaso: '#sincronismo',
+                text: 'Una transmisión no envía señal de reloj, pero marca cada bloque con indicadores de comienzo y fin. ¿Qué tipo es?',
+                options: { a: 'Síncrona', b: 'Dúplex', c: 'En paralelo', d: 'Asíncrona' },
+                answer: 'd',
+                feedback: 'Sin reloj y con marcas de inicio y fin: <strong>asíncrona</strong>.'
+            },
+            {
+                topic: 'Manchester',
+                repaso: '#manchester',
+                text: 'En Manchester, un bit presenta una transición de bajo a alto en su mitad. ¿Qué bit es?',
+                options: { a: 'Un 0', b: 'Depende del bit anterior', c: 'Un 1', d: 'Un error' },
+                answer: 'c',
+                feedback: '<strong>1</strong>: de bajo a alto. <strong>0</strong>: de alto a bajo. Lo que cuenta es el sentido de la transición central.'
+            },
+            {
+                topic: 'Manchester',
+                repaso: '#manchester',
+                text: '¿Qué ventaja tiene Manchester frente a NRZ, y a qué precio?',
+                options: {
+                    a: 'Mantiene el sincronismo, a cambio de necesitar más ancho de banda',
+                    b: 'Es más rápido, a cambio de más errores',
+                    c: 'Usa menos energía, a cambio de menos alcance',
+                    d: 'No tiene ninguna ventaja'
+                },
+                answer: 'a',
+                feedback: 'Con una transición en cada bit, el receptor siempre puede reajustar su reloj. Pero más cambios significan armónicos más altos: aproximadamente el <strong>doble de ancho de banda</strong>.'
+            },
+            {
+                topic: 'Baudios y bps',
+                repaso: '#baudios',
+                text: 'Una señal de dos niveles cambia 9 600 veces por segundo. ¿A cuántos bps transmite?',
+                options: { a: '4 800 bps', b: '19 200 bps', c: '9 600 bps', d: '96 000 bps' },
+                answer: 'c',
+                feedback: 'Con dos niveles, un bit por símbolo: <strong>bps = baudios</strong>.'
+            },
+            {
+                topic: 'Baudios y bps',
+                repaso: '#baudios',
+                text: 'Una señal de 8 niveles transmite a 1 200 baudios. ¿Cuántos bps son?',
+                options: { a: '1 200 bps', b: '2 400 bps', c: '9 600 bps', d: '3 600 bps' },
+                answer: 'd',
+                feedback: 'log<sub>2</sub>8 = 3 bits por símbolo. 1 200 × 3 = <strong>3 600 bps</strong>. Es el mismo caso del ejemplo del libro.'
+            },
+            {
+                topic: 'Baudios y bps',
+                repaso: '#baudios',
+                text: 'Quieres 4 000 bps con una señal que solo puede cambiar 1 000 veces por segundo. ¿Cuántos niveles necesitas?',
+                options: { a: '16', b: '2', c: '4', d: '8' },
+                answer: 'a',
+                feedback: 'Necesitas 4 bits por símbolo, y 2<sup>4</sup> = <strong>16 niveles</strong>.'
+            },
+            {
+                topic: 'Ethernet',
+                repaso: '#ethernet',
+                text: 'Según el currículo Cisco, ¿cómo se señaliza un 1 en fibra óptica?',
+                options: {
+                    a: 'Con una tensión alta',
+                    b: 'Con un pulso de luz; la ausencia de pulso es un 0',
+                    c: 'Con una onda de radio',
+                    d: 'Con una transición de bajo a alto'
+                },
+                answer: 'b',
+                feedback: 'En fibra la señal es luz: <strong>pulso</strong> para el 1, <strong>ausencia de pulso</strong> para el 0.'
+            },
+            {
+                topic: 'Ethernet',
+                repaso: '#ethernet',
+                text: '¿Cómo consigue 1000BASE-T transmitir 1 Gbps por un cable que deja pasar unos 100 MHz?',
+                options: {
+                    a: 'Usando Manchester en un solo par',
+                    b: 'Comprimiendo los datos antes de enviarlos',
+                    c: 'Repartiendo los datos entre los 4 pares y llevando 2 bits por símbolo, de modo que cada par cambia solo 125 millones de veces por segundo',
+                    d: 'No lo consigue: necesita fibra'
+                },
+                answer: 'c',
+                feedback: '4 × 125 millones × 2 = 1 000 millones. Con 125 millones de baudios, la fundamental más alta queda en 62,5 MHz, dentro del cable.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: '../Dia_01/teoria.html#pulsos',
+                text: '<em>Repaso.</em> ¿Por qué una señal con más cambios por segundo necesita un medio con más ancho de banda?',
+                options: {
+                    a: 'Porque sus pulsos son más estrechos y sus armónicos están a frecuencias más altas',
+                    b: 'Porque gasta más energía',
+                    c: 'Porque tiene más amplitud',
+                    d: 'No lo necesita'
+                },
+                answer: 'a',
+                feedback: 'Es la idea que conecta el lunes con hoy: <strong>menos cambios por segundo</strong> significa armónicos más bajos, y por eso los códigos multinivel caben en medios más estrechos.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/senales.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Modulación: ASK, FSK, PSK y QAM</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 3 — Modulación</h1>
+        <p>Subir los bits a una portadora · ASK, FSK y PSK · QAM y las constelaciones</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 5</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 68 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 24 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 5 h 00 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Cuando la banda base no sirve</strong>
+            Ayer los bits iban tal cual por el cable. Pero hay medios que no lo permiten: una línea pensada para la
+            voz, o el aire. Ahí una señal digital con sus escalones sencillamente <strong>no llega</strong>.
+            <br><br>
+            Hoy la solución: <strong>subir la información a una onda que sí viaja bien</strong>, y cambiarle algo en
+            cada bit.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            El lunes viste que una senoidal se describe con <strong>tres parámetros</strong>: amplitud, frecuencia y
+            fase. Hoy cada uno de ellos se convierte en una forma de transportar bits. Y ayer viste que más niveles
+            dan más bits por símbolo: hoy esa idea llega a su máxima expresión.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#porque">Por qué modular</a></li>
+                <li><a href="#portadora">Portadora, moduladora y módem</a></li>
+                <li><a href="#tres">Las tres formas: amplitud, frecuencia y fase</a></li>
+                <li><a href="#casos">Los cuatro casos de modulación</a></li>
+                <li><a href="#multibit">Modulación multibit</a></li>
+                <li><a href="#qam">QAM y las constelaciones</a></li>
+                <li><a href="#wifi">La modulación en tu Wi-Fi</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="porque">1. Por qué modular</h2>
+
+            <p>El libro de la asignatura cuenta el origen de forma muy clara. Cuando aparecieron las primeras redes de
+            ordenadores no había infraestructura para unir sedes lejanas. Las empresas recurrieron a lo que ya
+            existía: <strong>la red telefónica</strong>. El problema es que esa red estaba diseñada para transportar
+            <strong>voz</strong>, es decir, señales <strong>analógicas</strong>.</p>
+
+            <p>Y el lunes viste lo que pasa al meter una señal digital por la línea telefónica: a partir de cierta
+            velocidad, los armónicos no caben. La conclusión del libro es directa:</p>
+
+            <div class="dato">
+                <strong>Por qué no se envía la señal digital directamente</strong>
+                <p>Es preferible <strong>modificarla</strong> para que ocupe <strong>menos ancho de banda</strong> y
+                pueda transmitirse, a mayor velocidad, por medios de baja calidad. La técnica más importante para
+                conseguirlo es la <strong>modulación</strong>.</p>
+            </div>
+
+            <p>Y hay un segundo motivo, todavía más evidente: <strong>por el aire no se puede enviar un escalón de
+            tensión</strong>. Una antena solo radia bien ondas de una frecuencia concreta. Toda comunicación por radio,
+            desde la FM hasta el Wi-Fi, es modulada.</p>
+
+            <h2 id="portadora">2. Portadora, moduladora y módem</h2>
+
+            <p>Modular es hacer que una señal controle una característica de otra. El libro lo define así:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Señal</th><th>Qué es</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Moduladora</strong></td><td>La que lleva la <strong>información</strong>: en nuestro caso, los bits</td></tr>
+                    <tr><td><strong>Portadora</strong></td><td>Una onda senoidal con las características que el medio necesita: la frecuencia adecuada para el cable o para la antena</td></tr>
+                    <tr><td><strong>Modulada</strong></td><td>El resultado: lleva la <strong>información de la moduladora</strong> con las <strong>características de la portadora</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s05_d03_modulador.png"
+         width="1400" height="788" loading="lazy"
+         alt="Esquema de un modulador. Entran una señal digital, la moduladora, y una senoidal regular, la portadora. Sale una señal modulada cuya amplitud es grande en unos tramos y pequeña en otros, que se envía al medio, representado por una antena.">
+    <figcaption>La señal modulada lleva la información de la moduladora con las características de la portadora.</figcaption>
+</figure>
+<pre><code>  moduladora (los bits) ─┐
+                         ├──▶ [ MODULADOR ] ──▶ señal modulada ──▶ medio
+  portadora (senoidal) ──┘</code></pre>
+
+            <p>El aparato que hace esta conversión en los dos sentidos se llama <strong>módem</strong>: es
+            <strong>MO</strong>dulador y <strong>DEM</strong>odulador a la vez. Modula lo que envía y demodula lo que
+            recibe para recuperar los bits.</p>
+
+            <div class="dato">
+                <strong>Una definición que conviene entender, no memorizar</strong>
+                <p>El currículo de Cisco lo resume así: la modulación es el proceso por el que una característica de
+                una onda, <strong>la señal</strong>, modifica a otra onda, <strong>la portadora</strong>.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="tres">3. Las tres formas: amplitud, frecuencia y fase</h2>
+
+            <p>Una senoidal tiene tres parámetros. Cada uno da una forma de modular. En la radio clásica, con
+            información analógica, se conocen como <strong>AM</strong> y <strong>FM</strong>. Con bits, sus versiones
+            digitales tienen nombre propio:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Técnica</th><th>Qué cambia</th><th>Un 1</th><th>Un 0</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>ASK</strong> — modulación por desplazamiento de amplitud</td><td>La <strong>amplitud</strong></td><td>Una amplitud</td><td>Otra amplitud distinta</td></tr>
+                    <tr><td><strong>FSK</strong> — por desplazamiento de frecuencia</td><td>La <strong>frecuencia</strong></td><td>Una frecuencia</td><td>Otra frecuencia distinta</td></tr>
+                    <tr><td><strong>PSK</strong> — por desplazamiento de fase</td><td>La <strong>fase</strong></td><td>La onda tal cual</td><td>La onda desplazada</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s05_d03_ask_fsk_psk.png"
+         width="1400" height="788" loading="lazy"
+         alt="Los bits 1, 0 y 1 modulados de tres formas. En ASK la onda del 0 es más baja. En FSK la amplitud no cambia, pero el 1 tiene muchos más ciclos que el 0. En PSK amplitud y ritmo son iguales en los tres bits, y en cada cambio de bit la onda da un salto porque su fase se invierte.">
+    <figcaption>Los mismos tres bits: en ASK cambia la altura, en FSK el ritmo y en PSK el punto en que empieza la onda.</figcaption>
+</figure>
+<pre><code>bits     1          0          1
+ASK      ∿∿∿∿       ~~~~       ∿∿∿∿     el 0 con amplitud más pequeña
+FSK      ∿∿∿∿∿∿∿∿   ∿ ∿ ∿ ∿    ∿∿∿∿∿∿∿∿   el 1 con más ciclos por bit
+PSK      ∿∿∿∿       ∿∿∿∿       ∿∿∿∿     igual forma, pero el 0 empieza «al revés»</code></pre>
+
+            <p>El libro insiste en una idea que evita muchos errores: los valores concretos <strong>no importan</strong>.
+            Se puede usar cualquier amplitud, cualquier frecuencia o cualquier desplazamiento para el 0 y el 1,
+            <strong>siempre que sean distintos</strong>. Lo único prohibido en PSK es desplazar exactamente un periodo
+            completo, porque la onda quedaría igual que al principio.</p>
+
+            <p>Compáralas en el modulador. Escribe tus propios bits y observa las tres filas:</p>
+
+            <div class="senal" data-senal="modulacion"></div>
+
+            <div class="aviso">
+                <strong>Lo que tienes que observar</strong>
+                En <strong>ASK</strong> la onda crece y encoge. En <strong>FSK</strong> la amplitud no cambia nunca: solo
+                se aprietan o se separan los ciclos. En <strong>PSK</strong> ni la amplitud ni la frecuencia cambian; lo
+                único que delata el cambio de bit es un <strong>salto brusco</strong> en la onda, donde la fase se
+                invierte. Por eso FSK y PSK resisten mejor las perturbaciones que afectan a la amplitud.
+            </div>
+
+            <h2 id="casos">4. Los cuatro casos de modulación</h2>
+
+            <p>El libro clasifica la modulación según qué tipo de señal lleva la información y qué tipo de portadora
+            se usa:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Información</th><th>Portadora</th><th>Para qué se usa</th></tr></thead>
+                <tbody>
+                    <tr><td>Analógica</td><td>Analógica</td><td>Transmitir una señal analógica a otra frecuencia o con menos ancho de banda. La radio AM y FM</td></tr>
+                    <tr><td><strong>Digital</strong></td><td><strong>Analógica</strong></td><td>Enviar bits por un medio analógico. <strong>La más común</strong>: el acceso a Internet por la red telefónica</td></tr>
+                    <tr><td>Analógica</td><td>Digital</td><td>Enviar una señal analógica por una red digital, como la voz en la telefonía móvil digital</td></tr>
+                    <tr><td>Digital</td><td>Digital</td><td>No existe como tal: se considera un caso de <strong>transmisión en banda base</strong>, lo de ayer</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>ASK, FSK y PSK son casos de la segunda fila: bits sobre una portadora analógica.</p>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="multibit">5. Modulación multibit</h2>
+
+            <p>Ayer viste que una señal con más niveles lleva más bits por símbolo. Con la modulación pasa lo mismo, y
+            el libro lo llama <strong>modulación multibit</strong>: usar <strong>varios valores</strong>, o varios
+            métodos a la vez, para meter más de un bit en cada intervalo.</p>
+
+            <div class="dato">
+                <strong>El ejemplo del libro</strong>
+                <p>Con dos amplitudes (A<sub>1</sub> y A<sub>2</sub>) y dos frecuencias (F<sub>1</sub> y
+                F<sub>2</sub>) a la vez hay <strong>cuatro estados</strong> distintos: A<sub>1</sub>F<sub>1</sub>,
+                A<sub>1</sub>F<sub>2</sub>, A<sub>2</sub>F<sub>1</sub> y A<sub>2</sub>F<sub>2</sub>. Cuatro estados son
+                <strong>dos bits por intervalo</strong>.</p>
+            </div>
+
+            <p>La regla es la misma de ayer, con otro nombre: con <strong>N estados</strong> posibles, cada símbolo
+            lleva <strong>log<sub>2</sub>N bits</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Estados</th><th>Bits por símbolo</th></tr></thead>
+                <tbody>
+                    <tr><td>2</td><td>1</td></tr>
+                    <tr><td>4</td><td>2</td></tr>
+                    <tr><td>16</td><td>4</td></tr>
+                    <tr><td>64</td><td>6</td></tr>
+                    <tr><td>256</td><td>8</td></tr>
+                    <tr><td>1 024</td><td>10</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="qam">6. QAM y las constelaciones</h2>
+
+            <p>La técnica multibit más importante es <strong>QAM</strong>, <em>Quadrature Amplitude Modulation</em>:
+            modulación de amplitud en cuadratura. Cambia <strong>a la vez la amplitud y la fase</strong>.</p>
+
+            <p>El libro describe una QAM concreta que usa 12 fases distintas, cuatro de ellas con dos amplitudes, lo
+            que da 8 + 4 × 2 = <strong>16 combinaciones</strong>: <strong>4 bits por intervalo</strong>.</p>
+
+            <h3>Cómo se dibuja: la constelación</h3>
+
+            <p>Para ver de un vistazo todos los estados se usa un diagrama llamado <strong>constelación</strong>. Cada
+            símbolo posible es un <strong>punto</strong>:</p>
+
+            <ul>
+                <li>La <strong>distancia al centro</strong> es la amplitud.</li>
+                <li>El <strong>ángulo</strong> es la fase.</li>
+            </ul>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s05_d03_constelacion_qam16.png"
+         width="1254" height="1254" loading="lazy"
+         alt="Constelación QAM-16: dieciséis puntos en una rejilla de cuatro por cuatro, cada uno con su etiqueta de cuatro bits. Una flecha desde el centro hasta el punto 1011 indica su amplitud, y un arco junto al origen indica su fase.">
+    <figcaption>Cada punto es un símbolo de 4 bits. Su distancia al centro es la amplitud, y su ángulo, la fase.</figcaption>
+</figure>
+<pre><code>              Q
+       •    •  │  •    •        16 puntos = 16 estados = 4 bits por símbolo
+                │
+       •    •  │  •    •        cada punto tiene su amplitud (distancia al centro)
+    ───────────┼───────────  I  y su fase (ángulo)
+       •    •  │  •    •
+                │
+       •    •  │  •    •</code></pre>
+
+            <p>El modulador de más arriba dibuja una QAM-16 en forma de <strong>rejilla de 4 × 4</strong>, que es la
+            disposición habitual hoy. Escribe 8 bits y verás dos puntos numerados: son los dos símbolos que se
+            envían.</p>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: por qué la rejilla y por qué ese orden de etiquetas</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>La QAM del libro reparte los puntos en círculos. La que se usa hoy en Wi-Fi, en el cable y en la
+                    fibra hasta casa los coloca en una <strong>rejilla cuadrada</strong>, porque así los puntos quedan
+                    igual de separados y el receptor los distingue mejor.</p>
+                    <p>Las etiquetas siguen un <strong>código Gray</strong>: dos puntos vecinos solo se diferencian en un
+                    bit. Si el ruido hace que el receptor confunda un punto con su vecino, solo se equivoca en un bit de
+                    los cuatro. <em>Esta disposición procede de la documentación técnica de QAM, no de la bibliografía
+                    de la asignatura.</em></p>
+                </div>
+            </details>
+
+            <div class="aviso">
+                <strong>El mismo precio de ayer</strong>
+                Más puntos en la constelación significan <strong>más bits por símbolo</strong>, pero también puntos
+                <strong>más juntos</strong>. Con poco ruido, el receptor los distingue. Con mucho, confunde un punto con
+                su vecino y aparecen errores.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="wifi">7. La modulación en tu Wi-Fi</h2>
+
+            <p>El currículo de Cisco da dos pistas que ahora cobran sentido. La primera: las redes inalámbricas usan
+            técnicas como <strong>DSSS</strong> y <strong>OFDM</strong>. La segunda: una de las propiedades del medio
+            inalámbrico es la <strong>tasa adaptativa</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Término</th><th>Qué es, en una frase</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>DSSS</strong></td><td>Espectro ensanchado por secuencia directa: reparte cada bit en una banda ancha para resistir interferencias. Lo usaban las primeras redes Wi-Fi</td></tr>
+                    <tr><td><strong>OFDM</strong></td><td>Multiplexación por división de frecuencia ortogonal: divide el canal en <strong>muchas portadoras</strong> estrechas, y cada una se modula por separado, normalmente con QAM</td></tr>
+                    <tr><td><strong>Tasa adaptativa</strong></td><td>El equipo cambia de modulación según la calidad de la señal</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Y la tasa adaptativa es justo el aviso de antes llevado a la práctica. Cuando estás cerca del punto de
+            acceso, la señal es limpia y se usa una constelación con muchos puntos: muchos bits por símbolo. Al
+            alejarte, el ruido pesa más, el equipo <strong>cambia a una constelación con menos puntos</strong> y la
+            velocidad baja. Por eso el Wi-Fi va más lento en la otra punta de casa, aunque siga conectado.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Norma Wi-Fi</th><th>Técnica</th><th>Modulación máxima</th><th>Bits por símbolo</th></tr></thead>
+                <tbody>
+                    <tr><td>802.11b</td><td>DSSS</td><td>—</td><td>—</td></tr>
+                    <tr><td>802.11a / g</td><td>OFDM</td><td>64-QAM</td><td>6</td></tr>
+                    <tr><td>802.11n (Wi-Fi 4)</td><td>OFDM</td><td>64-QAM</td><td>6</td></tr>
+                    <tr><td>802.11ac (Wi-Fi 5)</td><td>OFDM</td><td>256-QAM</td><td>8</td></tr>
+                    <tr><td>802.11ax (Wi-Fi 6)</td><td>OFDM</td><td>1024-QAM</td><td>10</td></tr>
+                </tbody>
+            </table>
+            </div>
+            <p><em>Esta tabla procede de las normas IEEE 802.11. La bibliografía de la asignatura nombra DSSS y OFDM,
+            pero no da las modulaciones de cada norma.</em></p>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Se modula cuando el medio <strong>no admite la señal en banda base</strong>: líneas de voz,
+                    radio.</li>
+                    <li>La <strong>moduladora</strong> lleva la información; la <strong>portadora</strong>, las
+                    características que necesita el medio. El <strong>módem</strong> hace los dos sentidos.</li>
+                    <li><strong>ASK</strong> cambia la amplitud; <strong>FSK</strong>, la frecuencia; <strong>PSK</strong>,
+                    la fase.</li>
+                    <li>Bits sobre portadora analógica es el caso <strong>más común</strong>. Bits sobre portadora digital
+                    es banda base.</li>
+                    <li><strong>Multibit</strong>: N estados llevan log<sub>2</sub>N bits por símbolo.</li>
+                    <li><strong>QAM</strong> cambia amplitud y fase a la vez. En la <strong>constelación</strong>, la
+                    distancia al centro es la amplitud y el ángulo, la fase.</li>
+                    <li>Más puntos, más bits y <strong>más sensibilidad al ruido</strong>. El Wi-Fi lo gestiona con la
+                    <strong>tasa adaptativa</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Modular y codificar son lo mismo»</td><td>Codificar pone los bits en <strong>banda base</strong>; modular los sube a una <strong>portadora</strong></td></tr>
+                    <tr><td>«En ASK el 0 es ausencia de señal»</td><td>Puede serlo, pero basta con que la amplitud sea <strong>distinta</strong></td></tr>
+                    <tr><td>«En PSK cambia la frecuencia»</td><td>Cambia la <strong>fase</strong>. La frecuencia es la misma para el 0 y el 1</td></tr>
+                    <tr><td>«El módem sirve para conectarse a Internet»</td><td>Sirve para <strong>convertir</strong> entre digital y analógico en los dos sentidos</td></tr>
+                    <tr><td>«QAM-16 lleva 16 bits»</td><td>Lleva <strong>4</strong>: 16 es el número de estados</td></tr>
+                    <tr><td>«Si el Wi-Fi baja de velocidad, se ha cortado»</td><td>Suele ser la <strong>tasa adaptativa</strong>: cambia a una modulación más robusta</td></tr>
+                    <tr><td>«Cuantos más puntos en la constelación, mejor»</td><td>Solo si el canal es limpio: con ruido, los puntos se confunden</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 24 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Con el modulador compararás las tres técnicas y leerás una constelación. Después averiguarás
+            <strong>qué normas Wi-Fi admite tu adaptador</strong> y cuántos bits por símbolo puede usar cada una.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 3</strong></a> (79 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 4</strong>
+            <p><strong>Perturbaciones y capacidad</strong>: qué ensucia la señal, cómo se mide en decibelios y cuántos
+            bits por segundo caben como máximo en un canal, según Nyquist y Shannon.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> si más puntos dan más bits, ¿por qué no usar un millón de
+            puntos en la constelación? ¿Qué lo impide?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/teoria.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/teoria.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Explica con tus palabras la diferencia entre la <strong>moduladora</strong> y la <strong>portadora</strong>, y por qué un enlace por radio no puede prescindir de la modulación.',
+                modelo: 'La <strong>moduladora</strong> es la señal que lleva la información, en nuestro caso los bits. La <strong>portadora</strong> es una onda senoidal elegida porque viaja bien por el medio: tiene la frecuencia adecuada para la antena o el cable. Modulando, la señal resultante lleva la información de la primera con las características de la segunda. Por radio es imprescindible porque una antena solo radia bien ondas de una frecuencia determinada: un escalón de tensión en banda base no se propaga por el aire.',
+                puntos: [
+                    'Identifica la moduladora con la información',
+                    'Identifica la portadora con las características que necesita el medio',
+                    'Explica que la señal modulada combina ambas',
+                    'Justifica que por el aire no se puede enviar la señal en banda base'
+                ]
+            },
+            {
+                pregunta: 'Te enseñan una señal modulada con la amplitud siempre igual y la frecuencia siempre igual, pero con saltos bruscos en algunos puntos. ¿Qué técnica es, y qué indican esos saltos?',
+                modelo: 'Es <strong>PSK</strong>, modulación por desplazamiento de fase. Si la amplitud y la frecuencia no cambian, lo único que puede transportar la información es la <strong>fase</strong>. Los saltos bruscos aparecen donde <strong>cambia el bit</strong>: ahí la onda se desplaza de golpe y empieza «al revés».',
+                puntos: [
+                    'Identifica PSK',
+                    'Razona por descarte con amplitud y frecuencia',
+                    'Relaciona los saltos con los cambios de bit'
+                ]
+            },
+            {
+                pregunta: 'Una modulación usa <strong>64 puntos</strong> en su constelación. ¿Cuántos bits lleva cada símbolo? ¿Qué ventaja y qué inconveniente tiene frente a una de 16 puntos, a igual número de símbolos por segundo?',
+                modelo: 'Lleva log<sub>2</sub>64 = <strong>6 bits</strong> por símbolo, frente a los 4 de QAM-16. A igual número de símbolos por segundo, transmite <strong>un 50 % más de bits</strong> por el mismo canal. El inconveniente es que sus puntos están <strong>más juntos</strong>, así que con el mismo ruido el receptor confunde un punto con su vecino más a menudo: necesita una señal más limpia.',
+                puntos: [
+                    'Calcula 6 bits por símbolo',
+                    'Compara con los 4 bits de QAM-16',
+                    'Explica que transmite más bits por el mismo canal',
+                    'Explica la mayor sensibilidad al ruido'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Por qué se modula?', dorso: 'Porque el medio <strong>no admite la señal en banda base</strong>: una línea de voz o el aire.' },
+            { frente: 'Moduladora frente a portadora', dorso: 'La <strong>moduladora</strong> lleva la información; la <strong>portadora</strong> tiene las características que necesita el medio.' },
+            { frente: '¿Qué es un módem?', dorso: '<strong>MO</strong>dulador-<strong>DEM</strong>odulador: convierte en los dos sentidos.' },
+            { frente: '¿Qué cambia en ASK?', dorso: 'La <strong>amplitud</strong>.' },
+            { frente: '¿Qué cambia en FSK?', dorso: 'La <strong>frecuencia</strong>. La amplitud no cambia.' },
+            { frente: '¿Qué cambia en PSK?', dorso: 'La <strong>fase</strong>. Ni la amplitud ni la frecuencia cambian.' },
+            { frente: '¿Qué caso de modulación es el más común?', dorso: '<strong>Información digital sobre portadora analógica</strong>: bits por la red telefónica o por radio.' },
+            { frente: 'Información digital sobre portadora digital', dorso: 'No existe como tal: es <strong>transmisión en banda base</strong>.' },
+            { frente: '¿Qué es la modulación multibit?', dorso: 'Usar varios valores o varios métodos a la vez para llevar <strong>más de un bit por símbolo</strong>.' },
+            { frente: '¿Qué cambia QAM?', dorso: 'La <strong>amplitud y la fase</strong> a la vez.' },
+            { frente: 'En una constelación, ¿qué son la distancia y el ángulo?', dorso: 'La distancia al centro es la <strong>amplitud</strong>; el ángulo, la <strong>fase</strong>.' },
+            { frente: '¿Qué es la tasa adaptativa?', dorso: 'El equipo inalámbrico <strong>cambia de modulación</strong> según la calidad de la señal. Con peor señal, menos puntos y menos velocidad.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 3: Modulación',
+        tiempo: '24 minutos',
+        minutos: 24,
+        questions: [
+            {
+                topic: 'Por qué modular',
+                repaso: '#porque',
+                text: '¿Por qué los primeros enlaces de datos entre sedes lejanas tuvieron que modular la señal?',
+                options: {
+                    a: 'Porque los datos ocupaban demasiado espacio en disco',
+                    b: 'Porque usaban la red telefónica, diseñada para señales analógicas de voz, que no admite bien la señal digital en banda base',
+                    c: 'Porque así los datos iban cifrados',
+                    d: 'Porque la ley lo exigía'
+                },
+                answer: 'b',
+                feedback: 'Es el origen que cuenta el libro: la infraestructura disponible era la de voz, y por ella la señal digital directa no cabe.'
+            },
+            {
+                topic: 'Por qué modular',
+                repaso: '#porque',
+                text: '¿Por qué toda comunicación por radio está modulada?',
+                options: {
+                    a: 'Porque las antenas solo radian bien ondas de una frecuencia concreta, y un escalón de tensión no se propaga por el aire',
+                    b: 'Porque la radio es más lenta',
+                    c: 'Por seguridad',
+                    d: 'No toda lo está'
+                },
+                answer: 'a',
+                feedback: 'Sin portadora no hay enlace de radio. Desde la FM hasta el Wi-Fi, todo va modulado.'
+            },
+            {
+                topic: 'Portadora y módem',
+                repaso: '#portadora',
+                text: 'En una modulación, ¿qué señal lleva la información?',
+                options: { a: 'La portadora', b: 'La modulada, pero no la moduladora', c: 'La moduladora', d: 'Ninguna' },
+                answer: 'c',
+                feedback: 'La <strong>moduladora</strong> lleva la información. La modulada es el resultado: la misma información con las características de la portadora.'
+            },
+            {
+                topic: 'Portadora y módem',
+                repaso: '#portadora',
+                text: '¿Qué hace un módem?',
+                options: {
+                    a: 'Solo modula lo que se envía',
+                    b: 'Enruta los paquetes',
+                    c: 'Cifra la conexión',
+                    d: 'Modula lo que envía y demodula lo que recibe'
+                },
+                answer: 'd',
+                feedback: 'MOdulador-DEModulador: trabaja en los dos sentidos.'
+            },
+            {
+                topic: 'ASK, FSK y PSK',
+                repaso: '#tres',
+                text: 'En una señal modulada, la amplitud nunca cambia, pero los ciclos se aprietan en unos bits y se separan en otros. ¿Qué técnica es?',
+                options: { a: 'ASK', b: 'FSK', c: 'PSK', d: 'NRZ' },
+                answer: 'b',
+                feedback: 'Ciclos más o menos juntos significa <strong>distinta frecuencia</strong>: FSK.'
+            },
+            {
+                topic: 'ASK, FSK y PSK',
+                repaso: '#tres',
+                text: '¿Qué técnica es más vulnerable a una perturbación que reduzca la amplitud de la señal?',
+                options: { a: 'ASK', b: 'FSK', c: 'PSK', d: 'Las tres por igual' },
+                answer: 'a',
+                feedback: 'En ASK la información está <strong>en la amplitud</strong>: si la perturbación la altera, altera los bits. FSK y PSK llevan la información en otra propiedad.'
+            },
+            {
+                topic: 'ASK, FSK y PSK',
+                repaso: '#tres',
+                text: 'En PSK, ¿qué desplazamiento de fase NO puede usarse para distinguir el 0 del 1?',
+                options: { a: '90°', b: '180°', c: '360°', d: '45°' },
+                answer: 'c',
+                feedback: 'Un desplazamiento de un periodo completo deja la onda <strong>exactamente igual</strong>. El libro lo advierte expresamente.'
+            },
+            {
+                topic: 'Los cuatro casos',
+                repaso: '#casos',
+                text: 'Un módem transmite los bits de un ordenador por la línea telefónica. ¿Qué caso de modulación es?',
+                options: {
+                    a: 'Información analógica sobre portadora analógica',
+                    b: 'Información analógica sobre portadora digital',
+                    c: 'Información digital sobre portadora digital',
+                    d: 'Información digital sobre portadora analógica'
+                },
+                answer: 'd',
+                feedback: 'Bits sobre una onda analógica: el caso más común, según el libro.'
+            },
+            {
+                topic: 'Los cuatro casos',
+                repaso: '#casos',
+                text: 'Según el libro, ¿qué es en realidad la «modulación digital con portadora digital»?',
+                options: {
+                    a: 'Un caso de transmisión en banda base',
+                    b: 'La técnica más moderna',
+                    c: 'Lo que usa el Wi-Fi',
+                    d: 'QAM'
+                },
+                answer: 'a',
+                feedback: 'No existe como tal. Es la codificación en banda base del Día 2.'
+            },
+            {
+                topic: 'Multibit y QAM',
+                repaso: '#multibit',
+                text: 'Una modulación combina 2 amplitudes y 2 frecuencias. ¿Cuántos bits lleva cada símbolo?',
+                options: { a: '1', b: '4', c: '2', d: '8' },
+                answer: 'c',
+                feedback: '2 × 2 = 4 estados, y log<sub>2</sub>4 = <strong>2 bits</strong>. Es el ejemplo del libro.'
+            },
+            {
+                topic: 'Multibit y QAM',
+                repaso: '#qam',
+                text: '¿Cuántos bits lleva cada símbolo de QAM-256?',
+                options: { a: '256', b: '16', c: '4', d: '8' },
+                answer: 'd',
+                feedback: '2<sup>8</sup> = 256, así que <strong>8 bits</strong>. El número que acompaña a QAM es el de estados, no el de bits.'
+            },
+            {
+                topic: 'Multibit y QAM',
+                repaso: '#qam',
+                text: 'En una constelación, dos puntos están a la misma distancia del centro pero en ángulos distintos. ¿En qué se diferencian?',
+                options: { a: 'En la amplitud', b: 'En la fase', c: 'En la frecuencia', d: 'En nada' },
+                answer: 'b',
+                feedback: 'Misma distancia, misma <strong>amplitud</strong>. El ángulo es la <strong>fase</strong>.'
+            },
+            {
+                topic: 'Wi-Fi',
+                repaso: '#wifi',
+                text: 'Tu portátil va a 600 Mbps junto al router y a 80 Mbps en la otra punta de la casa, sin perder la conexión. ¿Qué explica mejor el cambio?',
+                options: {
+                    a: 'El router limita la velocidad por distancia',
+                    b: 'La tasa adaptativa: con peor señal, el equipo pasa a una modulación con menos puntos y menos bits por símbolo',
+                    c: 'Una avería en la tarjeta',
+                    d: 'Que hay más dispositivos conectados'
+                },
+                answer: 'b',
+                feedback: 'Con más ruido relativo, los puntos de una constelación grande se confundirían. El equipo elige una más robusta y más lenta.'
+            },
+            {
+                topic: 'Recuperación · Día 2',
+                repaso: '../Dia_02/teoria.html#baudios',
+                text: '<em>Repaso.</em> Una QAM-16 transmite a 2 400 símbolos por segundo. ¿Cuántos bps son?',
+                options: { a: '2 400 bps', b: '4 800 bps', c: '38 400 bps', d: '9 600 bps' },
+                answer: 'd',
+                feedback: 'Es la misma fórmula del martes: 2 400 baudios × 4 bits = <strong>9 600 bps</strong>.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: '../Dia_01/teoria.html#parametros',
+                text: '<em>Repaso.</em> Una portadora de 2,4 GHz, ¿cuántas veces por segundo se repite?',
+                options: { a: '2 400 millones', b: '2,4 millones', c: '24 000', d: '2,4' },
+                answer: 'a',
+                feedback: '1 GHz = 10<sup>9</sup> Hz: 2,4 GHz son <strong>2 400 millones</strong> de repeticiones por segundo.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/senales.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

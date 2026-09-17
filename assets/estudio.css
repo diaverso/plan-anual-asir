@@ -1975,3 +1975,89 @@ select:focus {
 @media (max-width: 600px) {
     .figura img { padding: 8px; }
 }
+
+/* ------------------------------------------ visualizadores de señales (senales.js) */
+
+.senal-controles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px 18px;
+    margin: 14px 0;
+}
+
+.senal-controles label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.92em;
+    color: var(--texto-suave);
+}
+
+.senal-controles small {
+    color: var(--texto-tenue);
+}
+
+.senal-controles input[type="range"] {
+    width: 100%;
+    accent-color: var(--primario);
+}
+
+.senal-controles select,
+.senal-controles input[type="text"] {
+    padding: 8px 10px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background: var(--superficie);
+    color: var(--texto);
+    font: inherit;
+}
+
+.senal-controles input[type="text"] {
+    font-family: ui-monospace, Consolas, monospace;
+    letter-spacing: 0.12em;
+}
+
+.senal-valor {
+    font-weight: 600;
+    color: var(--texto);
+}
+
+.senal-etiqueta {
+    font-size: 0.84em;
+    color: var(--texto-suave);
+    margin: 12px 0 5px;
+}
+
+.senal-lectura {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.senal-lectura > div {
+    background: var(--superficie);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.88em;
+    color: var(--texto-suave);
+}
+
+.senal-lectura strong {
+    display: block;
+    margin-top: 2px;
+    font-size: 1.3em;
+    color: var(--texto);
+    font-variant-numeric: tabular-nums;
+}
+
+.senal-bits {
+    font-family: ui-monospace, Consolas, monospace;
+    letter-spacing: 0.2em;
+}
+
+.senal-bits .mal {
+    color: var(--mal-txt);
+    background: var(--mal-bg);
+    border-radius: 3px;
+}
