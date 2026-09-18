@@ -111,12 +111,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> Tu móvil por Wi-Fi imprime en una impresora conectada por cable al switch. ¿Por qué funciona sin configurar nada?',
                     opciones: {
-                        a: 'Porque el punto de acceso hace de router entre las dos',
-                        b: 'Porque el AP es de capa 2 y no separa dominios de broadcast: los dos están en la misma red',
+                        a: 'Porque el AP es de capa 2 y no separa dominios de broadcast: los dos están en la misma red',
+                        b: 'Porque el punto de acceso hace de router entre las dos',
                         c: 'Porque la impresora tiene Wi-Fi también',
                         d: 'Porque el móvil usa un protocolo especial'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El AP une el aire con el cable <strong>sin separar nada</strong>: es una sola red. Si hiciera de router, harían falta dos redes distintas y una ruta entre ellas.',
                     pistas: [
                         '¿Qué capa separa dominios de broadcast, y en cuál trabaja un AP?'
@@ -127,11 +127,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Se puede eliminar las colisiones en Wi-Fi comprando un AP mejor?',
                     opciones: {
                         a: 'Sí, los modelos Wi-Fi 6 las eliminan',
-                        b: 'No: el medio es compartido por física, y ningún aparato puede dar «un aire» a cada equipo',
-                        c: 'Sí, si se configura en modo dúplex completo',
+                        b: 'Sí, si se configura en modo dúplex completo',
+                        c: 'No: el medio es compartido por física, y ningún aparato puede dar «un aire» a cada equipo',
                         d: 'Sí, usando la banda de 5 GHz'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Wi-Fi 6 mejora mucho la <strong>gestión</strong> de muchos clientes a la vez, pero no elimina el problema de raíz. La limitación no está en el aparato: está en el medio.',
                     pistas: [
                         '¿Cómo eliminó el switch las colisiones, y se puede hacer lo mismo con el aire?'
@@ -176,11 +176,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Por qué el receptor tiene que <strong>confirmar</strong> cada trama en Wi-Fi, cosa que no ocurre en Ethernet conmutado?',
                     opciones: {
                         a: 'Porque el estándar lo exige sin motivo técnico',
-                        b: 'Porque el emisor no puede saber por sí mismo si su trama llegó o chocó, ya que no puede escuchar mientras transmite',
-                        c: 'Porque el aire pierde muchas tramas',
-                        d: 'Porque lo pide el cifrado'
+                        b: 'Porque el aire pierde muchas tramas',
+                        c: 'Porque lo pide el cifrado',
+                        d: 'Porque el emisor no puede saber por sí mismo si su trama llegó o chocó, ya que no puede escuchar mientras transmite'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Es la consecuencia lógica de no poder detectar colisiones: si no puedes comprobarlo tú, alguien tiene que <strong>decírtelo</strong>. Y esa confirmación es más tráfico que ocupa el canal compartido.',
                     pistas: [
                         'Si no puedes detectar el choque tú mismo, ¿cómo te enteras de que la trama llegó?'
@@ -291,12 +291,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> ¿Por qué el cifrado es más crítico en Wi-Fi que en una red cableada con switch?',
                     opciones: {
-                        a: 'Porque el Wi-Fi tiene más errores de transmisión',
-                        b: 'Porque la señal se emite al aire y cualquiera dentro del alcance la recibe, sin necesidad de conectarse ni entrar en el edificio',
+                        a: 'Porque la señal se emite al aire y cualquiera dentro del alcance la recibe, sin necesidad de conectarse ni entrar en el edificio',
+                        b: 'Porque el Wi-Fi tiene más errores de transmisión',
                         c: 'Porque los APs no tienen tabla MAC',
                         d: 'Porque el cable ya va cifrado de fábrica'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Con switch, el lunes comprobaste que el tráfico ajeno <strong>ni siquiera llega a tu cable</strong>: la protección es física. En el aire no hay nada que aislar, así que el cifrado es lo único que queda.',
                     pistas: [
                         'Recuerda tu medición del lunes: ¿cuántas tramas ajenas llegaban a tu cable?'
@@ -336,11 +336,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> ¿Qué diferencia hay entre un cortafuegos de capa 4 y uno de capa 7?',
                     opciones: {
                         a: 'Ninguna: son nombres comerciales del mismo producto',
-                        b: 'El de capa 4 decide por direcciones y puertos; el de capa 7 mira dentro del contenido y puede distinguir dos peticiones que van al mismo puerto',
-                        c: 'El de capa 7 es más rápido',
-                        d: 'El de capa 4 solo funciona con UDP'
+                        b: 'El de capa 7 es más rápido',
+                        c: 'El de capa 4 solo funciona con UDP',
+                        d: 'El de capa 4 decide por direcciones y puertos; el de capa 7 mira dentro del contenido y puede distinguir dos peticiones que van al mismo puerto'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Si un ataque y una petición legítima van las dos al puerto 443, mirar puertos no basta. El de capa 7 es mucho más potente y bastante <strong>más lento</strong>, porque tiene que abrir y entender el contenido.',
                     pistas: [
                         '¿Puede un cortafuegos de capa 4 distinguir dos peticiones que van al mismo puerto?'
@@ -351,11 +351,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Cuándo tiene sentido un <strong>switch de capa 3</strong> en lugar de un router?',
                     opciones: {
                         a: 'Para conectar la empresa a Internet',
-                        b: 'Para enrutar rápido entre las VLAN internas de una red grande, con muchos puertos iguales',
-                        c: 'Para sustituir a todos los switches de capa 2',
+                        b: 'Para sustituir a todos los switches de capa 2',
+                        c: 'Para enrutar rápido entre las VLAN internas de una red grande, con muchos puertos iguales',
                         d: 'Nunca: siempre es mejor un router'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Está optimizado para ir rápido <strong>dentro</strong> de la organización. Para salir a Internet sigue haciendo falta un <strong>router</strong>, que además aporta NAT, cortafuegos y VPN.',
                     pistas: [
                         '¿Dónde está optimizado cada uno: dentro de la red o en su frontera?'

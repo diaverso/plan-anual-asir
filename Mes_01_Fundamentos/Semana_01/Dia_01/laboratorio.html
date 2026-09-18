@@ -296,10 +296,10 @@ const ejerciciosData = {
                     opciones: {
                         a: 'No hay conexión a Internet',
                         b: 'El cable de red está roto',
-                        c: 'Hay conectividad, pero falla la resolución de nombres (DNS)',
-                        d: 'Google está caído'
+                        c: 'Google está caído',
+                        d: 'Hay conectividad, pero falla la resolución de nombres (DNS)'
                     },
-                    respuesta: 'c',
+                    respuesta: 'd',
                     explicacion: 'Si los paquetes llegan a una IP, la conectividad funciona. Lo que falla es la traducción de nombre a dirección: es un problema de <strong>DNS</strong>. Este es uno de los diagnósticos más frecuentes en soporte real.',
                     pistas: [
                         'Si el problema fuera el cable, ¿habría respondido el primer ping?',
@@ -412,11 +412,11 @@ docker compose exec nodo-a ping -c 3 nodo-c</code></pre></div>
                     pregunta: '<strong>b)</strong> ¿Y con <code>ping nodo-a → nodo-c</code>?',
                     opciones: {
                         a: 'Responde igual de bien',
-                        b: 'Falla: están en redes distintas y no hay nada que las interconecte',
-                        c: 'Responde más lento',
-                        d: 'Depende de la velocidad del disco'
+                        b: 'Responde más lento',
+                        c: 'Depende de la velocidad del disco',
+                        d: 'Falla: están en redes distintas y no hay nada que las interconecte'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Están en el mismo ordenador físico, a centímetros el uno del otro, y aun así no se comunican: <strong>no comparten infraestructura</strong>. Para unirlos haría falta un router que enrutara entre lan1 y lan2, exactamente el papel que estudiarás en la Semana 4.',
                     pistas: [
                         'nodo-c está en lan2, no en lan1.',

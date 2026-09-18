@@ -321,12 +321,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>d)</strong> Una entrada aparece como <code>Stale</code>. ¿Qué significa?',
                     opciones: {
-                        a: 'Que es incorrecta y hay que borrarla',
-                        b: 'Que se aprendió hace rato y no se ha vuelto a confirmar; sigue siendo válida pero se verificará antes de fiarse',
+                        a: 'Que se aprendió hace rato y no se ha vuelto a confirmar; sigue siendo válida pero se verificará antes de fiarse',
+                        b: 'Que es incorrecta y hay que borrarla',
                         c: 'Que ese equipo está apagado',
                         d: 'Que la MAC ha cambiado'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Es el mismo principio del envejecimiento de la tabla del switch: la información de red <strong>caduca</strong>, porque los equipos se apagan, se mueven y cambian.',
                     pistas: [
                         'Compara con la caducidad de las entradas de la tabla MAC.'
@@ -403,11 +403,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> Has hecho ping a una IP que no existe y ves la misma pregunta ARP repetida tres veces. ¿Por qué?',
                     opciones: {
                         a: 'Porque la red está saturada',
-                        b: 'Porque ARP no sabe si el silencio significa «no existe» o «se perdió la trama», así que insiste antes de rendirse',
-                        c: 'Porque el switch la devuelve',
-                        d: 'Porque el ping envía tres paquetes'
+                        b: 'Porque el switch la devuelve',
+                        c: 'Porque el ping envía tres paquetes',
+                        d: 'Porque ARP no sabe si el silencio significa «no existe» o «se perdió la trama», así que insiste antes de rendirse'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Es un comportamiento sensato ante la incertidumbre. Solo tras varios intentos sin respuesta, el ping falla.',
                     pistas: [
                         '¿Puede distinguir tu equipo entre «no hay nadie» y «no me ha llegado la respuesta»?'
@@ -418,11 +418,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Ese ping ha fallado. ¿En qué capa está realmente el problema?',
                     opciones: {
                         a: 'En la capa 3: la IP de destino no responde',
-                        b: 'En la capa 2: no se ha podido averiguar la MAC, así que ni siquiera se ha llegado a construir la trama',
-                        c: 'En la capa 4: el puerto está cerrado',
+                        b: 'En la capa 4: el puerto está cerrado',
+                        c: 'En la capa 2: no se ha podido averiguar la MAC, así que ni siquiera se ha llegado a construir la trama',
                         d: 'En la capa 1: el cable está mal'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Es un matiz fino y muy útil: el paquete IP <strong>nunca llegó a enviarse</strong>. Sin MAC de destino no hay trama en la que meterlo. El fallo ocurre una capa más abajo de lo que parece.',
                     pistas: [
                         '¿Qué necesita tu equipo para poder construir la trama, y qué le faltaba?'

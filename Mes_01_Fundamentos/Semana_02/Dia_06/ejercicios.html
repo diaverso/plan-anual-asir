@@ -132,11 +132,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Por qué es un error empezar eligiendo el switch?',
                     opciones: {
                         a: 'Porque los switches son muy caros',
-                        b: 'Porque todavía no se sabe cuántas tomas hacen falta ni cuántos armarios habrá',
-                        c: 'Porque hay que elegir primero el fabricante',
+                        b: 'Porque hay que elegir primero el fabricante',
+                        c: 'Porque todavía no se sabe cuántas tomas hacen falta ni cuántos armarios habrá',
                         d: 'No es un error: es lo más práctico'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Elegir material antes de dimensionar lleva casi siempre a rehacerlo. Y el error se descubre tarde, cuando ya se ha comprado.',
                     pistas: [
                         '¿Qué necesitas saber antes de poder decir cuántos puertos comprar?'
@@ -184,11 +184,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> Con switches de 48 puertos, ¿cuántos hacen falta?',
                     opciones: {
                         a: 'Uno: 48 puertos son suficientes',
-                        b: 'Dos: 96 puertos, con margen incluido',
-                        c: 'Tres, para tener redundancia',
-                        d: 'Cuatro, uno por cada tipo de dispositivo'
+                        b: 'Tres, para tener redundancia',
+                        c: 'Cuatro, uno por cada tipo de dispositivo',
+                        d: 'Dos: 96 puertos, con margen incluido'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Con 83 tomas previstas, un switch de 48 se queda corto y dos suman 96. Ojo con un detalle real: al apilar switches, algunos puertos se dedican al enlace entre ellos, así que el margen efectivo es algo menor de lo que sugiere la resta.',
                     pistas: [
                         'Compara el resultado del apartado b con la capacidad de un switch.',
@@ -237,12 +237,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> Una empresa de 12 personas sin informático interno. ¿Qué diseño es mejor?',
                     opciones: {
-                        a: 'El más avanzado posible, para que les dure más',
-                        b: 'Uno sencillo y bien documentado, que puedan sostener y que un externo entienda rápido',
+                        a: 'Uno sencillo y bien documentado, que puedan sostener y que un externo entienda rápido',
+                        b: 'El más avanzado posible, para que les dure más',
                         c: 'Cualquiera: la complejidad no influye',
                         d: 'Uno mínimo, sin margen de crecimiento, para abaratar'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Un diseño se juzga por cómo está dos años después. Lo que nadie sabe mantener se degrada solo. Ojo: sencillo no significa escaso, y por eso la <strong>d</strong> también es mala: quitar margen de crecimiento no simplifica, solo aplaza el problema.',
                     pistas: [
                         'Dos opciones son extremos opuestos y las dos están mal.',

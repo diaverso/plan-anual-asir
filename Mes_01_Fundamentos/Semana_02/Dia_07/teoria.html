@@ -418,11 +418,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Analizas una tabla ARP y encuentras <code>B6-2F-19-04-8A-51</code>. ¿Qué puedes afirmar <strong>solo con mirarla</strong>?',
                 options: {
                     a: 'Es multicast, porque empieza por B',
-                    b: 'Es unicast pero administrada localmente: no viene de fábrica',
-                    c: 'Es unicast y de fábrica, de un fabricante registrado',
-                    d: 'Es una dirección inválida'
+                    b: 'Es unicast y de fábrica, de un fabricante registrado',
+                    c: 'Es una dirección inválida',
+                    d: 'Es unicast pero administrada localmente: no viene de fábrica'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Segundo dígito <strong>6</strong> = 0110. El bit I/G (último) vale 0 → unicast. El bit U/L (penúltimo) vale 1 → <strong>local</strong>. Un móvil con MAC aleatoria o una interfaz virtual.'
             },
             {
@@ -431,11 +431,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Tu PC descarga un fichero de un servidor situado a 8 saltos. ¿Cuántas veces se reescriben las direcciones?',
                 options: {
                     a: 'Las IP 8 veces, las MAC ninguna',
-                    b: 'Las MAC en cada salto; las IP de origen y destino, nunca',
-                    c: 'Ambas en cada salto',
+                    b: 'Ambas en cada salto',
+                    c: 'Las MAC en cada salto; las IP de origen y destino, nunca',
                     d: 'Ninguna: por eso llega al destino'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'La IP identifica a los <strong>extremos</strong> y se mantiene de punta a punta; la MAC identifica el <strong>tramo actual</strong> y cada router la reescribe.'
             },
             {
@@ -456,12 +456,12 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 repaso: '../Dia_01/teoria.html#mac',
                 text: 'Un fabricante compra <strong>dos</strong> OUI al IEEE. ¿Cuántas direcciones distintas puede repartir?',
                 options: {
-                    a: 'Unos 16,7 millones',
-                    b: 'Unos 33,5 millones',
+                    a: 'Unos 33,5 millones',
+                    b: 'Unos 16,7 millones',
                     c: '281 billones',
                     d: 'Ilimitadas'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Cada OUI deja libres 24 bits: 2²⁴ ≈ 16,7 millones. Con dos OUI, el doble: unos <strong>33,5 millones</strong>.'
             },
 
@@ -472,11 +472,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Hay que llevar 10 Gbps a un puesto situado a <strong>70 m</strong> del armario. ¿Qué categoría se instala?',
                 options: {
                     a: 'Cat 5e',
-                    b: 'Cat 6',
-                    c: 'Cat 6A',
+                    b: 'Cat 6A',
+                    c: 'Cat 6',
                     d: 'Cat 8, por ser la más moderna'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Cat 6 solo alcanza 10 Gbps hasta unos <strong>55 m</strong> y Cat 8 se queda en <strong>30 m</strong>. Solo Cat 6A garantiza 10 Gbps a los 100 m completos.'
             },
             {
@@ -485,11 +485,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Se sustituye un latiguillo y el enlace pasa de 1 Gbps a 100 Mbps. ¿Qué ha ocurrido con casi total seguridad?',
                 options: {
                     a: 'El switch ha limitado el puerto por seguridad',
-                    b: 'El nuevo latiguillo tiene pares dañados o solo dos pares conectados',
-                    c: 'La tarjeta de red ha cambiado de modo dúplex',
+                    b: 'La tarjeta de red ha cambiado de modo dúplex',
+                    c: 'El nuevo latiguillo tiene pares dañados o solo dos pares conectados',
                     d: 'El cable es demasiado largo'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: '100 Mbps necesita <strong>2 pares</strong> y gigabit <strong>los 4</strong>. Es el síntoma más característico del cableado, y el más fácil de pasar por alto porque la red sigue funcionando.'
             },
             {
@@ -497,12 +497,12 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 repaso: '../Dia_02/teoria.html#categorias',
                 text: 'El cableado fijo de un puesto mide 88 m. ¿Cuánto puede sumar como máximo el conjunto de los dos latiguillos?',
                 options: {
-                    a: '10 m, siempre',
-                    b: '12 m',
+                    a: '12 m',
+                    b: '10 m, siempre',
                     c: '20 m, porque los latiguillos van aparte',
                     d: 'No hay límite si el cable es Cat 6A'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El tope del enlace completo son <strong>100 m</strong>, y los latiguillos <strong>cuentan dentro</strong>: 100 − 88 = <strong>12 m</strong>. Creer que van aparte es un error clásico.'
             },
             {
@@ -511,11 +511,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Un técnico fija a mano velocidad y dúplex en dos switches y el enlace entre ellos deja de funcionar con el cable de siempre. ¿Por qué?',
                 options: {
                     a: 'Porque los switches necesitan fibra entre sí',
-                    b: 'Porque al desactivar la autonegociación se ha perdido el auto-MDIX, y entre dispositivos iguales hace falta cable cruzado',
-                    c: 'Porque el cable se ha estropeado por coincidencia',
-                    d: 'Porque fijar el dúplex duplica el consumo del puerto'
+                    b: 'Porque el cable se ha estropeado por coincidencia',
+                    c: 'Porque fijar el dúplex duplica el consumo del puerto',
+                    d: 'Porque al desactivar la autonegociación se ha perdido el auto-MDIX, y entre dispositivos iguales hace falta cable cruzado'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El auto-MDIX forma parte de la <strong>autonegociación</strong>. Al fijarlo todo a mano, el puerto deja de conmutar internamente los pines y reaparece la necesidad del cable cruzado.'
             },
 
@@ -525,12 +525,12 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 repaso: '../Dia_03/teoria.html#puertos',
                 text: 'En un servidor ves <code>0.0.0.0:3306 LISTENING</code>. ¿Qué implica frente a <code>127.0.0.1:3306</code>?',
                 options: {
-                    a: 'Nada: son equivalentes',
-                    b: 'Que la base de datos es alcanzable desde toda la red, y no solo desde la propia máquina',
+                    a: 'Que la base de datos es alcanzable desde toda la red, y no solo desde la propia máquina',
+                    b: 'Nada: son equivalentes',
                     c: 'Que el servicio está detenido',
                     d: 'Que usa UDP en lugar de TCP'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: '<code>127.0.0.1</code> limita el servicio al bucle local. <code>0.0.0.0</code> significa «en todas las interfaces»: expuesto. Atar cada servicio a la interfaz mínima necesaria es una buena práctica universal.'
             },
             {
@@ -565,11 +565,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Una empresa de 40 personas descarta el modelo cliente-servidor «porque es un punto único de fallo». ¿Qué error comete?',
                 options: {
                     a: 'Ninguno: es un buen razonamiento',
-                    b: 'Que a ese tamaño el control de accesos, las copias y la revocación pesan más, y el punto único de fallo se mitiga con redundancia',
-                    c: 'Que el P2P no permite compartir ficheros',
-                    d: 'Que el modelo cliente-servidor no tiene puntos únicos de fallo'
+                    b: 'Que el P2P no permite compartir ficheros',
+                    c: 'Que el modelo cliente-servidor no tiene puntos únicos de fallo',
+                    d: 'Que a ese tamaño el control de accesos, las copias y la revocación pesan más, y el punto único de fallo se mitiga con redundancia'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El punto único de fallo es real, pero es un problema <strong>resoluble</strong>. Lo que no se resuelve con P2P es poder revocar el acceso de un empleado de forma verificable ni hacer copias fiables.'
             },
 
@@ -606,11 +606,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Servidor A: MTBF 40 000 h, MTTR 10 h. Servidor B: MTBF 20 000 h, MTTR 2 h. ¿Cuál tiene mayor disponibilidad?',
                 options: {
                     a: 'A, porque falla la mitad de veces',
-                    b: 'B',
-                    c: 'Son idénticos',
-                    d: 'Faltan datos'
+                    b: 'Son idénticos',
+                    c: 'Faltan datos',
+                    d: 'B'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'A: 40 000/40 010 = 99,975 %. B: 20 000/20 002 = <strong>99,990 %</strong>. Fallar el doble pero repararse cinco veces más rápido gana. Es el argumento para invertir en repuestos y procedimientos.'
             },
             {
@@ -618,12 +618,12 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 repaso: '../Dia_04/teoria.html#spof',
                 text: 'Una sala tiene dos servidores en clúster, cada uno con dos fuentes, y las cuatro van a la misma regleta con SAI. ¿Qué se ha logrado?',
                 options: {
-                    a: 'Eliminar el punto único de fallo eléctrico',
-                    b: 'Moverlo: ahora el punto único es la regleta',
+                    a: 'Moverlo: ahora el punto único es la regleta',
+                    b: 'Eliminar el punto único de fallo eléctrico',
                     c: 'Duplicar la autonomía del SAI',
                     d: 'Cumplir los cinco nueves'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'La redundancia solo vale si llega hasta el final de la cadena. Las fuentes deben repartirse entre <strong>circuitos distintos</strong>. Es el error de «redundar lo visible».'
             },
 
@@ -634,11 +634,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Un usuario no abre webs. <code>ping 8.8.8.8</code> responde; <code>ping google.com</code> falla. ¿Qué revisas?',
                 options: {
                     a: 'El cableado del puesto',
-                    b: 'La puerta de enlace',
-                    c: 'Los servidores DNS configurados y su disponibilidad',
+                    b: 'Los servidores DNS configurados y su disponibilidad',
+                    c: 'La puerta de enlace',
                     d: 'Los permisos del directorio'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'El primer ping demuestra conectividad completa hasta Internet: cable, IP, máscara, puerta de enlace y rutas quedan descartados. Solo falla la <strong>traducción de nombres</strong>.'
             },
             {
@@ -647,11 +647,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Un lunes por la mañana, varios equipos recién encendidos tienen direcciones <code>169.254.x.x</code> y otros, encendidos desde el viernes, funcionan. ¿Qué ha pasado?',
                 options: {
                     a: 'Se ha caído el DNS',
-                    b: 'Se ha caído el DHCP: los que ya estaban encendidos conservan su concesión',
-                    c: 'Hay un problema de permisos',
-                    d: 'Los equipos nuevos tienen el cable mal'
+                    b: 'Hay un problema de permisos',
+                    c: 'Los equipos nuevos tienen el cable mal',
+                    d: 'Se ha caído el DHCP: los que ya estaban encendidos conservan su concesión'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Es el patrón característico de una avería de DHCP: <strong>no se nota al instante</strong>, sino al arrancar. Por eso muchas se descubren los lunes o después de un puente.'
             },
             {
@@ -659,12 +659,12 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 repaso: '../Dia_05/teoria.html#dependencias',
                 text: '¿Por qué el DNS tiene que arrancar <strong>antes</strong> que el directorio?',
                 options: {
-                    a: 'Por convenio; no hay razón técnica',
-                    b: 'Porque los clientes localizan el controlador de dominio <strong>por nombre</strong>',
+                    a: 'Porque los clientes localizan el controlador de dominio <strong>por nombre</strong>',
+                    b: 'Por convenio; no hay razón técnica',
                     c: 'Porque el DNS entrega las contraseñas',
                     d: 'Porque el directorio no usa la red'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Sin resolución de nombres, el directorio puede estar perfectamente encendido y ser <strong>invisible</strong> para los clientes.'
             },
             {
@@ -673,11 +673,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Un equipo con el reloj adelantado 45 minutos no consigue iniciar sesión en el dominio. ¿Cuál es la causa?',
                 options: {
                     a: 'Coincidencia: son dos problemas distintos',
-                    b: 'La autenticación usa marcas de tiempo y un desfase grande invalida las credenciales',
-                    c: 'El DHCP rechaza equipos con la hora mal',
+                    b: 'El DHCP rechaza equipos con la hora mal',
+                    c: 'La autenticación usa marcas de tiempo y un desfase grande invalida las credenciales',
                     d: 'El DNS no resuelve con la hora desviada'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Las marcas de tiempo evitan la reutilización de credenciales capturadas. El mensaje de error no menciona la hora, y de ahí que cueste tanto diagnosticarlo.'
             },
 
@@ -688,11 +688,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Una oficina tiene 45 puestos con PC y teléfono IP, 4 impresoras, 5 puntos de acceso y 1 enlace de subida. ¿Cuántas tomas hacen falta sin margen?',
                 options: {
                     a: '55',
-                    b: '90',
-                    c: '100',
+                    b: '100',
+                    c: '90',
                     d: '135'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: '(45 × 2) + 4 + 5 + 1 = 90 + 10 = <strong>100 tomas</strong>. El error habitual es contar 45 en lugar de 90: cada puesto son <strong>dos</strong> tomas.'
             },
             {
@@ -700,12 +700,12 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 repaso: '../Dia_06/teoria.html#metodo',
                 text: 'El puesto más lejano de la planta 2 está a 115 m del único armario. ¿Qué se hace?',
                 options: {
-                    a: 'Usar Cat 6A, que soporta más distancia',
-                    b: 'Usar Cat 8, que es más moderna',
-                    c: 'Instalar un segundo armario en esa planta, unido por fibra',
+                    a: 'Instalar un segundo armario en esa planta, unido por fibra',
+                    b: 'Usar Cat 6A, que soporta más distancia',
+                    c: 'Usar Cat 8, que es más moderna',
                     d: 'Poner un repetidor de señal en el cable'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'El límite de 100 m es <strong>físico</strong> y ninguna categoría lo supera: Cat 8 llega incluso a menos. La solución es meter un dispositivo activo por el camino.'
             },
             {
@@ -714,11 +714,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Un informe dice: «R-02: sin línea de respaldo. Coste 70 €/mes. Impacto: sin correo ni acceso externo; el trabajo interno continúa. Decisión: se asume y se revisa en 12 meses». ¿Qué opinas?',
                 options: {
                     a: 'Es negligente: todo riesgo debe corregirse',
-                    b: 'Es correcto: el riesgo está identificado, valorado y la decisión es consciente y revisable',
-                    c: 'Falta indicar quién tiene la culpa',
-                    d: 'Los riesgos no deben aparecer en un informe de diseño'
+                    b: 'Falta indicar quién tiene la culpa',
+                    c: 'Los riesgos no deben aparecer en un informe de diseño',
+                    d: 'Es correcto: el riesgo está identificado, valorado y la decisión es consciente y revisable'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Asumir por escrito, con coste e impacto, y con fecha de revisión, es exactamente lo profesional. Lo negligente sería que ese riesgo <strong>no apareciera</strong> en ninguna parte.'
             },
             {
@@ -727,11 +727,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Una empresa de 15 personas sin informático interno recibe dos propuestas: una muy sofisticada y otra sencilla y muy documentada. ¿Cuál es mejor y por qué?',
                 options: {
                     a: 'La sofisticada, porque durará más años',
-                    b: 'La sencilla, porque podrán sostenerla y cualquier técnico externo la entenderá',
-                    c: 'Da igual: la complejidad no influye en el mantenimiento',
+                    b: 'Da igual: la complejidad no influye en el mantenimiento',
+                    c: 'La sencilla, porque podrán sostenerla y cualquier técnico externo la entenderá',
                     d: 'La sofisticada, siempre que sea más barata'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Un diseño se juzga por cómo está <strong>dos años después</strong>. Lo que nadie entiende no se actualiza ni se toca, y acaba funcionando peor que una instalación sencilla y bien cuidada.'
             },
 
@@ -768,11 +768,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Ordena mentalmente lo que ocurre al abrir un documento de la carpeta común. ¿Qué sucede <strong>antes</strong> de que el usuario se autentique?',
                 options: {
                     a: 'El servidor de ficheros comprueba sus permisos',
-                    b: 'La NIC enlaza, el DHCP entrega la configuración y el DNS localiza el controlador de dominio',
-                    c: 'Se resuelve el nombre del servidor de ficheros',
-                    d: 'Nada: la autenticación es lo primero'
+                    b: 'Se resuelve el nombre del servidor de ficheros',
+                    c: 'Nada: la autenticación es lo primero',
+                    d: 'La NIC enlaza, el DHCP entrega la configuración y el DNS localiza el controlador de dominio'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Autenticarse exige antes tener enlace físico, dirección IP y saber <em>dónde</em> está el directorio. Los permisos y el nombre del servidor de ficheros vienen <strong>después</strong>.'
             },
             {
@@ -780,12 +780,12 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 repaso: '../Dia_04/teoria.html#raid',
                 text: 'Una empresa tiene RAID 6, clúster de virtualización y copias diarias… en un disco dentro del propio anfitrión. Un incendio destruye la sala. ¿Qué se recupera?',
                 options: {
-                    a: 'Todo: el RAID 6 tolera dos fallos',
-                    b: 'Todo: el clúster mantiene una réplica',
-                    c: 'Nada: original y copia estaban en el mismo sitio físico',
+                    a: 'Nada: original y copia estaban en el mismo sitio físico',
+                    b: 'Todo: el RAID 6 tolera dos fallos',
+                    c: 'Todo: el clúster mantiene una réplica',
                     d: 'Solo los datos de las últimas 24 horas'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'RAID y clúster son <strong>disponibilidad</strong>: protegen de averías, no de desastres. Una copia solo protege si sobrevive a lo que destruye el original: al menos una debe estar <strong>fuera del edificio</strong>.'
             },
             {
@@ -794,11 +794,11 @@ tomas previstas    = tomas reales × 1,2 a 1,3</code></pre>
                 text: 'Hay que mover 8 puestos a otro switch y a otra configuración de red. Con cableado estructurado bien hecho y etiquetado, ¿cuánto trabajo supone?',
                 options: {
                     a: 'Tirar cable nuevo desde cada puesto',
-                    b: 'Mover 8 latiguillos dentro del armario, minutos de trabajo',
-                    c: 'Sustituir las 8 rosetas',
-                    d: 'Reconfigurar el patch panel'
+                    b: 'Sustituir las 8 rosetas',
+                    c: 'Reconfigurar el patch panel',
+                    d: 'Mover 8 latiguillos dentro del armario, minutos de trabajo'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Esa es toda la razón de ser del modelo: el cableado fijo se instala <strong>una vez</strong> y no se toca; la flexibilidad vive en los latiguillos. Sin etiquetado, en cambio, la ventaja desaparece.'
             },
             {

@@ -592,12 +592,12 @@
                 repaso: '#concepto',
                 text: '¿Cuál de estas afirmaciones define mejor una red de computadoras?',
                 options: {
-                    a: 'Un conjunto de ordenadores situados en la misma sala',
-                    b: 'Un conjunto de dispositivos interconectados que comparten recursos y servicios',
+                    a: 'Un conjunto de dispositivos interconectados que comparten recursos y servicios',
+                    b: 'Un conjunto de ordenadores situados en la misma sala',
                     c: 'Un cable que une dos equipos informáticos',
                     d: 'Un programa que permite navegar por Internet'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Lo esencial no es la proximidad ni el cable, sino que exista interconexión mediante protocolos comunes y que se compartan recursos, información o servicios.'
             },
             {
@@ -631,12 +631,12 @@
                 repaso: '#ventajas',
                 text: 'Una empresa instala una única impresora láser para sus 20 empleados en lugar de comprar 20 impresoras. ¿Qué ventaja está aprovechando?',
                 options: {
-                    a: 'Compartición de recursos',
-                    b: 'Fiabilidad',
-                    c: 'Escalabilidad',
-                    d: 'Seguridad centralizada'
+                    a: 'Fiabilidad',
+                    b: 'Escalabilidad',
+                    c: 'Seguridad centralizada',
+                    d: 'Compartición de recursos'
                 },
-                answer: 'a',
+                answer: 'd',
                 feedback: 'La compartición de recursos permite que un dispositivo caro sea utilizado por muchos usuarios, reduciendo la inversión necesaria.'
             },
             {
@@ -644,12 +644,12 @@
                 repaso: '#ventajas',
                 text: 'Se instala un sumidero DNS (Pi-hole) que bloquea telemetría para todos los equipos de la casa, incluida la televisión. ¿Qué ventaja ilustra mejor este caso?',
                 options: {
-                    a: 'Escalabilidad',
-                    b: 'Ahorro de costes',
-                    c: 'Seguridad centralizada',
+                    a: 'Seguridad centralizada',
+                    b: 'Escalabilidad',
+                    c: 'Ahorro de costes',
                     d: 'Compartición de recursos'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Un único servicio aplica la política a toda la red, incluidos dispositivos donde no se puede instalar nada. Su contrapartida es que se convierte en un punto único de fallo si no hay un DNS secundario.'
             },
             {
@@ -683,12 +683,12 @@
                 repaso: '#historia',
                 text: 'Ordena cronológicamente: Ethernet, ARPANET, World Wide Web, TCP/IP como estándar.',
                 options: {
-                    a: 'ARPANET → Ethernet → TCP/IP → WWW',
-                    b: 'Ethernet → ARPANET → WWW → TCP/IP',
-                    c: 'TCP/IP → ARPANET → Ethernet → WWW',
-                    d: 'ARPANET → TCP/IP → Ethernet → WWW'
+                    a: 'Ethernet → ARPANET → WWW → TCP/IP',
+                    b: 'TCP/IP → ARPANET → Ethernet → WWW',
+                    c: 'ARPANET → TCP/IP → Ethernet → WWW',
+                    d: 'ARPANET → Ethernet → TCP/IP → WWW'
                 },
-                answer: 'a',
+                answer: 'd',
                 feedback: 'ARPANET (1969) → Ethernet (1973) → TCP/IP estándar (1983) → World Wide Web (1989).'
             },
             {
@@ -697,11 +697,11 @@
                 text: '¿Qué aportó ALOHAnet (1971) que resultó decisivo para Ethernet?',
                 options: {
                     a: 'El primer navegador gráfico',
-                    b: 'El método para que varios emisores compartan un mismo medio gestionando colisiones',
-                    c: 'La conmutación de circuitos',
+                    b: 'La conmutación de circuitos',
+                    c: 'El método para que varios emisores compartan un mismo medio gestionando colisiones',
                     d: 'El protocolo HTTP'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'ALOHAnet resolvió por radio el problema del medio compartido. Robert Metcalfe adaptó esa idea al cable dos años después para crear Ethernet.'
             },
             {
@@ -722,12 +722,12 @@
                 repaso: '#arpanet',
                 text: 'En la simulación, al cortar un enlace en modo circuito la comunicación se detiene, pero en modo paquetes continúa. ¿Por qué?',
                 options: {
-                    a: 'Porque el circuito reservado no busca rutas alternativas y los paquetes sí',
-                    b: 'Porque el modo circuito usa cables de peor calidad',
-                    c: 'Porque los paquetes viajan más rápido',
-                    d: 'Porque en modo circuito no hay destino definido'
+                    a: 'Porque el modo circuito usa cables de peor calidad',
+                    b: 'Porque los paquetes viajan más rápido',
+                    c: 'Porque en modo circuito no hay destino definido',
+                    d: 'Porque el circuito reservado no busca rutas alternativas y los paquetes sí'
                 },
-                answer: 'a',
+                answer: 'd',
                 feedback: 'El circuito se reserva de extremo a extremo antes de transmitir: si se rompe, no hay camino y la comunicación cae. Cada paquete, en cambio, decide su ruta al salir y puede rodear el tramo averiado.'
             },
             {
@@ -735,12 +735,12 @@
                 repaso: '#web',
                 text: '¿Cuál es la relación correcta entre Internet y la World Wide Web?',
                 options: {
-                    a: 'Son exactamente lo mismo',
-                    b: 'Internet es un servicio que funciona sobre la Web',
-                    c: 'La Web es un servicio que funciona sobre Internet',
+                    a: 'La Web es un servicio que funciona sobre Internet',
+                    b: 'Son exactamente lo mismo',
+                    c: 'Internet es un servicio que funciona sobre la Web',
                     d: 'La Web sustituyó a Internet en 1989'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Internet es la infraestructura de redes interconectadas. La Web (HTTP, HTML, URL) es solo uno de los servicios que funcionan sobre ella, junto al correo, FTP, DNS o el streaming.'
             }
         ]

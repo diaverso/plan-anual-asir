@@ -634,12 +634,12 @@
                 repaso: '#ap',
                 text: '¿En qué capa trabaja un punto de acceso?',
                 options: {
-                    a: 'Capa 1, como un hub',
-                    b: 'Capa 2, como un switch: mira la MAC',
+                    a: 'Capa 2, como un switch: mira la MAC',
+                    b: 'Capa 1, como un hub',
                     c: 'Capa 3, como un router',
                     d: 'Capa 7'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Capa 2. Por eso tampoco separa dominios de broadcast, y tu móvil por Wi-Fi está en la <strong>misma red</strong> que los equipos por cable.'
             },
             {
@@ -661,11 +661,11 @@
                 text: '¿Por qué el Wi-Fi no puede usar CSMA/CD, con detección de colisiones?',
                 options: {
                     a: 'Porque sería demasiado lento',
-                    b: 'Porque una antena no puede escuchar mientras transmite: su propia señal tapa cualquier otra',
-                    c: 'Porque el estándar no lo permite',
-                    d: 'Porque en Wi-Fi no hay colisiones'
+                    b: 'Porque el estándar no lo permite',
+                    c: 'Porque en Wi-Fi no hay colisiones',
+                    d: 'Porque una antena no puede escuchar mientras transmite: su propia señal tapa cualquier otra'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Detectar una colisión exige oír <em>mientras</em> se transmite, y eso en radio es imposible. De ahí la <strong>A de evitación</strong>: prevenir en vez de detectar.'
             },
             {
@@ -674,11 +674,11 @@
                 text: 'Un enlace Wi-Fi anuncia 300 Mbps. ¿Qué rendimiento real cabe esperar?',
                 options: {
                     a: 'Unos 300 Mbps',
-                    b: 'Unos 150 Mbps: cerca de la mitad se va en el protocolo que evita colisiones',
-                    c: 'Unos 30 Mbps',
+                    b: 'Unos 30 Mbps',
+                    c: 'Unos 150 Mbps: cerca de la mitad se va en el protocolo que evita colisiones',
                     d: 'Depende solo del proveedor de Internet'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Esperas, confirmaciones y reintentos consumen la mitad. Compáralo con Ethernet conmutado, donde el rendimiento real ronda el <strong>96 %</strong>.'
             },
             {
@@ -700,11 +700,11 @@
                 text: '¿Por qué el cifrado es imprescindible en Wi-Fi y no tanto en una red cableada con switch?',
                 options: {
                     a: 'Porque el Wi-Fi es más lento',
-                    b: 'Porque la señal va por el aire y cualquiera con una antena la recibe, sin conectarse a nada',
-                    c: 'Porque lo exige la ley',
+                    b: 'Porque lo exige la ley',
+                    c: 'Porque la señal va por el aire y cualquiera con una antena la recibe, sin conectarse a nada',
                     d: 'Porque los APs no tienen tabla MAC'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Con switch, el lunes comprobaste que el tráfico ajeno <strong>ni llega a tu cable</strong>: la protección es física. En el aire no hay nada que aislar.'
             },
             {
@@ -714,11 +714,11 @@
                 options: {
                     a: '802.11n',
                     b: '802.11ac',
-                    c: '802.11ax',
-                    d: '802.3af'
+                    c: '802.3af',
+                    d: '802.11ax'
                 },
-                answer: 'c',
-                feedback: 'n = Wi-Fi 4, ac = Wi-Fi 5, <strong>ax = Wi-Fi 6</strong>. La opción d no es ni siquiera inalámbrica: es <strong>PoE</strong>, alimentación por cable Ethernet.'
+                answer: 'd',
+                feedback: 'n = Wi-Fi 4, ac = Wi-Fi 5, <strong>ax = Wi-Fi 6</strong>. La opción c no es ni siquiera inalámbrica: es <strong>PoE</strong>, alimentación por cable Ethernet.'
             },
             {
                 topic: 'Estándares 802.11',
@@ -738,12 +738,12 @@
                 repaso: '#canales',
                 text: 'Necesitas cubrir una zona alejada, al otro lado de dos paredes. ¿Qué banda eliges?',
                 options: {
-                    a: '5 GHz, porque es más rápida',
-                    b: '2,4 GHz, porque llega más lejos y atraviesa mejor los obstáculos',
+                    a: '2,4 GHz, porque llega más lejos y atraviesa mejor los obstáculos',
+                    b: '5 GHz, porque es más rápida',
                     c: 'Da igual: el alcance es el mismo',
                     d: '6 GHz siempre'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Es física pura: las frecuencias <strong>más bajas</strong> llegan más lejos y penetran mejor. Se paga con menos velocidad y más saturación.'
             },
             {
@@ -752,11 +752,11 @@
                 text: '¿Cuántos canales realmente independientes hay en la banda de 2,4 GHz?',
                 options: {
                     a: '13',
-                    b: '11',
-                    c: '3: el 1, el 6 y el 11',
+                    b: '3: el 1, el 6 y el 11',
+                    c: '11',
                     d: '1'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Hay 13 numerados, pero se <strong>solapan</strong>. Por eso en un edificio con veinte redes todas se pelean por tres canales, y además con microondas y Bluetooth.'
             },
             {
@@ -765,11 +765,11 @@
                 text: '¿Qué diferencia hay entre SSID y BSSID?',
                 options: {
                     a: 'Ninguna: son sinónimos',
-                    b: 'El SSID es el nombre de la red; el BSSID es la MAC de un punto de acceso concreto',
-                    c: 'El SSID es la MAC y el BSSID el nombre',
-                    d: 'El BSSID solo existe en redes cableadas'
+                    b: 'El SSID es la MAC y el BSSID el nombre',
+                    c: 'El BSSID solo existe en redes cableadas',
+                    d: 'El SSID es el nombre de la red; el BSSID es la MAC de un punto de acceso concreto'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'En una oficina hay <strong>un SSID y muchos BSSID</strong>. Cuando el Wi-Fi va mal en una zona, la pregunta útil no es a qué red estás conectado, sino <strong>a qué AP</strong>.'
             },
             {
@@ -777,12 +777,12 @@
                 repaso: '#ssid',
                 text: 'Un compañero propone ocultar el SSID para proteger la red. ¿Qué le dices?',
                 options: {
-                    a: 'Buena idea: así nadie la encuentra',
-                    b: 'Que no aporta seguridad: se descubre en segundos con un analizador y solo molesta a los usuarios legítimos',
+                    a: 'Que no aporta seguridad: se descubre en segundos con un analizador y solo molesta a los usuarios legítimos',
+                    b: 'Buena idea: así nadie la encuentra',
                     c: 'Que solo funciona en 5 GHz',
                     d: 'Que hay que ocultarlo y además quitar el cifrado'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Es <strong>seguridad por oscuridad</strong>: esconder algo no es protegerlo. Lo que protege de verdad es el cifrado, hoy WPA3.'
             },
             {
@@ -803,12 +803,12 @@
                 repaso: '#elegir',
                 text: '¿Qué justifica pagar más por un switch gestionable?',
                 options: {
-                    a: 'Que tiene más puertos',
-                    b: 'VLAN, port mirroring y port security: separar dominios de broadcast, poder diagnosticar y defenderse del MAC flooding',
+                    a: 'VLAN, port mirroring y port security: separar dominios de broadcast, poder diagnosticar y defenderse del MAC flooding',
+                    b: 'Que tiene más puertos',
                     c: 'Que es más rápido',
                     d: 'Que consume menos'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Las tres han salido esta semana como problemas concretos. Un switch gestionable es, básicamente, el que permite resolverlos.'
             },
             {
@@ -817,11 +817,11 @@
                 text: '<em>Repaso.</em> Un paquete a 10.1.5.7 con dos rutas: <code>10.1.5.0/24</code> métrica 90 y <code>0.0.0.0/0</code> métrica 2. ¿Cuál gana?',
                 options: {
                     a: 'La 0.0.0.0/0, por métrica',
-                    b: 'La 10.1.5.0/24, porque el prefijo más largo se aplica antes que la métrica',
-                    c: 'Se reparte entre las dos',
-                    d: 'Ninguna'
+                    b: 'Se reparte entre las dos',
+                    c: 'Ninguna',
+                    d: 'La 10.1.5.0/24, porque el prefijo más largo se aplica antes que la métrica'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La métrica <strong>solo desempata entre rutas igual de específicas</strong>. Es el error más repetido del tema del router.'
             }
         ]

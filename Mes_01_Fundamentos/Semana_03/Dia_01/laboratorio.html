@@ -230,11 +230,11 @@ const ejerciciosData = {
                     pregunta: '<strong>3.</strong> Tu puerto está <em>Up</em> a 1 Gbps. ¿Qué has demostrado?',
                     opciones: {
                         a: 'Que la red funciona correctamente',
-                        b: 'Solo que la capa 1 funciona: hay señal y los bits pueden viajar',
-                        c: 'Que tienes acceso a Internet',
+                        b: 'Que tienes acceso a Internet',
+                        c: 'Solo que la capa 1 funciona: hay señal y los bits pueden viajar',
                         d: 'Que el DNS está bien configurado'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Es justo el valor de razonar por capas: <strong>saber qué NO has demostrado</strong>. Puede haber enlace perfecto y no funcionar nada por encima.',
                     pistas: [
                         'Pregúntate qué información maneja la capa 1. ¿Sabe algo de direcciones?'
@@ -285,12 +285,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>7.</strong> ¿Qué capa comprueba realmente el comando <code>arp -a</code>?',
                     opciones: {
-                        a: 'Solo la capa 1',
-                        b: 'La frontera entre la capa 2 y la 3: asocia direcciones IP con direcciones MAC',
+                        a: 'La frontera entre la capa 2 y la 3: asocia direcciones IP con direcciones MAC',
+                        b: 'Solo la capa 1',
                         c: 'Solo la capa 4',
                         d: 'La capa 7'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'La tabla ARP es literalmente una tabla de correspondencias entre las dos capas: a la izquierda direcciones de capa 3, a la derecha de capa 2.',
                     pistas: [
                         'Mira las dos columnas de la salida: ¿de qué capa es cada una?'

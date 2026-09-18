@@ -828,12 +828,12 @@
                 repaso: '#raid',
                 text: 'Un conjunto <strong>RAID 0</strong> de dos discos. ¿Cuántos fallos de disco tolera?',
                 options: {
-                    a: 'Uno',
-                    b: 'Dos',
-                    c: 'Ninguno, y además duplica la probabilidad de perderlo todo',
+                    a: 'Ninguno, y además duplica la probabilidad de perderlo todo',
+                    b: 'Uno',
+                    c: 'Dos',
                     d: 'Depende del tamaño de los discos'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'RAID 0 solo reparte datos para ganar velocidad y capacidad. Al necesitar los dos discos para reconstruir cualquier fichero, la avería de cualquiera lo pierde todo: el riesgo es <strong>mayor</strong> que con un disco suelto.'
             },
             {
@@ -842,11 +842,11 @@
                 text: 'Un empleado borra por error una carpeta del servidor, que tiene RAID 6. ¿Se puede recuperar del RAID?',
                 options: {
                     a: 'Sí, porque RAID 6 tolera dos fallos',
-                    b: 'No: el borrado se replica al instante en todos los discos',
-                    c: 'Sí, si se actúa en menos de 24 horas',
-                    d: 'Solo si el servidor no se ha reiniciado'
+                    b: 'Sí, si se actúa en menos de 24 horas',
+                    c: 'Solo si el servidor no se ha reiniciado',
+                    d: 'No: el borrado se replica al instante en todos los discos'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'RAID mantiene el estado <strong>actual</strong> de forma redundante, no versiones anteriores. Para esto hace falta una copia de seguridad: RAID es disponibilidad, la copia es recuperación.'
             },
             {
@@ -855,11 +855,11 @@
                 text: 'Con cinco discos de 4 TB en RAID 5, ¿cuánta capacidad útil queda?',
                 options: {
                     a: '20 TB',
-                    b: '16 TB',
-                    c: '12 TB',
-                    d: '10 TB'
+                    b: '12 TB',
+                    c: '10 TB',
+                    d: '16 TB'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'RAID 5 dedica el equivalente a un disco a la paridad: (N−1) × tamaño = 4 × 4 TB = <strong>16 TB</strong>.'
             },
             {
@@ -867,12 +867,12 @@
                 repaso: '#disponibilidad',
                 text: 'Un servicio con <strong>99,9 %</strong> de disponibilidad, ¿cuánto puede estar caído al año?',
                 options: {
-                    a: 'Unos 5 minutos',
-                    b: 'Unos 52 minutos',
-                    c: 'Unas 8 horas y 46 minutos',
+                    a: 'Unas 8 horas y 46 minutos',
+                    b: 'Unos 5 minutos',
+                    c: 'Unos 52 minutos',
                     d: 'Unos 3 días y medio'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: '525 600 minutos al año × 0,001 = 525,6 minutos ≈ <strong>8 h 46 min</strong>. Las otras opciones corresponden a cinco, cuatro y dos nueves respectivamente.'
             },
             {
@@ -881,11 +881,11 @@
                 text: 'Dos servidores: A falla cada 20 000 h y se repara en 8 h; B falla cada 10 000 h pero se repara en 30 min. ¿Cuál tiene mayor disponibilidad?',
                 options: {
                     a: 'A, porque falla la mitad de veces',
-                    b: 'B, porque su MTTR es mucho menor',
-                    c: 'Son iguales',
+                    b: 'Son iguales',
+                    c: 'B, porque su MTTR es mucho menor',
                     d: 'No se puede saber sin conocer el hardware'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'A: 20 000/20 008 = 99,96 %. B: 10 000/10 000,5 = <strong>99,995 %</strong>. Es la razón de que salga más rentable invertir en repuestos y procedimientos que en hardware más caro.'
             },
             {
@@ -907,11 +907,11 @@
                 text: '¿Qué hipervisor usarías en un servidor de producción y por qué?',
                 options: {
                     a: 'Tipo 2, porque es más fácil de instalar',
-                    b: 'Tipo 1, porque se instala directamente sobre el hardware y no arrastra el peso de un sistema operativo anfitrión',
-                    c: 'Cualquiera: el rendimiento es idéntico',
-                    d: 'Tipo 2, porque permite instantáneas'
+                    b: 'Cualquiera: el rendimiento es idéntico',
+                    c: 'Tipo 2, porque permite instantáneas',
+                    d: 'Tipo 1, porque se instala directamente sobre el hardware y no arrastra el peso de un sistema operativo anfitrión'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Proxmox, ESXi, Hyper-V o KVM son de tipo 1. VirtualBox y VMware Workstation son de tipo 2 y están pensados para escritorio, pruebas y laboratorios.'
             },
             {
@@ -933,11 +933,11 @@
                 text: '¿Cuál es la diferencia fundamental entre un contenedor y una máquina virtual?',
                 options: {
                     a: 'El contenedor es una máquina virtual más pequeña',
-                    b: 'El contenedor no lleva sistema operativo propio: comparte el núcleo del anfitrión',
-                    c: 'La máquina virtual no permite instalar aplicaciones',
+                    b: 'La máquina virtual no permite instalar aplicaciones',
+                    c: 'El contenedor no lleva sistema operativo propio: comparte el núcleo del anfitrión',
                     d: 'El contenedor solo funciona en la nube'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'De ahí salen todas las demás diferencias: tamaño en megabytes en vez de gigabytes, arranque en menos de un segundo y, como contrapartida, un <strong>aislamiento menor</strong>.'
             },
             {
@@ -945,12 +945,12 @@
                 repaso: '#nube',
                 text: 'Contratas una máquina virtual en un proveedor de nube (IaaS). ¿Quién actualiza el sistema operativo?',
                 options: {
-                    a: 'El proveedor, está incluido',
-                    b: 'Tú: en IaaS te dan la infraestructura, el sistema y la aplicación son tuyos',
+                    a: 'Tú: en IaaS te dan la infraestructura, el sistema y la aplicación son tuyos',
+                    b: 'El proveedor, está incluido',
                     c: 'Nadie: las máquinas en la nube no necesitan parches',
                     d: 'Se actualiza solo automáticamente'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'En IaaS la frontera está justo debajo del sistema operativo. Es un error caro y frecuente: mucha gente supone que al estar «en la nube» ya está mantenido.'
             },
             {
@@ -958,12 +958,12 @@
                 repaso: '../Dia_03/teoria.html#puertos',
                 text: '<em>Repaso.</em> ¿Qué distingue el puerto que usa un servidor del que usa un cliente?',
                 options: {
-                    a: 'El del servidor es fijo y conocido; el del cliente lo asigna el sistema del rango efímero',
-                    b: 'El del cliente es fijo y el del servidor variable',
+                    a: 'El del cliente es fijo y el del servidor variable',
+                    b: 'El del servidor es fijo y conocido; el del cliente lo asigna el sistema del rango efímero',
                     c: 'Los dos son efímeros',
                     d: 'El cliente no usa puerto'
                 },
-                answer: 'a',
+                answer: 'b',
                 feedback: 'Quien espera tiene que ser localizable; quien llama, no. Por eso el servidor usa 443, 22 o 53, y el cliente cualquiera del rango 49152–65535.'
             },
             {
@@ -971,12 +971,12 @@
                 repaso: '../../Semana_01/Dia_06/teoria.html',
                 text: '<em>Repaso.</em> En el modelo jerárquico de tres capas, ¿qué capa prioriza la velocidad de conmutación por encima de todo?',
                 options: {
-                    a: 'Acceso',
-                    b: 'Distribución',
-                    c: 'Núcleo',
+                    a: 'Núcleo',
+                    b: 'Acceso',
+                    c: 'Distribución',
                     d: 'Las tres por igual'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'El núcleo mueve el tráfico agregado de toda la red y no debe entretenerse: las políticas, el filtrado y el enrutamiento entre VLAN se hacen en <strong>distribución</strong>.'
             }
         ]

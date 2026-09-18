@@ -93,11 +93,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> ¿Qué pasaría si un switch aprendiera de la MAC de <strong>destino</strong> en lugar de la de origen?',
                     opciones: {
                         a: 'Nada: sería equivalente',
-                        b: 'La tabla quedaría al revés: apuntaría que el destinatario está en el puerto donde en realidad está el emisor',
-                        c: 'Aprendería el doble de rápido',
+                        b: 'Aprendería el doble de rápido',
+                        c: 'La tabla quedaría al revés: apuntaría que el destinatario está en el puerto donde en realidad está el emisor',
                         d: 'Solo funcionaría con tramas de difusión'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'El destino indica <strong>adónde va</strong> la trama, no de dónde viene. Solo la de origen está avalada por un hecho comprobable: esa trama ha entrado físicamente por ese puerto.',
                     pistas: [
                         '¿Qué sabe con certeza el switch cuando una trama entra por un puerto?'
@@ -108,11 +108,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Necesita el switch que los equipos le hablen <em>a él</em> para aprender dónde están?',
                     opciones: {
                         a: 'Sí: cada equipo debe registrarse al conectarse',
-                        b: 'No: aprende de cualquier trama que lo atraviese, aunque vaya dirigida a otro',
-                        c: 'Sí, pero solo la primera vez',
-                        d: 'Solo si es un switch gestionable'
+                        b: 'Sí, pero solo la primera vez',
+                        c: 'Solo si es un switch gestionable',
+                        d: 'No: aprende de cualquier trama que lo atraviese, aunque vaya dirigida a otro'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Es lo elegante del diseño: el switch <strong>no participa</strong> en ninguna conversación, solo necesita que ocurran a través suyo. No hay registro, ni protocolo de anuncio, ni configuración.',
                     pistas: [
                         '¿De qué tramas puede extraer información útil?'
@@ -156,12 +156,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> ¿Por qué al inundar se excluye siempre el puerto de entrada?',
                     opciones: {
-                        a: 'Para ahorrar ancho de banda',
-                        b: 'Porque quien la envió ya la tiene: devolvérsela no aporta nada y podría causar bucles',
+                        a: 'Porque quien la envió ya la tiene: devolvérsela no aporta nada y podría causar bucles',
+                        b: 'Para ahorrar ancho de banda',
                         c: 'Porque ese puerto está ocupado',
                         d: 'No se excluye: se envía también por él'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Es una regla constante: <strong>nunca se devuelve una trama por donde ha venido</strong>. Ni al inundar, ni al reenviar.',
                     pistas: [
                         '¿Quién está al otro lado del puerto de entrada, y qué tiene ya?'
@@ -244,12 +244,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>d)</strong> Tras las tres tramas, ¿qué equipo <strong>sigue sin estar</strong> en la tabla y por qué?',
                     opciones: {
-                        a: 'A, porque solo ha respondido',
-                        b: 'D, porque no ha enviado ninguna trama todavía',
+                        a: 'D, porque no ha enviado ninguna trama todavía',
+                        b: 'A, porque solo ha respondido',
                         c: 'B, porque su trama era de difusión',
                         d: 'Ninguno: los cuatro están'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El switch solo aprende de quien <strong>habla</strong>. D ha estado callado, así que sigue siendo desconocido: la próxima trama dirigida a él se inundará.',
                     pistas: [
                         'Repasa de qué dirección aprende el switch.'
@@ -280,12 +280,12 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> Un equipo lleva 10 minutos encendido pero completamente callado. Alguien le envía una trama. ¿Qué ocurre?',
                     opciones: {
                         a: 'Se reenvía directamente a su puerto',
-                        b: 'Se inunda, porque su entrada ha caducado, y al responder el switch vuelve a aprender dónde está',
-                        c: 'Se descarta',
-                        d: 'El switch pregunta por él con ARP'
+                        b: 'Se descarta',
+                        c: 'El switch pregunta por él con ARP',
+                        d: 'Se inunda, porque su entrada ha caducado, y al responder el switch vuelve a aprender dónde está'
                     },
-                    respuesta: 'b',
-                    explicacion: 'El temporizador de envejecimiento ronda los <strong>5 minutos</strong>. La d es un error frecuente: <strong>ARP lo hacen los equipos</strong>, no el switch.',
+                    respuesta: 'd',
+                    explicacion: 'El temporizador de envejecimiento ronda los <strong>5 minutos</strong>. La c es un error frecuente: <strong>ARP lo hacen los equipos</strong>, no el switch.',
                     pistas: [
                         '¿Cuánto dura una entrada sin refrescarse?'
                     ]
@@ -348,12 +348,12 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> ¿Qué problema resuelve ARP?',
                     opciones: {
                         a: 'Traducir nombres de dominio en direcciones IP',
-                        b: 'Averiguar la MAC correspondiente a una IP conocida, para poder construir la trama',
-                        c: 'Repartir direcciones IP automáticamente',
+                        b: 'Repartir direcciones IP automáticamente',
+                        c: 'Averiguar la MAC correspondiente a una IP conocida, para poder construir la trama',
                         d: 'Encontrar la ruta hacia una red remota'
                     },
-                    respuesta: 'b',
-                    explicacion: 'La a es <strong>DNS</strong>, la c es <strong>DHCP</strong> y la d es el <strong>enrutamiento</strong>, que es mañana. ARP cubre el hueco entre saber la IP y necesitar la MAC.',
+                    respuesta: 'c',
+                    explicacion: 'La a es <strong>DNS</strong>, la b es <strong>DHCP</strong> y la d es el <strong>enrutamiento</strong>, que es mañana. ARP cubre el hueco entre saber la IP y necesitar la MAC.',
                     pistas: [
                         'Piensa qué le falta a tu equipo justo antes de poder enviar la trama.'
                     ]
@@ -388,12 +388,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> ¿Qué diferencia hay entre la tabla MAC y la tabla ARP?',
                     opciones: {
-                        a: 'Ninguna: son dos nombres para lo mismo',
-                        b: 'La MAC está en el switch y relaciona MAC con puerto; la ARP está en los equipos y relaciona IP con MAC',
+                        a: 'La MAC está en el switch y relaciona MAC con puerto; la ARP está en los equipos y relaciona IP con MAC',
+                        b: 'Ninguna: son dos nombres para lo mismo',
                         c: 'La MAC está en los equipos y la ARP en el switch',
                         d: 'La ARP solo existe en los routers'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Y también se llenan de forma opuesta: la del switch <strong>escuchando</strong>, la del equipo <strong>preguntando</strong>. Las dos existen por lo mismo: no volver a averiguar lo ya sabido.',
                     pistas: [
                         '¿Puede un switch entender direcciones IP?'

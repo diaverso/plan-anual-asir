@@ -733,11 +733,11 @@
                 text: '¿Qué distingue exactamente a un cliente de un servidor?',
                 options: {
                     a: 'La potencia del hardware',
-                    b: 'Quién inicia la conversación: el cliente empieza, el servidor espera',
-                    c: 'El sistema operativo instalado',
-                    d: 'Que el servidor siempre tiene IP pública'
+                    b: 'El sistema operativo instalado',
+                    c: 'Que el servidor siempre tiene IP pública',
+                    d: 'Quién inicia la conversación: el cliente empieza, el servidor espera'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Es un <strong>papel</strong>, no un hardware ni un sistema operativo. Un mismo equipo puede ser servidor de un servicio y cliente de otro al mismo tiempo.'
             },
             {
@@ -746,11 +746,11 @@
                 text: '¿Por qué un servidor necesita una dirección conocida y un cliente no?',
                 options: {
                     a: 'Porque el servidor envía más datos',
-                    b: 'Porque el servidor es quien espera: si nadie sabe dónde está, nadie puede llamarlo',
-                    c: 'Porque los clientes no tienen dirección IP',
+                    b: 'Porque los clientes no tienen dirección IP',
+                    c: 'Porque el servidor es quien espera: si nadie sabe dónde está, nadie puede llamarlo',
                     d: 'Porque lo exige el protocolo TCP'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'La asimetría de papeles lo explica todo: quien espera tiene que ser localizable; quien llama, no. Por eso los servicios usan puertos fijos y los clientes, puertos efímeros cualesquiera.'
             },
             {
@@ -771,12 +771,12 @@
                 repaso: '#puertos',
                 text: 'Tienes cinco pestañas abiertas en la misma web. ¿Qué impide que se mezclen las respuestas?',
                 options: {
-                    a: 'Que cada pestaña usa una IP distinta',
-                    b: 'Que cada conexión tiene un puerto de origen diferente, y la cuaterna la identifica',
+                    a: 'Que cada conexión tiene un puerto de origen diferente, y la cuaterna la identifica',
+                    b: 'Que cada pestaña usa una IP distinta',
                     c: 'Que el navegador las procesa una a una',
                     d: 'Que el servidor las numera'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Tres de los cuatro datos coinciden: tu IP, la IP del servidor y su puerto. Lo único que cambia es <strong>tu puerto de origen</strong>, y eso basta para que la cuaterna sea única.'
             },
             {
@@ -785,11 +785,11 @@
                 text: 'Relaciona correctamente: ¿qué servicio escucha en el puerto 22?',
                 options: {
                     a: 'Telnet',
-                    b: 'SMTP',
-                    c: 'SSH',
+                    b: 'SSH',
+                    c: 'SMTP',
                     d: 'DNS'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'El 22 es SSH. Telnet es el 23 y va <strong>en claro</strong>, por lo que está obsoleto; SMTP es el 25 y DNS el 53.'
             },
             {
@@ -798,11 +798,11 @@
                 text: 'Una empresa de 40 empleados quiere organizar sus datos. ¿Qué modelo conviene y por qué?',
                 options: {
                     a: 'P2P, porque es más barato',
-                    b: 'Cliente-servidor, por el control centralizado de permisos y copias de seguridad',
-                    c: 'P2P, porque no tiene punto único de fallo',
-                    d: 'Da igual: a ese tamaño no hay diferencia'
+                    b: 'P2P, porque no tiene punto único de fallo',
+                    c: 'Da igual: a ese tamaño no hay diferencia',
+                    d: 'Cliente-servidor, por el control centralizado de permisos y copias de seguridad'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La ventaja decisiva no es técnica sino de gestión: cuando alguien se va de la empresa, se desactiva una cuenta y pierde el acceso a todo. Con datos repartidos habría que ir equipo por equipo.'
             },
             {
@@ -823,12 +823,12 @@
                 repaso: '#p2p',
                 text: 'Se publica una nueva versión de Ubuntu y millones de personas la descargan a la vez por BitTorrent. ¿Qué ocurre?',
                 options: {
-                    a: 'El sistema se satura, como pasaría con un servidor',
-                    b: 'La descarga va más rápida cuanta más gente participa, porque cada nodo también sirve',
+                    a: 'La descarga va más rápida cuanta más gente participa, porque cada nodo también sirve',
+                    b: 'El sistema se satura, como pasaría con un servidor',
                     c: 'Se reparte el ancho de banda del tracker entre todos',
                     d: 'Solo pueden descargar 20 personas a la vez'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Es la propiedad característica del P2P: cada participante <strong>aporta la capacidad que consume</strong>. Por eso se usa precisamente para picos de demanda enormes.'
             },
             {
@@ -836,12 +836,12 @@
                 repaso: '#p2p',
                 text: 'Tres equipos en una casa quieren compartir una carpeta. ¿Qué modelo tiene sentido?',
                 options: {
-                    a: 'Cliente-servidor, con un servidor dedicado',
-                    b: 'P2P: montar y mantener un servidor para tres equipos no compensa',
+                    a: 'P2P: montar y mantener un servidor para tres equipos no compensa',
+                    b: 'Cliente-servidor, con un servidor dedicado',
                     c: 'Ninguno: hace falta un servicio en la nube',
                     d: 'Cliente-servidor, porque P2P no permite compartir carpetas'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El modelo se elige por <strong>tamaño y objetivo</strong>. Por debajo de unos diez equipos, el coste y la administración de un servidor no se justifican.'
             },
             {
@@ -850,11 +850,11 @@
                 text: 'En una videollamada, ¿qué papel cumple el servidor?',
                 options: {
                     a: 'Transporta todo el audio y el vídeo de los participantes',
-                    b: 'Autentica, gestiona la sala y pone en contacto a los participantes',
-                    c: 'Ninguno: las videollamadas son P2P puro',
+                    b: 'Ninguno: las videollamadas son P2P puro',
+                    c: 'Autentica, gestiona la sala y pone en contacto a los participantes',
                     d: 'Solo guarda la grabación'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es el patrón «servidor para descubrirse, P2P para transferir». El P2P puro no resolvería el arranque —nadie sabría a quién preguntar— y el servidor puro sería carísimo en ancho de banda.'
             },
             {
@@ -863,11 +863,11 @@
                 text: 'Una pyme usa un PC con Windows 11 como servidor de ficheros. Al crecer a 25 empleados empiezan los errores de conexión. ¿Por qué?',
                 options: {
                     a: 'El hardware no da más de sí',
-                    b: 'La edición de escritorio limita a 20 conexiones simultáneas por licencia',
-                    c: 'Windows 11 no admite carpetas compartidas',
-                    d: 'Se ha agotado el rango de puertos efímeros'
+                    b: 'Windows 11 no admite carpetas compartidas',
+                    c: 'Se ha agotado el rango de puertos efímeros',
+                    d: 'La edición de escritorio limita a 20 conexiones simultáneas por licencia'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Es un límite <strong>de licencia</strong>, no técnico: el sistema podría, pero lo impide. Es un problema clásico y difícil de diagnosticar si no se conoce.'
             },
             {
@@ -876,11 +876,11 @@
                 text: '<em>Repaso.</em> ¿Cuál de estas direcciones cambia en cada salto del trayecto hacia un servidor de Internet?',
                 options: {
                     a: 'La IP de destino',
-                    b: 'La IP de origen',
-                    c: 'Las direcciones MAC de origen y destino',
+                    b: 'Las direcciones MAC de origen y destino',
+                    c: 'La IP de origen',
                     d: 'Ninguna'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Las IP identifican a los <strong>extremos</strong> y se mantienen; las MAC identifican el <strong>tramo actual</strong> y se reescriben en cada router.'
             },
             {
@@ -890,10 +890,10 @@
                 options: {
                     a: 'Cat 5e',
                     b: 'Cat 6',
-                    c: 'Cat 6A',
-                    d: 'Cat 8'
+                    c: 'Cat 8',
+                    d: 'Cat 6A'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Cat 6 solo alcanza 10 Gbps hasta unos 55 m y Cat 8 se queda en 30 m. <strong>Cat 6A</strong> es la que garantiza 10 Gbps a los 100 m completos.'
             }
         ]

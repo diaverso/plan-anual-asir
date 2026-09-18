@@ -182,10 +182,10 @@ interfaces por nodo = N − 1</code></pre>`,
                     opciones: {
                         a: 'No pasa nada, hay rutas alternativas automáticas',
                         b: 'Cae únicamente ese switch',
-                        c: 'Cae toda la rama que cuelga de él, pero el resto sigue',
-                        d: 'Cae toda la red de la empresa'
+                        c: 'Cae toda la red de la empresa',
+                        d: 'Cae toda la rama que cuelga de él, pero el resto sigue'
                     },
-                    respuesta: 'c',
+                    respuesta: 'd',
                     explicacion: 'El fallo queda contenido en su bloque. Cuanto más arriba en la jerarquía, mayor alcance tiene la avería: por eso los niveles superiores se duplican.',
                     pistas: [
                         'Piensa qué cuelga por debajo de un switch de distribución.',
@@ -258,11 +258,11 @@ interfaces por nodo = N − 1</code></pre>`,
                     pregunta: '<strong>c)</strong> ¿A qué dirección MAC se envía una trama de broadcast?',
                     opciones: {
                         a: '00:00:00:00:00:00',
-                        b: 'FF:FF:FF:FF:FF:FF',
-                        c: '01:00:5E:00:00:01',
+                        b: '01:00:5E:00:00:01',
+                        c: 'FF:FF:FF:FF:FF:FF',
                         d: 'A la del router'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'FF:FF:FF:FF:FF:FF es la dirección de difusión: todos los equipos del dominio deben procesarla. La usan ARP, DHCP y el descubrimiento de servicios.',
                     pistas: [
                         'Es la dirección con todos los bits a uno.',
@@ -331,12 +331,12 @@ interfaces por nodo = N − 1</code></pre>`,
                     tipo: 'opcion',
                     pregunta: '<strong>d)</strong> Si <strong>PC1 envía un broadcast ARP</strong>, ¿quién lo recibe?',
                     opciones: {
-                        a: 'Todos los equipos de la red, incluidos PC5 y PC6',
-                        b: 'PC2, PC3 y PC4',
+                        a: 'PC2, PC3 y PC4',
+                        b: 'Todos los equipos de la red, incluidos PC5 y PC6',
                         c: 'Solo PC2',
                         d: 'Nadie: el switch descarta los broadcasts'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Llega a todo su dominio de broadcast (PC2, PC3, PC4). El router NO lo reenvía a la otra interfaz, así que PC5 y PC6 quedan fuera.'
                 },
                 {
@@ -377,12 +377,12 @@ interfaces por nodo = N − 1</code></pre>`,
                     pregunta: `<strong>a)</strong> Una empresa ha crecido de 10 a 120 empleados manteniendo un único switch
                                plano de 24 puertos ampliado con hubs. ¿Cuál es el problema más grave que aparecerá?`,
                     opciones: {
-                        a: 'Que el cable de red se calentará',
-                        b: 'Un dominio de broadcast enorme, con riesgo de tormenta y degradación general',
+                        a: 'Un dominio de broadcast enorme, con riesgo de tormenta y degradación general',
+                        b: 'Que el cable de red se calentará',
                         c: 'Que las direcciones MAC se agotarán',
                         d: 'Que habrá demasiados routers'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Con 120 equipos en un solo dominio de broadcast, el tráfico de difusión consume ancho de banda y CPU en todos ellos. La solución es segmentar con VLAN y pasar a un diseño jerárquico.',
                     pistas: [
                         'Piensa qué pasa cuando 120 equipos comparten el mismo dominio de difusión.',
@@ -395,10 +395,10 @@ interfaces por nodo = N − 1</code></pre>`,
                     opciones: {
                         a: 'Porque es la opción más barata',
                         b: 'Porque necesita menos cableado que la estrella',
-                        c: 'Porque aporta rutas alternativas y alta disponibilidad',
-                        d: 'Porque es más fácil de administrar'
+                        c: 'Porque es más fácil de administrar',
+                        d: 'Porque aporta rutas alternativas y alta disponibilidad'
                     },
-                    respuesta: 'c',
+                    respuesta: 'd',
                     explicacion: 'Con una disponibilidad exigida del 99,99 % (unos 52 min de caída al año) no puede existir un punto único de fallo. El coste de una hora de caída supera con creces el de los enlaces extra.',
                     pistas: [
                         'No busques la opción más barata: piensa qué le cuesta a un banco estar una hora sin red.',

@@ -624,11 +624,11 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 text: '¿Cuáles son los 5 componentes básicos de un sistema de comunicación, en orden?',
                 options: {
                     a: 'Emisor, Receptor, Canal, Código, Contexto',
-                    b: 'Fuente, Transmisor, Medio, Receptor, Destino',
-                    c: 'CPU, Memoria, Entrada, Salida, Almacenamiento',
-                    d: 'Router, Switch, Cable, PC, Servidor'
+                    b: 'CPU, Memoria, Entrada, Salida, Almacenamiento',
+                    c: 'Router, Switch, Cable, PC, Servidor',
+                    d: 'Fuente, Transmisor, Medio, Receptor, Destino'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La fuente genera la información, el transmisor la codifica, el medio la transporta, el receptor la decodifica y el destino la consume.'
             },
             {
@@ -637,11 +637,11 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 text: 'En una llamada telefónica, ¿qué elemento actúa como TRANSMISOR?',
                 options: {
                     a: 'La persona que habla',
-                    b: 'El micrófono y los circuitos del móvil que digitalizan la voz',
-                    c: 'Las ondas de radio',
+                    b: 'Las ondas de radio',
+                    c: 'El micrófono y los circuitos del móvil que digitalizan la voz',
                     d: 'La persona que escucha'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'La persona que habla es la fuente (genera la información). El transmisor es el hardware que transforma esa voz en una señal apta para viajar por el medio.'
             },
             {
@@ -650,11 +650,11 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 text: 'Un PC descarga un archivo de un servidor. En el sentido servidor → PC, ¿qué papel desempeña el PC?',
                 options: {
                     a: 'Fuente',
-                    b: 'Transmisor',
-                    c: 'Medio',
-                    d: 'Destino'
+                    b: 'Destino',
+                    c: 'Transmisor',
+                    d: 'Medio'
                 },
-                answer: 'd',
+                answer: 'b',
                 feedback: 'Los papeles dependen del sentido de la transmisión. En la descarga el servidor es la fuente y el PC el destino; en la petición previa era al revés.'
             },
             {
@@ -675,12 +675,12 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 repaso: '#perturbaciones',
                 text: 'Un cable de red pasa pegado durante varios metros al cable de alimentación de un motor industrial. ¿Qué problema es el más probable?',
                 options: {
-                    a: 'Atenuación excesiva',
-                    b: 'Ruido electromagnético que corrompe las tramas',
+                    a: 'Ruido electromagnético que corrompe las tramas',
+                    b: 'Atenuación excesiva',
                     c: 'Skew entre los pares',
                     d: 'Colisiones en el switch'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Un motor genera interferencia electromagnética que se acopla al cable. El trenzado del par la cancela en buena medida, pero con una fuente potente y muchos metros en paralelo aparecen errores de CRC y retransmisiones.'
             },
             {
@@ -689,11 +689,11 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 text: 'Un walkie-talkie permite hablar en ambos sentidos, pero no a la vez. ¿Qué modo usa?',
                 options: {
                     a: 'Simplex',
-                    b: 'Half-duplex',
-                    c: 'Full-duplex',
+                    b: 'Full-duplex',
+                    c: 'Half-duplex',
                     d: 'Multiplex'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Half-duplex: la comunicación es bidireccional pero alternada. Hay que soltar el botón para que el otro pueda hablar.'
             },
             {
@@ -701,12 +701,12 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 repaso: '#modos',
                 text: '¿Qué modo de transmisión utiliza una emisora de radio FM?',
                 options: {
-                    a: 'Simplex',
-                    b: 'Half-duplex',
-                    c: 'Full-duplex',
-                    d: 'Depende de la frecuencia'
+                    a: 'Half-duplex',
+                    b: 'Full-duplex',
+                    c: 'Depende de la frecuencia',
+                    d: 'Simplex'
                 },
-                answer: 'a',
+                answer: 'd',
                 feedback: 'Simplex: la emisora solo transmite y el receptor solo recibe. El oyente no tiene ningún canal de retorno hacia la emisora.'
             },
             {
@@ -741,12 +741,12 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 repaso: '#colisiones',
                 text: '¿Qué ocurre cuando dos equipos conectados a un hub transmiten simultáneamente?',
                 options: {
-                    a: 'El hub almacena una trama y envía la otra',
-                    b: 'Se produce una colisión y ambas tramas se destruyen',
+                    a: 'Se produce una colisión y ambas tramas se destruyen',
+                    b: 'El hub almacena una trama y envía la otra',
                     c: 'El hub las envía por puertos distintos sin problema',
                     d: 'La trama con mayor prioridad pasa primero'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El hub no conmuta ni almacena: las señales se superponen físicamente. CSMA/CD detecta la colisión y ambos equipos reintentan tras un tiempo aleatorio.'
             },
             {
@@ -768,11 +768,11 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 text: 'Un switch muestra miles de colisiones en un puerto concreto y ese equipo va lentísimo, aunque funciona. ¿Cuál es la causa más probable?',
                 options: {
                     a: 'El cable es demasiado corto',
-                    b: 'Un desajuste de dúplex: un extremo en full y el otro en half',
-                    c: 'El switch tiene demasiados puertos libres',
-                    d: 'El equipo tiene un virus'
+                    b: 'El switch tiene demasiados puertos libres',
+                    c: 'El equipo tiene un virus',
+                    d: 'Un desajuste de dúplex: un extremo en full y el otro en half'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'En un enlace conmutado full-duplex NO debería haber colisiones. Si aparecen, el extremo en half está interpretando como colisiones las transmisiones simultáneas legítimas del otro. Se corrige dejando autonegociación en ambos lados.'
             },
             {
@@ -794,11 +794,11 @@ FULL-DUPLEX    A ══════════════▶ B      (ambos a l
                 text: '¿Por qué las redes modernas transmiten en serie y no en paralelo?',
                 options: {
                     a: 'Porque el serie envía más bits a la vez',
-                    b: 'Porque en paralelo el sesgo de sincronismo impide reconstruir el dato a distancia',
-                    c: 'Porque el cable paralelo no existe comercialmente',
-                    d: 'Porque el serie es incompatible con la fibra óptica'
+                    b: 'Porque el cable paralelo no existe comercialmente',
+                    c: 'Porque el serie es incompatible con la fibra óptica',
+                    d: 'Porque en paralelo el sesgo de sincronismo impide reconstruir el dato a distancia'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'A alta velocidad, los bits que salen juntos por hilos distintos no llegan exactamente a la vez (skew). Pasada cierta distancia el dato es irrecuperable, por eso el paralelo queda relegado a buses internos.'
             }
         ]

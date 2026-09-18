@@ -636,11 +636,11 @@
                 text: 'Una empresa sustituye todo su cableado de cobre por fibra óptica. ¿Qué capas hay que rehacer?',
                 options: {
                     a: 'Todas, porque cambia el medio',
-                    b: 'Solo la capa 1: las demás no saben por dónde viajan los bits',
-                    c: 'Las capas 1 y 2',
+                    b: 'Las capas 1 y 2',
+                    c: 'Solo la capa 1: las demás no saben por dónde viajan los bits',
                     d: 'De la 1 a la 4'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es la ventaja principal de dividir en capas: <strong>se puede cambiar una sin tocar las demás</strong>. El navegador, TCP y el direccionamiento IP siguen exactamente igual.'
             },
             {
@@ -661,12 +661,12 @@
                 repaso: '#osi',
                 text: '¿Qué capa está <strong>inmediatamente por encima</strong> de la de red?',
                 options: {
-                    a: 'Enlace de datos',
-                    b: 'Sesión',
-                    c: 'Transporte',
+                    a: 'Transporte',
+                    b: 'Enlace de datos',
+                    c: 'Sesión',
                     d: 'Presentación'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Red es la 3 y Transporte la 4. Enlace es la 2, o sea la de <em>debajo</em>. Este tipo de pregunta cae constantemente.'
             },
             {
@@ -675,11 +675,11 @@
                 text: 'Un técnico dice que el hub es «un switch sencillo». ¿Qué le corriges?',
                 options: {
                     a: 'Nada, es una buena descripción',
-                    b: 'Que el hub es de capa 1: repite bits sin leer direcciones, mientras que el switch lee MAC',
-                    c: 'Que el hub es de capa 3',
-                    d: 'Que el hub solo funciona con fibra'
+                    b: 'Que el hub es de capa 3',
+                    c: 'Que el hub solo funciona con fibra',
+                    d: 'Que el hub es de capa 1: repite bits sin leer direcciones, mientras que el switch lee MAC'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La diferencia no es de tamaño sino de <strong>capa</strong>. El hub no entiende lo que copia, y por eso no puede separar dominios de colisión.'
             },
             {
@@ -688,11 +688,11 @@
                 text: '¿Cuál es la unidad de datos de la capa de enlace?',
                 options: {
                     a: 'Bit',
-                    b: 'Trama',
-                    c: 'Paquete',
+                    b: 'Paquete',
+                    c: 'Trama',
                     d: 'Segmento'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Bit es capa 1, <strong>trama</strong> capa 2, paquete capa 3 y segmento capa 4. Confundir trama con paquete es el error más repetido del tema.'
             },
             {
@@ -701,11 +701,11 @@
                 text: 'De las dos subcapas de la capa 2, ¿cuál permite que la capa 3 funcione igual sobre Ethernet que sobre Wi-Fi?',
                 options: {
                     a: 'La subcapa MAC',
-                    b: 'La subcapa LLC',
-                    c: 'Ninguna: hay que reprogramar la capa 3',
-                    d: 'Las dos por igual'
+                    b: 'Ninguna: hay que reprogramar la capa 3',
+                    c: 'Las dos por igual',
+                    d: 'La subcapa LLC'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La <strong>LLC</strong> mira hacia arriba y ofrece a la capa 3 una interfaz común. El detalle de cada medio se queda encapsulado en la subcapa <strong>MAC</strong>, que mira hacia abajo.'
             },
             {
@@ -713,12 +713,12 @@
                 repaso: '#capa2',
                 text: 'Una trama llega corrompida y el FCS no cuadra. ¿Qué hace Ethernet?',
                 options: {
-                    a: 'La corrige con los bits de paridad',
-                    b: 'La descarta, sin pedir retransmisión',
+                    a: 'La descarta, sin pedir retransmisión',
+                    b: 'La corrige con los bits de paridad',
                     c: 'La entrega igualmente a la capa 3',
                     d: 'Reinicia el enlace'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Ethernet <strong>detecta pero no corrige</strong>. Se limita a no entregar basura hacia arriba; recuperar lo perdido es trabajo de capas superiores.'
             },
             {
@@ -727,11 +727,11 @@
                 text: '¿Cuál es el alcance de la capa 3, frente al de la capa 2?',
                 options: {
                     a: 'Ambas llegan de extremo a extremo',
-                    b: 'La capa 2 llega de extremo a extremo y la 3 solo a un salto',
-                    c: 'La capa 2 llega a un salto y la 3 de extremo a extremo, entre redes',
+                    b: 'La capa 2 llega a un salto y la 3 de extremo a extremo, entre redes',
+                    c: 'La capa 2 llega de extremo a extremo y la 3 solo a un salto',
                     d: 'Ambas se limitan a la red local'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'La capa 2 entrega <strong>dentro</strong> de una red; la capa 3, <strong>entre</strong> redes. De ahí que las MAC cambien en cada salto y las IP no.'
             },
             {
@@ -740,11 +740,11 @@
                 text: '¿Por qué la dirección IP puede encaminar y la MAC no?',
                 options: {
                     a: 'Porque la IP es más larga',
-                    b: 'Porque la IP es jerárquica (red + host) y permite agrupar; la MAC es plana',
-                    c: 'Porque la MAC se puede falsificar',
-                    d: 'Porque la MAC solo existe en Wi-Fi'
+                    b: 'Porque la MAC se puede falsificar',
+                    c: 'Porque la MAC solo existe en Wi-Fi',
+                    d: 'Porque la IP es jerárquica (red + host) y permite agrupar; la MAC es plana'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Con direcciones planas un router necesitaría una entrada por cada interfaz del planeta. La jerarquía permite una sola ruta para toda una red.'
             },
             {
@@ -753,11 +753,11 @@
                 text: 'La <strong>tabla ARP</strong> que consultaste en la Semana 2, ¿con qué capas tiene que ver?',
                 options: {
                     a: 'Solo con la capa 1',
-                    b: 'Con la frontera entre la capa 2 y la capa 3: traduce una IP en una MAC',
-                    c: 'Solo con la capa 4',
+                    b: 'Solo con la capa 4',
+                    c: 'Con la frontera entre la capa 2 y la capa 3: traduce una IP en una MAC',
                     d: 'Con la capa 7'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'ARP hace de puente: recibe una dirección de <strong>capa 3</strong> y devuelve una de <strong>capa 2</strong>. Es la pregunta trampa clásica del tema.'
             },
             {
@@ -778,12 +778,12 @@
                 repaso: '#yasabias',
                 text: '¿En qué capa o capas trabaja una tarjeta de red?',
                 options: {
-                    a: 'Solo en la capa 1',
-                    b: 'Solo en la capa 2',
-                    c: 'En las capas 1 y 2',
+                    a: 'En las capas 1 y 2',
+                    b: 'Solo en la capa 1',
+                    c: 'Solo en la capa 2',
                     d: 'En las capas 1, 2 y 3'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Sus cuatro funciones se reparten dos y dos: conexión física y conversión de señal son <strong>capa 1</strong>; direccionamiento MAC y control de acceso al medio, <strong>capa 2</strong>.'
             },
             {
@@ -792,11 +792,11 @@
                 text: '<em>Repaso.</em> Hay que llevar 10 Gbps a 80 metros. ¿Qué categoría hace falta?',
                 options: {
                     a: 'Cat 5e',
-                    b: 'Cat 6',
-                    c: 'Cat 6A',
+                    b: 'Cat 6A',
+                    c: 'Cat 6',
                     d: 'Cat 8'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Cat 6 solo alcanza 10 Gbps hasta unos 55 m y Cat 8 se queda en 30 m. Solo <strong>Cat 6A</strong> garantiza 10 Gbps a los 100 m completos.'
             },
             {
@@ -805,11 +805,11 @@
                 text: '<em>Repaso.</em> <code>ping 8.8.8.8</code> responde, <code>ping google.com</code> falla. Con el vocabulario de hoy, ¿qué has demostrado?',
                 options: {
                     a: 'Nada concluyente',
-                    b: 'Que las capas 1 a 3 funcionan: hay conectividad completa, y lo que falla es la resolución de nombres',
-                    c: 'Que solo funciona la capa 1',
-                    d: 'Que el problema está en el navegador'
+                    b: 'Que solo funciona la capa 1',
+                    c: 'Que el problema está en el navegador',
+                    d: 'Que las capas 1 a 3 funcionan: hay conectividad completa, y lo que falla es la resolución de nombres'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El ping por IP ejercita las capas 1, 2 y 3. Lo que falla es el <strong>DNS</strong>, un servicio de capa 7. Es la prueba de los dos ping, explicada ahora por capas.'
             }
         ]

@@ -106,11 +106,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Si ahora analizamos el sentido <strong>Juan → María</strong>, ¿qué papel pasa a tener el smartphone de María?',
                     opciones: {
                         a: 'Sigue siendo el transmisor',
-                        b: 'Pasa a ser el receptor',
-                        c: 'Pasa a ser el medio',
+                        b: 'Pasa a ser el medio',
+                        c: 'Pasa a ser el receptor',
                         d: 'Pasa a ser la fuente'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Los papeles no son fijos: dependen del sentido de cada transmisión. Por eso los dispositivos incorporan transmisor y receptor a la vez, y se llaman <strong>transceptores</strong>.',
                     pistas: [
                         'Ahora la información nace en Juan y termina en María. ¿Qué hace el móvil de María con esa señal?',
@@ -263,10 +263,10 @@ const ejerciciosData = {
                     opciones: {
                         a: '100 Mbps, porque el switch es de 100 Mbps',
                         b: '200 Mbps',
-                        c: '400 Mbps, porque cada pareja tiene su propio camino dedicado',
-                        d: '12,5 Mbps por pareja'
+                        c: '12,5 Mbps por pareja',
+                        d: '400 Mbps, porque cada pareja tiene su propio camino dedicado'
                     },
-                    respuesta: 'c',
+                    respuesta: 'd',
                     explicacion: '4 parejas × 100 Mbps = <strong>400 Mbps</strong>. El switch conmuta en paralelo: los caminos son independientes y no compiten por el medio.'
                 },
                 {
@@ -392,12 +392,12 @@ const ejerciciosData = {
                     pregunta: `<strong>b)</strong> Una oficina tiene la red muy lenta. Al revisar el switch se observan
                                <strong>miles de colisiones</strong> en un puerto concreto. ¿Cuál es la causa más probable?`,
                     opciones: {
-                        a: 'El cable de ese puerto es demasiado corto',
-                        b: 'Hay un desajuste de dúplex: un extremo en full y el otro en half',
+                        a: 'Hay un desajuste de dúplex: un extremo en full y el otro en half',
+                        b: 'El cable de ese puerto es demasiado corto',
                         c: 'El switch tiene demasiados puertos libres',
                         d: 'La fuente de alimentación es insuficiente'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El <em>duplex mismatch</em> es un clásico: si un extremo está en full-duplex y el otro en half, el que está en half detecta como colisiones las transmisiones simultáneas legítimas del otro. La red funciona, pero lentísima.'
                 },
                 {

@@ -124,11 +124,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Cuál de estas afirmaciones sobre la capa 7 es correcta?',
                     opciones: {
                         a: 'La capa 7 es el programa que usa el usuario, como el navegador',
-                        b: 'La capa 7 son los protocolos del servicio, como HTTP o DNS; el navegador es un programa que los usa',
-                        c: 'La capa 7 solo existe en el servidor',
-                        d: 'La capa 7 se encarga del cifrado'
+                        b: 'La capa 7 solo existe en el servidor',
+                        c: 'La capa 7 se encarga del cifrado',
+                        d: 'La capa 7 son los protocolos del servicio, como HTTP o DNS; el navegador es un programa que los usa'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Distinguir <strong>protocolo</strong> de <strong>programa</strong> es el matiz que separa haber entendido el modelo de haberlo memorizado. El cifrado, además, es capa 6.',
                     pistas: [
                         'Una de las opciones confunde capa con cifrado; otra, protocolo con programa.'
@@ -191,12 +191,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> ¿Qué hace la capa 3 con la cabecera TCP que ya viene puesta?',
                     opciones: {
-                        a: 'La lee para saber el puerto de destino',
-                        b: 'Nada: para ella es contenido opaco, y le añade delante su propia cabecera',
+                        a: 'Nada: para ella es contenido opaco, y le añade delante su propia cabecera',
+                        b: 'La lee para saber el puerto de destino',
                         c: 'La sustituye por la cabecera IP',
                         d: 'La mueve al final'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Cada capa <strong>envuelve sin abrir</strong>. Es exactamente lo que permite cambiar una capa sin tocar las demás: si ninguna mira dentro, da igual qué haya.',
                     pistas: [
                         'Recuerda la analogía del transportista y tu paquete.'
@@ -207,11 +207,11 @@ const ejerciciosData = {
                     pregunta: '<strong>d)</strong> ¿Por qué el FCS de la capa 2 va al final y no delante?',
                     opciones: {
                         a: 'Por convenio histórico',
-                        b: 'Porque para calcularlo hay que haber visto la trama entera',
-                        c: 'Porque así ocupa menos',
+                        b: 'Porque así ocupa menos',
+                        c: 'Porque para calcularlo hay que haber visto la trama entera',
                         d: 'Porque lo lee el destino antes que la cabecera'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Es un código calculado sobre <strong>todo</strong> el contenido de la trama; hasta que no está montada no se puede obtener. De ahí que sea la única información que va detrás.',
                     pistas: [
                         'Piensa sobre qué datos se calcula ese código de comprobación.'
@@ -404,12 +404,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> Un usuario tiene una conexión que declara MTU 1500 en la tarjeta, pero al medirlo resulta ser 1492. ¿Está mal configurada?',
                     opciones: {
-                        a: 'Sí, hay que corregir el MTU de la tarjeta',
-                        b: 'No: la tarjeta declara el MTU de su enlace Ethernet, pero el camino completo pasa por PPPoE, que añade 8 bytes',
+                        a: 'No: la tarjeta declara el MTU de su enlace Ethernet, pero el camino completo pasa por PPPoE, que añade 8 bytes',
+                        b: 'Sí, hay que corregir el MTU de la tarjeta',
                         c: 'Sí, el cable es defectuoso',
                         d: 'No, es un error de medición'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Son dos cosas distintas: el <strong>MTU de la interfaz</strong> y el <strong>MTU del camino</strong>. El primero describe el primer enlace; el segundo, el más restrictivo de todo el trayecto.',
                     pistas: [
                         '¿El MTU de tu tarjeta describe todo el camino hasta Internet, o solo el primer tramo?'

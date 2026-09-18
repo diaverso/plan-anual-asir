@@ -180,11 +180,11 @@ const ejerciciosData = {
                                <code>01-00-5e-00-00-fb</code>. ¿Qué son?`,
                     opciones: {
                         a: 'Dispositivos ocultos de tu red',
-                        b: 'Direcciones multicast: grupos de destinatarios, no equipos concretos',
-                        c: 'Intrusos conectados a tu Wi-Fi',
-                        d: 'Errores de la tabla ARP'
+                        b: 'Intrusos conectados a tu Wi-Fi',
+                        c: 'Errores de la tabla ARP',
+                        d: 'Direcciones multicast: grupos de destinatarios, no equipos concretos'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'El rango 224.x.x.x es <strong>multicast</strong>: un envío a un grupo de interesados en lugar de a uno solo (unicast) o a todos (broadcast). Esa concreta la usa mDNS, el descubrimiento de servicios de impresoras y altavoces. Lo verás en el <strong>Mes 6</strong>.',
                     pistas: [
                         'Fíjate en que todas empiezan por 224 o 239 y su MAC empieza por 01-00-5e.',
@@ -248,12 +248,12 @@ const ejerciciosData = {
                     pregunta: `<strong>c)</strong> Los dispositivos por Wi-Fi comparten el aire; los de cable tienen su
                                propio enlace. ¿Cómo se llama una red que combina características de varias topologías?`,
                     opciones: {
-                        a: 'Topología de malla',
-                        b: 'Topología híbrida',
+                        a: 'Topología híbrida',
+                        b: 'Topología de malla',
                         c: 'Topología de bus',
                         d: 'Topología de anillo'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Tu red doméstica es <strong>híbrida</strong>: una estrella conmutada por cable, más una zona inalámbrica que funciona como medio compartido. Casi todas las redes reales lo son.',
                     pistas: [
                         'No es ninguna de las tres topologías básicas puras.'

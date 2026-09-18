@@ -573,12 +573,12 @@
                 repaso: '#origen',
                 text: 'Un compañero dice que «TCP/IP nació para simplificar el modelo OSI». ¿Qué le corriges?',
                 options: {
-                    a: 'Nada, es correcto',
-                    b: 'Que es al revés: TCP/IP ya estaba funcionando en 1983 y OSI se publicó en 1984',
+                    a: 'Que es al revés: TCP/IP ya estaba funcionando en 1983 y OSI se publicó en 1984',
+                    b: 'Nada, es correcto',
                     c: 'Que los dos se publicaron a la vez',
                     d: 'Que TCP/IP es en realidad más complejo'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'TCP/IP <strong>es anterior</strong>. No es una versión reducida de OSI: son dos modelos que nacieron por caminos distintos, y el de la ISO llegó cuando el otro ya estaba desplegado.'
             },
             {
@@ -587,11 +587,11 @@
                 text: 'El 1 de enero de 1983 ARPANET cambió a TCP/IP en un solo día. ¿Con qué problema actual se compara eso en la teoría?',
                 options: {
                     a: 'Con la saturación de los servidores DNS',
-                    b: 'Con la migración a IPv6, que es lo mismo pero con miles de millones de equipos',
-                    c: 'Con la aparición del Wi-Fi',
+                    b: 'Con la aparición del Wi-Fi',
+                    c: 'Con la migración a IPv6, que es lo mismo pero con miles de millones de equipos',
                     d: 'Con el cambio de HTTP a HTTPS'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Aquel día migraron unos 400 equipos y aun así fue una operación memorable. IPv6 es el mismo cambio a escala planetaria, y por eso lleva décadas sin cerrarse.'
             },
             {
@@ -599,13 +599,13 @@
                 repaso: '#capas',
                 text: 'Ordena mentalmente las capas de TCP/IP de abajo arriba. ¿Cuál es correcta?',
                 options: {
-                    a: 'Acceso a la red → Internet → Transporte → Aplicación',
-                    b: 'Física → Enlace → Red → Aplicación',
+                    a: 'Física → Enlace → Red → Aplicación',
+                    b: 'Acceso a la red → Internet → Transporte → Aplicación',
                     c: 'Internet → Acceso a la red → Transporte → Aplicación',
                     d: 'Acceso a la red → Transporte → Internet → Aplicación'
                 },
-                answer: 'a',
-                feedback: 'La b son nombres de OSI y la d intercambia transporte e internet. Recuerda que la de red aquí se llama <strong>internet</strong>.'
+                answer: 'b',
+                feedback: 'La a son nombres de OSI y la d intercambia transporte e internet. Recuerda que la de red aquí se llama <strong>internet</strong>.'
             },
             {
                 topic: 'Las cuatro capas',
@@ -613,11 +613,11 @@
                 text: 'TCP/IP no define nada sobre su capa de acceso a la red. ¿Qué consecuencia tiene?',
                 options: {
                     a: 'Que solo funciona sobre Ethernet',
-                    b: 'Que puede funcionar sobre cualquier tecnología, incluidas las inventadas después',
-                    c: 'Que necesita OSI para completarse',
-                    d: 'Que las redes inalámbricas quedan fuera del modelo'
+                    b: 'Que necesita OSI para completarse',
+                    c: 'Que las redes inalámbricas quedan fuera del modelo',
+                    d: 'Que puede funcionar sobre cualquier tecnología, incluidas las inventadas después'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Es la mejor decisión de diseño del modelo. Si en 1974 hubiera fijado cómo era la capa de abajo, habría fijado la tecnología de 1974.'
             },
             {
@@ -627,10 +627,10 @@
                 options: {
                     a: 'Solo la 7',
                     b: 'La 6 y la 7',
-                    c: 'La 5, la 6 y la 7',
-                    d: 'La 4, la 5, la 6 y la 7'
+                    c: 'La 4, la 5, la 6 y la 7',
+                    d: 'La 5, la 6 y la 7'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Las <strong>tres de arriba</strong>: sesión, presentación y aplicación. En la práctica el mismo protocolo se ocupa de las tres cosas.'
             },
             {
@@ -638,12 +638,12 @@
                 repaso: '#correspondencia',
                 text: 'Sin memorizar la tabla, ¿cuál es la regla para reconstruirla?',
                 options: {
-                    a: 'Las capas del medio son idénticas; arriba OSI separa en tres y abajo en dos',
-                    b: 'Cada capa de TCP/IP equivale a dos de OSI',
-                    c: 'Las capas de arriba son idénticas y cambian las de abajo',
+                    a: 'Cada capa de TCP/IP equivale a dos de OSI',
+                    b: 'Las capas de arriba son idénticas y cambian las de abajo',
+                    c: 'Las capas del medio son idénticas; arriba OSI separa en tres y abajo en dos',
                     d: 'No hay regla: hay que memorizarla'
                 },
-                answer: 'a',
+                answer: 'c',
                 feedback: 'Transporte y red/internet coinciden uno a uno. Solo cambian los <strong>extremos</strong>, y con eso se reconstruye la tabla entera.'
             },
             {
@@ -651,12 +651,12 @@
                 repaso: '#capas',
                 text: 'En una ficha de producto lees «cortafuegos de capa 7». ¿A qué modelo se refiere?',
                 options: {
-                    a: 'A TCP/IP, porque es el que se usa de verdad',
-                    b: 'A OSI: TCP/IP solo tiene cuatro capas, así que no existe una capa 7',
+                    a: 'A OSI: TCP/IP solo tiene cuatro capas, así que no existe una capa 7',
+                    b: 'A TCP/IP, porque es el que se usa de verdad',
                     c: 'Al modelo híbrido de cinco capas',
                     d: 'Es indistinto'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Un argumento definitivo: si el modelo tiene cuatro capas, <strong>no puede haber una séptima</strong>. Todo el vocabulario comercial es de OSI.'
             },
             {
@@ -691,11 +691,11 @@
                 text: '¿Qué hay en la cintura del reloj de arena y por qué importa?',
                 options: {
                     a: 'TCP, porque garantiza la entrega',
-                    b: 'IP: como todo pasa por él, cualquier aplicación funciona sobre cualquier red',
-                    c: 'Ethernet, porque es la tecnología más extendida',
-                    d: 'HTTP, porque es el protocolo más usado'
+                    b: 'Ethernet, porque es la tecnología más extendida',
+                    c: 'HTTP, porque es el protocolo más usado',
+                    d: 'IP: como todo pasa por él, cualquier aplicación funciona sobre cualquier red'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Muchos protocolos arriba, muchas tecnologías abajo y <strong>uno solo en medio</strong>. Esa estrechez es justo lo que permite combinarlo todo con todo.'
             },
             {
@@ -704,11 +704,11 @@
                 text: 'Cambiar HTTP por HTTP/2 fue relativamente rápido; cambiar IPv4 por IPv6 lleva décadas. ¿Por qué?',
                 options: {
                     a: 'Porque IPv6 es mucho más complejo de programar',
-                    b: 'Porque IP está en la cintura: todo se apoya en él, así que hay que mover a la vez lo de arriba y lo de abajo',
-                    c: 'Porque IPv6 aún no está terminado',
+                    b: 'Porque IPv6 aún no está terminado',
+                    c: 'Porque IP está en la cintura: todo se apoya en él, así que hay que mover a la vez lo de arriba y lo de abajo',
                     d: 'Porque no hay suficientes direcciones IPv6'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Un protocolo de aplicación solo afecta a quien lo usa. El de la cintura los afecta a todos, y por eso el cambio no puede hacerse por partes.'
             },
             {
@@ -716,12 +716,12 @@
                 repaso: '#pila',
                 text: '¿Sobre qué protocolo de transporte viaja DNS, y por qué?',
                 options: {
-                    a: 'Sobre TCP, porque es un servicio crítico que no puede fallar',
-                    b: 'Sobre UDP: son una consulta y una respuesta cortas, y montar una conexión costaría más que preguntar',
+                    a: 'Sobre UDP: son una consulta y una respuesta cortas, y montar una conexión costaría más que preguntar',
+                    b: 'Sobre TCP, porque es un servicio crítico que no puede fallar',
                     c: 'Sobre IP directamente, sin capa de transporte',
                     d: 'Sobre ICMP'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Que un servicio sea importante no significa que necesite TCP. Si la respuesta no llega, se vuelve a preguntar, y sale más barato que negociar una conexión.'
             },
             {
@@ -729,12 +729,12 @@
                 repaso: '#hibrido',
                 text: '¿Qué toma de cada modelo el modelo híbrido de cinco capas?',
                 options: {
-                    a: 'La aplicación única de TCP/IP arriba y la separación física/enlace de OSI abajo',
-                    b: 'Las siete capas de OSI quitando dos',
+                    a: 'Las siete capas de OSI quitando dos',
+                    b: 'La aplicación única de TCP/IP arriba y la separación física/enlace de OSI abajo',
                     c: 'Las cuatro de TCP/IP más la capa de sesión',
                     d: 'Es un modelo oficial de la ISO'
                 },
-                answer: 'a',
+                answer: 'b',
                 feedback: 'Lo simple donde la separación no aporta y lo preciso donde sí: distinguir un fallo de cable de uno de configuración cambia quién tiene que arreglarlo.'
             },
             {
@@ -742,12 +742,12 @@
                 repaso: '../Dia_02/teoria.html#encapsulacion',
                 text: '<em>Repaso.</em> ¿Cómo se llama la PDU de la capa de red, y qué cabecera lleva?',
                 options: {
-                    a: 'Trama, con direcciones MAC',
-                    b: 'Segmento, con puertos',
-                    c: 'Paquete, con direcciones IP',
+                    a: 'Paquete, con direcciones IP',
+                    b: 'Trama, con direcciones MAC',
+                    c: 'Segmento, con puertos',
                     d: 'Datagrama, con el FCS'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Datos → segmento → <strong>paquete</strong> → trama → bits. La trama es de capa 2 y el segmento de capa 4.'
             }
         ]

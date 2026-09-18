@@ -614,11 +614,11 @@ Tabla después:   A → 1
                 text: 'Llega una trama por el puerto 3 con origen AA:AA:… y destino BB:BB:… ¿Qué aprende el switch?',
                 options: {
                     a: 'Que BB:BB:… está en el puerto 3',
-                    b: 'Que AA:AA:… está en el puerto 3',
-                    c: 'Las dos cosas',
-                    d: 'Nada: solo aprende de las tramas dirigidas a él'
+                    b: 'Las dos cosas',
+                    c: 'Nada: solo aprende de las tramas dirigidas a él',
+                    d: 'Que AA:AA:… está en el puerto 3'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Aprende de la <strong>MAC de origen</strong>: si la trama entró por el puerto 3, quien la envió está en el puerto 3. Del destino no puede deducir nada, porque indica adónde <em>va</em>.'
             },
             {
@@ -626,12 +626,12 @@ Tabla después:   A → 1
                 repaso: '#aprender',
                 text: '¿Qué habría que configurar en un switch nuevo para que empiece a entregar bien las tramas?',
                 options: {
-                    a: 'La lista de direcciones MAC de cada puerto',
-                    b: 'Nada: construye su tabla solo, con el tráfico que pasa por él',
+                    a: 'Nada: construye su tabla solo, con el tráfico que pasa por él',
+                    b: 'La lista de direcciones MAC de cada puerto',
                     c: 'Las direcciones IP de los equipos',
                     d: 'La puerta de enlace'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Un switch no gestionable se enchufa y funciona. Cada trama que pasa trae gratis la ubicación de su emisor, así que la tabla se llena sola en segundos.'
             },
             {
@@ -653,11 +653,11 @@ Tabla después:   A → 1
                 text: 'En la tabla de un switch aparecen 12 direcciones MAC distintas asociadas al puerto 1. ¿Qué indica?',
                 options: {
                     a: 'Un error: un puerto solo puede tener una MAC',
-                    b: 'Que en ese puerto hay otro switch o un hub, con varios equipos detrás',
-                    c: 'Que hay un ataque en curso',
+                    b: 'Que hay un ataque en curso',
+                    c: 'Que en ese puerto hay otro switch o un hub, con varios equipos detrás',
                     d: 'Que la tabla está corrupta'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es completamente normal. Un puerto puede tener <strong>muchas</strong> MAC; lo que no puede es una MAC estar en dos puertos a la vez.'
             },
             {
@@ -665,12 +665,12 @@ Tabla después:   A → 1
                 repaso: '#decisiones',
                 text: 'El switch conoce el destino y está en un puerto distinto del de entrada. ¿Qué hace?',
                 options: {
-                    a: 'Inunda por todos los puertos',
-                    b: 'Reenvía solo por ese puerto',
+                    a: 'Reenvía solo por ese puerto',
+                    b: 'Inunda por todos los puertos',
                     c: 'Filtra: descarta la trama',
                     d: 'La devuelve al origen'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Es el caso normal, y es <strong>reenviar</strong>. Que ocurra la inmensa mayoría de las veces es lo que hace que un switch filtre el tráfico ajeno.'
             },
             {
@@ -679,11 +679,11 @@ Tabla después:   A → 1
                 text: 'El destino de la trama está en el <strong>mismo</strong> puerto por el que ha entrado. ¿Qué hace el switch?',
                 options: {
                     a: 'La reenvía por ese mismo puerto',
-                    b: 'La inunda',
-                    c: 'La descarta: los dos equipos ya se han oído directamente',
+                    b: 'La descarta: los dos equipos ya se han oído directamente',
+                    c: 'La inunda',
                     d: 'Genera un error'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Se llama <strong>filtrar</strong>. Si origen y destino están al otro lado del mismo cable, el destinatario ya tiene la trama: reenviarla sería trabajo inútil.'
             },
             {
@@ -692,11 +692,11 @@ Tabla después:   A → 1
                 text: 'El switch no encuentra la MAC de destino en su tabla. ¿Qué hace?',
                 options: {
                     a: 'Descarta la trama y avisa al emisor',
-                    b: 'La envía por todos los puertos menos por el de entrada',
-                    c: 'Pregunta a los demás switches',
-                    d: 'Espera a que el destino se anuncie'
+                    b: 'Pregunta a los demás switches',
+                    c: 'Espera a que el destino se anuncie',
+                    d: 'La envía por todos los puertos menos por el de entrada'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: '<strong>Inundación de unicast desconocido.</strong> Prefiere molestar a todos antes que perder la trama; durante ese instante se comporta como un hub.'
             },
             {
@@ -705,11 +705,11 @@ Tabla después:   A → 1
                 text: 'Switch recién encendido, tabla vacía. A envía a B, y B responde a A. ¿Cuántas de esas dos tramas se han inundado?',
                 options: {
                     a: 'Las dos',
-                    b: 'Solo la primera: al responder B, el switch ya conocía a A',
-                    c: 'Ninguna',
+                    b: 'Ninguna',
+                    c: 'Solo la primera: al responder B, el switch ya conocía a A',
                     d: 'Solo la segunda'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'La primera se inunda porque B es desconocido; pero al pasar esa trama el switch aprendió dónde está A, así que la respuesta ya va dirigida. Por eso una red se ordena en segundos.'
             },
             {
@@ -718,11 +718,11 @@ Tabla después:   A → 1
                 text: '¿Por qué caducan las entradas de la tabla MAC a los pocos minutos?',
                 options: {
                     a: 'Para ahorrar electricidad',
-                    b: 'Para que la tabla contenga solo equipos vivos y para que mover un equipo de toma no deje entradas falsas',
-                    c: 'Porque las MAC cambian cada cierto tiempo',
+                    b: 'Porque las MAC cambian cada cierto tiempo',
+                    c: 'Para que la tabla contenga solo equipos vivos y para que mover un equipo de toma no deje entradas falsas',
                     d: 'Es un fallo de diseño heredado'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Y tiene un efecto secundario visible: un equipo que pase 5 minutos callado provocará que la siguiente trama dirigida a él se <strong>inunde</strong>.'
             },
             {
@@ -730,13 +730,13 @@ Tabla después:   A → 1
                 repaso: '#arp',
                 text: '¿Qué problema resuelve ARP?',
                 options: {
-                    a: 'Traducir nombres de dominio a direcciones IP',
-                    b: 'Averiguar la MAC que corresponde a una IP conocida, para poder construir la trama',
+                    a: 'Averiguar la MAC que corresponde a una IP conocida, para poder construir la trama',
+                    b: 'Traducir nombres de dominio a direcciones IP',
                     c: 'Asignar direcciones IP automáticamente',
                     d: 'Cifrar el tráfico de la red local'
                 },
-                answer: 'b',
-                feedback: 'La opción a es <strong>DNS</strong> y la c es <strong>DHCP</strong>. ARP resuelve el hueco entre la capa 3, que sabe la IP, y la capa 2, que necesita la MAC.'
+                answer: 'a',
+                feedback: 'La opción b es <strong>DNS</strong> y la c es <strong>DHCP</strong>. ARP resuelve el hueco entre la capa 3, que sabe la IP, y la capa 2, que necesita la MAC.'
             },
             {
                 topic: 'ARP',
@@ -757,11 +757,11 @@ Tabla después:   A → 1
                 text: 'En una captura ves 64 preguntas ARP pero solo 5 respuestas, todas tuyas. ¿Por qué?',
                 options: {
                     a: 'Porque la mayoría de las preguntas se quedan sin respuesta',
-                    b: 'Porque las preguntas van en difusión y el switch las inunda, mientras que las respuestas van en unicast y las filtra',
-                    c: 'Porque Wireshark no captura bien las respuestas',
-                    d: 'Porque las respuestas van cifradas'
+                    b: 'Porque Wireshark no captura bien las respuestas',
+                    c: 'Porque las respuestas van cifradas',
+                    d: 'Porque las preguntas van en difusión y el switch las inunda, mientras que las respuestas van en unicast y las filtra'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Es el laboratorio de ayer visto con un solo protocolo: en ARP conviven el tráfico que se inunda y el que se filtra.'
             },
             {
@@ -770,11 +770,11 @@ Tabla después:   A → 1
                 text: '¿Cuál es la ventaja de <em>store-and-forward</em> frente a <em>cut-through</em>?',
                 options: {
                     a: 'Es más rápido',
-                    b: 'Espera la trama entera, así que puede comprobar el FCS y descartar las dañadas',
-                    c: 'Consume menos memoria',
-                    d: 'Funciona sin tabla MAC'
+                    b: 'Consume menos memoria',
+                    c: 'Funciona sin tabla MAC',
+                    d: 'Espera la trama entera, así que puede comprobar el FCS y descartar las dañadas'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: '<em>Cut-through</em> reenvía tras leer los 6 bytes de la MAC de destino: para cuando podría comprobar el FCS, <strong>ya ha enviado la trama</strong>. Si estaba dañada, la ha propagado.'
             },
             {
@@ -783,11 +783,11 @@ Tabla después:   A → 1
                 text: '<em>Repaso.</em> Un switch de 12 puertos con 12 equipos. ¿Dominios de colisión y de broadcast?',
                 options: {
                     a: '12 y 12',
-                    b: '12 y 1',
-                    c: '1 y 1',
+                    b: '1 y 1',
+                    c: '12 y 1',
                     d: '1 y 12'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Uno de colisión <strong>por puerto</strong>, pero un solo dominio de broadcast. Y hoy has visto por qué: la difusión se <strong>inunda</strong> siempre.'
             },
             {
@@ -795,12 +795,12 @@ Tabla después:   A → 1
                 repaso: '../../Semana_02/Dia_01/teoria.html',
                 text: '<em>Repaso.</em> ¿Qué parte de una dirección MAC identifica al fabricante, y quién la reparte?',
                 options: {
-                    a: 'Los últimos 3 bytes; los reparte IANA',
-                    b: 'Los primeros 3 bytes (el OUI); los reparte el IEEE',
+                    a: 'Los primeros 3 bytes (el OUI); los reparte el IEEE',
+                    b: 'Los últimos 3 bytes; los reparte IANA',
                     c: 'El primer byte; lo elige el fabricante',
                     d: 'Toda la dirección; la reparte el fabricante'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El <strong>OUI</strong>. Es lo que permite que Wireshark muestre «TpLinkTechno» o «XiaomiMobile» en lugar de una tira de hexadecimal, como habrás visto en la captura ARP.'
             }
         ]

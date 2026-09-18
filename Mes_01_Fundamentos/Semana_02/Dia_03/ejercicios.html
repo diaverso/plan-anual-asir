@@ -95,11 +95,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Un mismo equipo, ¿puede ser cliente y servidor a la vez?',
                     opciones: {
                         a: 'No: los papeles son excluyentes',
-                        b: 'Sí: puede ofrecer un servicio y a la vez consumir otros',
-                        c: 'Solo si tiene dos tarjetas de red',
+                        b: 'Solo si tiene dos tarjetas de red',
+                        c: 'Sí: puede ofrecer un servicio y a la vez consumir otros',
                         d: 'Solo en redes P2P'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'El papel se define <strong>por conexión</strong>, no por máquina. Un servidor web es servidor de HTTP y, al mismo tiempo, cliente de DNS cada vez que necesita resolver un nombre.',
                     pistas: [
                         'Piensa si un servidor web necesita alguna vez pedir algo a otro equipo.'
@@ -110,11 +110,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Por qué se considera que cada servicio a la escucha es una responsabilidad?',
                     opciones: {
                         a: 'Porque consume mucha memoria mientras espera',
-                        b: 'Porque es un punto alcanzable desde la red, que puede ser vulnerable, estar mal configurado o estar olvidado',
-                        c: 'Porque ralentiza el arranque del sistema',
-                        d: 'Porque ocupa un puerto que podría necesitar otro programa'
+                        b: 'Porque ralentiza el arranque del sistema',
+                        c: 'Porque ocupa un puerto que podría necesitar otro programa',
+                        d: 'Porque es un punto alcanzable desde la red, que puede ser vulnerable, estar mal configurado o estar olvidado'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Un servicio esperando no consume prácticamente nada. El problema es que constituye una puerta: por eso la regla es apagar lo que no se usa y conocer lo que queda encendido.',
                     pistas: [
                         'Un programa que espera no hace nada: descarta las opciones sobre consumo.',
@@ -188,11 +188,11 @@ const ejerciciosData = {
                     pregunta: '<strong>d)</strong> ¿Cuál de estos servicios usa habitualmente <strong>UDP</strong> y no TCP?',
                     opciones: {
                         a: 'HTTPS',
-                        b: 'SSH',
-                        c: 'DNS para consultas normales',
+                        b: 'DNS para consultas normales',
+                        c: 'SSH',
                         d: 'RDP'
                     },
-                    respuesta: 'c',
+                    respuesta: 'b',
                     explicacion: 'DNS usa UDP para las consultas corrientes porque son pequeñas y una sola pregunta y respuesta bastan: montar una conexión TCP costaría más que la propia consulta. Sí usa TCP para transferencias de zona y respuestas grandes.',
                     pistas: [
                         'Piensa cuál de los cuatro intercambia un mensaje diminuto y no necesita mantener una sesión.',
@@ -240,12 +240,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> En un juego con <strong>host entre jugadores</strong>, ¿qué desventaja tiene frente a un servidor dedicado?',
                     opciones: {
-                        a: 'Ninguna: es equivalente y más barato',
-                        b: 'El jugador que hace de host tiene ventaja de latencia, y si se va se corta la partida',
+                        a: 'El jugador que hace de host tiene ventaja de latencia, y si se va se corta la partida',
+                        b: 'Ninguna: es equivalente y más barato',
                         c: 'No permite más de cuatro jugadores',
                         d: 'Consume más ancho de banda para todos'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Es la manifestación práctica del punto único de fallo, más un problema de equidad: el host tiene latencia cero contra sí mismo. De ahí las migraciones de anfitrión cuando alguien abandona.',
                     pistas: [
                         'Piensa qué latencia tiene el jugador que ejecuta el servidor en su propia máquina.',
@@ -329,11 +329,11 @@ TCP    192.168.1.10:51422     ESTABLISHED  curl</code></pre>`,
                     pregunta: '<strong>b)</strong> <code>mysqld</code> escucha en <code>127.0.0.1:3306</code> y no en <code>0.0.0.0:3306</code>. ¿Qué significa?',
                     opciones: {
                         a: 'Que está mal configurado',
-                        b: 'Que solo acepta conexiones desde el propio equipo, no desde la red',
-                        c: 'Que solo acepta conexiones de la red local',
-                        d: 'Que el servicio está detenido'
+                        b: 'Que solo acepta conexiones de la red local',
+                        c: 'Que el servicio está detenido',
+                        d: 'Que solo acepta conexiones desde el propio equipo, no desde la red'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: '<code>127.0.0.1</code> es la interfaz de bucle local: solo alcanzable desde la propia máquina. <code>0.0.0.0</code> significa «en todas las interfaces», es decir, expuesto a la red. Es una diferencia de seguridad enorme y una buena práctica muy habitual: la base de datos solo la usa el servidor web, que está en la misma máquina.',
                     pistas: [
                         'Recuerda qué es la dirección 127.0.0.1 y quién puede alcanzarla.',
@@ -345,11 +345,11 @@ TCP    192.168.1.10:51422     ESTABLISHED  curl</code></pre>`,
                     pregunta: '<strong>c)</strong> La última línea, con puerto 51422 y estado ESTABLISHED, ¿qué representa?',
                     opciones: {
                         a: 'Otro servicio a la escucha',
-                        b: 'Una conexión saliente en la que este equipo actúa como cliente, con puerto de origen efímero',
-                        c: 'Un ataque en curso',
+                        b: 'Un ataque en curso',
+                        c: 'Una conexión saliente en la que este equipo actúa como cliente, con puerto de origen efímero',
                         d: 'Un puerto abierto por error'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Dos pistas lo confirman: el estado es ESTABLISHED y no LISTENING, y el puerto está en el rango efímero (49152–65535). Además el proceso es <code>curl</code>, una herramienta cliente. El servidor está actuando de cliente de otro servicio.',
                     pistas: [
                         'Compara el estado de esa línea con el de las demás.',
@@ -392,12 +392,12 @@ TCP    192.168.1.10:51422     ESTABLISHED  curl</code></pre>`,
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> De los tres componentes de la semana, ¿cuál es imprescindible en <strong>cualquier</strong> comunicación de red?',
                     opciones: {
-                        a: 'El cable: sin medio guiado no hay red',
-                        b: 'La interfaz de red: puede no haber cable, switch ni servidor, pero siempre hacen falta al menos dos interfaces',
+                        a: 'La interfaz de red: puede no haber cable, switch ni servidor, pero siempre hacen falta al menos dos interfaces',
+                        b: 'El cable: sin medio guiado no hay red',
                         c: 'El servidor: alguien tiene que ofrecer el servicio',
                         d: 'Los tres por igual'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El medio puede ser el aire y el modelo puede ser P2P sin ningún servidor, pero sin interfaces de red no hay nada. Es la conclusión con la que abrió el Día 1 y cierra la semana.',
                     pistas: [
                         'Piensa en dos móviles hablando por Bluetooth: ¿qué falta de la lista y qué sigue estando?'

@@ -625,10 +625,10 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 options: {
                     a: 'Trama',
                     b: 'Paquete',
-                    c: 'Segmento',
-                    d: 'Bit'
+                    c: 'Bit',
+                    d: 'Segmento'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Datos (5-7) → <strong>segmento</strong> (4) → paquete (3) → trama (2) → bits (1). Esta secuencia cae en examen casi siempre.'
             },
             {
@@ -650,11 +650,11 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 text: '¿Por qué la cabecera de UDP ocupa 8 bytes y la de TCP 20?',
                 options: {
                     a: 'Porque UDP transporta menos datos',
-                    b: 'Porque UDP renuncia a garantizar la entrega y el orden, así que no necesita números de secuencia ni control',
-                    c: 'Porque UDP solo funciona en redes locales',
+                    b: 'Porque UDP solo funciona en redes locales',
+                    c: 'Porque UDP renuncia a garantizar la entrega y el orden, así que no necesita números de secuencia ni control',
                     d: 'Porque TCP incluye la dirección IP'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Toda la maquinaria de TCP —secuencia, reconocimientos, control de flujo— ocupa espacio en la cabecera. UDP no la lleva porque no ofrece esas garantías.'
             },
             {
@@ -662,12 +662,12 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 repaso: '#capa567',
                 text: 'Un compañero dice que «el navegador es la capa 7». ¿Qué le corriges?',
                 options: {
-                    a: 'Nada, es correcto',
-                    b: 'Que la capa 7 son los protocolos, como HTTP; el navegador es un programa que los usa',
+                    a: 'Que la capa 7 son los protocolos, como HTTP; el navegador es un programa que los usa',
+                    b: 'Nada, es correcto',
                     c: 'Que el navegador es capa 6',
                     d: 'Que el navegador abarca las capas 5, 6 y 7'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Es el matiz que más se falla. La capa 7 la forman <strong>HTTP, DNS, SMTP…</strong>, no los programas que los emplean.'
             },
             {
@@ -701,12 +701,12 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 repaso: '#encapsulacion',
                 text: 'Ordena mentalmente la secuencia de PDU al enviar. ¿Cuál es correcta, de arriba abajo?',
                 options: {
-                    a: 'Datos → paquete → segmento → trama → bits',
-                    b: 'Datos → segmento → paquete → trama → bits',
+                    a: 'Datos → segmento → paquete → trama → bits',
+                    b: 'Datos → paquete → segmento → trama → bits',
                     c: 'Bits → trama → paquete → segmento → datos',
                     d: 'Datos → trama → paquete → segmento → bits'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Al enviar se baja: <strong>datos → segmento → paquete → trama → bits</strong>. La opción c es la secuencia al <em>recibir</em>, que es la inversa.'
             },
             {
@@ -716,10 +716,10 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 options: {
                     a: 'La capa 3, con el TTL',
                     b: 'La capa 4, con el número de secuencia',
-                    c: 'La capa 2, con el FCS',
-                    d: 'Ninguna: todas ponen su cabecera delante'
+                    c: 'Ninguna: todas ponen su cabecera delante',
+                    d: 'La capa 2, con el FCS'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'El <strong>FCS</strong> solo puede calcularse cuando ya está toda la trama montada, así que necesariamente va detrás.'
             },
             {
@@ -729,10 +729,10 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 options: {
                     a: 'Los 6 routers',
                     b: 'Solo el primero',
-                    c: 'Solo la capa 4 del equipo de destino',
-                    d: 'Ninguno: la cabecera TCP se descarta en el primer salto'
+                    c: 'Ninguno: la cabecera TCP se descarta en el primer salto',
+                    d: 'Solo la capa 4 del equipo de destino'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Es la <strong>comunicación entre pares</strong>: la capa 4 del origen habla con la capa 4 del destino. Los routers solo necesitan la cabecera IP.'
             },
             {
@@ -741,11 +741,11 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 text: 'Con el vocabulario de hoy, ¿por qué cambian las MAC en cada salto y no las IP?',
                 options: {
                     a: 'Porque las MAC son más cortas',
-                    b: 'Porque la cabecera de capa 2 se rehace en cada tramo, mientras que la de capa 3 viaja intacta',
-                    c: 'Porque los routers no entienden las MAC',
+                    b: 'Porque los routers no entienden las MAC',
+                    c: 'Porque la cabecera de capa 2 se rehace en cada tramo, mientras que la de capa 3 viaja intacta',
                     d: 'Porque las IP se cifran'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'El router descarta la trama entera y construye otra nueva; la cabecera IP, en cambio, la reenvía sin tocar más allá del TTL.'
             },
             {
@@ -753,12 +753,12 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 repaso: '#coste',
                 text: 'Cabecera IP y cabecera TCP. ¿Cuánto ocupan?',
                 options: {
-                    a: '20 bytes cada una',
-                    b: '14 y 20 bytes',
+                    a: '14 y 20 bytes',
+                    b: '20 bytes cada una',
                     c: '8 y 20 bytes',
                     d: '20 y 8 bytes'
                 },
-                answer: 'a',
+                answer: 'b',
                 feedback: 'IP y TCP ocupan <strong>20 bytes cada una</strong>. 14 es la cabecera Ethernet y 8 la de UDP.'
             },
             {
@@ -766,12 +766,12 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 repaso: '#mtu',
                 text: 'Con MTU de 1500 bytes, ¿cuál es el MSS de una conexión TCP?',
                 options: {
-                    a: '1500 bytes',
-                    b: '1480 bytes',
-                    c: '1460 bytes',
+                    a: '1460 bytes',
+                    b: '1500 bytes',
+                    c: '1480 bytes',
                     d: '1518 bytes'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'MSS = MTU − 20 (IP) − 20 (TCP) = <strong>1460</strong>. 1480 sería descontando solo IP, y 1518 es la trama completa.'
             },
             {
@@ -793,11 +793,11 @@ Eficiencia = 1460 ÷ 1518 = 96,2 %</code></pre>
                 text: 'Una trama Ethernet llena transporta 1460 bytes útiles en 1518 totales. ¿Y si el dato fueran solo 100 bytes?',
                 options: {
                     a: 'La eficiencia sería la misma',
-                    b: 'La eficiencia sería mucho peor: las cabeceras seguirían ocupando 58 bytes',
-                    c: 'Las cabeceras se reducirían proporcionalmente',
-                    d: 'No se podría enviar'
+                    b: 'Las cabeceras se reducirían proporcionalmente',
+                    c: 'No se podría enviar',
+                    d: 'La eficiencia sería mucho peor: las cabeceras seguirían ocupando 58 bytes'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Las cabeceras son de <strong>tamaño fijo</strong>. Con paquetes pequeños su peso relativo se dispara, y por eso el tráfico de muchos paquetes cortos es tan ineficiente.'
             },
             {

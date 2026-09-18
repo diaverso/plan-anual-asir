@@ -183,11 +183,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> Un fabricante anuncia un «switch de capa 3». ¿Qué significa?',
                     opciones: {
                         a: 'Que tiene tres puertos',
-                        b: 'Que además de conmutar por MAC, sabe leer direcciones IP y encaminar',
-                        c: 'Que solo funciona con cable de categoría 3',
+                        b: 'Que solo funciona con cable de categoría 3',
+                        c: 'Que además de conmutar por MAC, sabe leer direcciones IP y encaminar',
                         d: 'Que es un switch de tercera generación'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'La capa de un dispositivo es la de la información más alta que sabe leer. Un switch normal se queda en la MAC; uno de capa 3 sube hasta la IP y hace también de router.',
                     pistas: [
                         'Recuerda el criterio: la capa la marca hasta dónde sabe leer el aparato.'
@@ -223,11 +223,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Una trama llega con el FCS incorrecto. ¿Qué ocurre?',
                     opciones: {
                         a: 'Ethernet la corrige y la entrega',
-                        b: 'Ethernet la descarta y no pide retransmisión',
-                        c: 'Ethernet la entrega igualmente y avisa a la capa 3',
-                        d: 'Se reinicia el enlace'
+                        b: 'Ethernet la entrega igualmente y avisa a la capa 3',
+                        c: 'Se reinicia el enlace',
+                        d: 'Ethernet la descarta y no pide retransmisión'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Ethernet <strong>detecta pero no corrige</strong>. Su compromiso es no entregar datos corruptos hacia arriba; recuperarlos es cosa de capas superiores, como verás mañana con TCP.',
                     pistas: [
                         'Piensa qué es más barato de implementar en hardware: detectar o corregir.'

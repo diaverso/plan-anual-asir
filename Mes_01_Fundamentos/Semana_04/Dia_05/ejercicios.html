@@ -188,12 +188,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> ¿Por qué ves las preguntas ARP de otros equipos pero no sus respuestas?',
                     opciones: {
-                        a: 'Porque esas preguntas se quedan sin respuesta',
-                        b: 'Porque las preguntas van en difusión y el switch las inunda; las respuestas van en unicast y las filtra',
+                        a: 'Porque las preguntas van en difusión y el switch las inunda; las respuestas van en unicast y las filtra',
+                        b: 'Porque esas preguntas se quedan sin respuesta',
                         c: 'Porque las respuestas van cifradas',
                         d: 'Porque Wireshark las descarta'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'En ARP conviven los <strong>dos comportamientos del switch</strong> dentro del mismo protocolo. Por eso el laboratorio dio 64 preguntas frente a solo 5 respuestas.',
                     pistas: [
                         '¿Cómo viaja una pregunta ARP, y cómo una respuesta?'
@@ -229,11 +229,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> ¿Cuál es el orden correcto de los criterios de decisión?',
                     opciones: {
                         a: 'Primero la métrica más baja, y si empatan, el prefijo más largo',
-                        b: 'Primero el prefijo más largo, y solo si empatan, la métrica más baja',
-                        c: 'Siempre la primera ruta de la tabla',
-                        d: 'Siempre la ruta por defecto'
+                        b: 'Siempre la primera ruta de la tabla',
+                        c: 'Siempre la ruta por defecto',
+                        d: 'Primero el prefijo más largo, y solo si empatan, la métrica más baja'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Invertir el orden es <strong>el error más repetido</strong> del tema. Una métrica excelente no salva a una ruta menos específica.',
                     pistas: [
                         '¿Qué información es más valiosa: la más precisa o la más barata?'
@@ -267,11 +267,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> ¿Por qué el Wi-Fi usa CSMA/CA y no CSMA/CD?',
                     opciones: {
                         a: 'Porque es más rápido',
-                        b: 'Porque una antena no puede escuchar mientras transmite, así que es imposible detectar la colisión: hay que evitarla',
-                        c: 'Porque lo exige el cifrado',
+                        b: 'Porque lo exige el cifrado',
+                        c: 'Porque una antena no puede escuchar mientras transmite, así que es imposible detectar la colisión: hay que evitarla',
                         d: 'Porque en Wi-Fi no hay colisiones'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'La señal que emite la propia antena es millones de veces más fuerte que la que intenta oír. De ahí la <strong>A de evitación</strong>, y de ahí que el rendimiento real sea la mitad del nominal.',
                     pistas: [
                         '¿Puede una antena oír un susurro mientras grita?'

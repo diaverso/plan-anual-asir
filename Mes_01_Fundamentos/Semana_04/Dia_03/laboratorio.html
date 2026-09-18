@@ -235,11 +235,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Qué significa que una ruta tenga <code>NextHop</code> igual a <code>0.0.0.0</code>?',
                     opciones: {
                         a: 'Que la ruta está desactivada',
-                        b: 'Que esa red está directamente conectada: no hay que entregarle el paquete a nadie para que siga',
-                        c: 'Que el siguiente salto es Internet',
+                        b: 'Que el siguiente salto es Internet',
+                        c: 'Que esa red está directamente conectada: no hay que entregarle el paquete a nadie para que siga',
                         d: 'Que es un error de configuración'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Es la diferencia entre «esto lo tengo aquí al lado» y «esto se lo doy a otro para que lo lleve». La ruta por defecto sí tiene <code>NextHop</code>, porque hay alguien a quien entregarle el paquete.',
                     pistas: [
                         '¿Necesitas un intermediario para hablar con un equipo de tu propia red?'
@@ -298,12 +298,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> Para <code>8.8.8.8</code>, la ruta ganadora tiene métrica 0 y las demás 256. ¿Ha ganado por la métrica?',
                     opciones: {
-                        a: 'Sí: 0 es mejor que 256',
-                        b: 'No: ha ganado porque era la única que encajaba. La métrica solo desempata entre rutas que encajan igual de bien',
+                        a: 'No: ha ganado porque era la única que encajaba. La métrica solo desempata entre rutas que encajan igual de bien',
+                        b: 'Sí: 0 es mejor que 256',
                         c: 'Sí, y además por el prefijo',
                         d: 'No se puede saber'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Es una trampa útil: la métrica de la ruta por defecto suele ser buenísima, y eso confunde. Pero solo se llega a comparar métricas <strong>entre rutas de la misma longitud de prefijo</strong>.',
                     pistas: [
                         '¿Qué otras rutas encajaban con 8.8.8.8?'
@@ -413,11 +413,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Un equipo tiene bien puesta la IP y la máscara, pero <strong>mal</strong> la puerta de enlace. ¿Qué le pasará?',
                     opciones: {
                         a: 'No funcionará nada',
-                        b: 'Hablará bien con los equipos de su red, pero no podrá salir a ninguna otra ni a Internet',
-                        c: 'Solo fallará el DNS',
-                        d: 'Funcionará todo con normalidad'
+                        b: 'Solo fallará el DNS',
+                        c: 'Funcionará todo con normalidad',
+                        d: 'Hablará bien con los equipos de su red, pero no podrá salir a ninguna otra ni a Internet'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Es un diagnóstico clásico y ahora sabes explicarlo: para su propia red usa la ruta <strong>directamente conectada</strong>, que no necesita puerta de enlace. Todo lo demás cae en la <strong>ruta por defecto</strong>, que apunta a un sitio equivocado.',
                     pistas: [
                         '¿Qué ruta se usa para hablar con un equipo de tu misma red? ¿Interviene la puerta de enlace?'

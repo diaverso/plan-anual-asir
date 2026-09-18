@@ -178,11 +178,11 @@ const ejerciciosData = {
                     pregunta: '<strong>d)</strong> ¿Por qué el paquete de 1473 bytes no llega, en lugar de trocearse?',
                     opciones: {
                         a: 'Porque 1473 es un número impar',
-                        b: 'Porque la opción -f prohíbe fragmentar, así que el router lo descarta en vez de trocearlo',
-                        c: 'Porque el servidor de Google rechaza paquetes grandes',
+                        b: 'Porque el servidor de Google rechaza paquetes grandes',
+                        c: 'Porque la opción -f prohíbe fragmentar, así que el router lo descarta en vez de trocearlo',
                         d: 'Porque se ha agotado el TTL'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'La opción <code>-f</code> activa el bit <em>Don&#39;t Fragment</em> de la cabecera IP. Sin ella el paquete se trocearía y llegaría igualmente, y no podríamos localizar el límite. Es justo esa prohibición la que convierte el ping en una herramienta de medida.',
                     pistas: [
                         'Fíjate en qué hace exactamente la opción <code>-f</code> según el enunciado del Paso 1.'
@@ -311,12 +311,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: `<strong>c)</strong> Al descargar de verdad ves unos <strong>68 MB/s</strong> en lugar de 75. ¿Es normal?`,
                     opciones: {
-                        a: 'No: el operador no está dando lo contratado y hay que reclamar',
-                        b: 'Sí: parte del caudal se va en cabeceras de protocolo y confirmaciones, así que el goodput siempre es algo menor',
+                        a: 'Sí: parte del caudal se va en cabeceras de protocolo y confirmaciones, así que el goodput siempre es algo menor',
+                        b: 'No: el operador no está dando lo contratado y hay que reclamar',
                         c: 'No: significa que el cable está defectuoso',
                         d: 'Sí, pero solo ocurre con fibra'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Es la diferencia entre <strong>ancho de banda</strong> (capacidad teórica), <strong>throughput</strong> (caudal real) y <strong>goodput</strong> (datos útiles). Perder entre un 5 y un 10 % en cabeceras TCP/IP, confirmaciones y espacios entre tramas es completamente normal.',
                     pistas: [
                         'Recuerda los tres términos que distinguiste hoy: ancho de banda, throughput y goodput.',

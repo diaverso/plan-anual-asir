@@ -194,12 +194,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> ¿Qué hicieron PC2 y PC3 con esa trama?',
                     opciones: {
-                        a: 'La reenviaron a PC1',
-                        b: 'La procesaron y respondieron',
-                        c: 'Comprobaron que la MAC de destino no era la suya y la descartaron',
+                        a: 'Comprobaron que la MAC de destino no era la suya y la descartaron',
+                        b: 'La reenviaron a PC1',
+                        c: 'La procesaron y respondieron',
                         d: 'La almacenaron por si acaso'
                     },
-                    respuesta: 'c',
+                    respuesta: 'a',
                     explicacion: 'Cada tarjeta compara la MAC de destino con la suya y descarta lo que no le corresponde. Han gastado ancho de banda y procesamiento <strong>para nada</strong>: eso es exactamente el coste de compartir el medio.',
                     pistas: [
                         'En la simulación verás una cruz roja sobre los equipos que descartan la trama.'
@@ -230,11 +230,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> En el <strong>primer</strong> ping, ¿a cuántos equipos llegó la trama?',
                     opciones: {
                         a: 'Solo a PC1',
-                        b: 'A todos: el switch aún no sabía dónde estaba PC1',
-                        c: 'A ninguno',
+                        b: 'A ninguno',
+                        c: 'A todos: el switch aún no sabía dónde estaba PC1',
                         d: 'Solo al router'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Con la tabla CAM vacía, el switch desconoce por qué puerto está PC1 y hace <strong>flooding</strong>: reenvía por todos los puertos menos el de origen. Además el ARP previo es un broadcast legítimo.',
                     pistas: [
                         '¿Qué sabe el switch de la red justo después de encenderlo?',
@@ -246,11 +246,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> En el <strong>segundo</strong> ping, ¿qué cambió?',
                     opciones: {
                         a: 'Nada, se comportó igual',
-                        b: 'Llegó solo a PC1: el switch ya había aprendido su ubicación',
-                        c: 'Llegó a más equipos que la primera vez',
-                        d: 'Falló porque la tabla estaba llena'
+                        b: 'Llegó a más equipos que la primera vez',
+                        c: 'Falló porque la tabla estaba llena',
+                        d: 'Llegó solo a PC1: el switch ya había aprendido su ubicación'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Al pasar la primera trama, el switch anotó la MAC de origen de cada equipo junto al puerto por el que llegó. Con esa información ya puede hacer envío <strong>unicast</strong> directo.',
                     pistas: [
                         'Entre el primer ping y el segundo, el switch ha visto tráfico. ¿Qué habrá aprendido?'
@@ -304,12 +304,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>a)</strong> Al enviar el ARP desde PC0 hacia <code>192.168.1.99</code>, ¿hasta dónde llegó?',
                     opciones: {
-                        a: 'A todos los equipos, incluidos PC4 y PC5',
-                        b: 'Solo a PC1, PC2 y PC3: el router no lo reenvió',
+                        a: 'Solo a PC1, PC2 y PC3: el router no lo reenvió',
+                        b: 'A todos los equipos, incluidos PC4 y PC5',
                         c: 'Solo al router',
                         d: 'A ninguno, porque esa dirección no existe'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El router trabaja en <strong>capa 3</strong> y no reenvía broadcasts de capa 2. Ahí está la frontera: cada interfaz suya delimita un dominio de broadcast distinto.',
                     pistas: [
                         'Sigue la animación: ¿en qué equipo se detienen los sobres?',

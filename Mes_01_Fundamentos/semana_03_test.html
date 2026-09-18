@@ -331,12 +331,12 @@
             {
                 text: '¿Cuántas capas tiene el modelo OSI y quién lo desarrolló?',
                 options: {
-                    a: '4 capas, desarrollado por el IETF',
-                    b: '7 capas, desarrollado por la ISO',
+                    a: '7 capas, desarrollado por la ISO',
+                    b: '4 capas, desarrollado por el IETF',
                     c: '5 capas, desarrollado por el IEEE',
                     d: '7 capas, desarrollado por Cisco'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El modelo OSI (Open Systems Interconnection) fue publicado por la ISO en 1984 y consta de 7 capas, desde Física (1) hasta Aplicación (7).'
             },
             {
@@ -344,43 +344,43 @@
                 options: {
                     a: 'Capa 1 - Física',
                     b: 'Capa 2 - Enlace',
-                    c: 'Capa 3 - Red',
-                    d: 'Capa 4 - Transporte'
+                    c: 'Capa 4 - Transporte',
+                    d: 'Capa 3 - Red'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'El router trabaja en la capa 3 (Red): usa direcciones IP para tomar decisiones de enrutamiento entre redes distintas y delimita dominios de broadcast.'
             },
             {
                 text: '¿Cuál es la PDU (unidad de datos) de la capa de Transporte?',
                 options: {
                     a: 'Trama',
-                    b: 'Paquete',
-                    c: 'Bit',
-                    d: 'Segmento'
+                    b: 'Segmento',
+                    c: 'Paquete',
+                    d: 'Bit'
                 },
-                answer: 'd',
+                answer: 'b',
                 feedback: 'Las PDU por capa son: Datos (7-5), Segmento (4), Paquete (3), Trama (2) y Bits (1).'
             },
             {
                 text: 'Las capas 5, 6 y 7 del modelo OSI se corresponden en TCP/IP con:',
                 options: {
-                    a: 'La capa de Aplicación',
-                    b: 'La capa de Transporte',
-                    c: 'La capa de Internet',
+                    a: 'La capa de Transporte',
+                    b: 'La capa de Internet',
+                    c: 'La capa de Aplicación',
                     d: 'La capa de Acceso a Red'
                 },
-                answer: 'a',
+                answer: 'c',
                 feedback: 'TCP/IP fusiona Sesión, Presentación y Aplicación en una única capa de Aplicación, y también fusiona Enlace y Física en Acceso a Red.'
             },
             {
                 text: '¿Qué protocolo se encarga de resolver una dirección IP en su correspondiente dirección MAC?',
                 options: {
-                    a: 'DNS',
-                    b: 'ARP',
+                    a: 'ARP',
+                    b: 'DNS',
                     c: 'ICMP',
                     d: 'DHCP'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'ARP (Address Resolution Protocol) traduce direcciones IP (capa 3) a direcciones MAC (capa 2) dentro del mismo segmento de red.'
             },
             {
@@ -398,11 +398,11 @@
                 text: 'Si la MTU de una red Ethernet es de 1500 bytes, ¿cuántos bytes de datos útiles caben en un paquete IP con cabecera de 20 bytes?',
                 options: {
                     a: '1500 bytes',
-                    b: '1520 bytes',
-                    c: '1480 bytes',
+                    b: '1480 bytes',
+                    c: '1520 bytes',
                     d: '1460 bytes'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'La MTU limita el paquete IP completo. Restando los 20 bytes de cabecera IP quedan 1480 bytes de carga útil. Si además hay cabecera TCP (20 B), el MSS sería 1460.'
             },
             {
@@ -431,11 +431,11 @@
                 text: 'El campo TTL de la cabecera IP se decrementa cada vez que el paquete:',
                 options: {
                     a: 'Atraviesa un switch',
-                    b: 'Atraviesa un router',
-                    c: 'Cambia de cable',
+                    b: 'Cambia de cable',
+                    c: 'Atraviesa un router',
                     d: 'Se fragmenta'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Cada router decrementa el TTL en 1 y descarta el paquete si llega a 0. Evita que los paquetes circulen indefinidamente en caso de bucle de enrutamiento.'
             },
             {
@@ -443,10 +443,10 @@
                 options: {
                     a: 'En la capa física: el cable está roto',
                     b: 'En la capa de enlace: la MAC es incorrecta',
-                    c: 'En la resolución de nombres (DNS)',
-                    d: 'En la capa de transporte: el puerto está cerrado'
+                    c: 'En la capa de transporte: el puerto está cerrado',
+                    d: 'En la resolución de nombres (DNS)'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Si la conectividad IP funciona pero falla la resolución por nombre, el problema está en el servicio DNS (capa de aplicación). Se comprueba con nslookup o dig.'
             },
             {
@@ -465,32 +465,32 @@
                 options: {
                     a: 'Las direcciones IP de origen y destino',
                     b: 'Los puertos TCP de origen y destino',
-                    c: 'Las direcciones MAC y el TTL',
-                    d: 'No se modifica nada'
+                    c: 'No se modifica nada',
+                    d: 'Las direcciones MAC y el TTL'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Las direcciones MAC se reescriben para cada enlace y el TTL se decrementa. Las IP y los puertos son extremo a extremo y se mantienen, salvo que exista NAT.'
             },
             {
                 text: '¿Cuál es el puerto estándar del servicio HTTPS?',
                 options: {
                     a: '80',
-                    b: '21',
-                    c: '25',
-                    d: '443'
+                    b: '443',
+                    c: '21',
+                    d: '25'
                 },
-                answer: 'd',
+                answer: 'b',
                 feedback: 'HTTPS usa el puerto 443/TCP. HTTP usa el 80, FTP el 21 (control), SSH el 22 y SMTP el 25.'
             },
             {
                 text: '¿Por qué el modelo TCP/IP se impuso frente al modelo OSI en la práctica?',
                 options: {
                     a: 'Porque tiene más capas y es más detallado',
-                    b: 'Porque ya estaba implementado, era libre y funcionaba',
-                    c: 'Porque lo desarrolló la ISO',
+                    b: 'Porque lo desarrolló la ISO',
+                    c: 'Porque ya estaba implementado, era libre y funcionaba',
                     d: 'Porque es más seguro por diseño'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'TCP/IP ya funcionaba en ARPANET y venía incluido gratuitamente en UNIX BSD mientras OSI aún se debatía. La implementación real y sencilla ganó al diseño teórico y complejo.'
             }
         ];

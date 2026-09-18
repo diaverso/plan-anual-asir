@@ -131,12 +131,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> Un compañero afirma: «como la MAC es única en el mundo, sirve para identificar a un usuario en Internet». ¿Qué falla en su razonamiento?',
                     opciones: {
-                        a: 'Nada: es correcto',
-                        b: 'Que la MAC no sale de la red local: el primer router la sustituye por la suya',
+                        a: 'Que la MAC no sale de la red local: el primer router la sustituye por la suya',
+                        b: 'Nada: es correcto',
                         c: 'Que las MAC no son únicas en absoluto',
                         d: 'Que solo las tarjetas Wi-Fi tienen MAC'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El alcance de la MAC es <strong>un salto</strong>. Lo que sí llega al servidor es la IP pública, y ni siquiera es la del equipo: es la del router, por el NAT.',
                     pistas: [
                         'La premisa (que es única) es más o menos cierta. El fallo está en la conclusión.',
@@ -187,10 +187,10 @@ const ejerciciosData = {
                     opciones: {
                         a: 'Mejor protección frente al ruido, aunque no la máxima',
                         b: 'Lo mismo que con UTP, pero pagando más',
-                        c: 'Una instalación potencialmente peor: la pantalla sin continuidad ni tierra actúa como antena',
-                        d: 'Mayor velocidad'
+                        c: 'Mayor velocidad',
+                        d: 'Una instalación potencialmente peor: la pantalla sin continuidad ni tierra actúa como antena'
                     },
-                    respuesta: 'c',
+                    respuesta: 'd',
                     explicacion: 'El apantallamiento es <strong>todo o nada</strong>: exige que conectores, rosetas y panel sean apantallados y estén correctamente puestos a tierra en ambos extremos. Hecho a medias, empeora.',
                     pistas: [
                         'Piensa qué le pasa a un conductor metálico aislado que no está conectado a tierra.'
@@ -428,11 +428,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> Se cae el DHCP un jueves a las 16:00 y nadie nota nada hasta el lunes. ¿Por qué?',
                     opciones: {
                         a: 'Porque el DHCP no es un servicio importante',
-                        b: 'Porque los equipos encendidos conservan su concesión, y el fallo solo aparece al arrancar',
-                        c: 'Porque el DNS suple su función',
+                        b: 'Porque el DNS suple su función',
+                        c: 'Porque los equipos encendidos conservan su concesión, y el fallo solo aparece al arrancar',
                         d: 'Porque los equipos pasan automáticamente a IP fija'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Es el único servicio cuya caída no es inmediata. Y por eso muchas averías de DHCP se descubren un lunes o tras un puente, cuando decenas de equipos arrancan a la vez y ninguno consigue dirección.',
                     pistas: [
                         'Recuerda qué es exactamente una concesión y cuánto dura.'
@@ -463,12 +463,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> ¿En cuál de estas decisiones conviene ser <strong>generoso</strong> aunque el presupuesto esté ajustado?',
                     opciones: {
-                        a: 'En el modelo de switch',
-                        b: 'En la categoría del cable y el número de tiradas',
+                        a: 'En la categoría del cable y el número de tiradas',
+                        b: 'En el modelo de switch',
                         c: 'En la potencia del servidor',
                         d: 'En el tamaño del SAI'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Un switch, un servidor o un SAI se sustituyen en una tarde. El cableado exige <strong>obra</strong> y dura veinte años. La regla: generoso en lo difícil de cambiar, tacaño en lo fácil.',
                     pistas: [
                         'Pregúntate qué cuesta más cambiar dentro de tres años, no qué cuesta más comprar hoy.'
@@ -479,11 +479,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> Un informe de diseño <strong>no menciona</strong> que el switch de una planta carece de redundancia. El técnico dice: «se lo dije de palabra al gerente». ¿Es suficiente?',
                     opciones: {
                         a: 'Sí, si el gerente lo recuerda',
-                        b: 'No: un riesgo asumido tiene que estar identificado, valorado y escrito, con la decisión aprobada por quien paga',
-                        c: 'Sí, porque los riesgos no van en un informe técnico',
-                        d: 'Da igual, porque el riesgo es pequeño'
+                        b: 'Sí, porque los riesgos no van en un informe técnico',
+                        c: 'Da igual, porque el riesgo es pequeño',
+                        d: 'No: un riesgo asumido tiene que estar identificado, valorado y escrito, con la decisión aprobada por quien paga'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Sin constancia escrita no hay diferencia entre asumir e <strong>ignorar</strong>: el día que ocurra, nadie recordará la conversación y el diseño parecerá negligente. Escribirlo protege al cliente y al técnico.',
                     pistas: [
                         'Piensa qué pasará el día que ese switch se estropee y haya que explicar por qué no estaba duplicado.'

@@ -832,12 +832,12 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 repaso: '#partrenzado',
                 text: 'Al montar un conector RJ45, ¿por qué hay que destrenzar los pares lo mínimo posible?',
                 options: {
-                    a: 'Para que el cable quede más estético',
-                    b: 'Para que quepan los ocho hilos en el conector',
-                    c: 'Porque cada tramo destrenzado pierde la protección frente al ruido y la diafonía',
+                    a: 'Porque cada tramo destrenzado pierde la protección frente al ruido y la diafonía',
+                    b: 'Para que el cable quede más estético',
+                    c: 'Para que quepan los ocho hilos en el conector',
                     d: 'Porque los hilos se rompen si se destrenzan'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'El máximo admitido son unos 13 mm. Destrenzar de más es la causa número uno de que un cable montado a mano acabe negociando 100 Mbps en lugar de 1 Gbps.'
             },
             {
@@ -860,10 +860,10 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 options: {
                     a: 'Cat 5e',
                     b: 'Cat 6',
-                    c: 'Cat 6A',
-                    d: 'Cat 8, por ser la más moderna'
+                    c: 'Cat 8, por ser la más moderna',
+                    d: 'Cat 6A'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Cat 6 solo alcanza 10 Gbps hasta unos 55 m, y Cat 8 se queda en 30 m: no llegaría. <strong>Cat 6A</strong> es la que garantiza 10 Gbps a los 100 m completos.'
             },
             {
@@ -872,11 +872,11 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 text: 'El límite de 100 m de un enlace de cobre, ¿cómo se reparte según el cableado estructurado?',
                 options: {
                     a: '100 m de cable fijo, más los latiguillos aparte',
-                    b: '90 m de cableado fijo y 10 m repartidos entre los latiguillos',
-                    c: '50 m a cada lado del patch panel',
+                    b: '50 m a cada lado del patch panel',
+                    c: '90 m de cableado fijo y 10 m repartidos entre los latiguillos',
                     d: 'No hay reparto: son 100 m de cualquier tipo de cable'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Los latiguillos <strong>cuentan</strong> dentro del límite. Es un error clásico pensar que los 100 m son solo del cable de la pared y que los latiguillos van aparte.'
             },
             {
@@ -885,11 +885,11 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 text: '¿Cuál es la diferencia entre las normas T568A y T568B?',
                 options: {
                     a: 'T568B admite mayor velocidad',
-                    b: 'Intercambian el par verde y el par naranja; el resto de pines es igual',
-                    c: 'T568A usa 4 hilos y T568B usa 8',
-                    d: 'T568A es para cable apantallado'
+                    b: 'T568A usa 4 hilos y T568B usa 8',
+                    c: 'T568A es para cable apantallado',
+                    d: 'Intercambian el par verde y el par naranja; el resto de pines es igual'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Los pines 4, 5, 7 y 8 son idénticos en ambas. Ninguna es técnicamente superior: lo que importa es usar la misma en toda la instalación.'
             },
             {
@@ -898,11 +898,11 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 text: 'Un latiguillo tiene dos pares dañados. ¿Qué ocurre al conectarlo entre un PC y un switch, ambos de 1 Gbps?',
                 options: {
                     a: 'No enlaza: no hay conectividad',
-                    b: 'Enlaza a 1 Gbps pero con errores',
-                    c: 'Enlaza a 100 Mbps, y todo parece funcionar bien',
+                    b: 'Enlaza a 100 Mbps, y todo parece funcionar bien',
+                    c: 'Enlaza a 1 Gbps pero con errores',
                     d: 'Enlaza a 10 Mbps'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: '100 Mbps solo necesita dos pares (1-2 y 3-6). Por eso el fallo pasa desapercibido: la red funciona, el usuario navega, y la avería solo se nota al copiar ficheros grandes.'
             },
             {
@@ -910,12 +910,12 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 repaso: '#cruzado',
                 text: 'Antes de que existiera el auto-MDIX, ¿qué cable hacía falta para unir dos switches entre sí?',
                 options: {
-                    a: 'Directo, porque son dispositivos de red',
-                    b: 'Cruzado, porque son dispositivos del mismo tipo y ambos transmiten por los mismos pines',
+                    a: 'Cruzado, porque son dispositivos del mismo tipo y ambos transmiten por los mismos pines',
+                    b: 'Directo, porque son dispositivos de red',
                     c: 'Uno de fibra obligatoriamente',
                     d: 'Cualquiera de los dos, siempre ha dado igual'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Dos dispositivos iguales transmiten y escuchan por los mismos pines: sin cruzar los pares, ambos hablarían a un hilo donde nadie escucha.'
             },
             {
@@ -924,11 +924,11 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 text: 'Un técnico fija a mano la velocidad y el dúplex de un puerto de switch. ¿Qué efecto secundario puede aparecer?',
                 options: {
                     a: 'Ninguno: es la configuración recomendada',
-                    b: 'Se desactiva la autonegociación y con ella puede dejar de funcionar el auto-MDIX',
-                    c: 'El puerto pasa a exigir cable apantallado',
+                    b: 'El puerto pasa a exigir cable apantallado',
+                    c: 'Se desactiva la autonegociación y con ella puede dejar de funcionar el auto-MDIX',
                     d: 'Se duplica el consumo del puerto'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'El auto-MDIX forma parte del proceso de autonegociación. Al fijarlo todo a mano, el puerto deja de adaptarse y un cable directo entre dispositivos iguales puede no enlazar.'
             },
             {
@@ -937,11 +937,11 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 text: 'Hay que unir dos edificios separados 800 m dentro de un mismo campus. ¿Qué medio se elige?',
                 options: {
                     a: 'Cat 6A, que llega a 100 m',
-                    b: 'Varios tramos de cobre unidos con acopladores',
-                    c: 'Fibra óptica',
+                    b: 'Fibra óptica',
+                    c: 'Varios tramos de cobre unidos con acopladores',
                     d: 'Wi-Fi punto a punto, que es lo más barato siempre'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Ningún cobre llega a 800 m: el límite es 100 m. Unir tramos con acopladores no resuelve la atenuación. La regla es cobre al puesto y fibra entre edificios.'
             },
             {
@@ -949,12 +949,12 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 repaso: '#fibra',
                 text: '¿Cuál es la principal ventaja de la fibra frente al cobre en un entorno industrial con motores?',
                 options: {
-                    a: 'Es más barata de instalar',
-                    b: 'Es totalmente inmune a las interferencias electromagnéticas',
+                    a: 'Es totalmente inmune a las interferencias electromagnéticas',
+                    b: 'Es más barata de instalar',
                     c: 'Se puede doblar sin límite',
                     d: 'No necesita conectores'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'La fibra transporta luz, no electricidad, así que ningún campo electromagnético la afecta. Sus desventajas son justo las otras opciones: instalación cara y fragilidad ante dobleces.'
             },
             {
@@ -963,11 +963,11 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 text: 'Hay que pasar cinco puestos a otro switch. Con cableado estructurado bien hecho, ¿qué se toca?',
                 options: {
                     a: 'Se tira cable nuevo desde cada puesto hasta el armario',
-                    b: 'Se cambian los latiguillos correspondientes dentro del rack',
-                    c: 'Se sustituyen las rosetas de los cinco puestos',
-                    d: 'Se reconfigura el patch panel'
+                    b: 'Se sustituyen las rosetas de los cinco puestos',
+                    c: 'Se reconfigura el patch panel',
+                    d: 'Se cambian los latiguillos correspondientes dentro del rack'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Esa es exactamente la razón de ser del modelo: el cableado fijo se instala una vez y no se toca; toda la flexibilidad está en los latiguillos del armario.'
             },
             {
@@ -975,12 +975,12 @@ Llega un ruido de +5:   hilo A = +6      hilo B = +4      diferencia = 2
                 repaso: '../Dia_01/teoria.html#bits',
                 text: '<em>Repaso.</em> Ves la MAC <code>B2-14-7C-00-1A-3F</code>. ¿Qué puedes afirmar?',
                 options: {
-                    a: 'Es multicast',
-                    b: 'Es unicast y administrada localmente',
+                    a: 'Es unicast y administrada localmente',
+                    b: 'Es multicast',
                     c: 'Es unicast y de fábrica',
                     d: 'Es la dirección de broadcast'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Segundo dígito <strong>2</strong> = 0010: el bit I/G vale 0 (unicast) y el U/L vale 1 (local). Es una dirección generada por software o cambiada a mano.'
             },
             {

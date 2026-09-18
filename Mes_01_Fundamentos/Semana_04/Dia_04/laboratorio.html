@@ -305,11 +305,11 @@ const ejerciciosData = {
                     pregunta: '<strong>d)</strong> Una red aparece con <strong>tres BSSID distintos</strong> bajo el mismo SSID. ¿Qué significa?',
                     opciones: {
                         a: 'Que hay un error en el escaneo',
-                        b: 'Que esa red tiene tres puntos de acceso, todos con el mismo nombre',
-                        c: 'Que la red emite en tres canales a la vez por un solo AP',
+                        b: 'Que la red emite en tres canales a la vez por un solo AP',
+                        c: 'Que esa red tiene tres puntos de acceso, todos con el mismo nombre',
                         d: 'Que hay tres redes distintas con el mismo nombre por casualidad'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Un <strong>SSID</strong> y varios <strong>BSSID</strong>: es lo normal en oficinas y en casas con repetidores. Para el usuario es «una red»; para el equipo, tres aparatos entre los que hace <strong>roaming</strong>.',
                     pistas: [
                         '¿Qué es exactamente un BSSID?'
@@ -354,12 +354,12 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Con esos 26 puertos necesarios, ¿qué switch comprarías para la planta baja?',
                     opciones: {
                         a: 'Uno de 24 puertos: es lo más ajustado',
-                        b: 'Uno de 48 puertos: cubre la necesidad y deja margen para crecer',
-                        c: 'Dos de 16 puertos encadenados',
-                        d: 'Uno de 8 puertos y varios hubs'
+                        b: 'Dos de 16 puertos encadenados',
+                        c: 'Uno de 8 puertos y varios hubs',
+                        d: 'Uno de 48 puertos: cubre la necesidad y deja margen para crecer'
                     },
-                    respuesta: 'b',
-                    explicacion: 'Uno de 24 <strong>no llega</strong>: hacen falta 26. Y una red siempre crece, así que quedarse justo obliga a encadenar switches al poco tiempo. La d es directamente inaceptable: <strong>los hubs no se usan</strong>.',
+                    respuesta: 'd',
+                    explicacion: 'Uno de 24 <strong>no llega</strong>: hacen falta 26. Y una red siempre crece, así que quedarse justo obliga a encadenar switches al poco tiempo. La c es directamente inaceptable: <strong>los hubs no se usan</strong>.',
                     pistas: [
                         'Compara el número que has calculado con los tamaños habituales: 8, 16, 24, 48.'
                     ]
@@ -368,13 +368,13 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> Hay que separar la red de <strong>visitas</strong> de la de <strong>datos de clientes</strong>. ¿Cuál es la solución más razonable?',
                     opciones: {
-                        a: 'Instalar un segundo router y una segunda instalación de cable',
-                        b: 'Usar switches gestionables y crear dos VLAN sobre el cableado existente',
+                        a: 'Usar switches gestionables y crear dos VLAN sobre el cableado existente',
+                        b: 'Instalar un segundo router y una segunda instalación de cable',
                         c: 'Poner contraseñas distintas en cada equipo',
                         d: 'Ocultar el SSID de la red de visitas'
                     },
-                    respuesta: 'b',
-                    explicacion: 'Las <strong>VLAN</strong> separan dominios de broadcast sin duplicar cableado ni comprar un router por red. La a funcionaría pero es mucho más cara; la c y la d <strong>no separan nada</strong>: siguen estando en la misma red.',
+                    respuesta: 'a',
+                    explicacion: 'Las <strong>VLAN</strong> separan dominios de broadcast sin duplicar cableado ni comprar un router por red. La b funcionaría pero es mucho más cara; la c y la d <strong>no separan nada</strong>: siguen estando en la misma red.',
                     pistas: [
                         '¿Qué función de un switch gestionable separa dominios de broadcast?'
                     ]
@@ -393,12 +393,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>e)</strong> ¿Cuántos puntos de acceso pondrías para cubrir las dos plantas?',
                     opciones: {
-                        a: 'Uno solo, potente, en la planta baja',
-                        b: 'Al menos uno por planta, con el mismo SSID y canales distintos',
+                        a: 'Al menos uno por planta, con el mismo SSID y canales distintos',
+                        b: 'Uno solo, potente, en la planta baja',
                         c: 'Uno por despacho',
                         d: 'Ninguno: basta con el Wi-Fi del router'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Un forjado entre plantas atenúa muchísimo la señal, sobre todo en 5 GHz. <strong>Mismo SSID</strong> para que el roaming sea transparente, y <strong>canales distintos</strong> para que los dos APs no se estorben.',
                     pistas: [
                         '¿Qué le hace un suelo de hormigón a una señal de radio?',

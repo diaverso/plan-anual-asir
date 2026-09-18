@@ -464,11 +464,11 @@ const ejerciciosData = {
                     pregunta: '<strong>e)</strong> En el bloque IP aparece <code>Don\'t fragment: Set</code>. ¿Qué implica?',
                     opciones: {
                         a: 'Que curl pidió expresamente no fragmentar',
-                        b: 'Que el bit DF va activado de serie, no solo cuando se pide con ping -f',
-                        c: 'Que la trama es demasiado grande',
+                        b: 'Que la trama es demasiado grande',
+                        c: 'Que el bit DF va activado de serie, no solo cuando se pide con ping -f',
                         d: 'Que el paquete se ha fragmentado'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'El martes lo activaste <strong>a mano</strong> para medir el MTU, y podía parecer un truco de laboratorio. Aquí se ve que es el comportamiento normal: se prefiere descartar y descubrir el MTU del camino antes que fragmentar.',
                     pistas: [
                         '¿Pediste tú algo especial al ejecutar curl?'
@@ -516,11 +516,11 @@ const ejerciciosData = {
                     pregunta: '<strong>h)</strong> La cabecera TCP mide 20 bytes en el GET pero <strong>32</strong> en el SYN. ¿Por qué?',
                     opciones: {
                         a: 'Es un error de Wireshark',
-                        b: 'Los 20 bytes son el mínimo: el SYN añade 12 bytes de opciones para negociar la conexión',
-                        c: 'El SYN lleva datos dentro',
-                        d: 'Porque el SYN va sin cabecera IP'
+                        b: 'El SYN lleva datos dentro',
+                        c: 'Porque el SYN va sin cabecera IP',
+                        d: 'Los 20 bytes son el mínimo: el SYN añade 12 bytes de opciones para negociar la conexión'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'La cabecera TCP tiene <strong>20 bytes obligatorios y hasta 40 de opciones</strong>. En el saludo se usan para negociar el <strong>MSS</strong> que calculaste el martes, entre otras cosas. Aquel «TCP son 20 bytes» era una simplificación razonable, y esta es la letra pequeña.',
                     pistas: [
                         '¿Qué tiene de especial la primera trama de una conexión?',
@@ -569,12 +569,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> En el bloque IP aparece <code>Protocol: TCP (6)</code>. ¿Qué es ese 6 y quién lo decidió?',
                     opciones: {
-                        a: 'La versión de TCP; la decide el IEEE',
-                        b: 'El número que identifica a TCP dentro de la cabecera IP, del registro de IANA',
+                        a: 'El número que identifica a TCP dentro de la cabecera IP, del registro de IANA',
+                        b: 'La versión de TCP; la decide el IEEE',
                         c: 'El número de saltos que ha dado el paquete',
                         d: 'Un identificador que elige el sistema operativo'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Sin ese número, el destino no sabría si lo que hay tras la cabecera IP es TCP, UDP o ICMP. Es el mismo mecanismo que el <strong>EtherType 0x0800</strong> de la capa 2: cada capa deja escrito qué protocolo viene encima.',
                     pistas: [
                         'Compáralo con el campo Type de Ethernet, que valía 0x0800.'
@@ -608,11 +608,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> ¿Por qué el laboratorio usa <code>http://</code> y no <code>https://</code>?',
                     opciones: {
                         a: 'Porque HTTPS no se puede capturar',
-                        b: 'Porque con HTTPS el contenido va cifrado y no se leería, aunque las cabeceras de abajo se verían igual',
-                        c: 'Porque Wireshark no entiende el puerto 443',
+                        b: 'Porque Wireshark no entiende el puerto 443',
+                        c: 'Porque con HTTPS el contenido va cifrado y no se leería, aunque las cabeceras de abajo se verían igual',
                         d: 'Porque HTTP es más moderno'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'La captura de HTTPS funciona perfectamente: se ven las MAC, las IP, los puertos y el tamaño de todo. Lo único ilegible es el <strong>contenido</strong>, que es exactamente lo que TLS pretende. Y eso, en sí mismo, dice mucho sobre en qué capa actúa el cifrado.',
                     pistas: [
                         '¿Qué es lo que cifra TLS y qué deja al descubierto?'
@@ -657,12 +657,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> Mañana es viernes de evaluación. ¿Qué dos tablas conviene repasar?',
                     opciones: {
-                        a: 'La de organismos y la de puertos',
-                        b: 'La correspondencia OSI ↔ TCP/IP y los tamaños de cabecera',
+                        a: 'La correspondencia OSI ↔ TCP/IP y los tamaños de cabecera',
+                        b: 'La de organismos y la de puertos',
                         c: 'La de topologías y la de medios',
                         d: 'Ninguna: el test es de razonamiento'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Son las dos que atraviesan toda la semana y las que más aparecen en el test. La de organismos también entra, pero se resuelve con la regla IEEE / IETF / IANA en lugar de memorizando.',
                     pistas: [
                         '¿Qué dos cosas has usado los cuatro días?'

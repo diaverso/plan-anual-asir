@@ -541,11 +541,11 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 text: '¿Cuál es la característica que define a una señal digital?',
                 options: {
                     a: 'Varía de forma continua y toma infinitos valores',
-                    b: 'Toma valores discretos, típicamente 0 y 1',
-                    c: 'Solo puede viajar por fibra óptica',
+                    b: 'Solo puede viajar por fibra óptica',
+                    c: 'Toma valores discretos, típicamente 0 y 1',
                     d: 'No se ve afectada por la distancia'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'La señal digital usa un número finito de niveles. Esa discretización es lo que permite decidir sin ambigüedad qué valor se transmitió y regenerar la señal.'
             },
             {
@@ -554,11 +554,11 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 text: '¿Por qué la señal digital resiste mejor las largas distancias?',
                 options: {
                     a: 'Porque viaja más rápido que la analógica',
-                    b: 'Porque no sufre atenuación',
-                    c: 'Porque se puede regenerar limpia, eliminando el ruido acumulado',
+                    b: 'Porque se puede regenerar limpia, eliminando el ruido acumulado',
+                    c: 'Porque no sufre atenuación',
                     d: 'Porque usa menos ancho de banda'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Un regenerador decide si el valor recibido es un 0 o un 1 y emite una señal nueva y perfecta. El amplificador analógico, en cambio, amplifica también el ruido.'
             },
             {
@@ -567,11 +567,11 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 text: '¿Es cierto que una señal digital es inmune al ruido?',
                 options: {
                     a: 'Sí, el ruido no le afecta en absoluto',
-                    b: 'No: si el ruido supera cierto umbral, se confunde un 1 con un 0',
-                    c: 'Solo es inmune si viaja por cobre',
-                    d: 'Solo es inmune por debajo de 100 metros'
+                    b: 'Solo es inmune si viaja por cobre',
+                    c: 'Solo es inmune por debajo de 100 metros',
+                    d: 'No: si el ruido supera cierto umbral, se confunde un 1 con un 0'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Digital no significa inmune, sino tolerante: existe un margen dentro del cual la recuperación es perfecta. Superado ese umbral se producen errores igualmente.'
             },
             {
@@ -579,12 +579,12 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 repaso: '#digitalizacion',
                 text: 'Según el teorema de Nyquist, para digitalizar una señal de 4 kHz sin pérdida hay que muestrear a:',
                 options: {
-                    a: '2.000 muestras por segundo',
-                    b: '4.000 muestras por segundo',
-                    c: '8.000 muestras por segundo',
+                    a: '8.000 muestras por segundo',
+                    b: '2.000 muestras por segundo',
+                    c: '4.000 muestras por segundo',
                     d: '16.000 muestras por segundo'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Nyquist exige al menos el doble de la frecuencia máxima: 2 × 4 kHz = 8.000 muestras/s. Es exactamente lo que hace la telefonía digital.'
             },
             {
@@ -605,12 +605,12 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 repaso: '#unidades',
                 text: '¿Cuántos bits contiene un byte?',
                 options: {
-                    a: '4 bits',
-                    b: '8 bits',
+                    a: '8 bits',
+                    b: '4 bits',
                     c: '16 bits',
                     d: '1.024 bits'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Un byte son 8 bits. Este factor 8 es la fuente más habitual de errores al convertir entre tamaños de fichero y velocidades de enlace.'
             },
             {
@@ -619,11 +619,11 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 text: 'Una fibra de 600 Mbps, ¿a cuántos MB/s puede descargar como máximo teórico?',
                 options: {
                     a: '600 MB/s',
-                    b: '75 MB/s',
-                    c: '4.800 MB/s',
+                    b: '4.800 MB/s',
+                    c: '75 MB/s',
                     d: '60 MB/s'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: '600 Mbps ÷ 8 = 75 MB/s. Las velocidades de red se expresan en bits (b minúscula) y los tamaños de fichero en bytes (B mayúscula).'
             },
             {
@@ -632,11 +632,11 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 text: 'En redes y telecomunicaciones, 1 Mbps equivale exactamente a:',
                 options: {
                     a: '1.048.576 bits por segundo',
-                    b: '1.000.000 bits por segundo',
-                    c: '1.024.000 bits por segundo',
-                    d: '1.000.000 bytes por segundo'
+                    b: '1.024.000 bits por segundo',
+                    c: '1.000.000 bytes por segundo',
+                    d: '1.000.000 bits por segundo'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'En redes se usa siempre el convenio decimal del SI: mega = 10⁶. Los prefijos binarios (mebi = 2²⁰) se reservan para memoria y almacenamiento.'
             },
             {
@@ -670,12 +670,12 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 repaso: '#latencia',
                 text: 'Un enlace por satélite ofrece 100 Mbps pero tiene 250 ms de latencia. ¿Qué demuestra?',
                 options: {
-                    a: 'Que el ancho de banda y la latencia son independientes',
-                    b: 'Que el enlace está mal configurado',
-                    c: 'Que a más ancho de banda, más latencia',
-                    d: 'Que el satélite no puede superar los 10 Mbps'
+                    a: 'Que el enlace está mal configurado',
+                    b: 'Que a más ancho de banda, más latencia',
+                    c: 'Que el satélite no puede superar los 10 Mbps',
+                    d: 'Que el ancho de banda y la latencia son independientes'
                 },
-                answer: 'a',
+                answer: 'd',
                 feedback: 'La latencia depende sobre todo de la distancia física (36.000 km de subida y otros tantos de bajada). Contratar más megas no acorta esa distancia.'
             },
             {
@@ -683,12 +683,12 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 repaso: '#latencia',
                 text: '¿Cuál de estos componentes de la latencia NO se puede reducir por más que se mejore el equipamiento?',
                 options: {
-                    a: 'El retardo de encolado',
-                    b: 'El retardo de procesamiento',
-                    c: 'El retardo de propagación',
+                    a: 'El retardo de propagación',
+                    b: 'El retardo de encolado',
+                    c: 'El retardo de procesamiento',
                     d: 'El retardo de transmisión'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'La propagación depende de la distancia y está limitada por la velocidad de la luz en el medio. Los demás retardos sí se reducen con mejor hardware o menos congestión.'
             },
             {
@@ -696,12 +696,12 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 repaso: '#latencia',
                 text: '¿Qué es el jitter y por qué importa?',
                 options: {
-                    a: 'El retardo medio de ida y vuelta; importa en las descargas',
-                    b: 'La variación de la latencia entre paquetes; es crítico en voz y vídeo en tiempo real',
+                    a: 'La variación de la latencia entre paquetes; es crítico en voz y vídeo en tiempo real',
+                    b: 'El retardo medio de ida y vuelta; importa en las descargas',
                     c: 'La pérdida de paquetes por congestión',
                     d: 'La capacidad máxima del enlace'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Aunque la latencia media sea baja, si unos paquetes llegan a 20 ms y otros a 200 ms la conversación se entrecorta. Para descargar un fichero, en cambio, es irrelevante.'
             },
             {
@@ -710,11 +710,11 @@ Con la sobrecarga real (~10 %), unos 44 segundos.</code></pre>
                 text: '¿Cuánto tarda en transferirse un fichero de 250 MB por un enlace de 100 Mbps, sin contar sobrecarga?',
                 options: {
                     a: '2,5 segundos',
-                    b: '10 segundos',
-                    c: '20 segundos',
+                    b: '20 segundos',
+                    c: '10 segundos',
                     d: '25 segundos'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: '250 MB × 8 = 2.000 Mb. 2.000 ÷ 100 = 20 segundos. Recuerda pasar siempre el tamaño a bits antes de dividir por la velocidad.'
             }
         ]

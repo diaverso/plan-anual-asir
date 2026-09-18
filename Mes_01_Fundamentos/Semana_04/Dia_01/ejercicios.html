@@ -168,12 +168,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>d)</strong> ¿Qué topología física y lógica tiene una red cableada con un hub central?',
                     opciones: {
-                        a: 'Física de bus, lógica de estrella',
-                        b: 'Física de estrella, lógica de bus',
+                        a: 'Física de estrella, lógica de bus',
+                        b: 'Física de bus, lógica de estrella',
                         c: 'Física y lógica de estrella',
                         d: 'Física y lógica de anillo'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Los cables dibujan una estrella, pero eléctricamente todos comparten el mismo medio, que es la definición de un bus. Es el ejemplo canónico de que las dos topologías no tienen por qué coincidir.',
                     pistas: [
                         'Mira primero cómo van los cables, y después cómo circula la señal.'
@@ -192,11 +192,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> Un puente une dos segmentos. Llega una trama del segmento A dirigida a un equipo que también está en A. ¿Qué hace?',
                     opciones: {
                         a: 'La reenvía al segmento B por si acaso',
-                        b: 'No la deja pasar: origen y destino están del mismo lado, así que cruzarla solo molestaría al otro segmento',
-                        c: 'La descarta y avisa al emisor',
+                        b: 'La descarta y avisa al emisor',
+                        c: 'No la deja pasar: origen y destino están del mismo lado, así que cruzarla solo molestaría al otro segmento',
                         d: 'La reenvía a los dos segmentos'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Eso es <strong>filtrar</strong>, y es justo lo que un hub no puede hacer. El tráfico local se queda en su segmento, y por eso el puente crea <strong>dos dominios de colisión</strong> donde antes había uno.',
                     pistas: [
                         '¿Necesita el destinatario que la trama cruce al otro lado para recibirla?'
@@ -321,11 +321,11 @@ const ejerciciosData = {
                     pregunta: '<strong>d)</strong> En ese escenario, ¿qué diferencia práctica hay entre los 10 equipos directos y los 4 del hub?',
                     opciones: {
                         a: 'Ninguna: todos tienen la misma velocidad',
-                        b: 'Los 4 del hub comparten el ancho de banda de ese puerto entre ellos y pueden colisionar; los 10 directos, no',
-                        c: 'Los 4 del hub no pueden salir a Internet',
-                        d: 'Los 10 directos comparten ancho de banda y los del hub no'
+                        b: 'Los 4 del hub no pueden salir a Internet',
+                        c: 'Los 10 directos comparten ancho de banda y los del hub no',
+                        d: 'Los 4 del hub comparten el ancho de banda de ese puerto entre ellos y pueden colisionar; los 10 directos, no'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'El switch aísla ese puerto del resto de la red, pero <strong>dentro</strong> del hub sigue habiendo medio compartido, semidúplex y colisiones. Es un trozo de red antigua metido en una moderna.',
                     pistas: [
                         '¿Qué ocurre dentro del hub, entre sus propios equipos?'
@@ -344,11 +344,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> Una oficina con 20 equipos va lentísima. Al mirar el armario ves un aparato de 24 puertos sin ninguna luz de configuración, muy antiguo, y todos los equipos van a 100 Mbps en semidúplex. ¿Qué sospechas?',
                     opciones: {
                         a: 'Que el cableado es de categoría insuficiente',
-                        b: 'Que es un hub: el semidúplex generalizado y la lentitud con muchos equipos encajan con un medio compartido',
-                        c: 'Que hay un bucle en la red',
-                        d: 'Que faltan direcciones IP'
+                        b: 'Que hay un bucle en la red',
+                        c: 'Que faltan direcciones IP',
+                        d: 'Que es un hub: el semidúplex generalizado y la lentitud con muchos equipos encajan con un medio compartido'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'El <strong>semidúplex</strong> es la pista definitiva: con un switch moderno, los enlaces se negocian en dúplex completo. Si todo está en semidúplex, es que el medio se comparte.',
                     pistas: [
                         '¿Qué modo de transmisión obliga a usar un hub, y por qué?'

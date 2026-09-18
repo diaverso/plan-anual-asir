@@ -165,11 +165,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Por qué son distintas?',
                     opciones: {
                         a: 'Porque el comando está mal escrito',
-                        b: 'Porque el router traduce tu dirección privada a la pública al salir (NAT)',
-                        c: 'Porque tienes dos tarjetas de red',
-                        d: 'Porque la privada es de IPv4 y la pública de IPv6'
+                        b: 'Porque tienes dos tarjetas de red',
+                        c: 'Porque la privada es de IPv4 y la pública de IPv6',
+                        d: 'Porque el router traduce tu dirección privada a la pública al salir (NAT)'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'El router aplica <strong>NAT</strong>: sustituye tu dirección privada por la suya pública al enviar, y hace lo contrario al recibir. Lo estudiarás en detalle en el <strong>Mes 11</strong>, pero acabas de verlo funcionando.',
                     pistas: [
                         'Piensa qué equipo está en medio entre tu ordenador e Internet.',
@@ -181,12 +181,12 @@ const ejerciciosData = {
                     pregunta: `<strong>d)</strong> Tu vecino ejecuta los mismos comandos y le sale <strong>la misma dirección
                                privada</strong> que a ti, pero una pública distinta. ¿Es un problema?`,
                     opciones: {
-                        a: 'Sí, hay un conflicto de direcciones y uno de los dos se quedará sin red',
-                        b: 'No: las privadas solo son únicas dentro de cada LAN, y las dos LAN están separadas',
+                        a: 'No: las privadas solo son únicas dentro de cada LAN, y las dos LAN están separadas',
+                        b: 'Sí, hay un conflicto de direcciones y uno de los dos se quedará sin red',
                         c: 'Sí, hay que cambiar el rango de una de las dos redes',
                         d: 'No, porque las direcciones privadas no se usan realmente'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Las direcciones privadas <strong>no son enrutables en Internet</strong>: solo tienen sentido dentro de su propia LAN. Millones de hogares usan 192.168.1.1 simultáneamente sin ningún conflicto, porque esas direcciones nunca salen al exterior.',
                     pistas: [
                         '¿Cuántas casas crees que tienen ahora mismo un router en 192.168.1.1?',

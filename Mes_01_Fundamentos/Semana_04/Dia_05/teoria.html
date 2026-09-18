@@ -381,12 +381,12 @@ Colisión:   8 equipos × 3 switches          → 24
                 repaso: '../Dia_01/teoria.html#hub',
                 text: 'A envía a B a través de un hub de 8 puertos. ¿Qué ocurre?',
                 options: {
-                    a: 'El hub consulta su tabla y la envía solo al puerto de B',
-                    b: 'La repite por los otros 7 puertos; las tarjetas de los demás la descartan',
+                    a: 'La repite por los otros 7 puertos; las tarjetas de los demás la descartan',
+                    b: 'El hub consulta su tabla y la envía solo al puerto de B',
                     c: 'La descarta por no conocer a B',
                     d: 'La envía a B y avisa a los demás'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Un hub <strong>no puede</strong> consultar ninguna tabla: la MAC es de capa 2 y él no llega ahí. El filtrado lo hace cada tarjeta al final del recorrido.'
             },
             {
@@ -395,11 +395,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: 'Un switch de 16 puertos con 16 equipos. ¿Dominios de colisión y de broadcast?',
                 options: {
                     a: '16 y 16',
-                    b: '16 y 1',
-                    c: '1 y 1',
-                    d: '1 y 16'
+                    b: '1 y 1',
+                    c: '1 y 16',
+                    d: '16 y 1'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Uno de colisión <strong>por puerto</strong>, pero un solo dominio de broadcast. Es la pregunta que más cae de todo el tema.'
             },
             {
@@ -408,11 +408,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: 'Un hub de 10 puertos a 100 Mbps con los 10 equipos activos. ¿Cuánto le toca a cada uno como máximo?',
                 options: {
                     a: '100 Mbps',
-                    b: 'Unos 10 Mbps',
-                    c: '1000 Mbps',
+                    b: '1000 Mbps',
+                    c: 'Unos 10 Mbps',
                     d: '50 Mbps'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: '100 ÷ 10 = <strong>10 Mbps</strong>, y en el mejor caso: cada colisión es tiempo en el que <strong>nadie</strong> transmite.'
             },
             {
@@ -422,10 +422,10 @@ Colisión:   8 equipos × 3 switches          → 24
                 options: {
                     a: 'Tener más puertos',
                     b: 'Regenerar mejor la señal',
-                    c: 'Decidir si dejar pasar una trama según su MAC de destino, en lugar de repetir a ciegas',
-                    d: 'Trabajar en capa 3'
+                    c: 'Trabajar en capa 3',
+                    d: 'Decidir si dejar pasar una trama según su MAC de destino, en lugar de repetir a ciegas'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Ahí está la frontera entre la capa 1 y la 2: uno <strong>repite</strong> y el otro <strong>decide</strong>. El switch es esa idea con muchos puertos y en hardware.'
             },
             {
@@ -448,12 +448,12 @@ Colisión:   8 equipos × 3 switches          → 24
                 repaso: '../Dia_02/teoria.html#aprender',
                 text: 'Entra una trama por el puerto 3, origen AA:AA:…, destino BB:BB:… ¿Qué aprende el switch?',
                 options: {
-                    a: 'Que BB:BB:… está en el puerto 3',
-                    b: 'Que AA:AA:… está en el puerto 3',
+                    a: 'Que AA:AA:… está en el puerto 3',
+                    b: 'Que BB:BB:… está en el puerto 3',
                     c: 'Las dos cosas',
                     d: 'Nada'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Aprende de la <strong>MAC de origen</strong>: si la trama entró por ahí, quien la envió está ahí. Del destino no puede deducir nada.'
             },
             {
@@ -462,12 +462,12 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: 'El switch no encuentra la MAC de destino en su tabla. ¿Qué hace?',
                 options: {
                     a: 'Descarta la trama',
-                    b: 'La envía por todos los puertos menos el de entrada',
-                    c: 'Pregunta con ARP',
+                    b: 'Pregunta con ARP',
+                    c: 'La envía por todos los puertos menos el de entrada',
                     d: 'Espera a que el destino se anuncie'
                 },
-                answer: 'b',
-                feedback: '<strong>Inundación de unicast desconocido.</strong> La c es un error frecuente: <strong>ARP lo hacen los equipos</strong>, no el switch.'
+                answer: 'c',
+                feedback: '<strong>Inundación de unicast desconocido.</strong> La b es un error frecuente: <strong>ARP lo hacen los equipos</strong>, no el switch.'
             },
             {
                 topic: 'Día 2 — La tabla MAC',
@@ -500,12 +500,12 @@ Colisión:   8 equipos × 3 switches          → 24
                 repaso: '../Dia_02/teoria.html#arp',
                 text: '¿Por qué la pregunta ARP va en difusión y la respuesta en unicast?',
                 options: {
-                    a: 'Por eficiencia',
-                    b: 'Porque quien pregunta no conoce la MAC del destinatario, que es lo que pide; quien responde sí la conoce, porque venía en la pregunta',
+                    a: 'Porque quien pregunta no conoce la MAC del destinatario, que es lo que pide; quien responde sí la conoce, porque venía en la pregunta',
+                    b: 'Por eficiencia',
                     c: 'Porque lo exige el switch',
                     d: 'Es al revés'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Es la <strong>única</strong> forma posible: no se puede dirigir un mensaje a alguien cuya dirección es precisamente lo que estás preguntando.'
             },
             {
@@ -514,11 +514,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: 'La tabla de un switch muestra 12 MAC distintas en el puerto 1. ¿Qué indica?',
                 options: {
                     a: 'Un error: un puerto solo admite una MAC',
-                    b: 'Que en ese puerto hay otro switch o un hub con varios equipos detrás',
-                    c: 'Un ataque en curso',
-                    d: 'Que la tabla está corrupta'
+                    b: 'Un ataque en curso',
+                    c: 'Que la tabla está corrupta',
+                    d: 'Que en ese puerto hay otro switch o un hub con varios equipos detrás'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Es normal. Un puerto puede tener <strong>muchas</strong> MAC; lo que no puede es una MAC estar en dos puertos a la vez.'
             },
 
@@ -529,11 +529,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: 'Llega a un router una trama de difusión. ¿Qué hace?',
                 options: {
                     a: 'La reenvía por todas sus interfaces',
-                    b: 'No la reenvía: se detiene en él',
-                    c: 'La reenvía solo hacia Internet',
-                    d: 'La convierte en unicast'
+                    b: 'La reenvía solo hacia Internet',
+                    c: 'La convierte en unicast',
+                    d: 'No la reenvía: se detiene en él'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Y por eso <strong>sí separa dominios de broadcast</strong>: él marca dónde acaba la red a la que va dirigida esa difusión.'
             },
             {
@@ -541,12 +541,12 @@ Colisión:   8 equipos × 3 switches          → 24
                 repaso: '../Dia_03/teoria.html#longest',
                 text: 'Paquete a 10.0.5.20. Encajan <code>0.0.0.0/0</code> (métrica 1) y <code>10.0.5.0/24</code> (métrica 100). ¿Cuál gana?',
                 options: {
-                    a: 'La 0.0.0.0/0, por su métrica',
-                    b: 'La 10.0.5.0/24: el prefijo más largo se aplica antes que la métrica',
+                    a: 'La 10.0.5.0/24: el prefijo más largo se aplica antes que la métrica',
+                    b: 'La 0.0.0.0/0, por su métrica',
                     c: 'Se reparte',
                     d: 'Ninguna'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'La métrica <strong>solo desempata entre rutas igual de específicas</strong>. Una métrica excelente no salva a una ruta menos específica.'
             },
             {
@@ -555,11 +555,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: '¿Qué guarda la tabla de rutas?',
                 options: {
                     a: 'MAC y puertos',
-                    b: 'Redes con su siguiente salto, interfaz y métrica',
-                    c: 'Una entrada por equipo',
+                    b: 'Una entrada por equipo',
+                    c: 'Redes con su siguiente salto, interfaz y métrica',
                     d: 'Nombres de dominio'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Guardar <strong>redes</strong> y no equipos es lo que permite que un router de Internet funcione con una tabla manejable.'
             },
             {
@@ -594,11 +594,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: '¿Para qué sirve el TTL?',
                 options: {
                     a: 'Para medir el tiempo de viaje en milisegundos',
-                    b: 'Para contar saltos: baja en cada router y, al llegar a cero, el paquete se descarta',
-                    c: 'Para marcar prioridad',
+                    b: 'Para marcar prioridad',
+                    c: 'Para contar saltos: baja en cada router y, al llegar a cero, el paquete se descarta',
                     d: 'Para identificar la conexión'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es el seguro contra los <strong>bucles</strong>: garantiza que ningún paquete circule para siempre, pase lo que pase con la configuración.'
             },
 
@@ -609,11 +609,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: '¿En qué se parece un punto de acceso a un hub?',
                 options: {
                     a: 'En que no ve las direcciones MAC',
-                    b: 'En que tiene un solo dominio de colisión: el medio es compartido',
-                    c: 'En que trabaja en capa 1',
-                    d: 'En nada'
+                    b: 'En que trabaja en capa 1',
+                    c: 'En nada',
+                    d: 'En que tiene un solo dominio de colisión: el medio es compartido'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Sí ve las MAC —es capa 2— pero no puede dar un medio propio a cada cliente. La limitación es <strong>física</strong>, no del aparato.'
             },
             {
@@ -621,12 +621,12 @@ Colisión:   8 equipos × 3 switches          → 24
                 repaso: '../Dia_04/teoria.html#colisiones',
                 text: '¿Por qué el Wi-Fi no puede usar CSMA/CD?',
                 options: {
-                    a: 'Sería demasiado lento',
-                    b: 'Porque una antena no puede escuchar mientras transmite: su propia señal tapa cualquier otra',
+                    a: 'Porque una antena no puede escuchar mientras transmite: su propia señal tapa cualquier otra',
+                    b: 'Sería demasiado lento',
                     c: 'Porque el estándar no lo contempla',
                     d: 'Porque en Wi-Fi no hay colisiones'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Detectar exige oír <em>mientras</em> se transmite, y en radio es imposible. De ahí la <strong>A de evitación</strong>.'
             },
             {
@@ -636,10 +636,10 @@ Colisión:   8 equipos × 3 switches          → 24
                 options: {
                     a: '13',
                     b: '11',
-                    c: '3: el 1, el 6 y el 11',
-                    d: '1'
+                    c: '1',
+                    d: '3: el 1, el 6 y el 11'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Hay 13 numerados pero se <strong>solapan</strong>. Por eso en un edificio con veinte redes todas compiten por tres canales, y además con microondas y Bluetooth.'
             },
             {
@@ -660,12 +660,12 @@ Colisión:   8 equipos × 3 switches          → 24
                 repaso: '../Dia_04/teoria.html#elegir',
                 text: '¿Qué justifica pagar por un switch gestionable?',
                 options: {
-                    a: 'Que tiene más puertos',
-                    b: 'VLAN, port mirroring y port security',
+                    a: 'VLAN, port mirroring y port security',
+                    b: 'Que tiene más puertos',
                     c: 'Que sus puertos son más rápidos',
                     d: 'Que consume menos'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Las tres resuelven problemas concretos vistos esta semana. La velocidad depende del <strong>hardware</strong> del puerto, no de que sea gestionable.'
             },
 
@@ -676,11 +676,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: 'Un router con 3 interfaces; en cada una, un switch de 8 puertos lleno. ¿Cuántos dominios de colisión hay?',
                 options: {
                     a: '24',
-                    b: '27: los 24 equipos más los 3 enlaces switch–router',
-                    c: '3',
+                    b: '3',
+                    c: '27: los 24 equipos más los 3 enlaces switch–router',
                     d: '8'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'El error clásico es olvidar los <strong>enlaces entre aparatos</strong>: también son cables entre dos puertos, y por tanto dominios de colisión.'
             },
             {
@@ -688,12 +688,12 @@ Colisión:   8 equipos × 3 switches          → 24
                 repaso: '../Dia_01/teoria.html#switch',
                 text: 'En ese mismo escenario, ¿cuántos dominios de <strong>broadcast</strong>?',
                 options: {
-                    a: '24',
-                    b: '1',
-                    c: '3: uno por interfaz del router',
+                    a: '3: uno por interfaz del router',
+                    b: '24',
+                    c: '1',
                     d: '27'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Los switches no separan broadcast; el que lo hace es el <strong>router</strong>, con uno por interfaz. Contar bien las dos cifras a la vez es lo que más se falla.'
             },
             {
@@ -702,11 +702,11 @@ Colisión:   8 equipos × 3 switches          → 24
                 text: '<em>Con la Semana 3.</em> ¿Por qué la MAC de destino de tu petición web es la de tu router y no la del servidor?',
                 options: {
                     a: 'Por un fallo de configuración',
-                    b: 'Porque la capa 2 tiene alcance de un salto: su dirección apunta al siguiente aparato, no al destino final',
-                    c: 'Porque el servidor no tiene MAC',
+                    b: 'Porque el servidor no tiene MAC',
+                    c: 'Porque la capa 2 tiene alcance de un salto: su dirección apunta al siguiente aparato, no al destino final',
                     d: 'Porque se usa NAT'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Y por eso en tu tabla ARP <strong>nunca</strong> aparece una IP de Internet: tu pregunta ARP jamás saldría de tu red, porque el router no reenvía difusiones.'
             }
         ]

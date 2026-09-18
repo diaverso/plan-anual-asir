@@ -95,11 +95,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> ¿Por qué cada uno de los cuatro pares lleva un <strong>paso de trenzado diferente</strong>?',
                     opciones: {
                         a: 'Para poder distinguirlos visualmente al crimpar',
-                        b: 'Para que no queden alineados entre sí y se reduzca la diafonía',
-                        c: 'Para que el cable sea más flexible',
+                        b: 'Para que el cable sea más flexible',
+                        c: 'Para que no queden alineados entre sí y se reduzca la diafonía',
                         d: 'Para que cada par transporte una velocidad distinta'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Con el mismo paso, dos pares quedarían siempre en la misma posición relativa y se acoplarían. Con pasos distintos esa posición cambia constantemente y la interferencia se promedia hasta anularse.',
                     pistas: [
                         'Los pares ya se distinguen por el color, así que esa no es la razón.',
@@ -155,12 +155,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> Instalación nueva de oficina, tiradas de 70 m, se quiere dejar preparado para 10 Gbps en el futuro. ¿Qué se instala?',
                     opciones: {
-                        a: 'Cat 5e, que es más barato',
-                        b: 'Cat 6, suficiente para 70 m',
-                        c: 'Cat 6A',
+                        a: 'Cat 6A',
+                        b: 'Cat 5e, que es más barato',
+                        c: 'Cat 6, suficiente para 70 m',
                         d: 'Cat 8'
                     },
-                    respuesta: 'c',
+                    respuesta: 'a',
                     explicacion: 'Cat 6 daría 10 Gbps solo hasta 55 m, así que a 70 m no cumple el objetivo. Cat 8 no llega a 30 m. Cat 6A es la única que cubre 10 Gbps a esa distancia con conectores estándar.',
                     pistas: [
                         'Compara los 70 m con el alcance de cada categoría a 10 Gbps.',
@@ -172,11 +172,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> Un comercial insiste en vender Cat 8 para cablear las plantas de un edificio de oficinas. ¿Cuál es el problema?',
                     opciones: {
                         a: 'Ninguno: es la mejor categoría disponible',
-                        b: 'Que su alcance es de 30 m, insuficiente para cablear plantas',
-                        c: 'Que no admite conectores RJ45 de ningún tipo',
-                        d: 'Que solo funciona con fibra'
+                        b: 'Que no admite conectores RJ45 de ningún tipo',
+                        c: 'Que solo funciona con fibra',
+                        d: 'Que su alcance es de 30 m, insuficiente para cablear plantas'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Cat 8 está pensada para conexiones cortas <strong>dentro de un rack</strong> de centro de datos. En un edificio, con tiradas normales, sencillamente no enlazaría.',
                     pistas: [
                         'Vuelve a mirar la columna de distancia de Cat 8, no la de velocidad.',
@@ -259,11 +259,11 @@ const ejerciciosData = {
                     pregunta: '<strong>d)</strong> Con equipos modernos, ¿qué pasa si conectas dos portátiles directamente con un latiguillo <strong>directo</strong>?',
                     opciones: {
                         a: 'No enlazan: hace falta un cable cruzado',
-                        b: 'Enlazan, porque el auto-MDIX conmuta internamente los pines',
-                        c: 'Enlazan pero solo a 10 Mbps',
+                        b: 'Enlazan pero solo a 10 Mbps',
+                        c: 'Enlazan, porque el auto-MDIX conmuta internamente los pines',
                         d: 'Se dañan los puertos de red'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'El auto-MDIX detecta durante la negociación que está recibiendo por los pines equivocados y conmuta sus transmisores y receptores. Por eso el cable cruzado prácticamente ha desaparecido.',
                     pistas: [
                         'Piensa en qué mecanismo hace innecesario el cable cruzado hoy en día.'
@@ -391,11 +391,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Enlaza con el Día 6 de la Semana 1: en el modelo jerárquico de tres capas, ¿dónde encaja cada medio?',
                     opciones: {
                         a: 'Fibra en acceso, cobre en núcleo',
-                        b: 'Cobre en acceso, fibra en distribución y núcleo',
-                        c: 'Cobre en las tres capas',
-                        d: 'Fibra en las tres capas'
+                        b: 'Cobre en las tres capas',
+                        c: 'Fibra en las tres capas',
+                        d: 'Cobre en acceso, fibra en distribución y núcleo'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'El cobre llega hasta el puesto de trabajo (acceso), donde las distancias son cortas y el coste importa mucho por la cantidad de tomas. La fibra une armarios, plantas y edificios, donde las distancias superan los 100 m y el número de enlaces es pequeño.',
                     pistas: [
                         'Piensa dónde hay cientos de tomas baratas y dónde hay unos pocos enlaces largos.'

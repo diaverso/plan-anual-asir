@@ -307,11 +307,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> Ese número, ¿qué describe exactamente?',
                     opciones: {
                         a: 'El MTU de todo el camino hasta Internet',
-                        b: 'El MTU del primer enlace: de tu equipo al router',
-                        c: 'La velocidad de tu conexión',
-                        d: 'El tamaño máximo de fichero que puedes descargar'
+                        b: 'La velocidad de tu conexión',
+                        c: 'El tamaño máximo de fichero que puedes descargar',
+                        d: 'El MTU del primer enlace: de tu equipo al router'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Solo el <strong>primer tramo</strong>. Lo que limita de verdad es el enlace más restrictivo de todo el trayecto, y ese es el que vas a medir en el bloque siguiente.'
                 }
             ]
@@ -434,10 +434,10 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> Con el puerto <strong>81</strong>, ¿qué obtuviste?',
                     opciones: {
                         a: 'PingSucceeded True y TcpTestSucceeded True',
-                        b: 'PingSucceeded True y TcpTestSucceeded False',
-                        c: 'Ambos False'
+                        b: 'Ambos False',
+                        c: 'PingSucceeded True y TcpTestSucceeded False'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'La máquina sigue estando ahí —la capa 3 funciona igual de bien—, pero <strong>no hay nadie escuchando</strong> en ese puerto. El edificio existe; en ese piso no vive nadie.'
                 },
                 {

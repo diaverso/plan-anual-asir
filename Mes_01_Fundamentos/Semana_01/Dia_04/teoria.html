@@ -460,12 +460,12 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 repaso: '#extension',
                 text: '¿Cuál es el alcance típico de una red PAN?',
                 options: {
-                    a: '1 - 10 metros',
-                    b: '10 - 1000 metros',
-                    c: '1 - 50 kilómetros',
-                    d: 'Más de 50 kilómetros'
+                    a: '10 - 1000 metros',
+                    b: '1 - 50 kilómetros',
+                    c: 'Más de 50 kilómetros',
+                    d: '1 - 10 metros'
                 },
-                answer: 'a',
+                answer: 'd',
                 feedback: 'La PAN cubre el espacio personal inmediato del usuario, unos 10 metros. Usa Bluetooth, NFC, USB o Zigbee.'
             },
             {
@@ -473,12 +473,12 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 repaso: '#extension',
                 text: 'Una empresa interconecta 8 sedes repartidas por una misma ciudad mediante fibra propia. ¿Qué tipo de red es?',
                 options: {
-                    a: 'LAN',
-                    b: 'PAN',
-                    c: 'MAN',
+                    a: 'MAN',
+                    b: 'LAN',
+                    c: 'PAN',
                     d: 'WAN'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'La MAN cubre el área de una ciudad, entre 1 y 50 km, interconectando varias LAN. La fibra óptica es su tecnología habitual.'
             },
             {
@@ -487,11 +487,11 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 text: 'Además de la distancia, ¿qué criterio distingue realmente una LAN de una WAN?',
                 options: {
                     a: 'La velocidad del enlace',
-                    b: 'Quién posee el medio de transmisión',
-                    c: 'El número de equipos conectados',
+                    b: 'El número de equipos conectados',
+                    c: 'Quién posee el medio de transmisión',
                     d: 'El sistema operativo utilizado'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'En una LAN el cable es propio y se puede usar libremente. En una WAN se atraviesa terreno público y hay que contratar a un operador, lo que condiciona coste y velocidad.'
             },
             {
@@ -500,11 +500,11 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 text: '¿Qué tecnología es propia de una LAN?',
                 options: {
                     a: 'MPLS',
-                    b: 'Bluetooth',
-                    c: 'Ethernet (IEEE 802.3)',
+                    b: 'Ethernet (IEEE 802.3)',
+                    c: 'Bluetooth',
                     d: 'Enlace satelital'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Ethernet y Wi-Fi son las tecnologías LAN. Bluetooth corresponde a PAN, y MPLS o el satélite son tecnologías WAN.'
             },
             {
@@ -526,11 +526,11 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 text: '¿Cuál de estas afirmaciones sobre Internet es correcta?',
                 options: {
                     a: 'Internet es una MAN de gran tamaño',
-                    b: 'Internet es una WAN, pero no toda WAN es Internet',
-                    c: 'WAN e Internet son exactamente sinónimos',
+                    b: 'WAN e Internet son exactamente sinónimos',
+                    c: 'Internet es una WAN, pero no toda WAN es Internet',
                     d: 'Internet no se clasifica por extensión'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Internet es la WAN por excelencia, pero una empresa puede tener su propia WAN privada con MPLS que no pase por Internet en ningún momento.'
             },
             {
@@ -539,11 +539,11 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 text: '¿Qué es exactamente una WLAN?',
                 options: {
                     a: 'Una categoría intermedia entre LAN y MAN',
-                    b: 'Una LAN que utiliza tecnología inalámbrica',
-                    c: 'Una WAN de baja velocidad',
-                    d: 'Una red de almacenamiento'
+                    b: 'Una WAN de baja velocidad',
+                    c: 'Una red de almacenamiento',
+                    d: 'Una LAN que utiliza tecnología inalámbrica'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'WLAN es simplemente una LAN inalámbrica (Wi-Fi). El alcance es el mismo que el de una LAN: lo único que cambia es el medio.'
             },
             {
@@ -551,12 +551,12 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 repaso: '#otras',
                 text: '¿Por qué la SAN no encaja en la clasificación por alcance?',
                 options: {
-                    a: 'Porque siempre ocupa más de 50 km',
-                    b: 'Porque se clasifica por su finalidad: conectar servidores con el almacenamiento',
+                    a: 'Porque se clasifica por su finalidad: conectar servidores con el almacenamiento',
+                    b: 'Porque siempre ocupa más de 50 km',
                     c: 'Porque es una red inalámbrica',
                     d: 'Porque es un tipo de VPN'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'La SAN (Storage Area Network) se define por su cometido, no por su extensión: dar a los servidores acceso a las cabinas de discos como si fueran locales.'
             },
             {
@@ -565,11 +565,11 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 text: '¿Qué caracteriza a una red privada?',
                 options: {
                     a: 'Que cualquiera puede conectarse contratando el servicio',
-                    b: 'Que el acceso está restringido a la organización propietaria',
-                    c: 'Que siempre usa cifrado',
-                    d: 'Que su alcance nunca supera un edificio'
+                    b: 'Que siempre usa cifrado',
+                    c: 'Que su alcance nunca supera un edificio',
+                    d: 'Que el acceso está restringido a la organización propietaria'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La red privada pertenece a la organización, que controla totalmente la infraestructura y restringe el acceso. Eso le da alta seguridad a cambio de inversión.'
             },
             {
@@ -578,11 +578,11 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 text: '¿Qué es una VPN?',
                 options: {
                     a: 'Una línea física dedicada entre dos sedes',
-                    b: 'Una topología de red en malla',
-                    c: 'Una red privada que viaja cifrada sobre infraestructura pública',
+                    b: 'Una red privada que viaja cifrada sobre infraestructura pública',
+                    c: 'Una topología de red en malla',
                     d: 'Un tipo de cableado estructurado'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'La VPN crea un túnel cifrado sobre una red pública como Internet: aporta la privacidad de una red privada al coste de una pública.'
             },
             {
@@ -590,12 +590,12 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 repaso: '#vpn',
                 text: 'Un teletrabajador se conecta desde casa a los recursos de su empresa mediante un túnel cifrado. ¿Qué tipo de VPN es?',
                 options: {
-                    a: 'VPN de acceso remoto',
-                    b: 'VPN sitio a sitio',
-                    c: 'VPN de almacenamiento',
+                    a: 'VPN sitio a sitio',
+                    b: 'VPN de almacenamiento',
+                    c: 'VPN de acceso remoto',
                     d: 'VPN metropolitana'
                 },
-                answer: 'a',
+                answer: 'c',
                 feedback: 'La VPN de acceso remoto conecta a un usuario individual con la red corporativa. La sitio a sitio, en cambio, une permanentemente dos sedes completas.'
             },
             {
@@ -603,12 +603,12 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 repaso: '#vpn',
                 text: '¿Cuál es la principal desventaja de una VPN sobre Internet frente a una línea dedicada?',
                 options: {
-                    a: 'Es mucho más cara',
-                    b: 'Tarda meses en desplegarse',
-                    c: 'No garantiza ancho de banda ni latencia: funciona en modo best effort',
+                    a: 'No garantiza ancho de banda ni latencia: funciona en modo best effort',
+                    b: 'Es mucho más cara',
+                    c: 'Tarda meses en desplegarse',
                     d: 'No permite cifrar el tráfico'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'La VPN es barata, rápida de desplegar y escalable, pero comparte la infraestructura pública: no hay SLA de capacidad ni de latencia.'
             },
             {
@@ -630,11 +630,11 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 text: 'Ordenados de menor a mayor alcance, los tipos de red son:',
                 options: {
                     a: 'LAN → PAN → MAN → WAN',
-                    b: 'PAN → LAN → MAN → WAN',
-                    c: 'PAN → MAN → LAN → WAN',
+                    b: 'PAN → MAN → LAN → WAN',
+                    c: 'PAN → LAN → MAN → WAN',
                     d: 'WAN → MAN → LAN → PAN'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'PAN (10 m) → LAN (edificio) → MAN (ciudad) → WAN (sin límite). Cada salto implica un cambio de tecnología y de propietario del medio.'
             },
             {
@@ -643,11 +643,11 @@ Con VPN:   [Sede A] ═══ túnel cifrado ═══ Internet ═══ [Sede 
                 text: 'La red Wi-Fi abierta de una cafetería se clasifica como:',
                 options: {
                     a: 'Red privada, porque el local es de propiedad privada',
-                    b: 'Red pública, porque cualquier cliente puede acceder a ella',
-                    c: 'VPN',
-                    d: 'SAN'
+                    b: 'VPN',
+                    c: 'SAN',
+                    d: 'Red pública, porque cualquier cliente puede acceder a ella'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La clasificación se refiere al acceso, no a la titularidad del local: al ser accesible por cualquiera es una red pública, y por eso conviene usar VPN al conectarse.'
             }
         ]

@@ -161,11 +161,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> ¿Por qué el DNS va antes que el directorio?',
                     opciones: {
                         a: 'Por convenio, no hay razón técnica',
-                        b: 'Porque el propio directorio se localiza por nombre, y sin DNS los clientes no lo encuentran',
-                        c: 'Porque el DNS asigna las contraseñas',
+                        b: 'Porque el DNS asigna las contraseñas',
+                        c: 'Porque el propio directorio se localiza por nombre, y sin DNS los clientes no lo encuentran',
                         d: 'Porque el directorio no usa la red'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Los clientes no llevan escrita la dirección IP de su controlador de dominio: la buscan por DNS. Sin resolución de nombres, el directorio puede estar perfectamente encendido y ser invisible.',
                     pistas: [
                         'Pregúntate cómo sabe un PC dónde está el servidor al que tiene que pedir permiso.'
@@ -175,12 +175,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> El DNS de una empresa es una máquina virtual, y su anfitrión se localiza por nombre. Tras un apagón, no arranca nada. ¿Cómo se llama ese problema y cómo se evita?',
                     opciones: {
-                        a: 'Cuello de botella; se evita con más memoria',
-                        b: 'Dependencia circular; se evita dejando IP fijas y documentadas en la infraestructura',
+                        a: 'Dependencia circular; se evita dejando IP fijas y documentadas en la infraestructura',
+                        b: 'Cuello de botella; se evita con más memoria',
                         c: 'Desajuste de dúplex; se evita con autonegociación',
                         d: 'Punto único de fallo; se evita con RAID'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El anfitrión necesita el DNS para ser localizado y el DNS necesita el anfitrión para existir. Es un error real y frecuente al virtualizarlo todo sin pensar en el orden de arranque.',
                     pistas: [
                         'Fíjate en la forma del problema: A necesita B y B necesita A.',
@@ -277,11 +277,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> ¿Qué tienen en común el primer aviso y el último?',
                     opciones: {
                         a: 'Nada: son problemas distintos',
-                        b: 'Los dos apuntan al DHCP, pero el último indica que la avería es general y no de un puesto',
-                        c: 'Los dos son de cableado',
-                        d: 'Los dos se resuelven reiniciando el equipo'
+                        b: 'Los dos son de cableado',
+                        c: 'Los dos se resuelven reiniciando el equipo',
+                        d: 'Los dos apuntan al DHCP, pero el último indica que la avería es general y no de un puesto'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'La diferencia entre «le pasa a uno» y «le pasa a todos los que han arrancado hoy» es la que separa revisar un puesto de ir corriendo al servidor. Es la primera pregunta que hay que hacer siempre.',
                     pistas: [
                         'Fíjate en el alcance de cada aviso: ¿cuánta gente está afectada?'
@@ -291,12 +291,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> Llega un séptimo aviso: «va todo lentísimo». Los usuarios afectados están repartidos por toda la oficina, en plantas distintas. ¿Qué descartas de entrada?',
                     opciones: {
-                        a: 'Un problema de cableado de un puesto concreto',
-                        b: 'Un problema del servidor',
-                        c: 'Un problema de la línea de Internet',
-                        d: 'No se puede descartar nada'
+                        a: 'Un problema del servidor',
+                        b: 'Un problema de la línea de Internet',
+                        c: 'No se puede descartar nada',
+                        d: 'Un problema de cableado de un puesto concreto'
                     },
-                    respuesta: 'a',
+                    respuesta: 'd',
                     explicacion: 'Un cable defectuoso afecta a <strong>un</strong> puesto. Si el síntoma aparece repartido por varias plantas, la causa tiene que estar en algo compartido: un servidor, un enlace troncal o la salida a Internet.',
                     pistas: [
                         'Pregúntate qué alcance puede tener cada causa posible.',
@@ -318,12 +318,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>a)</strong> ¿Necesitan un servicio de directorio?',
                     opciones: {
-                        a: 'No: con 35 personas se apañan con cuentas locales',
-                        b: 'Sí: manejan datos de clientes y necesitan permisos centralizados, revocación y auditoría',
+                        a: 'Sí: manejan datos de clientes y necesitan permisos centralizados, revocación y auditoría',
+                        b: 'No: con 35 personas se apañan con cuentas locales',
                         c: 'Solo si tienen más de una sede',
                         d: 'No, porque el correo es externo'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'No es solo el tamaño: es el <strong>tipo de datos</strong>. Con información fiscal de clientes hay que poder demostrar quién accedió a qué y cortar el acceso de forma verificable cuando alguien se marcha.',
                     pistas: [
                         'Fíjate en qué tipo de datos manejan, no solo en cuánta gente son.',
@@ -408,11 +408,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> En esa secuencia, ¿cuántos eslabones tendrían que fallar para que el usuario diga exactamente lo mismo, «no me va»?',
                     opciones: {
                         a: 'Solo el primero',
-                        b: 'Cualquiera de los seis: el síntoma que percibe el usuario es idéntico',
-                        c: 'Al menos tres a la vez',
+                        b: 'Al menos tres a la vez',
+                        c: 'Cualquiera de los seis: el síntoma que percibe el usuario es idéntico',
                         d: 'Ninguno: siempre da un error distinto'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Esta es la razón de ser del diagnóstico por capas. El usuario no puede darte el diagnóstico, solo el síntoma: el trabajo consiste en <strong>ir descartando eslabones de abajo hacia arriba</strong> con pruebas rápidas.',
                     pistas: [
                         'Ponte en el lugar del usuario: ¿distingue él en qué punto se rompió la cadena?'

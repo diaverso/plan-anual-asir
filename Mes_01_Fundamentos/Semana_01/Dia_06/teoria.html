@@ -523,11 +523,11 @@
                 text: '¿Cuántos enlaces necesita una malla completa de 6 nodos?',
                 options: {
                     a: '12 enlaces',
-                    b: '15 enlaces',
-                    c: '30 enlaces',
-                    d: '6 enlaces'
+                    b: '30 enlaces',
+                    c: '6 enlaces',
+                    d: '15 enlaces'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Aplicando N × (N−1) ÷ 2: 6 × 5 ÷ 2 = 15 enlaces.'
             },
             {
@@ -536,11 +536,11 @@
                 text: 'En una malla completa de 10 nodos, ¿cuántas interfaces necesita CADA nodo?',
                 options: {
                     a: '10',
-                    b: '45',
-                    c: '9',
+                    b: '9',
+                    c: '45',
                     d: '5'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Cada nodo se conecta a los otros N−1 = 9. El total de enlaces sería 45, pero eso es la suma de toda la red, no lo que soporta un solo equipo.'
             },
             {
@@ -548,12 +548,12 @@
                 repaso: '#malla',
                 text: '¿Por qué en la práctica se usa malla parcial en lugar de completa?',
                 options: {
-                    a: 'Porque la completa no aporta redundancia',
-                    b: 'Porque el coste y las interfaces crecen de forma cuadrática',
+                    a: 'Porque el coste y las interfaces crecen de forma cuadrática',
+                    b: 'Porque la completa no aporta redundancia',
                     c: 'Porque la completa solo funciona con fibra óptica',
                     d: 'Porque la parcial es más rápida'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Al doblar los nodos, los enlaces se multiplican por cuatro. Unos pocos enlaces bien elegidos aportan casi toda la tolerancia a fallos a una fracción del coste.'
             },
             {
@@ -600,12 +600,12 @@
                 repaso: '#arbol',
                 text: '¿Qué ventaja principal aporta el modelo jerárquico frente a una estrella única?',
                 options: {
-                    a: 'Elimina por completo los puntos de fallo',
-                    b: 'Reduce el coste del cableado',
-                    c: 'Permite escalar por partes y contener los fallos por bloque',
+                    a: 'Permite escalar por partes y contener los fallos por bloque',
+                    b: 'Elimina por completo los puntos de fallo',
+                    c: 'Reduce el coste del cableado',
                     d: 'Aumenta la velocidad de cada enlace individual'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Si crece una planta se añaden switches de acceso sin tocar el núcleo, y una avería en distribución afecta solo a su rama. Además limita los dominios de broadcast.'
             },
             {
@@ -614,11 +614,11 @@
                 text: '¿Cuántos dominios de colisión crea un hub con 6 equipos conectados?',
                 options: {
                     a: '6 dominios, uno por puerto',
-                    b: '1 dominio compartido por todos',
-                    c: '3 dominios',
-                    d: 'Ninguno: el hub los elimina'
+                    b: '3 dominios',
+                    c: 'Ninguno: el hub los elimina',
+                    d: '1 dominio compartido por todos'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El hub no segmenta: repite cada bit por todos los puertos, así que los 6 equipos comparten un único dominio de colisión con CSMA/CD.'
             },
             {
@@ -627,11 +627,11 @@
                 text: 'Un switch de 12 puertos con todos ocupados crea:',
                 options: {
                     a: '1 dominio de colisión',
-                    b: '12 dominios de colisión',
-                    c: '12 dominios de broadcast',
-                    d: '6 dominios de colisión'
+                    b: '12 dominios de broadcast',
+                    c: '6 dominios de colisión',
+                    d: '12 dominios de colisión'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El switch crea un dominio de colisión por puerto. En cambio, sin VLAN, los 12 puertos siguen perteneciendo a un único dominio de broadcast.'
             },
             {
@@ -641,10 +641,10 @@
                 options: {
                     a: 'Hub',
                     b: 'Switch sin VLAN',
-                    c: 'Repetidor',
-                    d: 'Router'
+                    c: 'Router',
+                    d: 'Repetidor'
                 },
-                answer: 'd',
+                answer: 'c',
                 feedback: 'El router opera en capa 3 y no reenvía broadcasts de capa 2, por lo que cada una de sus interfaces delimita un dominio de broadcast distinto.'
             },
             {
@@ -665,12 +665,12 @@
                 repaso: '#broadcast',
                 text: '¿Cómo se puede segmentar el broadcast sin usar un router?',
                 options: {
-                    a: 'Añadiendo más hubs',
-                    b: 'Configurando VLAN en un switch gestionable',
+                    a: 'Configurando VLAN en un switch gestionable',
+                    b: 'Añadiendo más hubs',
                     c: 'Instalando terminadores',
                     d: 'Usando cable de mayor categoría'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Cada VLAN constituye un dominio de broadcast independiente. Eso sí, para comunicar unas VLAN con otras sigue haciendo falta enrutamiento inter-VLAN.'
             },
             {
@@ -678,12 +678,12 @@
                 repaso: '#broadcast',
                 text: '¿Qué es una tormenta de broadcast?',
                 options: {
-                    a: 'Un ataque informático desde Internet',
-                    b: 'La multiplicación indefinida de tramas de difusión, típicamente por un bucle sin STP',
+                    a: 'La multiplicación indefinida de tramas de difusión, típicamente por un bucle sin STP',
+                    b: 'Un ataque informático desde Internet',
                     c: 'Un fallo del cableado estructurado',
                     d: 'La saturación del disco de un servidor'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Las tramas se replican sin fin consumiendo ancho de banda y CPU de todos los equipos, hasta colapsar la red. Es una de las averías más rápidas y graves en una LAN.'
             },
             {
@@ -692,11 +692,11 @@
                 text: 'Una red tiene un router con 2 interfaces, cada una hacia un switch. ¿Cuántos dominios de broadcast hay?',
                 options: {
                     a: '1',
-                    b: '2',
-                    c: '4',
-                    d: 'Depende del número de PCs'
+                    b: '4',
+                    c: 'Depende del número de PCs',
+                    d: '2'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Un dominio de broadcast por interfaz de router activa: 2. El número de PCs no influye, porque los switches no segmentan el broadcast.'
             },
             {

@@ -378,11 +378,11 @@
                 text: 'Un fabricante cambia la tecnología de la capa 1 de una red, de cable de cobre a fibra. ¿Qué hay que reprogramar en las capas de arriba?',
                 options: {
                     a: 'Todas: un cambio de medio afecta a toda la pila',
-                    b: 'Nada: cada capa ofrece un servicio sin contar cómo lo consigue',
-                    c: 'Solo la capa 2',
+                    b: 'Solo la capa 2',
+                    c: 'Nada: cada capa ofrece un servicio sin contar cómo lo consigue',
                     d: 'Solo las capas de aplicación'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es la razón de ser del modelo de capas. Cuando apareció el Wi-Fi no hubo que reescribir ni los navegadores ni TCP: la capa de arriba solo pide un servicio, sin saber cómo se presta.'
             },
             {
@@ -391,11 +391,11 @@
                 text: 'Un switch recibe una trama. ¿Qué dirección mira para decidir por dónde sacarla, y en qué capa trabaja?',
                 options: {
                     a: 'La IP de destino; capa 3',
-                    b: 'La MAC de destino; capa 2',
-                    c: 'El puerto de destino; capa 4',
-                    d: 'El nombre de dominio; capa 7'
+                    b: 'El puerto de destino; capa 4',
+                    c: 'El nombre de dominio; capa 7',
+                    d: 'La MAC de destino; capa 2'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Switch → MAC → <strong>capa 2</strong>. Router → IP → capa 3. Es la distinción que abre la Semana 4.'
             },
             {
@@ -429,12 +429,12 @@
                 repaso: '../Dia_01/teoria.html#capa1',
                 text: 'Un usuario dice que «no le llega Internet». Compruebas y su cable está desenchufado. ¿En qué capa está el problema?',
                 options: {
-                    a: 'Capa 1',
-                    b: 'Capa 2',
-                    c: 'Capa 3',
+                    a: 'Capa 2',
+                    b: 'Capa 3',
+                    c: 'Capa 1',
                     d: 'Capa 7'
                 },
-                answer: 'a',
+                answer: 'c',
                 feedback: 'Capa <strong>física</strong>. Y ese es justo el valor de diagnosticar por capas: sin enlace físico, no tiene sentido revisar la IP ni el navegador.'
             },
 
@@ -457,12 +457,12 @@
                 repaso: '../Dia_02/teoria.html#coste',
                 text: 'Con MTU de 1500 bytes, ¿cuál es el MSS de una conexión TCP?',
                 options: {
-                    a: '1500 bytes',
-                    b: '1480 bytes',
-                    c: '1460 bytes',
+                    a: '1460 bytes',
+                    b: '1500 bytes',
+                    c: '1480 bytes',
                     d: '1518 bytes'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'MSS = MTU − 20 (IP) − 20 (TCP) = <strong>1460</strong>. 1480 sería descontando solo IP; 1518 es la trama completa con cabecera Ethernet y FCS.'
             },
             {
@@ -471,11 +471,11 @@
                 text: 'En una web con candado, ¿en qué capa se cifra el contenido?',
                 options: {
                     a: 'En la 7, porque forma parte de HTTPS',
-                    b: 'En la 6: lo hace TLS, y cifrar es una forma de representar los datos',
-                    c: 'En la 4, porque va sobre TCP',
-                    d: 'En la 3, junto con IP'
+                    b: 'En la 4, porque va sobre TCP',
+                    c: 'En la 3, junto con IP',
+                    d: 'En la 6: lo hace TLS, y cifrar es una forma de representar los datos'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'HTTPS no es un protocolo aparte: es <strong>HTTP sobre TLS</strong>. Por eso el paso a HTTPS no obligó a cambiar ni TCP ni IP.'
             },
             {
@@ -483,12 +483,12 @@
                 repaso: '../Dia_02/teoria.html#desencapsulacion',
                 text: 'Un paquete atraviesa cuatro routers. ¿Quién lee la cabecera TCP?',
                 options: {
-                    a: 'Los cuatro routers',
-                    b: 'El primero y el último',
-                    c: 'Solo la capa 4 del equipo de destino',
+                    a: 'Solo la capa 4 del equipo de destino',
+                    b: 'Los cuatro routers',
+                    c: 'El primero y el último',
                     d: 'Ninguno: se descarta en el primer salto'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Es la <strong>comunicación entre pares</strong>. Los routers solo necesitan la cabecera IP para decidir por dónde reenviar.'
             },
             {
@@ -525,11 +525,11 @@
                 text: '¿Qué capas de OSI se corresponden con la capa de <strong>acceso a la red</strong> de TCP/IP?',
                 options: {
                     a: 'Solo la 1',
-                    b: 'La 1 y la 2',
-                    c: 'La 1, la 2 y la 3',
-                    d: 'Solo la 2'
+                    b: 'La 1, la 2 y la 3',
+                    c: 'Solo la 2',
+                    d: 'La 1 y la 2'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Física y enlace. Arriba, en cambio, TCP/IP funde <strong>tres</strong> capas de OSI en la de aplicación.'
             },
             {
@@ -538,11 +538,11 @@
                 text: '¿Qué relación temporal hay entre TCP/IP y OSI?',
                 options: {
                     a: 'TCP/IP se creó después, para simplificar OSI',
-                    b: 'TCP/IP ya funcionaba en 1983; OSI se publicó en 1984',
-                    c: 'Se publicaron el mismo año',
+                    b: 'Se publicaron el mismo año',
+                    c: 'TCP/IP ya funcionaba en 1983; OSI se publicó en 1984',
                     d: 'OSI es de los años sesenta y TCP/IP de los noventa'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es el dato que más se confunde. TCP/IP <strong>no simplificó OSI</strong>: es anterior, y OSI llegó cuando el otro ya estaba desplegado.'
             },
             {
@@ -564,11 +564,11 @@
                 text: 'En una ficha de producto lees «cortafuegos de capa 7». ¿Qué modelo se está usando y cómo lo sabes?',
                 options: {
                     a: 'TCP/IP, porque es el que se usa en la práctica',
-                    b: 'OSI: TCP/IP solo tiene cuatro capas, así que no existe una séptima',
-                    c: 'El modelo híbrido de cinco capas',
-                    d: 'No hay forma de saberlo'
+                    b: 'El modelo híbrido de cinco capas',
+                    c: 'No hay forma de saberlo',
+                    d: 'OSI: TCP/IP solo tiene cuatro capas, así que no existe una séptima'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El argumento es aritmético. Y resume la semana: <strong>TCP/IP para funcionar, OSI para hablar</strong>.'
             },
             {
@@ -576,12 +576,12 @@
                 repaso: '../Dia_03/teoria.html#pila',
                 text: '¿Sobre qué protocolo de transporte viaja DNS, y por qué?',
                 options: {
-                    a: 'Sobre TCP, porque es un servicio crítico',
-                    b: 'Sobre UDP: una consulta y una respuesta cortas, en las que montar una conexión costaría más que preguntar',
+                    a: 'Sobre UDP: una consulta y una respuesta cortas, en las que montar una conexión costaría más que preguntar',
+                    b: 'Sobre TCP, porque es un servicio crítico',
                     c: 'Sobre ICMP',
                     d: 'Directamente sobre IP, sin capa de transporte'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Que un servicio sea importante no implica que necesite garantías de transporte. Si la respuesta no llega, se repite la pregunta.'
             },
 
@@ -592,11 +592,11 @@
                 text: 'Necesitas la especificación de la trama Ethernet. ¿Qué organismo la publica?',
                 options: {
                     a: 'La IETF',
-                    b: 'El IEEE',
-                    c: 'El W3C',
-                    d: 'IANA'
+                    b: 'El W3C',
+                    c: 'IANA',
+                    d: 'El IEEE'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Capas 1 y 2 → <strong>IEEE</strong>, norma 802.3. Capas 3 a 7 → IETF. Números → IANA.'
             },
             {
@@ -605,11 +605,11 @@
                 text: 'HTTP y HTML aparecen juntos en cualquier web. ¿Los define el mismo organismo?',
                 options: {
                     a: 'Sí, los dos el W3C',
-                    b: 'Sí, los dos la IETF',
-                    c: 'No: HTTP es de la IETF y HTML del W3C',
+                    b: 'No: HTTP es de la IETF y HTML del W3C',
+                    c: 'Sí, los dos la IETF',
                     d: 'No: HTTP es del W3C y HTML de la IETF'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'HTTP es el <strong>protocolo</strong>; HTML, el <strong>formato</strong> del documento. Por HTTP se puede enviar un PDF sin una línea de HTML.'
             },
             {
@@ -617,12 +617,12 @@
                 repaso: '../Dia_04/teoria.html#rfc',
                 text: 'Se detecta un fallo en un protocolo definido en un RFC. ¿Qué se hace?',
                 options: {
-                    a: 'Se corrige el documento original',
-                    b: 'Se publica un RFC nuevo que deja obsoleto al anterior; el viejo se conserva',
+                    a: 'Se publica un RFC nuevo que deja obsoleto al anterior; el viejo se conserva',
+                    b: 'Se corrige el documento original',
                     c: 'Se retira y se borra del registro',
                     d: 'Se añade una nota al pie'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Los RFC <strong>nunca se modifican</strong>. Así, quien programó «según el RFC 791» sabe que ese documento dice hoy lo mismo que en 1981.'
             },
             {
@@ -643,12 +643,12 @@
                 repaso: '../Dia_04/teoria.html#leer',
                 text: 'Un RFC dice que una implementación <strong>SHOULD</strong> hacer algo y tu equipo no lo hace. ¿Qué significa?',
                 options: {
-                    a: 'Que incumple el estándar y no es válido',
-                    b: 'Que es una recomendación: se puede incumplir, pero conviene saber por qué',
+                    a: 'Que es una recomendación: se puede incumplir, pero conviene saber por qué',
+                    b: 'Que incumple el estándar y no es válido',
                     c: 'Que es equivalente a MUST',
                     d: 'Que el RFC está obsoleto'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Ahí está la diferencia entre una <strong>incompatibilidad</strong> y una decisión de diseño. Cuando dos equipos «casi» se entienden, suele haber un <em>SHOULD</em> por medio.'
             },
 
@@ -671,12 +671,12 @@
                 repaso: '../Dia_03/teoria.html#correspondencia',
                 text: 'Un número de puerto. ¿En qué capa de OSI está, en cuál de TCP/IP, y quién reparte los números?',
                 options: {
-                    a: 'OSI 4, TCP/IP transporte, IANA',
-                    b: 'OSI 4, TCP/IP aplicación, IEEE',
+                    a: 'OSI 4, TCP/IP aplicación, IEEE',
+                    b: 'OSI 4, TCP/IP transporte, IANA',
                     c: 'OSI 3, TCP/IP internet, IANA',
                     d: 'OSI 7, TCP/IP aplicación, IETF'
                 },
-                answer: 'a',
+                answer: 'b',
                 feedback: 'Las dos capas del medio coinciden en ambos modelos, así que el puerto es de transporte en los dos. Y el reparto de números es siempre de <strong>IANA</strong>.'
             },
             {
@@ -685,11 +685,11 @@
                 text: 'Capturas tráfico con Wireshark y ves que la MAC de destino de tu petición web es la de tu router, no la del servidor. ¿Es correcto?',
                 options: {
                     a: 'No: debería ser la del servidor',
-                    b: 'Sí: la MAC solo llega a un salto, así que la de destino es siempre la del siguiente aparato',
-                    c: 'No: indica que hay un problema de enrutamiento',
-                    d: 'Sí, pero solo porque se usa HTTP y no HTTPS'
+                    b: 'No: indica que hay un problema de enrutamiento',
+                    c: 'Sí, pero solo porque se usa HTTP y no HTTPS',
+                    d: 'Sí: la MAC solo llega a un salto, así que la de destino es siempre la del siguiente aparato'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Y es la comprobación práctica de lo del Día 1: la capa 2 tiene alcance de <strong>un salto</strong>, así que la MAC del servidor no aparece por ningún sitio de tu red.'
             },
             {

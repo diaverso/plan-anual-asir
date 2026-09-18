@@ -632,12 +632,12 @@
                 repaso: '#router',
                 text: 'Llega a un router una trama de difusión, dirigida a FF:FF:FF:FF:FF:FF. ¿Qué hace?',
                 options: {
-                    a: 'La reenvía por todas sus interfaces',
-                    b: 'No la reenvía: la difusión se detiene en él',
+                    a: 'No la reenvía: la difusión se detiene en él',
+                    b: 'La reenvía por todas sus interfaces',
                     c: 'La reenvía solo por la interfaz de Internet',
                     d: 'La convierte en unicast'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Y por eso <strong>sí separa dominios de broadcast</strong>. La difusión significa «a todos los de mi red», y el router marca justamente dónde acaba esa red.'
             },
             {
@@ -646,11 +646,11 @@
                 text: '¿Cuántas direcciones IP tiene un router que une tres redes?',
                 options: {
                     a: 'Una',
-                    b: 'Tres: una por cada red que une',
-                    c: 'Ninguna: es transparente como un switch',
+                    b: 'Ninguna: es transparente como un switch',
+                    c: 'Tres: una por cada red que une',
                     d: 'Depende del fabricante'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Y cada una de esas tres es la <strong>puerta de enlace</strong> de su red. Por eso la puerta de enlace que configuras siempre pertenece a tu propia red.'
             },
             {
@@ -659,11 +659,11 @@
                 text: '¿Qué guarda la tabla de rutas de un router?',
                 options: {
                     a: 'Direcciones MAC y puertos',
-                    b: 'Redes con su siguiente salto, interfaz y métrica',
-                    c: 'Una entrada por cada equipo de la red',
-                    d: 'Nombres de dominio'
+                    b: 'Una entrada por cada equipo de la red',
+                    c: 'Nombres de dominio',
+                    d: 'Redes con su siguiente salto, interfaz y métrica'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La a es la tabla del switch. Guardar <strong>redes</strong> y no equipos es lo que hace posible que un router de Internet funcione con una tabla manejable.'
             },
             {
@@ -684,12 +684,12 @@
                 repaso: '#longest',
                 text: 'Un paquete va a 10.0.5.20. Encajan <code>0.0.0.0/0</code> (métrica 1) y <code>10.0.5.0/24</code> (métrica 100). ¿Cuál se usa?',
                 options: {
-                    a: 'La 0.0.0.0/0, porque tiene mejor métrica',
-                    b: 'La 10.0.5.0/24, porque el prefijo más largo se aplica antes que la métrica',
+                    a: 'La 10.0.5.0/24, porque el prefijo más largo se aplica antes que la métrica',
+                    b: 'La 0.0.0.0/0, porque tiene mejor métrica',
                     c: 'Se reparte el tráfico entre las dos',
                     d: 'Ninguna: hay conflicto'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Es el error clásico. La métrica <strong>solo desempata entre rutas igual de específicas</strong>: una métrica excelente no salva a una ruta menos específica.'
             },
             {
@@ -698,11 +698,11 @@
                 text: '¿Por qué tiene sentido que gane la ruta más específica?',
                 options: {
                     a: 'Porque suele ser la más rápida',
-                    b: 'Porque cuanto más largo es el prefijo menos direcciones abarca, así que la información es más precisa',
-                    c: 'Porque se configuró más tarde',
-                    d: 'Es una convención sin justificación'
+                    b: 'Porque se configuró más tarde',
+                    c: 'Es una convención sin justificación',
+                    d: 'Porque cuanto más largo es el prefijo menos direcciones abarca, así que la información es más precisa'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Una <code>/0</code> dice «no sé nada, prueba por aquí»; una <code>/24</code> dice «conozco exactamente esas 256 direcciones». Se hace caso a quien tiene mejor información.'
             },
             {
@@ -711,11 +711,11 @@
                 text: 'Un paquete cruza un router. ¿Qué le pasa a la cabecera Ethernet?',
                 options: {
                     a: 'Se reenvía intacta',
-                    b: 'Se descarta entera y el router construye una nueva, con su MAC como origen',
-                    c: 'Solo se cambia la MAC de destino',
+                    b: 'Solo se cambia la MAC de destino',
+                    c: 'Se descarta entera y el router construye una nueva, con su MAC como origen',
                     d: 'Se elimina y no se vuelve a poner'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Y ahí está la explicación de por qué <strong>la MAC cambia en cada salto</strong>: no es que se modifique, es que la cabecera entera se rehace.'
             },
             {
@@ -724,12 +724,12 @@
                 text: 'Y a la cabecera IP, ¿qué le pasa al cruzar un router?',
                 options: {
                     a: 'Se rehace igual que la Ethernet',
-                    b: 'Se lee pero no se modifica, salvo descontar uno al TTL',
-                    c: 'Se cambia la IP de destino por la del siguiente salto',
+                    b: 'Se cambia la IP de destino por la del siguiente salto',
+                    c: 'Se lee pero no se modifica, salvo descontar uno al TTL',
                     d: 'Se cifra'
                 },
-                answer: 'b',
-                feedback: 'Por eso las IP viajan <strong>de extremo a extremo</strong>. La c describe un error muy común: el siguiente salto se resuelve con la <strong>MAC</strong>, no cambiando la IP de destino.'
+                answer: 'c',
+                feedback: 'Por eso las IP viajan <strong>de extremo a extremo</strong>. La b describe un error muy común: el siguiente salto se resuelve con la <strong>MAC</strong>, no cambiando la IP de destino.'
             },
             {
                 topic: 'Proceso de enrutado',
@@ -749,12 +749,12 @@
                 repaso: '#llenar',
                 text: '¿Por qué un router no puede aprender sus rutas escuchando, como hace el switch?',
                 options: {
-                    a: 'Porque no tiene suficiente memoria',
-                    b: 'Porque debe conocer redes a muchos saltos, de las que nunca le llegará tráfico que delate dónde están',
+                    a: 'Porque debe conocer redes a muchos saltos, de las que nunca le llegará tráfico que delate dónde están',
+                    b: 'Porque no tiene suficiente memoria',
                     c: 'Porque las direcciones IP cambian',
                     d: 'Sí puede: aprende igual que el switch'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El switch tiene a todos sus destinos <strong>a un cable de distancia</strong>. Escuchar solo funciona cuando el vecino está al alcance del oído.'
             },
             {
@@ -763,11 +763,11 @@
                 text: '¿Qué ventaja tienen las rutas dinámicas frente a las estáticas?',
                 options: {
                     a: 'Son más seguras',
-                    b: 'Se adaptan solas: si un enlace falla, los routers buscan otro camino',
-                    c: 'Ocupan menos memoria',
-                    d: 'No necesitan ninguna configuración'
+                    b: 'Ocupan menos memoria',
+                    c: 'No necesitan ninguna configuración',
+                    d: 'Se adaptan solas: si un enlace falla, los routers buscan otro camino'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Con rutas estáticas, un enlace caído obliga a que alguien vaya a cambiar la configuración. Con RIP u OSPF, los routers se reorganizan solos.'
             },
             {
@@ -789,11 +789,11 @@
                 text: '<em>Repaso.</em> Un router con 3 interfaces, y en cada una un switch de 8 puertos lleno. ¿Cuántos dominios de broadcast hay?',
                 options: {
                     a: '1',
-                    b: '3: uno por interfaz del router',
-                    c: '24',
-                    d: '8'
+                    b: '24',
+                    c: '8',
+                    d: '3: uno por interfaz del router'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Los switches no separan broadcast, así que cada uno mantiene el suyo unido; el que separa es el <strong>router</strong>, con uno por interfaz. Dominios de colisión sí habría 24.'
             }
         ]

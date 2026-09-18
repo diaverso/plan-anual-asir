@@ -117,12 +117,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> ¿Cuál es la diferencia de fondo entre los dos?',
                     opciones: {
-                        a: 'El router es más caro y más rápido',
-                        b: 'El switch trabaja dentro de una red y el router entre redes distintas',
+                        a: 'El switch trabaja dentro de una red y el router entre redes distintas',
+                        b: 'El router es más caro y más rápido',
                         c: 'El switch es para empresas y el router para casas',
                         d: 'El router tiene más puertos'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'De ahí sale todo lo demás. Un switch <strong>monta</strong> una red; un router es su <strong>frontera</strong>. Por eso uno propaga la difusión y el otro la detiene.',
                     pistas: [
                         'Piensa en qué une cada uno: ¿equipos o redes?'
@@ -133,11 +133,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> Un router es más lento que un switch. ¿Por qué?',
                     opciones: {
                         a: 'Porque tiene menos memoria',
-                        b: 'Porque hace siete pasos por paquete —desencapsular, consultar la tabla, descontar el TTL, rehacer la trama— frente al único del switch',
-                        c: 'Porque sus puertos son más lentos',
+                        b: 'Porque sus puertos son más lentos',
+                        c: 'Porque hace siete pasos por paquete —desencapsular, consultar la tabla, descontar el TTL, rehacer la trama— frente al único del switch',
                         d: 'Porque siempre usa software'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'El switch mira seis bytes y reenvía. El router <strong>deshace y rehace</strong> la trama entera en cada salto. Es más trabajo, y por eso dentro de las redes grandes se usan switches de capa 3.',
                     pistas: [
                         'Compara cuánto tiene que hacer cada uno con una trama que le llega.'
@@ -186,11 +186,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Qué es la <strong>puerta de enlace</strong> de un equipo?',
                     opciones: {
                         a: 'La dirección del servidor DNS',
-                        b: 'La IP del router en la propia red del equipo: la salida hacia las demás redes',
-                        c: 'La IP pública del router',
-                        d: 'La dirección de difusión de la red'
+                        b: 'La IP pública del router',
+                        c: 'La dirección de difusión de la red',
+                        d: 'La IP del router en la propia red del equipo: la salida hacia las demás redes'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Siempre pertenece a <strong>tu</strong> red, porque es el lado del router que da a tu lado. Si estuviera en otra red no podrías ni hablar con ella.',
                     pistas: [
                         '¿A qué red tiene que pertenecer para que puedas entregarle una trama directamente?'
@@ -235,11 +235,11 @@ E)  192.168.0.0/16   → 10.0.0.7     métrica 5</code></pre>
                     pregunta: '<strong>b)</strong> Para <code>10.1.5.77</code> gana la ruta D, con métrica 50, frente a la A con métrica 1. ¿Por qué?',
                     opciones: {
                         a: 'Es un error: debería ganar la de métrica 1',
-                        b: 'Porque el prefijo más largo se aplica antes que la métrica, y /24 es más específico que /0',
-                        c: 'Porque la ruta A está desactivada',
-                        d: 'Porque D se configuró después'
+                        b: 'Porque la ruta A está desactivada',
+                        c: 'Porque D se configuró después',
+                        d: 'Porque el prefijo más largo se aplica antes que la métrica, y /24 es más específico que /0'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'La métrica <strong>solo</strong> desempata entre rutas igual de específicas. Una métrica excelente no salva a una ruta menos específica: es el error más repetido del tema.',
                     pistas: [
                         '¿Cuál es el primer criterio y cuál el segundo?'
@@ -249,12 +249,12 @@ E)  192.168.0.0/16   → 10.0.0.7     métrica 5</code></pre>
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> Se añade la ruta <code>F) 10.1.5.0/24 → 10.0.0.11, métrica 20</code>. ¿Qué pasa con <code>10.1.5.77</code>?',
                     opciones: {
-                        a: 'Sigue usando la D',
-                        b: 'Pasa a usar la F: empata en prefijo con la D, así que ahora sí desempata la métrica, y 20 es mejor que 50',
+                        a: 'Pasa a usar la F: empata en prefijo con la D, así que ahora sí desempata la métrica, y 20 es mejor que 50',
+                        b: 'Sigue usando la D',
                         c: 'Se reparte entre D y F',
                         d: 'Hay conflicto y se descarta el paquete'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Aquí sí interviene la métrica, porque las dos rutas son <strong>igual de específicas</strong>. Es exactamente el caso para el que existe ese segundo criterio.',
                     pistas: [
                         '¿Tienen D y F el mismo prefijo?'
@@ -343,11 +343,11 @@ E)  192.168.0.0/16   → 10.0.0.7     métrica 5</code></pre>
                     pregunta: '<strong>c)</strong> ¿Qué pasaría si el TTL no existiera?',
                     opciones: {
                         a: 'Nada: los paquetes llegarían igual',
-                        b: 'Un paquete atrapado en un bucle de enrutamiento circularía para siempre, consumiendo ancho de banda',
-                        c: 'Los paquetes llegarían más rápido',
+                        b: 'Los paquetes llegarían más rápido',
+                        c: 'Un paquete atrapado en un bucle de enrutamiento circularía para siempre, consumiendo ancho de banda',
                         d: 'No se podría hacer tracert'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Y no sería un paquete: serían todos los que entraran en ese bucle, acumulándose hasta saturar los enlaces. El TTL es un límite duro que garantiza que <strong>todo paquete acaba desapareciendo</strong>.',
                     pistas: [
                         '¿Qué pasa si dos routers mal configurados se pasan el paquete el uno al otro?'
@@ -403,12 +403,12 @@ E)  192.168.0.0/16   → 10.0.0.7     métrica 5</code></pre>
                     tipo: 'opcion',
                     pregunta: '<strong>a)</strong> Un equipo puede hacer ping a todos los de su red, pero a ninguno de fuera. La IP y la máscara son correctas. ¿Qué revisas?',
                     opciones: {
-                        a: 'El cable de red',
-                        b: 'La puerta de enlace: para su propia red usa la ruta directa, pero todo lo demás depende de la ruta por defecto',
+                        a: 'La puerta de enlace: para su propia red usa la ruta directa, pero todo lo demás depende de la ruta por defecto',
+                        b: 'El cable de red',
                         c: 'El servidor DNS',
                         d: 'La dirección MAC'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El síntoma lo dice todo: la capa 1 y la 2 funcionan —habla con sus vecinos— y la IP es correcta. Lo único que falla es <strong>salir</strong>, y de eso se ocupa la ruta por defecto.',
                     pistas: [
                         '¿Interviene la puerta de enlace cuando hablas con un equipo de tu propia red?'

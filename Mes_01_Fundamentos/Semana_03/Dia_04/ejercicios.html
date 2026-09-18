@@ -99,11 +99,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> ¿Por qué HTTP y HTML los definen organismos distintos?',
                     opciones: {
                         a: 'Por razones históricas, sin ninguna lógica',
-                        b: 'Porque HTTP es un protocolo de red y HTML es el formato del documento que se transporta',
-                        c: 'Porque HTML es más moderno',
+                        b: 'Porque HTML es más moderno',
+                        c: 'Porque HTTP es un protocolo de red y HTML es el formato del documento que se transporta',
                         d: 'Porque HTTP es de pago y HTML gratuito'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'La prueba está en que por HTTP se puede enviar una imagen, un vídeo o un PDF, <strong>sin una línea de HTML</strong>. El protocolo transporta; el formato es lo transportado.',
                     pistas: [
                         '¿Se puede usar HTTP para enviar algo que no sea HTML?'
@@ -230,11 +230,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> ¿Qué ventaja tiene que un RFC no se modifique nunca?',
                     opciones: {
                         a: 'Ahorra trabajo a los autores',
-                        b: 'Que una referencia significa siempre lo mismo: dos equipos programados con años de diferencia siguen la misma especificación',
-                        c: 'Que los RFC ocupan menos espacio',
-                        d: 'Ninguna: es una limitación heredada del papel'
+                        b: 'Que los RFC ocupan menos espacio',
+                        c: 'Ninguna: es una limitación heredada del papel',
+                        d: 'Que una referencia significa siempre lo mismo: dos equipos programados con años de diferencia siguen la misma especificación'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Si se editaran sobre la marcha, dos fabricantes podrían programar «según el mismo RFC» y ser incompatibles, sin forma de saber quién siguió qué versión. Además queda un <strong>archivo histórico completo</strong> de la evolución de Internet.',
                     pistas: [
                         'Piensa en dos fabricantes que programan el mismo protocolo con diez años de diferencia.'
@@ -260,12 +260,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>d)</strong> ¿Qué hace falta para proponer un cambio en un protocolo de Internet a través de la IETF?',
                     opciones: {
-                        a: 'Ser miembro de pago y representar a una empresa',
-                        b: 'Nada especial: es abierta a cualquiera, se decide por consenso aproximado y se valora que haya código que funcione',
+                        a: 'Nada especial: es abierta a cualquiera, se decide por consenso aproximado y se valora que haya código que funcione',
+                        b: 'Ser miembro de pago y representar a una empresa',
                         c: 'La aprobación previa de la ISO',
                         d: 'Una votación entre los países miembros'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Es la diferencia de método que explicaba lo de ayer. Frente a un comité que vota especificaciones, un grupo abierto que escribe implementaciones y se queda con la que funciona.',
                     pistas: [
                         'Recuerda la frase de David Clark del Día 3.'
@@ -343,11 +343,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> Compras un switch de un fabricante y un punto de acceso de otro. ¿Qué te permite darlos por compatibles antes de probarlos?',
                     opciones: {
                         a: 'Que sean del mismo año',
-                        b: 'Que ambos declaren cumplir las mismas normas: 802.3 para el cableado, 802.11 para el inalámbrico',
-                        c: 'Nada: hay que probarlo siempre',
-                        d: 'Que sean del mismo distribuidor'
+                        b: 'Nada: hay que probarlo siempre',
+                        c: 'Que sean del mismo distribuidor',
+                        d: 'Que ambos declaren cumplir las mismas normas: 802.3 para el cableado, 802.11 para el inalámbrico'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Es <strong>para lo que sirven los estándares</strong>: comprar de fabricantes distintos sin quedarte atado a ninguno. Probar sigue siendo buena idea, pero la norma es lo que hace razonable esperar que funcione.',
                     pistas: [
                         '¿Qué información de la caja te dice si dos aparatos se van a entender?'
@@ -358,11 +358,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Un servicio interno de tu empresa escucha en el puerto 8080. ¿Es incorrecto?',
                     opciones: {
                         a: 'Sí: el puerto de la web es el 80 y usar otro incumple el estándar',
-                        b: 'No: los puertos son una convención registrada, no una obligación. Basta con indicarlo en la dirección',
-                        c: 'Sí, salvo que se pida permiso a IANA',
+                        b: 'Sí, salvo que se pida permiso a IANA',
+                        c: 'No: los puertos son una convención registrada, no una obligación. Basta con indicarlo en la dirección',
                         d: 'No, porque el 8080 también está reservado para la web'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'IANA lleva un <strong>registro</strong>, no una ley. El registro sirve para que los demás sepan dónde llamar; si te sales de él, todo funciona igual pero hay que avisar: <code>http://servidor:8080</code>.',
                     pistas: [
                         'Recuerda los puertos raros que viste ayer en tus propias conexiones.'

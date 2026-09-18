@@ -546,11 +546,11 @@
                 text: 'Un router entiende de direcciones IP, pero también de MAC y de señales. ¿Cómo se clasifica entonces?',
                 options: {
                     a: 'Como dispositivo de capa 1, que es la más básica que usa',
-                    b: 'Como dispositivo de capa 3: se clasifica por la capa más alta que mira',
-                    c: 'Como dispositivo de las tres capas a la vez',
-                    d: 'Depende del fabricante'
+                    b: 'Como dispositivo de las tres capas a la vez',
+                    c: 'Depende del fabricante',
+                    d: 'Como dispositivo de capa 3: se clasifica por la capa más alta que mira'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Se clasifica por <strong>la capa más alta</strong>. Para llegar a la 3 hay que pasar por las dos de abajo, así que cada dispositivo incluye las capacidades de los inferiores.'
             },
             {
@@ -558,12 +558,12 @@
                 repaso: '#hub',
                 text: 'El equipo A envía una trama al equipo B a través de un hub de 8 puertos. ¿Qué ocurre?',
                 options: {
-                    a: 'El hub consulta su tabla y la envía solo al puerto de B',
-                    b: 'El hub la repite por los otros 7 puertos, y las tarjetas de los demás la descartan',
+                    a: 'El hub la repite por los otros 7 puertos, y las tarjetas de los demás la descartan',
+                    b: 'El hub consulta su tabla y la envía solo al puerto de B',
                     c: 'El hub la descarta porque no conoce a B',
                     d: 'El hub la envía a B y avisa a los demás'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El hub <strong>no puede</strong> consultar ninguna tabla: la MAC está en la capa 2 y él no llega ahí. Repite a ciegas, y el filtrado lo hace cada tarjeta al final.'
             },
             {
@@ -572,11 +572,11 @@
                 text: 'Una red cableada con un hub central, ¿qué topología tiene?',
                 options: {
                     a: 'Física de bus y lógica de estrella',
-                    b: 'Física de estrella y lógica de bus',
-                    c: 'Física y lógica de estrella',
+                    b: 'Física y lógica de estrella',
+                    c: 'Física de estrella y lógica de bus',
                     d: 'Física y lógica de bus'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Los cables van todos al centro (<strong>estrella física</strong>), pero eléctricamente todos comparten el mismo medio (<strong>bus lógico</strong>). Es el ejemplo clásico de que las dos topologías no coinciden.'
             },
             {
@@ -597,12 +597,12 @@
                 repaso: '#problema',
                 text: '¿Por qué una red con hub es un problema de seguridad?',
                 options: {
-                    a: 'Porque los hubs no tienen contraseña',
-                    b: 'Porque la trama pasa por el cable de todos, y en modo promiscuo cualquiera puede leerla',
+                    a: 'Porque la trama pasa por el cable de todos, y en modo promiscuo cualquiera puede leerla',
+                    b: 'Porque los hubs no tienen contraseña',
                     c: 'Porque los hubs no cifran el tráfico',
                     d: 'No lo es: cada tarjeta descarta lo que no es suyo'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'La d describe el comportamiento normal, pero descartar es una decisión <strong>voluntaria</strong> de la tarjeta. En modo promiscuo deja de descartar y lo captura todo.'
             },
             {
@@ -612,10 +612,10 @@
                 options: {
                     a: 'Tener más puertos',
                     b: 'Regenerar mejor la señal',
-                    c: 'Decidir si dejar pasar una trama según su MAC de destino, en lugar de repetirla a ciegas',
-                    d: 'Trabajar en capa 3'
+                    c: 'Trabajar en capa 3',
+                    d: 'Decidir si dejar pasar una trama según su MAC de destino, en lugar de repetirla a ciegas'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Ahí está la frontera entre la capa 1 y la 2: uno <strong>repite</strong> y el otro <strong>decide</strong>. Es exactamente lo que hace un switch.'
             },
             {
@@ -624,11 +624,11 @@
                 text: 'Un switch de 16 puertos con 16 equipos conectados. ¿Cuántos dominios de colisión y de broadcast crea?',
                 options: {
                     a: '16 de colisión y 16 de broadcast',
-                    b: '16 de colisión y 1 de broadcast',
-                    c: '1 de colisión y 1 de broadcast',
+                    b: '1 de colisión y 1 de broadcast',
+                    c: '16 de colisión y 1 de broadcast',
                     d: '1 de colisión y 16 de broadcast'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Uno de colisión <strong>por puerto</strong>, pero <strong>un solo</strong> dominio de broadcast. Es la pregunta que más cae de todo el tema.'
             },
             {
@@ -650,11 +650,11 @@
                 text: 'Un switch de 8 puertos a 1 Gbps. ¿Qué velocidad tiene cada equipo conectado?',
                 options: {
                     a: '125 Mbps: se reparte entre los 8',
-                    b: '1 Gbps cada uno, y dos conversaciones distintas pueden ir a la vez',
-                    c: '1 Gbps entre todos',
+                    b: '1 Gbps entre todos',
+                    c: '1 Gbps cada uno, y dos conversaciones distintas pueden ir a la vez',
                     d: '500 Mbps por ser dúplex'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es la diferencia esencial con el hub: el ancho de banda es <strong>dedicado por puerto</strong>, no compartido, porque cada puerto es su propio dominio de colisión.'
             },
             {
@@ -662,12 +662,12 @@
                 repaso: '#comparativa',
                 text: 'Conectas un hub antiguo a uno de los puertos de tu switch, y cuelgas 4 equipos del hub. ¿Qué ocurre con las colisiones?',
                 options: {
-                    a: 'No hay colisiones: el switch las evita',
-                    b: 'Esos 4 equipos comparten un dominio de colisión entre ellos, aunque el resto de la red no se ve afectado',
+                    a: 'Esos 4 equipos comparten un dominio de colisión entre ellos, aunque el resto de la red no se ve afectado',
+                    b: 'No hay colisiones: el switch las evita',
                     c: 'Toda la red vuelve a tener un solo dominio de colisión',
                     d: 'El switch no admite un hub conectado'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El switch aísla ese puerto del resto, pero <strong>dentro</strong> del hub se mantiene el medio compartido. Ese puerto es un dominio de colisión con 4 equipos dentro.'
             },
             {
@@ -676,11 +676,11 @@
                 text: '¿Por qué dejaron de fabricarse hubs?',
                 options: {
                     a: 'Porque una norma los prohibió',
-                    b: 'Porque al pasar la decisión por MAC a hardware, el switch se abarató y no quedó motivo para preferir un hub',
-                    c: 'Porque no admitían más de 4 puertos',
-                    d: 'Porque no funcionaban con cable de par trenzado'
+                    b: 'Porque no admitían más de 4 puertos',
+                    c: 'Porque no funcionaban con cable de par trenzado',
+                    d: 'Porque al pasar la decisión por MAC a hardware, el switch se abarató y no quedó motivo para preferir un hub'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Mientras decidir por MAC exigía software, el switch era caro. Al hacerse en un circuito dedicado, la ventaja del hub —el precio— desapareció.'
             },
             {

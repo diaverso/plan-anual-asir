@@ -332,44 +332,44 @@
                 text: '¿Qué dispositivo retransmite las tramas por todos sus puertos sin analizar el destino?',
                 options: {
                     a: 'Switch',
-                    b: 'Hub',
-                    c: 'Router',
+                    b: 'Router',
+                    c: 'Hub',
                     d: 'Firewall'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'El hub opera en capa 1: repite eléctricamente cada bit por todos los puertos sin interpretar direcciones. Por eso genera colisiones y está obsoleto.'
             },
             {
                 text: '¿Qué nombre recibe la tabla que asocia direcciones MAC con puertos en un switch?',
                 options: {
-                    a: 'Tabla de enrutamiento',
-                    b: 'Tabla ARP',
-                    c: 'Tabla CAM',
+                    a: 'Tabla CAM',
+                    b: 'Tabla de enrutamiento',
+                    c: 'Tabla ARP',
                     d: 'Tabla NAT'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'La tabla CAM (Content Addressable Memory) guarda la correspondencia puerto ↔ MAC. El switch la construye aprendiendo la MAC de origen de cada trama recibida.'
             },
             {
                 text: 'Cuando un switch recibe una trama cuya MAC de destino NO está en su tabla CAM, ¿qué hace?',
                 options: {
                     a: 'Descarta la trama',
-                    b: 'La envía solo al primer puerto',
-                    c: 'Hace flooding: la envía por todos los puertos menos el de origen',
+                    b: 'Hace flooding: la envía por todos los puertos menos el de origen',
+                    c: 'La envía solo al primer puerto',
                     d: 'Consulta al router'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Ante un destino desconocido el switch hace flooding. Cuando el destino responde, aprende su MAC y a partir de entonces la envía en unicast.'
             },
             {
                 text: '¿Cuántos bits tiene una dirección MAC?',
                 options: {
                     a: '32 bits',
-                    b: '48 bits',
-                    c: '64 bits',
-                    d: '128 bits'
+                    b: '64 bits',
+                    c: '128 bits',
+                    d: '48 bits'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La MAC tiene 48 bits (6 bytes, 12 dígitos hexadecimales). Los 3 primeros bytes son el OUI del fabricante y los 3 últimos identifican la tarjeta.'
             },
             {
@@ -388,21 +388,21 @@
                 options: {
                     a: '1 dominio',
                     b: '2 dominios',
-                    c: '4 dominios',
-                    d: '8 dominios'
+                    c: '8 dominios',
+                    d: '4 dominios'
                 },
-                answer: 'd',
+                answer: 'c',
                 feedback: 'El switch crea un dominio de colisión por puerto, lo que permite full-duplex y elimina las colisiones. Sin embargo, todos siguen en el mismo dominio de broadcast.'
             },
             {
                 text: '¿Cuál es la principal diferencia entre un switch y un router?',
                 options: {
-                    a: 'El switch usa IP y el router usa MAC',
-                    b: 'El switch trabaja en capa 2 con MAC y el router en capa 3 con IP',
+                    a: 'El switch trabaja en capa 2 con MAC y el router en capa 3 con IP',
+                    b: 'El switch usa IP y el router usa MAC',
                     c: 'El router es más rápido que el switch',
                     d: 'No hay diferencia funcional'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El switch conmuta tramas dentro de una LAN usando MAC (capa 2). El router interconecta redes distintas usando IP (capa 3) y delimita dominios de broadcast.'
             },
             {
@@ -410,54 +410,54 @@
                 options: {
                     a: '100 Mbps dedicados',
                     b: '400 Mbps en total',
-                    c: 'Unos 25 Mbps compartidos',
-                    d: '200 Mbps en full-duplex'
+                    c: '200 Mbps en full-duplex',
+                    d: 'Unos 25 Mbps compartidos'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'El hub reparte los 100 Mbps entre todos los equipos porque comparten el medio: 100/4 = 25 Mbps aproximados, y además en half-duplex con colisiones.'
             },
             {
                 text: '¿Qué dispositivo permite conectar dispositivos inalámbricos a una red cableada?',
                 options: {
-                    a: 'Bridge',
-                    b: 'Repetidor',
-                    c: 'Access Point',
+                    a: 'Access Point',
+                    b: 'Bridge',
+                    c: 'Repetidor',
                     d: 'Gateway'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'El Access Point actúa como puente inalámbrico: traduce entre tramas 802.11 (Wi-Fi) y 802.3 (Ethernet), integrando los clientes inalámbricos en la LAN.'
             },
             {
                 text: 'En una tabla de enrutamiento, ¿qué significa la entrada 0.0.0.0 con máscara 0.0.0.0?',
                 options: {
                     a: 'Una red inalcanzable',
-                    b: 'La ruta por defecto',
-                    c: 'La red local',
-                    d: 'Una dirección de broadcast'
+                    b: 'La red local',
+                    c: 'Una dirección de broadcast',
+                    d: 'La ruta por defecto'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Es la ruta por defecto (gateway of last resort): coincide con cualquier destino y se usa cuando ninguna ruta más específica encaja.'
             },
             {
                 text: 'Cuando existen varias rutas hacia el mismo destino, ¿qué criterio aplica primero el router?',
                 options: {
                     a: 'La ruta con menor métrica',
-                    b: 'La ruta aprendida más recientemente',
-                    c: 'El prefijo más largo (ruta más específica)',
+                    b: 'El prefijo más largo (ruta más específica)',
+                    c: 'La ruta aprendida más recientemente',
                     d: 'La ruta con mayor ancho de banda'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Se aplica el longest prefix match: gana siempre la ruta más específica. Solo si empatan se comparan la distancia administrativa y después la métrica.'
             },
             {
                 text: '¿Qué ventaja principal aporta un switch gestionable frente a uno no gestionable?',
                 options: {
                     a: 'Tiene más puertos físicos',
-                    b: 'Permite crear VLANs y aplicar políticas de seguridad',
-                    c: 'Consume menos energía',
+                    b: 'Consume menos energía',
+                    c: 'Permite crear VLANs y aplicar políticas de seguridad',
                     d: 'No necesita configuración'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Los gestionables permiten VLANs, STP, QoS, port-security, 802.1X y monitorización SNMP, imprescindibles para segmentar tráfico y cumplir normativa.'
             },
             {
@@ -465,32 +465,32 @@
                 options: {
                     a: 'Un hub adicional',
                     b: 'Un repetidor',
-                    c: 'Un switch gestionable configurando VLANs',
-                    d: 'Un Access Point'
+                    c: 'Un Access Point',
+                    d: 'Un switch gestionable configurando VLANs'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Cada VLAN configurada en un switch gestionable constituye un dominio de broadcast independiente. Para comunicar VLANs sí hace falta enrutamiento inter-VLAN.'
             },
             {
                 text: 'Un firewall que filtra tráfico según direcciones IP y números de puerto opera en las capas:',
                 options: {
-                    a: '1 y 2',
-                    b: '3 y 4',
+                    a: '3 y 4',
+                    b: '1 y 2',
                     c: 'Solo la 7',
                     d: 'Solo la 1'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Filtrar por IP corresponde a la capa 3 y por puerto a la capa 4. Los firewalls de nueva generación llegan además hasta la capa 7 inspeccionando la aplicación.'
             },
             {
                 text: '¿Por qué en entornos empresariales se prefieren dispositivos separados en lugar de un equipo integrado?',
                 options: {
                     a: 'Porque son más baratos',
-                    b: 'Porque consumen menos energía',
-                    c: 'Por escalabilidad y para evitar un punto único de fallo',
+                    b: 'Por escalabilidad y para evitar un punto único de fallo',
+                    c: 'Porque consumen menos energía',
                     d: 'Porque no necesitan configuración'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Separar funciones permite dimensionar y actualizar cada elemento por separado, y evita que el fallo o la vulnerabilidad de un solo equipo comprometa conmutación, enrutamiento, Wi-Fi y seguridad a la vez.'
             }
         ];

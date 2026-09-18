@@ -135,12 +135,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> ¿Para qué sirven los terminadores de una topología de bus?',
                     opciones: {
-                        a: 'Para conectar nuevos equipos al cable central',
-                        b: 'Para amplificar la señal en los extremos',
-                        c: 'Para absorber la señal e impedir que se refleje',
+                        a: 'Para absorber la señal e impedir que se refleje',
+                        b: 'Para conectar nuevos equipos al cable central',
+                        c: 'Para amplificar la señal en los extremos',
                         d: 'Para asignar direcciones MAC a los equipos'
                     },
-                    respuesta: 'c',
+                    respuesta: 'a',
                     explicacion: 'Sin terminador la señal rebota al llegar al extremo y vuelve interfiriendo con el tráfico posterior. Un terminador suelto era una avería clásica en redes coaxiales.',
                     pistas: [
                         'No sirven para conectar nada: van en los extremos del cable, donde no hay ningún equipo.',
@@ -192,11 +192,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> En una topología de <strong>bus</strong>, ¿qué avería tumba toda la red?',
                     opciones: {
                         a: 'El fallo de la NIC de cualquier equipo',
-                        b: 'La rotura del cable central o la pérdida de un terminador',
-                        c: 'La caída del switch central',
+                        b: 'La caída del switch central',
+                        c: 'La rotura del cable central o la pérdida de un terminador',
                         d: 'Que un equipo transmita demasiado'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'El bus es crítico: al romperse aparecen reflexiones que corrompen todo el tráfico. No hay switch central en esta topología.',
                     pistas: [
                         'Descarta la opción que menciona un switch: en un bus no existe.',
@@ -209,10 +209,10 @@ const ejerciciosData = {
                     opciones: {
                         a: 'El fallo del cable de un puesto',
                         b: 'El fallo de la NIC de un puesto',
-                        c: 'La caída del nodo central (switch)',
-                        d: 'La pérdida de un terminador'
+                        c: 'La pérdida de un terminador',
+                        d: 'La caída del nodo central (switch)'
                     },
-                    respuesta: 'c',
+                    respuesta: 'd',
                     explicacion: 'Es su único punto crítico, y se mitiga con apilamiento de switches, enlaces redundantes con STP y alimentación protegida por SAI.',
                     pistas: [
                         'En la estrella todo pasa por un mismo sitio: ¿cuál?',
@@ -326,11 +326,11 @@ const ejerciciosData = {
                     pregunta: `<strong>a)</strong> Vas a cablear una oficina nueva de 30 puestos. ¿Qué topología eliges?`,
                     opciones: {
                         a: 'Bus, porque ahorra cable',
-                        b: 'Anillo, porque evita colisiones',
-                        c: 'Estrella con switch, por aislamiento de fallos y escalabilidad',
+                        b: 'Estrella con switch, por aislamiento de fallos y escalabilidad',
+                        c: 'Anillo, porque evita colisiones',
                         d: 'Da igual: todas rinden lo mismo'
                     },
-                    respuesta: 'c',
+                    respuesta: 'b',
                     explicacion: 'La estrella conmutada es el estándar actual: enlaces dedicados full-duplex sin colisiones, fallos aislados por puesto, diagnóstico inmediato y crecimiento trivial.',
                     pistas: [
                         'Piensa cuál usarías tú de verdad si tuvieras que montarla mañana.',
@@ -362,11 +362,11 @@ const ejerciciosData = {
                                ¿Cuál es la razón?`,
                     opciones: {
                         a: 'Porque el anillo es más barato que la estrella',
-                        b: 'Porque aporta redundancia: si se corta un tramo, el tráfico circula en sentido contrario',
-                        c: 'Porque el token evita colisiones en la fibra',
+                        b: 'Porque el token evita colisiones en la fibra',
+                        c: 'Porque aporta redundancia: si se corta un tramo, el tráfico circula en sentido contrario',
                         d: 'Porque las topologías obsoletas son obligatorias en fibra'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Aunque Token Ring esté obsoleto, el <strong>concepto</strong> de anillo sigue vigente en backbones precisamente por su redundancia: cada nodo tiene dos caminos posibles.',
                     pistas: [
                         'En un anillo, ¿por cuántos caminos puede salir el tráfico de cada nodo?',

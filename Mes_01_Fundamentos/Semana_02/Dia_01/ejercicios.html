@@ -121,12 +121,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> ¿Cuál de estos equipos <strong>no</strong> necesita una interfaz de red para comunicarse?',
                     opciones: {
-                        a: 'Un móvil conectado por Bluetooth a unos auriculares',
-                        b: 'Una Raspberry Pi conectada por Wi-Fi',
-                        c: 'Un PC conectado por cable a un switch',
-                        d: 'Ninguno: todos la necesitan'
+                        a: 'Ninguno: todos la necesitan',
+                        b: 'Un móvil conectado por Bluetooth a unos auriculares',
+                        c: 'Una Raspberry Pi conectada por Wi-Fi',
+                        d: 'Un PC conectado por cable a un switch'
                     },
-                    respuesta: 'd',
+                    respuesta: 'a',
                     explicacion: 'Puede faltar el switch, el router o incluso el cable, pero <strong>siempre</strong> hacen falta al menos dos interfaces de red. Es el único componente imprescindible.',
                     pistas: [
                         'Piensa si el Bluetooth cuenta o no como interfaz de red.',
@@ -204,10 +204,10 @@ const ejerciciosData = {
                     opciones: {
                         a: 'Un equipo de un fabricante poco conocido',
                         b: 'Una dirección de multicast',
-                        c: 'Un móvil con aleatorización de MAC, o una interfaz virtual',
-                        d: 'Una dirección corrupta que hay que investigar'
+                        c: 'Una dirección corrupta que hay que investigar',
+                        d: 'Un móvil con aleatorización de MAC, o una interfaz virtual'
                     },
-                    respuesta: 'c',
+                    respuesta: 'd',
                     explicacion: 'Segundo dígito <strong>E</strong> = 1110: I/G a 0 (unicast) pero U/L a 1 (local). No hay fabricante detrás, así que es software: un móvil con MAC aleatoria o una interfaz virtual.',
                     pistas: [
                         'Descompón la E en binario y mira los dos últimos bits.',
@@ -273,11 +273,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> La trama pasa por seis routers hasta llegar al servidor. ¿Cuántas veces cambian las direcciones?',
                     opciones: {
                         a: 'Las IP cambian en cada salto; las MAC no cambian nunca',
-                        b: 'Las MAC cambian en cada salto; las IP de origen y destino no cambian',
-                        c: 'Cambian las dos en cada salto',
+                        b: 'Cambian las dos en cada salto',
+                        c: 'Las MAC cambian en cada salto; las IP de origen y destino no cambian',
                         d: 'No cambia ninguna: por eso llega al destino'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Es la idea central del día. La IP identifica a los extremos y se mantiene; la MAC identifica el tramo y se reescribe en cada router.',
                     pistas: [
                         'Recuerda la analogía: la dirección postal del sobre frente al cartero de cada tramo.',
@@ -340,11 +340,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> ¿Cuál de esas entradas corresponde con seguridad a un dispositivo con <strong>MAC aleatorizada o virtual</strong>?',
                     opciones: {
                         a: '<code>e4-ab-89-b8-6f-38</code>',
-                        b: '<code>00-1b-44-11-3a-b7</code>',
-                        c: '<code>3a-6f-87-48-98-13</code>',
+                        b: '<code>3a-6f-87-48-98-13</code>',
+                        c: '<code>00-1b-44-11-3a-b7</code>',
                         d: '<code>01-00-5e-00-00-fb</code>'
                     },
-                    respuesta: 'c',
+                    respuesta: 'b',
                     explicacion: 'Segundo dígito <strong>a</strong> = 1010: unicast pero con el bit U/L a 1. Es una dirección administrada localmente, típica de un móvil con aleatorización de MAC.',
                     pistas: [
                         'Descarta primero las que no son unicast.',
@@ -356,11 +356,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> Las dos últimas entradas aparecen como <em>estático</em> y no como <em>dinámico</em>. ¿Por qué?',
                     opciones: {
                         a: 'Porque el administrador las configuró a mano',
-                        b: 'Porque no son direcciones de equipos concretos: son de grupo, y su MAC se deduce por regla fija sin preguntar a nadie',
-                        c: 'Porque esos equipos tienen IP fija',
+                        b: 'Porque esos equipos tienen IP fija',
+                        c: 'Porque no son direcciones de equipos concretos: son de grupo, y su MAC se deduce por regla fija sin preguntar a nadie',
                         d: 'Porque son entradas caducadas'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Una entrada dinámica se aprende preguntando por ARP. Pero a la dirección de broadcast y a los grupos multicast no hay a quién preguntar: su MAC se calcula por una regla fija, así que el sistema la da por conocida.',
                     pistas: [
                         'Fíjate en qué tienen en común esas dos direcciones IP: ninguna es de un equipo concreto.',

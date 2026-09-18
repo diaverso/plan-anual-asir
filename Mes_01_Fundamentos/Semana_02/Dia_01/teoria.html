@@ -760,10 +760,10 @@
                 options: {
                     a: 'Conversión de señal',
                     b: 'Direccionamiento',
-                    c: 'Control de acceso al medio',
-                    d: 'Conexión física'
+                    c: 'Conexión física',
+                    d: 'Control de acceso al medio'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'El control de acceso al medio (CSMA/CD en Ethernet clásico, CSMA/CA en Wi-Fi) es el que arbitra el turno. Fíjate en que es de lo que toma su nombre la propia dirección MAC: <em>Media Access Control</em>.'
             },
             {
@@ -798,11 +798,11 @@
                 text: '¿Cuál de estas MAC va dirigida a un <strong>grupo</strong> y no a una sola interfaz?',
                 options: {
                     a: '<code>08-00-27-4B-1C-90</code>',
-                    b: '<code>01-00-5E-00-00-FB</code>',
-                    c: '<code>0A-00-27-00-00-0D</code>',
+                    b: '<code>0A-00-27-00-00-0D</code>',
+                    c: '<code>01-00-5E-00-00-FB</code>',
                     d: '<code>50-EB-F6-26-B4-2F</code>'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'El bit I/G es el de menor peso del primer byte, y solo está a 1 cuando el segundo dígito es <strong>impar</strong>. Aquí <code>01</code> → 1 es impar → grupo. Además <code>01-00-5E</code> es el prefijo del multicast IPv4.'
             },
             {
@@ -824,11 +824,11 @@
                 text: 'Tu PC (<code>192.168.1.70</code>) abre una web en <code>93.184.216.34</code>. En la trama que sale de tu tarjeta, ¿qué MAC de destino lleva?',
                 options: {
                     a: 'La MAC del servidor web',
-                    b: 'La MAC de tu router (la puerta de enlace)',
-                    c: '<code>FF-FF-FF-FF-FF-FF</code>, porque el destino está fuera',
-                    d: 'Ninguna: al salir a Internet no se usan MAC'
+                    b: '<code>FF-FF-FF-FF-FF-FF</code>, porque el destino está fuera',
+                    c: 'Ninguna: al salir a Internet no se usan MAC',
+                    d: 'La MAC de tu router (la puerta de enlace)'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Tu PC no puede conocer la MAC del servidor: está en otra red. Entrega la trama a su vecino de la red local, el router, que la reenviará reescribiendo las MAC del siguiente tramo. Las IP, en cambio, no cambian.'
             },
             {
@@ -836,12 +836,12 @@
                 repaso: '#macip',
                 text: 'Llevas tu portátil de casa a la oficina. ¿Qué cambia?',
                 options: {
-                    a: 'La MAC de la tarjeta Ethernet, pero no su IP',
-                    b: 'Su IP, pero no la MAC de la tarjeta Ethernet',
+                    a: 'Su IP, pero no la MAC de la tarjeta Ethernet',
+                    b: 'La MAC de la tarjeta Ethernet, pero no su IP',
                     c: 'Ni una ni otra',
                     d: 'Las dos, siempre'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'La MAC viaja con la tarjeta: identifica <em>quién</em> eres. La IP depende de la red en la que estés porque identifica <em>dónde</em> estás, así que la nueva red te asignará otra.'
             },
             {
@@ -850,11 +850,11 @@
                 text: '¿Cuál es la razón de fondo por la que Internet no se enruta con direcciones MAC?',
                 options: {
                     a: 'Porque 48 bits son pocos para tantos equipos',
-                    b: 'Porque las MAC se pueden falsificar',
-                    c: 'Porque son planas: no permiten agrupar equipos por ubicación y las tablas de rutas serían inmanejables',
+                    b: 'Porque son planas: no permiten agrupar equipos por ubicación y las tablas de rutas serían inmanejables',
+                    c: 'Porque las MAC se pueden falsificar',
                     d: 'Porque las MAC solo funcionan con cable'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'El problema no es la cantidad —2⁴⁸ es enorme— sino la <strong>falta de jerarquía</strong>. Con IP un router guarda una entrada por red completa; con MAC necesitaría una por cada interfaz del planeta.'
             },
             {
@@ -901,12 +901,12 @@
                 repaso: '../../Semana_01/Dia_04/teoria.html',
                 text: '<em>Repaso.</em> ¿Por qué millones de viviendas pueden usar a la vez la dirección <code>192.168.1.1</code>?',
                 options: {
-                    a: 'Porque el operador reserva ese rango para cada cliente',
-                    b: 'Porque es una dirección privada, no enrutable en Internet, y el router traduce con NAT al salir',
+                    a: 'Porque es una dirección privada, no enrutable en Internet, y el router traduce con NAT al salir',
+                    b: 'Porque el operador reserva ese rango para cada cliente',
                     c: 'Porque solo una de ellas está activa en cada momento',
                     d: 'Porque es una dirección multicast'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Los rangos privados (10.x, 172.16–31.x, 192.168.x) no se enrutan en Internet, así que pueden repetirse sin conflicto. El NAT del router las traduce a la IP pública al salir.'
             }
         ]

@@ -119,12 +119,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> Un armario de 42U tiene ocupadas 2U de patch panel, 3U de switches, 3U de SAI y cuatro servidores de 2U. ¿Cuántas U quedan libres?',
                     opciones: {
-                        a: '34 U',
-                        b: '26 U',
+                        a: '26 U',
+                        b: '34 U',
                         c: '30 U',
                         d: '24 U'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: '2 + 3 + 3 + (4 × 2) = 16 U ocupadas. 42 − 16 = <strong>26 U</strong> libres. Ojo con los cuatro servidores: son 8 U, no 4.',
                     pistas: [
                         'Cuidado con los servidores: son cuatro, pero cada uno ocupa 2U.',
@@ -281,11 +281,11 @@ const ejerciciosData = {
                     pregunta: '<strong>d)</strong> Servidor A: MTBF 30 000 h, MTTR 12 h. Servidor B: MTBF 15 000 h, MTTR 1 h. ¿Cuál tiene mayor disponibilidad?',
                     opciones: {
                         a: 'A, porque falla la mitad de veces',
-                        b: 'B, porque se repara doce veces más rápido',
-                        c: 'Son prácticamente iguales',
-                        d: 'Faltan datos para saberlo'
+                        b: 'Son prácticamente iguales',
+                        c: 'Faltan datos para saberlo',
+                        d: 'B, porque se repara doce veces más rápido'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'A: 30 000 ÷ 30 012 = 99,960 %. B: 15 000 ÷ 15 001 = <strong>99,993 %</strong>. Fallar el doble pero repararse doce veces más rápido sale claramente ganando.',
                     pistas: [
                         'No te fíes de la intuición: aplica la fórmula a los dos.',
@@ -428,12 +428,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> Necesitas desplegar la misma aplicación web 40 veces, de forma idéntica y en segundos. ¿Qué eliges?',
                     opciones: {
-                        a: 'Cuarenta máquinas virtuales, por el aislamiento',
-                        b: 'Contenedores: arrancan en menos de un segundo y pesan megabytes',
+                        a: 'Contenedores: arrancan en menos de un segundo y pesan megabytes',
+                        b: 'Cuarenta máquinas virtuales, por el aislamiento',
                         c: 'Cuarenta servidores físicos',
                         d: 'Da igual: el rendimiento es el mismo'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Es el caso de uso para el que se inventaron los contenedores: desplegar una aplicación muchas veces y siempre igual. Las máquinas virtuales se reservan para cuando hace falta otro sistema operativo o un aislamiento fuerte.',
                     pistas: [
                         'Fíjate en las dos palabras clave del enunciado: «idéntica» y «en segundos».'

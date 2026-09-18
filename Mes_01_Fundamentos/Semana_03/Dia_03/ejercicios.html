@@ -105,11 +105,11 @@ const ejerciciosData = {
                     pregunta: '<strong>c)</strong> ¿Qué define TCP/IP sobre su capa de acceso a la red?',
                     opciones: {
                         a: 'El formato de la trama Ethernet',
-                        b: 'Nada, y es deliberado: así funciona sobre cualquier tecnología',
-                        c: 'Solo el cableado, no el inalámbrico',
+                        b: 'Solo el cableado, no el inalámbrico',
+                        c: 'Nada, y es deliberado: así funciona sobre cualquier tecnología',
                         d: 'Las direcciones MAC'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Ese hueco es lo que permitió que el mismo modelo de 1974 funcione hoy sobre 5G. Si hubiera definido la capa de abajo, habría definido la tecnología de su época.',
                     pistas: [
                         'Piensa qué tecnologías de red existen hoy y no existían en 1974.'
@@ -210,12 +210,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>b)</strong> ¿Sobre qué viaja <strong>DNS</strong>, y por qué?',
                     opciones: {
-                        a: 'Sobre TCP, porque es un servicio crítico',
-                        b: 'Sobre UDP: una consulta y una respuesta cortas, en las que montar una conexión costaría más que preguntar',
+                        a: 'Sobre UDP: una consulta y una respuesta cortas, en las que montar una conexión costaría más que preguntar',
+                        b: 'Sobre TCP, porque es un servicio crítico',
                         c: 'Directamente sobre IP',
                         d: 'Sobre ICMP'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'Que un servicio sea importante no implica que necesite garantías de transporte. Si la respuesta no llega, se repite la pregunta, y sale más barato que negociar una conexión para dos mensajes.',
                     pistas: [
                         '¿Cuántos mensajes hacen falta para resolver un nombre?'
@@ -276,11 +276,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> HTTP/2 y HTTP/3 se adoptaron en pocos años. IPv6 lleva desde 1998. ¿Cuál es la diferencia de fondo?',
                     opciones: {
                         a: 'IPv6 está peor diseñado',
-                        b: 'Un protocolo de aplicación solo afecta a quien lo usa; el de la cintura los afecta a todos a la vez',
-                        c: 'HTTP es más importante que IP',
-                        d: 'IPv6 todavía no está terminado'
+                        b: 'HTTP es más importante que IP',
+                        c: 'IPv6 todavía no está terminado',
+                        d: 'Un protocolo de aplicación solo afecta a quien lo usa; el de la cintura los afecta a todos a la vez'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Cambiar HTTP afecta a navegadores y servidores web. Cambiar IP afecta a routers, sistemas operativos, cortafuegos y a todos los programas, <strong>simultáneamente</strong>.',
                     pistas: [
                         '¿Cuántas cosas se apoyan directamente en cada uno de los dos?'
@@ -327,11 +327,11 @@ const ejerciciosData = {
                     pregunta: '<strong>b)</strong> «Rechazamos reyes, presidentes y votaciones. Creemos en el consenso aproximado y en el código que funciona.» ¿Qué describe esa frase?',
                     opciones: {
                         a: 'La política de precios de la ISO',
-                        b: 'La forma de trabajar de quienes desarrollaron Internet: implementar primero y estandarizar lo que funciona',
-                        c: 'El funcionamiento interno del protocolo TCP',
-                        d: 'La estructura de gobierno de ARPANET'
+                        b: 'El funcionamiento interno del protocolo TCP',
+                        c: 'La estructura de gobierno de ARPANET',
+                        d: 'La forma de trabajar de quienes desarrollaron Internet: implementar primero y estandarizar lo que funciona'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Es de David Clark, 1992, y resume la diferencia con OSI: un comité que vota especificaciones frente a un grupo que escribe implementaciones y se queda con la que funciona. Mañana verás que sigue siendo el procedimiento oficial.',
                     pistas: [
                         'Piensa en la diferencia de método entre los dos modelos.'

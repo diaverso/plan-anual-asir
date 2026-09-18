@@ -614,11 +614,11 @@
                 text: 'En los años ochenta, comprar equipos de red de IBM obligaba a seguir comprando de IBM. ¿Cómo se llama eso y qué lo resolvió?',
                 options: {
                     a: 'Monopolio; lo resolvió la competencia',
-                    b: 'Dependencia del proveedor; lo resolvieron los estándares abiertos',
-                    c: 'Obsolescencia programada; lo resolvió la ley',
+                    b: 'Obsolescencia programada; lo resolvió la ley',
+                    c: 'Dependencia del proveedor; lo resolvieron los estándares abiertos',
                     d: 'Incompatibilidad técnica; se resolvió sola'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'No era un defecto técnico: <strong>era el modelo de negocio</strong>. Que hoy cualquier portátil funcione con cualquier router es consecuencia directa de la normalización.'
             },
             {
@@ -627,11 +627,11 @@
                 text: '¿Qué distingue a un estándar <em>de facto</em> de uno <em>de iure</em>?',
                 options: {
                     a: 'El de facto es siempre peor técnicamente',
-                    b: 'El de iure lo aprueba un organismo oficial; el de facto se impone porque todo el mundo lo usa',
-                    c: 'El de facto es de pago y el de iure gratuito',
-                    d: 'El de iure solo se usa en Europa'
+                    b: 'El de facto es de pago y el de iure gratuito',
+                    c: 'El de iure solo se usa en Europa',
+                    d: 'El de iure lo aprueba un organismo oficial; el de facto se impone porque todo el mundo lo usa'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: '«De derecho» frente a «de hecho». El de facto es más rápido porque no espera a ningún comité; su riesgo es que <strong>puede tener dueño</strong>.'
             },
             {
@@ -666,11 +666,11 @@
                 text: 'HTTP y HTML aparecen juntos en cualquier página web. ¿Los define el mismo organismo?',
                 options: {
                     a: 'Sí, los dos el W3C',
-                    b: 'Sí, los dos la IETF',
-                    c: 'No: HTTP es de la IETF y HTML del W3C',
+                    b: 'No: HTTP es de la IETF y HTML del W3C',
+                    c: 'Sí, los dos la IETF',
                     d: 'No: HTTP es del W3C y HTML de la IETF'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'HTTP es el <strong>protocolo</strong> —cómo se piden los documentos— y es de redes. HTML es el <strong>formato</strong> del documento. Por HTTP se puede enviar un PDF sin nada de HTML.'
             },
             {
@@ -678,12 +678,12 @@
                 repaso: '#organismos',
                 text: '¿Qué organismo publicó el modelo OSI?',
                 options: {
-                    a: 'El IEEE',
-                    b: 'La IETF',
-                    c: 'La ISO',
+                    a: 'La ISO',
+                    b: 'El IEEE',
+                    c: 'La IETF',
                     d: 'La ITU-T'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'La <strong>ISO</strong>, en la norma 7498. De ahí el nombre completo: <em>Open Systems Interconnection</em>, el modelo de interconexión de sistemas abiertos de la ISO.'
             },
             {
@@ -692,11 +692,11 @@
                 text: 'Se descubre un fallo en un protocolo definido en un RFC. ¿Qué se hace con ese documento?',
                 options: {
                     a: 'Se corrige el RFC original y se publica la versión revisada',
-                    b: 'Se publica un RFC nuevo que deja obsoleto al anterior; el viejo se conserva',
-                    c: 'Se retira el RFC y se borra del registro',
+                    b: 'Se retira el RFC y se borra del registro',
+                    c: 'Se publica un RFC nuevo que deja obsoleto al anterior; el viejo se conserva',
                     d: 'Se añade una nota al pie'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Un RFC <strong>no se modifica jamás</strong>. Así, quien programó «según el RFC 791» sabe que ese documento dice hoy lo mismo que en 1981.'
             },
             {
@@ -706,10 +706,10 @@
                 options: {
                     a: 'Representar a una empresa del sector',
                     b: 'Pagar la cuota anual de miembro',
-                    c: 'Nada: es abierta a cualquiera y se decide por consenso aproximado',
-                    d: 'Un título universitario homologado'
+                    c: 'Un título universitario homologado',
+                    d: 'Nada: es abierta a cualquiera y se decide por consenso aproximado'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Es lo que la diferenciaba de la ISO, cuyos documentos además se pagaban. Lo que sí se espera es <strong>código que funcione</strong>.'
             },
             {
@@ -718,11 +718,11 @@
                 text: 'Un RFC dice que una implementación <strong>SHOULD</strong> hacer algo, y tu equipo no lo hace. ¿Qué significa?',
                 options: {
                     a: 'El equipo incumple el estándar y no es válido',
-                    b: 'Es una recomendación: se puede incumplir, pero conviene saber por qué',
-                    c: 'Significa lo mismo que MUST',
+                    b: 'Significa lo mismo que MUST',
+                    c: 'Es una recomendación: se puede incumplir, pero conviene saber por qué',
                     d: 'Es una errata del RFC'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'La diferencia entre <strong>MUST</strong> y <strong>SHOULD</strong> es la que separa una incompatibilidad de una decisión de diseño. Cuando dos aparatos «casi» se entienden, suele haber un <em>SHOULD</em> por medio.'
             },
             {
@@ -730,12 +730,12 @@
                 repaso: '#ieee802',
                 text: 'En la caja de un switch lees «802.1Q». ¿Qué te está diciendo?',
                 options: {
-                    a: 'Que es compatible con Wi-Fi',
-                    b: 'Que admite VLAN',
+                    a: 'Que admite VLAN',
+                    b: 'Que es compatible con Wi-Fi',
                     c: 'Que alimenta aparatos por el cable de red',
                     d: 'Que cumple la norma de fibra óptica'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: '802.3 Ethernet, 802.11 Wi-Fi, <strong>802.1Q VLAN</strong>, 802.1X autenticación, 802.3af PoE. Esa numeración aparece constantemente en las fichas de producto.'
             },
             {
@@ -744,11 +744,11 @@
                 text: 'Un compañero dice que «Wi-Fi es el nombre técnico de la tecnología». ¿Qué le corriges?',
                 options: {
                     a: 'Nada, es correcto',
-                    b: 'Que el nombre técnico es 802.11; Wi-Fi es una marca registrada de una asociación de fabricantes',
-                    c: 'Que el nombre técnico es 802.3',
-                    d: 'Que Wi-Fi es un estándar de la IETF'
+                    b: 'Que el nombre técnico es 802.3',
+                    c: 'Que Wi-Fi es un estándar de la IETF',
+                    d: 'Que el nombre técnico es 802.11; Wi-Fi es una marca registrada de una asociación de fabricantes'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Por eso los nombres comerciales no coinciden con los técnicos: <strong>Wi-Fi 6 es 802.11ax</strong>. Los inventaron porque «802.11ax» no se le queda a nadie.'
             },
             {
@@ -782,12 +782,12 @@
                 repaso: '#iana',
                 text: 'Los tres primeros bytes de una MAC identifican al fabricante. ¿Quién lleva ese registro?',
                 options: {
-                    a: 'IANA, porque reparte todos los números',
-                    b: 'El IEEE, porque las MAC son de capa 2',
+                    a: 'El IEEE, porque las MAC son de capa 2',
+                    b: 'IANA, porque reparte todos los números',
                     c: 'La IETF',
                     d: 'Cada fabricante se lo asigna a sí mismo'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'La regla otra vez: capas <strong>1 y 2 son del IEEE</strong>, y la MAC es de capa 2. Hoy, en Wireshark, verás esos bytes traducidos al nombre del fabricante gracias a ese registro.'
             },
             {

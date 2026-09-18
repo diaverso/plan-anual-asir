@@ -485,10 +485,10 @@
                 options: {
                     a: 'Simplex',
                     b: 'Full-duplex',
-                    c: 'Half-duplex',
-                    d: 'Multiplex'
+                    c: 'Multiplex',
+                    d: 'Half-duplex'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Half-duplex: la comunicación es bidireccional pero alternada, nunca simultánea. El teléfono, en cambio, es full-duplex.'
             },
             {
@@ -508,11 +508,11 @@
                 text: '¿Cuál es la característica principal de una señal digital frente a una analógica?',
                 options: {
                     a: 'Tiene infinitos valores posibles',
-                    b: 'Toma valores discretos y resiste mejor el ruido',
-                    c: 'Solo puede viajar por cable de cobre',
+                    b: 'Solo puede viajar por cable de cobre',
+                    c: 'Toma valores discretos y resiste mejor el ruido',
                     d: 'Es siempre más lenta'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'La señal digital usa valores discretos (0 y 1), lo que permite regenerarla sin acumular ruido y procesarla directamente con computadoras.'
             },
             {
@@ -532,11 +532,11 @@
                 text: '¿Cuántos enlaces se necesitan para conectar 10 dispositivos en malla completa?',
                 options: {
                     a: '20 enlaces',
-                    b: '45 enlaces',
-                    c: '90 enlaces',
-                    d: '100 enlaces'
+                    b: '90 enlaces',
+                    c: '100 enlaces',
+                    d: '45 enlaces'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Aplicando N × (N-1) / 2: 10 × 9 / 2 = 45 enlaces. El crecimiento es cuadrático, por eso la malla completa resulta inviable a gran escala.'
             },
             {
@@ -555,12 +555,12 @@
                 week: 2,
                 text: 'Una red Ethernet cableada en estrella pero con un hub central tiene topología lógica de:',
                 options: {
-                    a: 'Estrella',
-                    b: 'Anillo',
-                    c: 'Bus',
+                    a: 'Bus',
+                    b: 'Estrella',
+                    c: 'Anillo',
                     d: 'Malla'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'El hub repite cada bit por todos los puertos: eléctricamente todos comparten el medio, con un único dominio de colisión y acceso CSMA/CD, igual que un bus.'
             },
             {
@@ -580,11 +580,11 @@
                 text: '¿Cuál es la distancia máxima que fija el estándar para un enlace de cableado estructurado con UTP?',
                 options: {
                     a: '50 metros',
-                    b: '100 metros',
-                    c: '300 metros',
+                    b: '300 metros',
+                    c: '100 metros',
                     d: '1000 metros'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'TIA/EIA-568 fija 100 m: 90 m de cableado horizontal más 10 m de latiguillos. Para distancias mayores hay que usar fibra o un switch intermedio.'
             },
             {
@@ -616,23 +616,23 @@
                 text: '¿Cuál es la PDU de la capa de Red?',
                 options: {
                     a: 'Trama',
-                    b: 'Segmento',
-                    c: 'Paquete',
+                    b: 'Paquete',
+                    c: 'Segmento',
                     d: 'Bit'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Las PDU son: Datos (7-5), Segmento (4), Paquete (3), Trama (2) y Bits (1).'
             },
             {
                 week: 3,
                 text: 'La capa de Aplicación de TCP/IP agrupa qué capas del modelo OSI?',
                 options: {
-                    a: 'Solo la capa 7',
-                    b: 'Las capas 5, 6 y 7',
+                    a: 'Las capas 5, 6 y 7',
+                    b: 'Solo la capa 7',
                     c: 'Las capas 1 y 2',
                     d: 'Las capas 3 y 4'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'TCP/IP fusiona Sesión, Presentación y Aplicación en una sola capa, y también fusiona Enlace y Física en Acceso a Red.'
             },
             {
@@ -663,12 +663,12 @@
                 week: 3,
                 text: 'El estándar 802.3 (Ethernet) es publicado por:',
                 options: {
-                    a: 'IEEE',
-                    b: 'ISO',
+                    a: 'ISO',
+                    b: 'IEEE',
                     c: 'IETF',
                     d: 'ITU-T'
                 },
-                answer: 'a',
+                answer: 'b',
                 feedback: 'El IEEE publica la familia 802. El IETF publica las RFC (IP, TCP), la ISO el modelo OSI y la ITU-T los estándares de telecomunicaciones.'
             },
             {
@@ -676,23 +676,23 @@
                 text: 'Un equipo hace ping correcto a 8.8.8.8 pero no puede resolver google.com. ¿Cuál es el problema más probable?',
                 options: {
                     a: 'El cable de red está roto',
-                    b: 'El servicio DNS no funciona',
-                    c: 'La dirección MAC es incorrecta',
+                    b: 'La dirección MAC es incorrecta',
+                    c: 'El servicio DNS no funciona',
                     d: 'El TTL ha expirado'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Si la conectividad IP funciona pero falla la resolución por nombre, el fallo está en el DNS. Se comprueba con nslookup o dig.'
             },
             {
                 week: 3,
                 text: '¿Qué puerto utiliza por defecto el servicio HTTPS?',
                 options: {
-                    a: '21',
-                    b: '80',
-                    c: '443',
+                    a: '443',
+                    b: '21',
+                    c: '80',
                     d: '8080'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'HTTPS usa el puerto 443/TCP. HTTP el 80, FTP el 21 (control), SSH el 22, Telnet el 23 y SMTP el 25.'
             },
             {
@@ -701,22 +701,22 @@
                 options: {
                     a: 'Hub',
                     b: 'Repetidor',
-                    c: 'Switch',
-                    d: 'Access Point'
+                    c: 'Access Point',
+                    d: 'Switch'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'El switch construye la tabla CAM aprendiendo la MAC de origen de cada trama que recibe, lo que le permite reenviar en unicast al puerto correcto.'
             },
             {
                 week: 4,
                 text: 'Un switch de 12 puertos con todos los equipos conectados crea:',
                 options: {
-                    a: '1 dominio de colisión y 12 de broadcast',
-                    b: '12 dominios de colisión y 1 de broadcast',
+                    a: '12 dominios de colisión y 1 de broadcast',
+                    b: '1 dominio de colisión y 12 de broadcast',
                     c: '12 dominios de colisión y 12 de broadcast',
                     d: '1 dominio de colisión y 1 de broadcast'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El switch crea un dominio de colisión por puerto, pero no segmenta broadcast: todos los puertos siguen en el mismo dominio salvo que se configuren VLANs.'
             },
             {
@@ -736,11 +736,11 @@
                 text: 'En la dirección MAC 00:1B:44:11:3A:B7, ¿qué representa la parte 00:1B:44?',
                 options: {
                     a: 'El número de serie de la tarjeta',
-                    b: 'El OUI, identificador del fabricante',
-                    c: 'La dirección de broadcast',
+                    b: 'La dirección de broadcast',
+                    c: 'El OUI, identificador del fabricante',
                     d: 'El identificador de VLAN'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Los 3 primeros bytes forman el OUI (Organizationally Unique Identifier) que el IEEE asigna al fabricante; los 3 últimos identifican la tarjeta concreta.'
             },
             {
@@ -748,11 +748,11 @@
                 text: 'En una tabla de enrutamiento, cuando varias rutas coinciden con el destino, ¿qué criterio se aplica primero?',
                 options: {
                     a: 'La métrica más baja',
-                    b: 'La distancia administrativa',
-                    c: 'El prefijo más largo (ruta más específica)',
+                    b: 'El prefijo más largo (ruta más específica)',
+                    c: 'La distancia administrativa',
                     d: 'La ruta por defecto'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Se aplica el longest prefix match. Solo en caso de empate se comparan la distancia administrativa y después la métrica.'
             },
             {
@@ -760,11 +760,11 @@
                 text: '¿Cuál es la principal ventaja de un switch gestionable frente a uno no gestionable?',
                 options: {
                     a: 'Ofrece más puertos por el mismo precio',
-                    b: 'Funciona sin necesidad de alimentación',
-                    c: 'Permite VLANs, STP, QoS y control de acceso',
+                    b: 'Permite VLANs, STP, QoS y control de acceso',
+                    c: 'Funciona sin necesidad de alimentación',
                     d: 'Elimina la necesidad de un router'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Los gestionables permiten segmentar con VLANs, prevenir bucles con STP, priorizar tráfico con QoS y controlar accesos con port-security o 802.1X.'
             }
         ];

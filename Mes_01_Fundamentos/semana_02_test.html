@@ -331,12 +331,12 @@
             {
                 text: '¿Cuál es el alcance típico de una red PAN?',
                 options: {
-                    a: '10 - 1000 metros',
-                    b: '1 - 10 metros',
+                    a: '1 - 10 metros',
+                    b: '10 - 1000 metros',
                     c: '10 - 50 kilómetros',
                     d: 'Más de 50 kilómetros'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Una PAN (Personal Area Network) cubre el espacio personal del usuario, de 1 a 10 metros aproximadamente. Usa tecnologías como Bluetooth, NFC o USB.'
             },
             {
@@ -354,22 +354,22 @@
                 text: '¿Cuántos enlaces son necesarios para conectar 6 dispositivos en malla completa?',
                 options: {
                     a: '12 enlaces',
-                    b: '15 enlaces',
-                    c: '30 enlaces',
-                    d: '6 enlaces'
+                    b: '30 enlaces',
+                    c: '6 enlaces',
+                    d: '15 enlaces'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'La fórmula es N × (N-1) / 2. Para 6 dispositivos: 6 × 5 / 2 = 15 enlaces.'
             },
             {
                 text: 'En una topología de bus, ¿qué ocurre si se rompe el cable central?',
                 options: {
                     a: 'Solo se desconecta el equipo más cercano a la rotura',
-                    b: 'La red sigue funcionando por rutas alternativas',
-                    c: 'Cae toda la red por reflexiones de señal',
+                    b: 'Cae toda la red por reflexiones de señal',
+                    c: 'La red sigue funcionando por rutas alternativas',
                     d: 'El switch central redirige el tráfico'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'Al romperse el bus se pierden los terminadores efectivos y aparecen reflexiones de señal, dejando toda la red inoperativa. Es su principal desventaja.'
             },
             {
@@ -377,10 +377,10 @@
                 options: {
                     a: 'Bus',
                     b: 'Anillo',
-                    c: 'Malla completa',
-                    d: 'Estrella'
+                    c: 'Estrella',
+                    d: 'Malla completa'
                 },
-                answer: 'd',
+                answer: 'c',
                 feedback: 'La estrella es el estándar actual: cada equipo se conecta a un switch central, lo que facilita el diagnóstico, aísla los fallos y permite crecer fácilmente.'
             },
             {
@@ -410,87 +410,87 @@
                 options: {
                     a: 'Es una red física dedicada entre dos sedes',
                     b: 'Es una red pública sin ningún tipo de control de acceso',
-                    c: 'Es una red privada que viaja cifrada sobre infraestructura pública',
-                    d: 'Es una topología de red en malla'
+                    c: 'Es una topología de red en malla',
+                    d: 'Es una red privada que viaja cifrada sobre infraestructura pública'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Una VPN (Virtual Private Network) crea un túnel cifrado sobre una red pública como Internet, combinando el bajo coste de lo público con la privacidad de lo privado.'
             },
             {
                 text: 'En la topología de anillo simple, ¿qué sucede si falla un nodo intermedio?',
                 options: {
                     a: 'No pasa nada, el token toma otra ruta',
-                    b: 'Se rompe el anillo y cae toda la red',
-                    c: 'Solo se aísla ese nodo',
-                    d: 'Aumentan las colisiones pero la red funciona'
+                    b: 'Solo se aísla ese nodo',
+                    c: 'Aumentan las colisiones pero la red funciona',
+                    d: 'Se rompe el anillo y cae toda la red'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'En un anillo simple los datos circulan de nodo en nodo; si uno falla, el token no completa el circuito y la red deja de funcionar. Se mitiga con doble anillo (FDDI) o bypass automático.'
             },
             {
                 text: '¿Qué dispositivo segmenta dominios de broadcast?',
                 options: {
                     a: 'Hub',
-                    b: 'Repetidor',
-                    c: 'Router',
+                    b: 'Router',
+                    c: 'Repetidor',
                     d: 'Switch no gestionable'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'El router opera en capa 3 y no reenvía broadcasts de capa 2, por lo que cada una de sus interfaces delimita un dominio de broadcast distinto.'
             },
             {
                 text: '¿Cuál es la distancia máxima recomendada para un enlace de cable UTP en cableado estructurado?',
                 options: {
                     a: '50 metros',
-                    b: '100 metros',
-                    c: '500 metros',
+                    b: '500 metros',
+                    c: '100 metros',
                     d: '1000 metros'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'El estándar TIA/EIA-568 fija 100 m totales: 90 m de cableado horizontal más 10 m de latiguillos. Superarlo requiere un switch intermedio o fibra óptica.'
             },
             {
                 text: 'Un centro de datos bancario elige topología de malla parcial. ¿Cuál es la razón principal?',
                 options: {
-                    a: 'Es la opción más barata',
-                    b: 'Necesita menos cableado que la estrella',
-                    c: 'Ofrece rutas alternativas y alta disponibilidad',
+                    a: 'Ofrece rutas alternativas y alta disponibilidad',
+                    b: 'Es la opción más barata',
+                    c: 'Necesita menos cableado que la estrella',
                     d: 'Es más fácil de administrar'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'La malla aporta redundancia de caminos: ante el fallo de un enlace o equipo, el tráfico converge por otra ruta. En servicios críticos, el coste de una caída supera con creces el del cableado extra.'
             },
             {
                 text: 'En una red con un switch al que se conecta un hub con 4 PCs, ¿cuántos dominios de colisión aporta ese hub?',
                 options: {
                     a: '4 dominios (uno por PC)',
-                    b: '1 dominio compartido por los 4 PCs',
-                    c: 'Ninguno, el hub los elimina',
-                    d: '2 dominios'
+                    b: 'Ninguno, el hub los elimina',
+                    c: '2 dominios',
+                    d: '1 dominio compartido por los 4 PCs'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El hub no segmenta: todos los equipos conectados a él comparten un único dominio de colisión. Un switch, en cambio, crea un dominio de colisión por puerto.'
             },
             {
                 text: '¿Qué ventaja principal aporta la topología en árbol frente a una estrella simple?',
                 options: {
                     a: 'Elimina por completo los puntos de fallo',
-                    b: 'Reduce el coste del cableado',
-                    c: 'Permite escalar de forma jerárquica y gestionar por niveles',
+                    b: 'Permite escalar de forma jerárquica y gestionar por niveles',
+                    c: 'Reduce el coste del cableado',
                     d: 'Aumenta la velocidad de cada enlace'
                 },
-                answer: 'c',
+                answer: 'b',
                 feedback: 'La estructura jerárquica (núcleo, distribución y acceso) permite crecer añadiendo ramas, limita los dominios de broadcast y contiene los fallos dentro de cada rama.'
             },
             {
                 text: 'Un teletrabajador accede a los ficheros de su empresa desde casa mediante un túnel cifrado. ¿Qué tipo de red está usando?',
                 options: {
                     a: 'Una red pública sin protección',
-                    b: 'Una VPN',
-                    c: 'Una PAN',
+                    b: 'Una PAN',
+                    c: 'Una VPN',
                     d: 'Una MAN'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Se trata de una VPN de acceso remoto: el tráfico viaja cifrado por Internet, de modo que el equipo del teletrabajador se comporta como si estuviera dentro de la red corporativa.'
             }
         ];

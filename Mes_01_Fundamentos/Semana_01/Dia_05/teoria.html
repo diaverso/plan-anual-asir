@@ -520,12 +520,12 @@
                 repaso: '#concepto',
                 text: '¿Qué describe la topología de una red?',
                 options: {
-                    a: 'La marca del equipamiento utilizado',
-                    b: 'La forma en que se disponen e interconectan los dispositivos',
+                    a: 'La forma en que se disponen e interconectan los dispositivos',
+                    b: 'La marca del equipamiento utilizado',
                     c: 'La velocidad máxima del enlace',
                     d: 'El número de usuarios conectados'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'La topología determina el coste del cableado, la tolerancia a fallos, la facilidad de diagnóstico y el rendimiento. Es la primera decisión de diseño de una red.'
             },
             {
@@ -535,10 +535,10 @@
                 options: {
                     a: 'Estrella',
                     b: 'Anillo',
-                    c: 'Bus',
-                    d: 'Malla'
+                    c: 'Malla',
+                    d: 'Bus'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'El hub repite cada bit por todos sus puertos: eléctricamente todos comparten el mismo medio, con un único dominio de colisión y CSMA/CD. Ese es el comportamiento de un bus.'
             },
             {
@@ -572,12 +572,12 @@
                 repaso: '#bus',
                 text: 'En una topología de bus, ¿qué ocurre si se rompe el cable central?',
                 options: {
-                    a: 'Solo se desconecta el equipo más cercano a la rotura',
-                    b: 'Cae toda la red por las reflexiones de señal',
+                    a: 'Cae toda la red por las reflexiones de señal',
+                    b: 'Solo se desconecta el equipo más cercano a la rotura',
                     c: 'La red sigue funcionando por rutas alternativas',
                     d: 'El switch redirige automáticamente el tráfico'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Al romperse el bus se pierden los terminadores efectivos, aparecen reflexiones y ambos segmentos quedan inoperativos. Es su principal desventaja.'
             },
             {
@@ -586,11 +586,11 @@
                 text: 'En una topología de bus, si falla la tarjeta de red de un solo PC:',
                 options: {
                     a: 'Cae toda la red',
-                    b: 'Solo pierde conectividad ese PC',
-                    c: 'Se rompe el anillo',
-                    d: 'Los terminadores dejan de funcionar'
+                    b: 'Se rompe el anillo',
+                    c: 'Los terminadores dejan de funcionar',
+                    d: 'Solo pierde conectividad ese PC'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Los equipos son independientes entre sí: lo crítico en un bus es el cable central, no cada estación por separado.'
             },
             {
@@ -625,11 +625,11 @@
                 text: '¿Qué solución adopta FDDI para evitar que un fallo tumbe el anillo?',
                 options: {
                     a: 'Un switch central redundante',
-                    b: 'Dos anillos en sentidos opuestos',
-                    c: 'Terminadores en ambos extremos',
+                    b: 'Terminadores en ambos extremos',
+                    c: 'Dos anillos en sentidos opuestos',
                     d: 'Duplicar la velocidad del token'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Con doble anillo en sentidos contrarios, si se rompe un enlace el tráfico se repliega por el secundario y la red sigue operativa.'
             },
             {
@@ -651,11 +651,11 @@
                 text: 'En una topología en estrella, si se estropea el cable de un PC:',
                 options: {
                     a: 'Cae toda la red',
-                    b: 'Solo ese PC queda aislado',
-                    c: 'Se rompe el anillo lógico',
-                    d: 'Aparecen reflexiones de señal'
+                    b: 'Se rompe el anillo lógico',
+                    c: 'Aparecen reflexiones de señal',
+                    d: 'Solo ese PC queda aislado'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Cada enlace es independiente: el fallo queda contenido en un único puesto. Ese aislamiento de averías es la razón principal de que la estrella se impusiera.'
             },
             {
@@ -663,12 +663,12 @@
                 repaso: '#estrella',
                 text: '¿Por qué se impuso la estrella pese a necesitar más cable que el bus?',
                 options: {
-                    a: 'Porque el cable es caro y el técnico barato',
-                    b: 'Porque aísla los fallos y permite diagnosticar en segundos',
+                    a: 'Porque aísla los fallos y permite diagnosticar en segundos',
+                    b: 'Porque el cable es caro y el técnico barato',
                     c: 'Porque no necesita ningún equipo central',
                     d: 'Porque elimina la necesidad de protocolos'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El cable es barato frente a las horas de técnico. En un bus localizar una rotura llevaba horas; en una estrella basta con ver qué LED está apagado, y el fallo afecta a un solo puesto.'
             },
             {

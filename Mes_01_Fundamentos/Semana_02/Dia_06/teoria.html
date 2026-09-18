@@ -517,10 +517,10 @@
                 options: {
                     a: '¿Cuántos empleados hay?',
                     b: '¿Qué presupuesto tenéis?',
-                    c: '¿Cuánto os cuesta una hora parados?',
-                    d: '¿Qué marca preferís?'
+                    c: '¿Qué marca preferís?',
+                    d: '¿Cuánto os cuesta una hora parados?'
                 },
-                answer: 'c',
+                answer: 'd',
                 feedback: 'Sin esa cifra, la conversación sobre disponibilidad es un intercambio de opiniones. Con ella, se puede comparar el coste de la redundancia con el de la parada que evita.'
             },
             {
@@ -529,11 +529,11 @@
                 text: '¿Cuál es el orden correcto del método de diseño?',
                 options: {
                     a: 'Equipamiento → topología → requisitos → medio',
-                    b: 'Requisitos → topología → medio → equipamiento → servicios → riesgos',
-                    c: 'Medio → equipamiento → requisitos → servicios',
+                    b: 'Medio → equipamiento → requisitos → servicios',
+                    c: 'Requisitos → topología → medio → equipamiento → servicios → riesgos',
                     d: 'Riesgos → requisitos → equipamiento → medio'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'De arriba hacia abajo: de lo que la empresa necesita a los cables concretos. Empezar por el material obliga a rehacerlo casi siempre.'
             },
             {
@@ -541,12 +541,12 @@
                 repaso: '#metodo',
                 text: 'Un puesto queda a 110 metros de cable del único armario. ¿Qué implica?',
                 options: {
-                    a: 'Nada, si se usa Cat 6A',
-                    b: 'Que hay que usar un cable de mejor categoría',
-                    c: 'Que hace falta un segundo armario, o llevar fibra hasta un punto intermedio',
+                    a: 'Que hace falta un segundo armario, o llevar fibra hasta un punto intermedio',
+                    b: 'Nada, si se usa Cat 6A',
+                    c: 'Que hay que usar un cable de mejor categoría',
                     d: 'Que hay que poner un repetidor de señal'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'El límite de 100 m del enlace de cobre es físico y ninguna categoría lo cambia: Cat 8 llega incluso a menos. La solución es meter un dispositivo activo por el camino o pasar a fibra.'
             },
             {
@@ -554,12 +554,12 @@
                 repaso: '#metodo',
                 text: 'Una oficina tiene 40 personas. ¿Cuántos puertos de switch hay que prever, aproximadamente?',
                 options: {
-                    a: '40, uno por persona',
-                    b: 'Bastantes más: se cuentan tomas (PC, teléfonos, impresoras, puntos de acceso, servidores) y se añade un 20-30 % de margen',
+                    a: 'Bastantes más: se cuentan tomas (PC, teléfonos, impresoras, puntos de acceso, servidores) y se añade un 20-30 % de margen',
+                    b: '40, uno por persona',
                     c: '20, porque la mitad usará Wi-Fi',
                     d: 'Exactamente 48, que es el tamaño de switch estándar'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Se cuentan <strong>tomas, no personas</strong>. Entre teléfonos IP, impresoras, puntos de acceso, cámaras, servidores y enlaces entre switches, el total supera con facilidad el doble del número de empleados.'
             },
             {
@@ -568,11 +568,11 @@
                 text: 'Cobre y fibra en un edificio de tres plantas con un armario por planta. ¿Cómo se reparten?',
                 options: {
                     a: 'Fibra hasta cada puesto, cobre entre armarios',
-                    b: 'Cobre del armario al puesto, fibra entre los armarios de las plantas',
-                    c: 'Cobre en todo el edificio',
+                    b: 'Cobre en todo el edificio',
+                    c: 'Cobre del armario al puesto, fibra entre los armarios de las plantas',
                     d: 'Fibra en todo el edificio'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Cobre donde hay muchas tomas y distancias cortas; fibra donde hay pocos enlaces, más de 100 m o ruido eléctrico. Coincide con el modelo jerárquico: cobre en acceso, fibra en distribución.'
             },
             {
@@ -581,11 +581,11 @@
                 text: 'En un informe se lee: «el switch de planta 2 es un punto único de fallo; se asume porque duplicarlo cuesta 1 800 € y afectaría a 12 personas durante 4 h». ¿Qué opinas?',
                 options: {
                     a: 'Es negligente: un punto único de fallo hay que corregirlo siempre',
-                    b: 'Es profesional: el riesgo está identificado, valorado y la decisión es consciente',
-                    c: 'Falta poner de quién es la culpa',
-                    d: 'No debería aparecer en un informe'
+                    b: 'Falta poner de quién es la culpa',
+                    c: 'No debería aparecer en un informe',
+                    d: 'Es profesional: el riesgo está identificado, valorado y la decisión es consciente'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Asumir un riesgo por escrito, con su coste y su impacto, y que lo apruebe quien paga, es exactamente lo correcto. Lo negligente es que ese riesgo no aparezca en ninguna parte.'
             },
             {
@@ -619,12 +619,12 @@
                 repaso: '#documentar',
                 text: '¿Cuál es la parte más valiosa de la documentación de una red?',
                 options: {
-                    a: 'El inventario de números de serie',
-                    b: 'El plano físico',
-                    c: 'El registro de decisiones: por qué se hizo así y qué se descartó',
+                    a: 'El registro de decisiones: por qué se hizo así y qué se descartó',
+                    b: 'El inventario de números de serie',
+                    c: 'El plano físico',
                     d: 'La tabla de cableado'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'El <em>qué</em> se puede deducir mirando la instalación; el <em>porqué</em> se pierde para siempre. Sin él, quien llegue después cambiará algo que estaba resuelto o no tocará nada por miedo.'
             },
             {
@@ -633,11 +633,11 @@
                 text: 'Una empresa de 20 personas sin informático interno recibe un diseño muy sofisticado. ¿Cuál es el riesgo?',
                 options: {
                     a: 'Ninguno: cuanto más avanzado, mejor',
-                    b: 'Que se degrade sola, porque nadie se atreve a tocarla ni a actualizarla',
-                    c: 'Que consuma demasiada electricidad',
+                    b: 'Que consuma demasiada electricidad',
+                    c: 'Que se degrade sola, porque nadie se atreve a tocarla ni a actualizarla',
                     d: 'Que no cumpla la normativa'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Un diseño se juzga por cómo está <strong>dos años después</strong>. El mejor diseño no es el más avanzado, sino el más avanzado que esa empresa puede sostener.'
             },
             {
@@ -646,11 +646,11 @@
                 text: '<em>Repaso.</em> En el diseño hay que documentar el orden de arranque. ¿Cuál es?',
                 options: {
                     a: 'Ficheros → DNS → DHCP → directorio',
-                    b: 'Red física → DHCP → DNS → directorio y NTP → ficheros e impresión',
-                    c: 'Directorio → red física → DNS → DHCP',
-                    d: 'Da igual, todos son independientes'
+                    b: 'Directorio → red física → DNS → DHCP',
+                    c: 'Da igual, todos son independientes',
+                    d: 'Red física → DHCP → DNS → directorio y NTP → ficheros e impresión'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Cada escalón necesita el anterior. Y hay que evitar la dependencia circular de tener el DNS virtualizado en un anfitrión que se localiza por nombre.'
             }
         ]

@@ -349,11 +349,11 @@ const ejerciciosData = {
                     pregunta: '<strong>f)</strong> ¿Qué mide exactamente <code>eth.dst.ig</code>?',
                     opciones: {
                         a: 'Si la dirección la asignó el fabricante o se ha modificado',
-                        b: 'El bit I/G: vale 0 en direcciones individuales y 1 en las de grupo (multicast y difusión)',
-                        c: 'Si la trama va a Internet o se queda en la red local',
-                        d: 'El tamaño de la trama'
+                        b: 'Si la trama va a Internet o se queda en la red local',
+                        c: 'El tamaño de la trama',
+                        d: 'El bit I/G: vale 0 en direcciones individuales y 1 en las de grupo (multicast y difusión)'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Es el bit <strong>I/G</strong> de la Semana 2, el mismo que viste marcado en Wireshark el jueves pasado. La opción a describe el <strong>otro</strong> bit, el U/L.',
                     pistas: [
                         'Son los dos bits de la MAC que estudiaste en la Semana 2. Uno distingue individual de grupo.'
@@ -372,11 +372,11 @@ const ejerciciosData = {
                     pregunta: '<strong>a)</strong> Tu filtro 4 ha dado cero o casi cero. ¿Qué demuestra?',
                     opciones: {
                         a: 'Que no hay más equipos conectados a la red',
-                        b: 'Que hay un switch: mira la MAC de destino y solo envía por el puerto correspondiente',
-                        c: 'Que los demás equipos tienen el tráfico cifrado',
+                        b: 'Que los demás equipos tienen el tráfico cifrado',
+                        c: 'Que hay un switch: mira la MAC de destino y solo envía por el puerto correspondiente',
                         d: 'Que Wireshark no captura bien'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'La a queda descartada por los propios datos: las tramas de difusión y multicast <strong>prueban que hay otros equipos activos</strong>. Lo que no llega es su tráfico unicast, y eso solo lo explica un switch.',
                     pistas: [
                         '¿Cómo sabes, por la propia captura, que sí hay otros equipos en la red?'
@@ -453,12 +453,12 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>a)</strong> Tienes que analizar el tráfico de un servidor desde tu equipo, y el switch te lo impide. ¿Cuál es la solución legítima?',
                     opciones: {
-                        a: 'Sustituir el switch por un hub',
-                        b: 'Configurar port mirroring en el switch para que copie el tráfico de ese puerto al tuyo',
+                        a: 'Configurar port mirroring en el switch para que copie el tráfico de ese puerto al tuyo',
+                        b: 'Sustituir el switch por un hub',
                         c: 'Poner la tarjeta en modo promiscuo',
                         d: 'No se puede hacer'
                     },
-                    respuesta: 'b',
+                    respuesta: 'a',
                     explicacion: 'El modo promiscuo no sirve de nada aquí: solo evita que <strong>tu tarjeta</strong> descarte, pero si la trama no llega a tu puerto no hay nada que descartar. El <em>port mirroring</em> es una opción de los <strong>switches gestionables</strong>.',
                     pistas: [
                         'Si la trama no llega físicamente a tu cable, ¿de qué sirve configurar tu tarjeta?'

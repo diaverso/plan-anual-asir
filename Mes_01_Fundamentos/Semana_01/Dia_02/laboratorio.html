@@ -167,11 +167,11 @@ const ejerciciosData = {
                     tipo: 'opcion',
                     pregunta: '<strong>c)</strong> ¿Qué modo dúplex ha negociado?',
                     opciones: {
-                        a: 'Full-duplex (FullDuplex: True)',
-                        b: 'Half-duplex (FullDuplex: False)',
+                        a: 'Half-duplex (FullDuplex: False)',
+                        b: 'Full-duplex (FullDuplex: True)',
                         c: 'El campo aparece vacío'
                     },
-                    respuesta: 'a',
+                    respuesta: 'b',
                     explicacion: 'Cualquier enlace conmutado moderno negocia <strong>full-duplex</strong>. Si te sale <em>False</em> en un adaptador real, hay un problema de negociación que conviene revisar. Si el campo aparece vacío, casi seguro estás mirando un adaptador <strong>virtual</strong> (WSL, Docker, VirtualBox), que no tiene enlace físico.',
                     pistas: [
                         'Si te aparece vacío, comprueba que no estás mirando un adaptador <code>vEthernet</code>.'
@@ -182,11 +182,11 @@ const ejerciciosData = {
                     pregunta: `<strong>d)</strong> Tu enlace es full-duplex a 1 Gbps. ¿Cuál de estas afirmaciones es <strong>correcta</strong>?`,
                     opciones: {
                         a: 'Puede transmitir 2 Gbps en un solo sentido',
-                        b: 'Puede transmitir 1 Gbps y recibir 1 Gbps a la vez',
-                        c: 'Reparte 500 Mbps para subida y 500 para bajada',
-                        d: 'Solo alcanza 1 Gbps si no hay nadie más en la red'
+                        b: 'Reparte 500 Mbps para subida y 500 para bajada',
+                        c: 'Solo alcanza 1 Gbps si no hay nadie más en la red',
+                        d: 'Puede transmitir 1 Gbps y recibir 1 Gbps a la vez'
                     },
-                    respuesta: 'b',
+                    respuesta: 'd',
                     explicacion: 'Full-duplex significa <strong>dos caminos independientes</strong> de 1 Gbps cada uno, no un camino de 2 Gbps ni uno de 1 Gbps repartido. Y al ser un enlace dedicado punto a punto, el resto de la red no le resta capacidad.',
                     pistas: [
                         'Recuerda lo del puerto de 100 Mbps anunciado como «200 Mbps».'
@@ -316,11 +316,11 @@ const ejerciciosData = {
                                <strong>1 Mbps</strong> (un enlace WAN lento). ¿Cuánto tarda ahora en transmitirse esa trama?`,
                     opciones: {
                         a: 'Sigue siendo despreciable, unos 11 µs',
-                        b: 'Unos 11,2 ms, mil veces más: ya es comparable a la propagación',
-                        c: 'Exactamente lo mismo, el tamaño no influye',
+                        b: 'Exactamente lo mismo, el tamaño no influye',
+                        c: 'Unos 11,2 ms, mil veces más: ya es comparable a la propagación',
                         d: 'Menos, porque los enlaces lentos usan tramas más pequeñas'
                     },
-                    respuesta: 'b',
+                    respuesta: 'c',
                     explicacion: 'Al dividir por una velocidad mil veces menor, el tiempo se multiplica por mil: <strong>11,2 ms</strong>. En enlaces lentos el tamaño de la trama sí pesa, y por eso ahí sí compensa comprimir cabeceras y ajustar el MTU.',
                     pistas: [
                         'La velocidad baja de 1.000 Mbps a 1 Mbps: es dividir por mil.'

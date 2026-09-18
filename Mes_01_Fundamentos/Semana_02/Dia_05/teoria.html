@@ -747,11 +747,11 @@
                 text: 'Un equipo arranca y obtiene la dirección <code>169.254.88.13</code>. ¿Qué ha ocurrido?',
                 options: {
                     a: 'El DHCP le ha asignado una dirección de un rango especial',
-                    b: 'No encontró ningún servidor DHCP y se autoasignó una dirección APIPA',
-                    c: 'El administrador le puso una IP fija',
+                    b: 'El administrador le puso una IP fija',
+                    c: 'No encontró ningún servidor DHCP y se autoasignó una dirección APIPA',
                     d: 'Está conectado a la red de invitados'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es la señal inequívoca de que no hay DHCP o no se llega a él. El equipo parece conectado y muestra una IP de aspecto normal, pero no tiene puerta de enlace ni DNS: <strong>no hay red</strong>.'
             },
             {
@@ -773,11 +773,11 @@
                 text: 'Se cae el servidor DHCP un miércoles a las 11 de la mañana. ¿Qué ocurre inmediatamente?',
                 options: {
                     a: 'Todos los equipos pierden la red al instante',
-                    b: 'Casi nada: los equipos encendidos conservan su concesión durante horas',
-                    c: 'Los equipos pasan automáticamente a IP fija',
-                    d: 'Se cae también el DNS'
+                    b: 'Los equipos pasan automáticamente a IP fija',
+                    c: 'Se cae también el DNS',
+                    d: 'Casi nada: los equipos encendidos conservan su concesión durante horas'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Es el único servicio cuya caída no es inmediata. El problema aparece <strong>al arrancar</strong>: por eso muchas averías de DHCP se descubren un lunes, cuando decenas de equipos piden dirección a la vez.'
             },
             {
@@ -785,12 +785,12 @@
                 repaso: '#dns',
                 text: 'Un usuario no abre ninguna página web, pero <code>ping 8.8.8.8</code> funciona perfectamente. ¿Qué falla?',
                 options: {
-                    a: 'El cableado',
-                    b: 'La puerta de enlace',
-                    c: 'El DNS',
+                    a: 'El DNS',
+                    b: 'El cableado',
+                    c: 'La puerta de enlace',
                     d: 'El servidor de ficheros'
                 },
-                answer: 'c',
+                answer: 'a',
                 feedback: 'Si el ping por IP funciona, hay conectividad completa hasta Internet. Lo único que falta es traducir nombres a direcciones. Es la prueba de diagnóstico más rentable que existe.'
             },
             {
@@ -799,11 +799,11 @@
                 text: '¿Cuál es el valor principal del DNS, más allá de la comodidad?',
                 options: {
                     a: 'Que cifra las conexiones',
-                    b: 'Que aporta indirección: permite cambiar la infraestructura sin avisar a los usuarios',
-                    c: 'Que acelera la navegación',
-                    d: 'Que asigna las direcciones IP'
+                    b: 'Que acelera la navegación',
+                    c: 'Que asigna las direcciones IP',
+                    d: 'Que aporta indirección: permite cambiar la infraestructura sin avisar a los usuarios'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'Sin DNS, cambiar de servidor obligaría a avisar a todos los usuarios del mundo. Esa capa de indirección es la que hace posible el equilibrado de carga y las migraciones sin parada.'
             },
             {
@@ -812,11 +812,11 @@
                 text: 'Una empresa cambia su web a otro servidor. Durante unas horas, unos usuarios ven la web nueva y otros la antigua. ¿Por qué?',
                 options: {
                     a: 'Por un fallo del servidor web',
-                    b: 'Por la caché de DNS: cada respuesta tiene un TTL y unos ya han caducado y otros no',
-                    c: 'Porque el DHCP asigna servidores DNS distintos',
+                    b: 'Porque el DHCP asigna servidores DNS distintos',
+                    c: 'Por la caché de DNS: cada respuesta tiene un TTL y unos ya han caducado y otros no',
                     d: 'Porque el cambio no se hizo bien'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Es el comportamiento normal y esperado. Por eso, antes de una migración planificada, se baja el TTL del registro con antelación para que la caché caduque antes.'
             },
             {
@@ -837,12 +837,12 @@
                 repaso: '#directorio',
                 text: 'Además de autenticar usuarios, ¿qué otra función importante cumple un directorio?',
                 options: {
-                    a: 'Asignar direcciones IP',
-                    b: 'Configurar los equipos mediante directivas centralizadas',
+                    a: 'Configurar los equipos mediante directivas centralizadas',
+                    b: 'Asignar direcciones IP',
                     c: 'Hacer las copias de seguridad',
                     d: 'Resolver nombres de Internet'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Impresoras, unidades de red, restricciones y aplicaciones permitidas se deciden en un sitio y se aplican a todos los equipos. Es la diferencia entre administrar 40 equipos y administrar uno 40 veces.'
             },
             {
@@ -851,11 +851,11 @@
                 text: 'Un equipo lleva el reloj desviado 20 minutos y su usuario no consigue iniciar sesión en el dominio. ¿Por qué?',
                 options: {
                     a: 'Coincidencia: son dos problemas distintos',
-                    b: 'La autenticación usa marcas de tiempo, y un desfase grande hace que se rechacen las credenciales',
-                    c: 'El DHCP no entrega dirección a equipos con la hora mal',
+                    b: 'El DHCP no entrega dirección a equipos con la hora mal',
+                    c: 'La autenticación usa marcas de tiempo, y un desfase grande hace que se rechacen las credenciales',
                     d: 'El DNS no resuelve nombres si la hora está mal'
                 },
-                answer: 'b',
+                answer: 'c',
                 feedback: 'Las marcas de tiempo evitan que alguien reutilice una credencial capturada. El mensaje de error que ve el usuario no menciona la hora por ninguna parte, y por eso cuesta tanto diagnosticarlo.'
             },
             {
@@ -876,12 +876,12 @@
                 repaso: '#dependencias',
                 text: 'El servidor DNS es una máquina virtual, y el anfitrión que la aloja se localiza por su nombre. ¿Qué problema hay?',
                 options: {
-                    a: 'Ninguno: es la configuración recomendada',
-                    b: 'Una dependencia circular: tras un apagón, el anfitrión necesita el DNS y el DNS necesita el anfitrión',
+                    a: 'Una dependencia circular: tras un apagón, el anfitrión necesita el DNS y el DNS necesita el anfitrión',
+                    b: 'Ninguno: es la configuración recomendada',
                     c: 'Que la máquina virtual irá más lenta',
                     d: 'Que hace falta el doble de memoria'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'Es un error real y frecuente al virtualizarlo todo sin pensar. Se evita dejando <strong>direcciones IP fijas y documentadas</strong> en las piezas de infraestructura, pero hay que haberlo previsto antes del apagón.'
             },
             {
@@ -890,11 +890,11 @@
                 text: 'Un usuario no ve una carpeta compartida, pero sus compañeros del mismo departamento sí. ¿Por dónde empiezas?',
                 options: {
                     a: 'Por el servidor de ficheros: seguramente está caído',
-                    b: 'Por sus permisos y sus grupos en el directorio',
-                    c: 'Por el cableado de su puesto',
-                    d: 'Por el servidor DHCP'
+                    b: 'Por el cableado de su puesto',
+                    c: 'Por el servidor DHCP',
+                    d: 'Por sus permisos y sus grupos en el directorio'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El dato decisivo es que <strong>a los demás sí les funciona</strong>: eso descarta el servidor y la red, y apunta a algo específico de ese usuario. Comparar lo que falla con lo que funciona es la técnica de diagnóstico más eficaz.'
             },
             {
@@ -903,11 +903,11 @@
                 text: 'Con presupuesto ajustado, ¿qué servicio conviene duplicar primero?',
                 options: {
                     a: 'El servidor de impresión',
-                    b: 'El DNS: su caída lo paraliza todo y duplicarlo es barato',
-                    c: 'El DHCP, porque su caída es inmediata',
-                    d: 'El servidor de ficheros'
+                    b: 'El DHCP, porque su caída es inmediata',
+                    c: 'El servidor de ficheros',
+                    d: 'El DNS: su caída lo paraliza todo y duplicarlo es barato'
                 },
-                answer: 'b',
+                answer: 'd',
                 feedback: 'El DHCP puede esperar porque las concesiones vigentes aguantan horas. El servidor de ficheros se cubre con copias. El DNS, en cambio, deja la red aparentemente muerta en cuanto falla.'
             },
             {
@@ -928,12 +928,12 @@
                 repaso: '../Dia_03/teoria.html#puertos',
                 text: '<em>Repaso.</em> ¿En qué puerto escucha un servidor DNS?',
                 options: {
-                    a: '22',
-                    b: '53',
+                    a: '53',
+                    b: '22',
                     c: '80',
                     d: '443'
                 },
-                answer: 'b',
+                answer: 'a',
                 feedback: 'El 53, y normalmente sobre <strong>UDP</strong> para las consultas corrientes, porque son pequeñas y no compensa montar una conexión TCP para cada una.'
             }
         ]
