@@ -80,15 +80,16 @@ conteo de dominios y las listas de pasos.
 
 ## Pendientes de la Semana 5 (Mes 2)
 
-Doce diagramas pedidos el 17 de septiembre de 2026. **Diez insertados y dos por regenerar**, que no se
-suben al repositorio hasta tener la versión buena. El 1 y el 6 se aceptaron en la segunda tanda.
+Doce diagramas pedidos el 17 de septiembre de 2026. **Los doce están insertados.** Cuatro necesitaron una
+segunda versión y dos, una tercera:
 
-- **7** `gigabit_4pares`: dibuja señales de dos niveles con el rótulo «2 bits por cambio», que es
-  justo lo que dos niveles no pueden llevar. La segunda versión inventó texto: «transformento», «runa».
-- **12** `relacion_senal_ruido`: los ejes llevan el texto «Amplitude», en inglés. La segunda versión omite
-  el rótulo del panel derecho y añade un trazo de ruido suelto.
+- `parametros_senal`: primero dibujó dos ondas desplazadas y midió mal la fase.
+- `manchester`: primero dibujó el sexto bit, un 1, como una bajada.
+- `gigabit_4pares`: dibujó señales de dos niveles con el rótulo «2 bits por cambio» y, en la segunda
+  versión, se inventó texto: «transformento», «runa».
+- `relacion_senal_ruido`: llevaba los ejes en inglés y, en la segunda versión, le faltaba un rótulo.
 
-Defectos menores en dos de las insertadas: en `modulador` la secuencia de bits tiene una muesca y no casa
+Defectos menores que se conservan: en `modulador` la secuencia de bits tiene una muesca y no casa
 exactamente con la señal modulada; en `ask_fsk_psk` los ciclos del 0 en la fila PSK salen algo más juntos.
 
 | # | Archivo de destino | Dónde va |
