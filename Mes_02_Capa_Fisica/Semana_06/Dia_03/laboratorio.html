@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: presupuesto óptico</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">68 min</span></div>
+        <div class="info-item"><strong>Material:</strong> calculadora · una regla</div>
+        <div class="info-item"><strong>Herramientas:</strong> ninguna especial</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Eres el técnico al que le pasan tres enlaces de fibra para revisar antes de que se instalen. Dos
+            salen bien. <strong>Uno no llega</strong>, y tendrás que decidir qué cambiar. Después mirarás la fibra
+            que probablemente tengas en casa.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>De dónde salen estos números</strong>
+            <p>El libro de la asignatura da las pérdidas de las uniones en <strong>porcentaje</strong>, pero no
+            plantea este cálculo. El método y los valores por kilómetro proceden de las normas de instalación de
+            fibra (<strong>ANSI/TIA-568</strong> e <strong>IEC 61280</strong>) y de las fichas técnicas de los
+            transceptores <strong>IEEE 802.3</strong>. Es contenido de ampliación, pero es lo que se hace en una
+            instalación real.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — El método (10 min)</h2>
+
+            <p>Siempre los mismos tres pasos:</p>
+
+<pre><code>1. PÉRDIDA  =  km × dB/km  +  pares de conectores × dB  +  empalmes × dB
+2. TOTAL    =  PÉRDIDA + margen de seguridad
+3. ¿TOTAL  <  PRESUPUESTO DEL TRANSCEPTOR?     →  el enlace llega</code></pre>
+
+            <p>Donde el <strong>presupuesto del transceptor</strong> es la potencia que emite menos la mínima que su
+            receptor necesita. Cuidado con los signos: son valores negativos en dBm, y la resta de dos negativos da
+            un positivo.</p>
+
+            <div class="destacado">
+                <strong>Tabla de valores</strong>
+                <div class="tabla-wrap">
+                <table>
+                    <thead><tr><th>Elemento</th><th>Pérdida</th></tr></thead>
+                    <tbody>
+                        <tr><td>Fibra multimodo</td><td>3 dB/km</td></tr>
+                        <tr><td>Fibra monomodo</td><td>0,4 dB/km</td></tr>
+                        <tr><td>Par de conectores</td><td>0,75 dB</td></tr>
+                        <tr><td>Empalme por fusión</td><td>0,3 dB</td></tr>
+                        <tr><td>Margen de seguridad</td><td>3 dB</td></tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Transceptor</th><th>Potencia emitida</th><th>Sensibilidad del receptor</th><th>Presupuesto</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Tipo SX</strong> (multimodo)</td><td>−5 dBm</td><td>−17 dBm</td><td>12 dB</td></tr>
+                    <tr><td><strong>Tipo LX</strong> (monomodo)</td><td>−9,5 dBm</td><td>−20 dBm</td><td>10,5 dB</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2>Parte 2 — Los tres enlaces (40 min)</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Enlace</th><th>Escenario</th><th>Fibra</th><th>Longitud</th><th>Pares de conectores</th><th>Empalmes</th><th>Transceptor</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>A</strong></td><td>Entre dos edificios de un campus</td><td>Monomodo</td><td>1,8 km</td><td>2</td><td>2</td><td>LX</td></tr>
+                    <tr><td><strong>B</strong></td><td>Troncal entre dos plantas</td><td>Multimodo</td><td>400 m</td><td>2</td><td>0</td><td>SX</td></tr>
+                    <tr><td><strong>C</strong></td><td>Entre dos naves de un polígono</td><td>Multimodo</td><td>2 km</td><td>3</td><td>4</td><td>SX</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Calcula los tres en la hoja de abajo. <strong>No mires el resultado del tercero antes de hacer los
+            dos primeros</strong>: la gracia está en descubrirlo.</p>
+
+            <h2>Parte 3 — La fibra que tienes cerca (18 min)</h2>
+
+            <p>Dos comprobaciones con lo que tengas a mano.</p>
+
+            <h3>El radio de curvatura</h3>
+
+            <p>Los 25 mm de radio mínimo son un número abstracto hasta que se ve. Busca un objeto cilíndrico y mide
+            su diámetro: si el diámetro es de <strong>50 mm</strong>, su radio es justo el mínimo. Un vaso, un rollo
+            de cinta, una lata.</p>
+
+            <h3>El conector de tu casa</h3>
+
+            <p>Si tienes fibra hasta el domicilio, el cable que entra termina en un aparatito llamado
+            <strong>ONT</strong>, o en el propio router si van integrados. Ese conector es de fibra
+            <strong>monomodo</strong>.</p>
+
+            <div class="aviso">
+                <strong>Cuidado al mirarlo</strong>
+                <ul>
+                    <li><strong>No desconectes</strong> la fibra para verla mejor: te quedarás sin Internet y, si el
+                    extremo se ensucia o se raya, hará falta un técnico.</li>
+                    <li><strong>No mires nunca</strong> de frente el extremo de una fibra conectada. La luz es
+                    infrarroja, no se ve, y puede dañar la vista.</li>
+                    <li>Basta con mirar el <strong>color del conector</strong> sin tocar nada.</li>
+                </ul>
+            </div>
+
+            <div class="destacado">
+                <strong>Un color más, que no sale del libro</strong>
+                <p>El libro da dos colores: <strong>azul</strong> para monomodo y <strong>beige</strong> para
+                multimodo. En las instalaciones domésticas de fibra españolas vas a ver mucho el
+                <strong>verde</strong>: es un conector <strong>SC/APC</strong>, monomodo con el extremo pulido en
+                ángulo para reducir los reflejos hacia el emisor. El azul es el <strong>SC/UPC</strong>, pulido
+                plano. Es una convención posterior al libro, pero conviene reconocerla.</p>
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has calculado la pérdida total de los tres enlaces y su veredicto.</li>
+                <li>Has identificado por qué falla el enlace C y has propuesto un cambio con números.</li>
+                <li>Has comprobado con un objeto real cuánto es un radio de curvatura de 25 mm.</li>
+                <li>Sabes reconocer un conector de fibra monomodo por su color.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_02/laboratorio.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/laboratorio.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Laboratorio: presupuesto óptico',
+    subtitulo: 'Tres enlaces, uno que no llega · el radio de curvatura en la mano · el conector de tu casa',
+    tiempo: '68 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Enlace A — campus, 1,8 km monomodo',
+            tiempo: '12 min',
+            enunciado: '<p>Monomodo, 1,8 km, 2 pares de conectores, 2 empalmes por fusión, transceptor LX.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Pérdida de la fibra.',
+                    respuesta: 0.72,
+                    tolerancia: 0.02,
+                    unidad: 'dB',
+                    explicacion: '1,8 × 0,4 = <strong>0,72 dB</strong>. La monomodo atenúa muy poco: casi dos kilómetros y no llega ni a un decibelio.',
+                    pistas: ['Kilómetros por 0,4.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Pérdida de conectores y empalmes juntos.',
+                    respuesta: 2.1,
+                    tolerancia: 0.02,
+                    unidad: 'dB',
+                    explicacion: '2 × 0,75 = 1,5 de conectores y 2 × 0,3 = 0,6 de empalmes: <strong>2,1 dB</strong>. Fíjate en que las uniones pierden <strong>casi el triple</strong> que 1,8 km de fibra.',
+                    pistas: ['Calcula los dos conceptos por separado y súmalos.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Pérdida total con el margen de seguridad incluido.',
+                    respuesta: 5.82,
+                    tolerancia: 0.05,
+                    unidad: 'dB',
+                    explicacion: '0,72 + 2,1 = 2,82, más 3 de margen: <strong>5,82 dB</strong>.',
+                    pistas: ['Suma los dos apartados anteriores y añade el margen.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Con un transceptor LX, ¿el enlace llega?',
+                    opciones: {
+                        a: 'No: se queda a medio decibelio',
+                        b: 'Sí: 5,82 dB frente a los 10,5 dB de presupuesto, con casi el doble de margen',
+                        c: 'Solo si se quitan los empalmes',
+                        d: 'No se puede saber sin conocer la velocidad'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Presupuesto del LX: −9,5 − (−20) = <strong>10,5 dB</strong>. La pérdida es casi la mitad, así que el enlace es holgado y admitiría incluso algún empalme más en el futuro.',
+                    pistas: ['Resta la sensibilidad a la potencia emitida y compara.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Enlace B — troncal de 400 m multimodo',
+            tiempo: '10 min',
+            enunciado: '<p>Multimodo, 400 m, 2 pares de conectores, sin empalmes, transceptor SX.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Pérdida total, con margen.',
+                    respuesta: 5.7,
+                    tolerancia: 0.05,
+                    unidad: 'dB',
+                    explicacion: 'Fibra: 0,4 km × 3 = 1,2. Conectores: 1,5. Total 2,7, más 3 de margen: <strong>5,7 dB</strong>. Ojo al pasar 400 m a kilómetros.',
+                    pistas: ['400 m son 0,4 km.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Llega, con un transceptor SX de 12 dB de presupuesto?',
+                    opciones: {
+                        a: 'Sí, con holgura',
+                        b: 'No',
+                        c: 'Justo, sin margen alguno',
+                        d: 'Habría que usar monomodo'
+                    },
+                    respuesta: 'a',
+                    explicacion: '5,7 frente a 12 dB. En distancias cortas la multimodo va sobrada, y además sus transceptores son más baratos: por eso dentro de un edificio se sigue usando.',
+                    pistas: ['Compara con los 12 dB del SX.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Comparando A y B: el enlace A mide 1,8 km y el B solo 400 m, pero pierden casi lo mismo. ¿Por qué?',
+                    opciones: {
+                        a: 'Porque el margen de seguridad es igual en los dos',
+                        b: 'Porque la multimodo atenúa 3 dB/km frente a los 0,4 dB/km de la monomodo: siete veces más',
+                        c: 'Porque el enlace B tiene más conectores',
+                        d: 'Porque el transceptor SX es peor'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los dos tienen los mismos conectores y el mismo margen. Lo único que cambia de verdad es el <strong>tipo de fibra</strong>: 1,2 dB en 400 m de multimodo frente a 0,72 dB en 1 800 m de monomodo.',
+                    pistas: ['Mira qué conceptos son iguales en los dos enlaces y cuál no.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Enlace C — el que no llega',
+            tiempo: '20 min',
+            enunciado: '<p>Multimodo, 2 km, 3 pares de conectores, 4 empalmes por fusión, transceptor SX.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Pérdida de la fibra.',
+                    respuesta: 6,
+                    tolerancia: 0.05,
+                    unidad: 'dB',
+                    explicacion: '2 × 3 = <strong>6 dB</strong>, la mitad del presupuesto entero gastada solo en el cable.',
+                    pistas: ['Multimodo: 3 dB por kilómetro.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Pérdida de conectores y empalmes.',
+                    respuesta: 3.45,
+                    tolerancia: 0.05,
+                    unidad: 'dB',
+                    explicacion: '3 × 0,75 = 2,25 y 4 × 0,3 = 1,2: <strong>3,45 dB</strong>.',
+                    pistas: ['Tres pares de conectores y cuatro empalmes.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Pérdida total con margen.',
+                    respuesta: 12.45,
+                    tolerancia: 0.05,
+                    unidad: 'dB',
+                    explicacion: '6 + 3,45 = 9,45, más 3 de margen: <strong>12,45 dB</strong>.',
+                    pistas: ['Suma los dos apartados y el margen.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> El transceptor SX da 12 dB. ¿Cuál es el veredicto?',
+                    opciones: {
+                        a: 'Llega: 12,45 es prácticamente 12',
+                        b: 'Llega, porque el margen de seguridad no cuenta',
+                        c: 'No llega: se pasa en 0,45 dB, y ese margen existe precisamente para no apurar',
+                        d: 'No se puede decidir'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Se pasa por poco, y ese «por poco» es justamente lo que el margen de 3 dB está ahí para cubrir: envejecimiento, suciedad en los conectores, reparaciones futuras. Un enlace al límite funciona el día de la instalación y falla en invierno.',
+                    pistas: ['¿Para qué sirve el margen de seguridad?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Se cambia la fibra a <strong>monomodo</strong> con transceptores LX, manteniendo los 2 km, los 3 pares de conectores y los 4 empalmes. ¿Cuál es ahora la pérdida total con margen?',
+                    respuesta: 8.25,
+                    tolerancia: 0.05,
+                    unidad: 'dB',
+                    explicacion: 'Fibra: 2 × 0,4 = 0,8. Uniones: 3,45. Margen: 3. Total <strong>8,25 dB</strong>, frente a los 10,5 dB del LX: ahora <strong>llega</strong>. Cambiar el tipo de fibra ha ahorrado 5,2 dB de golpe.',
+                    pistas: ['Solo cambia el término de la fibra.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>f)</strong> Sin cambiar de fibra, ¿qué otra medida habría bastado para que el enlace C entrara en presupuesto?',
+                    opciones: {
+                        a: 'Añadir otro empalme para repartir la pérdida',
+                        b: 'Reducir las uniones: pasar de 3 pares de conectores a 2 ahorra 0,75 dB, más que los 0,45 que sobran',
+                        c: 'Aumentar la velocidad del enlace',
+                        d: 'Usar cable holgado en lugar de ajustado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Cada unión suprimida es pérdida que desaparece. Añadir empalmes suma pérdida, la velocidad no interviene en el cálculo y el tipo de cable no cambia la atenuación por kilómetro.',
+                    pistas: ['Faltan 0,45 dB. ¿Qué elemento de la lista pierde más que eso?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: La fibra que tienes cerca',
+            tiempo: '16 min',
+            enunciado: '<p>Sal de los números y mira cosas reales.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> ¿Qué objeto has usado para hacerte una idea del radio mínimo de 25 mm, y qué diámetro tiene?',
+                    ancho: '300px',
+                    placeholder: 'un vaso, unos 60 mm',
+                    explicacion: 'Con un diámetro de 50 mm el radio es exactamente el mínimo. Cualquier cosa más estrecha que eso es <strong>demasiado cerrada</strong> para una fibra: la luz se escaparía por la curva.',
+                    pistas: ['Radio 25 mm es diámetro 50 mm: algo así como una lata pequeña.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Tienes fibra en casa? Mira el conector del ONT o del router, <strong>sin tocarlo</strong>.',
+                    libre: true,
+                    opciones: {
+                        a: 'Sí, y el conector es verde',
+                        b: 'Sí, y el conector es azul',
+                        c: 'Sí, pero no distingo el color',
+                        d: 'No tengo fibra: mi conexión entra por cable coaxial o por par telefónico'
+                    },
+                    explicacion: 'En España lo más habitual es el <strong>verde</strong>, un SC/APC monomodo con el extremo pulido en ángulo. El azul es SC/UPC, pulido plano. Y si tu conexión entra por coaxial, estás usando el otro medio de hoy: coaxial de <strong>banda ancha</strong>.',
+                    pistas: ['No hay respuesta incorrecta: se registra lo que hayas observado.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Escribe el <strong>informe</strong> de los tres enlaces tal como se lo entregarías a quien te los pasó: veredicto de cada uno, y en el que falla, qué recomiendas y por qué.',
+                    filas: 8,
+                    modelo: '<p><strong>Enlace A</strong> (campus, 1,8 km monomodo, LX): pérdida total <strong>5,82 dB</strong> frente a 10,5 dB de presupuesto. <strong>Viable</strong>, con holgura suficiente para futuras reparaciones o algún empalme más.</p><p><strong>Enlace B</strong> (troncal, 400 m multimodo, SX): pérdida total <strong>5,7 dB</strong> frente a 12 dB. <strong>Viable</strong>. La multimodo es la opción correcta aquí: la distancia es corta y los transceptores son más baratos.</p><p><strong>Enlace C</strong> (2 km multimodo, 3 pares de conectores y 4 empalmes, SX): pérdida total <strong>12,45 dB</strong> frente a 12 dB. <strong>No viable</strong>: se pasa en 0,45 dB. El problema principal no son las uniones sino <strong>el tipo de fibra</strong>: 2 km de multimodo cuestan 6 dB, la mitad del presupuesto.</p><p><strong>Recomendación:</strong> cambiar a <strong>monomodo con transceptores LX</strong>. La pérdida baja a 8,25 dB frente a 10,5 dB disponibles, y queda margen real. Como alternativa de menor coste, mantener la multimodo y <strong>reducir las uniones</strong> —pasar de 3 a 2 pares de conectores ahorra 0,75 dB—, pero el enlace quedaría en 11,7 dB sobre 12, es decir, al límite: no lo recomendaría para un tendido entre naves, donde el mantenimiento futuro es incómodo.</p>',
+                    rubrica: [
+                        'Da el veredicto de los tres enlaces con sus cifras',
+                        'Identifica el tipo de fibra como causa principal del fallo del enlace C',
+                        'Propone el cambio a monomodo y lo justifica con el nuevo cálculo',
+                        'Menciona la alternativa de reducir uniones y sus límites',
+                        'Tiene en cuenta el margen para el futuro, no solo el día de la instalación'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -109,3 +109,30 @@ exactamente con la señal modulada; en `ask_fsk_psk` los ciclos del 0 en la fila
 
 Se quedan en ASCII: la fórmula de Shannon desarrollada, la comparación de los dos límites en cifras
 y los desgloses numéricos.
+
+---
+
+## Semana 6 — Medios cableados · completas
+
+Siete imágenes, todas insertadas y optimizadas a la primera: ninguna hubo que rehacerla. En
+conjunto pasaron de **7 160 KB a 1 426 KB**, un 80 % menos.
+
+| # | Archivo de destino | Dónde va |
+|--:|---|---|
+| 1 | `m02_s06_d01_apantallamientos.png` | D1 · cortes de UTP, FTP, STP y S/STP |
+| 2 | `m02_s06_d02_destrenzado.png` | D2 · destrenzado correcto frente a excesivo |
+| 3 | `m02_s06_d02_par_partido.png` | D2 · par partido: continuidad correcta, cable malo |
+| 4 | `m02_s06_d03_coaxial.png` | D3 · las cuatro capas del coaxial |
+| 5 | `m02_s06_d03_tipos_fibra.png` | D3 · monomodo, multimodo e índice gradual |
+| 6 | `m02_s06_d03_empalme_fibra.png` | D3 · los tres cortes de extremo: plano, oblicuo y pulido |
+| 7 | `m02_s06_d04_arbol_decision.png` | D4 · árbol de decisión para elegir medio |
+
+Todas se redujeron a 1 400 px de ancho, salvo el árbol de decisión, que es vertical y se dejó en
+1 145 × 1 374. En esta tanda hizo falta una segunda pasada de limpieza, con el umbral de fondo en
+236 y escalones de 16, porque con los valores habituales se quedaban en torno a 300 KB.
+
+El Día 1 **reutiliza** `m01_s02_d02_cancelacion_ruido.png`, de la Semana 2 del Mes 1: el mecanismo
+del trenzado es el mismo y no hacía falta una imagen nueva.
+
+Se quedan en ASCII: el orden de pines del conector visto a contraluz, el plano de la nave del
+laboratorio del Día 4 y los desgloses de decibelios.

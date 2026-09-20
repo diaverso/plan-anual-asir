@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Hoja de recuperación: medios cableados</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 5 — Hoja de recuperación</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">62 min</span></div>
+        <div class="info-item"><strong>Bloques:</strong> 5</div>
+        <div class="info-item"><strong>Se hace:</strong> después del test</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Cómo usar esta hoja</strong>
+            <p>Empieza por el bloque del <strong>día con peor resultado</strong> en el desglose del test. Si has
+            aprobado holgado, ve directo al bloque 5, que es el que junta toda la semana.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Cierre de la Semana 6</strong>
+            <ul>
+                <li>⏱️ <strong>Tiempo previsto:</strong> 22 h 07 min en cinco sesiones.</li>
+                <li>📚 <strong>Contenido:</strong> criterios de un medio · par sin trenzar · apantallamientos y
+                categorías · montaje de conectores macho y hembra · errores y diagnóstico · coaxial de banda base y
+                banda ancha · fibra, modos, uniones y presupuesto óptico · comparativa y decisión.</li>
+                <li>🛠️ <strong>Prácticas:</strong> lectura de la ficha de un cable · presupuesto y plano de una
+                oficina · presupuesto óptico de tres enlaces · diseño de los cuatro tramos de una nave.</li>
+                <li>🧠 <strong>Lo que conviene reforzar antes de la Semana 7:</strong> las cifras de la tabla de
+                síntesis y la diferencia entre inmunidad a EMI e inmunidad a peligros eléctricos.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Síntesis y test</a></span>
+        <span><a href="../Dia_04/ejercicios.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 5 — Hoja de recuperación',
+    subtitulo: 'Las cifras, los procedimientos y las decisiones de la semana',
+    tiempo: '62 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1 · Día 1: las cifras del cobre',
+            tiempo: '12 min',
+            enunciado: '<p>Si has fallado preguntas del Día 1, empieza aquí. <a href="../Dia_01/teoria.html">Teoría del Día 1</a>.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa la familia del par trenzado.',
+                    frase: 'El {{0}} no lleva ninguna pantalla conductora: es el más flexible y el más barato, pero el de menor inmunidad. El {{1}} rodea cada par con su propia malla conectada a tierra. El {{2}} lleva una única pantalla global. Y el que combina malla por par y pantalla global, el de mayor inmunidad de todos, es el {{3}}.',
+                    respuestas: [
+                        ['UTP'],
+                        ['STP'],
+                        ['FTP', 'S/UTP', 'S/FTP'],
+                        ['S/STP']
+                    ],
+                    explicacion: 'De menos a más metal: <strong>UTP → FTP → STP → S/STP</strong>, y ese mismo orden vale para el precio y la rigidez.',
+                    pistas: ['El tercero es el que el libro llama también S/UTP.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Cuántos MHz garantiza una categoría 6A?',
+                    respuesta: 500,
+                    unidad: 'MHz',
+                    explicacion: '<strong>500 MHz</strong>, que es lo que le permite sostener 10 Gbps a 100 m. La Cat 6 se queda en 250 y la 5e, en 100.',
+                    pistas: ['Es el doble que la Cat 6.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Un par de Cat 6 (250 MHz) con 8 niveles de señal. Capacidad máxima según Nyquist, en Mbps.',
+                    respuesta: 1500,
+                    unidad: 'Mbps',
+                    explicacion: 'C = 2 · 250 · log₂8 = 2 · 250 · 3 = <strong>1 500 Mbps</strong>. Con 8 niveles cada símbolo lleva 3 bits.',
+                    pistas: ['log₂8 = 3.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Cuál de estas <strong>no</strong> influye en la categoría de un cable?',
+                    opciones: {
+                        a: 'El número de pares',
+                        b: 'Las vueltas por metro del trenzado',
+                        c: 'El color de los aislantes',
+                        d: 'Los materiales empleados'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Los colores sirven para <strong>identificar</strong> los pares al engastar, nada más. Los tres factores de la categoría son pares, vueltas por metro y materiales.',
+                    pistas: ['Tres de las cuatro las cita el libro juntas.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2 · Día 2: el procedimiento',
+            tiempo: '13 min',
+            enunciado: '<p>Montaje y diagnóstico. <a href="../Dia_02/teoria.html">Teoría del Día 2</a>.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena estos cinco pasos del montaje de un RJ-45 macho.',
+                    elementos: [
+                        'Engastar con la crimpadora',
+                        'Destrenzar los pares y ordenar los colores',
+                        'Meter la funda protectora del conector por el cable',
+                        'Cortar los hilos a la misma altura',
+                        'Retirar unos 4 cm de funda del cable'
+                    ],
+                    orden: [
+                        'Meter la funda protectora del conector por el cable',
+                        'Retirar unos 4 cm de funda del cable',
+                        'Destrenzar los pares y ordenar los colores',
+                        'Cortar los hilos a la misma altura',
+                        'Engastar con la crimpadora'
+                    ],
+                    explicacion: 'La funda del conector <strong>siempre primero</strong>. Y el corte a la misma altura, antes de introducir los hilos, no después.',
+                    pistas: ['¿Qué pieza no podrá pasar por el cable una vez engastado el conector?']
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Relaciona cada síntoma con su causa más probable.',
+                    izquierda: [
+                        'Ocho luces correctas, pero solo 100 Mbps',
+                        'Se cae al rozar el cable',
+                        'Solo este tramo, junto a las luminarias, da errores',
+                        'No hay enlace en absoluto tras rehacer el conector'
+                    ],
+                    derecha: [
+                        'Par partido o un par sin contacto real',
+                        'Fallo mecánico: engaste flojo o cable en tensión',
+                        'Pantalla sin contacto a tierra',
+                        'Un hilo de los pares 1-2 o 3-6 no llega al fondo'
+                    ],
+                    pares: {
+                        'Ocho luces correctas, pero solo 100 Mbps': 'Par partido o un par sin contacto real',
+                        'Se cae al rozar el cable': 'Fallo mecánico: engaste flojo o cable en tensión',
+                        'Solo este tramo, junto a las luminarias, da errores': 'Pantalla sin contacto a tierra',
+                        'No hay enlace en absoluto tras rehacer el conector': 'Un hilo de los pares 1-2 o 3-6 no llega al fondo'
+                    },
+                    explicacion: 'Distingue siempre <strong>«va mal» de «no va»</strong>: la degradación apunta a diafonía o pantalla, y el corte limpio, a un contacto que no se cierra.',
+                    pistas: ['Uno de los cuatro depende de tocar físicamente el cable.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué el par 3 ocupa los pines 3 y 6 en lugar de dos contiguos?',
+                    opciones: {
+                        a: 'Por compatibilidad con la telefonía, que usa los dos pines centrales',
+                        b: 'Para repartir mejor el calor en el conector',
+                        c: 'Porque el verde es el par más largo',
+                        d: 'Para facilitar el engaste'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Y ese diseño es, de paso, el origen del <strong>par partido</strong>: es fácil equivocarse y meter en los pines 3 y 6 hilos de pares distintos.',
+                    pistas: ['¿Qué otro aparato se enchufa en un conector parecido?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3 · Día 3: la luz y sus cuentas',
+            tiempo: '14 min',
+            enunciado: '<p>Coaxial y fibra. <a href="../Dia_03/teoria.html">Teoría del Día 3</a>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa los datos de la fibra.',
+                    esquina: 'Dato',
+                    cabecera: ['Valor'],
+                    filas: [
+                        { etiqueta: 'Atenuación de la monomodo, por km', celdas: [{ respuestas: ['0,4 dB', '0.4 dB', '0,4', '0.4'], placeholder: 'dB/km' }] },
+                        { etiqueta: 'Atenuación de la multimodo, por km', celdas: [{ respuestas: ['3 dB', '3'], placeholder: 'dB/km' }] },
+                        { etiqueta: 'Pérdida de una unión por conectores', celdas: [{ respuestas: ['10-20 %', '10 a 20 %', 'del 10 al 20 %', '10-20', '10 al 20 %'], placeholder: 'porcentaje' }] },
+                        { etiqueta: 'Radio de curvatura mínimo', celdas: [{ respuestas: ['25 mm', '25'], placeholder: 'mm' }] },
+                        { etiqueta: 'Distancia entre repetidores en fibra', celdas: [{ respuestas: ['30 km', '30'], placeholder: 'km' }] },
+                        { etiqueta: 'Color del conector multimodo', celdas: [{ respuestas: ['beige'], placeholder: 'color' }] }
+                    ],
+                    explicacion: 'Las dos primeras son las que más se usan en los cálculos; las otras cuatro son de examen puro.',
+                    pistas: ['La atenuación de la multimodo es más de siete veces la de la monomodo.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Enlace de 1,5 km de multimodo, 2 pares de conectores y 2 empalmes por fusión, con margen de 3 dB. Pérdida total.',
+                    respuesta: 9.6,
+                    tolerancia: 0.1,
+                    unidad: 'dB',
+                    explicacion: '1,5 × 3 = 4,5 · conectores 1,5 · empalmes 0,6 · margen 3 → <strong>9,6 dB</strong>. Con un SX de 12 dB entra, pero con poco margen para el futuro.',
+                    pistas: ['Multimodo: 3 dB por kilómetro.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> El mismo enlace en monomodo con transceptores LX. ¿Pérdida total?',
+                    respuesta: 5.7,
+                    tolerancia: 0.1,
+                    unidad: 'dB',
+                    explicacion: '1,5 × 0,4 = 0,6 · 1,5 · 0,6 · 3 → <strong>5,7 dB</strong>, frente a los 10,5 dB del LX. Solo cambiar el tipo de fibra ha ahorrado <strong>3,9 dB</strong>.',
+                    pistas: ['Solo cambia el término de la fibra.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Por qué el coaxial de banda ancha llega a 100 km y el de banda base no?',
+                    opciones: {
+                        a: 'Porque es más grueso',
+                        b: 'Porque su señal analógica es menos crítica: se degrada de forma gradual y basta con amplificarla',
+                        c: 'Porque la señal digital se puede regenerar',
+                        d: 'Porque usa conectores BNC'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La regeneración de lo digital es una ventaja del <strong>equipamiento</strong>, no del cable, y por eso no aparece aquí. Lo que permite los 100 km es que una señal analógica algo degradada sigue sirviendo.',
+                    pistas: ['¿Qué tipo de señal lleva cada uno?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4 · Día 4: decidir',
+            tiempo: '11 min',
+            enunciado: '<p>Comparativa y criterios. <a href="../Dia_04/teoria.html">Teoría del Día 4</a>.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena las cinco preguntas del método de decisión.',
+                    elementos: [
+                        '¿Cuánto cuesta en total, material más montaje?',
+                        '¿Qué distancia hay?',
+                        '¿Quién lo va a mantener?',
+                        '¿Cómo es el entorno?',
+                        '¿Qué velocidad hará falta dentro de diez años?'
+                    ],
+                    orden: [
+                        '¿Qué distancia hay?',
+                        '¿Cómo es el entorno?',
+                        '¿Qué velocidad hará falta dentro de diez años?',
+                        '¿Cuánto cuesta en total, material más montaje?',
+                        '¿Quién lo va a mantener?'
+                    ],
+                    explicacion: 'Primero las dos que <strong>descartan</strong>, después la que <strong>dimensiona</strong>, y solo al final el dinero y las personas.',
+                    pistas: ['¿Cuál de las cinco puede eliminar un medio entero de un plumazo?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Marca <strong>todas</strong> las afirmaciones correctas sobre la comparación cobre-fibra.',
+                    multiple: true,
+                    opciones: {
+                        a: 'La fibra admite más ancho de banda y más distancia',
+                        b: 'El cobre exige menos conocimientos de instalación',
+                        c: 'La fibra es totalmente inmune a EMI y RFI',
+                        d: 'El cobre es inmune a los peligros eléctricos',
+                        e: 'El coste de medios y conectores es menor en cobre'
+                    },
+                    respuesta: ['a', 'b', 'c', 'e'],
+                    explicacion: 'Justo al revés en la cuarta: el cobre tiene inmunidad <strong>baja</strong> a los peligros eléctricos, porque conduce. Es la fibra la que aísla.',
+                    pistas: ['Una de las cinco invierte lo que dice la tabla.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> ¿Qué conector usa el coaxial delgado?',
+                    respuestas: ['BNC'],
+                    explicacion: '<strong>BNC</strong>. El grueso usa transceptor y el par trenzado, RJ-45.',
+                    pistas: ['Tres letras.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 5 · Toda la semana en un caso',
+            tiempo: '12 min',
+            enunciado: '<p>El ejercicio que junta los cuatro días. Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: 'Un hotel rehace su red. Hay cuatro tramos: <strong>(1)</strong> 90 habitaciones con tramos de 20 a 60 m por falso techo; <strong>(2)</strong> la lavandería, a 40 m del armario, con maquinaria industrial; <strong>(3)</strong> el edificio de spa, a 250 m cruzando el jardín, con cuadro eléctrico propio; <strong>(4)</strong> el enlace entre los dos armarios de la planta baja, 30 m, con 10 Gbps. <strong>Elige medio para cada tramo y justifícalo</strong>, e indica una precaución de montaje para cada uno.',
+                    filas: 12,
+                    modelo: '<p><strong>Tramo 1 · habitaciones.</strong> UTP <strong>Cat 6</strong>. Las dos primeras preguntas no descartan nada: los 60 m máximos entran en los 90 m de cableado fijo y un falso techo de hotel no tiene fuentes de ruido relevantes. Deciden el coste y la instalación, y con 90 tomas la diferencia de precio se multiplica por 90. <em>Precaución:</em> engastar <strong>los cuatro pares</strong> en todas las rosetas y respetar el destrenzado mínimo; con ese volumen, un procedimiento descuidado deja decenas de enlaces mediocres.</p><p><strong>Tramo 2 · lavandería.</strong> Par trenzado <strong>apantallado</strong> con la pantalla a tierra en los dos extremos, o fibra multimodo si no puede garantizarse. La distancia entra, pero el entorno con maquinaria industrial descarta el UTP. <em>Precaución:</em> comprobar en el montaje que la pantalla hace contacto con el chasis del conector, y separar la canalización de datos de la de energía conforme a los códigos de seguridad.</p><p><strong>Tramo 3 · spa.</strong> <strong>Fibra</strong>, con cable holgado de exterior. Dos razones independientes: los 250 m superan el límite de 100 m, y el edificio tiene <strong>cuadro eléctrico propio</strong>, de modo que el cobre uniría dos tierras distintas. A esa distancia bastaría multimodo, aunque con monomodo el presupuesto óptico quedaría mucho más holgado. <em>Precaución:</em> respetar el radio de curvatura de 25 mm en el armario y mantener las fundas puestas en los conectores hasta el momento de conectarlos.</p><p><strong>Tramo 4 · entre armarios.</strong> <strong>Cat 6A</strong> o fibra multimodo: a 30 m los dos cubren 10 Gbps y decide el coste total, incluidos los transceptores, y qué puertos traigan los switches. <em>Precaución:</em> si se va por cobre, certificar el enlace, porque a 10 Gbps un destrenzado excesivo o un par partido ya no perdonan.</p><p><strong>Comprobación final:</strong> ningún tramo de cobre pasa de 90 m de cableado fijo, todos los enlaces se etiquetan en roseta y panel con el mismo código, y el tramo 3 se calcula con presupuesto óptico antes de comprar nada.</p>',
+                    rubrica: [
+                        'Elige medio y categoría o tipo concretos para los cuatro tramos',
+                        'Justifica cada uno con el criterio que resulta decisivo',
+                        'Da dos razones independientes en el tramo del spa',
+                        'Reconoce que el tramo 4 admite dos soluciones válidas y dice qué lo decide',
+                        'Aporta una precaución de montaje distinta y pertinente para cada tramo',
+                        'Cierra con comprobaciones: longitudes, etiquetado y presupuesto óptico'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

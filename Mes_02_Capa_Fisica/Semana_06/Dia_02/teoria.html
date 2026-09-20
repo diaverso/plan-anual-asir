@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Montaje y comprobación de conectores</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 2 — Montaje y comprobación</h1>
+        <p>El conector como punto débil · RJ-45 macho paso a paso · la roseta · los errores que no tumban la red, solo la estropean</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 62 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 13 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 41 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Ayer quedó claro que el trenzado es lo que protege al cable, y que una pantalla sin tierra hace más mal
+            que bien. Hoy se ve el sitio exacto donde las dos cosas se pierden: <strong>los dos extremos</strong>.
+        </div>
+
+        <div class="aviso">
+            <strong>Una advertencia sobre este tema</strong>
+            Es el más «de taller» de la asignatura y también uno de los que más caen en examen, porque se puede
+            preguntar con precisión: pasos en orden, longitudes en milímetros, herramientas por su nombre. Merece la
+            pena aprendérselo bien aunque no tengas una crimpadora en casa.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#debil">Por qué el conector es el punto débil</a></li>
+                <li><a href="#recomendaciones">Las cuatro recomendaciones generales</a></li>
+                <li><a href="#normas">T568A y T568B: qué hace cada pin</a></li>
+                <li><a href="#macho">Montaje de un RJ-45 macho, paso a paso</a></li>
+                <li><a href="#longitudes">Las longitudes que deciden si el enlace va bien</a></li>
+                <li><a href="#hembra">Montaje de un RJ-45 hembra: la roseta</a></li>
+                <li><a href="#errores">Los errores típicos y sus síntomas</a></li>
+                <li><a href="#comprobar">Comprobar el trabajo</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="debil">1. Por qué el conector es el punto débil</h2>
+
+            <p>A veces los conectores vienen ya montados de fábrica, como en los latiguillos cortos que unen equipos
+            dentro de un armario. Pero los cables que van por canaletas, paredes y techos hasta un enchufe de pared
+            hay que <strong>montarlos a mano</strong>. Y ahí está el riesgo:</p>
+
+            <div class="dato">
+                <strong>Lo que dice el libro</strong>
+                <p>Es muy importante realizar un buen montaje de los conectores porque <strong>estos puntos son más
+                propensos a que el ruido se introduzca a través de ellos</strong>. Si no se siguen las
+                recomendaciones, el conector montado puede convertirse en una <strong>fuente receptora de
+                ruido</strong> para toda la instalación.</p>
+            </div>
+
+            <p>Tiene su lógica. En el conector pasan a la vez tres cosas malas:</p>
+
+            <ul>
+                <li>Se <strong>retira la funda</strong>, así que el cable queda desnudo.</li>
+                <li>Se <strong>destrenzan los pares</strong>, y sin trenzado no hay cancelación: justo lo que ayer
+                viste que protege del ruido.</li>
+                <li>Se <strong>interrumpe la pantalla</strong>, si el cable la lleva, y hay que reconstruir su
+                contacto a mano.</li>
+            </ul>
+
+<pre><code>tramo de cable          conector          tramo de cable
+════════════════  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ════════════════
+  protegido        ← aquí no →         protegido
+                 sin funda, sin trenzado,
+                 la pantalla interrumpida</code></pre>
+
+            <h2 id="recomendaciones">2. Las cuatro recomendaciones generales</h2>
+
+            <p>El libro las da para cualquier montaje, sea macho o hembra. Son cuatro y conviene sabérselas de
+            memoria, porque cada una evita un problema concreto:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Recomendación</th><th>Qué evita</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1.</strong> Mantener el trenzado de los pares lo más cerca posible del punto donde encajan con el conector</td><td>Que se pierda la cancelación del ruido y aparezca <strong>diafonía</strong></td></tr>
+                    <tr><td><strong>2.</strong> Eliminar solo el fragmento de pantalla protectora necesario para hacer la conexión</td><td>Dejar el cable desprotegido más allá de lo imprescindible</td></tr>
+                    <tr><td><strong>3.</strong> <strong>No realizar empalmes</strong> de los cables</td><td>Un empalme es una discontinuidad: refleja señal y capta ruido</td></tr>
+                    <tr><td><strong>4.</strong> Dejar longitud suficiente para que el cable no quede forzado ni tire del conector</td><td>Que el propio peso o un tirón acaben arrancando los contactos</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>«No hacer empalmes» va en serio</strong>
+                Si un cable se corta, la solución no es unir los dos trozos: es <strong>tirar otro tramo</strong> o
+                poner una roseta y un latiguillo. Un empalme casero en un cable de datos no es como en un cable
+                eléctrico; ahí no circula corriente continua, circulan señales de decenas o cientos de megahercios.
+            </div>
+
+            <h2 id="normas">3. T568A y T568B: qué hace cada pin</h2>
+
+            <p>Las dos conexiones que definen los estándares de cableado estructurado ya las conoces del
+            <a href="../../../Mes_01_Fundamentos/Semana_02/Dia_02/teoria.html">Mes 1</a>. Aquí están las dos tablas
+            del libro, para tenerlas a mano durante el montaje:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Pin</th><th>T568A · par</th><th>T568A · color</th><th>T568B · par</th><th>T568B · color</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>3</td><td>Blanco verde</td><td>2</td><td>Blanco naranja</td></tr>
+                    <tr><td>2</td><td>3</td><td>Verde</td><td>2</td><td>Naranja</td></tr>
+                    <tr><td>3</td><td>2</td><td>Blanco naranja</td><td>3</td><td>Blanco verde</td></tr>
+                    <tr><td>4</td><td>1</td><td>Azul</td><td>1</td><td>Azul</td></tr>
+                    <tr><td>5</td><td>1</td><td>Blanco azul</td><td>1</td><td>Blanco azul</td></tr>
+                    <tr><td>6</td><td>2</td><td>Naranja</td><td>3</td><td>Verde</td></tr>
+                    <tr><td>7</td><td>4</td><td>Blanco marrón</td><td>4</td><td>Blanco marrón</td></tr>
+                    <tr><td>8</td><td>4</td><td>Marrón</td><td>4</td><td>Marrón</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Las dos normas son la misma con el verde y el naranja cambiados</strong>
+                <p>Mira los pines 4, 5, 7 y 8: <strong>idénticos</strong> en las dos. Solo se intercambian los pares
+                2 y 3. Si te sabes una, te sabes la otra.</p>
+            </div>
+
+            <h3>Qué pines transmiten y cuáles reciben</h3>
+
+            <p>Fíjate en cómo se reparten los pares por los pines, porque explica muchas cosas:</p>
+
+<pre><code>par 1  → pines 4 y 5    (los dos del medio)
+par 2  → pines 1 y 2
+par 3  → pines 3 y 6    ← ¡partido! el 3 y el 6 no son contiguos
+par 4  → pines 7 y 8</code></pre>
+
+            <p>En 10BASE-T y 100BASE-TX solo se usan <strong>dos pares</strong>: uno transmite —pines 1 y 2— y el
+            otro recibe —pines 3 y 6—. Los pares que ocupan los pines 4-5 y 7-8 quedan libres. En
+            <strong>1000BASE-T</strong>, como viste la semana pasada, trabajan los <strong>cuatro</strong> a la vez y
+            en ambos sentidos.</p>
+
+            <div class="aviso">
+                <strong>El par 3 está partido a propósito</strong>
+                Que un par ocupe los pines 3 y 6, salteándose el 4 y el 5, parece un capricho. Es
+                <strong>compatibilidad</strong>: así el conector sigue sirviendo para un teléfono, que usa los dos
+                pines centrales. Y es, además, el origen del error más traicionero del montaje, el <em>par
+                partido</em>, que verás en el apartado 7.
+            </div>
+
+            <h3>El cable cruzado</h3>
+
+            <p>Para montar un cable cruzado se engasta <strong>cada extremo con una norma distinta</strong>: uno con
+            T568A y el otro con T568B. Los estándares recomiendan además ponerle <strong>fundas de otro color</strong>,
+            para distinguirlo de un vistazo.</p>
+
+            <p>El libro ya avisa de que los equipos actuales «también están preparados para funcionar con conexiones
+            de cables paralelos»: es el <strong>auto-MDIX</strong> que viste en el Mes 1. Hoy el cable cruzado es una
+            rareza, pero saber montarlo sigue siendo materia de examen y sigue haciendo falta con equipos antiguos.</p>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="macho">4. Montaje de un RJ-45 macho, paso a paso</h2>
+
+            <p>Estos son los <strong>ocho pasos</strong> del libro. El orden importa: el paso 1 es el que más se
+            olvida, y olvidarlo significa empezar de cero.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Paso</th><th>Cuidado con…</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1</strong></td><td>Introducir la <strong>funda protectora</strong> del conector por el extremo del cable</td><td>Si se olvida, ya no entra: hay que cortar y volver a empezar. Para un cable cruzado, funda de otro color</td></tr>
+                    <tr><td><strong>2</strong></td><td>Eliminar un fragmento de funda del cable, unos <strong>4 cm</strong>, con la herramienta de corte</td><td>La herramienta evita cortar por accidente los pares de dentro</td></tr>
+                    <tr><td><strong>3</strong></td><td>Retirar hacia atrás la <strong>pantalla</strong> y enrollar sobre ella el hilo de cobre de drenaje, si lo hay</td><td>Solo en cables apantallados</td></tr>
+                    <tr><td><strong>4</strong></td><td><strong>Destrenzar</strong> los pares estirándolos con los dedos, y colocar los hilos en orden de colores</td><td>Aquí se decide si sigues la T568A o la T568B</td></tr>
+                    <tr><td><strong>5</strong></td><td><strong>Cortar</strong> los extremos para que todos queden a la misma altura</td><td>Si uno queda corto, <strong>no hará contacto</strong> y ese par quedará muerto</td></tr>
+                    <tr><td><strong>6</strong></td><td><strong>Introducir</strong> los hilos en el conector hasta el fondo, asegurando que la pantalla entra lo justo para tocar el chasis metálico</td><td>Si la pantalla no toca, extraer, cortar y repetir</td></tr>
+                    <tr><td><strong>7</strong></td><td><strong>Engastar</strong> con la crimpadora</td><td>Los conectores son de <strong>un solo uso</strong>: si sale mal, se corta y se coge otro</td></tr>
+                    <tr><td><strong>8</strong></td><td>Colocar la <strong>funda protectora</strong> del conector</td><td>La que metiste en el paso 1</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Las herramientas, por su nombre</strong>
+                <ul>
+                    <li><strong>Crimpadora</strong> o engastadora: fija los terminales del conector contra los hilos y
+                    aprieta la parte enfundada del cable. Sirve igual para RJ-11 y RJ-45.</li>
+                    <li><strong>Herramienta de corte</strong> o pelacables: retira la funda sin dañar los pares.</li>
+                    <li><strong>Herramienta de impacto</strong>: para los conectores <em>hembra</em>. Se ve en el
+                    apartado 6.</li>
+                </ul>
+            </div>
+
+            <h2 id="longitudes">5. Las longitudes que deciden si el enlace va bien</h2>
+
+            <p>Aquí está el dato que separa un montaje correcto de uno que «parece» correcto. El libro lo dice sin
+            rodeos al pie de sus figuras:</p>
+
+            <div class="dato">
+                <strong>El destrenzado máximo depende de la categoría</strong>
+                <ul>
+                    <li>En <strong>categoría 5</strong> hay unas longitudes máximas de destrenzado en el extremo del
+                    cable para que las interferencias se mantengan dentro de lo aceptable.</li>
+                    <li>En <strong>categoría 6</strong> esas distancias <strong>deben reducirse mucho más</strong>:
+                    por ejemplo, un máximo de <strong>6 mm</strong> de destrenzado.</li>
+                </ul>
+                <p>Y el error que más se comete, también según el libro: <strong>destrenzar demasiado los pares</strong>,
+                lo que ocasiona un mal funcionamiento del enlace.</p>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s06_d02_destrenzado.png"
+         width="1400" height="760" loading="lazy"
+         alt="Dos extremos de cable entrando en un conector RJ-45. Arriba, el montaje correcto: el trenzado llega hasta el borde del conector y solo quedan unos milímetros de hilos sueltos. Abajo, el montaje incorrecto: los pares están destrenzados a lo largo de dos centímetros antes del conector, con una zona marcada como vulnerable al ruido.">
+    <figcaption>Cuanto más tramo destrenzado, más se parece ese extremo a dos hilos paralelos: una antena.</figcaption>
+</figure>
+<pre><code>CORRECTO    ╪╪╪╪╪╪╪╪╪╪╪╪▓▓▓▓▓   el trenzado llega hasta el conector
+                        ↑ pocos mm sueltos
+
+INCORRECTO  ╪╪╪╪╪╪┃┃┃┃┃┃┃▓▓▓▓▓   dos centímetros de hilos paralelos
+                  └─ zona sin protección ─┘</code></pre>
+
+            <p>Recuerda el mecanismo de ayer: el trenzado cancela porque los hilos se van intercambiando de posición.
+            En el tramo destrenzado <strong>no se intercambian</strong>, así que ese trocito de cable se comporta
+            como la antena del par paralelo. Dos centímetros no parecen nada; a 250 MHz, lo son.</p>
+
+            <div class="destacado">
+                <strong>Resumen de longitudes</strong>
+                <ul>
+                    <li>Funda retirada: unos <strong>4 cm</strong>, lo justo para trabajar.</li>
+                    <li>Destrenzado en Cat 6: <strong>≤ 6 mm</strong>.</li>
+                    <li>Pantalla eliminada: <strong>solo lo necesario</strong>.</li>
+                    <li>Todos los hilos, <strong>a la misma altura</strong>.</li>
+                </ul>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="hembra">6. Montaje de un RJ-45 hembra: la roseta</h2>
+
+            <p>Los conectores <strong>hembra</strong> son los que aparecen en los <strong>enchufes de pared</strong>
+            —las rosetas— y en los <strong>paneles de distribución</strong> del armario. Son el otro extremo del
+            cableado fijo que viste en el Mes 1.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Paso</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1</strong></td><td>Eliminar un fragmento de funda, unos <strong>4 cm</strong>, con la herramienta de corte</td></tr>
+                    <tr><td><strong>2</strong></td><td>Retirar hacia atrás la pantalla y colocar el cable de forma que <strong>haga contacto con la conexión a tierra</strong>; enrollar ahí el hilo de drenaje si lo hay</td></tr>
+                    <tr><td><strong>3</strong></td><td>Doblar el <strong>terminal de tierra</strong> hasta situarlo dentro del conector</td></tr>
+                    <tr><td><strong>4</strong></td><td>Colocar los hilos según los colores <strong>marcados en el propio conector</strong> y destrenzar los pares <strong>lo mínimo posible</strong></td></tr>
+                    <tr><td><strong>5</strong></td><td>Introducir cada hilo en su hueco y engastarlo con la <strong>herramienta de impacto</strong>, que lo mete a presión y corta el sobrante</td></tr>
+                    <tr><td><strong>6</strong></td><td>Colocar la carcasa protectora y montar el conjunto sobre el enchufe de pared</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Tres diferencias con el conector macho</strong>
+                <ul>
+                    <li>No hace falta <strong>cortar los hilos a la misma altura</strong>: la herramienta de impacto
+                    corta el sobrante ella sola al engastar.</li>
+                    <li>La roseta <strong>lleva impresos los colores</strong> de las dos normas, A y B, así que no hay
+                    que memorizar nada: se sigue la fila que corresponda.</li>
+                    <li>Los hilos deben mantenerse <strong>trenzados hasta el mismo punto donde quedan
+                    engastados</strong>. Es la recomendación número 1, aplicada al milímetro.</li>
+                </ul>
+            </div>
+
+            <p>Hay modelos de conector hembra que <strong>no necesitan herramienta</strong>: se colocan los hilos en
+            sus huecos y el engaste se produce al cerrar las piezas del propio componente. Son más cómodos y algo
+            menos fiables que el engaste por impacto.</p>
+
+            <div class="aviso">
+                <strong>Se engastan todos los pares, siempre</strong>
+                Aunque el enlace vaya a funcionar a 100 Mbps y sobren dos pares, <strong>se conectan los
+                cuatro</strong>. Es la diferencia entre una instalación que aguanta un cambio a gigabit y otra que
+                habrá que rehacer.
+            </div>
+
+            <h2 id="errores">7. Los errores típicos y sus síntomas</h2>
+
+            <p>Lo interesante de estos fallos es que casi ninguno deja la red muerta. La dejan <strong>a
+            medias</strong>, que es mucho peor: nadie sabe a quién echarle la culpa.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error</th><th>Qué provoca</th><th>Cómo se manifiesta</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Destrenzar de más</strong></td>
+                        <td>Diafonía en el extremo</td>
+                        <td>Enlace inestable, errores, negociación a menos velocidad de la esperada</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Un hilo corto</strong>, que no llega al fondo</td>
+                        <td>Ese contacto no se cierra</td>
+                        <td>Si es de los pares 1-2 o 3-6, no hay enlace; si es de los otros, funciona a 100 Mbps y no a 1 Gbps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Par partido</strong> (<em>split pair</em>)</td>
+                        <td>Los hilos llegan a su pin, pero <strong>no van por el mismo par trenzado</strong></td>
+                        <td>Funciona a 10 y a 100 Mbps y falla a 1 Gbps o con cables largos. <strong>Un comprobador barato lo da por bueno</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pantalla sin contacto</strong></td>
+                        <td>La pantalla queda flotando</td>
+                        <td>Más errores que con un cable sin apantallar, como viste ayer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Empalme</strong> en mitad del tramo</td>
+                        <td>Discontinuidad de impedancia</td>
+                        <td>Reflexiones y ruido; el certificador lo detecta como un fallo de retorno</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cable forzado o que tira del conector</strong></td>
+                        <td>Tensión mecánica en los contactos</td>
+                        <td>Fallos intermitentes, los peores de diagnosticar: aparecen y desaparecen</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Normas mezcladas sin querer</strong></td>
+                        <td>Un extremo A y otro B</td>
+                        <td>Has hecho un cable <strong>cruzado</strong> sin pretenderlo. Con auto-MDIX funcionará, y nadie se enterará hasta el día que haga falta un directo</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>El par partido, con detalle</h3>
+
+            <p>Es el error estrella y merece explicarse despacio, porque entenderlo demuestra que has entendido el
+            trenzado.</p>
+
+            <p>Imagina que, por descuido, se engastan los hilos así: el pin 3 recibe un hilo del par verde, y el pin 6
+            recibe un hilo del par naranja. Cada pin tiene <strong>un</strong> hilo, la continuidad es correcta pin a
+            pin, y un comprobador de continuidad encenderá sus ocho luces en orden. Pero la señal que debía viajar por
+            un <strong>par trenzado</strong> está viajando por <strong>dos hilos de pares distintos</strong>, que no
+            se trenzan entre sí. Es decir: por dos hilos paralelos.</p>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s06_d02_par_partido.png"
+         width="1400" height="700" loading="lazy"
+         alt="Comparación entre un montaje correcto y un par partido. Arriba, los pines 3 y 6 reciben los dos hilos del mismo par trenzado. Abajo, el pin 3 recibe un hilo del par verde y el pin 6 uno del par naranja: la continuidad pin a pin es correcta, pero la señal viaja por dos hilos que no están trenzados entre sí.">
+    <figcaption>Continuidad correcta y cable malo: los dos hilos llegan a su pin, pero no forman par.</figcaption>
+</figure>
+<pre><code>CORRECTO      pin 3 ──┐ mismo par trenzado, se cancelan
+              pin 6 ──┘
+
+PAR PARTIDO   pin 3 ──── hilo del par verde    ┐ no están trenzados
+              pin 6 ──── hilo del par naranja  ┘ entre sí: antena</code></pre>
+
+            <div class="aviso">
+                <strong>Esta parte no sale del libro</strong>
+                El libro habla del destrenzado excesivo, pero no usa el término <strong>par partido</strong>. El
+                concepto y su diagnóstico proceden de las normas de certificación de cableado
+                (<strong>ANSI/TIA-568</strong>) y de la práctica habitual de instalación. Lo incluyo porque es
+                inseparable del apartado 3: si no se explica por qué el par 3 ocupa los pines 3 y 6, este error no se
+                entiende.
+            </div>
+
+            <h2 id="comprobar">8. Comprobar el trabajo</h2>
+
+            <p>Un cable montado no está terminado hasta que se comprueba. Hay dos niveles, y confundirlos es otro
+            clásico:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Comprobador de continuidad</th><th>Certificador</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Qué hace</strong></td><td>Comprueba que cada pin de un extremo llega a su pin en el otro</td><td>Mide los <strong>parámetros eléctricos</strong>: atenuación, diafonía, pérdida de retorno, retardo</td></tr>
+                    <tr><td><strong>Qué detecta</strong></td><td>Hilos cortados, cruzados o sin contacto</td><td>Todo lo anterior <strong>más</strong> el par partido, el destrenzado excesivo y el exceso de longitud</td></tr>
+                    <tr><td><strong>Qué responde</strong></td><td>«Hay continuidad»</td><td>«Este enlace <strong>cumple</strong> categoría 6»</td></tr>
+                    <tr><td><strong>Precio</strong></td><td>Unos pocos euros</td><td>Miles</td></tr>
+                    <tr><td><strong>Cuándo se usa</strong></td><td>Al montar un latiguillo</td><td>Al entregar una instalación completa</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>También fuera del libro</strong>
+                La distinción entre comprobador y certificador y los parámetros que mide cada uno vienen de las
+                normas de certificación de cableado, no de la bibliografía de la asignatura. Se retomará en la
+                <strong>Semana 8</strong>, que trata el cableado estructurado a fondo.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>El conector es donde el cable pierde funda, trenzado y pantalla: por eso es la
+                    <strong>puerta de entrada del ruido</strong>.</li>
+                    <li>Cuatro recomendaciones: <strong>trenzado hasta el conector · quitar solo la pantalla
+                    necesaria · no empalmar · no forzar el cable</strong>.</li>
+                    <li>T568A y T568B se diferencian solo en el <strong>verde y el naranja</strong>. El par 3 ocupa
+                    los pines <strong>3 y 6</strong>.</li>
+                    <li>RJ-45 macho: <strong>ocho pasos</strong>, y el primero es meter la funda.</li>
+                    <li>Funda retirada, unos <strong>4 cm</strong>; destrenzado en Cat 6, <strong>≤ 6 mm</strong>.</li>
+                    <li>RJ-45 hembra: se engasta con <strong>herramienta de impacto</strong>, que corta el sobrante,
+                    y se conectan <strong>los cuatro pares</strong>.</li>
+                    <li>El <strong>par partido</strong> pasa la prueba de continuidad y arruina el gigabit.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Si el comprobador da las ocho luces, el cable está bien»</td><td>Solo dice que hay <strong>continuidad</strong>. Un par partido da las ocho luces</td></tr>
+                    <tr><td>«Da igual destrenzar un poco más, son dos centímetros»</td><td>A 250 MHz esos dos centímetros son una antena. En Cat 6 el máximo es <strong>6 mm</strong></td></tr>
+                    <tr><td>«Si el conector sale mal, se vuelve a apretar»</td><td>Son de <strong>un solo uso</strong>: se corta y se coge otro</td></tr>
+                    <tr><td>«Como voy a 100 Mbps, conecto solo dos pares»</td><td>Se conectan <strong>los cuatro</strong>, o la instalación no admitirá gigabit</td></tr>
+                    <tr><td>«Un empalme bien hecho no da problemas»</td><td>La norma lo prohíbe: crea una discontinuidad que refleja señal y capta ruido</td></tr>
+                    <tr><td>«En la roseta hay que memorizar los colores»</td><td>Los lleva <strong>impresos</strong>, con las dos normas</td></tr>
+                    <tr><td>«Mezclar A y B rompe el cable»</td><td>No: hace un <strong>cruzado</strong>. Con auto-MDIX ni te enteras, hasta que te hace falta un directo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 22 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a inspeccionar los conectores que ya tienes, a diagnosticar cinco averías a partir de sus
+            síntomas y a dibujar el plano de una instalación pequeña. Si tienes crimpadora, hay una ampliación con el
+            montaje real.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 2</strong></a> (70 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 3</strong>
+            <p><strong>Coaxial y fibra óptica</strong>: el medio que sostuvo las primeras redes locales y el que
+            sostiene hoy Internet. Con un cálculo nuevo: el <strong>presupuesto óptico</strong> en decibelios.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> mira el cable de la antena del televisor. ¿Por qué crees que
+            es tan grueso comparado con uno de red, si solo lleva una señal?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Un compañero monta los dos extremos de un latiguillo, uno con T568A y otro con T568B, sin darse cuenta. Lo conecta entre un portátil y un switch moderno y funciona perfectamente. ¿Qué ha fabricado, por qué funciona y por qué es un problema de todos modos?',
+                modelo: 'Ha fabricado un <strong>cable cruzado</strong>: engastar cada extremo con una norma distinta es exactamente el procedimiento de un cruzado. Funciona porque los equipos actuales llevan <strong>auto-MDIX</strong>, que detecta cómo está cableado el otro extremo e intercambia internamente transmisión y recepción. El problema es que ese cable está ahora en el cajón, <strong>sin etiquetar y con la funda del color de los directos</strong>: el día que haga falta conectar dos equipos antiguos sin auto-MDIX, o al revés, nadie sabrá qué tiene en la mano. Por eso los estándares recomiendan usar fundas de color distinto para los cruzados.',
+                puntos: [
+                    'Identifica que ha hecho un cable cruzado',
+                    'Explica que funciona gracias al auto-MDIX',
+                    'Señala que el problema es la falta de identificación, no el funcionamiento',
+                    'Menciona la recomendación de usar otro color de funda'
+                ]
+            },
+            {
+                pregunta: 'Explica por qué destrenzar tres centímetros de par al montar un conector estropea el enlace, aunque los ocho hilos hagan contacto perfectamente. Apóyate en lo de ayer.',
+                modelo: 'El trenzado protege porque los dos hilos van intercambiando su posición: lo que una interferencia induce en media vuelta se cancela con lo inducido en la siguiente. En un tramo <strong>destrenzado</strong> ese intercambio no ocurre, así que esos tres centímetros se comportan como <strong>dos hilos paralelos</strong>, es decir, como una antena que capta ruido y que además genera <strong>diafonía</strong> sobre los pares vecinos, que están ahí mismo. El contacto eléctrico es perfecto y aun así el enlace tendrá errores: negociará una velocidad menor o se mostrará inestable. Por eso la norma limita el destrenzado, y en categoría 6 lo baja a unos 6 mm.',
+                puntos: [
+                    'Recuerda el mecanismo de cancelación del trenzado',
+                    'Explica que el tramo destrenzado se comporta como hilos paralelos',
+                    'Menciona la diafonía con los pares vecinos',
+                    'Distingue entre continuidad correcta y calidad del enlace',
+                    'Cita el límite de la categoría 6'
+                ]
+            },
+            {
+                pregunta: 'Un cable recién montado da las ocho luces en el comprobador de continuidad, pero el enlace negocia 100 Mbps en lugar de 1 Gbps. Plantea al menos dos causas posibles y di cómo las distinguirías.',
+                modelo: 'Dos causas encajan con ese síntoma. La primera es un <strong>par partido</strong>: los ocho hilos llegan a su pin, de ahí las ocho luces, pero dos de ellos no pertenecen al mismo par trenzado, así que el enlace no aguanta el gigabit. La segunda es que <strong>uno de los pares 4-5 o 7-8 no haga contacto real</strong> o esté dañado: 100BASE-TX solo necesita dos pares y sigue funcionando, mientras que 1000BASE-T necesita los cuatro. Un comprobador de continuidad barato puede dar por bueno un contacto intermitente.</p><p>Para distinguirlas haría falta un <strong>certificador</strong>, que mide diafonía y detecta el par partido; sin él, la vía práctica es <strong>sustituir el latiguillo</strong> por uno de fábrica y ver si el enlace sube a 1 Gbps, y después rehacer el conector cuidando el orden de colores y el destrenzado.',
+                puntos: [
+                    'Propone el par partido como causa',
+                    'Propone un par sin contacto, recordando que 100 Mbps usa dos pares y 1 Gbps cuatro',
+                    'Explica que el comprobador de continuidad no distingue estos casos',
+                    'Da una forma práctica de discriminar: certificador o sustitución del cable'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Por qué el conector es el punto débil del enlace?', dorso: 'Porque ahí se quita la funda, se destrenzan los pares y se interrumpe la pantalla: es <strong>por donde entra el ruido</strong>.' },
+            { frente: 'Las cuatro recomendaciones de montaje', dorso: 'Trenzado hasta el conector · quitar solo la pantalla necesaria · <strong>no empalmar</strong> · no forzar el cable.' },
+            { frente: '¿En qué se diferencian T568A y T568B?', dorso: 'Solo en los pares <strong>verde y naranja</strong>, que están intercambiados. Los pines 4, 5, 7 y 8 son idénticos.' },
+            { frente: '¿Qué pines ocupa el par 3?', dorso: 'Los pines <strong>3 y 6</strong>, no contiguos. Es por compatibilidad con la telefonía, que usa los centrales.' },
+            { frente: '¿Qué pares usa 100BASE-TX y cuáles 1000BASE-T?', dorso: '100BASE-TX usa <strong>dos</strong>: 1-2 transmite y 3-6 recibe. 1000BASE-T usa los <strong>cuatro</strong>.' },
+            { frente: '¿Cuál es el primer paso al montar un RJ-45 macho?', dorso: 'Meter la <strong>funda protectora</strong> del conector por el cable. Si se olvida, hay que cortar y empezar de nuevo.' },
+            { frente: '¿Cuánta funda se retira del cable?', dorso: 'Unos <strong>4 cm</strong>, con la herramienta de corte para no dañar los pares.' },
+            { frente: 'Destrenzado máximo en categoría 6', dorso: '<strong>6 mm</strong>. En categoría 5 se admite algo más, pero siempre el mínimo posible.' },
+            { frente: '¿Por qué hay que cortar todos los hilos a la misma altura?', dorso: 'Porque si uno queda corto <strong>no llega al fondo</strong> del conector y ese contacto no se cierra.' },
+            { frente: '¿Los conectores RJ-45 se pueden reaprovechar?', dorso: 'No: son de <strong>un solo uso</strong>. Si el engaste sale mal, se corta el cable y se coge otro conector.' },
+            { frente: '¿Con qué se engasta un conector hembra?', dorso: 'Con la <strong>herramienta de impacto</strong>, que introduce cada hilo en su hueco y corta el sobrante.' },
+            { frente: '¿Qué es un par partido?', dorso: 'Que dos hilos lleguen a los pines correctos <strong>sin pertenecer al mismo par trenzado</strong>. Da continuidad correcta y arruina el gigabit.' },
+            { frente: 'Comprobador frente a certificador', dorso: 'El <strong>comprobador</strong> mira continuidad pin a pin. El <strong>certificador</strong> mide atenuación y diafonía, y dice si el enlace cumple una categoría.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 2: Montaje y comprobación',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'El conector como punto débil',
+                repaso: '#debil',
+                text: 'Según el libro, ¿qué riesgo tiene un conector mal montado?',
+                options: {
+                    a: 'Que se caliente y funda el plástico',
+                    b: 'Que convierta ese punto en una fuente receptora de ruido para la instalación',
+                    c: 'Que el cable pierda longitud útil',
+                    d: 'Que el switch no reconozca la categoría del cable'
+                },
+                answer: 'b',
+                feedback: 'En el conector se pierden a la vez la funda, el trenzado y la continuidad de la pantalla. Es el punto por donde el ruido tiene más fácil entrar.'
+            },
+            {
+                topic: 'Recomendaciones',
+                repaso: '#recomendaciones',
+                text: '¿Cuál de estas <strong>no</strong> es una de las cuatro recomendaciones generales de montaje?',
+                options: {
+                    a: 'Mantener el trenzado lo más cerca posible del conector',
+                    b: 'No realizar empalmes',
+                    c: 'Usar siempre la norma T568B',
+                    d: 'Dejar longitud suficiente para que el cable no tire del conector'
+                },
+                answer: 'c',
+                feedback: 'La norma que se elija da igual, siempre que se use <strong>la misma en toda la instalación</strong>. El libro incluso recomienda preferentemente la T568A.'
+            },
+            {
+                topic: 'Recomendaciones',
+                repaso: '#recomendaciones',
+                text: 'Un cable se ha cortado en mitad de una canaleta. ¿Qué dice la norma que hay que hacer?',
+                options: {
+                    a: 'Empalmar los dos trozos con cinta aislante',
+                    b: 'Empalmar con una regleta de conexión',
+                    c: 'Soldar los hilos par a par',
+                    d: 'No empalmar: tirar un tramo nuevo, o cortar y poner roseta y latiguillo'
+                },
+                answer: 'd',
+                feedback: 'Los empalmes están <strong>prohibidos</strong> en cableado de datos: crean una discontinuidad que refleja señal y capta ruido. No es un cable eléctrico.'
+            },
+            {
+                topic: 'T568A y T568B',
+                repaso: '#normas',
+                text: '¿Qué distingue exactamente a la T568A de la T568B?',
+                options: {
+                    a: 'Que están intercambiados los pares verde y naranja; los pines 4, 5, 7 y 8 son iguales',
+                    b: 'Que la T568A usa cuatro pares y la T568B solo dos',
+                    c: 'Que la T568B es para cables apantallados',
+                    d: 'Que tienen el orden completamente invertido'
+                },
+                answer: 'a',
+                feedback: 'Por eso quien se sabe una se sabe la otra. Y por eso mezclarlas en los dos extremos produce un cable cruzado.'
+            },
+            {
+                topic: 'T568A y T568B',
+                repaso: '#normas',
+                text: 'El par 3 ocupa los pines 3 y 6, saltándose el 4 y el 5. ¿Por qué se diseñó así?',
+                options: {
+                    a: 'Para facilitar el engaste',
+                    b: 'Para que el conector siga siendo compatible con un teléfono, que usa los dos pines centrales',
+                    c: 'Porque el par 3 es el más largo',
+                    d: 'Para repartir mejor el calor'
+                },
+                answer: 'b',
+                feedback: 'Los pines centrales quedan libres para la telefonía. Es también el origen del error llamado <strong>par partido</strong>.'
+            },
+            {
+                topic: 'Montaje del macho',
+                repaso: '#macho',
+                text: 'Has pelado el cable, ordenado los colores y engastado el conector. Entonces te das cuenta de que olvidaste algo del paso 1. ¿Qué era, y qué implica?',
+                options: {
+                    a: 'Medir la longitud del cable: se puede hacer después',
+                    b: 'Elegir la norma: se puede cambiar reengastando',
+                    c: 'Conectar la pantalla: se puede añadir por fuera',
+                    d: 'La funda protectora del conector: ya no entra, hay que cortar y empezar de nuevo'
+                },
+                answer: 'd',
+                feedback: 'La funda se mete <strong>antes</strong> de montar el conector, porque después el conector le impide pasar. Y como los conectores son de un solo uso, se pierde también ese.'
+            },
+            {
+                topic: 'Montaje del macho',
+                repaso: '#macho',
+                text: '¿Para qué sirve la herramienta de corte específica de cableado, frente a unas tijeras?',
+                options: {
+                    a: 'Para engastar el conector',
+                    b: 'Para medir la longitud del cable',
+                    c: 'Para retirar la funda sin cortar por accidente los pares trenzados de dentro',
+                    d: 'Para destrenzar los pares más deprisa'
+                },
+                answer: 'c',
+                feedback: 'Corta a la profundidad justa. Con tijeras es facilísimo dañar el aislante de un hilo, y ese daño no se ve pero se nota en el enlace.'
+            },
+            {
+                topic: 'Montaje del macho',
+                repaso: '#macho',
+                text: 'El engaste ha salido torcido y un par de contactos no han bajado bien. ¿Qué haces?',
+                options: {
+                    a: 'Volver a apretar la crimpadora sobre el mismo conector',
+                    b: 'Cortar el extremo y montar un conector nuevo: son de un solo uso',
+                    c: 'Empujar los contactos con un destornillador fino',
+                    d: 'Dejarlo si el comprobador da continuidad'
+                },
+                answer: 'b',
+                feedback: 'El libro lo dice explícitamente: los conectores son de <strong>un solo uso</strong>. Reapretar deforma los contactos y deja un fallo intermitente, que es lo peor que se puede dejar en una instalación.'
+            },
+            {
+                topic: 'Longitudes',
+                repaso: '#longitudes',
+                text: 'En categoría 6, ¿cuál es el destrenzado máximo recomendado en el extremo del cable?',
+                options: { a: '6 mm', b: '4 cm', c: '2 cm', d: '13 cm' },
+                answer: 'a',
+                feedback: 'Seis milímetros. Los 4 cm son de <strong>funda retirada</strong>, no de destrenzado: es la confusión típica de esta pregunta.'
+            },
+            {
+                topic: 'Longitudes',
+                repaso: '#longitudes',
+                text: 'Según el libro, ¿cuál es el error que se comete más a menudo al montar conectores RJ-45 macho?',
+                options: {
+                    a: 'Usar la norma equivocada',
+                    b: 'Apretar poco la crimpadora',
+                    c: 'Cortar el cable demasiado corto',
+                    d: 'Destrenzar demasiado los pares, lo que ocasiona un mal funcionamiento del enlace'
+                },
+                answer: 'd',
+                feedback: 'Y es un error silencioso: el cable «funciona», pero con errores y a menos velocidad de la que debería.'
+            },
+            {
+                topic: 'Montaje del hembra',
+                repaso: '#hembra',
+                text: '¿Qué hace la herramienta de impacto que no hace la crimpadora?',
+                options: {
+                    a: 'Introduce cada hilo a presión en su hueco del conector hembra y corta el sobrante',
+                    b: 'Pela la funda del cable',
+                    c: 'Comprueba la continuidad del enlace',
+                    d: 'Mide el destrenzado'
+                },
+                answer: 'a',
+                feedback: 'Por eso en el conector hembra no hace falta cortar antes los hilos a la misma altura: la herramienta lo hace al engastar.'
+            },
+            {
+                topic: 'Montaje del hembra',
+                repaso: '#hembra',
+                text: 'Montas la roseta de un puesto que va a funcionar a 100 Mbps. ¿Cuántos pares engastas?',
+                options: {
+                    a: 'Dos: los que usa 100BASE-TX',
+                    b: 'Tres, dejando uno de reserva',
+                    c: 'Los cuatro, siempre',
+                    d: 'Depende de la norma elegida'
+                },
+                answer: 'c',
+                feedback: 'Se engastan <strong>todos los pares</strong>. Es la diferencia entre una instalación que admitirá gigabit el día de mañana y otra que habrá que rehacer entera.'
+            },
+            {
+                topic: 'Errores',
+                repaso: '#errores',
+                text: 'Un cable pasa la prueba de continuidad con sus ocho luces, funciona a 100 Mbps y falla al negociar 1 Gbps. ¿Qué error encaja mejor?',
+                options: {
+                    a: 'La pantalla sin conectar a tierra',
+                    b: 'Un par partido: los hilos llegan a su pin, pero no forman par trenzado entre sí',
+                    c: 'Un empalme en mitad del tramo',
+                    d: 'Las normas A y B mezcladas'
+                },
+                answer: 'b',
+                feedback: 'Es la firma del <strong>par partido</strong>: continuidad perfecta, diafonía desastrosa. Solo lo detecta un certificador, no un comprobador de continuidad.'
+            },
+            {
+                topic: 'Comprobación',
+                repaso: '#comprobar',
+                text: 'Entregas una instalación completa de 40 puestos y el cliente exige garantía de categoría 6. ¿Qué equipo necesitas?',
+                options: {
+                    a: 'Un comprobador de continuidad de los baratos',
+                    b: 'Un multímetro',
+                    c: 'Un certificador, que mide atenuación, diafonía y pérdida de retorno',
+                    d: 'Basta con probar que los equipos navegan'
+                },
+                answer: 'c',
+                feedback: 'Solo un <strong>certificador</strong> puede afirmar que un enlace cumple una categoría. El comprobador dice si hay continuidad; que naveguen, ni siquiera eso.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: 'teoria.html#apantallamientos',
+                text: '<em>Repaso.</em> Durante el montaje, la pantalla del cable no llega a tocar el chasis metálico del conector. ¿Qué consecuencia tiene?',
+                options: {
+                    a: 'La pantalla queda flotando y puede meter más ruido que si el cable no la tuviera',
+                    b: 'Ninguna: la pantalla protege igual',
+                    c: 'El cable pierde un par',
+                    d: 'El enlace no se establece'
+                },
+                answer: 'a',
+                feedback: 'Una pantalla sin referencia a tierra se comporta como una antena. Por eso el paso 6 del montaje insiste en comprobar ese contacto antes de engastar.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Ejercicios: montaje y comprobación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">78 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 4 es el que separa a quien ha entendido el trenzado de quien se ha aprendido los colores:
+            <strong>diagnosticar una avería por su síntoma</strong>. No hay que saberse las respuestas de memoria,
+            hay que razonar qué puede producir cada comportamiento.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/ejercicios.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/ejercicios.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Ejercicios',
+    subtitulo: 'Recomendaciones de montaje · los ocho pasos · longitudes · diagnóstico de averías',
+    tiempo: '78 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Las reglas del montaje',
+            tiempo: '10 min',
+            enunciado: '<p>Las cuatro recomendaciones no son consejos: cada una evita un problema físico concreto.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada recomendación con el problema que evita.',
+                    izquierda: [
+                        'Mantener el trenzado hasta el conector',
+                        'Quitar solo la pantalla necesaria',
+                        'No realizar empalmes',
+                        'Dejar longitud suficiente'
+                    ],
+                    derecha: [
+                        'Que aparezca diafonía por perder la cancelación',
+                        'Dejar cable desprotegido más allá de lo imprescindible',
+                        'Una discontinuidad que refleja señal y capta ruido',
+                        'Que un tirón o el propio peso arranquen los contactos'
+                    ],
+                    pares: {
+                        'Mantener el trenzado hasta el conector': 'Que aparezca diafonía por perder la cancelación',
+                        'Quitar solo la pantalla necesaria': 'Dejar cable desprotegido más allá de lo imprescindible',
+                        'No realizar empalmes': 'Una discontinuidad que refleja señal y capta ruido',
+                        'Dejar longitud suficiente': 'Que un tirón o el propio peso arranquen los contactos'
+                    },
+                    explicacion: 'Las tres primeras son problemas <strong>eléctricos</strong>; la cuarta es <strong>mecánica</strong>, y es la que produce los fallos intermitentes, los más difíciles de diagnosticar.',
+                    pistas: ['Una de las cuatro no tiene que ver con el ruido, sino con la fuerza.']
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>b)</strong> Completa las cifras del montaje.',
+                    frase: 'Al montar un conector se retiran unos {{0}} cm de funda del cable. En categoría 6, el destrenzado en el extremo no debe pasar de {{1}} mm. Los conectores RJ-45 macho son de un solo {{2}}, así que un engaste fallido obliga a cortar y usar otro.',
+                    respuestas: [
+                        ['4', 'cuatro'],
+                        ['6', 'seis'],
+                        ['uso']
+                    ],
+                    explicacion: 'Cuidado con confundir las dos primeras: <strong>4 cm de funda</strong> y <strong>6 mm de destrenzado</strong>. Son cifras de órdenes distintos y caen juntas en los exámenes.',
+                    pistas: ['Una cifra va en centímetros y la otra en milímetros.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Los ocho pasos, en orden',
+            tiempo: '12 min',
+            enunciado: '<p>Coloca en su posición cada paso del montaje de un conector RJ-45 <strong>macho</strong>.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Numera los pasos del 1 al 8.',
+                    elementos: [
+                        'Cortar los extremos de los hilos para que queden todos a la misma altura',
+                        'Introducir la funda protectora del conector por el extremo del cable',
+                        'Engastar con la crimpadora',
+                        'Retirar hacia atrás la pantalla y enrollar sobre ella el hilo de drenaje',
+                        'Colocar la funda protectora del conector',
+                        'Eliminar unos 4 cm de funda del cable con la herramienta de corte',
+                        'Introducir los hilos en el conector hasta el fondo, comprobando el contacto de la pantalla',
+                        'Destrenzar los pares y colocar los hilos en orden de colores'
+                    ],
+                    orden: [
+                        'Introducir la funda protectora del conector por el extremo del cable',
+                        'Eliminar unos 4 cm de funda del cable con la herramienta de corte',
+                        'Retirar hacia atrás la pantalla y enrollar sobre ella el hilo de drenaje',
+                        'Destrenzar los pares y colocar los hilos en orden de colores',
+                        'Cortar los extremos de los hilos para que queden todos a la misma altura',
+                        'Introducir los hilos en el conector hasta el fondo, comprobando el contacto de la pantalla',
+                        'Engastar con la crimpadora',
+                        'Colocar la funda protectora del conector'
+                    ],
+                    explicacion: 'La funda del conector abre y cierra el procedimiento: se <strong>mete</strong> primero y se <strong>coloca</strong> al final. Y el corte a la misma altura va <strong>antes</strong> de introducir los hilos, no después.',
+                    pistas: ['¿Qué pieza no podrá pasar por el cable una vez montado el conector?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué pasos <strong>solo</strong> se aplican a un cable apantallado? Marca todos los que correspondan.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Retirar hacia atrás la pantalla y enrollar el hilo de drenaje',
+                        b: 'Cortar los hilos a la misma altura',
+                        c: 'Asegurar que la pantalla toca el chasis metálico del conector',
+                        d: 'Engastar con la crimpadora'
+                    },
+                    respuesta: ['a', 'c'],
+                    explicacion: 'En un UTP no hay pantalla que tratar, así que esos dos pasos desaparecen. Los otros dos son comunes a cualquier montaje.',
+                    pistas: ['Busca los pasos donde aparece la palabra «pantalla».']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Pines, pares y normas',
+            tiempo: '14 min',
+            enunciado: '<p>Completa la tabla de las dos normas. Escribe los colores tal como aparecen en el libro: <em>blanco verde</em>, <em>naranja</em>, <em>blanco azul</em>…</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Rellena las celdas vacías.',
+                    esquina: 'Pin',
+                    cabecera: ['Color en T568A', 'Color en T568B'],
+                    filas: [
+                        { etiqueta: '1', celdas: [{ fijo: 'Blanco verde' }, { respuestas: ['blanco naranja'], placeholder: 'color' }] },
+                        { etiqueta: '2', celdas: [{ respuestas: ['verde'], placeholder: 'color' }, { fijo: 'Naranja' }] },
+                        { etiqueta: '3', celdas: [{ respuestas: ['blanco naranja'], placeholder: 'color' }, { respuestas: ['blanco verde'], placeholder: 'color' }] },
+                        { etiqueta: '4', celdas: [{ fijo: 'Azul' }, { respuestas: ['azul'], placeholder: 'color' }] },
+                        { etiqueta: '5', celdas: [{ respuestas: ['blanco azul'], placeholder: 'color' }, { fijo: 'Blanco azul' }] },
+                        { etiqueta: '6', celdas: [{ respuestas: ['naranja'], placeholder: 'color' }, { respuestas: ['verde'], placeholder: 'color' }] },
+                        { etiqueta: '7', celdas: [{ fijo: 'Blanco marrón' }, { respuestas: ['blanco marrón', 'blanco marron'], placeholder: 'color' }] },
+                        { etiqueta: '8', celdas: [{ respuestas: ['marrón', 'marron'], placeholder: 'color' }, { fijo: 'Marrón' }] }
+                    ],
+                    explicacion: 'Azul y marrón <strong>nunca se mueven</strong>: ocupan los pines 4-5 y 7-8 en las dos normas. Solo se intercambian el verde y el naranja.',
+                    pistas: ['Rellena primero las filas 4, 5, 7 y 8: son iguales en las dos columnas.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> En 100BASE-TX, ¿qué pares se usan?',
+                    opciones: {
+                        a: 'Los cuatro',
+                        b: 'Los de los pines 1-2 y 3-6',
+                        c: 'Los de los pines 4-5 y 7-8',
+                        d: 'Solo el de los pines 1-2'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Uno transmite y el otro recibe. Los pares de los pines 4-5 y 7-8 quedan libres… hasta que se pasa a 1000BASE-T, que usa los cuatro en los dos sentidos.',
+                    pistas: ['¿Cuáles son los pines que no ocupa el par azul ni el marrón?']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> Si engastas un extremo con T568A y el otro con T568B, ¿qué tipo de cable has fabricado? Una palabra.',
+                    respuestas: ['cruzado', 'crossover', 'cable cruzado'],
+                    explicacion: 'Un cable <strong>cruzado</strong>. Es el procedimiento correcto para fabricarlo a propósito; el problema es hacerlo sin querer y no etiquetarlo.',
+                    pistas: ['Es el cable que antes hacía falta para unir dos equipos del mismo tipo.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Diagnóstico por síntomas',
+            tiempo: '18 min',
+            enunciado: '<p>Cinco avisos de usuario. En cada uno, elige la causa más probable. Razona antes de marcar: varias opciones son plausibles y solo una encaja con <strong>todos</strong> los datos.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> «El comprobador da las ocho luces en orden, pero el equipo negocia 100 Mbps con un switch gigabit.»',
+                    opciones: {
+                        a: 'El cable es demasiado largo',
+                        b: 'Un par partido, o un par sin contacto real de los que solo usa el gigabit',
+                        c: 'La norma T568A en los dos extremos',
+                        d: 'Falta la pantalla'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Continuidad correcta y gigabit imposible: es la firma del <strong>par partido</strong>. La misma A en los dos extremos es lo correcto para un cable directo, y un UTP sin pantalla funciona perfectamente.',
+                    pistas: ['¿Qué falla puede dar continuidad perfecta y aun así arruinar el enlace?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> «Funciona bien, pero si alguien pasa cerca y roza el cable, la conexión se cae un segundo y vuelve.»',
+                    opciones: {
+                        a: 'Diafonía por destrenzado excesivo',
+                        b: 'El cable es de categoría 5 en vez de 5e',
+                        c: 'El conector está mal engastado o el cable tira de él: es un fallo mecánico intermitente',
+                        d: 'Un empalme en mitad del tramo'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Que el fallo dependa de <strong>tocar el cable</strong> apunta siempre a lo mecánico: engaste flojo, hilo que no llega al fondo o cable en tensión tirando del conector.',
+                    pistas: ['¿Qué tipo de problema aparece y desaparece al mover algo?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> «Este tramo pasa junto a las luminarias y tiene muchos más errores que los demás, aunque el cable es apantallado y de la misma caja.»',
+                    opciones: {
+                        a: 'La pantalla no hace contacto con el chasis en algún extremo',
+                        b: 'El cable es demasiado corto',
+                        c: 'Los colores están en orden T568B',
+                        d: 'El switch no admite cables apantallados'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Mismo cable, mismo lote, y solo falla el tramo expuesto a interferencias: lo que cambia es la <strong>protección</strong>. Una pantalla sin tierra se comporta como una antena, como viste ayer.',
+                    pistas: ['Si el cable es apantallado y aun así capta ruido, ¿qué parte del apantallamiento puede estar fallando?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> «Este latiguillo funciona entre el PC y el switch, pero al unir con él dos switches antiguos no hay enlace.»',
+                    opciones: {
+                        a: 'Está cortado',
+                        b: 'Tiene un par partido',
+                        c: 'Le falta la funda protectora',
+                        d: 'Es un cable directo, y esos dos equipos antiguos sin auto-MDIX necesitan uno cruzado'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'El cable está bien: lo que falla es que el escenario exige un <strong>cruzado</strong>. Es el motivo por el que los estándares recomiendan fundas de otro color para distinguirlos.',
+                    pistas: ['El cable funciona en un escenario y no en otro. ¿Qué diferencia esos dos escenarios?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> «Rehíce el conector con prisa y ahora no hay enlace en absoluto.»',
+                    opciones: {
+                        a: 'Algún hilo de los pares 1-2 o 3-6 no llega al fondo del conector',
+                        b: 'Destrenzado excesivo',
+                        c: 'La pantalla toca el chasis',
+                        d: 'El cable supera los 100 m'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Sin enlace <strong>en absoluto</strong> es un corte, no una degradación. Si el hilo que falla fuera de los pares 4-5 o 7-8, el enlace se establecería igualmente a 100 Mbps.',
+                    pistas: ['Distingue entre «va mal» y «no va»: el destrenzado degrada, no corta.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: El conector hembra',
+            tiempo: '12 min',
+            enunciado: '<p>La roseta de pared y el panel de parcheo se montan de otra manera.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los seis pasos del montaje de un RJ-45 hembra.',
+                    elementos: [
+                        'Colocar los hilos según los colores marcados en el conector, destrenzando lo mínimo',
+                        'Eliminar unos 4 cm de funda con la herramienta de corte',
+                        'Colocar la carcasa protectora y montar sobre el enchufe de pared',
+                        'Doblar el terminal de tierra hasta situarlo dentro del conector',
+                        'Introducir cada hilo en su hueco y engastar con la herramienta de impacto',
+                        'Retirar la pantalla hacia atrás y ponerla en contacto con la conexión a tierra'
+                    ],
+                    orden: [
+                        'Eliminar unos 4 cm de funda con la herramienta de corte',
+                        'Retirar la pantalla hacia atrás y ponerla en contacto con la conexión a tierra',
+                        'Doblar el terminal de tierra hasta situarlo dentro del conector',
+                        'Colocar los hilos según los colores marcados en el conector, destrenzando lo mínimo',
+                        'Introducir cada hilo en su hueco y engastar con la herramienta de impacto',
+                        'Colocar la carcasa protectora y montar sobre el enchufe de pared'
+                    ],
+                    explicacion: 'La tierra se resuelve <strong>antes</strong> de colocar los hilos: primero se prepara el conector y después se cablea. Y aquí no hay paso de «cortar a la misma altura», porque lo hace la herramienta de impacto.',
+                    pistas: ['Los dos pasos de la pantalla y la tierra van seguidos, al principio.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué diferencias hay entre montar un macho y un hembra? Marca todas las <strong>correctas</strong>.',
+                    multiple: true,
+                    opciones: {
+                        a: 'En el hembra no hace falta cortar antes los hilos a la misma altura',
+                        b: 'El hembra lleva impresos los colores de las dos normas en el propio conector',
+                        c: 'En el hembra se usa la herramienta de impacto en lugar de la crimpadora',
+                        d: 'En el hembra no importa el orden de los colores',
+                        e: 'En el hembra se pueden dejar dos pares sin conectar'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'El orden importa igual, y se conectan siempre los cuatro pares. Lo que cambia es la <strong>herramienta</strong> y que el conector trae la guía de colores impresa.',
+                    pistas: ['Dos de las cinco afirmaciones relajan reglas que en realidad siguen en pie.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> ¿Cómo se llama la herramienta con la que se engasta un conector RJ-45 hembra?',
+                    respuestas: ['herramienta de impacto', 'de impacto', 'impacto', 'punch down', 'punzón de impacto'],
+                    explicacion: 'La <strong>herramienta de impacto</strong>: introduce el hilo en su hueco y corta el sobrante de un golpe.',
+                    pistas: ['Su nombre describe cómo actúa: de golpe.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Explicar el par partido',
+            tiempo: '12 min',
+            enunciado: '<p>Escribe tu respuesta y después contrástala con la solución modelo y su lista de puntos.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>a)</strong> Un compañero te enseña un cable y te dice: «lo he comprobado, las ocho luces se encienden en orden, así que está perfecto». <strong>Explícale por qué esa comprobación no basta</strong>, qué error puede estar escondido y qué consecuencia tendría.',
+                    filas: 8,
+                    modelo: '<p>Un comprobador de continuidad solo verifica que <strong>cada pin de un extremo llega a su pin en el otro</strong>. Eso deja pasar un error importante: el <strong>par partido</strong>.</p><p>Ocurre cuando dos hilos llegan a los pines correctos —por ejemplo el 3 y el 6— pero <strong>no pertenecen al mismo par trenzado</strong>: uno es del par verde y el otro del naranja. Pin a pin todo está bien, de ahí las ocho luces, pero la señal que debía viajar por un par trenzado viaja por dos hilos que no se trenzan entre sí, es decir, por dos hilos paralelos. Sin trenzado no hay cancelación, así que ese enlace tiene <strong>diafonía</strong>: funcionará a 10 y a 100 Mbps, y fallará al negociar 1 Gbps o en tramos largos.</p><p>Para detectarlo hace falta un <strong>certificador</strong>, que mide diafonía y no solo continuidad. Es la diferencia entre «hay cable» y «el enlace cumple categoría 6».</p>',
+                    rubrica: [
+                        'Dice qué comprueba exactamente un comprobador de continuidad',
+                        'Define el par partido: pines correctos, pares equivocados',
+                        'Explica por qué se enciende igual la luz de cada pin',
+                        'Relaciona la falta de trenzado con la diafonía',
+                        'Describe el síntoma: va a 100 Mbps y falla a 1 Gbps',
+                        'Menciona el certificador como la herramienta que sí lo detecta'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Vas a montar 40 rosetas en una oficina. <strong>Escribe el procedimiento de trabajo</strong> que seguirás para que las 40 queden iguales y bien: qué decides antes de empezar, qué compruebas en cada una y qué dejas documentado.',
+                    filas: 8,
+                    modelo: '<p><strong>Antes de empezar:</strong> elegir <strong>una norma</strong>, la T568A o la T568B, y usarla en las 40 rosetas y en los 40 puertos del panel; el libro recomienda preferentemente la T568A, pero lo decisivo es no mezclarlas. Preparar las herramientas: corte, impacto y comprobador.</p><p><strong>En cada roseta:</strong> retirar unos 4 cm de funda sin dañar los pares; resolver la pantalla y la tierra si el cable es apantallado; seguir los colores impresos en el conector; <strong>destrenzar lo mínimo</strong>, manteniendo el trenzado hasta el punto de engaste; engastar <strong>los cuatro pares</strong> con la herramienta de impacto; dejar cable de reserva suficiente para que nada quede en tensión.</p><p><strong>Comprobar:</strong> continuidad de cada enlace al terminarlo, y certificación del conjunto si el cliente exige garantía de categoría.</p><p><strong>Documentar:</strong> etiquetar cada roseta y su puerto correspondiente en el panel con el mismo código, y anotar la norma usada, la categoría del cable y la longitud de cada tramo. Sin etiquetado, la instalación es correcta hoy e inmanejable dentro de un año.</p>',
+                    rubrica: [
+                        'Decide una única norma para toda la instalación',
+                        'Cita el destrenzado mínimo y el engaste de los cuatro pares',
+                        'Incluye dejar holgura para que el cable no tire del conector',
+                        'Prevé una comprobación, distinguiendo continuidad de certificación',
+                        'Incluye el etiquetado de rosetas y panel con el mismo código',
+                        'Anota datos de la instalación: norma, categoría y longitudes'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

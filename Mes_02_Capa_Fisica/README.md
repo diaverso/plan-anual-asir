@@ -46,7 +46,7 @@ Todo el **Mes 1**, y en especial:
 | Semana | Tema | Estado |
 |---|---|---|
 | **[Semana 5](Semana_05/README.md)** | Conceptos de transmisión: señales, perturbaciones y ruido | ✅ Disponible (5 días) |
-| Semana 6 | Medios cableados: par trenzado, coaxial y fibra óptica | ⏳ Pendiente |
+| **[Semana 6](Semana_06/README.md)** | Medios cableados: par trenzado, coaxial y fibra óptica | ✅ Disponible (5 días) |
 | Semana 7 | Medios inalámbricos: radio, microondas y satélite | ⏳ Pendiente |
 | Semana 8 | Cableado estructurado: instalación y certificación | ⏳ Pendiente |
 
@@ -59,7 +59,10 @@ Todo el **Mes 1**, y en especial:
 | **Navegador web** | Teoría, quizzes, ejercicios y los visualizadores de señales | Todo el mes |
 | **Auriculares o altavoces** | Escuchar los armónicos en el laboratorio del Día 1 · opcional | Semana 5 |
 | **Terminal** (PowerShell o Linux) | Consultar la tarjeta de red y la radio Wi-Fi | Semana 5 |
-| Calculadora | Decibelios, Nyquist y Shannon | Semana 5 |
+| Calculadora | Decibelios, Nyquist y Shannon · presupuesto óptico | Semanas 5 y 6 |
+| **Cables de red** que ya tengas | Leer su ficha impresa e inspeccionar conectores | Semana 6 |
+| Papel o **FossFLOW** | Planos de cableado · siempre opcional en digital | Semana 6 |
+| Crimpadora y conectores · *opcional* | Ampliación del laboratorio del Día 2 | Semana 6 |
 | **Cisco Packet Tracer** | Medios y conexiones | Semanas 6 y 8 |
 
 Los visualizadores de la Semana 5 funcionan **sin conexión y sin instalar nada**: calculan la señal

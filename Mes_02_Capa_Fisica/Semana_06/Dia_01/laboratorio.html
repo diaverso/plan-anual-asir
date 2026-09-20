@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio: el cableado que ya tienes</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">66 min</span></div>
+        <div class="info-item"><strong>Material:</strong> cables de red que ya tengas</div>
+        <div class="info-item"><strong>Permisos:</strong> sin administrador</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Todo cable de red lleva impresa su propia ficha técnica en la funda. Vas a <strong>leerla</strong> en
+            los cables que tengas a mano, a consultar a qué velocidad ha negociado tu equipo y a comprobar si una cosa
+            encaja con la otra.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>Necesitas <strong>al menos un cable de red</strong>. Vale el del router, el de un televisor o un
+                decodificador, o cualquiera olvidado en un cajón. Con dos de distinta época, mejor.</li>
+                <li><strong>No desconectes</strong> el cable por el que estás navegando para leerlo: sácalo de la
+                canaleta o mira el tramo visible. Si tienes que desconectar algo, hazlo de un equipo apagado.</li>
+                <li>Si algún cable no lleva nada impreso, anótalo: eso también es un dato, y el jueves sabrás qué
+                significa.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Leer la funda (25 min)</h2>
+
+            <p>La impresión de la funda es una secuencia de campos, siempre parecida. Este es un ejemplo real del
+            tipo de texto que vas a encontrar:</p>
+
+<pre><code>MARCA  CAT 5e  UTP  4PR  24AWG  CM  ETL VERIFIED  TIA/EIA-568-B.2  0043 M</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Campo</th><th>Qué significa</th><th>Valores que verás</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>CAT …</strong></td><td>La <strong>categoría</strong>: el ancho de banda garantizado</td><td>CAT 5, 5e, 6, 6A, 7</td></tr>
+                    <tr><td><strong>UTP / FTP / STP</strong></td><td>El <strong>apantallamiento</strong>. A veces con la notación ISO: U/UTP, F/UTP, S/FTP</td><td>UTP es lo más común</td></tr>
+                    <tr><td><strong>4PR</strong></td><td>Número de <strong>pares</strong></td><td>Casi siempre 4</td></tr>
+                    <tr><td><strong>24AWG</strong></td><td>El <strong>grosor del hilo</strong>. Cuanto más alto el número, más fino el hilo</td><td>23AWG (rígido, mejor), 24, 26 (latiguillos finos)</td></tr>
+                    <tr><td><strong>CM / CMR / LSZH</strong></td><td>Comportamiento frente al <strong>fuego</strong></td><td>LSZH: no desprende humos tóxicos</td></tr>
+                    <tr><td><strong>TIA/EIA-568…</strong></td><td>La <strong>norma</strong> que dice cumplir</td><td>También ISO/IEC 11801</td></tr>
+                    <tr><td><strong>0043 M</strong></td><td>El <strong>marcado métrico</strong>: metros desde el inicio de la bobina</td><td>Un número que crece a lo largo del cable</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Esto no sale del libro</strong>
+                El libro explica las categorías y los apantallamientos, pero no cómo se imprime la ficha en la funda.
+                Los campos de esta tabla siguen las convenciones de <strong>ANSI/TIA-568</strong> y de los propios
+                fabricantes. Lo digo para que sepas qué es materia de examen y qué es oficio.
+            </div>
+
+            <h3>El marcado métrico: medir un cable sin metro</h3>
+
+            <p>Ese número que aparece cada metro sirve para algo muy práctico: <strong>restando</strong> el valor de
+            los dos extremos de un tramo sabes cuánto mide sin desenrollarlo. Si en un extremo pone <code>0043</code>
+            y en el otro <code>0061</code>, el cable tiene <strong>18 metros</strong>.</p>
+
+            <p>En los latiguillos cortos de fábrica muchas veces no hay marcado métrico: entonces se mide, o se
+            estima a ojo.</p>
+
+            <h2>Parte 2 — A qué velocidad has negociado (20 min)</h2>
+
+            <p>Mira ahora qué ha conseguido tu equipo con ese cable:</p>
+
+            <div class="so-tabs" data-grupo="vel">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="vel" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Format-Table Name, InterfaceDescription, LinkSpeed, MediaType, Status -AutoSize</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="vel" data-so="nix">
+                <div class="comando"><pre><code>for i in /sys/class/net/*; do echo "$(basename $i): $(cat $i/speed 2>/dev/null) Mbps"; done</code></pre></div>
+                <p>El clásico para esto es <code>ethtool</code>, pero <strong>no viene instalado</strong> en una
+                Debian mínima (<code>sudo apt install ethtool</code>). Y si estás en WSL o en una máquina virtual, la
+                tarjeta es virtual: dará cifras inventadas como 10 Gbps, porque no hay ningún cable detrás.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de este equipo</strong>
+<pre><code>Name        InterfaceDescription                     LinkSpeed MediaType     Status
+----        --------------------                     --------- ---------     ------
+Wi-Fi       Intel(R) Wi-Fi 6 AX201 160MHz            26 Mbps   Native 802.11 Disconnected
+Ethernet    Intel(R) Ethernet Controller (3) I225-V  1 Gbps    802.3         Up
+Ethernet 2  Xbox Wireless Adapter for Windows        600 Mbps  802.3         Up</code></pre>
+                <p>Fíjate en la columna <strong>MediaType</strong>: <code>802.3</code> es Ethernet por cable y
+                <code>Native 802.11</code>, Wi-Fi. Y en que un adaptador <strong>Disconnected</strong> también
+                muestra una velocidad: es la última que negoció o la nominal, no la actual. Solo son fiables las
+                filas con <strong>Status Up</strong>.</p>
+            </div>
+
+            <h2>Parte 3 — ¿Encaja lo uno con lo otro? (21 min)</h2>
+
+            <p>Con la categoría del cable y la velocidad negociada ya puedes cerrar el círculo. Ten a mano la tabla
+            de categorías de la <a href="teoria.html#categorias">teoría</a> y contesta abajo.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has leído la ficha impresa de al menos un cable y has identificado su categoría y su tipo.</li>
+                <li>Has anotado la velocidad negociada de tu adaptador con cable.</li>
+                <li>Puedes decir si tu cable limita tu velocidad, o si el que limita es otro elemento.</li>
+                <li>Sabes cuánto mide un tramo usando su marcado métrico.</li>
+            </ul>
+        </div>
+
+        <div class="destacado">
+            <strong>Y mañana lo abres</strong>
+            <p>Guarda a la vista el cable que hayas examinado: mañana, en el Día 2, verás los ocho pasos del montaje
+            de un RJ-45 y podrás comprobar en ese conector transparente cuánto destrenzado dejó quien lo fabricó.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/laboratorio.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Laboratorio: el cableado que ya tienes',
+    subtitulo: 'La ficha impresa en la funda · la velocidad negociada · si una cosa encaja con la otra',
+    tiempo: '66 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: La ficha del primer cable',
+            tiempo: '15 min',
+            enunciado: '<p>Coge el cable más largo que tengas y busca el texto impreso en la funda. Suele repetirse cada metro, así que basta con mirar un tramo. Si la impresión está gastada, prueba a inclinar el cable contra la luz.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> ¿Qué <strong>categoría</strong> declara? Cópiala tal cual aparece (por ejemplo <em>CAT 5e</em>).',
+                    ancho: '220px',
+                    placeholder: 'CAT 5e',
+                    explicacion: 'Si no aparece ninguna categoría, lo más probable es que sea un cable muy antiguo o de baja calidad. Anótalo como «sin marcar»: también es información.',
+                    pistas: ['Busca las letras CAT seguidas de un número.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> ¿Qué <strong>tipo de apantallamiento</strong> indica: UTP, FTP, STP, o alguna notación con barra como U/UTP o F/UTP?',
+                    ancho: '220px',
+                    placeholder: 'UTP',
+                    explicacion: 'En un cable doméstico casi siempre será UTP o U/UTP. Los apantallados son más gruesos y más difíciles de doblar; a veces se nota antes con los dedos que con los ojos.',
+                    pistas: ['Si no lo pone, mira si el cable es rígido y grueso: puede ser apantallado sin declararlo.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>c)</strong> ¿Qué <strong>norma</strong> dice cumplir? Suele empezar por TIA/EIA o por ISO/IEC.',
+                    ancho: '260px',
+                    placeholder: 'TIA/EIA-568-B.2',
+                    explicacion: 'Es la misma familia de normas de cableado estructurado que has visto en la teoría. Que el cable la cite significa que el fabricante se compromete a sus parámetros.',
+                    pistas: ['Busca un número de cuatro cifras precedido de letras, como 568 o 11801.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Mira el conector transparente por el lado de los pines. ¿Cuántos <strong>hilos de colores</strong> distintos entran en él?',
+                    respuesta: 8,
+                    unidad: 'hilos',
+                    explicacion: 'Ocho hilos, es decir, <strong>cuatro pares</strong>. Cada par tiene un hilo de color sólido y otro blanco con raya de ese mismo color, que es la masa. Si solo ves cuatro hilos, tienes en la mano un latiguillo barato de dos pares: no dará más de 100 Mbps.',
+                    pistas: ['Cuéntalos en el conector, no en la funda.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Medir sin metro',
+            tiempo: '10 min',
+            enunciado: '<p>Practica con el <strong>marcado métrico</strong>, el número que crece a lo largo del cable.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Un tramo tirado por una canaleta marca <code>0187 M</code> junto al armario y <code>0231 M</code> junto a la roseta. ¿Cuántos metros mide?',
+                    respuesta: 44,
+                    unidad: 'm',
+                    explicacion: '231 − 187 = <strong>44 m</strong>. Está dentro de los 90 m que la norma reserva al cableado horizontal, con margen para los latiguillos de los dos extremos.',
+                    pistas: ['Es una resta.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Otro tramo da 96 m entre sus dos marcas. ¿Qué haces?',
+                    opciones: {
+                        a: 'Nada: 96 es menos de 100',
+                        b: 'Rechazarlo: pasado de longitud. Con los latiguillos de los dos extremos se supera el límite de 100 m del enlace',
+                        c: 'Añadir un repetidor en medio del cable',
+                        d: 'Cambiar a categoría 6, que llega a 200 m'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los 100 m del par trenzado se reparten en <strong>90 m de cableado fijo + 10 m de latiguillos</strong>. Con 96 m fijos, el enlace se pasa. Y ninguna categoría cambia esa distancia: los metros no se compran, se replantean.',
+                    pistas: ['¿Qué había que sumar al tramo fijo para obtener el enlace completo?']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>c)</strong> ¿Tu cable tiene marcado métrico? Si lo tiene, escribe el número que ves; si no, escribe <em>sin marcado</em> y su longitud estimada.',
+                    ancho: '260px',
+                    placeholder: '0043 M  |  sin marcado, ~2 m',
+                    explicacion: 'Los latiguillos de fábrica casi nunca lo llevan: se venden por longitudes cerradas. El marcado es propio del cable que se vende por bobina para instalar.',
+                    pistas: ['Mira un tramo de medio metro: si lo lleva, aparecerá al menos una vez.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: La velocidad que has negociado',
+            tiempo: '20 min',
+            enunciado: '<p>Ejecuta el comando de la <strong>parte 2</strong> y trabaja con su salida.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    minimo: 60,
+                    debe: [['LinkSpeed', 'Mbps', 'Gbps', 'speed']],
+                    pregunta: '<strong>a)</strong> Pega aquí la salida completa del comando.',
+                    placeholder: 'Pega la salida de Get-NetAdapter…',
+                    explicacion: 'Con la salida delante se ve de un vistazo qué adaptadores hay, cuáles están levantados y cuál es de cable.',
+                    pistas: ['Copia desde la línea de encabezados hasta la última fila.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> ¿Qué <strong>velocidad</strong> muestra tu adaptador de cable con estado <em>Up</em>? Si no tienes ninguno conectado, escribe <em>ninguno conectado</em>.',
+                    ancho: '220px',
+                    placeholder: '1 Gbps',
+                    explicacion: 'Esa cifra es el resultado de la <strong>negociación automática</strong> entre tu tarjeta y el equipo del otro extremo. No es lo que el cable puede dar, sino lo que los dos extremos han acordado.',
+                    pistas: ['Columna LinkSpeed, y solo en las filas con Status Up.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un adaptador aparece como <em>Disconnected</em> y aun así muestra «1 Gbps». ¿Qué significa?',
+                    opciones: {
+                        a: 'Que está funcionando a 1 Gbps por otro camino',
+                        b: 'Que hay un error en el sistema',
+                        c: 'Nada útil: sin enlace no hay negociación, así que ese dato no describe ninguna conexión real',
+                        d: 'Que el cable es de categoría 5e'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Sin cable no hay con quién negociar. El valor que se ve es el nominal o el último recordado. <strong>Solo son fiables las filas con Status Up.</strong>',
+                    pistas: ['¿Con quién negocia un adaptador que no tiene nada enchufado?']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>d)</strong> ¿Cuál es la <strong>categoría mínima</strong> pensada para dar 1 Gbps a 100 metros?',
+                    respuestas: ['5e', 'cat 5e', 'categoría 5e', 'categoria 5e', 'cat5e'],
+                    explicacion: 'La <strong>Cat 5e</strong>. La Cat 5 «a secas» se quedó en 100 Mbps: la «e» de <em>enhanced</em> añadió los requisitos de diafonía que el gigabit necesita, sin cambiar los 100 MHz.',
+                    pistas: ['No es la 5 ni la 6: está entre las dos.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Cerrar el círculo',
+            tiempo: '21 min',
+            enunciado: '<p>Junta los dos datos: lo que dice el cable y lo que dice el sistema.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Cable Cat 6, switch de 1 Gbps, tarjeta que admite 2,5 Gbps. El enlace negocia 1 Gbps. ¿Quién limita?',
+                    opciones: {
+                        a: 'El switch: la negociación se queda en la velocidad del elemento más lento',
+                        b: 'El cable, que solo da 250 MHz',
+                        c: 'La tarjeta',
+                        d: 'El sistema operativo'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'La negociación automática siempre acaba en el <strong>máximo común</strong> a los dos extremos. El cable aquí va sobrado: una Cat 6 admitiría 2,5 y hasta 10 Gbps en tramos cortos.',
+                    pistas: ['¿Qué velocidad ofrece cada uno de los tres elementos?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un enlace que debería ir a 1 Gbps negocia 100 Mbps, y al cambiar el cable pasa a 1 Gbps. ¿Qué explicación encaja mejor?',
+                    opciones: {
+                        a: 'El sistema operativo estaba desactualizado',
+                        b: 'El cable anterior tenía algún par inutilizable, por categoría insuficiente, rotura o mal montaje',
+                        c: 'El switch se reinició solo',
+                        d: 'El cable nuevo es más corto y por eso va más rápido'
+                    },
+                    respuesta: 'b',
+                    explicacion: '100BASE-TX necesita <strong>dos pares</strong>; 1000BASE-T necesita los <strong>cuatro</strong>. Un cable con dos pares dañados, o un latiguillo barato que solo lleva dos, sigue dando 100 Mbps tan tranquilo. Es el síntoma más típico de un cable mal montado, y mañana lo verás desde dentro.',
+                    pistas: ['¿Cuántos pares hacen falta para 100 Mbps y cuántos para 1 Gbps?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Con los datos que has recogido: <strong>¿tu cable limita tu velocidad?</strong> Escribe tu conclusión citando la categoría que has leído, la velocidad negociada y qué elemento es el cuello de botella de tu instalación.',
+                    filas: 6,
+                    modelo: '<p>Una conclusión bien construida dice tres cosas. Ejemplo con los datos de este equipo: el cable es <strong>Cat 5e UTP</strong>, que admite 1 Gbps a 100 m; el enlace ha negociado <strong>1 Gbps</strong>, así que el cable <strong>no limita</strong>. El cuello de botella está en otro sitio: la tarjeta admite 2,5 Gbps y no los usa, luego el que se queda corto es el <strong>equipo del otro extremo</strong>, el router o el switch. Para subir de 1 Gbps habría que cambiar ese equipo, y solo entonces el cable pasaría a importar: una Cat 5e aguanta 2,5 Gbps en tramos cortos, pero para 10 Gbps haría falta Cat 6A.</p><p>Si tu caso es el contrario —cable sin categoría marcada o Cat 5, negociando 100 Mbps con equipos gigabit— entonces <strong>el cable sí es el cuello de botella</strong>, y es el componente más barato de sustituir de los tres.</p>',
+                    rubrica: [
+                        'Cita la categoría concreta leída en la funda',
+                        'Cita la velocidad negociada obtenida del comando',
+                        'Compara las dos y dice si el cable limita o no',
+                        'Identifica qué elemento es el cuello de botella real',
+                        'Dice qué habría que cambiar para subir de velocidad'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

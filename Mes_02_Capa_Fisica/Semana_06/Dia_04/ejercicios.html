@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios: elegir el medio</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">80 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 4 aplica las cinco preguntas a seis tramos seguidos. Contéstalos <strong>en orden</strong>,
+            sin saltar a la conclusión: lo que se entrena no es acertar el medio, es el camino que lleva hasta él.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/ejercicios.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/ejercicios.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Ejercicios',
+    subtitulo: 'Las tablas comparativas · cobre y fibra · seguridad eléctrica · decidir con criterio',
+    tiempo: '80 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: La tabla de los medios de cobre',
+            tiempo: '14 min',
+            enunciado: '<p>Reconstruye la tabla 3.6 del libro. En inmunidad escribe <em>máxima</em>, <em>buena</em> o <em>mínima</em>; en dificultad y coste, <em>alta</em>, <em>media</em> o <em>baja</em>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Rellena las celdas vacías.',
+                    esquina: 'Característica',
+                    cabecera: ['Coaxial grueso', 'Coaxial delgado', 'UTP', 'STP / FTP'],
+                    filas: [
+                        {
+                            etiqueta: 'Velocidad',
+                            celdas: [
+                                { fijo: '1 Gbps' },
+                                { respuestas: ['10 Mbps', '10mbps', '10'], placeholder: '?' },
+                                { respuestas: ['100 Mbps', '100mbps', '100'], placeholder: '?' },
+                                { fijo: '1 Gbps' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Longitud máxima de segmento',
+                            celdas: [
+                                { respuestas: ['500 m', '500m', '500'], placeholder: '?' },
+                                { respuestas: ['200 m', '200m', '200'], placeholder: '?' },
+                                { respuestas: ['100 m', '100m', '100'], placeholder: '?' },
+                                { respuestas: ['100 m', '100m', '100'], placeholder: '?' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Inmunidad a interferencias',
+                            celdas: [
+                                { respuestas: ['máxima', 'maxima'], placeholder: '?' },
+                                { fijo: 'Buena' },
+                                { respuestas: ['mínima', 'minima'], placeholder: '?' },
+                                { respuestas: ['buena'], placeholder: '?' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Conectores',
+                            celdas: [
+                                { fijo: 'Transceptor' },
+                                { respuestas: ['BNC'], placeholder: '?' },
+                                { respuestas: ['RJ-45', 'RJ45'], placeholder: '?' },
+                                { fijo: 'RJ-45' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Coste',
+                            celdas: [
+                                { respuestas: ['alto'], placeholder: '?' },
+                                { respuestas: ['bajo'], placeholder: '?' },
+                                { respuestas: ['muy bajo'], placeholder: '?' },
+                                { fijo: 'Bajo' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'Las tres longitudes —500, 200 y 100— son el dato que más cae. Y fíjate en que el <strong>UTP es el único «muy bajo»</strong> en coste, que es justo lo que explica su dominio.',
+                    pistas: ['Empieza por la fila de las longitudes: son tres cifras redondas.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Según la tabla 3.5, ¿qué medios superan los 100 km entre repetidores? Marca todos.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Par trenzado',
+                        b: 'Fibra óptica',
+                        c: 'Ondas de radio',
+                        d: 'Microondas',
+                        e: 'Infrarrojo'
+                    },
+                    respuesta: ['b', 'c'],
+                    explicacion: 'La fibra supera los 100 km y las ondas de radio llegan de 100 a 1 000 km. Las microondas se quedan en 80 km y el infrarrojo, en 200 m. El par trenzado, en 2-10 km.',
+                    pistas: ['Dos de los cinco. Uno es guiado y el otro, no.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Cobre frente a fibra',
+            tiempo: '12 min',
+            enunciado: '<p>Las siete cuestiones de implementación del currículo Cisco.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Marca las cuestiones en las que <strong>gana la fibra</strong>.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Ancho de banda admitido',
+                        b: 'Coste de medios y conectores',
+                        c: 'Distancia',
+                        d: 'Inmunidad a EMI y RFI',
+                        e: 'Conocimientos necesarios para instalarla',
+                        f: 'Inmunidad a peligros eléctricos'
+                    },
+                    respuesta: ['a', 'c', 'd', 'f'],
+                    explicacion: 'La fibra gana en las cuatro cuestiones <strong>técnicas</strong> y pierde en las tres <strong>prácticas</strong>: coste, conocimientos y precauciones de seguridad.',
+                    pistas: ['Cuatro de las seis. Piensa cuáles son ventajas del material y cuáles, del oficio.']
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Relaciona cada situación con el motivo por el que se elige fibra.',
+                    izquierda: [
+                        'Enlace de 4 km entre dos sedes',
+                        'Tramo junto a una línea de alta tensión',
+                        'Enlace entre dos edificios con tierras distintas',
+                        'Troncal que debe admitir 40 Gbps'
+                    ],
+                    derecha: [
+                        'Distancia: el cobre no llega',
+                        'Inmunidad a EMI y RFI',
+                        'Inmunidad a peligros eléctricos',
+                        'Ancho de banda admitido'
+                    ],
+                    pares: {
+                        'Enlace de 4 km entre dos sedes': 'Distancia: el cobre no llega',
+                        'Tramo junto a una línea de alta tensión': 'Inmunidad a EMI y RFI',
+                        'Enlace entre dos edificios con tierras distintas': 'Inmunidad a peligros eléctricos',
+                        'Troncal que debe admitir 40 Gbps': 'Ancho de banda admitido'
+                    },
+                    explicacion: 'Son las cuatro ventajas de la fibra, una por caso. Distinguir <strong>EMI</strong> de <strong>peligros eléctricos</strong> es lo que más cuesta: la primera es calidad de señal, la segunda es seguridad física.',
+                    pistas: ['Dos casos hablan de electricidad, pero por motivos distintos.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> Una fibra no conduce electricidad, así que separa eléctricamente los dos extremos del enlace. ¿Cómo se llama ese aislamiento? Dos palabras.',
+                    respuestas: ['aislamiento galvánico', 'aislamiento galvanico', 'aislamiento eléctrico', 'aislamiento electrico', 'galvánico', 'galvanico'],
+                    explicacion: '<strong>Aislamiento galvánico</strong>: no hay camino conductor entre un extremo y el otro, así que no circulan corrientes entre dos instalaciones con tierras distintas.',
+                    pistas: ['El adjetivo viene del apellido de Luigi Galvani.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Seguridad del cableado de cobre',
+            tiempo: '10 min',
+            enunciado: '<p>Las cuatro reglas y sus consecuencias prácticas.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa las cuatro reglas.',
+                    frase: 'La separación entre el cableado de datos y el de {{0}} eléctrica debe cumplir los códigos de seguridad. Los cables deben estar {{1}} correctamente. Las instalaciones deben {{2}} para detectar daños. Y el equipo debe estar correctamente conectado a {{3}}.',
+                    respuestas: [
+                        ['energía', 'energia', 'corriente', 'potencia'],
+                        ['conectados', 'montados'],
+                        ['inspeccionarse', 'revisarse', 'inspeccionar', 'revisar'],
+                        ['tierra', 'la tierra']
+                    ],
+                    explicacion: 'Las cuatro protegen a la vez a las <strong>personas</strong> y a la <strong>señal</strong>. La primera es la que más se incumple, porque compartir canaleta es cómodo y barato.',
+                    pistas: ['La última es la que hace que las pantallas sirvan de algo.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué dos consecuencias tiene tender datos y corriente por la misma canaleta?',
+                    multiple: true,
+                    opciones: {
+                        a: 'Incumple los códigos de seguridad',
+                        b: 'Somete el cable de datos a interferencias electromagnéticas constantes',
+                        c: 'Reduce la longitud máxima del cable a la mitad',
+                        d: 'Impide negociar la velocidad automáticamente'
+                    },
+                    respuesta: ['a', 'b'],
+                    explicacion: 'Una consecuencia de <strong>seguridad</strong> y otra de <strong>calidad de señal</strong>. Ni la longitud máxima ni la negociación dependen de por dónde vaya el cable.',
+                    pistas: ['Dos de las cuatro. Una afecta a las personas y otra a los bits.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Durante una inspección encuentras un tramo de UTP aplastado por una estantería. Funciona. ¿Qué haces?',
+                    opciones: {
+                        a: 'Nada: si funciona, no se toca',
+                        b: 'Sustituir el tramo: el aplastamiento deforma los pares y puede haber dañado el aislante, y esos fallos empeoran con el tiempo',
+                        c: 'Añadir un repetidor',
+                        d: 'Cambiar el conector de los dos extremos'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un cable aplastado ha perdido la geometría del trenzado en ese punto y puede tener el aislante dañado. Es exactamente lo que la regla de <strong>inspeccionar para detectar daños</strong> pretende evitar: hoy funciona, y dentro de seis meses da errores intermitentes.',
+                    pistas: ['¿Qué le ha pasado al trenzado en el punto aplastado?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Seis tramos, seis decisiones',
+            tiempo: '20 min',
+            enunciado: '<p>Aplica las cinco preguntas en orden: <strong>distancia → entorno → velocidad futura → coste total → mantenimiento</strong>.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Sala de reuniones a 28 m del armario. Techo registrable, sin maquinaria. 1 Gbps ahora, quizá 2,5 Gbps en unos años.',
+                    opciones: {
+                        a: 'Fibra multimodo',
+                        b: 'UTP Cat 6: entra en distancia, no hay ruido y deja margen de futuro con un coste mínimo',
+                        c: 'STP Cat 6A',
+                        d: 'Coaxial delgado'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Las dos primeras preguntas no descartan nada, así que deciden el coste y la facilidad de instalación. Apantallar aquí es pagar de más, y la fibra sería absurda a 28 m.',
+                    pistas: ['¿Alguna de las dos primeras preguntas descarta algo en este tramo?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Tramo de 45 m que discurre por una nave de producción, paralelo a la bandeja de alimentación de tres variadores de frecuencia.',
+                    opciones: {
+                        a: 'UTP Cat 6, que es más barato',
+                        b: 'Coaxial grueso',
+                        c: 'Par trenzado apantallado con la pantalla a tierra, o fibra si no puede garantizarse esa tierra',
+                        d: 'Cualquier cable: 45 m son pocos'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'La distancia entra, pero el <strong>entorno</strong> descarta el UTP: los variadores de frecuencia son una de las peores fuentes de EMI que hay. Y el apantallado solo vale si alguien resuelve la puesta a tierra.',
+                    pistas: ['Segunda pregunta: ¿cómo es el entorno?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Caseta de vigilancia a 120 m del edificio principal, cruzando el aparcamiento.',
+                    opciones: {
+                        a: 'Fibra: se superan los 100 m y además es un edificio distinto',
+                        b: 'UTP Cat 6A, que llega a 120 m',
+                        c: 'Dos tramos de UTP de 60 m empalmados',
+                        d: 'Coaxial delgado, que admite 200 m'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Dos razones independientes, y cualquiera bastaría. Ninguna categoría pasa de 100 m, empalmar está prohibido, y el coaxial delgado, aunque admita 200 m, es un medio obsoleto que además seguiría siendo cobre entre dos edificios.',
+                    pistas: ['Aquí se activan la primera y la segunda pregunta a la vez.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Conexión entre dos switches del mismo armario, separados por 2 m, a 10 Gbps.',
+                    opciones: {
+                        a: 'Fibra monomodo con transceptores LX',
+                        b: 'Un latiguillo de cobre adecuado para 10 Gbps: a 2 m no hay problema de distancia ni de ruido',
+                        c: 'Coaxial RG-58',
+                        d: 'UTP Cat 5e'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Dentro de un armario la distancia y el ruido no deciden; deciden el coste y la comodidad. Poner monomodo para dos metros sería pagar transceptores caros sin ninguna ventaja. La Cat 5e, en cambio, no da 10 Gbps.',
+                    pistas: ['¿Qué aportaría la fibra en un tramo de dos metros?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> Enlace de 800 m entre dos sedes de la misma empresa, por canalización propia.',
+                    opciones: {
+                        a: 'Fibra monomodo',
+                        b: 'Fibra multimodo, que es más barata',
+                        c: 'Par trenzado con repetidores cada 90 m',
+                        d: 'Coaxial grueso, que admite 500 m'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'A 800 m la monomodo es la opción sensata: su atenuación es de 0,4 dB/km frente a los 3 dB/km de la multimodo, y la diferencia de coste del cable es pequeña comparada con la obra. Encadenar repetidores de cobre sería un problema de alimentación y de mantenimiento, y el coaxial grueso se queda corto.',
+                    pistas: ['Calcula mentalmente la pérdida de 800 m en cada tipo de fibra.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>f)</strong> Una empresa pequeña, sin personal técnico, quiere unir dos locales a 90 m en la misma planta de un centro comercial. Todo interior, sin maquinaria.',
+                    opciones: {
+                        a: 'Fibra monomodo, que es la mejor solución técnica',
+                        b: 'Coaxial delgado',
+                        c: 'Par trenzado, cuidando que el enlace completo no pase de 100 m: es lo que sabrán mantener',
+                        d: 'No es posible unirlos'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Aquí decide la <strong>quinta</strong> pregunta. El tramo entra por poco —habrá que vigilar los latiguillos—, no hay ruido y es el mismo edificio. Una fibra obligaría a llamar a un tercero cada vez que pasara algo.',
+                    pistas: ['Las cuatro primeras preguntas no descartan el cobre. ¿Qué queda por preguntar?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Números de toda la semana',
+            tiempo: '12 min',
+            enunciado: '<p>Cálculos que cruzan los cuatro días.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Un enlace Ethernet tiene 7 m de latiguillos en total. ¿Cuántos metros de cableado fijo admite como máximo?',
+                    respuesta: 90,
+                    unidad: 'm',
+                    explicacion: 'El cableado fijo está limitado a <strong>90 m</strong> por la norma, y ese límite no sube aunque se usen menos metros de latiguillo. Los 7 m dejan el enlace en 97 m, dentro de los 100.',
+                    pistas: ['Cuidado: no es 100 − 7.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Enlace de fibra monomodo de 6 km, con 2 pares de conectores y 1 empalme por fusión. Pérdida total con margen de 3 dB.',
+                    respuesta: 7.2,
+                    tolerancia: 0.1,
+                    unidad: 'dB',
+                    explicacion: '6 × 0,4 = 2,4 · conectores 1,5 · empalme 0,3 · margen 3 → <strong>7,2 dB</strong>.',
+                    pistas: ['Monomodo: 0,4 dB por kilómetro.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Un par de un cable Cat 6A (500 MHz) transmitiendo con 4 niveles. Capacidad máxima según Nyquist, en Mbps.',
+                    respuesta: 2000,
+                    unidad: 'Mbps',
+                    explicacion: 'C = 2 · 500 · log₂4 = 2 · 500 · 2 = <strong>2 000 Mbps</strong> por par. Con cuatro pares hay margen de sobra para los 10 Gbps que la categoría promete.',
+                    pistas: ['log₂4 = 2.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Una nave necesita 14 tomas. Sumados los tramos dan 520 m. Con el 10 % de holgura y bobinas de 305 m, ¿cuántas bobinas hay que comprar?',
+                    respuesta: 2,
+                    unidad: 'bobinas',
+                    explicacion: '520 × 1,1 = 572 m. Entre 305 salen 1,87, así que <strong>2 bobinas</strong>.',
+                    pistas: ['Añade la holgura antes de dividir, y redondea hacia arriba.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> ¿Cuál de estas cifras <strong>no</strong> pertenece a la semana?',
+                    opciones: {
+                        a: '6 mm de destrenzado máximo en categoría 6',
+                        b: '25 mm de radio mínimo de curvatura en fibra',
+                        c: '500 m de segmento máximo en coaxial grueso',
+                        d: '300 m de longitud máxima del par trenzado'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'El par trenzado se queda en <strong>100 m</strong> de enlace, en cualquier categoría y con cualquier apantallamiento. Las otras tres son correctas.',
+                    pistas: ['Tres son datos vistos esta semana; una está inflada.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Defender una decisión',
+            tiempo: '12 min',
+            enunciado: '<p>Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>a)</strong> Has propuesto fibra para unir dos edificios separados 70 m y el cliente responde: «por 70 metros me pones un cable de red y nos ahorramos el dineral de la fibra». <strong>Escribe tu respuesta</strong>, en un tono con el que se la enviarías por correo.',
+                    filas: 8,
+                    modelo: '<p>Una respuesta que funciona con un cliente combina el argumento técnico con el económico:</p><p>«Tiene razón en que, por distancia, un cable de red llegaría: el límite son 100 metros y tenemos 70. El motivo para usar fibra no es la distancia, es que los dos edificios tienen <strong>instalaciones eléctricas y tomas de tierra distintas</strong>. Un cable de cobre las une, y eso produce dos problemas conocidos: circulan corrientes entre edificios por esa diferencia de potencial, lo que degrada el enlace; y, sobre todo, si cae un rayo cerca de uno de los dos edificios, la sobretensión puede recorrer el cobre y <strong>destruir el equipamiento del otro extremo</strong>, que cuesta bastante más que la diferencia entre las dos soluciones.»</p><p>«La fibra no conduce electricidad, así que los dos edificios quedan aislados eléctricamente. Como el tramo es corto, basta con <strong>multimodo</strong>, que es la opción económica: dos transceptores y un cable de exterior. Si prefiere el cobre, mi recomendación sería al menos presupuestar protectores de sobretensión en los dos extremos, aunque eso encarece la solución y protege menos.»</p>',
+                    rubrica: [
+                        'Concede que por distancia el cobre llegaría',
+                        'Explica el problema de las tierras distintas entre edificios',
+                        'Menciona el riesgo de sobretensión y el coste del equipamiento dañado',
+                        'Explica que la fibra aísla eléctricamente',
+                        'Propone una opción concreta y económica, no «fibra» a secas',
+                        'Ofrece una alternativa si el cliente insiste, señalando sus límites'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Resume en tus palabras <strong>el método</strong> para elegir un medio: las cinco preguntas, por qué van en ese orden y qué error se comete al alterarlo.',
+                    filas: 6,
+                    modelo: '<p>El orden es: <strong>distancia → entorno → velocidad futura → coste total → mantenimiento</strong>.</p><p>Las dos primeras <strong>descartan</strong> medios enteros: por encima de 100 m el par trenzado desaparece, y un entorno con interferencias fuertes o un salto entre edificios elimina el UTP o el cobre por completo. La tercera <strong>dimensiona</strong> lo que queda: elige la categoría o el tipo de fibra pensando en la vida útil del cableado, que es de quince o veinte años, no en la velocidad de hoy. La cuarta compara el <strong>coste total</strong> —material más montaje— entre las opciones que han sobrevivido. Y la quinta añade el factor humano: quién va a mantenerlo.</p><p>El error habitual es <strong>empezar por el precio</strong>. Un medio barato que no llega a la distancia necesaria, o que da errores por el ruido, no es una opción barata: es una instalación que habrá que rehacer, con la obra y el corte de servicio que eso supone. El dinero decide <strong>entre opciones válidas</strong>, nunca antes de saber cuáles lo son.</p>',
+                    rubrica: [
+                        'Enumera las cinco preguntas en su orden',
+                        'Distingue las que descartan de las que afinan',
+                        'Justifica dimensionar por la vida útil del cableado',
+                        'Incluye el montaje dentro del coste',
+                        'Explica por qué empezar por el precio es un error'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — El cobre por dentro: criterios, apantallamientos y categorías</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 1 — El cobre por dentro</h1>
+        <p>Medios guiados · los seis criterios · par sin trenzar · UTP, FTP, STP y S/FTP · qué significan los MHz de una categoría</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 58 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 20 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Esta semana no repite el Mes 1</strong>
+            En la <a href="../../../Mes_01_Fundamentos/Semana_02/Dia_02/teoria.html">Semana 2</a> viste que un cable
+            de red tiene cuatro pares trenzados, que existe el UTP y que las categorías van de la 5e en adelante.
+            Aquello era el <strong>qué</strong>. Esta semana es el <strong>por qué</strong> y el <strong>cómo se
+            monta</strong>.
+        </div>
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            La semana pasada quedó claro que un medio tiene un <a href="../../Semana_05/Dia_01/teoria.html#anchobanda">ancho
+            de banda en hercios</a> y que ese número, junto con el <a href="../../Semana_05/Dia_04/teoria.html#shannon">ruido</a>,
+            pone el techo de velocidad. Hoy vas a ver <strong>de qué está hecho</strong> el medio que da esos números, y
+            por qué un cable de 100 MHz cuesta cuatro euros y uno de 2 000 MHz cuesta cuarenta.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#guiados">Medios guiados y no guiados</a></li>
+                <li><a href="#criterios">Los seis criterios para juzgar un medio</a></li>
+                <li><a href="#normas">Las normas de cableado estructurado</a></li>
+                <li><a href="#paralelo">El par sin trenzar: categoría 1 y RJ-11</a></li>
+                <li><a href="#trenzado">Par trenzado: por qué se trenza</a></li>
+                <li><a href="#apantallamientos">La familia completa: UTP, STP, S/STP y FTP</a></li>
+                <li><a href="#categorias">Qué significan los MHz de una categoría</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="guiados">1. Medios guiados y no guiados</h2>
+
+            <p>El <strong>medio de transmisión</strong> es el soporte físico por el que emisor y receptor se
+            comunican. En los dos casos que existen la transmisión se hace con <strong>ondas
+            electromagnéticas</strong>; la diferencia está en si alguien las conduce o no.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Medios guiados</th><th>Medios no guiados</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Qué hacen</strong></td><td>Conducen las ondas a través de un camino físico</td><td>Dan soporte para que las ondas se propaguen, pero <strong>no las dirigen</strong></td></tr>
+                    <tr><td><strong>Ejemplos</strong></td><td>Par trenzado, coaxial, fibra óptica</td><td>El aire: radio, microondas, infrarrojos, luz</td></tr>
+                    <tr><td><strong>Qué limita la velocidad</strong></td><td>El <strong>propio medio</strong>: su construcción y su longitud</td><td>Más bien el <strong>espectro de frecuencia</strong> que se usa, y las condiciones atmosféricas</td></tr>
+                    <tr><td><strong>Cuándo se estudia</strong></td><td><strong>Esta semana</strong></td><td>Semana 7</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Esa última fila es más importante de lo que parece. En un cable, <strong>el medio es el que manda</strong>:
+            cambiar de categoría cambia lo que se puede transmitir. En el aire no hay «categorías»; lo que decide es en
+            qué banda de frecuencias trabajas y qué hay a tu alrededor.</p>
+
+            <h2 id="criterios">2. Los seis criterios para juzgar un medio</h2>
+
+            <p>Cada medio cumple unas determinadas características. El libro las lista en seis puntos, y conviene
+            aprenderlos como una <strong>lista de comprobación</strong>: cuando el jueves tengas que elegir cable para
+            una nave, los repasarás uno a uno.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Criterio</th><th>La pregunta que responde</th><th>Dónde lo has visto ya</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Velocidad de transmisión</strong></td><td>¿Cuántos bits por segundo admite?</td><td>Semana 5: bps</td></tr>
+                    <tr><td><strong>Ancho de banda que soporta</strong></td><td>¿Hasta qué frecuencia deja pasar la señal?</td><td>Semana 5, Día 1: hercios</td></tr>
+                    <tr><td><strong>Espacio entre repetidores</strong></td><td>¿Cada cuánto hay que regenerar la señal?</td><td>Semana 5, Día 4: atenuación</td></tr>
+                    <tr><td><strong>Fiabilidad en la transmisión</strong></td><td>¿Cuántos errores da? ¿Aguanta el ruido?</td><td>Semana 5, Día 4: S/N</td></tr>
+                    <tr><td><strong>Coste</strong></td><td>¿Cuánto cuesta el metro… y el montaje?</td><td>Hoy y el jueves</td></tr>
+                    <tr><td><strong>Facilidad de instalación</strong></td><td>¿Se puede doblar? ¿Hace falta un técnico?</td><td>Miércoles: fibra</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>El coste no es el precio del metro</strong>
+                Es el error clásico al comparar medios. El miércoles verás que en fibra óptica <strong>el caro es el
+                montaje</strong>, no el cable, hasta el punto de que a veces sale más barato tirar kilómetros de fibra
+                que empalmar dos tramos.
+            </div>
+
+            <h2 id="normas">3. Las normas de cableado estructurado</h2>
+
+            <p>Hay muchas formas de cablear un edificio, y si cada instalador hiciera la suya, nada encajaría con
+            nada. Por eso existen las normas de <strong>cableado estructurado</strong>, que definen en la práctica cómo
+            se instala una red en un edificio: qué cables, qué conectores, qué distancias y qué etiquetado.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Norma</th><th>Quién la hace</th><th>Dónde se usa</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>EIA/TIA-568</strong></td><td>Asociación de Industrias de Electrónica y Asociación de Industrias de Telecomunicaciones (EE. UU.)</td><td><strong>La más utilizada</strong></td></tr>
+                    <tr><td><strong>EN-50173</strong></td><td>Normalización europea</td><td>Europa</td></tr>
+                    <tr><td><strong>ISO/IEC 11801</strong></td><td>Normalización internacional</td><td>Internacional</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>De la EIA/TIA-568 ya conoces una parte: los órdenes de colores <strong>T568A</strong> y
+            <strong>T568B</strong>. Pero la norma va mucho más allá, y es la que define las categorías de cable, las
+            distancias máximas y hasta la obligación de <strong>etiquetar</strong> cada toma. La retomarás el jueves y,
+            de lleno, en la Semana 8.</p>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="paralelo">4. El par sin trenzar: categoría 1 y RJ-11</h2>
+
+            <p>Antes del par trenzado está su hermano pobre, que todavía se usa: dos hilos de cobre
+            <strong>paralelos</strong> recubiertos de plástico aislante. Sin trenzar.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Característica</th><th>Par sin trenzar (paralelo)</th></tr></thead>
+                <tbody>
+                    <tr><td>Protección frente a interferencias</td><td><strong>Muy poca</strong></td></tr>
+                    <tr><td>Uso habitual</td><td>Cable telefónico, para <strong>voz analógica</strong></td></tr>
+                    <tr><td>Conector</td><td><strong>RJ-11</strong>, de 4 pines, de los que se usan solo <strong>los dos centrales</strong> (pines 2 y 3)</td></tr>
+                    <tr><td>Modo de comunicación</td><td><strong>Semidúplex</strong>: la información circula en los dos sentidos por el mismo cable, pero no a la vez</td></tr>
+                    <tr><td>Distancia útil para datos</td><td>Apenas unos metros</td></tr>
+                    <tr><td>En la clasificación de categorías</td><td><strong>Categoría 1</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Dos detalles que suelen caer en examen:</p>
+
+            <ul>
+                <li>En el estándar de la red telefónica básica <strong>no importa el orden</strong> de engastado,
+                siempre que los dos hilos queden en los pines 2 y 3. En el par trenzado sí importa, y mucho: mañana
+                verás por qué.</li>
+                <li>El cable paralelo «en bus» es el que comunica los componentes <strong>dentro</strong> del
+                ordenador: ahí las distancias son de centímetros y no hace falta protegerse del ruido.</li>
+            </ul>
+
+            <div class="destacado">
+                <strong>Semidúplex, símplex, dúplex</strong>
+                <p>Lo viste en el <a href="../../../Mes_01_Fundamentos/Semana_01/Dia_02/teoria.html#duplex">Mes 1</a>.
+                El cable telefónico es semidúplex; cada <strong>par</strong> de un cable de red trenzado trabaja en
+                símplex, y es el conjunto de cuatro pares el que consigue el dúplex.</p>
+            </div>
+
+            <h2 id="trenzado">5. Par trenzado: por qué se trenza</h2>
+
+            <p>El par trenzado son dos cables de cobre aislados, normalmente de <strong>1 mm</strong> de espesor,
+            enlazados de dos en dos de forma <strong>helicoidal</strong>, parecida a la estructura del ADN.</p>
+
+            <p>El motivo del trenzado ya lo conoces del Mes 1, pero ahora puedes entenderlo mejor:</p>
+
+            <div class="dato">
+                <strong>Dos hilos paralelos son una antena</strong>
+                <p>Dos alambres paralelos constituyen una <strong>antena simple</strong>: pueden inducir corriente en
+                los cables cercanos, o recibirla de ellos. Es el mismo principio por el que funciona un transformador.
+                Al trenzarlos, cada tramo induce en sentido contrario al anterior y <strong>las interferencias se
+                cancelan</strong>.</p>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m01_s02_d02_cancelacion_ruido.png"
+         width="1400" height="788" loading="lazy"
+         alt="Dos hilos trenzados recorridos por una interferencia. En cada media vuelta la corriente inducida cambia de sentido, de modo que las dos mitades se compensan y el resultado en el receptor es cero.">
+    <figcaption>Cada media vuelta invierte el sentido de la interferencia inducida: al sumarlas, se anulan.</figcaption>
+</figure>
+
+            <p>Cuantas <strong>más vueltas por metro</strong> tenga el trenzado, mejor cancela y más alta es la
+            categoría del cable. Es uno de los tres factores que la norma tiene en cuenta para clasificarlo:</p>
+
+<pre><code>categoría del cable  ←  número de pares
+                     ←  vueltas por metro del trenzado
+                     ←  materiales empleados</code></pre>
+
+            <div class="aviso">
+                <strong>Un hilo de cada par va marcado</strong>
+                En cada par, uno de los dos hilos lleva una <strong>línea longitudinal</strong> de color: es la
+                <strong>masa</strong> de la señal. A diferencia del cable telefónico, el par trenzado se usa también
+                para transmisión digital, y por eso <strong>hay que respetar el orden</strong> al engastar el conector.
+            </div>
+
+            <h2 id="apantallamientos">6. La familia completa: UTP, STP, S/STP y FTP</h2>
+
+            <p>Los pares se agrupan en cables más gruesos recubiertos de aislante. Según <strong>cómo se
+            apantallen</strong>, el libro distingue cuatro tipos. En el Mes 1 viste los dos primeros; aquí está la
+            familia entera:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tipo</th><th>Qué lleva</th><th>Inmunidad al ruido</th><th>Flexibilidad y coste</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>UTP</strong><br><em>Unshielded Twisted Pair</em></td>
+                        <td>Ningún tipo de pantalla conductora</td>
+                        <td>La <strong>menor</strong>: muy sensible a interferencias</td>
+                        <td>Muy flexible y el más barato</td>
+                    </tr>
+                    <tr>
+                        <td><strong>STP</strong><br><em>Shielded Twisted Pair</em></td>
+                        <td>Una malla conductora <strong>alrededor de cada par</strong>, conectada a las tomas de tierra de los equipos</td>
+                        <td><strong>Grande</strong></td>
+                        <td>Rígido y caro</td>
+                    </tr>
+                    <tr>
+                        <td><strong>S/STP</strong><br><em>Screened Shielded Twisted Pair</em></td>
+                        <td>Malla por cada par <strong>más una pantalla global</strong></td>
+                        <td>La <strong>mayor de todas</strong></td>
+                        <td>El más rígido y el más caro</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FTP</strong><br><em>Fully Shielded Twisted Pair</em></td>
+                        <td>Una <strong>única pantalla global</strong> trenzada, sin malla individual por par</td>
+                        <td>Mejor que UTP, <strong>menor que STP</strong></td>
+                        <td>Coste inferior al STP</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>El libro añade que al FTP también se le llama <strong>S/UTP</strong> (<em>Screened Unshielded Twisted
+            Pair</em>) o <strong>S/FTP</strong> (<em>Screened Fully Shielded Twisted Pair</em>).</p>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s06_d01_apantallamientos.png"
+         width="1400" height="467" loading="lazy"
+         alt="Cuatro cortes transversales de cable de cuatro pares, uno junto a otro. El UTP solo tiene los pares y la funda. El FTP añade una pantalla global bajo la funda. El STP rodea cada par con su propia malla. El S/STP tiene malla por par y además pantalla global.">
+    <figcaption>De izquierda a derecha, cada vez más metal entre el ruido y los pares: y cada vez más caro y más rígido.</figcaption>
+</figure>
+<pre><code>UTP      ( o o  o o )          sin pantalla
+FTP      [( o o  o o )]        una pantalla global
+STP      ( [o o] [o o] )       una malla por cada par
+S/STP    [( [o o] [o o] )]     malla por par + pantalla global</code></pre>
+
+            <div class="aviso">
+                <strong>Un apantallado mal instalado es peor que un UTP</strong>
+                La pantalla solo funciona si está <strong>conectada a tierra</strong> en el conector. Si no lo está, se
+                comporta como una antena: recoge el ruido y lo mete dentro del cable, justo lo contrario de lo que se
+                buscaba. Por eso mañana, en el montaje, hay un paso dedicado solo a que la pantalla haga contacto con
+                el chasis metálico del conector.
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: la notación moderna, que no es la del libro</summary>
+                <div class="ampliacion-cuerpo">
+                    <p><strong>Esta parte no sale de la bibliografía de la asignatura</strong>, sino de la norma
+                    <strong>ISO/IEC 11801</strong>. La incluyo porque es lo que verás escrito en los cables que
+                    compres, y porque las siglas del libro no siempre coinciden con las del fabricante.</p>
+                    <p>La notación actual tiene la forma <code>XX/YZZ</code>, donde lo de delante de la barra es la
+                    <strong>pantalla global</strong> y lo de detrás, la de <strong>cada par</strong>:</p>
+                    <ul>
+                        <li><strong>U</strong> = sin pantalla (<em>unshielded</em>)</li>
+                        <li><strong>F</strong> = lámina de aluminio (<em>foil</em>)</li>
+                        <li><strong>S</strong> = malla trenzada (<em>screen</em>)</li>
+                    </ul>
+                    <div class="tabla-wrap">
+                    <table>
+                        <thead><tr><th>Notación ISO</th><th>Pantalla global</th><th>Por par</th><th>Nombre del libro</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>U/UTP</code></td><td>ninguna</td><td>ninguna</td><td>UTP</td></tr>
+                            <tr><td><code>F/UTP</code></td><td>lámina</td><td>ninguna</td><td>FTP</td></tr>
+                            <tr><td><code>U/FTP</code></td><td>ninguna</td><td>lámina</td><td>≈ STP</td></tr>
+                            <tr><td><code>S/FTP</code></td><td>malla</td><td>lámina</td><td>≈ S/STP</td></tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <p><strong>Ojo a la contradicción:</strong> para el libro, <code>S/FTP</code> es otro nombre del
+                    FTP —una sola pantalla global—; para la norma ISO es el cable <strong>más</strong> apantallado de
+                    todos. En un examen de la asignatura responde con la clasificación del libro; en una tienda, mira
+                    la notación ISO impresa en la funda.</p>
+                </div>
+            </details>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="categorias">7. Qué significan los MHz de una categoría</h2>
+
+            <p>Las normas de cableado estructurado clasifican los pares trenzados por <strong>categorías</strong>:
+            categoría 1 (el cable paralelo de antes), 2, 3, 4, 5, 5e, 6 y 7. Del Mes 1 ya te suenan; lo que no habías
+            podido entender entonces es <strong>qué garantiza</strong> exactamente una categoría.</p>
+
+            <div class="dato">
+                <strong>Una categoría es una promesa de ancho de banda… en hercios</strong>
+                <p>Cuando la norma dice que una Cat 5e es «de 100 MHz», está diciendo que el cable mantiene sus
+                parámetros —atenuación, diafonía— <strong>hasta 100 MHz</strong>, a 100 metros. No dice megabits:
+                dice <a href="../../Semana_05/Dia_01/teoria.html#anchobanda">el rango de frecuencias que deja
+                pasar</a>.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Las cifras de esta tabla no salen del libro</strong>
+                El libro enumera las categorías, pero no da sus frecuencias. Los megahercios y los estándares Ethernet
+                de la tabla proceden de <strong>ANSI/TIA-568</strong> e <strong>IEEE 802.3</strong>. Lo digo porque
+                conviene saber qué es materia de la asignatura y qué es complemento.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Categoría</th><th>Ancho de banda</th><th>Velocidad habitual a 100 m</th><th>Uso</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Cat 1</strong></td><td>—</td><td>Voz analógica</td><td>Par paralelo, telefonía</td></tr>
+                    <tr><td><strong>Cat 3</strong></td><td>16 MHz</td><td>10 Mbps</td><td>10BASE-T, telefonía de edificio</td></tr>
+                    <tr><td><strong>Cat 5</strong></td><td>100 MHz</td><td>100 Mbps</td><td>Fast Ethernet. Obsoleta</td></tr>
+                    <tr><td><strong>Cat 5e</strong></td><td>100 MHz</td><td><strong>1 Gbps</strong></td><td>El mínimo razonable hoy</td></tr>
+                    <tr><td><strong>Cat 6</strong></td><td>250 MHz</td><td>1 Gbps (10 Gbps solo hasta 55 m)</td><td>Instalaciones nuevas</td></tr>
+                    <tr><td><strong>Cat 6A</strong></td><td>500 MHz</td><td><strong>10 Gbps</strong></td><td>Troncales y centros de datos</td></tr>
+                    <tr><td><strong>Cat 7</strong></td><td>600 MHz</td><td>10 Gbps</td><td>Siempre apantallado; conector <strong>RJ-48</strong>, no RJ-45</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>La pregunta que deja mudos a media clase</h3>
+
+            <p>Si una Cat 5e solo deja pasar <strong>100 MHz</strong>, ¿cómo consigue <strong>1 000 Mbps</strong>?
+            Con lo de la semana pasada ya puedes contestar tú. Tres trucos combinados:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Truco</th><th>Qué aporta</th><th>Dónde lo viste</th></tr></thead>
+                <tbody>
+                    <tr><td>Usar los <strong>4 pares a la vez</strong>, en los dos sentidos</td><td>×4</td><td><a href="../../Semana_05/Dia_02/teoria.html#gigabit">Semana 5, Día 2</a></td></tr>
+                    <tr><td><strong>PAM-5</strong>: cinco niveles de tensión, más de un bit por símbolo</td><td>×2 aproximadamente</td><td>Semana 5, Día 2</td></tr>
+                    <tr><td>Codificación eficiente y cancelación de ecos</td><td>lo que falta</td><td>Semana 5, Día 2</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Con <a href="../../Semana_05/Dia_04/teoria.html#nyquist">Nyquist</a> se ve de golpe: un canal de
+            100 MHz con dos niveles daría 200 Mbps por par; si se reparte entre cuatro pares y se usan más niveles por
+            símbolo, el gigabit sale. <strong>Los hercios no se convierten en megabits con una regla fija</strong>:
+            depende de cómo se codifique.</p>
+
+            <div class="destacado">
+                <strong>Por qué un cable mejor cuesta más</strong>
+                <p>Subir de 100 a 500 MHz exige más vueltas por metro, cobre de más calidad, separadores internos
+                entre pares —la «cruceta» de las Cat 6— y, muchas veces, pantalla. Todo eso es material y proceso de
+                fabricación. Y además lo vuelve <strong>más rígido</strong>, que es el precio oculto: un Cat 6A
+                apantallado no gira en una esquina como gira un UTP.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Los medios <strong>guiados</strong> conducen las ondas; los <strong>no guiados</strong> solo
+                    les dan soporte. En los guiados manda el medio; en los no guiados, la frecuencia.</li>
+                    <li>Seis criterios: <strong>velocidad, ancho de banda, espacio entre repetidores, fiabilidad,
+                    coste y facilidad de instalación</strong>.</li>
+                    <li>Normas de cableado estructurado: <strong>EIA/TIA-568</strong> (la más usada), EN-50173 e
+                    ISO/IEC 11801.</li>
+                    <li>El <strong>par sin trenzar</strong> es la categoría 1: telefonía, conector <strong>RJ-11</strong>
+                    de 4 pines usando los dos centrales, <strong>semidúplex</strong>.</li>
+                    <li>Se trenza porque dos hilos paralelos son una <strong>antena</strong>; el trenzado cancela lo
+                    inducido.</li>
+                    <li><strong>UTP</strong> sin pantalla · <strong>STP</strong> malla por par · <strong>S/STP</strong>
+                    malla por par y global · <strong>FTP</strong> solo pantalla global.</li>
+                    <li>Una <strong>categoría</strong> garantiza un ancho de banda en <strong>MHz</strong>; los Mbps
+                    dependen además de la codificación.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Cat 6 son 250 megas»</td><td>Son <strong>250 MHz</strong> de ancho de banda. Da para 1 Gbps holgadamente, y 10 Gbps en tramos cortos</td></tr>
+                    <tr><td>«El apantallado siempre es mejor»</td><td>Solo si está <strong>bien conectado a tierra</strong>. Mal montado, mete más ruido que un UTP</td></tr>
+                    <tr><td>«RJ-11 y RJ-45 son lo mismo más pequeño»</td><td>El RJ-11 tiene <strong>4 pines</strong> y usa dos; el RJ-45, <strong>8</strong>, y en el orden importa</td></tr>
+                    <tr><td>«El cable telefónico es par trenzado»</td><td>El clásico es <strong>par paralelo</strong>, categoría 1, sin trenzar</td></tr>
+                    <tr><td>«FTP y STP son sinónimos»</td><td>El STP apantalla <strong>cada par</strong>; el FTP, solo el <strong>conjunto</strong></td></tr>
+                    <tr><td>«El medio más caro es el mejor»</td><td>Depende de los seis criterios. Un STP en una oficina sin ruido es dinero tirado y una instalación más difícil</td></tr>
+                    <tr><td>«El coste de un medio es su precio por metro»</td><td>El montaje suele pesar más que el cable, sobre todo en fibra</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a leer la <strong>ficha impresa</strong> en la funda de los cables que tengas por casa y a
+            comprobar si su categoría da para la velocidad a la que tu equipo ha negociado el enlace.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 1</strong></a> (66 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 2</strong>
+            <p><strong>Montaje y comprobación</strong>: los ocho pasos de un RJ-45 macho, el conector hembra de la
+            roseta, la herramienta de impacto y el error que arruina más instalaciones que ningún otro.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> mira el conector transparente del cable de tu router. ¿Hasta
+            dónde llega el trenzado de los pares? ¿Entra dentro del conector o se deshace antes?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_05/Dia_05/teoria.html">← Semana 5</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Te ofrecen dos cables para tirar 60 metros por una canaleta que va pegada al cuadro eléctrico de una nave. Uno es UTP Cat 6 y el otro, Cat 5e apantallado. ¿Qué criterios de los seis usarías para decidir, y qué elegirías?',
+                modelo: 'Los criterios que pesan aquí son la <strong>fiabilidad</strong> —hay un cuadro eléctrico al lado, así que habrá interferencias electromagnéticas— y la <strong>facilidad de instalación</strong>, porque un apantallado es más rígido y exige conectar la pantalla a tierra en los dos extremos. La velocidad y el ancho de banda casi no deciden: los dos dan de sobra para 1 Gbps a 60 metros. Con ruido cerca, el <strong>apantallado</strong> es la mejor opción… siempre que se monte bien la puesta a tierra; si no hay quien la haga, el UTP Cat 6 es más seguro.',
+                puntos: [
+                    'Nombra la fiabilidad frente a interferencias como criterio principal',
+                    'Menciona la facilidad de instalación o la rigidez del apantallado',
+                    'Descarta la velocidad y el ancho de banda como factores decisivos aquí',
+                    'Condiciona la elección del apantallado a una puesta a tierra correcta'
+                ]
+            },
+            {
+                pregunta: 'Explica con tus palabras la diferencia entre STP y FTP, y por qué el STP es más caro.',
+                modelo: 'El <strong>STP</strong> rodea <strong>cada par</strong> con su propia malla conductora, conectada a las tomas de tierra de los equipos. El <strong>FTP</strong> lleva una <strong>única pantalla global</strong> trenzada que envuelve a todos los pares juntos. El STP es más caro porque lleva más material conductor y su fabricación es más compleja, y a cambio ofrece más inmunidad al ruido, incluida la diafonía <em>entre</em> los propios pares del cable, que el FTP no protege. El precio adicional se paga también en rigidez.',
+                puntos: [
+                    'STP: una malla por cada par',
+                    'FTP: una sola pantalla global para todos los pares',
+                    'El STP protege también de la diafonía entre pares del mismo cable',
+                    'Relaciona el coste con más material y más rigidez'
+                ]
+            },
+            {
+                pregunta: 'Un compañero dice: «Mi cable es Cat 5e, o sea 100 MHz, así que no puede dar más de 100 Mbps». ¿Dónde está el error? Usa lo de la Semana 5.',
+                modelo: 'Confunde <strong>hercios con bits por segundo</strong>. Los 100 MHz son el ancho de banda que el cable garantiza, es decir, el rango de frecuencias que deja pasar; no una velocidad. Cuántos bits por segundo se consiguen depende de la <strong>codificación</strong>: 1000BASE-T usa los <strong>cuatro pares a la vez</strong>, en los dos sentidos, y <strong>PAM-5</strong> para meter más de un bit en cada símbolo. Con Nyquist, un canal de 100 MHz con dos niveles ya daría 200 Mbps por par; multiplicando por cuatro pares y con más niveles por símbolo, el gigabit sale sin necesidad de más hercios.',
+                puntos: [
+                    'Distingue el ancho de banda en Hz de la velocidad en bps',
+                    'Menciona que la codificación es la que decide los bps',
+                    'Cita el uso de los cuatro pares o PAM-5',
+                    'Se apoya en Nyquist para justificar el cálculo'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: 'Medios guiados y no guiados', dorso: 'Los <strong>guiados</strong> conducen las ondas por un camino físico (cables). Los <strong>no guiados</strong> solo les dan soporte (el aire).' },
+            { frente: '¿Qué limita la velocidad en un medio no guiado?', dorso: 'Más que el medio, el <strong>espectro de frecuencia</strong> usado, muy influido por las condiciones atmosféricas.' },
+            { frente: 'Los seis criterios de un medio', dorso: 'Velocidad · ancho de banda · <strong>espacio entre repetidores</strong> · fiabilidad · coste · facilidad de instalación.' },
+            { frente: 'Tres normas de cableado estructurado', dorso: '<strong>EIA/TIA-568</strong> (la más usada), EN-50173 e ISO/IEC 11801.' },
+            { frente: '¿Qué es el cable de categoría 1?', dorso: 'El <strong>par sin trenzar</strong> o paralelo: telefonía, voz analógica, conector RJ-11.' },
+            { frente: 'El conector RJ-11', dorso: '<strong>4 pines</strong>, de los que se usan solo los <strong>dos centrales</strong> (2 y 3). El orden de engastado no importa en la RTB.' },
+            { frente: '¿Por qué el cable telefónico es semidúplex?', dorso: 'La información circula en <strong>los dos sentidos por el mismo cable</strong>, pero no al mismo tiempo.' },
+            { frente: '¿Por qué se trenzan los pares?', dorso: 'Dos hilos paralelos forman una <strong>antena</strong>. El trenzado hace que lo inducido en cada media vuelta <strong>se cancele</strong>.' },
+            { frente: '¿De qué depende la categoría de un cable?', dorso: 'Del <strong>número de pares</strong>, de las <strong>vueltas por metro</strong> del trenzado y de los <strong>materiales</strong>.' },
+            { frente: 'UTP frente a STP', dorso: '<strong>UTP</strong>: sin pantalla, flexible y barato. <strong>STP</strong>: una malla <strong>por cada par</strong>, conectada a tierra, gran inmunidad.' },
+            { frente: 'FTP y S/STP', dorso: '<strong>FTP</strong>: una sola pantalla global trenzada. <strong>S/STP</strong>: malla por par <strong>más</strong> pantalla global; la mayor inmunidad de todas.' },
+            { frente: '¿Qué garantiza una categoría de cable?', dorso: 'Un <strong>ancho de banda en MHz</strong> a 100 m, no una velocidad. Los Mbps dependen de la codificación.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 1: El cobre por dentro',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Guiados y no guiados',
+                repaso: '#guiados',
+                text: '¿Qué diferencia a un medio guiado de uno no guiado?',
+                options: {
+                    a: 'Que el guiado es digital y el no guiado, analógico',
+                    b: 'Que el guiado conduce las ondas por un camino físico y el no guiado solo les da soporte',
+                    c: 'Que el guiado no usa ondas electromagnéticas',
+                    d: 'Que el no guiado no sufre interferencias'
+                },
+                answer: 'b',
+                feedback: 'Los dos transmiten con <strong>ondas electromagnéticas</strong>. La diferencia es si alguien las dirige: el cable las conduce, el aire no.'
+            },
+            {
+                topic: 'Guiados y no guiados',
+                repaso: '#guiados',
+                text: 'En un medio <em>no guiado</em>, ¿qué resulta más determinante para la velocidad máxima?',
+                options: {
+                    a: 'La longitud del cable',
+                    b: 'El número de pares',
+                    c: 'El espectro de frecuencia utilizado, muy influido por las condiciones atmosféricas',
+                    d: 'La categoría del medio'
+                },
+                answer: 'c',
+                feedback: 'En los guiados manda el medio; en los no guiados, la <strong>banda de frecuencias</strong> en la que trabajas. Ni «categoría» ni «longitud del cable» tienen sentido en el aire.'
+            },
+            {
+                topic: 'Criterios',
+                repaso: '#criterios',
+                text: '¿Cuál de estos <strong>no</strong> es uno de los seis criterios con los que el libro compara los medios de transmisión?',
+                options: {
+                    a: 'Espacio entre repetidores',
+                    b: 'Facilidad de instalación',
+                    c: 'Fiabilidad en la transmisión',
+                    d: 'Número de usuarios simultáneos'
+                },
+                answer: 'd',
+                feedback: 'Los seis son velocidad, ancho de banda, espacio entre repetidores, fiabilidad, coste e instalación. El número de usuarios es una decisión de diseño de red, no una característica del medio.'
+            },
+            {
+                topic: 'Criterios',
+                repaso: '#criterios',
+                text: 'Una instalación necesita cubrir 3 km sin equipos intermedios. ¿Qué criterio manda en esa decisión?',
+                options: {
+                    a: 'El espacio entre repetidores',
+                    b: 'La facilidad de instalación',
+                    c: 'El coste por metro',
+                    d: 'El ancho de banda'
+                },
+                answer: 'a',
+                feedback: 'Si la señal no llega, lo demás sobra. Es el criterio que descarta el par trenzado antes de mirar ningún otro, y el que hace ganar a la fibra en distancias largas.'
+            },
+            {
+                topic: 'Normas',
+                repaso: '#normas',
+                text: '¿Cuál es la norma de cableado estructurado más utilizada, la que define entre otras cosas las conexiones T568A y T568B?',
+                options: { a: 'IEEE 802.3', b: 'EN-50173', c: 'ISO/IEC 11801', d: 'EIA/TIA-568' },
+                answer: 'd',
+                feedback: 'La <strong>EIA/TIA-568</strong>. EN-50173 e ISO/IEC 11801 son sus equivalentes europea e internacional; IEEE 802.3 es Ethernet, otra cosa.'
+            },
+            {
+                topic: 'Par sin trenzar',
+                repaso: '#paralelo',
+                text: 'El conector RJ-11 del cable telefónico tiene cuatro pines. ¿Cuáles se utilizan?',
+                options: {
+                    a: 'Los cuatro',
+                    b: 'Los dos centrales, los pines 2 y 3',
+                    c: 'Los dos de los extremos, 1 y 4',
+                    d: 'Depende del orden de colores elegido'
+                },
+                answer: 'b',
+                feedback: 'Solo los <strong>dos centrales</strong>. Y en el estándar de la red telefónica básica da igual qué hilo vaya en cada uno, algo impensable en un RJ-45.'
+            },
+            {
+                topic: 'Par sin trenzar',
+                repaso: '#paralelo',
+                text: 'El cable telefónico clásico es semidúplex. ¿Qué significa eso?',
+                options: {
+                    a: 'Que solo transmite en un sentido',
+                    b: 'Que transmite y recibe a la vez por pares distintos',
+                    c: 'Que circula en los dos sentidos por el mismo cable, pero no al mismo tiempo',
+                    d: 'Que solo admite señales analógicas'
+                },
+                answer: 'c',
+                feedback: 'Los dos sentidos comparten el medio y se turnan. Que sea analógico es otra característica distinta, no la definición de semidúplex.'
+            },
+            {
+                topic: 'Par trenzado',
+                repaso: '#trenzado',
+                text: '¿Por qué se trenzan los pares de un cable de red?',
+                options: {
+                    a: 'Porque dos hilos paralelos forman una antena, y el trenzado cancela lo que se induce',
+                    b: 'Para que el cable sea más flexible',
+                    c: 'Para poder identificar los pares por su color',
+                    d: 'Para que quepan más hilos en el mismo grosor'
+                },
+                answer: 'a',
+                feedback: 'Cada media vuelta invierte el sentido de la corriente inducida, así que las interferencias se compensan entre sí. Es el mismo principio de un transformador, usado al revés.'
+            },
+            {
+                topic: 'Par trenzado',
+                repaso: '#trenzado',
+                text: 'Dos cables de cuatro pares, mismo cobre, misma funda. Uno tiene muchas más vueltas por metro. ¿Qué cabe esperar?',
+                options: {
+                    a: 'Que el de más vueltas sea más barato',
+                    b: 'Que sean idénticos: las vueltas no influyen',
+                    c: 'Que el de menos vueltas admita más distancia',
+                    d: 'Que el de más vueltas alcance una categoría superior'
+                },
+                answer: 'd',
+                feedback: 'Las vueltas por metro son uno de los tres factores que la norma tiene en cuenta, junto al número de pares y los materiales. Más vueltas, mejor cancelación y más ancho de banda garantizado.'
+            },
+            {
+                topic: 'Apantallamientos',
+                repaso: '#apantallamientos',
+                text: 'Un cable lleva una malla conductora <strong>alrededor de cada par</strong>, conectada a las tomas de tierra de los equipos. ¿De qué tipo es?',
+                options: { a: 'UTP', b: 'FTP', c: 'STP', d: 'Categoría 1' },
+                answer: 'c',
+                feedback: '<strong>STP</strong>, <em>Shielded Twisted Pair</em>. Si además tuviera una pantalla global sobre el conjunto, sería S/STP, el de mayor inmunidad.'
+            },
+            {
+                topic: 'Apantallamientos',
+                repaso: '#apantallamientos',
+                text: 'Se instala un cable apantallado pero nadie conecta la pantalla a tierra en los conectores. ¿Qué ocurre?',
+                options: {
+                    a: 'Nada: la pantalla protege igual',
+                    b: 'La pantalla queda como una antena y puede meter más ruido que un UTP',
+                    c: 'El cable deja de conducir',
+                    d: 'Se reduce la velocidad a la mitad, pero sin errores'
+                },
+                answer: 'b',
+                feedback: 'Una pantalla sin referencia a tierra recoge el ruido y lo acerca a los pares. Por eso en el montaje hay un paso dedicado a que la pantalla toque el chasis metálico del conector.'
+            },
+            {
+                topic: 'Categorías',
+                repaso: '#categorias',
+                text: 'Un cable Cat 6 se anuncia «de 250 MHz». ¿Qué está garantizando ese dato?',
+                options: {
+                    a: 'Que transmite a 250 Mbps',
+                    b: 'Que llega a 250 metros',
+                    c: 'Que tiene 250 vueltas por metro',
+                    d: 'Que mantiene sus parámetros hasta 250 MHz, es decir, el rango de frecuencias que deja pasar'
+                },
+                answer: 'd',
+                feedback: 'La unidad lo delata: <strong>hercios</strong>. Con esos 250 MHz, un enlace de 1 Gbps va sobrado, y 10 Gbps solo llega en tramos cortos.'
+            },
+            {
+                topic: 'Categorías',
+                repaso: '#categorias',
+                text: 'Una Cat 5e deja pasar 100 MHz y aun así transporta 1 Gbps. ¿Cómo se explica?',
+                options: {
+                    a: 'Usando los cuatro pares a la vez y varios niveles por símbolo, con PAM-5',
+                    b: 'Porque 100 MHz equivalen a 1 000 Mbps',
+                    c: 'Porque el cable se apantalla',
+                    d: 'Porque la señal se envía comprimida'
+                },
+                answer: 'a',
+                feedback: 'Cuatro pares en paralelo multiplican por cuatro, y meter más de un bit en cada símbolo hace el resto. Los hercios y los bits por segundo <strong>no se convierten con una regla fija</strong>.'
+            },
+            {
+                topic: 'Recuperación · Semana 5',
+                repaso: '../../Semana_05/Dia_04/teoria.html#shannon',
+                text: '<em>Repaso.</em> Dos cables idénticos, pero uno va junto a un motor industrial. Según Shannon, ¿qué le pasa a su capacidad?',
+                options: {
+                    a: 'No cambia: la capacidad solo depende del ancho de banda',
+                    b: 'Baja, porque la relación señal/ruido empeora',
+                    c: 'Sube, porque el ruido añade energía a la señal',
+                    d: 'Se vuelve infinita si la señal es digital'
+                },
+                answer: 'b',
+                feedback: 'C = W · log₂(1 + S/N). Con el mismo ancho de banda, <strong>más ruido es menos capacidad</strong>. Y esa es justo la razón de ser de los cables apantallados que has visto hoy.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

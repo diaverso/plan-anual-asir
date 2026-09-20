@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Ejercicios: el cobre por dentro</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">72 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 5 es el que engancha esta semana con la anterior: convertir los <strong>MHz</strong> de una
+            categoría en <strong>bits por segundo</strong> con Nyquist. No es una regla fija: hay que saber cuántos
+            niveles y cuántos pares entran en juego.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/ejercicios.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Ejercicios',
+    subtitulo: 'Criterios de un medio · par sin trenzar · apantallamientos · categorías y MHz',
+    tiempo: '72 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: El vocabulario del cobre',
+            tiempo: '10 min',
+            enunciado: '<p>Antes de calcular nada, hay que tener claros los nombres. Estos son los que se usarán toda la semana.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada término con lo que lo define.',
+                    izquierda: ['Medio guiado', 'Medio no guiado', 'UTP', 'STP', 'FTP', 'Categoría 1'],
+                    derecha: [
+                        'Conduce las ondas a través de un camino físico',
+                        'Da soporte a las ondas, pero no las dirige',
+                        'Par trenzado sin ningún tipo de pantalla conductora',
+                        'Una malla conductora rodeando cada par',
+                        'Una única pantalla global trenzada para todos los pares',
+                        'El par sin trenzar o paralelo, de uso telefónico'
+                    ],
+                    pares: {
+                        'Medio guiado': 'Conduce las ondas a través de un camino físico',
+                        'Medio no guiado': 'Da soporte a las ondas, pero no las dirige',
+                        'UTP': 'Par trenzado sin ningún tipo de pantalla conductora',
+                        'STP': 'Una malla conductora rodeando cada par',
+                        'FTP': 'Una única pantalla global trenzada para todos los pares',
+                        'Categoría 1': 'El par sin trenzar o paralelo, de uso telefónico'
+                    },
+                    explicacion: 'La confusión habitual está entre STP y FTP: lo que los separa es <strong>dónde</strong> va el metal, en cada par o alrededor del conjunto.',
+                    pistas: ['Fíjate en si la pantalla es individual por par o global para todos.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Marca <strong>todos</strong> los que sean criterios que el libro usa para comparar medios de transmisión.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Espacio entre repetidores',
+                        b: 'Color de la funda',
+                        c: 'Fiabilidad en la transmisión',
+                        d: 'Facilidad de instalación',
+                        e: 'Número de dispositivos conectados'
+                    },
+                    respuesta: ['a', 'c', 'd'],
+                    explicacion: 'Los seis son velocidad, ancho de banda, espacio entre repetidores, fiabilidad, coste e instalación. El color solo sirve para identificar, y los dispositivos conectados dependen del diseño de la red, no del medio.',
+                    pistas: ['Son seis en total; aquí aparecen tres de ellos.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Par paralelo y par trenzado',
+            tiempo: '12 min',
+            enunciado: '<p>Dos hilos de cobre. La diferencia entre que estén paralelos o trenzados lo cambia todo.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa el párrafo.',
+                    frase: 'El par sin trenzar se usa como cable {{0}} para transmitir voz analógica. Su conector se llama {{1}} y tiene {{2}} pines, de los que se utilizan solo los dos centrales. Es un medio {{3}}, porque la información circula en los dos sentidos por el mismo cable pero no al mismo tiempo. En la clasificación por categorías del cableado estructurado se corresponde con la categoría {{4}}.',
+                    respuestas: [
+                        ['telefónico', 'telefonico', 'de teléfono', 'de telefono'],
+                        ['RJ-11', 'RJ11'],
+                        ['4', 'cuatro'],
+                        ['semidúplex', 'semiduplex', 'half duplex', 'half-duplex'],
+                        ['1', 'uno']
+                    ],
+                    explicacion: 'El RJ-45 se parece al RJ-11, pero tiene <strong>8</strong> pines y en él sí importa el orden de los colores.',
+                    pistas: ['El conector del teléfono fijo es más estrecho que el de red.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>b)</strong> ¿Qué forma geométrica describe el libro al explicar cómo se enlazan los dos cables de un par trenzado? Una palabra.',
+                    respuestas: ['helicoidal', 'hélice', 'helice', 'en hélice', 'en helice'],
+                    explicacion: 'Se enlazan de forma <strong>helicoidal</strong>, y el libro la compara con la estructura del ADN.',
+                    pistas: ['El libro la compara con la estructura del ADN.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué dos hilos paralelos son un problema?',
+                    opciones: {
+                        a: 'Porque ocupan más espacio en la canaleta',
+                        b: 'Porque forman una antena simple, capaz de inducir corriente en cables cercanos o de recibirla de ellos',
+                        c: 'Porque no pueden transportar señales digitales',
+                        d: 'Porque el cobre se calienta más'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es el mismo principio de un transformador. Al trenzarlos, lo que se induce en cada media vuelta se cancela con lo de la siguiente.',
+                    pistas: ['Piensa en el ejemplo del transformador que cita el libro.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Para qué sirve la línea longitudinal que lleva marcada uno de los dos hilos de cada par?',
+                    opciones: {
+                        a: 'Para indicar cuál es la masa de la señal',
+                        b: 'Para indicar la categoría del cable',
+                        c: 'Para señalar el hilo que no se conecta',
+                        d: 'Para marcar el sentido de la transmisión'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Marca la <strong>masa</strong>. Como el par trenzado se usa también para transmisión digital, hay que respetar el orden al engastarlo, cosa que en el cable telefónico da igual.',
+                    pistas: ['Tiene que ver con por qué en el par trenzado sí importa el orden de los hilos.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: La tabla de los apantallamientos',
+            tiempo: '14 min',
+            enunciado: '<p>Completa la tabla con las cuatro variantes que distingue el libro. En la columna de la pantalla escribe <em>ninguna</em>, <em>por par</em>, <em>global</em> o <em>por par y global</em>. En la de inmunidad, <em>mínima</em>, <em>grande</em> o <em>máxima</em>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Rellena las celdas vacías.',
+                    esquina: 'Tipo',
+                    cabecera: ['Nombre completo en inglés', 'Pantalla que lleva', 'Inmunidad al ruido'],
+                    filas: [
+                        {
+                            etiqueta: 'UTP',
+                            celdas: [
+                                { fijo: 'Unshielded Twisted Pair' },
+                                { respuestas: ['ninguna', 'no tiene', 'sin pantalla'], placeholder: 'pantalla' },
+                                { respuestas: ['mínima', 'minima', 'la menor', 'baja'], placeholder: 'inmunidad' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'STP',
+                            celdas: [
+                                { respuestas: ['Shielded Twisted Pair'], placeholder: 'en inglés' },
+                                { respuestas: ['por par', 'una por cada par', 'individual', 'por cada par'], placeholder: 'pantalla' },
+                                { respuestas: ['grande', 'gran inmunidad', 'alta'], placeholder: 'inmunidad' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'S/STP',
+                            celdas: [
+                                { fijo: 'Screened Shielded Twisted Pair' },
+                                { respuestas: ['por par y global', 'por par y pantalla global', 'individual y global'], placeholder: 'pantalla' },
+                                { respuestas: ['máxima', 'maxima', 'la mayor'], placeholder: 'inmunidad' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'FTP',
+                            celdas: [
+                                { fijo: 'Fully Shielded Twisted Pair' },
+                                { respuestas: ['global', 'una global', 'pantalla global'], placeholder: 'pantalla' },
+                                { respuestas: ['grande', 'alta', 'media'], placeholder: 'inmunidad' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'El orden de menos a más metal es UTP → FTP → STP → S/STP, y ese mismo orden vale para el precio y para lo rígido que resulta el cable.',
+                    pistas: ['Solo uno de los cuatro lleva pantalla en los dos sitios a la vez.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>b)</strong> El libro dice que al FTP también se le conoce con otras dos siglas. Escribe <strong>una</strong> de ellas.',
+                    respuestas: ['S/UTP', 'SUTP', 'S/FTP', 'SFTP'],
+                    explicacion: 'El libro las da como sinónimos de FTP: <strong>S/UTP</strong> y <strong>S/FTP</strong>. Ojo: en la notación moderna ISO/IEC 11801, <code>S/FTP</code> significa otra cosa, el cable más apantallado de todos.',
+                    pistas: ['Las dos empiezan por «S/».']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Elegir el cable para cada sitio',
+            tiempo: '12 min',
+            enunciado: '<p>Cuatro situaciones reales. En todas ellas hacen falta 1 Gbps, así que la velocidad no decide: deciden los <strong>otros</strong> criterios.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Taller mecánico. La canaleta comparte recorrido con la alimentación de dos soldadoras. Tramos de 40 m.',
+                    opciones: {
+                        a: 'UTP Cat 5e, que es más barato',
+                        b: 'Cable paralelo de categoría 1',
+                        c: 'Cable apantallado, con la pantalla conectada a tierra en los dos extremos',
+                        d: 'Da igual: a 40 m no hay problemas'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Una soldadora es una fuente de interferencias de manual. Aquí manda la <strong>fiabilidad</strong>, y el apantallado solo sirve si alguien conecta bien su puesta a tierra.',
+                    pistas: ['¿Qué criterio de los seis pesa cuando hay maquinaria eléctrica al lado?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Oficina de administración, falso techo limpio, sin maquinaria. 30 puestos, presupuesto ajustado.',
+                    opciones: {
+                        a: 'S/STP, por si acaso',
+                        b: 'UTP Cat 6: suficiente, más barato y mucho más fácil de instalar',
+                        c: 'Coaxial grueso',
+                        d: 'Cable de categoría 3'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Poner apantallado donde no hay ruido es pagar de más, complicar el montaje y quedarse con un cable más rígido. La Cat 3 no llega al gigabit.',
+                    pistas: ['Si no hay interferencias, ¿qué aporta la pantalla?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un instalador monta cable apantallado pero deja las pantallas al aire, sin conectar a tierra en ningún extremo. ¿Qué es lo más probable?',
+                    opciones: {
+                        a: 'Que funcione mejor que un UTP, aunque no esté conectada',
+                        b: 'Que el enlace no llegue a establecerse',
+                        c: 'Que la velocidad se reduzca exactamente a la mitad',
+                        d: 'Que la pantalla actúe como antena y el enlace tenga más errores que con un UTP'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Una pantalla sin referencia a tierra capta el ruido y lo lleva pegado a los pares. El enlace se establece igual, pero con más errores: el problema aparece como lentitud, no como caída.',
+                    pistas: ['¿De dónde saca su efecto una pantalla? ¿Sirve de algo un metal aislado?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Latiguillo de 1,5 m entre un switch y un panel de parcheo dentro del mismo armario, en un CPD ordenado.',
+                    opciones: {
+                        a: 'UTP Cat 6: flexible, barato y de sobra para esa distancia',
+                        b: 'S/STP rígido, para máxima inmunidad',
+                        c: 'Cable paralelo de categoría 1',
+                        d: 'Fibra monomodo'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'A metro y medio la atenuación y las interferencias son despreciables. Aquí lo que importa es la <strong>flexibilidad</strong>: un cable rígido en un armario lleno es un problema de montaje.',
+                    pistas: ['Con tramos tan cortos, ¿qué criterio de los seis se vuelve el más molesto?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: De megahercios a megabits',
+            tiempo: '14 min',
+            enunciado: '<p>Aquí se juntan las dos semanas. Usa <strong>Nyquist</strong>: <strong>C = 2 · W · log₂ M</strong>, donde W es el ancho de banda en hercios y M el número de niveles. Responde en <strong>Mbps</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Un par de un cable Cat 6 (250 MHz) transmitiendo con solo <strong>2 niveles</strong>. ¿Capacidad máxima por ese par?',
+                    respuesta: 500,
+                    unidad: 'Mbps',
+                    explicacion: 'C = 2 · 250 · log₂2 = 2 · 250 · 1 = <strong>500 Mbps</strong>.',
+                    pistas: ['log₂2 = 1, así que la fórmula se queda en 2 · W.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un par de Cat 5e (100 MHz) con <strong>4 niveles</strong>. ¿Capacidad máxima?',
+                    respuesta: 400,
+                    unidad: 'Mbps',
+                    explicacion: 'log₂4 = 2. C = 2 · 100 · 2 = <strong>400 Mbps</strong>. Cada símbolo lleva 2 bits.',
+                    pistas: ['Con 4 niveles, cada símbolo transporta 2 bits.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Si un enlace reparte el tráfico entre los <strong>4 pares</strong> del cable, y cada par da los 400 Mbps del apartado anterior, ¿cuál es el total?',
+                    respuesta: 1600,
+                    unidad: 'Mbps',
+                    explicacion: '4 · 400 = <strong>1 600 Mbps</strong>. Sobra para el gigabit, que es justo el margen que 1000BASE-T necesita para la cancelación de ecos y la corrección de errores.',
+                    pistas: ['Los pares trabajan a la vez.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Quieres 1 000 Mbps por <strong>un solo par</strong> de 100 MHz. ¿Cuántos niveles harían falta como mínimo?',
+                    respuesta: 32,
+                    unidad: 'niveles',
+                    explicacion: '1 000 = 2 · 100 · log₂M → log₂M = 5 → M = 2⁵ = <strong>32 niveles</strong>. Distinguir 32 niveles de tensión con ruido es dificilísimo: por eso se prefiere repartir entre cuatro pares antes que apilar niveles.',
+                    pistas: ['Despeja log₂M y luego eleva 2 a ese resultado.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> A la vista de los cuatro cálculos, ¿qué afirmación es correcta?',
+                    opciones: {
+                        a: '1 MHz equivale siempre a 1 Mbps',
+                        b: 'Los MHz de una categoría son un límite físico; los Mbps dependen además de cuántos niveles y cuántos pares se usen',
+                        c: 'Los Mbps son siempre el doble de los MHz',
+                        d: 'Las dos magnitudes son independientes'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'No son independientes —sin hercios no hay bits— pero tampoco se convierten con una regla fija. La codificación es la que decide cuánto se aprovecha ese ancho de banda.',
+                    pistas: ['Compara los apartados a y b: mismo tipo de cable, distinto resultado.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Justifica la elección',
+            tiempo: '10 min',
+            enunciado: '<p>Este ejercicio no se corrige solo. Escribe tu respuesta y después contrástala con la solución modelo y su lista de puntos.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>a)</strong> Un cliente te pide presupuesto para cablear una nave de logística: 25 puestos, tramos de hasta 70 m, techos altos con bandejas metálicas, carretillas eléctricas circulando y un cuadro general en el centro de la nave. Te piden 1 Gbps «y que dure diez años». <strong>Elige el tipo de cable y su categoría, y justifícalo usando al menos cuatro de los seis criterios.</strong>',
+                    filas: 8,
+                    modelo: '<p>Una respuesta razonable: <strong>Cat 6A apantallado (F/UTP o S/FTP)</strong>, con la pantalla puesta a tierra en el armario.</p><ul><li><strong>Velocidad y ancho de banda:</strong> el gigabit ya lo daría una Cat 5e, pero «que dure diez años» pide margen: una Cat 6A con 500 MHz deja la puerta abierta a 10 Gbps sin volver a tirar cable, que es lo caro.</li><li><strong>Fiabilidad:</strong> carretillas eléctricas y un cuadro general son fuentes de interferencias; aquí el apantallado se justifica solo. Hay que presupuestar la puesta a tierra, o la pantalla hará más daño que bien.</li><li><strong>Espacio entre repetidores:</strong> 70 m está dentro de los 100 m del par trenzado, así que no hacen falta equipos intermedios. Si algún tramo se acercara al límite, habría que replantear la ubicación del armario.</li><li><strong>Coste e instalación:</strong> el apantallado es más caro y más rígido, y las bandejas metálicas con curvas cerradas lo complican. Parte del presupuesto es mano de obra, no material.</li></ul><p>Otra respuesta también válida: <strong>UTP Cat 6</strong> separando el cableado de datos de la línea eléctrica, si el cliente prefiere ahorrar y se puede garantizar esa separación física. Lo que no vale es elegir sin mirar el entorno.</p>',
+                    rubrica: [
+                        'Elige un tipo concreto de cable y una categoría, no una respuesta vaga',
+                        'Usa la fiabilidad frente a interferencias, citando las fuentes de ruido de la nave',
+                        'Comprueba que los 70 m caben dentro del límite del par trenzado',
+                        'Valora el coste contando también el montaje, no solo el metro de cable',
+                        'Menciona la rigidez o la dificultad de instalación del apantallado',
+                        'Justifica el margen de futuro con el ancho de banda en MHz, no con «es mejor»'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Explica, como se lo explicarías a un compañero de primero, <strong>por qué trenzar dos hilos reduce las interferencias</strong>. No vale decir «porque sí lo hace»: describe el mecanismo.',
+                    filas: 6,
+                    modelo: '<p>Dos hilos paralelos forman una <strong>antena</strong>: un campo electromagnético externo induce en ellos una corriente. Al trenzarlos, los dos hilos van intercambiando su posición: en media vuelta uno está más cerca de la fuente de ruido y en la siguiente media vuelta lo está el otro. La corriente que se induce en un tramo tiene sentido contrario a la del tramo siguiente, de modo que <strong>al sumarlas se cancelan</strong>. Por eso cuantas más vueltas por metro tenga el cable, mejor cancela y mayor categoría alcanza. Y por eso destrenzar los pares al montar un conector estropea justo la protección que se buscaba.</p>',
+                    rubrica: [
+                        'Parte de que dos hilos paralelos se comportan como una antena',
+                        'Explica que el trenzado hace que los hilos intercambien su posición',
+                        'Dice que lo inducido en tramos consecutivos tiene sentido contrario y se cancela',
+                        'Relaciona más vueltas por metro con mejor cancelación y más categoría'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

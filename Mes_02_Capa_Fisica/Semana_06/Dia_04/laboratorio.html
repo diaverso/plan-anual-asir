@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: cuatro tramos de una nave</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Material:</strong> calculadora · papel o FossFLOW</div>
+        <div class="info-item"><strong>Integra:</strong> los cuatro días</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>El encargo</strong>
+            <p>Logística Berrocal amplía su nave y te pide el <strong>proyecto de cableado</strong>. Hay cuatro
+            tramos y no se parecen en nada entre sí. Para cada uno tienes que elegir el medio,
+            <strong>justificarlo con cifras</strong> y dejarlo presupuestado.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>El plano del cliente</h2>
+
+<pre><code>            ┌──────────── NAVE PRINCIPAL ─────────────┐
+            │                                          │
+   OFICINAS │  8 puestos                               │
+   (planta  │       ╲                                  │
+    alta)   │        ╲   ARMARIO                       │      ░ patio ░
+            │         ╲   ▓▓▓  ◀── tramo D ── SALA     │      ░ 180 m ░
+            │          ╲  ▓▓▓                SERVIDORES│      ░       ░
+            │  tramo A ─╲ ▓▓▓                          │      ░       ░
+            │            ╲▓▓▓ ◀──── tramo B ──── ZONA  │      ░       ░
+            │                 ◀──── tramo C ─────────────────▶ BÁSCULA
+            └──────────────────────────────────────────┘      (módulo
+                                                               aparte)</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tramo</th><th>Qué conecta</th><th>Distancia</th><th>Entorno</th><th>Necesidad</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>A</strong></td>
+                        <td>Armario → 8 puestos de oficina en la planta alta</td>
+                        <td>26, 29, 31, 34, 36, 38, 41 y 45 m</td>
+                        <td>Falso techo limpio, sin maquinaria</td>
+                        <td>1 Gbps hoy; quizá 2,5 en unos años</td>
+                    </tr>
+                    <tr>
+                        <td><strong>B</strong></td>
+                        <td>Armario → puesto de control de la zona de producción</td>
+                        <td>55 m</td>
+                        <td>Bandeja paralela a la alimentación de dos <strong>variadores de frecuencia</strong> y un puente grúa</td>
+                        <td>1 Gbps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>C</strong></td>
+                        <td>Armario → módulo de <strong>báscula</strong>, al otro lado del patio</td>
+                        <td>180 m, edificio separado con su propia acometida eléctrica</td>
+                        <td>Exterior, por canalización enterrada</td>
+                        <td>100 Mbps bastan</td>
+                    </tr>
+                    <tr>
+                        <td><strong>D</strong></td>
+                        <td>Armario → sala de servidores, misma planta</td>
+                        <td>18 m</td>
+                        <td>Interior, sala climatizada</td>
+                        <td><strong>10 Gbps</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Datos para los cálculos</strong>
+                <ul>
+                    <li>Enlace Ethernet: máximo <strong>100 m</strong>, de los que <strong>90 m</strong> son de
+                    cableado fijo.</li>
+                    <li>Holgura de cable: <strong>10 %</strong>. Bobinas de <strong>305 m</strong>.</li>
+                    <li>Fibra: multimodo <strong>3 dB/km</strong>, monomodo <strong>0,4 dB/km</strong>, par de
+                    conectores <strong>0,75 dB</strong>, margen <strong>3 dB</strong>.</li>
+                    <li>Transceptores: <strong>SX</strong> multimodo, 12 dB de presupuesto; <strong>LX</strong>
+                    monomodo, 10,5 dB.</li>
+                    <li>Categorías: Cat 6 hasta 1 Gbps holgado; <strong>Cat 6A</strong> para 10 Gbps a 100 m.</li>
+                </ul>
+            </div>
+
+            <h2>Lo que hay que entregar</h2>
+
+            <ol>
+                <li>El <strong>medio elegido</strong> para cada tramo, con su justificación.</li>
+                <li>Los <strong>números</strong> que la sostienen: metros, decibelios o categoría.</li>
+                <li>El <strong>presupuesto de materiales</strong> del tramo A.</li>
+                <li>El <strong>plano</strong> con los cuatro tramos y sus medios, en papel o en digital.</li>
+            </ol>
+
+            <details class="ampliacion">
+                <summary>💡 Opcional: el plano con FossFLOW</summary>
+                <div class="ampliacion-cuerpo">
+                    <p><a href="https://fossflow.apps.icarosoft.com/">FossFLOW</a> permite dibujar el plano en
+                    isométrico desde el navegador (<a href="https://github.com/victortassinari/FossFLOW">código
+                    fuente</a>). Es <strong>opcional</strong>: se evalúa el plano, no la herramienta, y el papel
+                    basta para aprobar.</p>
+                    <ul>
+                        <li><strong>No guarda sola:</strong> usa <em>Export File</em> antes de cerrar.</li>
+                        <li><strong>No uses «Server Storage»:</strong> sube el diagrama al servidor de un tercero.</li>
+                    </ul>
+                    <p>Recuerda que FossFLOW <strong>dibuja</strong>; Packet Tracer, que verás más adelante,
+                    <strong>simula</strong>.</p>
+                </div>
+            </details>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has elegido medio para los cuatro tramos y puedes justificar cada uno con al menos dos criterios.</li>
+                <li>Has comprobado las distancias frente al límite de 100 m.</li>
+                <li>Has calculado el presupuesto óptico del tramo que lo necesita.</li>
+                <li>Tienes el presupuesto de materiales del tramo A y el plano de los cuatro.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_03/laboratorio.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Viernes →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Laboratorio: cuatro tramos de una nave',
+    subtitulo: 'Elegir medio, justificarlo con cifras, presupuestar y dibujar',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'TRAMO A: las oficinas',
+            tiempo: '18 min',
+            enunciado: '<p>Ocho puestos en la planta alta, tramos de 26 a 45 m, techo limpio, 1 Gbps con vistas a 2,5.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué medio eliges?',
+                    opciones: {
+                        a: 'Fibra multimodo hasta cada puesto',
+                        b: 'UTP Cat 6',
+                        c: 'STP Cat 6A, por si acaso',
+                        d: 'UTP Cat 5e, que es lo más barato'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La distancia entra con holgura y el entorno no descarta nada, así que deciden el coste y la instalación. La <strong>Cat 6</strong> cubre el gigabit de hoy y los 2,5 Gbps previstos; la 5e se quedaría justa y apantallar aquí es pagar de más.',
+                    pistas: ['¿Descartan algo las dos primeras preguntas en este tramo?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Suma de los ocho tramos, en metros.',
+                    respuesta: 280,
+                    unidad: 'm',
+                    explicacion: '26+29+31+34+36+38+41+45 = <strong>280 m</strong>.',
+                    pistas: ['Agrupa los sumandos de dos en dos.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Con el 10 % de holgura, ¿cuántos metros de cable hay que prever?',
+                    respuesta: 308,
+                    tolerancia: 1,
+                    unidad: 'm',
+                    explicacion: '280 × 1,1 = <strong>308 m</strong>. Justo por encima de una bobina, que es el peor sitio donde caer.',
+                    pistas: ['Multiplica por 1,1.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> ¿Cuántas bobinas de 305 m hay que comprar?',
+                    respuesta: 2,
+                    unidad: 'bobinas',
+                    explicacion: 'Se pasa por <strong>3 metros</strong>, así que hacen falta <strong>2 bobinas</strong>. Merece la pena revisar el recorrido antes de comprar: recortando tres metros entre ocho tramos se ahorra una bobina entera.',
+                    pistas: ['308 entre 305, redondeando hacia arriba.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> ¿Cuántos conectores hembra hacen falta para este tramo, contando rosetas y puertos de panel?',
+                    respuesta: 16,
+                    unidad: 'conectores',
+                    explicacion: '8 rosetas + 8 puertos de panel = <strong>16</strong>. Y 16 latiguillos, dos por puesto.',
+                    pistas: ['Cada tramo fijo acaba en hembra por los dos extremos.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'TRAMO B: la zona de producción',
+            tiempo: '13 min',
+            enunciado: '<p>55 m, junto a la alimentación de dos variadores de frecuencia y un puente grúa. 1 Gbps.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué descarta este tramo, y por qué pregunta del método?',
+                    opciones: {
+                        a: 'La distancia descarta el par trenzado',
+                        b: 'Nada: 55 m y 1 Gbps los cubre cualquier cable',
+                        c: 'El entorno descarta el UTP, por la segunda pregunta: hay fuentes fuertes de interferencias',
+                        d: 'La velocidad descarta la Cat 6'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'La distancia entra sin problema. Lo que decide es el <strong>entorno</strong>: los variadores de frecuencia y el puente grúa son de las peores fuentes de EMI de una nave.',
+                    pistas: ['Recorre las cinco preguntas en orden y mira cuál falla.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué propones?',
+                    opciones: {
+                        a: 'Par trenzado apantallado con la pantalla a tierra en los dos extremos; si no puede garantizarse esa tierra, fibra multimodo',
+                        b: 'UTP Cat 6A, que al ser mejor categoría aguanta el ruido',
+                        c: 'Coaxial grueso, que tiene la máxima inmunidad',
+                        d: 'UTP normal, separándolo un poco de la bandeja'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Subir de categoría <strong>no</strong> añade protección frente a EMI: lo que protege es la pantalla, y solo si está puesta a tierra. El coaxial grueso tendría la inmunidad pero es un medio obsoleto, rígido y difícil de instalar.',
+                    pistas: ['¿Qué parte del cable protege del ruido externo, la categoría o el apantallamiento?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Además del medio, ¿qué medida de <strong>seguridad del cableado de cobre</strong> hay que exigir aquí?',
+                    opciones: {
+                        a: 'Inspeccionar el cable cada mes',
+                        b: 'Que la separación con el cableado de energía cumpla los códigos de seguridad, en lugar de compartir bandeja',
+                        c: 'Usar conectores BNC',
+                        d: 'Doblar el cable con un radio mínimo de 25 mm'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la primera de las cuatro reglas, y aquí se está incumpliendo: el enunciado dice que la bandeja va <strong>paralela a la alimentación</strong>. El radio de 25 mm es de fibra, no de cobre.',
+                    pistas: ['Vuelve a las cuatro reglas de seguridad del cobre.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'TRAMO C: el módulo de báscula',
+            tiempo: '20 min',
+            enunciado: '<p>180 m por canalización enterrada, edificio separado con su propia acometida eléctrica. Con 100 Mbps basta.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Cuántas razones independientes descartan el cobre en este tramo?',
+                    opciones: {
+                        a: 'Ninguna: 180 m se cubren con dos tramos y un repetidor',
+                        b: 'Una sola: la distancia',
+                        c: 'Dos: la distancia supera los 100 m y, además, es un edificio separado con su propia tierra',
+                        d: 'Una sola: la velocidad'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Cualquiera de las dos bastaría. Que sean dos hace la decisión sólida: aunque el módulo estuviera a 40 m, seguiría siendo fibra por los <strong>peligros eléctricos</strong>.',
+                    pistas: ['Mira las dos primeras preguntas del método.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Monomodo o multimodo, y con qué tipo de cable?',
+                    opciones: {
+                        a: 'Monomodo con cable de recubrimiento ajustado',
+                        b: 'Multimodo con cable holgado: 180 m entran de sobra y el cable holgado es el de exterior, con gel contra la humedad',
+                        c: 'Multimodo con cable de recubrimiento ajustado',
+                        d: 'Monomodo, obligatoriamente, por ir enterrada'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'A 180 m la multimodo va sobrada y sus transceptores son más baratos. El cable <strong>holgado</strong> es el pensado para exterior; su punto flojo —conectores caros— no pesa, porque solo hay dos terminaciones.',
+                    pistas: ['¿Cuál de los dos tipos de cable lleva gel contra la humedad?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Presupuesto óptico: 180 m de multimodo, 2 pares de conectores, sin empalmes, más el margen de 3 dB. Pérdida total.',
+                    respuesta: 5.04,
+                    tolerancia: 0.1,
+                    unidad: 'dB',
+                    explicacion: '0,18 km × 3 = 0,54 · conectores 1,5 · margen 3 → <strong>5,04 dB</strong>. Fíjate en que las <strong>uniones pierden casi el triple</strong> que los 180 m de fibra.',
+                    pistas: ['Pasa los 180 m a kilómetros antes de multiplicar.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Con transceptores SX de 12 dB de presupuesto, ¿el enlace llega?',
+                    opciones: {
+                        a: 'Sí, con más del doble de margen: 5,04 frente a 12 dB',
+                        b: 'No, se queda corto',
+                        c: 'Justo, sin margen',
+                        d: 'Solo si se usa monomodo'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Sobra tanto que el enlace admitiría en el futuro algún empalme por reparación sin quedarse sin presupuesto, que es exactamente para lo que sirve tener margen.',
+                    pistas: ['Compara el resultado anterior con los 12 dB.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> El cliente pregunta si, ya que solo necesita 100 Mbps, puede ahorrar poniendo cobre y «un aparato que amplifique a mitad de camino». ¿Qué respondes?',
+                    opciones: {
+                        a: 'Que sí, si el aparato es de calidad',
+                        b: 'Que sí, pero solo con cable apantallado',
+                        c: 'Que un empalme resolvería el problema más barato',
+                        d: 'Que no: haría falta un equipo activo intermedio en el patio, con alimentación y mantenimiento, y seguiría habiendo cobre entre dos edificios con tierras distintas'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Poner electrónica en mitad de un patio significa alimentación, caja estanca, mantenimiento y un punto de fallo más. Y no resuelve el problema de fondo, que es eléctrico. Empalmar, además, está prohibido por norma.',
+                    pistas: ['Aunque se resolviera la distancia, ¿qué problema quedaría intacto?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'TRAMO D y entrega',
+            tiempo: '19 min',
+            enunciado: '<p>18 m hasta la sala de servidores, interior, 10 Gbps. Y el informe final.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué eliges para el tramo D?',
+                    opciones: {
+                        a: 'Cat 6, que es suficiente',
+                        b: 'Fibra monomodo con transceptores LX',
+                        c: 'Cat 6A, o fibra multimodo si el equipamiento ya la lleva: los dos cubren 10 Gbps a 18 m, y decide el coste total',
+                        d: 'Cat 5e, porque son solo 18 m'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'A 18 m no hay problema de distancia ni de ruido, así que es la única decisión de la nave donde hay <strong>debate real</strong>: deciden el coste total —incluidos transceptores— y qué puertos traigan los equipos. La monomodo sería tirar el dinero, y ni la Cat 6 ni la 5e garantizan 10 Gbps.',
+                    pistas: ['¿Qué categorías admiten 10 Gbps, y a qué distancia?']
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Relaciona cada tramo con el criterio que resultó <strong>decisivo</strong>.',
+                    izquierda: ['Tramo A · oficinas', 'Tramo B · producción', 'Tramo C · báscula', 'Tramo D · servidores'],
+                    derecha: [
+                        'Coste e instalación: nada lo descartaba',
+                        'Fiabilidad frente a interferencias',
+                        'Distancia y peligros eléctricos',
+                        'Velocidad futura exigida'
+                    ],
+                    pares: {
+                        'Tramo A · oficinas': 'Coste e instalación: nada lo descartaba',
+                        'Tramo B · producción': 'Fiabilidad frente a interferencias',
+                        'Tramo C · báscula': 'Distancia y peligros eléctricos',
+                        'Tramo D · servidores': 'Velocidad futura exigida'
+                    },
+                    explicacion: 'Cuatro tramos de la misma nave y <strong>cuatro criterios distintos</strong> decidiendo. Esa es la razón de recorrer siempre las cinco preguntas en vez de aplicar una receta.',
+                    pistas: ['¿Qué pregunta del método fue la que bloqueó cada tramo?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Escribe el <strong>informe de entrega</strong> para el cliente: qué se instala en cada tramo, por qué, y qué le pides que decida a él.',
+                    filas: 10,
+                    modelo: '<p><strong>Tramo A · oficinas (8 puestos, 26-45 m).</strong> UTP <strong>Cat 6</strong>, cableado fijo a rosetas y panel de 24 puertos. Los tramos están muy por debajo de los 90 m permitidos y no hay fuentes de ruido. La Cat 6 cubre el gigabit actual y los 2,5 Gbps previstos sin encarecer apenas. Materiales: 308 m de cable con holgura, es decir <strong>2 bobinas</strong> —conviene revisar el recorrido, porque nos pasamos de una sola por tres metros—, 16 conectores hembra y 16 latiguillos.</p><p><strong>Tramo B · producción (55 m).</strong> Par trenzado <strong>apantallado</strong>, con la pantalla puesta a tierra en los dos extremos. La distancia no es problema; el entorno sí: dos variadores de frecuencia y un puente grúa. <strong>Condición:</strong> hay que separar la bandeja de datos de la de alimentación conforme a los códigos de seguridad; si no es posible, o si no puede garantizarse la puesta a tierra, este tramo debe ir en <strong>fibra multimodo</strong>.</p><p><strong>Tramo C · báscula (180 m, edificio aparte).</strong> <strong>Fibra multimodo</strong> con cable holgado de exterior y transceptores SX. Dos razones independientes descartan el cobre: los 180 m superan el límite de 100 m, y el módulo tiene acometida eléctrica propia, de modo que un cable de cobre uniría dos tierras distintas con riesgo de sobretensiones. El presupuesto óptico da <strong>5,04 dB</strong> frente a los 12 dB disponibles: llega con holgura.</p><p><strong>Tramo D · servidores (18 m, 10 Gbps).</strong> <strong>Cat 6A</strong> o fibra multimodo, indistintamente desde el punto de vista técnico. <strong>Decisión del cliente:</strong> depende de qué puertos lleven los servidores y el switch. Si ya tienen puertos ópticos, fibra; si son de cobre, Cat 6A y nos ahorramos cuatro transceptores.</p><p><strong>Lo que necesito que decidan:</strong> (1) si se puede separar la bandeja del tramo B, (2) qué tipo de puerto llevan los equipos de la sala de servidores y (3) si quieren aprovechar la segunda bobina para dejar dos tomas de reserva en oficinas.</p>',
+                    rubrica: [
+                        'Da un medio concreto y una categoría o tipo para los cuatro tramos',
+                        'Justifica cada tramo con el criterio que resultó decisivo',
+                        'Aporta las cifras: metros, bobinas, decibelios',
+                        'Señala la condición del tramo B sobre la tierra y la separación de bandejas',
+                        'Explica las dos razones independientes del tramo C',
+                        'Deja explícito qué debe decidir el cliente y con qué información'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

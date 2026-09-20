@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Síntesis y test semanal: medios cableados</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 5 — Síntesis y test semanal</h1>
+        <p>Los cuatro días en una página · mazo completo de flashcards · test de 24 preguntas con desglose por día</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Síntesis:</strong> 35 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 24 min</div>
+        <div class="info-item"><strong>Test:</strong> 45 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 23 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Hoy no hay contenido nuevo</strong>
+            Esta página recoge lo de los cuatro días. Léela entera antes del test: está escrita para que se pueda
+            repasar de un tirón, no para aprender nada por primera vez.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido</h2>
+            <ol>
+                <li><a href="#mapa">El mapa de la semana</a></li>
+                <li><a href="#dia1">Día 1 — El cobre por dentro</a></li>
+                <li><a href="#dia2">Día 2 — Montaje y comprobación</a></li>
+                <li><a href="#dia3">Día 3 — Coaxial y fibra</a></li>
+                <li><a href="#dia4">Día 4 — Elegir el medio</a></li>
+                <li><a href="#cifras">Todas las cifras, juntas</a></li>
+                <li><a href="#hilo">El hilo que une la semana</a></li>
+                <li><a href="#repaso">Flashcards de toda la semana</a></li>
+                <li><a href="#quiz-inicio">Test semanal</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="mapa">1. El mapa de la semana</h2>
+
+<pre><code>            ¿QUÉ MEDIO PONGO AQUÍ?
+                      │
+      ┌───────────────┼────────────────┐
+      ▼               ▼                ▼
+  PAR TRENZADO     COAXIAL          FIBRA
+   (días 1 y 2)    (día 3)         (día 3)
+      │               │                │
+  categorías,     banda base,      monomodo,
+  apantallados,   banda ancha,     multimodo,
+  montaje         RG-58/100/150    empalmes, dB
+      └───────────────┼────────────────┘
+                      ▼
+              CRITERIOS Y DECISIÓN
+                    (día 4)</code></pre>
+
+            <p>Los tres primeros días construyen el catálogo; el cuarto enseña a elegir dentro de él. Si tuvieras
+            que quedarte con una sola idea de la semana, sería esta:</p>
+
+            <div class="dato">
+                <strong>No hay un medio mejor: hay un medio adecuado para cada tramo</strong>
+                <p>Y se encuentra recorriendo en orden cinco preguntas: <strong>distancia → entorno → velocidad
+                futura → coste total → quién lo mantiene</strong>.</p>
+            </div>
+
+            <h2 id="dia1">2. Día 1 — El cobre por dentro</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Guiados y no guiados</strong></td><td>Los guiados conducen las ondas por un camino físico; los no guiados solo les dan soporte. En los guiados manda el medio; en los no guiados, la frecuencia</td></tr>
+                    <tr><td><strong>Los seis criterios</strong></td><td>Velocidad · ancho de banda · espacio entre repetidores · fiabilidad · coste · facilidad de instalación</td></tr>
+                    <tr><td><strong>Normas</strong></td><td><strong>EIA/TIA-568</strong> (la más usada), EN-50173, ISO/IEC 11801</td></tr>
+                    <tr><td><strong>Par sin trenzar</strong></td><td>Categoría 1 · telefonía · conector <strong>RJ-11</strong> de 4 pines usando los dos centrales · <strong>semidúplex</strong></td></tr>
+                    <tr><td><strong>Por qué se trenza</strong></td><td>Dos hilos paralelos son una <strong>antena</strong>; el trenzado hace que lo inducido se cancele. Más vueltas por metro, más categoría</td></tr>
+                    <tr><td><strong>UTP</strong></td><td>Sin pantalla. Flexible, barato, inmunidad mínima</td></tr>
+                    <tr><td><strong>STP</strong></td><td>Malla <strong>por cada par</strong>, a tierra. Gran inmunidad</td></tr>
+                    <tr><td><strong>S/STP</strong></td><td>Malla por par <strong>más</strong> pantalla global. La mayor inmunidad</td></tr>
+                    <tr><td><strong>FTP</strong></td><td>Una sola pantalla global. También llamado S/UTP o S/FTP en el libro</td></tr>
+                    <tr><td><strong>Categorías</strong></td><td>Garantizan un ancho de banda en <strong>MHz</strong>, no una velocidad. Los Mbps dependen de la codificación</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La trampa del día 1</strong>
+                <p>Un cable apantallado <strong>sin puesta a tierra</strong> es peor que un UTP: la pantalla se
+                comporta como una antena. Apantallar no es gratis ni automáticamente mejor.</p>
+            </div>
+
+            <h2 id="dia2">3. Día 2 — Montaje y comprobación</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Por qué el conector es el punto débil</strong></td><td>Ahí se quita la funda, se destrenzan los pares y se interrumpe la pantalla: es la puerta de entrada del ruido</td></tr>
+                    <tr><td><strong>Las cuatro recomendaciones</strong></td><td>Trenzado hasta el conector · quitar solo la pantalla necesaria · <strong>no empalmar</strong> · no forzar el cable</td></tr>
+                    <tr><td><strong>T568A y T568B</strong></td><td>Se diferencian solo en <strong>verde y naranja</strong>. Pines 4, 5, 7 y 8 idénticos</td></tr>
+                    <tr><td><strong>El par 3</strong></td><td>Ocupa los pines <strong>3 y 6</strong>, por compatibilidad con la telefonía</td></tr>
+                    <tr><td><strong>Pares usados</strong></td><td>100BASE-TX: dos (1-2 transmite, 3-6 recibe). 1000BASE-T: los cuatro</td></tr>
+                    <tr><td><strong>Cable cruzado</strong></td><td>Cada extremo con una norma distinta. Funda de otro color. Hoy lo suple el auto-MDIX</td></tr>
+                    <tr><td><strong>Los ocho pasos</strong></td><td>Funda del conector → pelar 4 cm → pantalla → destrenzar y ordenar → cortar a la misma altura → introducir hasta el fondo → engastar → colocar la funda</td></tr>
+                    <tr><td><strong>Conector hembra</strong></td><td>Seis pasos, <strong>herramienta de impacto</strong>, colores impresos en el conector, los cuatro pares siempre</td></tr>
+                    <tr><td><strong>Par partido</strong></td><td>Pines correctos, pares equivocados. Da continuidad perfecta y arruina el gigabit</td></tr>
+                    <tr><td><strong>Comprobar</strong></td><td><strong>Comprobador</strong>: continuidad. <strong>Certificador</strong>: atenuación, diafonía y categoría</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La trampa del día 2</strong>
+                <p>Las ocho luces del comprobador <strong>no significan «cable correcto»</strong>. Significan
+                «continuidad correcta», que es mucho menos.</p>
+            </div>
+
+            <h2 id="dia3">4. Día 3 — Coaxial y fibra</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Estructura del coaxial</strong></td><td>Núcleo · aislante · malla (masa) · cubierta. La malla <strong>envuelve</strong> la señal</td></tr>
+                    <tr><td><strong>Velocidad</strong></td><td>1-2 Gbps en cables de 1 km; depende de la longitud</td></tr>
+                    <tr><td><strong>Banda base</strong></td><td>Digital · hasta 10 Mbps en 1 km · redes locales</td></tr>
+                    <tr><td><strong>Banda ancha</strong></td><td>Analógica · hasta 150 Mbps a 300 MHz · <strong>100 km</strong> · televisión por cable</td></tr>
+                    <tr><td><strong>Grueso</strong></td><td>RG-100 (núcleo 2,6 mm) y RG-150 (3,7 mm). Solo para troncales</td></tr>
+                    <tr><td><strong>Fino</strong></td><td>RG-58 (núcleo 1,2 mm): flexible, fácil de instalar y <strong>más caro</strong></td></tr>
+                    <tr><td><strong>Sistema óptico</strong></td><td><strong>Fuente</strong> (diodo láser) · <strong>medio</strong> (fibra de vidrio) · <strong>detector</strong>. Una fibra es <strong>símplex</strong></td></tr>
+                    <tr><td><strong>Partes de la fibra</strong></td><td>Núcleo · revestimiento (índice menor) · cubierta opaca</td></tr>
+                    <tr><td><strong>Monomodo</strong></td><td>Luz recta · radio 10 µm · larga distancia</td></tr>
+                    <tr><td><strong>Multimodo</strong></td><td>Luz que rebota · núcleo 100 µm · el pulso se ensancha, así que llega menos lejos</td></tr>
+                    <tr><td><strong>Índice gradual</strong></td><td>La luz se curva por refracción en lugar de rebotar</td></tr>
+                    <tr><td><strong>Holgado / ajustado</strong></td><td>Holgado: exterior, gel, barato por metro. Ajustado: interior, flexible, barato de conectorizar</td></tr>
+                    <tr><td><strong>Uniones</strong></td><td>Conectores <strong>10-20 %</strong> · empalme mecánico <strong>10 %</strong> · <strong>fusión</strong> casi sin pérdida</td></tr>
+                    <tr><td><strong>Ventajas</strong></td><td>Más ancho de banda · repetidores cada <strong>30 km</strong> frente a 5 · inmune a EMI · ligera · difícil de intervenir</td></tr>
+                    <tr><td><strong>Montaje</strong></td><td>Azul monomodo · beige multimodo · radio mínimo <strong>25 mm</strong> · cortar y pulir · fundas puestas</td></tr>
+                    <tr><td><strong>Presupuesto óptico</strong></td><td>Fibra × km + conectores + empalmes + margen, comparado con lo que da el transceptor</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La trampa del día 3</strong>
+                <p>Lo caro de la fibra <strong>no es el cable</strong>: es el montaje. Tanto, que a veces compensa
+                tirar kilómetros nuevos antes que empalmar.</p>
+            </div>
+
+            <h2 id="dia4">5. Día 4 — Elegir el medio</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Medio</th><th>Velocidad máx.</th><th>Entre repetidores</th><th>Segmento máx.</th><th>Conector</th></tr></thead>
+                <tbody>
+                    <tr><td>Par trenzado</td><td>1 Gbps</td><td>2-10 km</td><td><strong>100 m</strong></td><td>RJ-45</td></tr>
+                    <tr><td>Coaxial grueso</td><td>1 Gbps</td><td rowspan="2">10-100 km</td><td><strong>500 m</strong></td><td>Transceptor</td></tr>
+                    <tr><td>Coaxial delgado</td><td>10 Mbps</td><td><strong>200 m</strong></td><td><strong>BNC</strong></td></tr>
+                    <tr><td>Fibra óptica</td><td>&gt; 10 Gbps</td><td>&gt; 100 km</td><td>km</td><td>SC, ST, LC</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Cobre gana en…</th><th>Fibra gana en…</th></tr></thead>
+                <tbody>
+                    <tr><td>Coste de medios y conectores</td><td>Ancho de banda admitido</td></tr>
+                    <tr><td>Conocimientos de instalación</td><td>Distancia</td></tr>
+                    <tr><td>Precauciones de seguridad</td><td>Inmunidad a EMI y RFI</td></tr>
+                    <tr><td></td><td><strong>Inmunidad a peligros eléctricos</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p><strong>Seguridad del cobre:</strong> separar datos de energía · conexiones correctas · inspeccionar
+            daños · equipo a tierra.</p>
+
+            <div class="destacado">
+                <strong>La trampa del día 4</strong>
+                <p>Entre dos <strong>edificios distintos</strong> se pone fibra aunque la distancia no lo exija:
+                tierras distintas, corrientes entre edificios y sobretensiones por rayo.</p>
+            </div>
+
+            <h2 id="cifras">6. Todas las cifras, juntas</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Dato</th><th>Valor</th><th>Día</th></tr></thead>
+                <tbody>
+                    <tr><td>Grosor del hilo de un par trenzado</td><td>≈ 1 mm</td><td>1</td></tr>
+                    <tr><td>Pines del RJ-11 · usados</td><td>4 · los dos centrales</td><td>1</td></tr>
+                    <tr><td>Ancho de banda Cat 5e / Cat 6 / Cat 6A</td><td>100 / 250 / 500 MHz</td><td>1</td></tr>
+                    <tr><td>Funda retirada al montar un conector</td><td>≈ 4 cm</td><td>2</td></tr>
+                    <tr><td>Destrenzado máximo en Cat 6</td><td><strong>6 mm</strong></td><td>2</td></tr>
+                    <tr><td>Pasos del RJ-45 macho · hembra</td><td>8 · 6</td><td>2</td></tr>
+                    <tr><td>Enlace Ethernet</td><td><strong>100 m</strong> = 90 fijo + 10 latiguillos</td><td>2 y 4</td></tr>
+                    <tr><td>Coaxial en 1 km</td><td>1-2 Gbps</td><td>3</td></tr>
+                    <tr><td>Coaxial de banda ancha</td><td>150 Mbps · 100 km</td><td>3</td></tr>
+                    <tr><td>Núcleos RG-58 / RG-100 / RG-150</td><td>1,2 / 2,6 / 3,7 mm</td><td>3</td></tr>
+                    <tr><td>Fibra monomodo · multimodo</td><td>radio 10 µm · diámetro 100 µm</td><td>3</td></tr>
+                    <tr><td>Grosor de un cabello, para comparar</td><td>≈ 50 µm</td><td>3</td></tr>
+                    <tr><td>Pérdidas: conectores / mecánico / fusión</td><td>10-20 % / 10 % / casi nula</td><td>3</td></tr>
+                    <tr><td>Repetidores: fibra / cobre</td><td>30 km / 5 km</td><td>3</td></tr>
+                    <tr><td>Radio de curvatura mínimo</td><td><strong>25 mm</strong></td><td>3</td></tr>
+                    <tr><td>Atenuación monomodo / multimodo</td><td>0,4 / 3 dB por km</td><td>3</td></tr>
+                    <tr><td>Segmentos: grueso / delgado / par trenzado</td><td>500 / 200 / 100 m</td><td>4</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="hilo">7. El hilo que une la semana</h2>
+
+            <p>Cuatro ideas aparecen una y otra vez, en días distintos y con formas distintas. Si las reconoces,
+            tienes la semana entendida:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Idea</th><th>Dónde apareció</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>El coste real está en el montaje</strong></td>
+                        <td>El coaxial fino es más caro que el grueso · el cable holgado ahorra en metro y encarece el conector · en fibra compensa tirar cable nuevo antes que empalmar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>La protección solo funciona si está bien montada</strong></td>
+                        <td>La pantalla sin tierra es una antena · destrenzar de más anula el trenzado · un empalme crea una discontinuidad</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Continuidad no es calidad</strong></td>
+                        <td>El par partido pasa el comprobador · el destrenzado excesivo no corta el enlace, lo degrada · el certificador existe por esto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>El cableado dura más que los equipos</strong></td>
+                        <td>Se engastan los cuatro pares aunque se vaya a 100 Mbps · se elige categoría con margen · se deja margen en el presupuesto óptico</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Flashcards de toda la semana</h2>
+
+            <p>Veinticuatro tarjetas, seis por día. Piensa la respuesta <strong>antes</strong> de girarla.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Test semanal — Semana 6</h2>
+            <p>24 preguntas · 45 minutos · cinco por día más cuatro de <strong>integración</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro arranca al llegar aquí, al pulsar «Empezar
+            quiz» o al marcar tu primera respuesta. Al corregir verás el <strong>desglose por día</strong>.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir test</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por día</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Después del test: la hoja de recuperación</strong>
+            <p>Empieza por el día con peor resultado en el desglose. La hoja repasa los cálculos y las decisiones
+            de la semana, y termina con un caso que las junta todas.</p>
+            <p><a href="ejercicios.html"><strong>→ Ir a la hoja de recuperación</strong></a> (62 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>La semana que viene</strong>
+            <p><strong>Semana 7 — Medios inalámbricos.</strong> Las cuatro filas que esta semana quedaron sin tocar
+            en la tabla 3.5: ondas de radio, microondas, infrarrojos y ondas de luz. Y los canales Wi-Fi, con la
+            explicación de por qué el 1, el 6 y el 11 conviven y el 3 y el 5 se estorban.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Recuperación</a></span>
+        <span><a href="../Dia_04/teoria.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a> · <a href="../../Semana_05/Dia_05/teoria.html">Semana 5</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        flashcards: [
+            { frente: 'Los seis criterios para comparar un medio', dorso: 'Velocidad · ancho de banda · <strong>espacio entre repetidores</strong> · fiabilidad · coste · facilidad de instalación.' },
+            { frente: 'Medios guiados y no guiados', dorso: 'Los guiados <strong>conducen</strong> las ondas por un camino físico; los no guiados solo les dan soporte.' },
+            { frente: '¿Qué es la categoría 1?', dorso: 'El <strong>par sin trenzar</strong>: telefonía, voz analógica, conector RJ-11, semidúplex.' },
+            { frente: 'UTP · STP · S/STP · FTP', dorso: 'Sin pantalla · malla <strong>por par</strong> · malla por par <strong>y</strong> global · una sola pantalla <strong>global</strong>.' },
+            { frente: '¿Qué garantiza una categoría de cable?', dorso: 'Un ancho de banda en <strong>MHz</strong> a 100 m. Cat 5e: 100 · Cat 6: 250 · Cat 6A: 500.' },
+            { frente: '¿Por qué un apantallado sin tierra es peor que un UTP?', dorso: 'Porque la pantalla queda flotando y actúa como <strong>antena</strong>: capta ruido y lo acerca a los pares.' },
+            { frente: 'Las cuatro recomendaciones de montaje', dorso: 'Trenzado hasta el conector · quitar solo la pantalla necesaria · <strong>no empalmar</strong> · no forzar el cable.' },
+            { frente: '¿En qué se diferencian T568A y T568B?', dorso: 'Solo en los pares <strong>verde y naranja</strong>. Los pines 4, 5, 7 y 8 son idénticos.' },
+            { frente: '¿Qué pines ocupa el par 3 y por qué?', dorso: 'Los <strong>3 y 6</strong>, para dejar libres los centrales y mantener la compatibilidad con la telefonía.' },
+            { frente: 'Primer paso al montar un RJ-45 macho', dorso: 'Meter la <strong>funda protectora</strong> del conector por el cable. Si se olvida, hay que cortar y empezar de nuevo.' },
+            { frente: 'Destrenzado máximo en Cat 6 · funda retirada', dorso: '<strong>6 mm</strong> de destrenzado · unos <strong>4 cm</strong> de funda.' },
+            { frente: '¿Qué es un par partido?', dorso: 'Dos hilos en los pines correctos pero de <strong>pares distintos</strong>. Da continuidad perfecta y arruina el gigabit.' },
+            { frente: 'Las cuatro capas del coaxial', dorso: 'Núcleo de cobre · aislante · <strong>malla</strong> que hace de masa · cubierta de plástico.' },
+            { frente: 'Banda base y banda ancha', dorso: '<strong>Digital</strong>, 10 Mbps en 1 km · <strong>analógica</strong>, 150 Mbps y hasta 100 km: televisión por cable.' },
+            { frente: 'Los tres componentes de un sistema óptico', dorso: '<strong>Fuente</strong> de luz · <strong>medio</strong> · <strong>detector</strong>. Una fibra es símplex.' },
+            { frente: 'Monomodo y multimodo', dorso: 'Monomodo: luz <strong>recta</strong>, radio 10 µm, larga distancia. Multimodo: <strong>rebota</strong>, núcleo 100 µm, el pulso se ensancha.' },
+            { frente: 'Las tres uniones de fibra, por su pérdida', dorso: 'Conectores <strong>10-20 %</strong> · empalme mecánico <strong>10 %</strong> · <strong>fusión</strong> casi sin pérdida.' },
+            { frente: 'Colores de los conectores de fibra · radio mínimo', dorso: '<strong>Azul</strong> monomodo, <strong>beige</strong> multimodo · radio de curvatura <strong>25 mm</strong>.' },
+            { frente: 'Longitud máxima de segmento', dorso: 'Coaxial grueso <strong>500 m</strong> · delgado <strong>200 m</strong> · par trenzado <strong>100 m</strong>.' },
+            { frente: '¿En qué gana el cobre a la fibra?', dorso: 'En <strong>coste</strong>, en <strong>conocimientos</strong> de instalación y en <strong>precauciones</strong> de seguridad.' },
+            { frente: 'Las cuatro reglas de seguridad del cobre', dorso: 'Separar datos de energía · conexiones correctas · inspeccionar daños · equipo <strong>a tierra</strong>.' },
+            { frente: 'Las cinco preguntas para decidir', dorso: '<strong>Distancia → entorno → velocidad futura → coste total → quién lo mantiene.</strong>' },
+            { frente: '¿Qué medio se usa entre dos edificios?', dorso: '<strong>Fibra</strong>, aunque la distancia no lo exija: tierras distintas y riesgo de sobretensiones.' },
+            { frente: 'El cálculo del presupuesto óptico', dorso: 'Fibra × km + conectores + empalmes + <strong>margen</strong>, comparado con la potencia emitida menos la sensibilidad del receptor.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Test semanal — Semana 6: Medios cableados',
+        tiempo: '45 minutos',
+        minutos: 45,
+        questions: [
+            {
+                topic: 'Día 1 — El cobre por dentro',
+                repaso: '../Dia_01/teoria.html#criterios',
+                text: 'Un medio se juzga por seis criterios. ¿Cuál de estos <strong>lo es</strong>?',
+                options: {
+                    a: 'El número de equipos que admite',
+                    b: 'El espacio entre repetidores',
+                    c: 'El color de la funda',
+                    d: 'La marca del fabricante'
+                },
+                answer: 'b',
+                feedback: 'Los seis son velocidad, ancho de banda, <strong>espacio entre repetidores</strong>, fiabilidad, coste y facilidad de instalación.'
+            },
+            {
+                topic: 'Día 1 — El cobre por dentro',
+                repaso: '../Dia_01/teoria.html#paralelo',
+                text: 'Un cable telefónico clásico con conector RJ-11. ¿Qué afirmación es correcta?',
+                options: {
+                    a: 'Es par trenzado de categoría 5',
+                    b: 'Usa los cuatro pines del conector',
+                    c: 'Es par sin trenzar, categoría 1, semidúplex, y usa los dos pines centrales',
+                    d: 'Transmite en dúplex completo por pares separados'
+                },
+                answer: 'c',
+                feedback: 'Cuatro datos en una sola respuesta, y los cuatro caen en examen: <strong>paralelo, categoría 1, semidúplex, pines 2 y 3</strong>.'
+            },
+            {
+                topic: 'Día 1 — El cobre por dentro',
+                repaso: '../Dia_01/teoria.html#apantallamientos',
+                text: 'Un cable lleva una única pantalla conductora global, sin malla individual por par. ¿Cómo lo llama el libro?',
+                options: { a: 'STP', b: 'S/STP', c: 'UTP', d: 'FTP' },
+                answer: 'd',
+                feedback: '<strong>FTP</strong>, al que el libro también llama S/UTP o S/FTP. El STP apantalla <em>cada par</em>, y el S/STP hace las dos cosas.'
+            },
+            {
+                topic: 'Día 1 — El cobre por dentro',
+                repaso: '../Dia_01/teoria.html#trenzado',
+                text: 'Dos cables idénticos salvo en el número de vueltas por metro de su trenzado. ¿Qué cabe esperar del que tiene más vueltas?',
+                options: {
+                    a: 'Que cancele mejor las interferencias y alcance una categoría superior',
+                    b: 'Que sea más barato de fabricar',
+                    c: 'Que admita más distancia, superando los 100 m',
+                    d: 'Que no necesite conectores'
+                },
+                answer: 'a',
+                feedback: 'Las vueltas por metro son uno de los tres factores de la categoría, junto al número de pares y los materiales. La distancia máxima, en cambio, <strong>no cambia</strong>.'
+            },
+            {
+                topic: 'Día 1 — El cobre por dentro',
+                repaso: '../Dia_01/teoria.html#categorias',
+                text: 'Una Cat 5e garantiza 100 MHz y aun así transporta 1 Gbps. ¿Por qué no es una contradicción?',
+                options: {
+                    a: 'Porque los MHz y los Mbps son la misma unidad',
+                    b: 'Porque el cable está apantallado',
+                    c: 'Porque los MHz son el ancho de banda del medio y los bps dependen además de cuántos pares y cuántos niveles se usen',
+                    d: 'Porque la norma permite superar el ancho de banda garantizado'
+                },
+                answer: 'c',
+                feedback: '1000BASE-T usa los <strong>cuatro pares</strong> en los dos sentidos y <strong>PAM-5</strong>. Los hercios limitan, pero no se convierten en bits con una regla fija.'
+            },
+            {
+                topic: 'Día 2 — Montaje y comprobación',
+                repaso: '../Dia_02/teoria.html#recomendaciones',
+                text: 'Un cable de datos se ha cortado dentro de una canaleta. ¿Qué dice la norma?',
+                options: {
+                    a: 'Empalmar con regleta y aislar bien',
+                    b: 'No empalmar: se tira un tramo nuevo, o se corta y se pone roseta y latiguillo',
+                    c: 'Soldar los ocho hilos respetando los colores',
+                    d: 'Empalmar solo los cuatro pares que se usen'
+                },
+                answer: 'b',
+                feedback: 'Los empalmes están <strong>prohibidos</strong>: crean una discontinuidad que refleja señal y capta ruido. Es la tercera de las cuatro recomendaciones.'
+            },
+            {
+                topic: 'Día 2 — Montaje y comprobación',
+                repaso: '../Dia_02/teoria.html#macho',
+                text: 'Ordena mentalmente el montaje de un RJ-45 macho. ¿Qué va inmediatamente <strong>antes</strong> de introducir los hilos en el conector?',
+                options: {
+                    a: 'Engastar con la crimpadora',
+                    b: 'Meter la funda protectora del conector',
+                    c: 'Retirar 4 cm de funda del cable',
+                    d: 'Cortar los extremos para que todos queden a la misma altura'
+                },
+                answer: 'd',
+                feedback: 'Si un hilo queda más corto que los demás <strong>no llegará al fondo</strong> y ese contacto no se cerrará. Por eso se igualan antes de introducirlos.'
+            },
+            {
+                topic: 'Día 2 — Montaje y comprobación',
+                repaso: '../Dia_02/teoria.html#longitudes',
+                text: 'En categoría 6, ¿cuánto destrenzado se admite como máximo en el extremo?',
+                options: { a: '6 mm', b: '4 cm', c: '2 cm', d: '13 mm' },
+                answer: 'a',
+                feedback: '<strong>6 mm</strong>. Los 4 cm son la funda que se retira del cable: no confundas las dos cifras.'
+            },
+            {
+                topic: 'Día 2 — Montaje y comprobación',
+                repaso: '../Dia_02/teoria.html#hembra',
+                text: 'Estás montando la roseta de un puesto que funcionará a 100 Mbps. ¿Cuántos pares engastas y con qué herramienta?',
+                options: {
+                    a: 'Dos pares, con la crimpadora',
+                    b: 'Los cuatro pares, con la herramienta de impacto',
+                    c: 'Dos pares, con la herramienta de impacto',
+                    d: 'Los cuatro pares, con la crimpadora'
+                },
+                answer: 'b',
+                feedback: 'Siempre <strong>los cuatro</strong>, para que la instalación admita gigabit el día de mañana. Y el conector hembra se engasta con la <strong>herramienta de impacto</strong>, que además corta el sobrante.'
+            },
+            {
+                topic: 'Día 2 — Montaje y comprobación',
+                repaso: '../Dia_02/teoria.html#errores',
+                text: 'Un usuario avisa de que la red «va bien pero se cae un instante cuando alguien mueve la mesa». ¿Qué tipo de fallo es?',
+                options: {
+                    a: 'Diafonía por destrenzado excesivo',
+                    b: 'Un par partido',
+                    c: 'Mezcla de normas T568A y T568B',
+                    d: 'Un fallo mecánico: engaste flojo o cable en tensión tirando del conector'
+                },
+                answer: 'd',
+                feedback: 'Que dependa de <strong>mover algo</strong> apunta siempre a lo mecánico. El destrenzado y el par partido degradan de forma constante, no intermitente.'
+            },
+            {
+                topic: 'Día 3 — Coaxial y fibra',
+                repaso: '../Dia_03/teoria.html#bandas',
+                text: 'En redes de computadoras, un «cable de banda ancha» es:',
+                options: {
+                    a: 'Cualquier cable que utilice transmisión analógica',
+                    b: 'Un cable capaz de más de 100 Mbps',
+                    c: 'Un cable de fibra con varias longitudes de onda',
+                    d: 'Un coaxial de más de 1 cm de diámetro'
+                },
+                answer: 'a',
+                feedback: 'Es un término heredado de la telefonía. Nada que ver con el uso comercial de hoy: en redes, <strong>banda ancha = analógico</strong>.'
+            },
+            {
+                topic: 'Día 3 — Coaxial y fibra',
+                repaso: '../Dia_03/teoria.html#grosores',
+                text: '¿Qué afirmación sobre el coaxial fino RG-58 es correcta?',
+                options: {
+                    a: 'Tiene el núcleo de 2,6 mm',
+                    b: 'Es más barato que el grueso porque lleva menos cobre',
+                    c: 'Tiene mejor inmunidad que el grueso',
+                    d: 'Es más fácil de instalar por su flexibilidad, pero más caro y con menor inmunidad'
+                },
+                answer: 'd',
+                feedback: 'El dato que sorprende de la semana: <strong>menos material y más precio</strong>, porque se paga la facilidad de instalación.'
+            },
+            {
+                topic: 'Día 3 — Coaxial y fibra',
+                repaso: '../Dia_03/teoria.html#modos',
+                text: 'Un pulso de luz recorre 2 km de fibra multimodo y llega ensanchado. ¿Por qué?',
+                options: {
+                    a: 'Porque el revestimiento absorbe parte de la luz',
+                    b: 'Porque los rayos siguen caminos de distinta longitud y llegan en instantes diferentes',
+                    c: 'Porque el núcleo es demasiado estrecho',
+                    d: 'Porque la fuente de luz es un diodo láser'
+                },
+                answer: 'b',
+                feedback: 'Es lo que limita la multimodo, y no la pérdida de luz, que es casi nula. Por eso los tendidos largos usan <strong>monomodo</strong>.'
+            },
+            {
+                topic: 'Día 3 — Coaxial y fibra',
+                repaso: '../Dia_03/teoria.html#uniones',
+                text: 'Hay que unir dos tramos de fibra con la menor pérdida posible y la unión no se va a desmontar nunca. ¿Qué eliges?',
+                options: {
+                    a: 'Conectores de fábrica',
+                    b: 'Empalme mecánico con manga',
+                    c: 'Fusión de los dos extremos',
+                    d: 'Cualquiera: las tres pierden lo mismo'
+                },
+                answer: 'c',
+                feedback: 'La <strong>fusión</strong> queda casi como una fibra única. Los conectores son los más cómodos y los que más pierden: entre el 10 y el 20 %.'
+            },
+            {
+                topic: 'Día 3 — Coaxial y fibra',
+                repaso: '../Dia_03/teoria.html#presupuesto',
+                text: 'Enlace de 2 km de fibra monomodo (0,4 dB/km) con 2 pares de conectores (0,75 dB cada uno) y margen de 3 dB. ¿Pérdida total?',
+                options: { a: '2,3 dB', b: '4,3 dB', c: '5,3 dB', d: '7,3 dB' },
+                answer: 'c',
+                feedback: '0,8 de fibra + 1,5 de conectores = 2,3; más el margen de 3: <strong>5,3 dB</strong>. Olvidar el margen es el error típico.'
+            },
+            {
+                topic: 'Día 4 — Elegir el medio',
+                repaso: '../Dia_04/teoria.html#tabla36',
+                text: 'Longitudes máximas de segmento, según la tabla 3.6:',
+                options: {
+                    a: 'Grueso 500 m · delgado 200 m · par trenzado 100 m',
+                    b: 'Grueso 200 m · delgado 500 m · par trenzado 100 m',
+                    c: 'Grueso 1 km · delgado 500 m · par trenzado 200 m',
+                    d: 'Los tres, 100 m'
+                },
+                answer: 'a',
+                feedback: 'Y el par trenzado son 100 m tanto en UTP como en STP/FTP: <strong>el apantallamiento no da distancia</strong>.'
+            },
+            {
+                topic: 'Día 4 — Elegir el medio',
+                repaso: '../Dia_04/teoria.html#cobrefibra',
+                text: '¿Qué significa que la fibra sea inmune a los «peligros eléctricos»?',
+                options: {
+                    a: 'Que no le afectan los motores cercanos',
+                    b: 'Que aguanta más tensión que el cobre',
+                    c: 'Que no necesita conexión a tierra en el armario',
+                    d: 'Que no conduce electricidad, así que aísla los extremos y no transporta sobretensiones'
+                },
+                answer: 'd',
+                feedback: 'Lo de los motores es la inmunidad a <strong>EMI</strong>, otra fila distinta de la tabla. Esta es de <strong>seguridad física</strong>.'
+            },
+            {
+                topic: 'Día 4 — Elegir el medio',
+                repaso: '../Dia_04/teoria.html#seguridad',
+                text: 'De las cuatro reglas de seguridad del cableado de cobre, ¿cuál se incumple al tender los datos por la misma bandeja que la alimentación eléctrica?',
+                options: {
+                    a: 'La separación entre el cableado de datos y el de energía',
+                    b: 'La conexión a tierra del equipo',
+                    c: 'La inspección periódica',
+                    d: 'La conexión correcta de los cables'
+                },
+                answer: 'a',
+                feedback: 'Y se incumple por partida doble: por <strong>seguridad</strong> y por las <strong>interferencias</strong> que la línea eléctrica mete en el cable de datos.'
+            },
+            {
+                topic: 'Día 4 — Elegir el medio',
+                repaso: '../Dia_04/teoria.html#decidir',
+                text: '¿Por qué el método de decisión empieza por la distancia y no por el presupuesto?',
+                options: {
+                    a: 'Porque la distancia es más fácil de medir',
+                    b: 'Porque las preguntas que descartan medios enteros deben ir antes que las que eligen entre los válidos',
+                    c: 'Porque el presupuesto no importa',
+                    d: 'Porque la normativa lo exige en ese orden'
+                },
+                answer: 'b',
+                feedback: 'Un medio barato que no llega no es barato: es una instalación que hay que rehacer. El dinero decide <strong>entre opciones válidas</strong>.'
+            },
+            {
+                topic: 'Día 4 — Elegir el medio',
+                repaso: '../Dia_04/teoria.html#casos',
+                text: 'Caseta de control a 50 m del edificio principal, con acometida eléctrica propia. El par trenzado llegaría. ¿Qué instalas?',
+                options: {
+                    a: 'UTP Cat 6, que llega de sobra',
+                    b: 'STP Cat 6, con la pantalla a tierra',
+                    c: 'Fibra: son edificios distintos, con tierras distintas y riesgo de sobretensiones por el cobre',
+                    d: 'Coaxial delgado, que admite 200 m'
+                },
+                answer: 'c',
+                feedback: 'La distancia no es el criterio aquí. Entre edificios separados se pone fibra <strong>aunque quepa el cobre</strong>.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_01/teoria.html#apantallamientos',
+                text: '<strong>Integración.</strong> Un tramo apantallado de 40 m da errores. Al revisarlo se ve que la pantalla no toca el chasis en ninguno de los dos conectores. ¿Qué dos apartados de la semana explican el fallo?',
+                options: {
+                    a: 'El presupuesto óptico y las categorías',
+                    b: 'Que una pantalla sin tierra actúa como antena, y que el paso 6 del montaje exige comprobar ese contacto',
+                    c: 'El par partido y la dispersión modal',
+                    d: 'La tabla 3.6 y las normas de cableado'
+                },
+                answer: 'b',
+                feedback: 'Es el cruce del Día 1 con el Día 2: el <strong>concepto</strong> y el <strong>paso concreto del montaje</strong> que lo garantiza.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_02/teoria.html#errores',
+                text: '<strong>Integración.</strong> Un enlace nuevo negocia 100 Mbps donde se esperaba 1 Gbps, y el comprobador da las ocho luces. Ordena las hipótesis de más a menos probable.',
+                options: {
+                    a: 'El cable supera los 100 m · la categoría es baja · el switch es antiguo',
+                    b: 'El switch está mal configurado · el cable es apantallado · hay ruido',
+                    c: 'Par partido o un par sin contacto real · categoría insuficiente · limitación del equipo del otro extremo',
+                    d: 'Hay un empalme · la fibra está doblada · falta margen óptico'
+                },
+                answer: 'c',
+                feedback: 'Las ocho luces descartan un corte limpio, así que lo primero es el <strong>par partido</strong> o un contacto intermitente. Lo de la fibra no viene a cuento en un enlace de cobre.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_04/teoria.html#decidir',
+                text: '<strong>Integración.</strong> Tramo de 70 m dentro de la misma nave, junto a una línea de soldadura, con 10 Gbps previstos a cinco años. ¿Qué propones?',
+                options: {
+                    a: 'UTP Cat 6A: la distancia entra y la categoría cubre los 10 Gbps',
+                    b: 'Cat 6A apantallada con tierra correcta, o fibra multimodo si no puede garantizarse esa tierra',
+                    c: 'Fibra monomodo con transceptores LX',
+                    d: 'Coaxial grueso, por su máxima inmunidad'
+                },
+                answer: 'b',
+                feedback: 'La distancia entra, así que no obliga a fibra; pero el entorno descarta el UTP y la velocidad futura exige <strong>6A</strong>. La monomodo sería desproporcionada a 70 m.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_03/teoria.html#uniones',
+                text: '<strong>Integración.</strong> ¿Qué tienen en común el coaxial fino frente al grueso, el cable holgado frente al ajustado y la fibra frente al cobre?',
+                options: {
+                    a: 'Que en los tres casos el más caro por metro es el que menos pierde',
+                    b: 'Que en los tres casos gana el más flexible',
+                    c: 'Que en los tres casos hay que mirar el coste total, porque lo barato por metro suele salir caro en el montaje, y al revés',
+                    d: 'Que los tres son medios obsoletos'
+                },
+                answer: 'c',
+                feedback: 'Es una de las cuatro ideas que atraviesan la semana. El coaxial fino cuesta más y se instala mejor; el holgado ahorra en metro y encarece el conector; y en fibra el montaje pesa más que el cable.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

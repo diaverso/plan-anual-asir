@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Cable coaxial y fibra óptica</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 3 — Coaxial y fibra óptica</h1>
+        <p>La estructura del coaxial · banda base y banda ancha · los tres componentes de un sistema óptico · modos, empalmes y decibelios</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 60 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 35 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Dos días peleando con el ruido: trenzar, apantallar, poner a tierra, no destrenzar. Hoy aparecen dos
+            medios que atacan el problema de otra manera. El <strong>coaxial</strong> envuelve la señal en un tubo de
+            cobre. La <strong>fibra</strong> hace algo más radical: deja de usar electricidad.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#coaxial">El cable coaxial: estructura</a></li>
+                <li><a href="#bandas">Banda base y banda ancha</a></li>
+                <li><a href="#grosores">Coaxial grueso y coaxial fino</a></li>
+                <li><a href="#optico">Un sistema de transmisión óptico</a></li>
+                <li><a href="#modos">Monomodo, multimodo e índice gradual</a></li>
+                <li><a href="#cables">Cómo se agrupan las fibras en un cable</a></li>
+                <li><a href="#uniones">Las tres formas de unir dos fibras</a></li>
+                <li><a href="#ventajas">Ventajas de la fibra frente al cobre</a></li>
+                <li><a href="#montaje">Conectores y recomendaciones de montaje</a></li>
+                <li><a href="#presupuesto">El presupuesto óptico</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="coaxial">1. El cable coaxial: estructura</h2>
+
+            <p>El coaxial tiene <strong>mejor blindaje que el par trenzado</strong>, y de ahí se derivan sus dos
+            ventajas: alcanza velocidades mayores y permite tramos más largos entre repetidores o estaciones.</p>
+
+            <p>Su estructura son cuatro capas concéntricas —de ahí el nombre: todas comparten el mismo eje—:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>De qué es</th><th>Para qué sirve</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1. Núcleo</strong></td><td>Alambre de <strong>cobre duro</strong></td><td>Por él circula la señal</td></tr>
+                    <tr><td><strong>2. Aislante</strong></td><td>Material dieléctrico</td><td>Separa el núcleo de la malla y mantiene la distancia constante</td></tr>
+                    <tr><td><strong>3. Malla</strong></td><td>Conductor cilíndrico de <strong>cobre trenzado</strong></td><td>Hace de <strong>masa</strong> y envuelve por completo a la señal</td></tr>
+                    <tr><td><strong>4. Cubierta</strong></td><td>Plástico protector</td><td>Protege mecánicamente el conjunto</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s06_d03_coaxial.png"
+         width="1400" height="700" loading="lazy"
+         alt="Corte de un cable coaxial con sus cuatro capas concéntricas identificadas: el núcleo de cobre en el centro, el aislante dieléctrico a su alrededor, la malla de cobre trenzado que hace de masa, y la cubierta exterior de plástico.">
+    <figcaption>La malla envuelve por completo al núcleo: la señal viaja dentro de su propia jaula.</figcaption>
+</figure>
+<pre><code>  cubierta de plástico
+   ┌───────────────────────┐
+   │ ▒▒▒ malla de cobre ▒▒▒│   ← masa: rodea toda la señal
+   │ ░░░░  aislante  ░░░░░ │
+   │ ░░░░░░  ●núcleo ░░░░░ │   ← por aquí va la señal
+   └───────────────────────┘</code></pre>
+
+            <div class="dato">
+                <strong>Por qué es tan inmune al ruido</strong>
+                <p>Esta construcción le da un <strong>elevado ancho de banda</strong> y una <strong>excelente
+                inmunidad al ruido</strong>. En el par trenzado la protección es un truco geométrico: las
+                interferencias se cancelan. Aquí es directa: la malla <strong>envuelve</strong> a la señal y actúa
+                como escudo en los 360 grados.</p>
+            </div>
+
+            <p>Sobre su velocidad, el libro da una cifra concreta y una condición: depende de la longitud, y en
+            cables de <strong>1 km</strong> es posible obtener entre <strong>1 y 2 Gbps</strong>.</p>
+
+            <div class="destacado">
+                <strong>Dónde se usa hoy</strong>
+                <p>El coaxial se usaba en el sistema telefónico como conexión de gran capacidad y largo recorrido,
+                pero ahí lo ha sustituido la fibra. Sigue vivo en dos sitios: la <strong>televisión por cable</strong>
+                y el <strong>acceso a redes de área extensa</strong>. Si tienes Internet por cable coaxial en casa,
+                estás usando esta tecnología; se verá en el Mes 11.</p>
+            </div>
+
+            <h2 id="bandas">2. Banda base y banda ancha</h2>
+
+            <p>Hay dos tipos fundamentales de coaxial, y lo que los separa es el <strong>tipo de señal</strong> que
+            transportan:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Coaxial de <strong>banda base</strong></th><th>Coaxial de <strong>banda ancha</strong></th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Transmisión</strong></td><td>Digital</td><td>Analógica</td></tr>
+                    <tr><td><strong>Velocidad típica</strong></td><td>Hasta <strong>10 Mbps</strong> en cables de 1 km; más en cables cortos</td><td>Hasta <strong>150 Mbps</strong> en un cable que funcione a 300 MHz</td></tr>
+                    <tr><td><strong>Distancia</strong></td><td>Se reduce la velocidad al alargar el cable</td><td>Hasta <strong>100 km</strong>, gracias a la naturaleza analógica de la señal</td></tr>
+                    <tr><td><strong>Uso</strong></td><td>Redes de área local y transmisiones de larga distancia</td><td><strong>Televisión por cable</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>«Banda ancha» significa aquí otra cosa</strong>
+                El término viene de la telefonía, donde designaba cualquier señal por encima de los 4 kHz. En el
+                mundo de las redes, <strong>cable de banda ancha significa «cualquier cable que utilice transmisión
+                analógica»</strong>. No tiene nada que ver con el uso comercial de hoy —«banda ancha» como sinónimo
+                de conexión rápida—, así que cuidado al leer textos de distintas épocas.
+            </div>
+
+            <p>Fíjate en la última fila: la señal analógica aguanta <strong>100 km</strong> y la digital, no. Es
+            contraintuitivo después de la Semana 1, donde lo digital ganaba por poder regenerarse. Y es que la
+            regeneración es una ventaja del <em>equipamiento</em>, no del cable: en un enlace analógico basta con
+            amplificar, aunque se amplifique también el ruido.</p>
+
+            <h2 id="grosores">3. Coaxial grueso y coaxial fino</h2>
+
+            <p>Dentro del coaxial de banda base, el libro distingue por grosor. Las medidas son las del núcleo y la
+            malla:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tipo</th><th>Referencia</th><th>Núcleo</th><th>Malla</th><th>Diámetro total</th><th>Notas</th></tr></thead>
+                <tbody>
+                    <tr><td rowspan="2"><strong>Grueso</strong></td><td><strong>RG-100</strong></td><td>2,6 mm</td><td>9,5 mm</td><td>≈ 1 cm</td><td>El más utilizado de los gruesos</td></tr>
+                    <tr><td><strong>RG-150</strong></td><td>3,7 mm</td><td>13,5 mm</td><td>≈ 1,5 cm</td><td>Capas trenzadas que protegen mejor de las interferencias</td></tr>
+                    <tr><td><strong>Fino</strong></td><td><strong>RG-58</strong><br>(RG-58/U en España)</td><td>1,2 mm</td><td>4,4 mm</td><td>≈ 0,5 cm</td><td>Más flexible y fácil de instalar, pero <strong>más caro</strong> y con menor inmunidad</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>El coaxial grueso empezó usándose en redes locales y hoy solo se emplea para la <strong>estructura
+            troncal</strong> de distribución de la red.</p>
+
+            <div class="destacado">
+                <strong>El dato que sorprende</strong>
+                <p>El coaxial <strong>fino es más caro</strong> que el grueso, pese a llevar menos material. Se paga
+                la <strong>flexibilidad</strong>: es más fácil de instalar. Es el mismo patrón que viste el lunes con
+                el par trenzado, donde el coste del montaje pesa más que el del metro de cable.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="optico">4. Un sistema de transmisión óptico</h2>
+
+            <p>La fibra óptica transmite información binaria con <strong>ondas de luz</strong>. Un sistema óptico
+            tiene siempre <strong>tres componentes</strong>:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Componente</th><th>Qué hace</th><th>Con qué se construye</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1. Fuente de luz</strong></td><td>Convierte la señal eléctrica en señal óptica: un pulso de luz para el 1 y ausencia de luz para el 0, o bien un cambio de longitud de onda</td><td>Un emisor <strong>láser</strong>, habitualmente un diodo láser</td></tr>
+                    <tr><td><strong>2. Medio de transmisión</strong></td><td>Transporta la luz</td><td>Una <strong>fibra de vidrio ultradelgada</strong></td></tr>
+                    <tr><td><strong>3. Detector</strong></td><td>Genera un pulso eléctrico cuando la luz incide sobre él</td><td>Un <strong>fotodetector</strong> o una fotorresistencia</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<pre><code>señal        ┌────────┐      luz      ┌────────┐       señal
+eléctrica ──▶│ fuente │ ~~~~~~~~~~~~▶ │detector│ ──▶ eléctrica
+             └────────┘   la fibra    └────────┘
+                       un solo sentido: SÍMPLEX</code></pre>
+
+            <div class="aviso">
+                <strong>Una fibra es símplex</strong>
+                Fuente en un extremo y detector en el otro: la información viaja en <strong>un solo sentido</strong>.
+                Para tener comunicación bidireccional hacen falta <strong>dos fibras</strong>, y de ahí que los
+                conectores de fibra sean casi siempre dúplex, con dos hilos.
+            </div>
+
+            <h3>La estructura de la fibra</h3>
+
+            <p>Es un cilindro flexible de sección muy pequeña —del orden de <strong>2 a 125 µm</strong>— formado por
+            tres envolturas:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Parte</th><th>Función</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Núcleo</strong></td><td>Por él circula la luz</td></tr>
+                    <tr><td><strong>Revestimiento</strong></td><td>Tiene un <strong>índice de refracción menor</strong> que el núcleo, de modo que la luz rebota hacia dentro y no escapa</td></tr>
+                    <tr><td><strong>Cubierta plástica</strong></td><td>Protege el revestimiento e <strong>impide que entre luz del exterior</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Para hacerse una idea del grosor</strong>
+                <p>Un cabello humano tiene alrededor de <strong>50 µm</strong>. La fibra entera, con su revestimiento,
+                ronda los 125 µm: poco más del doble de un pelo.</p>
+            </div>
+
+            <h2 id="modos">5. Monomodo, multimodo e índice gradual</h2>
+
+            <p>La luz puede propagarse por la fibra de <strong>tres formas</strong>, según cómo esté construido el
+            núcleo:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tipo</th><th>Cómo viaja la luz</th><th>Núcleo</th><th>Cubierta</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Monomodo</strong></td>
+                        <td>La fibra es tan delgada que la luz va <strong>en línea recta</strong></td>
+                        <td>radio de <strong>10 µm</strong></td>
+                        <td>125 µm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multimodo</strong></td>
+                        <td>La luz <strong>rebota</strong> en la superficie interna del núcleo, como en un espejo. Las pérdidas siguen siendo casi nulas</td>
+                        <td>diámetro de <strong>100 µm</strong></td>
+                        <td>140 µm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multimodo de índice gradual</strong></td>
+                        <td>La luz se curva suavemente, por <strong>refracción gradual</strong>: el índice de refracción del núcleo aumenta del centro hacia los extremos</td>
+                        <td colspan="2">El mismo diámetro que la multimodo</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s06_d03_tipos_fibra.png"
+         width="1400" height="901" loading="lazy"
+         alt="Tres cortes longitudinales de fibra óptica, uno debajo de otro. En la monomodo, de núcleo muy estrecho, un único rayo va recto. En la multimodo, de núcleo ancho, varios rayos rebotan en zigzag contra la pared del núcleo. En la de índice gradual, los rayos describen curvas suaves en lugar de rebotar.">
+    <figcaption>El mismo pulso, tres formas de viajar. Cuanto más recto va, menos se deforma al llegar.</figcaption>
+</figure>
+<pre><code>Monomodo         ───────────────────────▶   un solo camino, recto
+
+Multimodo        ╲  ╱╲  ╱╲  ╱╲  ╱╲  ╱▶     rebota, varios caminos
+                  ╲╱  ╲╱  ╲╱  ╲╱  ╲╱
+
+Índice gradual    ╲__╱‾‾╲__╱‾‾╲__╱▶        se curva, sin rebotar</code></pre>
+
+            <div class="destacado">
+                <strong>Por qué importa el número de caminos</strong>
+                <p>En la multimodo cada rayo recorre una distancia distinta, así que los que rebotan mucho llegan
+                <strong>más tarde</strong> que los que van casi rectos. Un pulso que salió nítido llega
+                <strong>ensanchado</strong>, y si se ensancha demasiado se solapa con el siguiente: es el límite de
+                velocidad y distancia de la multimodo. La monomodo no tiene ese problema porque solo hay un camino,
+                y el índice gradual lo reduce curvando los rayos en lugar de rebotarlos.</p>
+                <p>Esa es la razón de fondo de la regla que ya conocías del Mes 1: <strong>monomodo para largas
+                distancias, multimodo para dentro del edificio</strong>.</p>
+            </div>
+
+            <h2 id="cables">6. Cómo se agrupan las fibras en un cable</h2>
+
+            <p>Un cable de fibra lleva varias fibras dentro, cada una transmitiendo en un sentido. Hay dos formas de
+            montarlas, y la elección depende de <strong>dónde</strong> va a instalarse:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Cable holgado (<em>Loose Tube</em>)</th><th>Recubrimiento ajustado (<em>Tight buffered</em>)</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Construcción</strong></td><td>Un <strong>único revestimiento</strong> para todas las fibras, con una capa de gel contra la humedad</td><td>Cada fibra con su <strong>propio recubrimiento</strong></td></tr>
+                    <tr><td><strong>Coste por metro</strong></td><td>Menor</td><td>Mayor</td></tr>
+                    <tr><td><strong>Coste de conectores y empalmes</strong></td><td><strong>Mayor</strong></td><td>Menor</td></tr>
+                    <tr><td><strong>Flexibilidad</strong></td><td>Muy limitada</td><td>Buena</td></tr>
+                    <tr><td><strong>Dónde se usa</strong></td><td><strong>Exterior</strong></td><td><strong>Interior</strong> de edificios</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Otra vez el mismo patrón: lo barato por metro sale caro en el montaje, y al revés. Para un tendido
+            largo entre edificios compensa el holgado; para repartir por dentro, donde hay muchas terminaciones y
+            muchas curvas, el ajustado.</p>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="uniones">7. Las tres formas de unir dos fibras</h2>
+
+            <p>Aquí está el verdadero problema de la fibra. El libro lo dice sin rodeos: su inconveniente principal
+            es el <strong>coste</strong>, y no tanto el precio del metro como el del <strong>montaje</strong>. La
+            fibra no se puede doblar demasiado y las conexiones son caras y complicadas. Tanto, que
+            <strong>muchas veces sale más rentable desechar varios kilómetros de fibra que hacer una unión de varios
+            tramos</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Forma de unión</th><th>En qué consiste</th><th>Pérdida de luz</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Conectores</strong></td>
+                        <td>Cada tramo viene de fábrica con enchufes en los extremos. Es lo más sencillo</td>
+                        <td>Entre el <strong>10 % y el 20 %</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Empalme mecánico</strong></td>
+                        <td>Se cortan con cuidado los dos extremos y se unen con una manga que los sujeta. La alineación se puede afinar pasando luz y ajustando</td>
+                        <td>En torno al <strong>10 %</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fusión</strong></td>
+                        <td>Se <strong>funden</strong> los dos extremos hasta formar una conexión sólida</td>
+                        <td>Casi tan buena como una fibra de hilado único: solo <strong>un poco de atenuación</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>De menos a más pérdida: <strong>fusión → empalme mecánico → conectores</strong>. Y de menos a más
+            comodidad, justo al revés. Los conectores permiten desconectar y reconfigurar; una fusión es para
+            siempre.</p>
+
+            <h3>El corte de los extremos</h3>
+
+            <p>Antes de unir nada hay que <strong>cortar y pulir</strong> los extremos. El libro muestra tres
+            situaciones:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Caso</th><th>Qué pasa</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>A.</strong> Dos extremos planos enfrentados</td><td>Queda una <strong>zona intermedia de aire</strong>: parte de la señal rebota y vuelve al origen</td></tr>
+                    <tr><td><strong>B.</strong> Corte oblicuo</td><td>Parte de la señal se escapa y se pierde</td></tr>
+                    <tr><td><strong>C.</strong> Corte perfectamente pulido</td><td><strong>Minimiza el reflejo</strong>: es el objetivo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s06_d03_empalme_fibra.png"
+         width="1400" height="882" loading="lazy"
+         alt="Tres uniones de fibra, una debajo de otra. En la primera, dos extremos planos separados por una capa de aire donde parte del rayo rebota hacia atrás. En la segunda, un corte oblicuo por el que parte del rayo escapa fuera de la fibra. En la tercera, un corte pulido y ajustado por el que el rayo pasa entero al otro tramo.">
+    <figcaption>Un corte mal hecho no rompe el enlace: le roba luz en cada unión, y las uniones se acumulan.</figcaption>
+</figure>
+<pre><code>A  ═══════╡ aire ╞═══════   parte rebota y vuelve
+B  ═══════╱      ╞═══════   parte se escapa
+C  ═══════╪══════════════   pasa casi toda: es el objetivo</code></pre>
+
+            <h2 id="ventajas">8. Ventajas de la fibra frente al cobre</h2>
+
+            <p>El libro enumera cinco. Conviene sabérselas porque son las que justifican su precio:</p>
+
+            <ol>
+                <li>Maneja <strong>anchos de banda mucho mayores</strong> que el cobre.</li>
+                <li>Por su <strong>baja atenuación</strong>, solo necesita repetidores cada <strong>30 km</strong>;
+                el cobre los necesita cada <strong>5 km</strong>.</li>
+                <li><strong>No la interfieren</strong> las ondas electromagnéticas.</li>
+                <li>Es <strong>delgada y ligera</strong> comparada con un cable de cobre de la misma capacidad.</li>
+                <li>No tiene fugas y es <strong>muy difícil de intervenir</strong>: habría que cortar el cable o
+                desviar parte de la luz, y eso exige equipos muy costosos.</li>
+            </ol>
+
+            <div class="destacado">
+                <strong>La tercera ventaja se lleva por delante dos días de trabajo</strong>
+                <p>Todo lo del lunes y el martes —trenzar, apantallar, poner a tierra, no destrenzar— existe para
+                pelear contra las interferencias electromagnéticas. En la fibra <strong>ese problema no
+                existe</strong>: por ahí viaja luz, y la luz no se induce en un cable vecino. Por eso la fibra es la
+                respuesta cuando el entorno es eléctricamente hostil, aunque la distancia sea corta.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Una cifra del libro que hay que matizar</strong>
+                El libro dice que la fibra alcanza en laboratorio más de <strong>50 Tbps</strong>, pero que el
+                <strong>límite práctico está cerca de 1 Gbps</strong> por la incapacidad de los emisores y detectores
+                para convertir más rápido entre electricidad y luz.
+                <br><br>
+                Ese techo <strong>ha quedado desfasado</strong>: hoy es normal encontrar transceptores comerciales de
+                10, 40, 100 y 400 Gbps. La <strong>idea</strong> del libro sigue siendo válida —quien limita no es la
+                fibra, sino la electrónica de los extremos—, pero la cifra concreta no. Este matiz no sale de la
+                bibliografía de la asignatura, sino de los estándares actuales de <strong>IEEE 802.3</strong>.
+            </div>
+
+            <h2 id="montaje">9. Conectores y recomendaciones de montaje</h2>
+
+            <p>Según la norma <strong>ANSI/EIA/TIA-568</strong>, los conectores de fibra son los
+            <strong>568SC</strong>, símplex o dúplex. Los dúplex montan dos fibras: una para transmitir y otra para
+            recibir. El libro muestra los tipos <strong>SC</strong> y <strong>ST</strong>.</p>
+
+            <div class="dato">
+                <strong>El código de colores</strong>
+                <ul>
+                    <li><strong>Azul</strong> → conectores y adaptadores <strong>monomodo</strong>.</li>
+                    <li><strong>Beige</strong> → <strong>multimodo</strong>.</li>
+                </ul>
+                <p>No es decorativo: mezclar una fibra monomodo con una multimodo en el mismo enlace pierde casi toda
+                la luz en el punto de unión.</p>
+            </div>
+
+            <p>Las <strong>recomendaciones de montaje</strong> del libro son seis:</p>
+
+            <ol>
+                <li>Los conectores alojarán <strong>dos fibras</strong>, una de transmisión y otra de recepción, del
+                <strong>mismo tipo y grosor</strong>. Si se usan modos distintos, hay que etiquetarlos.</li>
+                <li>Los latiguillos de los paneles se montan de forma que el extremo de <strong>transmisión conecte
+                con el de recepción</strong> del otro lado, y al revés. Cada fibra se etiqueta con su sentido.</li>
+                <li>Los armarios deben dejar hueco para un <strong>radio de curvatura mínimo de 25 mm</strong>.</li>
+                <li>Conectores <strong>beige para multimodo</strong> y <strong>azules para monomodo</strong>.</li>
+                <li><strong>Cortar y pulir</strong> los extremos antes de montar los conectores, evitando ángulos y
+                aristas.</li>
+                <li>Mantener los conectores <strong>cubiertos con sus fundas</strong> mientras no estén conectados.</li>
+            </ol>
+
+            <div class="aviso">
+                <strong>El radio de curvatura no es una recomendación estética</strong>
+                Doblar una fibra por debajo de su radio mínimo hace que la luz <strong>deje de rebotar hacia
+                dentro</strong> y se escape por la curva. El enlace pierde potencia o se cae, y si se fuerza más, la
+                fibra se rompe por dentro sin que se note por fuera. <strong>25 mm de radio</strong> es, más o menos,
+                un vaso de chupito.
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: el conector LC, que el libro no menciona</summary>
+                <div class="ampliacion-cuerpo">
+                    <p><strong>No sale de la bibliografía de la asignatura</strong>, pero te lo vas a encontrar en
+                    cuanto abras un armario moderno. El <strong>LC</strong> es hoy el conector más habitual en
+                    equipos de red: hace lo mismo que el SC pero con la mitad de tamaño, lo que permite el doble de
+                    puertos en el mismo frontal de switch.</p>
+                    <div class="tabla-wrap">
+                    <table>
+                        <thead><tr><th>Conector</th><th>Tamaño</th><th>Dónde se ve</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>ST</strong></td><td>Grande, con bayoneta de giro</td><td>Instalaciones antiguas</td></tr>
+                            <tr><td><strong>SC</strong></td><td>Cuadrado, de empujar y tirar</td><td>El de la norma TIA-568; paneles y acometidas</td></tr>
+                            <tr><td><strong>LC</strong></td><td>La mitad que el SC</td><td>Transceptores SFP de switches y servidores</td></tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <p>El código de colores azul y beige se mantiene en todos ellos.</p>
+                </div>
+            </details>
+
+            <h2 id="presupuesto">10. El presupuesto óptico</h2>
+
+            <p>Ya sabes que cada unión pierde luz. La pregunta práctica es: con toda esa pérdida acumulada,
+            <strong>¿llega bastante luz al otro extremo?</strong> Eso se calcula antes de instalar nada, y se llama
+            <strong>presupuesto óptico</strong>.</p>
+
+            <div class="aviso">
+                <strong>Contenido de ampliación, con fuente distinta</strong>
+                El libro habla de las pérdidas en porcentaje, pero <strong>no plantea este cálculo</strong>. El
+                método y los valores típicos que siguen proceden de las normas de instalación de fibra
+                (<strong>ANSI/TIA-568</strong> e <strong>IEC 61280</strong>). Lo incluyo porque es la aplicación
+                directa de los <a href="../../Semana_05/Dia_04/teoria.html#decibelios">decibelios de la Semana 5</a> y
+                porque es lo que se hace en el mundo real antes de tirar un tramo.
+            </div>
+
+            <p>Se trabaja en <strong>decibelios</strong>, y no en porcentajes, por la razón que ya conoces: los dB se
+            <strong>suman</strong> en lugar de multiplicarse. Valores típicos de referencia:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Elemento</th><th>Pérdida típica</th></tr></thead>
+                <tbody>
+                    <tr><td>Fibra <strong>multimodo</strong>, por kilómetro</td><td>3 dB/km</td></tr>
+                    <tr><td>Fibra <strong>monomodo</strong>, por kilómetro</td><td>0,4 dB/km</td></tr>
+                    <tr><td>Cada par de <strong>conectores</strong></td><td>0,75 dB</td></tr>
+                    <tr><td>Cada <strong>empalme por fusión</strong></td><td>0,3 dB</td></tr>
+                    <tr><td>Margen de seguridad recomendado</td><td>3 dB</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El cálculo, en tres pasos</strong>
+                <ol>
+                    <li><strong>Suma</strong> las pérdidas: fibra × km, más conectores, más empalmes.</li>
+                    <li><strong>Añade</strong> el margen de seguridad.</li>
+                    <li><strong>Compara</strong> con el presupuesto del transceptor: la diferencia entre la potencia
+                    que emite y la mínima que su receptor necesita.</li>
+                </ol>
+                <p>Si la pérdida total es <strong>menor</strong> que ese presupuesto, el enlace funciona. Si es
+                mayor, hay que cambiar de fibra, de transceptor o de recorrido.</p>
+            </div>
+
+            <p>Un ejemplo completo: 2 km de fibra monomodo, dos pares de conectores y un empalme por fusión.</p>
+
+<pre><code>fibra        2 km × 0,4 dB/km  =  0,8 dB
+conectores   2 × 0,75 dB       =  1,5 dB
+empalme      1 × 0,3 dB        =  0,3 dB
+                                 ───────
+                                  2,6 dB
+margen                         +  3,0 dB
+                                 ───────
+pérdida a considerar              5,6 dB</code></pre>
+
+            <p>Si el transceptor emite a −8 dBm y su receptor necesita al menos −20 dBm, dispone de
+            <strong>12 dB</strong> de presupuesto. Como 5,6 &lt; 12, el enlace <strong>llega con holgura</strong>.
+            Esto es exactamente lo que harás en el laboratorio.</p>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">11. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Coaxial: <strong>núcleo, aislante, malla y cubierta</strong>. La malla envuelve la señal, de
+                    ahí su excelente inmunidad. En 1 km, entre <strong>1 y 2 Gbps</strong>.</li>
+                    <li><strong>Banda base</strong> es digital, hasta 10 Mbps en 1 km. <strong>Banda ancha</strong> es
+                    analógica, hasta 150 Mbps y <strong>100 km</strong>: televisión por cable.</li>
+                    <li>Grueso: <strong>RG-100</strong> y <strong>RG-150</strong>. Fino: <strong>RG-58</strong>, más
+                    flexible y <strong>más caro</strong>.</li>
+                    <li>Sistema óptico: <strong>fuente, medio y detector</strong>. Una fibra es <strong>símplex</strong>.</li>
+                    <li><strong>Monomodo</strong>: recta, núcleo de 10 µm de radio. <strong>Multimodo</strong>: rebota,
+                    núcleo de 100 µm. <strong>Índice gradual</strong>: se curva.</li>
+                    <li><strong>Holgado</strong> para exterior, <strong>ajustado</strong> para interior.</li>
+                    <li>Uniones: <strong>conectores 10-20 %</strong>, <strong>empalme mecánico 10 %</strong>,
+                    <strong>fusión</strong> casi sin pérdida.</li>
+                    <li>Colores: <strong>azul monomodo</strong>, <strong>beige multimodo</strong>. Radio de curvatura
+                    mínimo, <strong>25 mm</strong>.</li>
+                    <li>El <strong>presupuesto óptico</strong> suma en dB fibra, conectores, empalmes y margen, y lo
+                    compara con lo que da el transceptor.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Banda ancha significa conexión rápida»</td><td>En redes significa <strong>transmisión analógica</strong>. Es un término heredado de la telefonía</td></tr>
+                    <tr><td>«El coaxial fino es más barato porque lleva menos cobre»</td><td>Es <strong>más caro</strong>: se paga su flexibilidad y su facilidad de instalación</td></tr>
+                    <tr><td>«La multimodo es mejor porque la luz aprovecha más caminos»</td><td>Al revés: los rayos llegan con retraso distinto y el pulso <strong>se ensancha</strong>. La monomodo llega más lejos</td></tr>
+                    <tr><td>«Una fibra transmite en los dos sentidos»</td><td>Una fibra es <strong>símplex</strong>. Hacen falta dos, y por eso los conectores son dúplex</td></tr>
+                    <tr><td>«Lo caro de la fibra es el cable»</td><td>Lo caro es el <strong>montaje</strong>: conexiones y empalmes. A veces sale mejor tirar kilómetros nuevos</td></tr>
+                    <tr><td>«Los conectores son la mejor forma de unir dos fibras»</td><td>Son la más cómoda y la que <strong>más pierde</strong>: del 10 al 20 %. La fusión es la mejor</td></tr>
+                    <tr><td>«Un cable de fibra se puede doblar como uno de cobre»</td><td>Por debajo del <strong>radio de 25 mm</strong> la luz se escapa por la curva y la fibra puede romperse por dentro</td></tr>
+                    <tr><td>«Da igual el color del conector»</td><td>Azul y beige distinguen <strong>monomodo de multimodo</strong>, y mezclarlos arruina el enlace</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">12. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 22 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a calcular tres enlaces de fibra en decibelios y a decidir cuáles llegan y cuáles no. Uno de
+            ellos no llega: habrá que averiguar qué cambiar.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 3</strong></a> (68 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 4</strong>
+            <p><strong>Elegir el medio</strong>: las dos tablas comparativas del libro, la seguridad eléctrica del
+            cableado de cobre y un caso completo de diseño para una nave con cuatro tramos distintos.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> si la fibra es mejor en casi todo, ¿por qué tu equipo sigue
+            conectado con cobre? Escribe dos razones.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/teoria.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/teoria.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'El coaxial de banda ancha llega a 100 km y el de banda base, no. Pero en la Semana 1 aprendiste que lo digital aguanta mejor las distancias largas porque se puede regenerar. ¿Se contradicen las dos cosas?',
+                modelo: 'No se contradicen, porque hablan de cosas distintas. La ventaja de lo digital es que el receptor puede <strong>decidir si era un 1 o un 0</strong> y emitir una señal limpia: por eso un enlace digital con repetidores puede cruzar un continente sin acumular ruido. Pero eso es una ventaja del <strong>equipamiento</strong>, no del cable.</p><p>Lo que dice el libro del coaxial de banda ancha es otra cosa: la señal <strong>analógica</strong> es «menos crítica», es decir, se degrada de forma gradual y sigue siendo aprovechable —una imagen de televisión con algo de nieve se ve— mientras que una señal digital muy deformada deja de entenderse del todo. Por eso un tendido analógico admite tramos largos con simples amplificadores, aunque estos amplifiquen también el ruido.',
+                puntos: [
+                    'Distingue la ventaja del equipamiento (regeneración) de la del medio',
+                    'Explica que la señal analógica se degrada de forma gradual',
+                    'Menciona que amplificar también amplifica el ruido',
+                    'Concluye que no hay contradicción entre las dos afirmaciones'
+                ]
+            },
+            {
+                pregunta: 'Explica por qué la fibra multimodo no llega tan lejos ni tan rápido como la monomodo, si en las dos las pérdidas de luz son prácticamente nulas.',
+                modelo: 'Porque el problema no es <strong>cuánta</strong> luz llega, sino <strong>cuándo</strong>. En la multimodo el núcleo es mucho más ancho —100 µm frente a los 10 µm de radio de la monomodo— y la luz viaja rebotando en la pared interna. Cada rayo toma un camino distinto: el que va casi recto recorre menos distancia que el que rebota muchas veces, así que <strong>llegan en instantes diferentes</strong>. Un pulso que salió nítido llega <strong>ensanchado</strong>, y cuanto más largo es el tramo, más se ensancha. Si se ensancha tanto que se solapa con el pulso siguiente, el receptor ya no distingue un bit del otro. En la monomodo solo hay un camino posible, así que el pulso llega con su forma; la fibra de índice gradual reduce el efecto curvando los rayos en lugar de rebotarlos.',
+                puntos: [
+                    'Señala que el límite no es la pérdida de luz sino la deformación del pulso',
+                    'Relaciona el ancho del núcleo con el número de caminos posibles',
+                    'Explica que los rayos llegan con retrasos distintos',
+                    'Concluye que el pulso se ensancha y puede solaparse con el siguiente',
+                    'Menciona que el índice gradual es una solución intermedia'
+                ]
+            },
+            {
+                pregunta: 'Un instalador te dice: «este tramo de fibra tiene 6 empalmes, pero como son de fusión y casi no pierden, da igual cuántos haya». ¿Qué le responderías?',
+                modelo: 'Que «casi no pierden» no es «no pierden», y que las pérdidas <strong>se acumulan</strong>. Con un valor típico de 0,3 dB por empalme de fusión, seis empalmes son <strong>1,8 dB</strong>, a los que hay que sumar los conectores de los extremos, la atenuación de la propia fibra por kilómetro y el margen de seguridad. Un enlace corto puede permitírselo; uno largo, con un presupuesto ajustado, puede quedarse sin luz suficiente en el receptor.</p><p>La forma de decidirlo no es la intuición, es el <strong>presupuesto óptico</strong>: sumar todas las pérdidas en decibelios y compararlas con la diferencia entre la potencia que emite el transceptor y la mínima que su receptor necesita. Además, cada empalme es un punto más donde algo puede degradarse con el tiempo.',
+                puntos: [
+                    'Señala que las pérdidas se acumulan y se suman en decibelios',
+                    'Hace un cálculo aproximado con los seis empalmes',
+                    'Recuerda que hay que sumar fibra, conectores y margen',
+                    'Propone el presupuesto óptico como criterio de decisión'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: 'Las cuatro capas del cable coaxial', dorso: '<strong>Núcleo</strong> de cobre duro · <strong>aislante</strong> · <strong>malla</strong> de cobre trenzado que hace de masa · <strong>cubierta</strong> de plástico.' },
+            { frente: '¿Por qué el coaxial es tan inmune al ruido?', dorso: 'Porque la <strong>malla envuelve por completo</strong> a la señal: es un escudo en los 360 grados, no una cancelación geométrica como el trenzado.' },
+            { frente: 'Velocidad del coaxial en un cable de 1 km', dorso: 'Entre <strong>1 y 2 Gbps</strong>, según el libro. Depende de la longitud.' },
+            { frente: 'Coaxial de banda base frente a banda ancha', dorso: '<strong>Banda base</strong>: digital, hasta 10 Mbps en 1 km. <strong>Banda ancha</strong>: analógica, hasta 150 Mbps y <strong>100 km</strong>; televisión por cable.' },
+            { frente: 'Los tres tipos de coaxial por grosor', dorso: 'Gruesos: <strong>RG-100</strong> (núcleo 2,6 mm) y <strong>RG-150</strong> (3,7 mm). Fino: <strong>RG-58</strong> (1,2 mm), más flexible y más caro.' },
+            { frente: 'Los tres componentes de un sistema óptico', dorso: '<strong>Fuente de luz</strong> (diodo láser) · <strong>medio</strong> (la fibra) · <strong>detector</strong> (fotodetector).' },
+            { frente: '¿Por qué un enlace de fibra necesita dos hilos?', dorso: 'Porque una fibra es <strong>símplex</strong>: fuente en un extremo, detector en el otro. Uno transmite y otro recibe.' },
+            { frente: 'Las tres partes de una fibra', dorso: '<strong>Núcleo</strong> (por donde va la luz) · <strong>revestimiento</strong> (índice de refracción menor, la devuelve hacia dentro) · <strong>cubierta</strong> (impide que entre luz externa).' },
+            { frente: 'Monomodo, multimodo e índice gradual', dorso: '<strong>Monomodo</strong>: recta, radio 10 µm. <strong>Multimodo</strong>: rebota, núcleo 100 µm. <strong>Gradual</strong>: se curva por refracción.' },
+            { frente: 'Cable holgado frente a recubrimiento ajustado', dorso: '<strong>Holgado</strong>: un revestimiento común con gel, barato por metro, caro de conectorizar, para <strong>exterior</strong>. <strong>Ajustado</strong>: recubrimiento propio, flexible, para <strong>interior</strong>.' },
+            { frente: 'Las tres formas de unir dos fibras y su pérdida', dorso: '<strong>Conectores</strong>: 10-20 %. <strong>Empalme mecánico</strong>: ~10 %. <strong>Fusión</strong>: casi como fibra única.' },
+            { frente: '¿Cada cuántos kilómetros necesita repetidores la fibra?', dorso: 'Cada <strong>30 km</strong>. El cobre, cada <strong>5 km</strong>.' },
+            { frente: 'El código de colores de los conectores de fibra', dorso: '<strong>Azul</strong> = monomodo · <strong>beige</strong> = multimodo.' },
+            { frente: 'Radio de curvatura mínimo de la fibra', dorso: '<strong>25 mm</strong>. Por debajo, la luz se escapa por la curva y la fibra puede romperse por dentro.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 3: Coaxial y fibra óptica',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'Coaxial',
+                repaso: '#coaxial',
+                text: 'En un cable coaxial, ¿qué función tiene la malla de cobre trenzado?',
+                options: {
+                    a: 'Transportar la señal',
+                    b: 'Hacer de masa y envolver la señal, protegiéndola del ruido en todas las direcciones',
+                    c: 'Dar rigidez mecánica al cable',
+                    d: 'Aislar el núcleo del exterior térmicamente'
+                },
+                answer: 'b',
+                feedback: 'La señal va por el <strong>núcleo</strong>; la malla la envuelve. Esa jaula es lo que le da su excelente inmunidad al ruido, distinta del truco geométrico del trenzado.'
+            },
+            {
+                topic: 'Coaxial',
+                repaso: '#coaxial',
+                text: 'El libro dice que en cables de 1 km el coaxial permite entre 1 y 2 Gbps. ¿De qué depende principalmente esa cifra?',
+                options: {
+                    a: 'Del conector utilizado',
+                    b: 'Del número de equipos conectados',
+                    c: 'De la longitud del cable',
+                    d: 'De si el cable está apantallado o no'
+                },
+                answer: 'c',
+                feedback: 'La velocidad depende de la <strong>longitud</strong>: más largo, más atenuación y menos velocidad. El coaxial ya está apantallado por construcción.'
+            },
+            {
+                topic: 'Banda base y banda ancha',
+                repaso: '#bandas',
+                text: 'En el mundo de las redes de computadoras, ¿qué significa «cable de banda ancha»?',
+                options: {
+                    a: 'Cualquier cable que utilice transmisión analógica',
+                    b: 'Un cable de más de 100 Mbps',
+                    c: 'Un cable con más de cuatro pares',
+                    d: 'Un cable con un ancho de banda superior a 4 kHz'
+                },
+                answer: 'a',
+                feedback: 'Es un término heredado de la telefonía, donde sí designaba las señales por encima de 4 kHz. En redes significa <strong>analógico</strong>, y no tiene que ver con el uso comercial actual de la palabra.'
+            },
+            {
+                topic: 'Banda base y banda ancha',
+                repaso: '#bandas',
+                text: 'Un operador de televisión por cable necesita cubrir decenas de kilómetros. ¿Qué tipo de coaxial usa y por qué?',
+                options: {
+                    a: 'Banda base, porque lo digital aguanta más distancia',
+                    b: 'Banda base, porque da más velocidad',
+                    c: 'Banda ancha, porque la señal analógica es menos crítica y permite tramos de hasta 100 km',
+                    d: 'Los dos por igual: la distancia no depende de eso'
+                },
+                answer: 'c',
+                feedback: 'Es el uso clásico del coaxial de <strong>banda ancha</strong>. La señal analógica se degrada de forma gradual, así que admite tramos muy largos con amplificadores.'
+            },
+            {
+                topic: 'Grosores',
+                repaso: '#grosores',
+                text: '¿Cuál de estas afirmaciones sobre el coaxial fino RG-58 es correcta?',
+                options: {
+                    a: 'Es el que se usa para la estructura troncal de la red',
+                    b: 'Tiene mayor inmunidad a las interferencias que el grueso',
+                    c: 'Su núcleo mide 2,6 mm',
+                    d: 'Es más fácil de instalar por su flexibilidad, pero más caro y con menor inmunidad'
+                },
+                answer: 'd',
+                feedback: 'Es el dato que sorprende: lleva menos material y cuesta más, porque se paga la flexibilidad. El troncal se hace con coaxial <strong>grueso</strong>, y 2,6 mm es el núcleo del RG-100.'
+            },
+            {
+                topic: 'Sistema óptico',
+                repaso: '#optico',
+                text: '¿Cuáles son los tres componentes de un sistema de transmisión óptico?',
+                options: {
+                    a: 'Emisor, repetidor y receptor',
+                    b: 'Fuente de luz, medio de transmisión y detector',
+                    c: 'Núcleo, revestimiento y cubierta',
+                    d: 'Conector, empalme y fusión'
+                },
+                answer: 'b',
+                feedback: 'Cuidado con la opción que enumera las tres partes de la <strong>fibra</strong>: eso es el medio, es decir, solo uno de los tres componentes del sistema.'
+            },
+            {
+                topic: 'Sistema óptico',
+                repaso: '#optico',
+                text: 'Un enlace de fibra necesita comunicación en los dos sentidos. ¿Cuántas fibras hacen falta como mínimo y por qué?',
+                options: {
+                    a: 'Una: la luz puede ir y volver por el mismo hilo',
+                    b: 'Cuatro, una por cada par',
+                    c: 'Ocho, como en el par trenzado',
+                    d: 'Dos, porque cada fibra tiene fuente en un extremo y detector en el otro: es símplex'
+                },
+                answer: 'd',
+                feedback: 'Por eso los conectores de fibra son casi siempre <strong>dúplex</strong>, con dos hilos: uno transmite y el otro recibe.'
+            },
+            {
+                topic: 'Modos',
+                repaso: '#modos',
+                text: 'En una fibra multimodo, ¿por qué se ensancha el pulso de luz a medida que avanza?',
+                options: {
+                    a: 'Porque los rayos siguen caminos de distinta longitud y llegan en instantes diferentes',
+                    b: 'Porque la luz pierde intensidad',
+                    c: 'Porque el revestimiento absorbe parte de la señal',
+                    d: 'Porque la fibra se calienta'
+                },
+                answer: 'a',
+                feedback: 'Es lo que limita su distancia y su velocidad: si el pulso se ensancha hasta solaparse con el siguiente, el receptor ya no distingue los bits. Las pérdidas de luz, en cambio, son casi nulas.'
+            },
+            {
+                topic: 'Modos',
+                repaso: '#modos',
+                text: 'Según el libro, la fibra multimodo tiene un núcleo de 100 µm. ¿Y la monomodo?',
+                options: { a: 'Un núcleo de 140 µm de diámetro', b: 'Un núcleo de 50 µm de radio', c: 'Un núcleo de 10 µm de radio', d: 'El mismo, pero con otro revestimiento' },
+                answer: 'c',
+                feedback: 'Radio de <strong>10 µm</strong>, con cubierta de 125 µm. Los 140 µm son la cubierta de la multimodo, y los 50 µm son el grosor aproximado de un cabello humano.'
+            },
+            {
+                topic: 'Cables de fibra',
+                repaso: '#cables',
+                text: 'Hay que tender fibra entre dos naves, por el exterior, sin terminaciones intermedias. ¿Qué tipo de cable encaja mejor?',
+                options: {
+                    a: 'Recubrimiento ajustado, porque es más flexible',
+                    b: 'Cable holgado: más barato por metro y pensado para exterior, con gel contra la humedad',
+                    c: 'Da igual: son equivalentes',
+                    d: 'Coaxial de banda ancha'
+                },
+                answer: 'b',
+                feedback: 'Su punto débil —que los conectores y empalmes salen caros— apenas pesa aquí, porque solo hay terminaciones en los dos extremos.'
+            },
+            {
+                topic: 'Uniones',
+                repaso: '#uniones',
+                text: 'Ordena de <strong>menor</strong> a <strong>mayor</strong> pérdida de luz las tres formas de unir dos fibras.',
+                options: {
+                    a: 'Conectores, empalme mecánico, fusión',
+                    b: 'Empalme mecánico, conectores, fusión',
+                    c: 'Fusión, empalme mecánico, conectores',
+                    d: 'Todas pierden lo mismo'
+                },
+                answer: 'c',
+                feedback: 'La <strong>fusión</strong> queda casi como una fibra única; el empalme mecánico pierde en torno al 10 %; los conectores, entre el 10 y el 20 %. La comodidad va justo al revés.'
+            },
+            {
+                topic: 'Uniones',
+                repaso: '#uniones',
+                text: 'El libro dice que muchas veces sale más rentable desechar varios kilómetros de fibra que empalmar tramos. ¿Qué demuestra eso?',
+                options: {
+                    a: 'Que la fibra es un medio de mala calidad',
+                    b: 'Que el cable de fibra es carísimo por metro',
+                    c: 'Que los empalmes no funcionan',
+                    d: 'Que en fibra el coste está sobre todo en el montaje, no en el cable'
+                },
+                answer: 'd',
+                feedback: 'Es la idea que atraviesa toda la semana: al comparar medios hay que contar el <strong>montaje</strong>, no el precio del metro.'
+            },
+            {
+                topic: 'Montaje',
+                repaso: '#montaje',
+                text: 'Un armario obliga a doblar la fibra en un radio de 10 mm. ¿Qué ocurre?',
+                options: {
+                    a: 'Nada, si el cable es de interior',
+                    b: 'Se pierde luz por la curva y la fibra puede romperse por dentro: el mínimo son 25 mm',
+                    c: 'Aumenta la diafonía con las fibras vecinas',
+                    d: 'Se invierte el sentido de transmisión'
+                },
+                answer: 'b',
+                feedback: 'Por debajo del radio mínimo la luz deja de rebotar hacia dentro y escapa. La diafonía, además, no existe en fibra: no hay campos que se induzcan entre hilos.'
+            },
+            {
+                topic: 'Presupuesto óptico',
+                repaso: '#presupuesto',
+                text: 'Un enlace de 3 km de fibra monomodo (0,4 dB/km) con dos pares de conectores (0,75 dB cada uno). ¿Cuánta pérdida acumula, sin contar margen?',
+                options: { a: '1,2 dB', b: '2,7 dB', c: '3,9 dB', d: '1,95 dB' },
+                answer: 'b',
+                feedback: '3 × 0,4 = 1,2 dB de fibra, más 2 × 0,75 = 1,5 dB de conectores: <strong>2,7 dB</strong>. Con el margen de 3 dB habría que contar 5,7 dB.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: 'teoria.html#criterios',
+                text: '<em>Repaso.</em> Una nave con maquinaria pesada necesita un enlace de 400 m entre dos puntos. ¿Qué medio encaja y por qué?',
+                options: {
+                    a: 'Par trenzado apantallado, que llega hasta 400 m',
+                    b: 'Coaxial de banda ancha, porque llega a 100 km',
+                    c: 'Fibra óptica: supera de largo los 100 m del par trenzado y no la afectan las interferencias electromagnéticas',
+                    d: 'Par trenzado UTP con un repetidor cada 100 m'
+                },
+                answer: 'c',
+                feedback: 'Dos criterios a la vez: <strong>distancia</strong> —ninguna categoría de par trenzado pasa de 100 m— y <strong>fiabilidad</strong> frente a la maquinaria. La fibra resuelve los dos de golpe.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

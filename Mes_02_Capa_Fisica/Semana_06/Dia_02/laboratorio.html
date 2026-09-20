@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: inspección, materiales y plano</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 6</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Material:</strong> tus cables · papel o FossFLOW</div>
+        <div class="info-item"><strong>Herramientas:</strong> ninguna obligatoria</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Primero <strong>inspeccionar</strong> los conectores que ya tienes: qué norma siguió quien los montó y
+            cuánto destrenzado dejó. Después <strong>presupuestar y dibujar</strong> el cableado de una oficina
+            pequeña, que es el trabajo real que sale de todo lo estudiado hoy.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Sin comprar nada</strong>
+            <p>Este laboratorio no necesita crimpadora ni conectores. Si los tienes, al final hay una
+            <strong>ampliación opcional</strong> con el montaje real; no cuenta para la nota.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Inspección de conectores (20 min)</h2>
+
+            <p>Coge un latiguillo y mira el conector <strong>por el lado plano</strong>, con la pestaña hacia abajo y
+            los pines hacia ti. El <strong>pin 1 queda a tu izquierda</strong>. Los ocho hilos se ven a través del
+            plástico transparente.</p>
+
+<pre><code>    pestaña abajo, pines hacia ti
+
+    ┌─┬─┬─┬─┬─┬─┬─┬─┐
+    │1│2│3│4│5│6│7│8│
+    └─┴─┴─┴─┴─┴─┴─┴─┘
+         └─ pestaña ─┘</code></pre>
+
+            <p>Anota el color que ves en el <strong>pin 1</strong> y en el <strong>pin 3</strong>. Con esos dos basta:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Pin 1</th><th>Pin 3</th><th>Norma usada</th></tr></thead>
+                <tbody>
+                    <tr><td>Blanco verde</td><td>Blanco naranja</td><td><strong>T568A</strong></td></tr>
+                    <tr><td>Blanco naranja</td><td>Blanco verde</td><td><strong>T568B</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Fíjate también en el <strong>trenzado</strong>: ¿hasta dónde llega antes de entrar en el conector?
+            En un latiguillo de fábrica bien hecho, los pares llegan trenzados casi hasta el borde del plástico.</p>
+
+            <h2>Parte 2 — Presupuestar una instalación (25 min)</h2>
+
+            <p>Una oficina con <strong>12 puestos</strong>, una toma por puesto. El armario va en el cuarto técnico.
+            Estos son los tramos medidos, en metros, del armario a cada puesto:</p>
+
+<pre><code>18  22  19  26  31  24  28  35  21  41  23  24
+                                     ↑ el más largo</code></pre>
+
+            <div class="destacado">
+                <strong>Reglas que necesitas</strong>
+                <ul>
+                    <li>El enlace completo no puede pasar de <strong>100 m</strong>: hasta <strong>90 m</strong> de
+                    cableado fijo y <strong>10 m</strong> repartidos entre los latiguillos de los dos extremos.</li>
+                    <li>Al cable siempre se le añade un <strong>10 % de holgura</strong> para curvas, reservas y
+                    errores de corte.</li>
+                    <li>El cable se vende en <strong>bobinas de 305 m</strong> (mil pies).</li>
+                    <li>Cada puesto necesita <strong>una roseta</strong> y <strong>un puerto de panel</strong>: dos
+                    conectores hembra.</li>
+                    <li>Cada puesto necesita <strong>dos latiguillos</strong>: uno de la roseta al equipo y otro del
+                    panel al switch.</li>
+                    <li>Los paneles y los switches se venden de <strong>24 puertos</strong>.</li>
+                </ul>
+            </div>
+
+            <h2>Parte 3 — El plano (25 min)</h2>
+
+            <p>Con los materiales calculados, dibuja el <strong>plano de un puesto completo</strong>: desde el
+            equipo del usuario hasta el switch, pasando por todo lo que hay en medio. Sirve un folio y un bolígrafo.</p>
+
+            <details class="ampliacion">
+                <summary>💡 Opcional: dibujarlo con FossFLOW</summary>
+                <div class="ampliacion-cuerpo">
+                    <p>Si prefieres entregarlo en digital, <a href="https://fossflow.apps.icarosoft.com/">FossFLOW</a>
+                    dibuja diagramas isométricos de red en el navegador
+                    (<a href="https://github.com/victortassinari/FossFLOW">código fuente</a>). Es
+                    <strong>opcional</strong>: lo que se evalúa es el plano, no la herramienta, y el papel basta.</p>
+                    <p>Dos avisos antes de usarla:</p>
+                    <ul>
+                        <li><strong>No guarda sola.</strong> La instancia pública trabaja en memoria de sesión: usa
+                        <em>Export File</em> o perderás el trabajo al cerrar la pestaña.</li>
+                        <li><strong>No uses «Server Storage».</strong> Ese botón sube tu diagrama al servidor de un
+                        tercero.</li>
+                    </ul>
+                    <p>Y no confundas herramientas: FossFLOW <strong>dibuja</strong>; Packet Tracer, que usarás más
+                    adelante, <strong>simula</strong>.</p>
+                </div>
+            </details>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <details class="ampliacion">
+            <summary>🧰 Ampliación opcional: si tienes crimpadora y conectores</summary>
+            <div class="ampliacion-cuerpo">
+                <p>Monta un latiguillo completo siguiendo los ocho pasos. No forma parte de la evaluación, pero es la
+                mejor forma de fijar el procedimiento.</p>
+                <ol>
+                    <li>Elige la norma y <strong>anótala</strong> antes de empezar. Usa la misma en los dos extremos.</li>
+                    <li>Mete la funda del conector en el cable <strong>antes de nada</strong>. Es el paso que todo el
+                    mundo olvida la primera vez.</li>
+                    <li>Retira unos 4 cm de funda. Si no tienes pelacables, con un cúter y mucho cuidado: si dañas el
+                    aislante de un hilo, corta y empieza otra vez.</li>
+                    <li>Destrenza <strong>lo mínimo</strong> y ordena los colores.</li>
+                    <li>Corta todos los hilos a la misma altura antes de introducirlos.</li>
+                    <li>Comprueba <strong>a contraluz</strong>, por la punta del conector, que los ocho hilos llegan
+                    al fondo y que los colores están en el orden correcto. <strong>Antes</strong> de engastar.</li>
+                    <li>Engasta a fondo, de una vez.</li>
+                    <li>Prueba el cable en un enlace real y mira la velocidad negociada con el comando de ayer.</li>
+                </ol>
+                <p><strong>Cuidado:</strong> los conectores son de un solo uso, así que compra unos cuantos de más. Y
+                no practiques cortando el cable por el que estás navegando.</p>
+            </div>
+        </details>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has identificado la norma con la que está montado al menos un conector real.</li>
+                <li>Has calculado cable, rosetas, conectores, latiguillos y panel de la instalación.</li>
+                <li>Has comprobado que ningún tramo supera el límite de longitud.</li>
+                <li>Tienes dibujado el recorrido completo de un puesto, en papel o en digital.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_01/laboratorio.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/laboratorio.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Laboratorio: inspección, materiales y plano',
+    subtitulo: 'Qué norma usó quien montó tus cables · presupuesto de una oficina de 12 puestos · el plano',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Inspección de tus conectores',
+            tiempo: '20 min',
+            enunciado: '<p>Con el conector a contraluz, pestaña abajo y el pin 1 a la izquierda.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> ¿Qué color ves en el <strong>pin 1</strong> de tu latiguillo?',
+                    ancho: '220px',
+                    placeholder: 'blanco naranja',
+                    explicacion: 'Si es blanco naranja, el montaje sigue la <strong>T568B</strong>, que es la más extendida en latiguillos comerciales. Si es blanco verde, es T568A.',
+                    pistas: ['Los hilos «blancos» llevan una raya del color de su par: míralos con luz detrás.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> Con la tabla de la parte 1, ¿qué <strong>norma</strong> siguió quien montó ese conector?',
+                    ancho: '180px',
+                    placeholder: 'T568B',
+                    explicacion: 'Comprueba el otro extremo del mismo cable: si coincide, es un <strong>cable directo</strong>; si no, tienes un cruzado en las manos.',
+                    pistas: ['Basta con los pines 1 y 3.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Mira los dos extremos del mismo cable. ¿Qué has encontrado?',
+                    libre: true,
+                    opciones: {
+                        a: 'La misma norma en los dos extremos: es un cable directo',
+                        b: 'Normas distintas: es un cable cruzado',
+                        c: 'No consigo distinguir los colores en uno de los extremos'
+                    },
+                    explicacion: 'Lo normal es encontrar la <strong>misma norma</strong> en los dos extremos. Un cruzado en un cable moderno sin etiquetar es justo el problema del que hablaba la teoría. Y no distinguir los colores también es un resultado: muchos conectores llevan la funda opaca.',
+                    pistas: ['No hay respuesta incorrecta: se registra lo que has observado.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Hasta dónde llega el trenzado de los pares antes de entrar en el conector?',
+                    libre: true,
+                    opciones: {
+                        a: 'Casi hasta el borde del conector: unos pocos milímetros sueltos',
+                        b: 'Se deshace un centímetro o más antes de entrar',
+                        c: 'No se aprecia: la funda o el protector lo tapan'
+                    },
+                    explicacion: 'En un latiguillo de fábrica el trenzado debería llegar prácticamente al conector. Si en el tuyo se deshace mucho antes, tienes delante el error del que habla el libro… fabricado en serie.',
+                    pistas: ['Compara con la figura del destrenzado de la teoría.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Comprobar las longitudes',
+            tiempo: '10 min',
+            enunciado: '<p>Antes de comprar nada, hay que verificar que la instalación es posible. Usa la lista de tramos de la parte 2.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> ¿Cuánto mide el tramo fijo más largo?',
+                    respuesta: 41,
+                    unidad: 'm',
+                    explicacion: 'Cuarenta y un metros, muy por debajo de los 90 m permitidos para el cableado fijo. La instalación es viable sin equipos intermedios.',
+                    pistas: ['Busca el mayor de los doce números.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Si ese puesto usara un latiguillo de 3 m y otro de 2 m en el armario, ¿cuánto mediría el <strong>enlace completo</strong>?',
+                    respuesta: 46,
+                    unidad: 'm',
+                    explicacion: '41 + 3 + 2 = <strong>46 m</strong>. El límite son 100 m contando todo, así que queda margen de sobra.',
+                    pistas: ['El enlace es el cableado fijo más los dos latiguillos.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Si un puesto nuevo quedara a 95 m del armario, ¿qué harías?',
+                    opciones: {
+                        a: 'Tirarlo igual: 95 es menos de 100',
+                        b: 'Usar cable de categoría superior, que llega más lejos',
+                        c: 'Llevarlo por fibra, o poner un armario intermedio: el cableado fijo no puede pasar de 90 m',
+                        d: 'Empalmar dos tramos de 50 m'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Con 95 m de tramo fijo ya no caben los latiguillos dentro de los 100 m del enlace. La categoría <strong>no cambia la distancia</strong>, y empalmar está prohibido. Las salidas reales son replantear la instalación o cambiar de medio, que es justo lo de mañana.',
+                    pistas: ['¿Cuántos metros del límite están reservados al cableado fijo?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: La lista de materiales',
+            tiempo: '18 min',
+            enunciado: '<p>Doce puestos, una toma cada uno. Calcula qué hay que comprar.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Suma de los doce tramos, en metros.',
+                    respuesta: 312,
+                    unidad: 'm',
+                    explicacion: '18+22+19+26+31+24+28+35+21+41+23+24 = <strong>312 m</strong> de cableado fijo.',
+                    pistas: ['Súmalos de dos en dos para no perderte.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Añadiendo el 10 % de holgura, ¿cuánto cable hay que prever?',
+                    respuesta: 343.2,
+                    tolerancia: 1,
+                    unidad: 'm',
+                    explicacion: '312 × 1,1 = <strong>343,2 m</strong>. Esa holgura cubre curvas, reservas dentro del armario y algún corte estropeado; sin ella, el último puesto siempre se queda a dos metros.',
+                    pistas: ['Multiplica por 1,1.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántas bobinas de 305 m hay que comprar?',
+                    respuesta: 2,
+                    unidad: 'bobinas',
+                    explicacion: 'Una bobina se queda corta por 38 m, así que hacen falta <strong>2</strong>. Es un resultado incómodo y muy real: sobra casi una bobina entera, y por eso conviene revisar el recorrido antes de comprar, por si algún tramo se puede acortar.',
+                    pistas: ['343,2 dividido entre 305, redondeando hacia arriba.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> ¿Cuántos conectores <strong>hembra</strong> en total, contando rosetas y puertos de panel?',
+                    respuesta: 24,
+                    unidad: 'conectores',
+                    explicacion: '12 rosetas + 12 puertos de panel = <strong>24</strong>. Cada tramo de cableado fijo tiene un conector hembra en cada punta.',
+                    pistas: ['Cada tramo tiene dos extremos, y los dos acaban en hembra.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> ¿Cuántos latiguillos hacen falta?',
+                    respuesta: 24,
+                    unidad: 'latiguillos',
+                    explicacion: 'Dos por puesto —roseta a equipo y panel a switch— son <strong>24</strong>. Estos sí se compran hechos: montarlos a mano sale más caro en tiempo y más propenso a errores.',
+                    pistas: ['Cuenta cuántos tramos móviles hay en el recorrido de un solo puesto.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>f)</strong> Para 12 puestos, ¿qué panel de parcheo comprarías?',
+                    opciones: {
+                        a: 'Uno de 24 puertos: es el formato estándar y deja doce libres para crecer',
+                        b: 'Uno de 12, exacto',
+                        c: 'Dos de 12',
+                        d: 'Ninguno: se conecta el cable directamente al switch'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Los paneles se fabrican en múltiplos estándar, y 24 es el habitual. Conectar el cableado fijo directamente al switch es mala práctica: cada movimiento obligaría a manipular el cable de pared en lugar de un latiguillo.',
+                    pistas: ['¿Qué tamaños de panel y de switch se venden normalmente?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: El plano y la documentación',
+            tiempo: '22 min',
+            enunciado: '<p>Dibuja primero, en papel o en FossFLOW, y después responde.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los elementos que atraviesa la señal desde el equipo del usuario hasta el switch.',
+                    elementos: [
+                        'Panel de parcheo',
+                        'Equipo del usuario',
+                        'Latiguillo del armario',
+                        'Roseta de pared',
+                        'Latiguillo del puesto',
+                        'Cableado fijo por la canaleta',
+                        'Switch'
+                    ],
+                    orden: [
+                        'Equipo del usuario',
+                        'Latiguillo del puesto',
+                        'Roseta de pared',
+                        'Cableado fijo por la canaleta',
+                        'Panel de parcheo',
+                        'Latiguillo del armario',
+                        'Switch'
+                    ],
+                    explicacion: 'Los dos latiguillos están en los extremos y el cableado fijo en el centro, entre la roseta y el panel. Ese cableado fijo es el que no se toca nunca: por eso todos los cambios se hacen moviendo latiguillos en el panel.',
+                    pistas: ['Empieza por el equipo y ve avanzando: ¿qué es lo primero que hay enchufado a él?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Describe tu plano: qué elementos has dibujado, cómo has etiquetado las tomas y qué datos has anotado para que otro técnico pueda trabajar con él dentro de dos años.',
+                    filas: 8,
+                    modelo: '<p>Un plano aprovechable incluye:</p><ul><li>El <strong>recorrido completo</strong>: equipo, latiguillo, roseta, cableado fijo, panel, latiguillo y switch.</li><li>Un <strong>código de etiquetado</strong> repetido en los dos extremos de cada enlace. Lo habitual es algo como <code>A-01</code>… <code>A-12</code>, escrito tanto en la roseta como en el puerto del panel, para que se pueda seguir un enlace sin comprobador.</li><li>La <strong>longitud de cada tramo</strong>, que es el dato que evita volver a medirlo todo cuando haya que mover un puesto.</li><li>La <strong>norma usada</strong>, T568A o T568B, y la <strong>categoría</strong> del cable instalado.</li><li>Dónde está el <strong>armario</strong> y por dónde van las canaletas, para no taladrar encima de un tramo.</li></ul><p>Lo que convierte un dibujo en documentación es que el etiquetado del plano <strong>coincida con el etiquetado físico</strong>. Un plano perfecto de una instalación sin etiquetas sirve de poco.</p>',
+                    rubrica: [
+                        'Dibuja los siete elementos del recorrido, no solo PC y switch',
+                        'Define un código de etiquetado y lo repite en roseta y panel',
+                        'Anota la longitud de los tramos',
+                        'Anota la norma de conexión y la categoría del cable',
+                        'Señala la ubicación del armario y el recorrido de las canaletas',
+                        'Menciona que el etiquetado físico debe coincidir con el plano'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>
