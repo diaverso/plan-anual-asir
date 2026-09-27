@@ -136,3 +136,24 @@ del trenzado es el mismo y no hacía falta una imagen nueva.
 
 Se quedan en ASCII: el orden de pines del conector visto a contraluz, el plano de la nave del
 laboratorio del Día 4 y los desgloses de decibelios.
+
+### Semana 6 · segunda tanda, completa
+
+Al revisar los bloques ASCII de la semana quedaron seis diagramas que también piden imagen: dos los
+detectó el usuario y cuatro salieron de auditar los 22 bloques restantes. Todos correctos a la
+primera. **Cuatro llegaron siendo JPEG con extensión `.png`**, como ya pasó en el Mes 1, así que la
+limpieza los convirtió a PNG de verdad: esos cuatro *engordan* un poco al convertirse, y aun así
+quedan por debajo de 160 KB porque venían a 1 024 px.
+
+| # | Archivo de destino | Dónde va |
+|--:|---|---|
+| 1 | `m02_s06_d02_conector_punto_debil.png` | D2 · el cable protegido salvo en el conector |
+| 2 | `m02_s06_d02_pines_pares.png` | D2 · qué par ocupa cada pin y por qué el 3 va partido |
+| 3 | `m02_s06_d02_orientacion_conector.png` | D2 · laboratorio: cómo mirar el conector para ver el pin 1 |
+| 4 | `m02_s06_d03_sistema_optico.png` | D3 · fuente, medio y detector |
+| 5 | `m02_s06_d04_plano_nave.png` | D4 · laboratorio: el plano de los cuatro tramos |
+| 6 | `m02_s06_d05_mapa_semana.png` | D5 · el mapa de la semana |
+
+Se confirma que **se quedan en ASCII**: las salidas de comandos, la ficha impresa del cable, los
+desgloses de decibelios, la lista de tramos medidos, los tres factores de la categoría y los
+bloques de respaldo de las figuras que ya existen.
