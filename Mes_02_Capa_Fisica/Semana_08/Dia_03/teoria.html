@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Comprobación y certificación del cableado</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 3 — Comprobación y certificación</h1>
+        <p>Los tres comprobadores · la reflectometría · NEXT, FEXT, ACR y pérdida por retorno · leer un informe</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 66 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 13 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 23 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 55 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Hoy volvemos al libro</strong>
+            Los dos días anteriores se apoyaban sobre todo en las normas. Hoy no: el libro dedica un
+            <strong>apartado entero</strong> a la comprobación del cableado, y casi todo lo que viene sale de ahí.
+            Lo que no, va marcado como siempre.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#porque">Por qué se comprueba</a></li>
+                <li><a href="#tipos">Los tres tipos de comprobadores</a></li>
+                <li><a href="#comose">Cómo se mide un enlace</a></li>
+                <li><a href="#reflectometria">La reflectometría: el TDR</a></li>
+                <li><a href="#basicos">Parámetros básicos</a></li>
+                <li><a href="#diafonia">La familia de la diafonía</a></li>
+                <li><a href="#retorno">Pérdida por retorno</a></li>
+                <li><a href="#informe">Cómo se lee un informe</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="porque">1. Por qué se comprueba</h2>
+
+            <p>El libro lo plantea en una frase que resume el trabajo de hoy. Cuando se realiza una instalación hay
+            que comprobar que:</p>
+
+            <div class="dato">
+                <strong>Las cuatro cosas que se verifican</strong>
+                <ul>
+                    <li>El cableado utilizado es <strong>correcto</strong>.</li>
+                    <li>Se ha usado una <strong>categoría adecuada</strong> a las velocidades que se van a
+                    alcanzar.</li>
+                    <li>Las <strong>conexiones no tienen deficiencias</strong>.</li>
+                    <li>Los <strong>niveles de ruido</strong> están en sus valores mínimos.</li>
+                </ul>
+            </div>
+
+            <p>Y añade un matiz importante: <strong>cuanto mayor sea la velocidad y la categoría</strong> para la
+            que se va a usar el cableado, <strong>mayores serán las exigencias</strong> de los valores medidos. No
+            existe «aprobar» a secas: se aprueba <strong>para una categoría</strong>.</p>
+
+            <div class="destacado">
+                <strong>La consecuencia práctica</strong>
+                <p>Un mismo enlace puede <strong>aprobar como categoría 5e y suspender como categoría 6</strong>,
+                sin que nadie haya tocado nada. Por eso, antes de certificar, hay que decirle al aparato
+                <strong>qué se pretende certificar</strong>: categoría y modo —enlace permanente o canal, como viste
+                el lunes—.</p>
+            </div>
+
+            <h2 id="tipos">2. Los tres tipos de comprobadores</h2>
+
+            <p>Los aparatos que miden todo esto se llaman genéricamente <strong>comprobadores de red</strong>, y los
+            hay para par trenzado con y sin apantallar, coaxial y fibra óptica. El libro distingue tres tipos según
+            lo que hacen:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tipo</th><th>Qué hace</th><th>Coste</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Comprobadores de continuidad</strong></td>
+                        <td>Solo comprueban si los cables están bien montados o tienen algún corte: si cada hilo <strong>ofrece continuidad o está cortado</strong>. Aquí entran los voltímetros y los multímetros digitales</td>
+                        <td>Muy reducido</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Comprobadores de cableado</strong></td>
+                        <td>Además de la continuidad, miden <strong>diafonía, atenuación y ruido</strong>. Los más avanzados monitorizan el tráfico y dan estadísticas de uso</td>
+                        <td>Medio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. TDR</strong><br><em>Reflector de Dominio del Tiempo</em></td>
+                        <td>Los más avanzados y caros. Detectan <strong>empalmes, nudos, radios de curvatura demasiado pronunciados y errores de impedancia</strong>, y miden longitud y tasa de propagación. Sobre todo: <strong>dicen en qué punto</strong> está la anomalía</td>
+                        <td>El mayor</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>El OTDR, para fibra</strong>
+                <p>El equivalente óptico se llama <strong>OTDR</strong>, <em>Optical Time Domain Reflector</em>.
+                Calcula la <strong>atenuación</strong> del tramo de cable y las <strong>pérdidas en los
+                conectores</strong>. Es el aparato que mediría de verdad aquel presupuesto óptico que calculaste en
+                la <a href="../../Semana_06/Dia_03/teoria.html#presupuesto">Semana 6</a>.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Comprobar no es certificar</strong>
+                Con el primer tipo se <strong>comprueba</strong>: hay cable y llega. Con el segundo y el tercero se
+                <strong>certifica</strong>: el enlace cumple los valores de una categoría concreta. Es la misma
+                distinción que viste en la Semana 6 entre comprobador y certificador, ahora con los tres escalones
+                completos.
+            </div>
+
+            <h2 id="comose">3. Cómo se mide un enlace</h2>
+
+            <p>El procedimiento es siempre el mismo, y el libro lo describe con precisión:</p>
+
+            <ol>
+                <li>Se coloca el aparato en <strong>un extremo</strong> del cable: es el <strong>extremo
+                cercano</strong>.</li>
+                <li>En el otro se conecta una <strong>sonda</strong> o <strong>unidad remota</strong>, que viene con
+                el equipo: es el <strong>extremo lejano</strong>.</li>
+                <li>Si el equipo o la sonda llevan el mismo tipo de conector que el punto donde hay que
+                conectarlos, se usa un <strong>latiguillo</strong>, asegurándose de que está en buenas condiciones
+                <strong>y no va a interferir con la prueba</strong>.</li>
+            </ol>
+
+<pre><code>   EXTREMO CERCANO                              EXTREMO LEJANO
+   [comprobador] ══════ enlace bajo prueba ══════ [sonda remota]
+        ▲                                               ▲
+   aquí se leen                              aquí se genera o
+   los resultados                            se recibe la señal</code></pre>
+
+            <div class="aviso">
+                <strong>El latiguillo de prueba importa</strong>
+                Si el latiguillo con el que conectas el certificador está en mal estado, sus defectos aparecerán en
+                el informe como si fueran del enlace. Los certificadores serios usan <strong>latiguillos de
+                referencia</strong> que se cambian periódicamente, precisamente por esto.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="reflectometria">4. La reflectometría: el TDR</h2>
+
+            <p>Esta es la técnica más potente de diagnóstico, y el libro la explica muy bien. El problema que
+            resuelve es concreto:</p>
+
+            <div class="destacado">
+                <strong>Lo que un comprobador normal no puede decirte</strong>
+                <p>Un comprobador convencional solo dice si hay un corte o, como mucho, detecta una anomalía
+                <strong>sin poder localizarla</strong>. Y eso es un inconveniente enorme cuando el problema obliga a
+                <strong>desmontar toda una instalación</strong> para encontrarlo.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Cómo funciona</strong>
+                <p>Una pequeña parte de la señal que circula por el cable <strong>rebota</strong> en el lugar donde
+                hay una anomalía y vuelve al extremo de origen. Midiendo <strong>el tiempo que tarda en
+                volver</strong>, el aparato calcula <strong>a qué distancia</strong> está esa anomalía.</p>
+            </div>
+
+            <p>Es exactamente el principio del eco: gritas, cuentas el tiempo hasta oír el rebote y deduces a qué
+            distancia está la pared. Aquí lo que viaja es una señal eléctrica y lo que se mide son nanosegundos.</p>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s08_d03_tdr.png"
+         width="1400" height="760" loading="lazy"
+         alt="Esquema de una medida con TDR: el aparato envía un pulso por el cable, el pulso avanza hasta una anomalía —un aplastamiento— donde parte de la señal se refleja y vuelve al aparato; debajo, la gráfica del tiempo muestra el pulso emitido y el eco recibido, con la conversión del tiempo transcurrido en distancia hasta la avería.">
+    <figcaption>El eco tarda lo que tarda: de ese tiempo sale la distancia exacta a la que está el problema.</figcaption>
+</figure>
+<pre><code>  pulso ──────────▶                        anomalía
+  [TDR] ═══════════════════════════════════╪═══════════
+        ◀────────── eco                     │
+                                       a 37,2 m
+        tiempo del eco ──▶ distancia de la avería</code></pre>
+
+            <p>Los equipos de alta precisión van más allá: no solo localizan un punto, sino que
+            <strong>representan un parámetro a lo largo de todo el cable</strong> en una gráfica, de modo que se ve
+            dónde empeora y cuánto.</p>
+
+            <h2 id="basicos">5. Parámetros básicos</h2>
+
+            <p>Cuando se certifica una instalación hay que medir una serie de parámetros. Estos son los cuatro más
+            directos:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Parámetro</th><th>Qué indica</th><th>Con qué se mide</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Continuidad</strong></td>
+                        <td>Si existe alguna <strong>rotura</strong> que impida que llegue señal al otro extremo</td>
+                        <td>Un simple comprobador de continuidad; con TDR se sabe además <strong>dónde</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mapeado de hilos</strong></td>
+                        <td>Si los hilos están montados correctamente o hay <strong>cortocircuitos</strong>. El libro subraya que es <strong>muy grave</strong> y de corrección prioritaria, porque impide que la información llegue</td>
+                        <td>También con un comprobador sencillo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resistencia</strong></td>
+                        <td>La resistencia eléctrica del cable. Un valor alto puede producir <strong>atenuación anormalmente alta</strong>, y suele venir de un defecto en los cables o en el montaje de los conectores</td>
+                        <td>Comprobador de cableado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Longitud</strong></td>
+                        <td>La distancia entre extremos. No debe exceder la del estándar: un exceso causa <strong>retardos</strong> que hacen fallar los protocolos, y <strong>atenuación</strong> que deteriora los mensajes</td>
+                        <td>Comprobador de cableado o TDR</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Un uso inesperado de la longitud</strong>
+                <p>El libro lo apunta y es una joya de diagnóstico: medir la longitud sirve también para
+                <strong>detectar rollos de cable sobrante escondidos dentro de los conductos</strong>. Si un tramo
+                que en el plano son 40 m mide 78, es que alguien dejó media bobina enrollada en el falso techo.</p>
+            </div>
+
+            <h3>Atenuación o pérdida por inserción</h3>
+
+            <p>Es la pérdida de energía de la señal al atravesar el medio, y ya la conoces desde la Semana 5. Se
+            calcula dividiendo la energía de entrada entre la de salida y <strong>se mide en decibelios</strong>. Lo
+            nuevo es saber <strong>qué la dispara</strong> en una instalación. El libro da tres causas:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Causa</th><th>Cómo se corrige</th></tr></thead>
+                <tbody>
+                    <tr><td>La <strong>longitud del enlace es excesiva</strong></td><td>Replantear el recorrido o el punto de distribución</td></tr>
+                    <tr><td>Los <strong>conectores no se han montado correctamente</strong></td><td>Rehacer la conectorización</td></tr>
+                    <tr><td>La <strong>temperatura es elevada</strong>, que influye especialmente en cables con PVC</td><td>Alejar el cable de fuentes de calor; en salas calientes, prever margen</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="diafonia">6. La familia de la diafonía</h2>
+
+            <p>La <strong>diafonía</strong> ya la conoces: la corriente que circula por un hilo crea un campo
+            electromagnético que interfiere con el hilo de al lado. El libro usa una imagen muy reconocible —oír
+            otra conversación de fondo en una llamada de teléfono fijo— y recuerda la regla de siempre:
+            <strong>cuanto mayor sea el trenzado, menor será la diafonía</strong>.</p>
+
+            <div class="dato">
+                <strong>Las dos causas de una diafonía alta, según el libro</strong>
+                <ul>
+                    <li>Que el cable <strong>no se ha mantenido trenzado al máximo en los conectores</strong>.</li>
+                    <li>Que la <strong>pantalla protectora se ha deteriorado o es de mala calidad</strong>.</li>
+                </ul>
+                <p>Las dos apuntan al montaje, que es justo lo que viste en la Semana 6 y el martes.</p>
+            </div>
+
+            <p>Para medirla no basta un solo número. Hay cuatro parámetros de esta familia:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Parámetro</th><th>Qué mide</th><th>¿Alto o bajo?</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>NEXT</strong><br><em>diafonía del extremo cercano</em></td>
+                        <td>La señal que se acopla en otro cable y <strong>vuelve en sentido contrario</strong> al de la señal original. Se mide en el <strong>extremo cercano</strong></td>
+                        <td><strong>Alto</strong>: cuanto más alto, menos diafonía</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FEXT</strong><br><em>diafonía del extremo lejano</em></td>
+                        <td>Lo mismo, pero con la señal acoplada que va <strong>en el mismo sentido</strong> y llega al otro extremo</td>
+                        <td><strong>Alto</strong> también</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ELFEXT</strong><br><em>igualdad de nivel de FEXT</em></td>
+                        <td><strong>No es una medida, es un cálculo</strong>: la diferencia entre la atenuación y el FEXT. Se inyecta señal en un par y se mide otro, así que en un cable de 4 pares salen <strong>12 medidas</strong></td>
+                        <td>Un valor <strong>bajo</strong> indica buena instalación</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ACR</strong><br><em>relación atenuación-diafonía</em></td>
+                        <td>La diferencia entre <strong>NEXT y atenuación</strong>. Dice si la señal es más fuerte que el ruido de fondo</td>
+                        <td><strong>Lo más alto posible</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Cómo retener cuál va alto y cuál bajo</strong>
+                <p><strong>NEXT, FEXT y ACR</strong> son <em>márgenes</em>: miden cuánto se diferencia la señal
+                buena del ruido, así que <strong>cuanto más altos, mejor</strong>. Un NEXT de 45 dB es mejor que uno
+                de 35.</p>
+                <p><strong>ELFEXT</strong> es la excepción que el libro señala: un valor <strong>bajo</strong> indica
+                una buena instalación del cableado.</p>
+                <p>Y ojo con la trampa de siempre: la <strong>atenuación</strong> no es un margen, es una pérdida.
+                Ahí cuanto <strong>más bajo</strong>, mejor.</p>
+            </div>
+
+            <p>Un ACR malo tiene dos posibles culpables, y el libro los nombra: <strong>una atenuación excesiva o
+            un NEXT excesivo</strong>. Es coherente, porque el ACR es la resta de los dos.</p>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s08_d03_next_fext.png"
+         width="1400" height="700" loading="lazy"
+         alt="Dos pares de un cable dibujados en paralelo. La señal entra por el par emisor desde la izquierda; una parte se acopla al par vecino y vuelve hacia la izquierda, donde está el comprobador, y eso se etiqueta como NEXT; otra parte se acopla y continúa hacia la derecha, hasta la sonda remota, y eso se etiqueta como FEXT.">
+    <figcaption>La misma diafonía medida en dos sitios: donde estás tú, NEXT; al otro lado, FEXT.</figcaption>
+</figure>
+<pre><code>  par emisor    ════════ señal ════════════════════▶
+                   ╲ se acopla          ╲ se acopla
+  par vecino    ◀═══╝ NEXT               ╚═══▶ FEXT
+                (vuelve al origen)      (llega al extremo lejano)
+                 ▲                                   ▲
+            comprobador                        sonda remota</code></pre>
+
+            <h2 id="retorno">7. Pérdida por retorno</h2>
+
+            <p>El último parámetro, y el que delata el trabajo del martes:</p>
+
+            <div class="dato">
+                <strong>Pérdida por retorno (<em>return loss</em>)</strong>
+                <p>Se produce por la <strong>diferencia de impedancia</strong> a lo largo de una línea. Esa
+                diferencia puede aparecer <strong>varias veces</strong> y produce un efecto de <strong>rebote</strong>
+                de parte de la señal, que vuelve al origen. Se mide en decibelios y su nivel aceptable depende del
+                medio.</p>
+            </div>
+
+            <p>Y el libro dice exactamente de dónde sale cuando es excesiva:</p>
+
+            <ul>
+                <li>Las <strong>longitudes de destrenzado</strong> de los cables en los conectores son
+                <strong>muy altas</strong>.</li>
+                <li><strong>No se ha mantenido hasta el extremo la pantalla protectora</strong>.</li>
+            </ul>
+
+            <div class="destacado">
+                <strong>Todo encaja</strong>
+                <p>Fíjate en que el destrenzado excesivo aparece como causa <strong>dos veces</strong>: en la
+                diafonía y en la pérdida por retorno. Es, con diferencia, el error de montaje que más caro sale en
+                una certificación, y es justo el que el libro señalaba en la Semana 6 como «el que se comete más a
+                menudo».</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Hasta dónde llega el libro</strong>
+                El libro avisa de que <strong>no es su propósito dar los valores máximos</strong> de estos
+                parámetros, y remite a los estándares de cableado. Así que en un examen de la asignatura hay que
+                saber <strong>qué es cada parámetro y qué lo estropea</strong>, no memorizar tablas de decibelios.
+                Los valores concretos los pone el certificador según la categoría elegida.
+            </div>
+
+            <h2 id="informe">8. Cómo se lee un informe</h2>
+
+            <div class="aviso">
+                <strong>Este apartado no sale del libro</strong>
+                El formato de los informes procede de los propios certificadores y de las normas de certificación.
+                Lo incluyo porque es lo que de verdad llega a las manos de un técnico, y porque sin saber leerlo,
+                todo lo anterior se queda en teoría.
+            </div>
+
+            <p>Un informe de certificación tiene siempre la misma estructura:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Sección</th><th>Qué contiene</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Cabecera</strong></td><td>Identificador del enlace, fecha, operador, modelo del certificador y <strong>norma y categoría</strong> contra la que se mide</td></tr>
+                    <tr><td><strong>Modo</strong></td><td><strong>Enlace permanente</strong> o <strong>canal</strong>: cambia los límites</td></tr>
+                    <tr><td><strong>Veredicto global</strong></td><td><strong>PASS</strong> o <strong>FAIL</strong>, a veces con un asterisco: <em>PASS*</em> significa que aprueba dentro del margen de incertidumbre del aparato</td></tr>
+                    <tr><td><strong>Tabla de parámetros</strong></td><td>Para cada uno: <strong>valor medido</strong>, <strong>límite</strong> y <strong>margen</strong>, casi siempre indicando el <strong>peor par</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La columna que hay que mirar: el margen</strong>
+                <p>El <strong>margen</strong> es la distancia entre lo medido y el límite. Si es positivo, cumple.
+                Y no da igual cuánto: un enlace que aprueba con <strong>0,3 dB</strong> de margen está al borde, y
+                cualquier cambio —una reconexión, calor en verano, el envejecimiento— puede tirarlo. Un margen
+                sano ronda varios decibelios.</p>
+            </div>
+
+            <p>Y lo más útil de todo: la relación entre <strong>qué parámetro falla</strong> y <strong>qué se hizo
+            mal</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Parámetro que falla</th><th>Causa más probable</th><th>Qué hacer</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Mapeado de hilos</strong></td><td>Conector mal montado, pares cruzados o par partido</td><td>Rehacer los conectores</td></tr>
+                    <tr><td><strong>Longitud</strong></td><td>Recorrido excesivo, o un <strong>rollo de cable</strong> sobrante escondido</td><td>Medir con TDR y replantear o retirar la reserva</td></tr>
+                    <tr><td><strong>Atenuación</strong></td><td>Longitud excesiva, conectores mal montados o temperatura alta</td><td>Las tres del libro, en ese orden</td></tr>
+                    <tr><td><strong>NEXT</strong></td><td><strong>Destrenzado excesivo</strong> en los conectores o pantalla deteriorada</td><td>Rehacer las terminaciones cuidando el destrenzado</td></tr>
+                    <tr><td><strong>ACR</strong></td><td>Atenuación excesiva o NEXT excesivo: es la resta de ambos</td><td>Mirar cuál de los dos está mal y corregir ese</td></tr>
+                    <tr><td><strong>Pérdida por retorno</strong></td><td>Destrenzado alto, pantalla no mantenida hasta el extremo, curvas cerradas o cable aplastado</td><td>Revisar terminaciones y recorrido; el TDR localiza el punto</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Se comprueba que el cableado es correcto, la <strong>categoría adecuada</strong>, las
+                    conexiones sin deficiencias y el ruido mínimo. <strong>Más categoría, más exigencia</strong>.</li>
+                    <li>Tres comprobadores: <strong>continuidad</strong> · <strong>cableado</strong> (añade
+                    diafonía, atenuación y ruido) · <strong>TDR</strong> (añade localización). En fibra,
+                    <strong>OTDR</strong>.</li>
+                    <li>Se mide con el aparato en el <strong>extremo cercano</strong> y la <strong>sonda</strong> en
+                    el lejano.</li>
+                    <li>La <strong>reflectometría</strong> mide el tiempo que tarda el eco en volver y con él
+                    calcula <strong>a qué distancia</strong> está la avería.</li>
+                    <li>Parámetros básicos: <strong>continuidad, mapeado, resistencia y longitud</strong>. La
+                    longitud delata además <strong>rollos escondidos</strong>.</li>
+                    <li><strong>Atenuación</strong>: por longitud excesiva, conectores mal montados o
+                    temperatura.</li>
+                    <li><strong>NEXT, FEXT y ACR</strong>, cuanto más altos mejor; <strong>ELFEXT</strong>, bajo.
+                    En un cable de 4 pares, ELFEXT son <strong>12 medidas</strong>.</li>
+                    <li><strong>Pérdida por retorno</strong>: destrenzado alto o pantalla no mantenida hasta el
+                    extremo.</li>
+                    <li>En un informe, lo que se mira es el <strong>margen</strong>, no solo el PASS.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«El cable aprueba la certificación»</td><td>Aprueba <strong>para una categoría y un modo</strong> concretos. Cambia la categoría y puede suspender</td></tr>
+                    <tr><td>«Con el comprobador de 20 euros ya está certificado»</td><td>Ese solo mira <strong>continuidad</strong>. Certificar exige medir diafonía y atenuación</td></tr>
+                    <tr><td>«NEXT alto es malo»</td><td>Al revés: NEXT alto significa <strong>poca diafonía</strong>. Es un margen, no una pérdida</td></tr>
+                    <tr><td>«ELFEXT cuanto más alto mejor, como los demás»</td><td>Es la excepción: un valor <strong>bajo</strong> indica buena instalación</td></tr>
+                    <tr><td>«Si el informe dice PASS, ya está»</td><td>Hay que mirar el <strong>margen</strong>: aprobar por 0,3 dB es aprobar en precario</td></tr>
+                    <tr><td>«Un comprobador normal me dice dónde está el fallo»</td><td>Solo el <strong>TDR</strong> localiza: los demás dicen que algo pasa, no dónde</td></tr>
+                    <tr><td>«La longitud solo sirve para ver si pasa de 90 m»</td><td>También delata <strong>rollos de cable</strong> escondidos en los conductos</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>16 preguntas · 23 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Tres informes de certificación: uno aprueba y dos suspenden. Hay que leer los números, dar el
+            veredicto y deducir qué se hizo mal durante la instalación.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 3</strong></a> (72 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 4</strong>
+            <p><strong>Etiquetado y documentación</strong>: lo que convierte una instalación correcta en una
+            instalación mantenible, y el dosier que se entrega al cliente.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> mira si los cables de tu casa o tu centro tienen etiquetas.
+            ¿Sabrías decir a dónde va cada uno sin seguirlo con la mano?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/teoria.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/teoria.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Una instalación de 60 enlaces da problemas intermitentes en uno de ellos. El comprobador de continuidad dice que todo está bien. ¿Qué aparato pedirías y por qué?',
+                modelo: 'Un <strong>TDR</strong>, un reflectómetro de dominio del tiempo. El comprobador de continuidad solo dice si cada hilo llega de un extremo al otro, y aquí evidentemente llega: el enlace funciona, aunque mal. Lo que no puede decir es <strong>qué</strong> está degradando la señal ni, sobre todo, <strong>dónde</strong>.</p><p>El TDR sí detecta anomalías como empalmes, nudos, radios de curvatura demasiado pronunciados o errores de impedancia, y además indica <strong>a qué distancia</strong> del extremo cercano se producen. Lo consigue midiendo el <strong>eco</strong>: una parte de la señal rebota en la anomalía y vuelve, y del tiempo que tarda se deduce la distancia.</p><p>Eso cambia por completo el coste de la reparación. Sin localización habría que revisar el recorrido entero o incluso desmontar la instalación; con un TDR que dice «anomalía a 37 metros», se va directamente al punto: probablemente una brida apretada, una curva forzada o un cable pinzado en ese tramo.',
+                puntos: [
+                    'Descarta el comprobador de continuidad y explica su límite',
+                    'Elige el TDR y nombra alguna de las anomalías que detecta',
+                    'Explica el principio del eco y la conversión tiempo-distancia',
+                    'Valora el ahorro práctico de localizar la avería'
+                ]
+            },
+            {
+                pregunta: 'En un informe, el enlace suspende por NEXT en el par 3-6, con un margen de −4 dB, y el mapeado de hilos aparece correcto. ¿Qué ha pasado durante la instalación y qué harías?',
+                modelo: 'Que el mapeado esté bien descarta el error grosero —hilos cruzados o cortados— y deja el foco en la <strong>geometría</strong> del cable. Un NEXT insuficiente significa <strong>demasiada diafonía en el extremo cercano</strong>, y el libro da dos causas: que el cable <strong>no se mantuvo trenzado al máximo en los conectores</strong> o que la <strong>pantalla se ha deteriorado o es de mala calidad</strong>.</p><p>Que el fallo esté justo en el <strong>par 3-6</strong> es una pista añadida: es el par «partido» entre pines no contiguos, el más fácil de destrenzar de más al conectorizar, como viste en la Semana 6. También podría ser un <strong>par partido</strong> propiamente dicho, que da mapeado correcto y NEXT desastroso.</p><p>Qué haría: primero, <strong>rehacer las dos terminaciones</strong> de ese enlace cuidando el destrenzado —menos de 13 mm, y en categoría 6 unos 6 mm— y comprobando que la pantalla, si la hay, hace contacto. Después, <strong>volver a certificar</strong>. Si sigue fallando, mediría con TDR para ver si el problema está en un punto intermedio del recorrido en lugar de en los extremos.',
+                puntos: [
+                    'Interpreta que el mapeado correcto descarta errores de conexión gruesos',
+                    'Cita las dos causas del libro para una diafonía alta',
+                    'Relaciona el par 3-6 con el destrenzado o con el par partido',
+                    'Propone rehacer terminaciones con el destrenzado controlado',
+                    'Prevé recertificar y, si persiste, usar TDR'
+                ]
+            },
+            {
+                pregunta: 'Un instalador entrega 40 enlaces: 38 en PASS con márgenes de 4 a 7 dB, y 2 en PASS con 0,2 dB de margen. El cliente pregunta si puede darlos todos por buenos. ¿Qué respondes?',
+                modelo: 'Que formalmente los 40 <strong>aprueban</strong>, pero que los dos de 0,2 dB no están en la misma situación que los demás y conviene tratarlos aparte.</p><p>El <strong>margen</strong> es la distancia entre lo medido y el límite, y con dos décimas de decibelio ese enlace está <strong>al borde</strong>. Cualquier cosa lo tira: el calor del verano —que el propio libro cita como causa de atenuación, sobre todo en cables con PVC—, el envejecimiento, una reconexión, o simplemente que el día de la medida las condiciones fueran algo mejores que la media. Además, el certificador tiene su propia <strong>incertidumbre</strong> de medida, y por eso algunos informes marcan esos casos con un asterisco.</p><p>Mi recomendación sería: aceptar los 38, y en los 2 ajustados <strong>investigar por qué</strong> están tan justos comparados con el resto. Casi siempre hay una razón identificable: son los más largos, tienen una terminación peor hecha o pasan por un recorrido caliente. Rehacer sus conectores suele devolverlos al rango del resto y cuesta muy poco comparado con una avería intermitente dentro de dos años.',
+                puntos: [
+                    'Reconoce que técnicamente los 40 aprueban',
+                    'Explica qué es el margen y por qué 0,2 dB es precario',
+                    'Cita factores que pueden tumbarlo: temperatura, envejecimiento, reconexión',
+                    'Menciona la incertidumbre del aparato',
+                    'Propone investigar y rehacer esos dos enlaces en lugar de rechazar la obra'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué cuatro cosas se comprueban en una instalación?', dorso: 'Cableado <strong>correcto</strong>, <strong>categoría adecuada</strong>, conexiones <strong>sin deficiencias</strong> y <strong>ruido mínimo</strong>.' },
+            { frente: 'Los tres tipos de comprobadores', dorso: 'De <strong>continuidad</strong> · de <strong>cableado</strong> (diafonía, atenuación y ruido) · <strong>TDR</strong> (localiza la anomalía).' },
+            { frente: '¿Qué es un OTDR?', dorso: 'El TDR óptico: calcula la <strong>atenuación</strong> del tramo de fibra y las <strong>pérdidas en los conectores</strong>.' },
+            { frente: '¿Cómo se conecta un certificador?', dorso: 'El aparato en el <strong>extremo cercano</strong> y la <strong>sonda o unidad remota</strong> en el lejano.' },
+            { frente: '¿Cómo localiza un TDR una avería?', dorso: 'Parte de la señal <strong>rebota</strong> en la anomalía; midiendo el <strong>tiempo del eco</strong> calcula la distancia.' },
+            { frente: '¿Qué indica el mapeado de hilos?', dorso: 'Si los hilos están bien montados o hay cortocircuitos. El libro lo llama <strong>muy grave</strong> y de corrección prioritaria.' },
+            { frente: 'Un uso poco evidente de medir la longitud', dorso: 'Detectar <strong>rollos de cable sobrante</strong> escondidos dentro de los conductos.' },
+            { frente: 'Las tres causas de atenuación alta', dorso: '<strong>Longitud excesiva</strong>, <strong>conectores mal montados</strong> y <strong>temperatura elevada</strong>, sobre todo en PVC.' },
+            { frente: 'Las dos causas de diafonía alta', dorso: 'No mantener el <strong>trenzado al máximo</strong> en los conectores, o <strong>pantalla</strong> deteriorada o de mala calidad.' },
+            { frente: 'NEXT frente a FEXT', dorso: '<strong>NEXT</strong>: la señal acoplada que vuelve al extremo cercano. <strong>FEXT</strong>: la que llega al extremo lejano. Los dos, <strong>altos</strong>.' },
+            { frente: '¿Qué es ELFEXT y cómo se interpreta?', dorso: 'Un <strong>cálculo</strong>: atenuación menos FEXT. Son <strong>12 medidas</strong> en un cable de 4 pares, y un valor <strong>bajo</strong> indica buena instalación.' },
+            { frente: '¿Qué es el ACR y de qué depende?', dorso: 'La diferencia entre <strong>NEXT y atenuación</strong>: dice si la señal supera al ruido. Cuanto más alto, mejor.' },
+            { frente: 'Causas de una pérdida por retorno excesiva', dorso: '<strong>Destrenzado</strong> muy alto en los conectores o <strong>pantalla no mantenida</strong> hasta el extremo.' },
+            { frente: '¿Qué columna se mira en un informe, además del PASS?', dorso: 'El <strong>margen</strong>: aprobar por 0,3 dB es aprobar en precario.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 3: Comprobación y certificación',
+        tiempo: '23 minutos',
+        minutos: 23,
+        questions: [
+            {
+                topic: 'Por qué se comprueba',
+                repaso: '#porque',
+                text: 'Según el libro, ¿qué ocurre con las exigencias de la certificación al subir la categoría y la velocidad?',
+                options: {
+                    a: 'Se mantienen iguales',
+                    b: 'Se relajan, porque el cable es mejor',
+                    c: 'Son mayores: cuanta más velocidad y categoría, más exigentes los valores',
+                    d: 'Solo cambian para la fibra'
+                },
+                answer: 'c',
+                feedback: 'Por eso un mismo enlace puede <strong>aprobar como Cat 5e y suspender como Cat 6</strong> sin que nadie haya tocado nada.'
+            },
+            {
+                topic: 'Tipos de comprobadores',
+                repaso: '#tipos',
+                text: '¿Qué mide un comprobador de continuidad?',
+                options: {
+                    a: 'Si cada hilo ofrece continuidad o está cortado',
+                    b: 'Diafonía y atenuación',
+                    c: 'La distancia a la que está una anomalía',
+                    d: 'La tasa de propagación del cable'
+                },
+                answer: 'a',
+                feedback: 'Nada más. Es el más sencillo y barato: aquí entran los voltímetros y los multímetros digitales.'
+            },
+            {
+                topic: 'Tipos de comprobadores',
+                repaso: '#tipos',
+                text: '¿Qué añade un comprobador de cableado sobre uno de continuidad?',
+                options: {
+                    a: 'Localiza las averías',
+                    b: 'Mide diafonía, atenuación y ruido',
+                    c: 'Funciona con fibra óptica',
+                    d: 'Mide el radio de curvatura'
+                },
+                answer: 'b',
+                feedback: 'Y los más avanzados hacen también monitorización del tráfico, con estadísticas de uso y mensajes perdidos.'
+            },
+            {
+                topic: 'Tipos de comprobadores',
+                repaso: '#tipos',
+                text: 'De estas capacidades, ¿cuál es exclusiva de un TDR?',
+                options: {
+                    a: 'Medir la atenuación',
+                    b: 'Comprobar la continuidad',
+                    c: 'Detectar diafonía',
+                    d: 'Indicar en qué punto del cable está la anomalía'
+                },
+                answer: 'd',
+                feedback: 'Es su gran aportación, y la que evita desmontar una instalación entera para encontrar un fallo.'
+            },
+            {
+                topic: 'Tipos de comprobadores',
+                repaso: '#tipos',
+                text: '¿Qué calcula un OTDR en un tramo de fibra?',
+                options: {
+                    a: 'La atenuación del cable y las pérdidas en los conectores',
+                    b: 'El número de fibras del cable',
+                    c: 'La longitud de onda de la fuente',
+                    d: 'El índice de refracción del núcleo'
+                },
+                answer: 'a',
+                feedback: 'Es el aparato que mediría de verdad el presupuesto óptico que calculaste en la Semana 6.'
+            },
+            {
+                topic: 'Cómo se mide',
+                repaso: '#comose',
+                text: 'Al certificar un enlace, ¿qué se coloca en el extremo lejano?',
+                options: {
+                    a: 'Otro certificador idéntico',
+                    b: 'Un switch',
+                    c: 'Una sonda o unidad remota, incluida con el aparato',
+                    d: 'Nada: se mide desde un solo extremo'
+                },
+                answer: 'c',
+                feedback: 'El certificador va en el <strong>extremo cercano</strong> y la sonda en el <strong>lejano</strong>: es lo que permite medir NEXT y FEXT por separado.'
+            },
+            {
+                topic: 'Reflectometría',
+                repaso: '#reflectometria',
+                text: '¿En qué se basa la prueba de reflectometría?',
+                options: {
+                    a: 'En comparar dos cables idénticos',
+                    b: 'En medir el tiempo que tarda en volver la parte de la señal que rebota en la anomalía',
+                    c: 'En inyectar luz y medir el color',
+                    d: 'En medir la resistencia del cable'
+                },
+                answer: 'b',
+                feedback: 'Es el principio del eco: del tiempo de vuelta sale la distancia. Por eso el TDR puede decir «anomalía a 37 metros».'
+            },
+            {
+                topic: 'Parámetros básicos',
+                repaso: '#basicos',
+                text: 'Un enlace mide 78 m cuando en el plano son 42 m. ¿Qué sospechas?',
+                options: {
+                    a: 'Que el certificador está mal calibrado',
+                    b: 'Que el plano está a otra escala',
+                    c: 'Que hay un rollo de cable sobrante escondido en el conducto',
+                    d: 'Que el cable es de otra categoría'
+                },
+                answer: 'c',
+                feedback: 'El libro lo apunta expresamente: medir la longitud sirve también para detectar <strong>rollos en el interior de los conductos</strong>.'
+            },
+            {
+                topic: 'Parámetros básicos',
+                repaso: '#basicos',
+                text: '¿Cuál de estas NO es una de las tres causas de atenuación excesiva que da el libro?',
+                options: {
+                    a: 'La longitud del enlace es excesiva',
+                    b: 'Los conectores no se han montado correctamente',
+                    c: 'La temperatura es elevada',
+                    d: 'El cable pasa cerca de una línea eléctrica'
+                },
+                answer: 'd',
+                feedback: 'Eso produciría <strong>ruido e interferencias</strong>, no atenuación. La atenuación es pérdida de energía por el camino.'
+            },
+            {
+                topic: 'Parámetros básicos',
+                repaso: '#basicos',
+                text: 'El mapeado de hilos falla en un enlace. ¿Con qué prioridad se corrige?',
+                options: {
+                    a: 'Prioritaria: es un error muy grave que impide que la información llegue',
+                    b: 'Baja: solo afecta al rendimiento',
+                    c: 'Media: se corrige en la siguiente revisión',
+                    d: 'Ninguna: se puede compensar con la configuración del switch'
+                },
+                answer: 'a',
+                feedback: 'Son las palabras del libro: «muy grave» y de corrección <strong>prioritaria</strong>, porque impide la comunicación.'
+            },
+            {
+                topic: 'Diafonía',
+                repaso: '#diafonia',
+                text: '¿Qué diferencia hay entre NEXT y FEXT?',
+                options: {
+                    a: 'NEXT se mide en cobre y FEXT en fibra',
+                    b: 'NEXT mide la señal acoplada que vuelve al extremo cercano; FEXT, la que llega al extremo lejano',
+                    c: 'NEXT es un cálculo y FEXT una medida',
+                    d: 'NEXT se mide en dB y FEXT en metros'
+                },
+                answer: 'b',
+                feedback: 'La misma diafonía, medida en dos sitios distintos. Los dos se quieren <strong>altos</strong>.'
+            },
+            {
+                topic: 'Diafonía',
+                repaso: '#diafonia',
+                text: 'En un cable de cuatro pares, ¿cuántas medidas distintas de ELFEXT existen?',
+                options: { a: '4', b: '8', c: '12', d: '16' },
+                answer: 'c',
+                feedback: 'Se inyecta señal en un par y se mide otro, así que salen <strong>12</strong> combinaciones. Y recuerda: ELFEXT no es una medida, es un cálculo.'
+            },
+            {
+                topic: 'Diafonía',
+                repaso: '#diafonia',
+                text: 'El ACR de un enlace es demasiado bajo. ¿Qué puede estar pasando?',
+                options: {
+                    a: 'Que la longitud sea insuficiente',
+                    b: 'Que la resistencia sea baja',
+                    c: 'Que el mapeado esté cruzado',
+                    d: 'Que la atenuación sea excesiva o que el NEXT lo sea: el ACR es la diferencia entre ambos'
+                },
+                answer: 'd',
+                feedback: 'Por eso, ante un ACR malo, lo primero es mirar cuál de los dos términos se ha ido: no se corrige el ACR directamente.'
+            },
+            {
+                topic: 'Pérdida por retorno',
+                repaso: '#retorno',
+                text: '¿Qué produce la pérdida por retorno?',
+                options: {
+                    a: 'La diferencia de impedancia en la línea, que hace rebotar parte de la señal',
+                    b: 'El exceso de longitud',
+                    c: 'La temperatura ambiente',
+                    d: 'El número de pares del cable'
+                },
+                answer: 'a',
+                feedback: 'Y esa diferencia puede aparecer <strong>varias veces</strong> a lo largo del cable: cada punto donde cambia la geometría es un rebote.'
+            },
+            {
+                topic: 'Leer el informe',
+                repaso: '#informe',
+                text: 'Un enlace aprueba con un margen de 0,2 dB. ¿Cómo lo interpretas?',
+                options: {
+                    a: 'Igual que cualquier otro PASS: cumple y punto',
+                    b: 'Aprueba, pero al borde: conviene revisarlo, porque el calor, el envejecimiento o una reconexión pueden tumbarlo',
+                    c: 'Hay que rechazar toda la instalación',
+                    d: 'Significa que el certificador está averiado'
+                },
+                answer: 'b',
+                feedback: 'El margen importa tanto como el veredicto. Un enlace al límite hoy es una avería intermitente dentro de dos años.'
+            },
+            {
+                topic: 'Recuperación · Día 2',
+                repaso: '../Dia_02/teoria.html#tirado',
+                text: '<em>Repaso.</em> Durante el tirado se apretaron mucho las bridas. ¿Qué parámetro lo delatará?',
+                options: {
+                    a: 'La continuidad',
+                    b: 'El mapeado de hilos',
+                    c: 'La longitud',
+                    d: 'La pérdida por retorno, porque el aplastamiento cambia la impedancia en esos puntos'
+                },
+                answer: 'd',
+                feedback: 'Y un TDR indicaría además <strong>a qué distancia</strong> está cada brida culpable, que es justo lo que ahorra horas de búsqueda.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

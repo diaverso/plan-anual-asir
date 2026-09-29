@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: monta el armario</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">66 min</span></div>
+        <div class="info-item"><strong>Material:</strong> calculadora y un metro o una cinta</div>
+        <div class="info-item"><strong>Permisos:</strong> sin administrador</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Tienes el material de una planta de <strong>48 puestos</strong> y hay que meterlo en un armario:
+            calcular las unidades, elegir el tamaño, repartir los elementos y comprobar que las canaletas
+            previstas admiten todos los cables. Al final, medirás un espacio real para ver si ese armario cabría.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>El encargo (10 min)</h2>
+
+            <p>Planta de oficinas con <strong>48 puestos de trabajo</strong>, una toma por puesto. El material
+            previsto es este:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Elemento</th><th>Cantidad</th><th>Altura</th></tr></thead>
+                <tbody>
+                    <tr><td>Panel de parcheo de 24 puertos</td><td>2</td><td>1U cada uno</td></tr>
+                    <tr><td>Pasahilos</td><td>2</td><td>1U cada uno</td></tr>
+                    <tr><td>Switch de 24 puertos</td><td>2</td><td>1U cada uno</td></tr>
+                    <tr><td>Bandeja para el equipo del operador</td><td>1</td><td>1U</td></tr>
+                    <tr><td>Regleta de alimentación</td><td>1</td><td>1U</td></tr>
+                    <tr><td>SAI</td><td>1</td><td><strong>2U</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Datos para los cálculos</strong>
+                <ul>
+                    <li><strong>1 U = 4,45 cm</strong>; ancho normalizado, <strong>19 pulgadas</strong> (48,26 cm).</li>
+                    <li>Hay que dejar libre entre un <strong>20 y un 30 %</strong> del armario.</li>
+                    <li>Cable de <strong>6 mm</strong> de diámetro: <strong>28,3 mm²</strong> de sección.</li>
+                    <li>Ocupación máxima de canalización: <strong>40 %</strong>.</li>
+                    <li>Medidas comerciales de armario: 12U, 16U, 18U, 22U, 27U, 42U.</li>
+                </ul>
+            </div>
+
+            <h2>Parte 2 — El reparto (20 min)</h2>
+
+            <p>Coloca los elementos con las cuatro reglas del día: lo pesado abajo, panel y switch emparejados con
+            su pasahilos, espacio libre reservado y aire circulando.</p>
+
+<pre><code>   ┌──────────────────────┐   ← arriba: llega el cableado fijo
+   │                      │
+   │                      │
+   │                      │
+   │                      │
+   │                      │
+   └──────────────────────┘   ← abajo: lo más pesado</code></pre>
+
+            <h2>Parte 3 — Medir un espacio real (16 min)</h2>
+
+            <p>Busca un sitio donde podría ir un armario: un hueco de pasillo, un altillo, una parte del trastero.
+            Y mide tres cosas con un metro o una cinta:</p>
+
+            <ol>
+                <li><strong>Ancho disponible.</strong> Un armario de 19 pulgadas necesita más de 48,26 cm: la
+                carcasa añade unos centímetros por cada lado, así que cuenta con <strong>60 cm</strong>.</li>
+                <li><strong>Fondo disponible.</strong> Y no solo el del armario: hace falta poder abrir la puerta y
+                trabajar.</li>
+                <li><strong>Altura libre.</strong> Compárala con la que has calculado.</li>
+            </ol>
+
+            <div class="aviso">
+                <strong>El error de medir solo el armario</strong>
+                Un armario de 60 cm de fondo no cabe en un hueco de 60 cm. Hacen falta además unos
+                <strong>10 cm por detrás</strong> para los cables y el aire, y espacio por delante para abrir la
+                puerta y trabajar. Medir «justo» es la forma más habitual de comprar un armario que no entra.
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has calculado las unidades ocupadas y el tamaño de armario necesario.</li>
+                <li>Has repartido los elementos justificando el orden.</li>
+                <li>Has comprobado si la canalización prevista admite los 48 cables.</li>
+                <li>Has medido un espacio real y sabes si el armario cabría con sus holguras.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_01/laboratorio.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/laboratorio.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Laboratorio: monta el armario',
+    subtitulo: 'Calcular las unidades · repartir los elementos · comprobar la canalización · medir el hueco',
+    tiempo: '66 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Las cuentas del armario',
+            tiempo: '18 min',
+            enunciado: '<p>Con el material del encargo y los datos de arriba.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> ¿Cuántas U ocupa todo el material?',
+                    respuesta: 10,
+                    unidad: 'U',
+                    explicacion: '2 paneles + 2 pasahilos + 2 switches + bandeja + regleta = 8U, más 2U del SAI: <strong>10 U</strong>.',
+                    pistas: ['Cuenta el SAI como 2 y el resto como 1.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Dejando libre un 25 %, ¿cuántas U debe tener el armario como mínimo? Al entero superior.',
+                    respuesta: 14,
+                    tolerancia: 1,
+                    unidad: 'U',
+                    explicacion: 'Las 10 U ocupadas son el 75 %: 10 ÷ 0,75 = 13,3 → <strong>14 U</strong>.',
+                    pistas: ['Divide entre 0,75.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> De las medidas comerciales disponibles, ¿cuál comprarías? Responde en U.',
+                    respuesta: 16,
+                    unidad: 'U',
+                    explicacion: 'El de <strong>16U</strong> es el primero que cumple. Con él quedan 6 U libres, un 37 %: margen de sobra para otro panel con su switch y su pasahilos.',
+                    pistas: ['La lista de medidas está en los datos: 12, 16, 18, 22, 27, 42.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Altura útil de ese armario, en centímetros. Al entero.',
+                    respuesta: 71,
+                    tolerancia: 2,
+                    unidad: 'cm',
+                    explicacion: '16 × 4,45 = <strong>71,2 cm</strong> de altura útil, sin contar la carcasa ni las patas.',
+                    pistas: ['Unidades por 4,45 cm.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> ¿Por qué no comprar el de 12U, que también parece suficiente?',
+                    opciones: {
+                        a: 'Porque 12U no es medida comercial',
+                        b: 'Porque 10 U ocupadas sobre 12 dejan solo un 17 % libre: por debajo del margen recomendado y sin sitio para crecer',
+                        c: 'Porque no admite switches de 24 puertos',
+                        d: 'Porque los armarios de 12U no llevan puerta'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Cabría, pero quedaría lleno desde el primer día. Añadir 24 puestos más exigiría 3 U —panel, pasahilos y switch— que ya no hay.',
+                    pistas: ['Calcula qué porcentaje libre deja el de 12U.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: El reparto',
+            tiempo: '16 min',
+            enunciado: '<p>Coloca los elementos con las cuatro reglas del día.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los elementos <strong>de arriba abajo</strong>.',
+                    elementos: [
+                        'SAI',
+                        'Panel 1',
+                        'Pasahilos 1',
+                        'Switch 1',
+                        'Panel 2',
+                        'Pasahilos 2',
+                        'Switch 2',
+                        'Bandeja del equipo del operador',
+                        'Espacio libre',
+                        'Regleta de alimentación'
+                    ],
+                    orden: [
+                        'Panel 1',
+                        'Pasahilos 1',
+                        'Switch 1',
+                        'Panel 2',
+                        'Pasahilos 2',
+                        'Switch 2',
+                        'Bandeja del equipo del operador',
+                        'Espacio libre',
+                        'Regleta de alimentación',
+                        'SAI'
+                    ],
+                    explicacion: 'Arriba los dos conjuntos de panel-pasahilos-switch, porque ahí llega el cableado fijo; después la bandeja; el espacio libre en medio-abajo, y al final la alimentación con el SAI como último elemento, por peso. Otras variantes son defendibles siempre que respeten las cuatro reglas; esta es la que corrige el ejercicio.',
+                    pistas: ['Empieza por donde termina el cableado fijo y acaba por lo que más pesa.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué el pasahilos va entre el panel y el switch, y no debajo de los dos?',
+                    opciones: {
+                        a: 'Porque así guía los latiguillos justo donde nacen y no cuelgan ni se doblan',
+                        b: 'Porque pesa poco',
+                        c: 'Porque necesita ventilación',
+                        d: 'Porque lo exige la norma de rack'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Los latiguillos van del panel al switch, y el pasahilos tiene que estar <strong>en medio del recorrido</strong> para hacer su trabajo.',
+                    pistas: ['¿Por dónde pasa el latiguillo que va del panel al switch?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un compañero propone poner los dos paneles juntos arriba y los dos switches juntos debajo. ¿Qué inconveniente tiene?',
+                    opciones: {
+                        a: 'Ninguno: es más ordenado visualmente',
+                        b: 'Que el armario no lo permite',
+                        c: 'Que los latiguillos del panel de arriba tendrán que recorrer todo el bloque hasta su switch, con más longitud y peor orden',
+                        d: 'Que los switches se calientan más juntos'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Agrupar por tipo parece ordenado y produce más desorden: lo que se agrupa es <strong>cada panel con su switch</strong>.',
+                    pistas: ['Piensa por dónde tendrían que ir los 24 latiguillos del panel superior.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: La canalización de la planta',
+            tiempo: '16 min',
+            enunciado: '<p>Los 48 cables tienen que llegar al armario. Cable de 6 mm: <strong>28,3 mm²</strong> por cable, ocupación máxima <strong>40 %</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Sección útil necesaria para los 48 cables, en mm².',
+                    respuesta: 1358,
+                    tolerancia: 20,
+                    unidad: 'mm²',
+                    explicacion: '48 × 28,3 = <strong>1 358 mm²</strong>.',
+                    pistas: ['Cables por sección de cada uno.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Sección <strong>total</strong> que debe tener la canalización, en mm².',
+                    respuesta: 3396,
+                    tolerancia: 60,
+                    unidad: 'mm²',
+                    explicacion: '1 358 ÷ 0,40 = <strong>3 396 mm²</strong>. Recuerda: lo calculado antes era solo el 40 %.',
+                    pistas: ['Divide entre 0,4.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál de estas canaletas sirve para el tramo común?',
+                    opciones: {
+                        a: 'Una de 40 × 40 mm, que da 1 600 mm²',
+                        b: 'Una de 60 × 40 mm, que da 2 400 mm²',
+                        c: 'Una de 60 × 60 mm, que da 3 600 mm²',
+                        d: 'Una de 40 × 25 mm, que da 1 000 mm²'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Es la única que supera los 3 396 mm² necesarios. Las demás obligarían a repartir el recorrido en dos o tres canaletas paralelas, que también es una solución válida.',
+                    pistas: ['Compara cada sección con el resultado del apartado anterior.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> En realidad, los 48 cables solo van juntos en el tramo final, junto al armario. ¿Qué implica eso?',
+                    opciones: {
+                        a: 'Que la canalización puede ir estrechándose a medida que se aleja del armario, porque cada vez lleva menos cables',
+                        b: 'Que todo el recorrido debe ser de 60 × 60',
+                        c: 'Que no hace falta calcular la ocupación',
+                        d: 'Que hay que usar bandeja obligatoriamente'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'La canalización se dimensiona <strong>por tramos</strong>: el tronco cercano al armario es el que más carga, y los ramales finales pueden ser mucho más pequeños.',
+                    pistas: ['¿Cuántos cables pasan por el último metro antes de una roseta?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: El hueco real',
+            tiempo: '16 min',
+            enunciado: '<p>Mide con un metro o una cinta el sitio que hayas elegido.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>a)</strong> <strong>Ancho</strong> disponible en el hueco, en centímetros.',
+                    ancho: '140px',
+                    placeholder: '75',
+                    explicacion: 'Un armario de 19 pulgadas necesita al menos <strong>60 cm</strong> de ancho con su carcasa. Si has medido menos, ese hueco no vale.',
+                    pistas: ['Mide de pared a pared, en el punto más estrecho.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>b)</strong> <strong>Fondo</strong> disponible, en centímetros.',
+                    ancho: '140px',
+                    placeholder: '80',
+                    explicacion: 'Al fondo del armario hay que sumarle unos <strong>10 cm por detrás</strong> para cables y aire, más espacio por delante para abrir la puerta.',
+                    pistas: ['Mide desde la pared hasta donde acabaría el armario.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Con lo que has medido, ¿cabría un armario de 16U de pie o mural?',
+                    libre: true,
+                    opciones: {
+                        a: 'Sí, con holgura suficiente por detrás y por delante',
+                        b: 'Sí, pero justo: habría que buscar un modelo de fondo reducido',
+                        c: 'No cabe: el hueco es demasiado estrecho o poco profundo',
+                        d: 'No he podido medirlo'
+                    },
+                    explicacion: 'Medir «justo» es la forma más habitual de comprar un armario que luego no entra o que no se puede abrir. Los fabricantes dan varios fondos precisamente por esto.',
+                    pistas: ['No hay respuesta incorrecta: se registra tu medida.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>d)</strong> Escribe la <strong>ficha del armario</strong> que propondrías para esta planta: tamaño, reparto, canalización y los requisitos del emplazamiento.',
+                    filas: 9,
+                    modelo: '<p><strong>Armario:</strong> 16U de 19 pulgadas, con puerta y cerradura. Ocupa 10 U y deja 6 libres, un 37 %, suficiente para crecer en otros 24 puestos —panel, pasahilos y switch: 3 U— y todavía sobra margen. Fondo mínimo de 60 cm, comprobando el equipo más profundo, y con unos 10 cm libres por detrás para cables y ventilación.</p><p><strong>Reparto, de arriba abajo:</strong> panel 1, pasahilos, switch 1; panel 2, pasahilos, switch 2; bandeja del equipo del operador; el espacio libre; la regleta de alimentación; y el <strong>SAI abajo del todo</strong>, por ser lo más pesado. Cada panel queda junto a su switch para que los latiguillos sean cortos y pasen por su pasahilos.</p><p><strong>Canalización:</strong> el tramo troncal, junto al armario, debe admitir los 48 cables: <strong>1 358 mm²</strong> útiles, es decir, unos <strong>3 400 mm²</strong> de sección total al 40 %. Sirve una canaleta de 60 × 60 mm o dos de 60 × 40 en paralelo. Los ramales pueden ir estrechándose conforme se alejan del armario.</p><p><strong>Emplazamiento:</strong> hace falta <strong>puesta a tierra</strong> del armario, una línea eléctrica protegida para el SAI, <strong>ventilación</strong> —natural si la sala es fresca, forzada si es un hueco cerrado—, <strong>cierre con llave</strong> y espacio para trabajar por delante y por detrás. Conviene también un punto de luz y un enchufe libre para herramientas.</p>',
+                    rubrica: [
+                        'Propone un tamaño de armario coherente con las U calculadas',
+                        'Justifica el margen libre y el crecimiento futuro',
+                        'Detalla el reparto respetando las cuatro reglas',
+                        'Dimensiona la canalización con las cifras correctas',
+                        'Menciona la posibilidad de estrechar los ramales',
+                        'Incluye tierra, alimentación, ventilación, cierre y espacio de trabajo'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

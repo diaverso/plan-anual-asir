@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Ejercicios: los subsistemas del cableado</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">76 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 5 es el que hace de verdad un diseñador: <strong>dimensionar una planta entera</strong>
+            desde los metros cuadrados hasta las bobinas de cable. Se hace en cadena, y un error al principio se
+            arrastra hasta el final.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/ejercicios.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Ejercicios',
+    subtitulo: 'Subsistemas · estrella jerárquica · distancias · enlace y canal · dimensionar una planta',
+    tiempo: '76 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Los seis subsistemas',
+            tiempo: '12 min',
+            enunciado: '<p>Cada parte del edificio tiene su nombre y su función.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los subsistemas <strong>desde la calle hasta el usuario</strong>.',
+                    elementos: [
+                        'Cableado horizontal',
+                        'Acometida o entrada de servicios',
+                        'Área de trabajo',
+                        'Cableado vertical o backbone',
+                        'Sala de equipos',
+                        'Cuarto de telecomunicaciones'
+                    ],
+                    orden: [
+                        'Acometida o entrada de servicios',
+                        'Sala de equipos',
+                        'Cableado vertical o backbone',
+                        'Cuarto de telecomunicaciones',
+                        'Cableado horizontal',
+                        'Área de trabajo'
+                    ],
+                    explicacion: 'Dos son <strong>tramos de cable</strong> —el vertical y el horizontal— y los otros cuatro son <strong>lugares</strong>. Alternan: lugar, cable, lugar, cable, lugar.',
+                    pistas: ['Empieza por donde entra el operador en el edificio.']
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Empareja cada subsistema con lo que contiene.',
+                    izquierda: [
+                        'Sala de equipos',
+                        'Cuarto de telecomunicaciones',
+                        'Cableado horizontal',
+                        'Área de trabajo'
+                    ],
+                    derecha: [
+                        'Servidores y el repartidor principal del edificio',
+                        'El armario de planta con sus paneles de parcheo',
+                        'El cable fijo que va del panel a cada roseta',
+                        'La roseta, el latiguillo y el equipo del usuario'
+                    ],
+                    pares: {
+                        'Sala de equipos': 'Servidores y el repartidor principal del edificio',
+                        'Cuarto de telecomunicaciones': 'El armario de planta con sus paneles de parcheo',
+                        'Cableado horizontal': 'El cable fijo que va del panel a cada roseta',
+                        'Área de trabajo': 'La roseta, el latiguillo y el equipo del usuario'
+                    },
+                    explicacion: 'Cuidado con confundir la <strong>sala de equipos</strong>, que es una por edificio, con el <strong>cuarto de telecomunicaciones</strong>, que hay uno por planta o zona.',
+                    pistas: ['Uno es del edificio entero y otro, de una planta.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> ¿Cómo se llama la tarea transversal que no es un lugar, y que consiste en etiquetar y documentar la instalación?',
+                    respuestas: ['administración', 'administracion', 'la administración', 'documentación', 'documentacion'],
+                    explicacion: 'La <strong>administración</strong>: el etiquetado y la documentación. Es el tema del jueves, y lo que separa una instalación profesional de un montón de cables.',
+                    pistas: ['Es lo que permite que otro técnico entienda la instalación.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: La estrella jerárquica',
+            tiempo: '11 min',
+            enunciado: '<p>Cómo se conectan los subsistemas entre sí.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Marca <strong>todas</strong> las reglas ciertas de la topología en estrella jerárquica.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Cada toma cuelga de un solo armario de planta',
+                        b: 'Los armarios de planta pueden unirse entre sí para dar redundancia',
+                        c: 'Cada armario de planta cuelga de la sala de equipos',
+                        d: 'Se admite como mucho un nivel intermedio entre la sala de equipos y la toma',
+                        e: 'El cableado no debe tener bucles'
+                    },
+                    respuesta: ['a', 'c', 'd', 'e'],
+                    explicacion: 'La redundancia se resuelve con <strong>equipos y protocolos</strong>, no cruzando cables entre armarios: el cableado tiene que ser previsible y documentable.',
+                    pistas: ['Cuatro de las cinco. La falsa propone algo que rompe la jerarquía.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué la norma prohíbe los bucles en el cableado?',
+                    opciones: {
+                        a: 'Porque los cables se calientan',
+                        b: 'Porque el cableado es pasivo y debe ser previsible y documentable; la redundancia la dan los equipos',
+                        c: 'Porque los bucles aumentan la atenuación',
+                        d: 'Porque lo impide el panel de parcheo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un cable no decide nada: transporta. Si hay dos caminos físicos, quien tiene que elegir es un switch con su protocolo, no la instalación.',
+                    pistas: ['¿Puede un cable decidir por dónde enviar los datos?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> La estrella jerárquica es una topología…',
+                    opciones: {
+                        a: 'Lógica: describe cómo circulan los datos',
+                        b: 'De protocolo',
+                        c: 'Física: describe por dónde van los cables',
+                        d: 'De direccionamiento'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Sobre esa estrella física se puede montar cualquier cosa lógica: VLAN, agregación de enlaces o caminos redundantes entre switches.',
+                    pistas: ['Recuerda la distinción del Mes 1 entre topología física y lógica.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Distancias',
+            tiempo: '14 min',
+            enunciado: '<p>Con los <strong>90 m</strong> de cableado fijo, los <strong>10 m</strong> de latiguillos y la regla práctica: distancia en planta <strong>+ 20 %</strong> y <strong>3 m</strong> por cada cambio de altura.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Una toma está a 40 m del armario en planta, con dos cambios de altura. ¿Qué longitud de cable cabe esperar, en metros?',
+                    respuesta: 54,
+                    tolerancia: 1,
+                    unidad: 'm',
+                    explicacion: '40 × 1,2 = 48, más 6 m por los dos cambios: <strong>54 m</strong>. Entra con holgura.',
+                    pistas: ['Primero el 20 %, después los cambios de altura.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Otra toma está a 68 m en planta, también con dos cambios de altura. ¿Cuántos metros de cable?',
+                    respuesta: 87.6,
+                    tolerancia: 1,
+                    unidad: 'm',
+                    explicacion: '68 × 1,2 = 81,6, más 6: <strong>87,6 m</strong>. Cabe, pero a menos de tres metros del límite: ese punto hay que medirlo de verdad antes de darlo por bueno.',
+                    pistas: ['Mismo método que en el apartado anterior.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Una tercera toma da 96 m estimados. ¿Qué haces?',
+                    opciones: {
+                        a: 'Tirarla igual: la norma tiene margen de seguridad',
+                        b: 'Usar categoría 6A, que aguanta más distancia',
+                        c: 'Poner un repetidor a mitad de camino',
+                        d: 'Replantear: mover el armario, crear un segundo punto de distribución o llevar ese tramo por fibra'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'La categoría <strong>no da distancia</strong> y los repetidores no forman parte de un cableado estructurado. Lo que se replantea es la ubicación del armario.',
+                    pistas: ['¿Alguna categoría de cobre supera los 100 m de enlace?']
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>d)</strong> Completa la regla de las distancias.',
+                    frase: 'El cableado horizontal fijo admite como máximo {{0}} metros. A eso se suman {{1}} metros de latiguillos, repartidos normalmente entre el área de trabajo y el armario, lo que da un enlace completo de {{2}} metros.',
+                    respuestas: [
+                        ['90', 'noventa'],
+                        ['10', 'diez'],
+                        ['100', 'cien']
+                    ],
+                    explicacion: 'Tres cifras que hay que tener automatizadas: <strong>90 + 10 = 100</strong>.',
+                    pistas: ['La suma da una cifra redonda.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Enlace permanente y canal',
+            tiempo: '13 min',
+            enunciado: '<p>Dos formas de medir el mismo tramo, con límites distintos.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la comparación.',
+                    esquina: 'Aspecto',
+                    cabecera: ['Enlace permanente', 'Canal'],
+                    filas: [
+                        {
+                            etiqueta: 'Longitud máxima',
+                            celdas: [
+                                { respuestas: ['90 m', '90'], placeholder: 'metros' },
+                                { respuestas: ['100 m', '100'], placeholder: 'metros' }
+                            ]
+                        },
+                        {
+                            etiqueta: '¿Incluye los latiguillos?',
+                            celdas: [
+                                { respuestas: ['no'], placeholder: 'sí/no' },
+                                { respuestas: ['sí', 'si'], placeholder: 'sí/no' }
+                            ]
+                        },
+                        {
+                            etiqueta: '¿Quién lo mide habitualmente?',
+                            celdas: [
+                                { respuestas: ['el instalador', 'instalador'], placeholder: '¿quién?' },
+                                { fijo: 'El administrador, al diagnosticar' }
+                            ]
+                        },
+                        {
+                            etiqueta: '¿Cuál es más exigente?',
+                            celdas: [
+                                { respuestas: ['sí', 'si', 'más exigente', 'mas exigente'], placeholder: 'sí/no' },
+                                { respuestas: ['no', 'menos exigente'], placeholder: 'sí/no' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'El enlace permanente tiene <strong>menos elementos</strong>, así que se le toleran menos pérdidas. Por eso un tramo puede aprobar como canal y suspender como enlace permanente.',
+                    pistas: ['El que incluye los latiguillos es el más largo y el menos exigente.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué el instalador certifica el enlace permanente y no el canal?',
+                    opciones: {
+                        a: 'Porque es más rápido de medir',
+                        b: 'Porque el canal no se puede medir',
+                        c: 'Porque es de lo único de lo que responde: los latiguillos los pone y los cambia el cliente',
+                        d: 'Porque el canal solo se aplica a la fibra'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Un latiguillo malo no es culpa del instalador, y se sustituye en diez segundos. Lo que va dentro de la pared, no.',
+                    pistas: ['¿Qué parte de la instalación queda bajo el control del instalador?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un enlace mide 94 m de canal y 88 m de enlace permanente. ¿Qué se puede decir?',
+                    opciones: {
+                        a: 'Cumple las dos longitudes: 88 ≤ 90 y 94 ≤ 100',
+                        b: 'No cumple ninguna',
+                        c: 'Cumple canal pero no enlace permanente',
+                        d: 'No se puede saber sin conocer la categoría'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'En longitud cumple. Otra cosa es que apruebe en los <strong>demás parámetros</strong>: la longitud es solo uno de los que se certifican, como verás el miércoles.',
+                    pistas: ['Compara cada cifra con su límite correspondiente.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Dimensionar una planta',
+            tiempo: '14 min',
+            enunciado: '<p>Una planta diáfana de <strong>400 m²</strong>. Áreas de trabajo de <strong>10 m²</strong> y <strong>dos tomas</strong> por área. La longitud media estimada de cada tramo es de <strong>35 m</strong>, se añade un <strong>10 %</strong> de holgura y el cable viene en bobinas de <strong>305 m</strong>. Los paneles de parcheo son de <strong>24 puertos</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> ¿Cuántas áreas de trabajo salen?',
+                    respuesta: 40,
+                    unidad: 'áreas',
+                    explicacion: '400 / 10 = <strong>40 áreas de trabajo</strong>.',
+                    pistas: ['Superficie total entre superficie de cada área.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Cuántas tomas hay que instalar?',
+                    respuesta: 80,
+                    unidad: 'tomas',
+                    explicacion: '40 × 2 = <strong>80 tomas</strong>. Cada una es un enlace que habrá que certificar.',
+                    pistas: ['Dos por área.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Metros de cable necesarios, con el 10 % de holgura incluido.',
+                    respuesta: 3080,
+                    tolerancia: 20,
+                    unidad: 'm',
+                    explicacion: '80 × 35 = 2 800 m, más el 10 %: <strong>3 080 m</strong>.',
+                    pistas: ['Tomas por longitud media, y después la holgura.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> ¿Cuántas bobinas de 305 m hay que comprar?',
+                    respuesta: 11,
+                    unidad: 'bobinas',
+                    explicacion: '3 080 / 305 = 10,1, así que <strong>11 bobinas</strong>. Y conviene pedir alguna de más: el sobrante de cada bobina rara vez se aprovecha entero.',
+                    pistas: ['Redondea siempre hacia arriba.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> ¿Cuántos paneles de parcheo de 24 puertos hacen falta?',
+                    respuesta: 4,
+                    unidad: 'paneles',
+                    explicacion: '80 / 24 = 3,33 → <strong>4 paneles</strong>, que dan 96 puertos y dejan 16 libres para crecer. Justo lo que interesa.',
+                    pistas: ['Redondea hacia arriba, como con las bobinas.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>f)</strong> El cliente propone poner una sola toma por área para ahorrar. ¿Qué le dices?',
+                    opciones: {
+                        a: 'Que es buena idea: se ahorra la mitad del cable',
+                        b: 'Que el ahorro real es pequeño, porque lo caro es abrir y canalizar, y añadir la segunda toma después costará como la primera',
+                        c: 'Que la norma lo prohíbe expresamente',
+                        d: 'Que entonces habrá que usar categoría superior'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El cable y la roseta son una parte menor del presupuesto. La mano de obra y la obra civil se pagan igual, se tire un cable o dos por el mismo recorrido.',
+                    pistas: ['¿Qué partida del presupuesto no se duplica al poner dos tomas en vez de una?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Justificar el diseño',
+            tiempo: '12 min',
+            enunciado: '<p>Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>a)</strong> Un edificio de <strong>cuatro plantas</strong> de 500 m² cada una. Te preguntan si pueden poner <strong>un único armario</strong> en la planta baja para todo el edificio y ahorrarse los de cada planta. <strong>Responde y justifica</strong>.',
+                    filas: 8,
+                    modelo: '<p>No es viable, y el motivo es la <strong>distancia</strong>. Desde un armario en la planta baja, el cableado horizontal tendría que llegar a tomas situadas tres plantas más arriba y en el extremo opuesto del edificio. Con plantas de 500 m² y la regla práctica —distancia en planta más un 20 %, más unos 3 m por cada cambio de altura— es fácil superar los <strong>90 m</strong> de cableado fijo en buena parte de los puntos. Y la categoría del cable no cambia ese límite.</p><p>Hay un segundo motivo, de diseño: la norma organiza el edificio en <strong>estrella jerárquica</strong> con un cuarto de telecomunicaciones por planta o zona precisamente para que los recorridos horizontales sean cortos y el sistema sea manejable. Un solo armario significaría cientos de cables convergiendo en un punto, canalizaciones verticales enormes y una avería en un punto afectando a todo.</p><p>Lo correcto es un <strong>armario por planta</strong>, unidos a la sala de equipos por el <strong>cableado vertical</strong>, normalmente en fibra. Si alguna planta es muy extensa, incluso dos armarios en esa planta. El ahorro que se busca se pierde igualmente en canalización vertical y en metros de cobre.</p>',
+                    rubrica: [
+                        'Rechaza la propuesta por la distancia máxima del cableado horizontal',
+                        'Aplica la regla práctica con los cambios de altura',
+                        'Recuerda que la categoría no aumenta la distancia',
+                        'Invoca la estructura en estrella jerárquica y el armario por planta',
+                        'Propone la solución correcta con backbone de fibra'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Explica en pocas líneas, para un cliente no técnico, <strong>por qué el cableado se diseña pensando en el edificio y no en la red actual</strong>.',
+                    filas: 6,
+                    modelo: '<p>Porque son cosas con vidas muy distintas. Los equipos de red —los switches, los ordenadores, el router— se cambian cada cuatro o cinco años, y eso es sencillo: se desenchufan y se enchufan otros. El <strong>cableado va dentro de la pared</strong> y dura quince o veinte años; cambiarlo significa volver a abrir techos y tabiques, con la obra y el corte de servicio que eso supone.</p><p>Por eso se instala una infraestructura <strong>genérica</strong>, que no depende de qué red se monte encima: la misma sirve para los ordenadores de hoy, para el teléfono, para las cámaras de seguridad y para lo que venga dentro de diez años. Y por eso se deja margen —alguna toma de más, algo de espacio libre en las canaletas y en el armario—: hacerlo mientras la pared está abierta cuesta muy poco, y hacerlo después cuesta como empezar de nuevo.</p>',
+                    rubrica: [
+                        'Contrapone la vida útil del cableado y la de los equipos',
+                        'Explica que cambiar el cable implica obra',
+                        'Describe la infraestructura como genérica y válida para varios servicios',
+                        'Justifica el margen por el coste del acceso',
+                        'Usa lenguaje comprensible para alguien no técnico'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

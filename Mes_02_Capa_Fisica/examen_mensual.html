@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Mensual 2 — Capa Física</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../assets/estudio.css">
+    <style>
+        /* ---- Repaso de fallos del mes: autocontenido en esta página ---- */
+        .repaso-mes {
+            background: var(--info-bg);
+            border-left: 5px solid var(--info-bd);
+            border-radius: 8px;
+            padding: 22px 24px;
+            margin-bottom: 34px;
+        }
+        .repaso-mes h2 {
+            color: var(--info-txt);
+            font-size: 1.35em;
+            margin: 0 0 10px;
+            border: none;
+            padding: 0;
+        }
+        .repaso-mes .intro,
+        .repaso-mes .vacio {
+            color: var(--info-txt);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .repaso-mes .aviso-borrado {
+            color: var(--texto-tenue);
+            font-size: 0.86em;
+            margin-top: 14px;
+            line-height: 1.5;
+        }
+        details.repaso-dia {
+            background: var(--superficie);
+            border: 1px solid var(--borde);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        details.repaso-dia > summary {
+            cursor: pointer;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--texto);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            list-style: none;
+        }
+        details.repaso-dia > summary::-webkit-details-marker { display: none; }
+        details.repaso-dia > summary:hover { background: var(--superficie-alt); }
+        details.repaso-dia .cuantas {
+            background: var(--mal-bg);
+            color: var(--mal-txt);
+            border-radius: 12px;
+            padding: 2px 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .repaso-item {
+            border-top: 1px solid var(--borde);
+            padding: 14px 16px;
+        }
+        .repaso-item .preg { font-weight: 600; color: var(--texto); margin-bottom: 6px; }
+        .repaso-item .sol { color: var(--ok-txt); background: var(--ok-bg); border-radius: 6px; padding: 6px 10px; margin-bottom: 6px; }
+        .repaso-item .porque { color: var(--texto-suave); font-size: 0.93em; line-height: 1.55; }
+        .repaso-item .volver { display: inline-block; margin-top: 8px; font-size: 0.88em; color: var(--enlace, var(--primario-txt)); }
+
+        /* ---- Parte práctica ---- */
+        .bloque-titulo {
+            margin: 42px 0 18px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primario);
+            color: var(--texto);
+        }
+        .bloque-titulo h2 { margin: 0 0 4px; font-size: 1.6em; }
+        .bloque-titulo p { margin: 0; color: var(--texto-suave); }
+
+        .rubrica-check { list-style: none; padding: 0; margin: 10px 0 0; }
+        .rubrica-check li {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 7px 0;
+            border-bottom: 1px dashed var(--borde);
+            line-height: 1.5;
+        }
+        .rubrica-check li:last-child { border-bottom: none; }
+        .rubrica-check input { margin-top: 4px; flex-shrink: 0; width: 17px; height: 17px; accent-color: var(--primario); }
+        .puntos-ej { font-size: 0.9em; color: var(--texto-suave); margin-top: 10px; }
+
+        .nota-final {
+            margin-top: 34px;
+            background: var(--superficie-alt);
+            border: 2px solid var(--primario);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+        .nota-final h2 { margin: 0 0 12px; color: var(--texto); }
+        .nota-final .cifra { font-size: 3em; font-weight: 700; color: var(--primario-txt); }
+        .nota-final .desglose { color: var(--texto-suave); margin-top: 8px; line-height: 1.7; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Examen Mensual 2 — Capa Física</h1>
+        <p>Semanas 5 a 8 · Transmisión · Medios cableados · Medios inalámbricos · Cableado estructurado</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Test:</strong> 22 preguntas (50 %)</div>
+        <div class="info-item"><strong>Práctica:</strong> 4 ejercicios (50 %)</div>
+        <div class="info-item"><strong>Tiempo:</strong> 105 min</div>
+        <div class="info-item"><strong>Aprobado:</strong> 5/10</div>
+    </div>
+
+    <div class="content">
+
+        <div id="repasoMes"></div>
+
+        <div class="aviso">
+            <strong>Cómo se corrige</strong>
+            El test se corrige solo. La parte práctica se <strong>autoevalúa</strong>: escribes tu respuesta,
+            revelas la solución modelo y marcas en la rúbrica los puntos que realmente habías puesto. Sé honesto:
+            la nota es para ti, no para nadie más.
+        </div>
+
+        <div class="bloque-titulo">
+            <h2>Parte 1 — Test</h2>
+            <p>22 preguntas · vale el 50 % de la nota</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTest()">Corregir test</button>
+            <button onclick="reiniciarTest()">Reiniciar test</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultado del test</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">22</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown">
+                <h3>Resultado por semana</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="bloque-titulo">
+            <h2>Parte 2 — Práctica</h2>
+            <p>4 ejercicios · vale el 50 % de la nota · ninguna solución aparece antes de que escribas la tuya</p>
+        </div>
+
+        <div id="practicas"></div>
+
+        <div class="buttons">
+            <button onclick="calcularNota()">Calcular nota final</button>
+        </div>
+
+        <div class="nota-final" id="notaFinal" style="display:none">
+            <h2>Nota final del Mes 2</h2>
+            <div class="cifra" id="notaCifra">—</div>
+            <div class="desglose" id="notaDesglose"></div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Índice del Mes 2</a></span>
+        <span><a href="Semana_08/Dia_05/teoria.html">← Test semanal de la Semana 8</a></span>
+    </div>
+
+</div>
+
+<script src="../assets/progreso.js"></script>
+<script src="../assets/interactivo.js"></script>
+<script>
+/* ==================================================================
+ * EXAMEN MENSUAL DEL MES 2
+ *
+ * Página autocontenida: usa estudio.css y progreso.js, pero lleva su
+ * propio motor porque quiz.js y ejercicios.js comparten los mismos
+ * identificadores del DOM y no pueden convivir en una página.
+ * ================================================================== */
+
+const semanas = {
+    5: 'Conceptos de transmisión',
+    6: 'Medios cableados',
+    7: 'Medios inalámbricos',
+    8: 'Cableado estructurado'
+};
+
+const preguntas = [
+    {
+        semana: 5,
+        text: 'Una línea telefónica corta en 3.000 Hz. ¿Por qué eso limita la velocidad en bits por segundo, si son unidades distintas?',
+        options: {
+            a: 'Porque una señal cuadrada necesita muchos armónicos y la línea solo deja pasar los primeros, así que los bits llegan deformados',
+            b: 'Porque 3.000 Hz equivalen exactamente a 3.000 bps',
+            c: 'Porque el ruido crece con la frecuencia',
+            d: 'Porque el cable no admite más de 3.000 voltios'
+        },
+        answer: 'a',
+        feedback: 'Fourier descompone el pulso en armónicos. Si el medio los recorta, el pulso deja de parecerse a un pulso y el receptor empieza a confundir bits.'
+    },
+    {
+        semana: 5,
+        text: 'Canal de 3.000 Hz sin ruido y señalización de 4 niveles. Según Nyquist, ¿capacidad máxima?',
+        options: { a: '3.000 bps', b: '6.000 bps', c: '12.000 bps', d: '24.000 bps' },
+        answer: 'c',
+        feedback: 'C = 2·H·log₂(V) = 2 × 3.000 × log₂(4) = 2 × 3.000 × 2 = <strong>12.000 bps</strong>.'
+    },
+    {
+        semana: 5,
+        text: 'Se dobla el número de niveles de señalización de 4 a 8 en un canal con ruido. ¿Qué es lo que impide que la capacidad crezca sin fin?',
+        options: {
+            a: 'Nada: cada nivel añadido multiplica la capacidad',
+            b: 'El límite de Shannon: con más niveles se parecen más entre sí y el ruido los confunde',
+            c: 'La longitud del cable',
+            d: 'La codificación Manchester'
+        },
+        answer: 'b',
+        feedback: 'Nyquist da el techo teórico sin ruido; Shannon impone el techo real, que depende de la relación señal/ruido y no de cuántos niveles inventemos.'
+    },
+    {
+        semana: 5,
+        text: '¿Qué le aporta Manchester frente a NRZ, y qué le cuesta?',
+        options: {
+            a: 'Menos ancho de banda a costa de errores',
+            b: 'Más niveles a costa de ruido',
+            c: 'Más alcance a costa de velocidad',
+            d: 'Una transición en el centro de cada bit, que da sincronización, a costa del doble de ancho de banda'
+        },
+        answer: 'd',
+        feedback: 'Con NRZ una ristra larga de ceros deja al receptor sin referencia de reloj; Manchester garantiza un cambio por bit, pero necesita el doble de banda.'
+    },
+    {
+        semana: 5,
+        text: 'En una constelación QAM-16, ¿qué representa cada punto?',
+        options: {
+            a: 'Un bit',
+            b: 'Una combinación de amplitud y fase que codifica 4 bits',
+            c: 'Un canal distinto',
+            d: 'Una frecuencia portadora distinta'
+        },
+        answer: 'b',
+        feedback: '16 puntos = log₂(16) = <strong>4 bits por símbolo</strong>. Y cuantos más puntos, más juntos quedan y menos ruido aguantan.'
+    },
+    {
+        semana: 6,
+        text: '¿Para qué sirve trenzar los pares de un cable UTP?',
+        options: {
+            a: 'Para que el cable sea más flexible',
+            b: 'Para reducir el peso de cobre',
+            c: 'Para que el ruido afecte por igual a los dos hilos del par y se cancele en el receptor',
+            d: 'Para aumentar la sección conductora'
+        },
+        answer: 'c',
+        feedback: 'El par trenzado funciona por <strong>cancelación</strong>: la interferencia se induce igual en ambos hilos y el receptor, que mide la diferencia, la elimina.'
+    },
+    {
+        semana: 6,
+        text: 'Al montar un RJ-45 se dejan 4 cm de cable destrenzado dentro del conector. ¿Qué parámetro se resiente y por qué?',
+        options: {
+            a: 'La continuidad, porque los hilos se separan',
+            b: 'La resistencia, porque el cobre se estira',
+            c: 'La longitud medida, porque se añaden 4 cm',
+            d: 'La diafonía, porque sin trenzado desaparece la cancelación justo donde las señales están más juntas'
+        },
+        answer: 'd',
+        feedback: 'El destrenzado no debe pasar de unos 13 mm. Un cable perfecto con terminaciones malas suspende en NEXT.'
+    },
+    {
+        semana: 6,
+        text: 'El par 3 de un cable Ethernet ocupa los pines 3 y 6, que no son contiguos. ¿Qué error provoca esta peculiaridad?',
+        options: {
+            a: 'El par partido: se crimpa 3-4 y 5-6, hay continuidad pero los pares no se corresponden con los trenzados',
+            b: 'La inversión de polaridad',
+            c: 'La rotura del blindaje',
+            d: 'Un cruce entre T568A y T568B'
+        },
+        answer: 'a',
+        feedback: 'Un comprobador de continuidad da todo correcto: el fallo solo aparece al medir diafonía, porque los hilos de cada señal ya no viajan trenzados entre sí.'
+    },
+    {
+        semana: 6,
+        text: 'Enlace de fibra: presupuesto 12 dB, atenuación del tramo 6,4 dB, cuatro conectores a 0,5 dB y dos empalmes a 0,1 dB. ¿Cabe?',
+        options: {
+            a: 'No, se pasa por poco',
+            b: 'Sí, con 3,4 dB de margen',
+            c: 'Sí, justo en el límite',
+            d: 'No se puede saber sin conocer la longitud'
+        },
+        answer: 'b',
+        feedback: '6,4 + (4 × 0,5) + (2 × 0,1) = <strong>8,6 dB</strong>, y 12 − 8,6 = <strong>3,4 dB</strong> de margen. Holgado.'
+    },
+    {
+        semana: 6,
+        text: 'Hay que llevar datos por un pasillo pegado a una bandeja de fuerza con motores. ¿Qué cable es la elección razonable?',
+        options: {
+            a: 'UTP Cat 5e, que es más barato',
+            b: 'Coaxial RG-58',
+            c: 'Un cable apantallado (F/UTP o S/FTP) con la pantalla puesta a tierra en el armario',
+            d: 'UTP Cat 6, porque la mayor categoría ya protege del ruido'
+        },
+        answer: 'c',
+        feedback: 'La categoría mide prestaciones, no inmunidad. Y una pantalla sin continuidad hasta la tierra del armario no sirve de nada: peor aún, hace de antena.'
+    },
+    {
+        semana: 7,
+        text: '¿Cuál es aproximadamente la longitud de onda de una señal Wi-Fi de 2,4 GHz?',
+        options: { a: '12,5 cm', b: '2,4 m', c: '1,25 mm', d: '30 cm' },
+        answer: 'a',
+        feedback: 'λ = c/f = 300.000.000 ÷ 2.400.000.000 ≈ <strong>0,125 m</strong>. Los 30 cm corresponderían a 1 GHz.'
+    },
+    {
+        semana: 7,
+        text: 'Un enlace por satélite geoestacionario introduce unos 477 ms de ida y vuelta. ¿De dónde sale ese retardo?',
+        options: {
+            a: 'Del procesado en el satélite',
+            b: 'De la congestión del enlace',
+            c: 'De la modulación empleada',
+            d: 'De la distancia: 35.786 km de subida y otros tantos de bajada, dos veces, a la velocidad de la luz'
+        },
+        answer: 'd',
+        feedback: 'Es un retardo de <strong>propagación</strong>: no se arregla con más ancho de banda ni con mejor equipo. Es física.'
+    },
+    {
+        semana: 7,
+        text: '¿Por qué en 2,4 GHz se usan los canales 1, 6 y 11 y no 1, 2 y 3?',
+        options: {
+            a: 'Porque los demás canales están prohibidos en Europa',
+            b: 'Porque los canales están separados 5 MHz pero ocupan 22 MHz, así que solo 1, 6 y 11 no se solapan',
+            c: 'Porque son los únicos con potencia suficiente',
+            d: 'Porque los canales pares interfieren con Bluetooth'
+        },
+        answer: 'b',
+        feedback: 'f = 2412 + 5·(n−1) MHz. Del 1 al 6 hay 25 MHz de separación, suficiente para 22 MHz de ancho. Del 1 al 2, solo 5 MHz: se pisan.'
+    },
+    {
+        semana: 7,
+        text: 'Se quiere unir dos naves separadas 800 m con línea de visión directa y sin posibilidad de zanja. ¿Qué solución encaja mejor?',
+        options: {
+            a: 'UTP Cat 6A con un repetidor a mitad',
+            b: 'Coaxial de banda ancha',
+            c: 'Un radioenlace de microondas punto a punto con antenas directivas',
+            d: 'Wi-Fi omnidireccional en 2,4 GHz'
+        },
+        answer: 'c',
+        feedback: 'El cobre no llega a 800 m, y el Wi-Fi omnidireccional reparte la potencia en todas direcciones. La visión directa es justo lo que necesitan las microondas.'
+    },
+    {
+        semana: 7,
+        text: 'Frente a un cable, ¿cuál es la desventaja estructural de cualquier medio inalámbrico?',
+        options: {
+            a: 'Que siempre es más lento en el papel',
+            b: 'Que no admite cifrado',
+            c: 'Que necesita más potencia eléctrica',
+            d: 'Que el medio es compartido y abierto: el vecino interfiere y cualquiera puede escuchar'
+        },
+        answer: 'd',
+        feedback: 'Un cable es un medio privado y previsible. El aire no es de nadie, y eso condiciona rendimiento y seguridad a la vez.'
+    },
+    {
+        semana: 8,
+        text: 'En una instalación de cableado estructurado, ¿qué separa los 90 m de los 10 m?',
+        options: {
+            a: '90 m es el cableado fijo del panel a la roseta; los 10 m son la suma de los latiguillos de los dos extremos',
+            b: '90 m es el vertical y 10 m el horizontal',
+            c: '90 m es fibra y 10 m es cobre',
+            d: '90 m es la distancia máxima entre armarios'
+        },
+        answer: 'a',
+        feedback: 'Y el límite de 90 m del tramo fijo no sube por usar latiguillos más cortos.'
+    },
+    {
+        semana: 8,
+        text: 'Una canaleta de 40 × 25 mm con cables de 6 mm de diámetro (28,3 mm² cada uno). ¿Cuántos caben respetando el 40 %?',
+        options: { a: '35', b: '28', c: '14', d: '7' },
+        answer: 'c',
+        feedback: '40 × 25 = 1.000 mm²; el 40 % son 400 mm²; y 400 ÷ 28,3 ≈ <strong>14 cables</strong>. El resto del espacio es para ampliar y para no comprimir.'
+    },
+    {
+        semana: 8,
+        text: 'Un enlace certifica FAIL en NEXT y en pérdida por retorno, con el mapeado correcto y la longitud dentro de límite. ¿Qué buscas primero?',
+        options: {
+            a: 'Un rollo de cable escondido',
+            b: 'Una interferencia eléctrica externa',
+            c: 'Un cable de categoría inferior',
+            d: 'Las terminaciones: destrenzado excesivo en el conector explica los dos parámetros a la vez'
+        },
+        answer: 'd',
+        feedback: 'Cuando fallan la diafonía y la impedancia juntas, y lo demás está bien, la firma es la de una terminación mal hecha.'
+    },
+    {
+        semana: 8,
+        text: '¿Por qué la etiqueta de una roseta lleva un código como A-1-07 y no «Contabilidad»?',
+        options: {
+            a: 'Porque el código debe ser estable y los departamentos se mudan',
+            b: 'Porque lo exige el fabricante del cable',
+            c: 'Porque los nombres largos no caben',
+            d: 'Porque el usuario no debe saber a qué armario va'
+        },
+        answer: 'a',
+        feedback: 'Se identifica la <strong>toma</strong>, que no se mueve. El uso va en la tabla de enlaces, que sí se actualiza.'
+    },
+    {
+        semana: 8,
+        text: '¿Qué se necesita, además de material homologado, para que un fabricante conceda la garantía del sistema de 20-25 años?',
+        options: {
+            a: 'Un contrato de mantenimiento anual',
+            b: 'Que la instalación tenga menos de 100 enlaces',
+            c: 'Instalador certificado, certificación completa de los enlaces y documentación entregada',
+            d: 'Únicamente la factura de compra'
+        },
+        answer: 'c',
+        feedback: 'Certificar y documentar no son adornos: son la condición para que la cobertura exista.'
+    },
+    {
+        semana: 8,
+        text: '<strong>Integración.</strong> Un enlace Cat 6 mal tirado rinde peor que un Cat 5e bien instalado. ¿Con qué idea del mes conecta esto?',
+        options: {
+            a: 'Con la codificación Manchester',
+            b: 'Con la fórmula λ = c/f',
+            c: 'Con la separación de canales Wi-Fi',
+            d: 'Con Shannon: la capacidad real depende de la relación señal/ruido, y la instalación es lo que decide el ruido'
+        },
+        answer: 'd',
+        feedback: 'La categoría promete un techo; el oficio decide cuánto te acercas a él. Es el hilo que une la Semana 5 con la Semana 8.'
+    },
+    {
+        semana: 7,
+        text: '<strong>Integración.</strong> Se compara un enlace de fibra de 40 km con uno por satélite GEO. La fibra da 10 Gbps y el satélite 100 Mbps, pero además hay otra diferencia decisiva para una videollamada. ¿Cuál?',
+        options: {
+            a: 'La latencia: unos 0,2 ms frente a casi medio segundo de ida y vuelta',
+            b: 'El coste del equipo terminal',
+            c: 'La inmunidad al ruido eléctrico',
+            d: 'El número de conectores del enlace'
+        },
+        answer: 'a',
+        feedback: 'El ancho de banda se compra; el retardo de propagación, no. 40 km de fibra son microsegundos; 143.000 km de ida y vuelta, 477 ms.'
+    }
+];
+
+const practicas = [
+    {
+        semana: 5,
+        titulo: 'Ejercicio 1 — El techo del canal',
+        tiempo: '15 min',
+        enunciado:
+            '<p>Un enlace tiene un ancho de banda de <strong>4.000 Hz</strong> y una relación señal/ruido de <strong>30 dB</strong>.</p>' +
+            '<ol>' +
+            '<li>Calcula la capacidad máxima según <strong>Shannon</strong>.</li>' +
+            '<li>Si quisieras alcanzar esa capacidad usando solo Nyquist, ¿cuántos niveles de señalización harían falta?</li>' +
+            '<li>Explica por qué, en la práctica, ese número de niveles no es realista en ese canal.</li>' +
+            '</ol>',
+        modelo:
+            '<p><strong>1.</strong> 30 dB significa S/N = 10^(30/10) = <strong>1.000</strong>.<br>' +
+            'C = H · log₂(1 + S/N) = 4.000 × log₂(1.001) ≈ 4.000 × 9,97 ≈ <strong>39.900 bps</strong>, es decir unos 40 kbps.</p>' +
+            '<p><strong>2.</strong> Nyquist: C = 2 · H · log₂(V) → 39.900 = 2 × 4.000 × log₂(V) → log₂(V) ≈ 4,99 → ' +
+            '<strong>V ≈ 32 niveles</strong>.</p>' +
+            '<p><strong>3.</strong> Con 32 niveles repartidos en el mismo margen de tensión, la distancia entre niveles ' +
+            'contiguos es mínima. Un ruido que antes no molestaba ahora basta para que el receptor lea el nivel vecino. ' +
+            'Por eso Shannon y Nyquist no se suman: Shannon es el techo, y Nyquist solo dice cuántos niveles harían falta ' +
+            '<em>si</em> el ruido lo permitiera. En un canal con 30 dB, 32 niveles es exactamente el punto en el que el ' +
+            'ruido empieza a comerse la mejora.</p>',
+        rubrica: [
+            'Convertí los 30 dB a una relación lineal S/N = 1.000',
+            'Apliqué Shannon correctamente y obtuve unos 40 kbps',
+            'Despejé V en la fórmula de Nyquist y llegué a unos 32 niveles',
+            'Expliqué que más niveles significa niveles más juntos y por tanto más sensibles al ruido',
+            'Dejé claro que Shannon es el límite real y Nyquist el teórico sin ruido'
+        ]
+    },
+    {
+        semana: 6,
+        titulo: 'Ejercicio 2 — Elegir el medio de tres tramos',
+        tiempo: '20 min',
+        enunciado:
+            '<p>Un campus tiene que resolver tres tramos. Para cada uno, elige el medio y <strong>justifícalo</strong> con ' +
+            'un argumento técnico, no con «es mejor»:</p>' +
+            '<ol>' +
+            '<li><strong>Tramo A:</strong> entre el edificio de administración y el de aulas, <strong>620 m</strong>, por canalización subterránea propia.</li>' +
+            '<li><strong>Tramo B:</strong> del armario de la planta 2 a los 18 puestos de un aula, el más lejano a <strong>58 m</strong> medidos en planta, con dos cambios de altura.</li>' +
+            '<li><strong>Tramo C:</strong> del armario de planta al rack del aula de informática, <strong>70 m</strong>, pasando junto al cuadro eléctrico y a dos climatizadores.</li>' +
+            '</ol>' +
+            '<p>Para el tramo B, calcula además la longitud estimada de cable y di si cumple.</p>',
+        modelo:
+            '<p><strong>Tramo A — fibra monomodo</strong> (o multimodo si se acepta el coste de repuesto y la distancia lo ' +
+            'permite; con 620 m la multimodo OM3/OM4 todavía serviría a 1 Gbps, pero la monomodo no cierra puertas). ' +
+            'Razón: el cobre no pasa de 100 m, y además es un tramo entre edificios: la fibra es <strong>dieléctrica</strong>, ' +
+            'de modo que no crea un camino eléctrico entre las tierras de los dos edificios ni conduce una sobretensión ' +
+            'por rayo.</p>' +
+            '<p><strong>Tramo B — UTP Cat 6 o Cat 6A.</strong> Estimación: 58 × 1,2 = 69,6 m, más 3 m por cada cambio de ' +
+            'altura = 69,6 + 6 = <strong>75,6 m</strong>. Está por debajo de los 90 m del tramo fijo, así que ' +
+            '<strong>cumple</strong>, con unos 14 m de margen. La categoría se elige por el horizonte de vida de la ' +
+            'instalación, no por la velocidad de hoy.</p>' +
+            '<p><strong>Tramo C — par apantallado, F/UTP o S/FTP</strong>, con la pantalla puesta a tierra en el armario, ' +
+            'o fibra si se quiere olvidarse del problema. Razón: la cercanía del cuadro y de los motores de los ' +
+            'climatizadores es una fuente de interferencia electromagnética continua, y el apantallamiento es lo que la ' +
+            'ataja. Subir de categoría <strong>no</strong> resuelve esto: la categoría mide prestaciones, no inmunidad. ' +
+            'Y una pantalla mal conectada es peor que ninguna, porque hace de antena.</p>',
+        rubrica: [
+            'Tramo A: elegí fibra y justifiqué con la distancia (>100 m)',
+            'Tramo A: mencioné el aislamiento eléctrico entre edificios',
+            'Tramo B: apliqué la regla del +20 % y los 3 m por cambio de altura',
+            'Tramo B: obtuve unos 75-76 m y concluí que cumple los 90 m',
+            'Tramo C: elegí un cable apantallado o fibra por la interferencia',
+            'Tramo C: dije que la pantalla debe estar puesta a tierra',
+            'Tramo C: descarté explícitamente «subir de categoría» como solución al ruido'
+        ]
+    },
+    {
+        semana: 7,
+        titulo: 'Ejercicio 3 — Plan de canales de una planta',
+        tiempo: '20 min',
+        enunciado:
+            '<p>Una planta rectangular necesita <strong>cuatro puntos de acceso</strong> en 2,4 GHz, colocados en fila a lo ' +
+            'largo de un pasillo, con solapamiento de cobertura entre vecinos para que el itinerancia funcione.</p>' +
+            '<ol>' +
+            '<li>Asigna un canal a cada AP y justifica el reparto.</li>' +
+            '<li>Calcula la frecuencia central de los canales que hayas usado.</li>' +
+            '<li>El instalador anterior había puesto los cuatro en el canal 6 «para que no se molesten entre ellos». ' +
+            'Explica qué pasa realmente.</li>' +
+            '<li>¿Qué cambiarías si la planta pudiera trabajar en 5 GHz?</li>' +
+            '</ol>',
+        modelo:
+            '<p><strong>1.</strong> El reparto es <strong>1 — 6 — 11 — 1</strong>. Solo esos tres canales no se solapan en ' +
+            'la banda de 2,4 GHz, así que con cuatro AP en fila hay que reutilizar uno; se reutiliza el que quede más ' +
+            'lejos físicamente, es decir el del extremo opuesto. Lo que nunca debe ocurrir es que dos AP <em>vecinos</em> ' +
+            'compartan canal o usen canales solapados.</p>' +
+            '<p><strong>2.</strong> Con f = 2412 + 5·(n−1) MHz: canal 1 → <strong>2.412 MHz</strong>; canal 6 → ' +
+            '<strong>2.437 MHz</strong>; canal 11 → <strong>2.462 MHz</strong>. Entre el 1 y el 6 hay 25 MHz, suficientes ' +
+            'para los 22 MHz que ocupa cada canal.</p>' +
+            '<p><strong>3.</strong> Cuatro AP en el mismo canal <em>no</em> se interfieren como ruido: se ' +
+            '<strong>reparten el tiempo</strong>. CSMA/CA hace que cada uno espere a que el medio esté libre, así que los ' +
+            'cuatro AP y todos sus clientes comparten la capacidad de un solo canal. Es peor de lo que parece: la red ' +
+            'funciona, pero rinde una cuarta parte, y el síntoma es lentitud, no desconexión. Con canales parcialmente ' +
+            'solapados (1, 3, 5...) sería aún peor, porque entonces sí se oyen como ruido y ni siquiera se turnan.</p>' +
+            '<p><strong>4.</strong> En 5 GHz hay muchos más canales no solapados, así que los cuatro AP podrían llevar ' +
+            'canal propio y no habría que reutilizar ninguno. A cambio, el alcance es menor y la penetración en paredes ' +
+            'peor, porque a mayor frecuencia, menor longitud de onda y más atenuación en obstáculos: probablemente harían ' +
+            'falta más puntos de acceso para cubrir la misma planta.</p>',
+        rubrica: [
+            'Asigné 1 — 6 — 11 — 1 (o equivalente con el repetido en el extremo)',
+            'Justifiqué que solo 1, 6 y 11 no se solapan',
+            'Calculé bien al menos las tres frecuencias con f = 2412 + 5·(n−1)',
+            'Expliqué que en el mismo canal los AP se reparten el tiempo, no se destruyen',
+            'Señalé que el síntoma sería lentitud, no caída del servicio',
+            'Para 5 GHz: más canales disponibles, pero menos alcance y peor penetración'
+        ]
+    },
+    {
+        semana: 8,
+        titulo: 'Ejercicio 4 — Un informe de certificación que no cuadra',
+        tiempo: '25 min',
+        enunciado:
+            '<p>Recibes la certificación de una obra de 40 enlaces. Tres llaman la atención:</p>' +
+            '<div class="tabla-wrap"><table><thead><tr><th>Enlace</th><th>Longitud</th><th>Mapeado</th><th>NEXT</th><th>Atenuación</th><th>Retorno</th><th>Veredicto</th></tr></thead><tbody>' +
+            '<tr><td>C-2-05</td><td>61 m</td><td>OK</td><td>+0,3 dB</td><td>+4,1 dB</td><td>+3,0 dB</td><td>PASS</td></tr>' +
+            '<tr><td>C-2-11</td><td>103 m</td><td>OK</td><td>+2,1 dB</td><td>−1,8 dB</td><td>+2,6 dB</td><td>FAIL</td></tr>' +
+            '<tr><td>C-2-18</td><td>54 m</td><td>OK</td><td>−4,7 dB</td><td>+3,9 dB</td><td>−2,1 dB</td><td>FAIL</td></tr>' +
+            '</tbody></table></div>' +
+            '<p>Los valores positivos son margen a favor. El plano da 58 m para C-2-11.</p>' +
+            '<ol>' +
+            '<li>Diagnostica cada uno de los tres enlaces.</li>' +
+            '<li>Di qué harías con cada uno.</li>' +
+            '<li>¿Qué exigirías que constara en el dosier de entrega respecto a estos tres?</li>' +
+            '</ol>',
+        modelo:
+            '<p><strong>C-2-05 — PASS, pero en precario.</strong> Aprueba con <strong>0,3 dB</strong> de margen en NEXT ' +
+            'mientras que en atenuación y retorno va holgado. Ese desequilibrio apunta otra vez a las terminaciones. ' +
+            'Un margen así se pierde con el primer cambio de temperatura o la primera reconexión, y entonces aparece una ' +
+            'avería intermitente, que es la peor de todas. <strong>Qué hacer:</strong> rehacer las dos terminaciones y ' +
+            'recertificar. No es obligatorio, pero cuesta veinte minutos ahora y un día de diagnóstico dentro de dos años.</p>' +
+            '<p><strong>C-2-11 — FAIL por longitud.</strong> 103 m frente a los 58 m del plano: hay ' +
+            '<strong>45 m de cable de más</strong>, casi con seguridad un rollo sobrante escondido en el conducto o en el ' +
+            'falso techo. Además supera los 90 m del enlace permanente, y eso arrastra la atenuación, que ya está en ' +
+            'negativo. No es un fallo de terminación: es un fallo de tirado. <strong>Qué hacer:</strong> localizar el rollo ' +
+            '(el TDR da la distancia a la anomalía), retirar el sobrante, recortar y volver a terminar. Recertificar.</p>' +
+            '<p><strong>C-2-18 — FAIL por terminación.</strong> Longitud correcta, mapeado correcto, atenuación con buen ' +
+            'margen, pero fallan <strong>NEXT y pérdida por retorno a la vez</strong>. Es la firma del ' +
+            '<strong>destrenzado excesivo</strong> en los conectores, o de una pantalla no mantenida hasta el extremo si ' +
+            'el cable es apantallado. <strong>Qué hacer:</strong> rehacer ambas terminaciones respetando los 13 mm de ' +
+            'destrenzado y la continuidad de la pantalla, y recertificar.</p>' +
+            '<p><strong>3. En el dosier</strong> debe constar, para estos tres y para los otros 37: el informe completo del ' +
+            'certificador con los <strong>valores medidos y sus márgenes</strong>, no solo el PASS/FAIL; la ' +
+            '<strong>categoría</strong> y el <strong>modo de medida</strong> (enlace permanente o canal) contra los que se ' +
+            'certificó; la <strong>fecha</strong> y el modelo del equipo con su calibración; y, en los enlaces rehechos, la ' +
+            '<strong>recertificación posterior</strong> junto a la medida original, para que quede trazado qué se corrigió. ' +
+            'Un informe que solo diga «PASS» no compromete a nada.</p>',
+        rubrica: [
+            'C-2-05: identifiqué que aprueba con margen mínimo y que eso es un riesgo',
+            'C-2-05: relacioné el margen justo en NEXT con las terminaciones',
+            'C-2-11: detecté la diferencia de longitud frente al plano',
+            'C-2-11: lo atribuí a cable sobrante y mencioné el TDR para localizarlo',
+            'C-2-11: vi que además supera los 90 m y que eso arrastra la atenuación',
+            'C-2-18: diagnostiqué destrenzado excesivo por fallar NEXT y retorno juntos',
+            'Propuse rehacer terminaciones y recertificar en los casos que lo requieren',
+            'Dosier: exigí valores medidos y márgenes, no solo PASS/FAIL',
+            'Dosier: exigí categoría, modo de medida y fecha',
+            'Dosier: exigí que la recertificación quede junto a la medida original'
+        ]
+    }
+];
+
+/* ------------------------------------------------------- render del test */
+
+const respuestasCorrectas = {};
+preguntas.forEach((q, i) => { respuestasCorrectas['q' + (i + 1)] = q.answer; });
+
+function escaparTexto(t) {
+    const d = document.createElement('div');
+    d.textContent = t == null ? '' : String(t);
+    return d.innerHTML;
+}
+
+function renderTest() {
+    document.getElementById('quiz').innerHTML = preguntas.map((q, i) => {
+        const n = i + 1;
+        const opciones = Object.keys(q.options).map(letra => `
+                    <div class="option">
+                        <input type="radio" id="q${n}${letra}" name="q${n}" value="${letra}">
+                        <label for="q${n}${letra}">${q.options[letra]}</label>
+                    </div>`).join('');
+        return `
+            <div class="question" data-question="${n}">
+                <div class="question-header">
+                    <span class="question-number">Pregunta ${n}</span>
+                    <span class="question-topic">Semana ${q.semana} · ${semanas[q.semana]}</span>
+                </div>
+                <div class="question-text">${q.text}</div>
+                <div class="options">${opciones}</div>
+                <div class="feedback">${q.feedback}</div>
+            </div>`;
+    }).join('');
+
+    document.getElementById('total').textContent = preguntas.length;
+    document.querySelectorAll('#quiz input[type="radio"]').forEach(inp => {
+        inp.addEventListener('change', actualizarProgreso);
+    });
+}
+
+function actualizarProgreso() {
+    const total = preguntas.length;
+    let hechas = 0;
+    for (let i = 1; i <= total; i++) {
+        if (document.querySelector(`input[name="q${i}"]:checked`)) hechas++;
+    }
+    const pct = Math.round((hechas / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressTexto').textContent = pct + '% contestado';
+}
+
+let notaTest = null;
+
+function corregirTest() {
+    const total = preguntas.length;
+    const sinResponder = [];
+    const porSemana = {};
+    Object.keys(semanas).forEach(s => { porSemana[s] = { correct: 0, total: 0 }; });
+    preguntas.forEach(q => { porSemana[q.semana].total++; });
+
+    for (let i = 1; i <= total; i++) {
+        if (!document.querySelector(`input[name="q${i}"]:checked`)) sinResponder.push(i);
+    }
+    if (sinResponder.length) {
+        alert('Faltan preguntas por responder: ' + sinResponder.join(', '));
+        return;
+    }
+
+    let correctas = 0;
+    const fallos = [];
+
+    for (let i = 1; i <= total; i++) {
+        const q = preguntas[i - 1];
+        const elegida = document.querySelector(`input[name="q${i}"]:checked`);
+        const div = document.querySelector(`[data-question="${i}"]`);
+        const feedback = div.querySelector('.feedback');
+        const opciones = div.querySelectorAll('.option');
+        opciones.forEach(o => o.classList.remove('correct', 'incorrect'));
+
+        if (elegida.value === q.answer) {
+            correctas++;
+            porSemana[q.semana].correct++;
+            div.classList.add('correct');
+            div.classList.remove('incorrect');
+            feedback.classList.add('show', 'correct');
+            feedback.classList.remove('incorrect');
+            elegida.parentElement.classList.add('correct');
+        } else {
+            div.classList.add('incorrect');
+            div.classList.remove('correct');
+            feedback.classList.add('show', 'incorrect');
+            feedback.classList.remove('correct');
+            elegida.parentElement.classList.add('incorrect');
+            div.querySelector(`input[value="${q.answer}"]`).parentElement.classList.add('correct');
+            fallos.push({
+                texto: q.text,
+                solucion: q.options[q.answer],
+                porque: q.feedback,
+                tema: 'Semana ' + q.semana + ' — ' + semanas[q.semana],
+                repaso: '',
+                titulo: 'Examen mensual del Mes 2'
+            });
+        }
+    }
+
+    const pct = Math.round((correctas / total) * 100);
+    notaTest = correctas / total;
+
+    document.getElementById('score').textContent = pct + '%';
+    document.getElementById('correct').textContent = correctas;
+    document.getElementById('incorrect').textContent = total - correctas;
+
+    const veredicto = document.getElementById('verdict');
+    if (pct >= 90)      veredicto.innerHTML = '<strong>Excelente.</strong> El mes está dominado.';
+    else if (pct >= 70) veredicto.innerHTML = '<strong>Muy bien.</strong> Puedes pasar al Mes 3.';
+    else if (pct >= 50) veredicto.innerHTML = '<strong>Aprobado.</strong> Repasa las semanas que marque el desglose antes de continuar.';
+    else                veredicto.innerHTML = '<strong>Suspenso.</strong> Rehaz los tests semanales de las semanas flojas y repite el examen.';
+
+    document.getElementById('breakdownRows').innerHTML = Object.keys(semanas).map(s => {
+        const d = porSemana[s];
+        const p = Math.round((d.correct / d.total) * 100);
+        const aviso = p < 50 ? ' — repasar' : '';
+        return `<div class="breakdown-row">
+                    <span>Semana ${s}: ${semanas[s]}</span>
+                    <span><strong>${d.correct}/${d.total}</strong> (${p}%)${aviso}</span>
+                </div>`;
+    }).join('');
+
+    if (typeof PARProgreso !== 'undefined') {
+        PARProgreso.registrar(correctas, total, fallos);
+    }
+
+    document.getElementById('results').classList.add('show');
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressTexto').textContent = pct + '% de aciertos';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+function reiniciarTest() {
+    document.querySelectorAll('#quiz input[type="radio"]').forEach(i => { i.checked = false; });
+    document.querySelectorAll('#quiz .question').forEach(q => q.classList.remove('correct', 'incorrect'));
+    document.querySelectorAll('#quiz .option').forEach(o => o.classList.remove('correct', 'incorrect'));
+    document.querySelectorAll('#quiz .feedback').forEach(f => f.classList.remove('show', 'correct', 'incorrect'));
+    document.getElementById('results').classList.remove('show');
+    document.getElementById('breakdownRows').innerHTML = '';
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressTexto').textContent = '';
+    notaTest = null;
+    document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* -------------------------------------------------- render de la práctica */
+
+function renderPracticas() {
+    document.getElementById('practicas').innerHTML = practicas.map((p, i) => {
+        const rub = p.rubrica.map((r, j) => `
+                    <li><input type="checkbox" id="r${i}_${j}" data-ej="${i}">
+                        <label for="r${i}_${j}">${r}</label></li>`).join('');
+        return `
+        <div class="ejercicio" data-ej="${i}">
+            <div class="ejercicio-header">
+                <h2>${p.titulo}</h2>
+                <span class="tiempo-ej">⏱️ ${p.tiempo} · Semana ${p.semana}</span>
+            </div>
+            <div class="enunciado">${p.enunciado}</div>
+            <div class="item-ej">
+                <div class="pregunta-ej"><p>Escribe aquí tu respuesta. Hasta que no escribas algo,
+                    el botón de la solución modelo no se activa.</p></div>
+                <textarea class="resp-desarrollo" id="resp${i}" rows="9"
+                          placeholder="Tu razonamiento, con los cálculos si los hay..."></textarea>
+                <div class="ejercicio-acciones">
+                    <button type="button" class="btn-solucion" id="btnSol${i}" disabled
+                            onclick="verModelo(${i})">Ver solución modelo</button>
+                </div>
+            </div>
+            <div class="feedback-ej modelo" id="modelo${i}">
+                <strong>Solución modelo</strong>
+                ${p.modelo}
+                <p style="margin-top:14px"><strong>Marca lo que realmente habías puesto:</strong></p>
+                <ul class="rubrica-check">${rub}</ul>
+                <p class="puntos-ej" id="puntos${i}">0 de ${p.rubrica.length} puntos marcados.</p>
+            </div>
+        </div>`;
+    }).join('');
+
+    practicas.forEach((p, i) => {
+        const ta = document.getElementById('resp' + i);
+        ta.addEventListener('input', () => {
+            document.getElementById('btnSol' + i).disabled = ta.value.trim().length < 15;
+        });
+        document.querySelectorAll(`input[data-ej="${i}"]`).forEach(chk => {
+            chk.addEventListener('change', () => contarPuntos(i));
+        });
+    });
+}
+
+function verModelo(i) {
+    document.getElementById('modelo' + i).classList.add('show');
+    document.getElementById('btnSol' + i).disabled = true;
+    document.getElementById('btnSol' + i).textContent = 'Solución mostrada';
+}
+
+function contarPuntos(i) {
+    const marcados = document.querySelectorAll(`input[data-ej="${i}"]:checked`).length;
+    const total = practicas[i].rubrica.length;
+    document.getElementById('puntos' + i).textContent =
+        marcados + ' de ' + total + ' puntos marcados.';
+}
+
+/* ------------------------------------------------------------ nota final */
+
+function calcularNota() {
+    if (notaTest === null) {
+        alert('Corrige primero el test: su resultado es la mitad de la nota.');
+        document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+        return;
+    }
+
+    let marcados = 0, puntosTotales = 0;
+    const detalle = practicas.map((p, i) => {
+        const m = document.querySelectorAll(`input[data-ej="${i}"]:checked`).length;
+        marcados += m;
+        puntosTotales += p.rubrica.length;
+        return `<div>${p.titulo}: <strong>${m}/${p.rubrica.length}</strong></div>`;
+    }).join('');
+
+    const notaPractica = puntosTotales ? marcados / puntosTotales : 0;
+    const final = (notaTest * 0.5 + notaPractica * 0.5) * 10;
+
+    document.getElementById('notaCifra').textContent = final.toFixed(1) + ' / 10';
+    document.getElementById('notaDesglose').innerHTML =
+        `<p><strong>Test:</strong> ${(notaTest * 10).toFixed(1)}/10 · pesa el 50 %</p>` +
+        `<p><strong>Práctica:</strong> ${(notaPractica * 10).toFixed(1)}/10 (${marcados} de ${puntosTotales} puntos de rúbrica) · pesa el 50 %</p>` +
+        detalle +
+        `<p style="margin-top:12px"><strong>${final >= 5 ? '✅ Aprobado.' : '❌ Suspenso.'}</strong> ` +
+        (final >= 7
+            ? 'Adelante con el Mes 3.'
+            : final >= 5
+                ? 'Repasa las semanas que marque el desglose del test antes de continuar.'
+                : 'Rehaz los tests semanales de las semanas flojas y vuelve a este examen.') + '</p>';
+
+    document.getElementById('notaFinal').style.display = 'block';
+    document.getElementById('notaFinal').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ============================================================
+ * REPASO DE LO FALLADO DURANTE EL MES
+ * Se construye con lo que progreso.js ha ido guardando en los
+ * quizzes diarios y los tests semanales de las semanas 5 a 8.
+ * ============================================================ */
+
+const MES_DE_ESTE_EXAMEN = 2;
+
+function nombreActividad(a) {
+    const tipo = a.archivo === 'teoria' ? 'Quiz' : a.archivo;
+    if (!a.semana) return tipo;
+    if (!a.dia) return 'Semana ' + a.semana + ' — ' + tipo;
+    return 'Semana ' + a.semana + ' · Día ' + a.dia;
+}
+
+// Las rutas de repaso se guardaron relativas a la página del día;
+// este examen vive en Mes_02_Capa_Fisica/, así que hay que rehacerlas.
+function enlaceRepaso(clave, repaso) {
+    if (!repaso) return '';
+    const dir = clave.split('/').slice(1, -1).join('/');   // Semana_0X/Dia_0Y
+    if (!dir) return '';
+    if (repaso.charAt(0) === '#') return dir + '/teoria.html' + repaso;
+    const base = dir.split('/');
+    const partes = repaso.split('/');
+    while (partes.length && partes[0] === '..') { partes.shift(); base.pop(); }
+    return base.concat(partes).join('/');
+}
+
+function pintarRepasoMes() {
+    const cont = document.getElementById('repasoMes');
+    if (!cont || typeof PARProgreso === 'undefined') return;
+
+    let actividades = [];
+    try { actividades = PARProgreso.fallosDelMes(MES_DE_ESTE_EXAMEN, 60) || []; }
+    catch (e) { return; }
+
+    // Este examen también guarda sus fallos; no tiene sentido que aparezcan
+    // en su propio repaso al repetirlo.
+    actividades = actividades.filter(a => a.archivo !== 'examen_mensual');
+
+    const total = actividades.reduce((n, a) => n + a.fallos.length, 0);
+
+    if (!total) {
+        cont.innerHTML =
+            '<div class="repaso-mes">' +
+            '<h2>🧠 Repaso de lo que fallaste este mes</h2>' +
+            '<p class="vacio">No hay nada guardado todavía. Este apartado se rellena solo con las preguntas ' +
+            'que falles en los <strong>quizzes diarios y los tests semanales</strong> de las semanas 5 a 8. ' +
+            'Si haces el examen en otro navegador, o después de borrar los datos de navegación, aparecerá ' +
+            'vacío aunque hayas hecho los quizzes.</p>' +
+            '</div>';
+        return;
+    }
+
+    const bloques = actividades.map(function (a) {
+        const items = a.fallos.map(function (f) {
+            const destino = enlaceRepaso(a.clave, f.repaso);
+            return '<div class="repaso-item">' +
+                '<div class="preg">' + escaparTexto(f.texto) + '</div>' +
+                '<div class="sol">✔ ' + escaparTexto(f.solucion) + '</div>' +
+                (f.porque ? '<div class="porque">' + f.porque + '</div>' : '') +
+                (destino ? '<a class="volver" href="' + destino + '">→ Repasar este apartado</a>' : '') +
+                '</div>';
+        }).join('');
+
+        return '<details class="repaso-dia">' +
+            '<summary>' + escaparTexto(nombreActividad(a)) +
+            '<span class="cuantas">' + a.fallos.length +
+            (a.fallos.length === 1 ? ' fallo' : ' fallos') + '</span></summary>' +
+            items + '</details>';
+    }).join('');
+
+    cont.innerHTML =
+        '<div class="repaso-mes">' +
+        '<h2>🧠 Repaso de lo que fallaste este mes</h2>' +
+        '<p class="intro">Antes de empezar, repasa las <strong>' + total + '</strong> preguntas que fallaste ' +
+        'en los quizzes y tests del Mes 2. Están ordenadas por semana y por día, siguiendo el orden del ' +
+        'temario. Pulsa en cada bloque para desplegarlo.</p>' +
+        bloques +
+        '<p class="aviso-borrado">Este repaso se genera con el progreso guardado en este navegador. Al ' +
+        'repetir un quiz, sus fallos sustituyen a los de la vez anterior. Solo se registran fallos de quiz ' +
+        'y test: el motor de ejercicios guarda la nota, no qué apartado se falló.</p>' +
+        '</div>';
+}
+
+renderTest();
+renderPracticas();
+pintarRepasoMes();
+</script>
+</body>
+</html>

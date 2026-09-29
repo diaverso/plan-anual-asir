@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Los subsistemas del cableado estructurado</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 1 — Los subsistemas</h1>
+        <p>Independencia de la aplicación · los seis subsistemas · estrella jerárquica · distancias · enlace y canal</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 62 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 21 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 33 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Tres semanas eligiendo medios sueltos. Hoy cambia la escala: no se trata de qué cable poner, sino de
+            cómo se organiza el cableado de <strong>un edificio entero</strong> para que dure veinte años y sirva
+            para lo que haga falta.
+        </div>
+
+        <div class="aviso">
+            <strong>De dónde sale lo de hoy</strong>
+            El libro de la asignatura cita las tres normas de cableado estructurado —<strong>EIA/TIA-568</strong>,
+            <strong>EN-50173</strong> e <strong>ISO/IEC 11801</strong>— y dice que «definen en la práctica cómo se
+            deben instalar las redes en los edificios», pero no las desarrolla.
+            <br><br>
+            Así que la estructura de hoy procede de <strong>las propias normas</strong> y de la práctica
+            profesional. Lo señalo una vez aquí y no en cada apartado, para no repetirlo diez veces: <strong>todo
+            este día es contenido normativo, no del libro</strong>. Lo que sí sale del libro se indica
+            expresamente.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#porque">Por qué existe la norma</a></li>
+                <li><a href="#subsistemas">Los seis subsistemas</a></li>
+                <li><a href="#estrella">La topología en estrella jerárquica</a></li>
+                <li><a href="#distancias">Las distancias que hay que respetar</a></li>
+                <li><a href="#enlace">Enlace permanente y canal</a></li>
+                <li><a href="#area">El área de trabajo: cuántas tomas</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="porque">1. Por qué existe la norma</h2>
+
+            <p>Imagina un edificio de oficinas de los años ochenta: un cable para los teléfonos, otro distinto para
+            los terminales, otro para la red de un fabricante concreto y otro para el sistema de alarma. Cuatro
+            instalaciones incompatibles, cada una con su cable, su conector y su recorrido. Cambiar de proveedor
+            significaba <strong>volver a cablear el edificio</strong>.</p>
+
+            <p>El cableado estructurado nace para acabar con eso, y su idea central es una sola:</p>
+
+            <div class="dato">
+                <strong>Independencia de la aplicación</strong>
+                <p>Se instala <strong>una única infraestructura</strong>, genérica y normalizada, que después sirve
+                para lo que haga falta: red de datos, telefonía, cámaras, control de accesos. Lo que cambia con los
+                años son los <strong>equipos de los extremos</strong>, no el cable de la pared.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Las tres consecuencias prácticas</strong>
+                <ul>
+                    <li><strong>Vida útil larga.</strong> El cableado dura entre quince y veinte años; los equipos,
+                    cinco. Por eso se dimensiona con margen, como viste en la Semana 6.</li>
+                    <li><strong>Independencia del instalador.</strong> Otro técnico puede entender y ampliar la
+                    instalación sin conocerla, porque sigue un patrón conocido.</li>
+                    <li><strong>Garantía del sistema.</strong> Si la instalación está certificada según norma, el
+                    fabricante del material puede garantizarla durante años. Eso se ve el jueves.</li>
+                </ul>
+            </div>
+
+            <h2 id="subsistemas">2. Los seis subsistemas</h2>
+
+            <p>La norma trocea el edificio en partes con funciones claras. Recorridas <strong>desde la calle hasta
+            el usuario</strong>, son estas:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Subsistema</th><th>Qué es</th><th>Qué contiene</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><strong>Acometida</strong><br><em>entrada de servicios</em></td>
+                        <td>El punto por donde entran en el edificio los servicios del operador</td>
+                        <td>Registro de entrada, protecciones, el final de la fibra del operador</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><strong>Sala de equipos</strong></td>
+                        <td>El centro de la instalación: donde viven los equipos que dan servicio a todo el edificio</td>
+                        <td>Servidores, electrónica principal, el <strong>repartidor de edificio</strong></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><strong>Cableado vertical</strong><br><em>backbone o troncal</em></td>
+                        <td>Une la sala de equipos con los armarios de cada planta</td>
+                        <td>Normalmente <strong>fibra óptica</strong>, a veces cobre de muchos pares</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><strong>Cuarto de telecomunicaciones</strong><br><em>armario de planta</em></td>
+                        <td>El punto de distribución de una planta o de una zona</td>
+                        <td>Armario con <strong>paneles de parcheo</strong>, switches y latiguillos</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td><strong>Cableado horizontal</strong></td>
+                        <td>Del armario de planta a cada toma de usuario. Es el más numeroso y el que no se toca nunca</td>
+                        <td>Par trenzado, canalizado por techos y tabiques</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td><strong>Área de trabajo</strong></td>
+                        <td>El puesto del usuario, desde la roseta hasta su equipo</td>
+                        <td>Roseta, latiguillo y el equipo conectado</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Y hay un séptimo elemento que no es un lugar, sino una tarea que atraviesa a todos los demás: la
+            <strong>administración</strong>, es decir, el etiquetado y la documentación. Es el tema del jueves.</p>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s08_d01_subsistemas.png"
+         width="1400" height="900" loading="lazy"
+         alt="Corte de un edificio de tres plantas que muestra los subsistemas del cableado estructurado: la acometida entrando desde la calle al sótano, la sala de equipos junto a ella, el cableado vertical subiendo por un patinillo hasta el armario de cada planta, y desde cada armario el cableado horizontal abriéndose en abanico hacia las rosetas de las áreas de trabajo.">
+    <figcaption>El mismo esquema se repite planta a planta: eso es lo que hace previsible una instalación.</figcaption>
+</figure>
+<pre><code>  calle ──▶ ACOMETIDA ──▶ SALA DE EQUIPOS
+                               │
+                               │  cableado VERTICAL (backbone, fibra)
+                               ├──────────▶ ARMARIO planta 1 ─┬─▶ roseta ─▶ equipo
+                               │                              ├─▶ roseta ─▶ equipo
+                               │                              └─▶ …   cableado HORIZONTAL
+                               └──────────▶ ARMARIO planta 2 ─┬─▶ …
+                                                              └─▶ …</code></pre>
+
+            <div class="destacado">
+                <strong>La distinción que más se usa en el día a día</strong>
+                <p>El <strong>cableado horizontal</strong> es <strong>fijo</strong>: va dentro de la pared, se
+                instala una vez y no se toca en años. Los <strong>latiguillos</strong> son <strong>móviles</strong>:
+                se cambian a diario para reconfigurar la red.</p>
+                <p>Por eso todo el diseño gira alrededor de una idea: <strong>que ningún cambio obligue a tocar lo
+                que está dentro de la pared</strong>. Ese es el motivo de existir del panel de parcheo.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="estrella">3. La topología en estrella jerárquica</h2>
+
+            <p>Los subsistemas no se conectan de cualquier manera. La norma impone una forma concreta:
+            <strong>estrella jerárquica</strong>, también llamada árbol.</p>
+
+<pre><code>                  SALA DE EQUIPOS
+                  (repartidor de edificio)
+                     ╱      │      ╲
+                    ╱       │       ╲          ← estrella de primer nivel:
+              ARM. p0   ARM. p1   ARM. p2        el backbone
+               ╱ │ ╲     ╱ │ ╲     ╱ │ ╲
+              ○  ○  ○   ○  ○  ○   ○  ○  ○      ← estrella de segundo nivel:
+              rosetas de las áreas de trabajo     el cableado horizontal</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Regla</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr><td>Cada toma cuelga de <strong>un solo</strong> armario de planta</td><td>Una avería afecta a una zona identificable, y la documentación es posible</td></tr>
+                    <tr><td>Cada armario cuelga de la <strong>sala de equipos</strong></td><td>Hay un único punto central desde el que gestionar todo</td></tr>
+                    <tr><td><strong>Sin bucles</strong> ni caminos alternativos en el cableado</td><td>El cableado es pasivo: la redundancia se resuelve con equipos, no con cables cruzados</td></tr>
+                    <tr><td>Como mucho, <strong>un nivel intermedio</strong> entre la sala y la toma</td><td>Más saltos significan más conectores, más pérdidas y más sitios donde fallar</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Estrella física, no lógica</strong>
+                Esto describe <strong>por dónde van los cables</strong>, no cómo circula la información. Un switch
+                puede crear VLAN, rutas redundantes o agregaciones sobre esa misma estrella física. Es la
+                diferencia entre topología física y lógica que viste en el
+                <a href="../../../Mes_01_Fundamentos/Semana_01/Dia_05/teoria.html">Mes 1</a>.
+            </div>
+
+            <h2 id="distancias">4. Las distancias que hay que respetar</h2>
+
+            <p>Estas cifras ya las conoces en parte; aquí quedan colocadas en su sitio dentro del sistema:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tramo</th><th>Límite</th><th>Comentario</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Cableado horizontal fijo</strong><br>del panel a la roseta</td><td><strong>90 m</strong></td><td>Es el tramo que no se toca. Por eso se mide y se certifica</td></tr>
+                    <tr><td><strong>Latiguillos</strong>, sumando los dos extremos</td><td><strong>10 m</strong></td><td>Habitualmente 5 m en el área de trabajo y 5 m en el armario</td></tr>
+                    <tr><td><strong>Enlace completo</strong></td><td><strong>100 m</strong></td><td>La cifra que hay que recordar: 90 + 10</td></tr>
+                    <tr><td><strong>Cableado vertical</strong></td><td>Depende del medio</td><td>Con fibra, cientos de metros o kilómetros; el cobre queda otra vez limitado</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La trampa de los 90 metros</strong>
+                <p>Los 90 m son de <strong>cable</strong>, no de distancia en línea recta. El cable sube al falso
+                techo, recorre el pasillo, baja por el tabique y da vueltas dentro del armario. Una toma que está a
+                <strong>55 m en el plano</strong> puede llevar fácilmente <strong>75 u 80 m de cable</strong>.</p>
+                <p>Regla práctica de instalador: cuenta la distancia en planta, <strong>añade un 20 %</strong> por
+                recorridos y otros <strong>3 m por cada cambio de altura</strong>. Si el resultado pasa de 90, hay
+                que mover el armario o partir la planta en dos zonas.</p>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="enlace">5. Enlace permanente y canal</h2>
+
+            <p>Aquí hay una distinción que parece burocrática y es la que decide si una instalación se aprueba o se
+            rechaza. Hay <strong>dos formas de medir</strong> el mismo tramo:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Enlace permanente</th><th>Canal</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Qué incluye</strong></td><td>Solo la parte <strong>fija</strong>: del panel de parcheo a la roseta, con sus dos conectores</td><td>Todo: enlace permanente <strong>más los dos latiguillos</strong></td></tr>
+                    <tr><td><strong>Longitud máxima</strong></td><td>90 m</td><td>100 m</td></tr>
+                    <tr><td><strong>Quién lo mide</strong></td><td>El <strong>instalador</strong>, al entregar la obra</td><td>El administrador, cuando algo falla</td></tr>
+                    <tr><td><strong>Por qué</strong></td><td>Es lo único de lo que el instalador responde: los latiguillos los pone y los cambia el cliente</td><td>Es lo que de verdad ve el equipo conectado</td></tr>
+                    <tr><td><strong>Exigencia</strong></td><td><strong>Mayor</strong>: menos elementos, así que se toleran menos pérdidas</td><td>Menor: se admite más atenuación porque hay más cable y más conectores</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<pre><code>  ENLACE PERMANENTE  (90 m máx · lo certifica el instalador)
+                    ┌──────────────────────────────┐
+  [switch] ~~latiguillo~~ [panel]════cable fijo════[roseta] ~~latiguillo~~ [PC]
+           └────────────────────── CANAL (100 m máx) ──────────────────────┘</code></pre>
+
+            <div class="aviso">
+                <strong>El error que cuesta dinero</strong>
+                Certificar un tramo como <strong>canal</strong> cuando el cliente pidió <strong>enlace
+                permanente</strong>, o al revés. Son pruebas distintas, con límites distintos, y el certificador
+                pregunta cuál quieres <strong>antes</strong> de medir. Un enlace que aprueba como canal puede
+                suspender como enlace permanente.
+            </div>
+
+            <h2 id="area">6. El área de trabajo: cuántas tomas</h2>
+
+            <p>Una pregunta que parece menor y decide el presupuesto entero: ¿cuántas tomas se ponen por puesto?</p>
+
+            <div class="dato">
+                <strong>La recomendación clásica</strong>
+                <p><strong>Dos tomas por área de trabajo</strong>, entendiendo por área de trabajo unos
+                <strong>10 m²</strong>. Una para el equipo y otra de reserva o para el teléfono.</p>
+            </div>
+
+            <p>El motivo no es el capricho de una norma, es económico: lo caro de una toma no es la roseta ni los
+            metros de cable, es <strong>la obra</strong> —abrir, canalizar, tirar, rematar—. Añadir una segunda toma
+            mientras la canaleta está abierta cuesta una fracción; añadirla dos años después cuesta lo mismo que la
+            primera instalación de ese punto.</p>
+
+            <div class="destacado">
+                <strong>La regla que resume el día</strong>
+                <p>En cableado estructurado, <strong>lo caro es el acceso, no el material</strong>. Por eso se
+                sobredimensiona: más tomas, más categoría, más espacio en la canaleta y más unidades libres en el
+                armario. Todo lo que se deja previsto mientras la pared está abierta sale casi gratis.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">7. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>El cableado estructurado es <strong>independiente de la aplicación</strong>: una sola
+                    infraestructura para datos, voz y lo que venga.</li>
+                    <li>Seis subsistemas: <strong>acometida · sala de equipos · vertical · cuarto de
+                    telecomunicaciones · horizontal · área de trabajo</strong>, más la
+                    <strong>administración</strong> como tarea transversal.</li>
+                    <li>Topología en <strong>estrella jerárquica</strong>, sin bucles y con un solo nivel
+                    intermedio.</li>
+                    <li><strong>90 m</strong> de cableado fijo + <strong>10 m</strong> de latiguillos =
+                    <strong>100 m</strong> de enlace.</li>
+                    <li>El <strong>enlace permanente</strong> es la parte fija, lo certifica el instalador y es
+                    <strong>más exigente</strong>. El <strong>canal</strong> lo incluye todo.</li>
+                    <li><strong>Dos tomas</strong> por área de trabajo de unos 10 m².</li>
+                    <li>Lo caro es <strong>el acceso</strong>: se sobredimensiona mientras la pared está abierta.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«El cableado se diseña para la red que vamos a montar»</td><td>Se diseña <strong>independiente de la aplicación</strong>, porque dura mucho más que los equipos</td></tr>
+                    <tr><td>«Los 90 metros son la distancia entre los dos puntos»</td><td>Son metros de <strong>cable</strong>, con sus subidas, rodeos y vueltas dentro del armario</td></tr>
+                    <tr><td>«Enlace permanente y canal son lo mismo»</td><td>Se miden distinto y tienen límites distintos: 90 m y 100 m</td></tr>
+                    <tr><td>«Pongo una toma por puesto y ya ampliaré»</td><td>Ampliar después cuesta como la instalación original: lo caro es abrir la pared</td></tr>
+                    <tr><td>«Conecto dos armarios entre sí para tener redundancia»</td><td>La estrella jerárquica <strong>no admite bucles</strong>: la redundancia se resuelve con equipos</td></tr>
+                    <tr><td>«El backbone es cable de red más largo»</td><td>Suele ser <strong>fibra</strong>, precisamente porque el cobre no llega</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 21 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a reconocer los seis subsistemas en el edificio donde vives o estudias, dibujar su estrella
+            jerárquica y comprobar si las distancias cuadran.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 1</strong></a> (66 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 2</strong>
+            <p><strong>Instalación física</strong>: canalizaciones, armarios, unidades de rack y las buenas
+            prácticas que deciden si el miércoles la instalación pasa la certificación.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> busca una canaleta en tu casa o tu centro. ¿Va el cable de
+            red por el mismo hueco que el eléctrico?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_07/Dia_05/teoria.html">← Semana 7</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Una empresa te dice: «no cablees el edificio entero, cablea solo los veinte puestos que tenemos ahora y ya ampliaremos». ¿Qué le responderías, con lo de hoy?',
+                modelo: 'Que el cableado no se dimensiona por los equipos de hoy, sino por el <strong>edificio</strong>. Una instalación de cableado dura <strong>quince o veinte años</strong>; los equipos que se conectan a ella, unos cinco. Lo que se deje sin prever hoy habrá que abrirlo mañana.</p><p>Y sobre todo: <strong>lo caro no es el material, es el acceso</strong>. Tirar un cable más mientras la canaleta está abierta y el instalador está en el edificio cuesta una fracción de lo que costará hacerlo dentro de dos años, cuando haya que volver a abrir el falso techo, cortar el servicio y rematar otra vez.</p><p>La postura razonable no es cablear todo el edificio a ciegas, sino <strong>dejar previsto</strong>: canalizaciones con espacio libre, dos tomas por área de trabajo, categoría con margen y unidades libres en el armario. Eso encarece poco la obra y evita rehacerla.',
+                puntos: [
+                    'Contrapone la vida útil del cableado con la de los equipos',
+                    'Explica que lo caro es el acceso y la obra, no el material',
+                    'Propone dejar previsto en lugar de sobrecablear a ciegas',
+                    'Cita medidas concretas: canalización con espacio, tomas de reserva, categoría'
+                ]
+            },
+            {
+                pregunta: 'Estás midiendo el recorrido de una toma que, en el plano, está a 62 metros del armario, en la misma planta. ¿Cabe dentro de la norma? Razona con la regla práctica.',
+                modelo: 'En el plano parece que sí, porque 62 m están por debajo de los 90 m del cableado horizontal. Pero los 90 m son metros de <strong>cable</strong>, no distancia en línea recta.</p><p>Aplicando la regla práctica: 62 m de recorrido en planta, más un <strong>20 %</strong> por rodeos, curvas y el recorrido dentro del falso techo, son unos <strong>74 m</strong>. A eso hay que sumar los cambios de altura: subir al falso techo y bajar por el tabique son dos, unos <strong>6 m</strong> más. Total, alrededor de <strong>80 m</strong>. Además hay que dejar algo de holgura dentro del armario para el peinado y la reserva.</p><p>Cabe, pero <strong>con poco margen</strong>. Antes de darlo por bueno mediría el recorrido real con el metro o con el marcado métrico del cable, y si hay más tomas aún más lejos, plantearía mover el armario o dividir la planta en dos zonas de distribución.',
+                puntos: [
+                    'Aclara que los 90 m son de cable, no en línea recta',
+                    'Aplica el 20 % de recorrido y los metros por cambio de altura',
+                    'Llega a una cifra aproximada y la compara con el límite',
+                    'Concluye que el margen es escaso y propone verificar o replantear'
+                ]
+            },
+            {
+                pregunta: 'Un instalador entrega una obra con todos los enlaces certificados «en modo canal» y aprobados. El cliente reclama. ¿Por qué puede tener razón el cliente?',
+                modelo: 'Porque lo que el instalador debe certificar es normalmente el <strong>enlace permanente</strong>, no el canal. El enlace permanente es la parte <strong>fija</strong> —del panel de parcheo a la roseta, con sus dos conectores—, que es de lo único que el instalador responde: los latiguillos los pone, los cambia y los estropea el cliente.</p><p>Además, la prueba de canal es <strong>menos exigente</strong>: admite 100 m y más pérdidas, porque incluye más cable y más conectores. Un enlace puede <strong>aprobar como canal y suspender como enlace permanente</strong>, así que certificar en el modo equivocado puede estar ocultando una instalación que no cumple.</p><p>Y hay un problema práctico añadido: si el instalador midió con sus propios latiguillos y luego se los llevó, la certificación entregada no corresponde a nada de lo que queda instalado. Lo correcto es repetir las medidas en modo <strong>enlace permanente</strong>, con los adaptadores adecuados, y entregar ese informe.',
+                puntos: [
+                    'Explica qué incluye cada modo de medida',
+                    'Justifica por qué el instalador responde del enlace permanente',
+                    'Señala que el canal es menos exigente y puede ocultar defectos',
+                    'Propone repetir la certificación en el modo correcto'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué significa «independiente de la aplicación»?', dorso: 'Que se instala <strong>una sola infraestructura</strong> genérica que vale para datos, voz, cámaras o lo que venga.' },
+            { frente: '¿Cuánto dura un cableado frente a los equipos?', dorso: 'El cableado, <strong>15 a 20 años</strong>; los equipos, unos <strong>5</strong>. Por eso se dimensiona con margen.' },
+            { frente: 'Los seis subsistemas, de la calle al usuario', dorso: '<strong>Acometida · sala de equipos · vertical (backbone) · cuarto de telecomunicaciones · horizontal · área de trabajo</strong>.' },
+            { frente: '¿Qué hay en un cuarto de telecomunicaciones?', dorso: 'El <strong>armario de planta</strong>: paneles de parcheo, switches y latiguillos. Es el punto de distribución de una planta.' },
+            { frente: '¿Qué medio se usa normalmente en el backbone?', dorso: '<strong>Fibra óptica</strong>: el cobre no llega a esas distancias y además une plantas o edificios distintos.' },
+            { frente: '¿Qué topología impone la norma?', dorso: '<strong>Estrella jerárquica</strong>, sin bucles y con un solo nivel intermedio entre la sala de equipos y la toma.' },
+            { frente: 'Cableado fijo frente a latiguillos', dorso: 'El horizontal es <strong>fijo</strong> y no se toca; los latiguillos son <strong>móviles</strong> y se cambian a diario.' },
+            { frente: 'Las tres distancias de la norma', dorso: '<strong>90 m</strong> de cableado fijo, <strong>10 m</strong> de latiguillos, <strong>100 m</strong> de enlace.' },
+            { frente: 'La regla práctica de los recorridos', dorso: 'Distancia en planta <strong>+ 20 %</strong> y <strong>3 m por cada cambio de altura</strong>.' },
+            { frente: '¿Qué es el enlace permanente?', dorso: 'La parte <strong>fija</strong>: del panel a la roseta con sus dos conectores. Máximo <strong>90 m</strong>. Lo certifica el instalador.' },
+            { frente: '¿Qué es el canal?', dorso: 'El enlace permanente <strong>más los dos latiguillos</strong>. Máximo <strong>100 m</strong>. Es lo que ve el equipo conectado.' },
+            { frente: '¿Cuál de los dos modos es más exigente?', dorso: 'El <strong>enlace permanente</strong>: al tener menos elementos, se toleran menos pérdidas.' },
+            { frente: '¿Cuántas tomas por área de trabajo?', dorso: '<strong>Dos</strong>, por cada unos 10 m². Porque lo caro es el acceso, no la roseta.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 1: Los subsistemas',
+        tiempo: '21 minutos',
+        minutos: 21,
+        questions: [
+            {
+                topic: 'Por qué la norma',
+                repaso: '#porque',
+                text: '¿Qué significa que un cableado estructurado sea «independiente de la aplicación»?',
+                options: {
+                    a: 'Que funciona sin electricidad',
+                    b: 'Que una misma infraestructura sirve para datos, voz y otros servicios, sin rehacerla',
+                    c: 'Que no necesita mantenimiento',
+                    d: 'Que cada servicio lleva su propio cable'
+                },
+                answer: 'b',
+                feedback: 'Es la idea que da sentido a toda la norma: lo que cambia con los años son <strong>los equipos</strong>, no el cable de la pared.'
+            },
+            {
+                topic: 'Por qué la norma',
+                repaso: '#porque',
+                text: '¿Por qué se dimensiona el cableado con margen, aunque hoy no haga falta?',
+                options: {
+                    a: 'Porque lo exige el fabricante del switch',
+                    b: 'Porque el cable pierde categoría con los años',
+                    c: 'Porque dura 15 o 20 años, mientras que los equipos se cambian cada 5',
+                    d: 'Porque así se cobra más por la obra'
+                },
+                answer: 'c',
+                feedback: 'Y porque lo caro es <strong>el acceso</strong>: abrir otra vez la pared cuesta mucho más que el material que se ahorró.'
+            },
+            {
+                topic: 'Subsistemas',
+                repaso: '#subsistemas',
+                text: '¿Qué subsistema une la sala de equipos con los armarios de cada planta?',
+                options: {
+                    a: 'El cableado horizontal',
+                    b: 'El área de trabajo',
+                    c: 'La acometida',
+                    d: 'El cableado vertical o backbone'
+                },
+                answer: 'd',
+                feedback: 'Y suele hacerse con <strong>fibra óptica</strong>, porque une plantas distintas y el cobre se queda corto.'
+            },
+            {
+                topic: 'Subsistemas',
+                repaso: '#subsistemas',
+                text: 'La roseta de la pared, el latiguillo y el equipo del usuario forman…',
+                options: {
+                    a: 'El área de trabajo',
+                    b: 'El cableado horizontal',
+                    c: 'El cuarto de telecomunicaciones',
+                    d: 'La acometida'
+                },
+                answer: 'a',
+                feedback: 'El cableado horizontal termina <strong>en</strong> la roseta; de la roseta al equipo empieza el área de trabajo.'
+            },
+            {
+                topic: 'Subsistemas',
+                repaso: '#subsistemas',
+                text: '¿Cuál de estos NO es uno de los subsistemas del cableado estructurado?',
+                options: {
+                    a: 'Sala de equipos',
+                    b: 'Cuarto de telecomunicaciones',
+                    c: 'Dominio de colisión',
+                    d: 'Acometida o entrada de servicios'
+                },
+                answer: 'c',
+                feedback: 'El dominio de colisión es un concepto de la capa de enlace, del Mes 1: no tiene nada que ver con la estructura física del edificio.'
+            },
+            {
+                topic: 'Estrella jerárquica',
+                repaso: '#estrella',
+                text: 'Un técnico propone unir dos armarios de planta entre sí «para tener un camino alternativo». ¿Qué problema tiene?',
+                options: {
+                    a: 'Ninguno: es lo recomendable',
+                    b: 'Que el cableado estructurado es una estrella jerárquica sin bucles: la redundancia se resuelve con equipos',
+                    c: 'Que los armarios no tienen puertos suficientes',
+                    d: 'Que habría que usar cobre en vez de fibra'
+                },
+                answer: 'b',
+                feedback: 'El cableado es <strong>pasivo</strong> y debe ser previsible. Los caminos alternativos se montan con switches y protocolos, no cruzando cables.'
+            },
+            {
+                topic: 'Estrella jerárquica',
+                repaso: '#estrella',
+                text: 'La estrella jerárquica describe…',
+                options: {
+                    a: 'Cómo circulan los datos por la red',
+                    b: 'Qué protocolos se usan en cada planta',
+                    c: 'La configuración de las VLAN',
+                    d: 'Por dónde van físicamente los cables del edificio'
+                },
+                answer: 'd',
+                feedback: 'Es topología <strong>física</strong>. Sobre ella, la lógica puede ser cualquier cosa: VLAN, rutas redundantes o agregaciones.'
+            },
+            {
+                topic: 'Distancias',
+                repaso: '#distancias',
+                text: '¿Cuántos metros admite el cableado horizontal fijo y cuántos los latiguillos?',
+                options: {
+                    a: '100 m y 10 m',
+                    b: '90 m de cableado fijo y 10 m de latiguillos',
+                    c: '90 m y 90 m',
+                    d: '80 m y 20 m'
+                },
+                answer: 'b',
+                feedback: '90 + 10 = <strong>100 m</strong> de enlace completo. Los 10 m se reparten habitualmente en 5 y 5.'
+            },
+            {
+                topic: 'Distancias',
+                repaso: '#distancias',
+                text: 'Una toma está a 70 m del armario en el plano, en la misma planta. Aplicando la regla práctica del 20 % más 3 m por cambio de altura, con dos cambios, ¿qué longitud de cable cabe esperar?',
+                options: { a: '70 m', b: '76 m', c: '90 m', d: 'Unos 90 m: 84 más 6' },
+                answer: 'd',
+                feedback: '70 × 1,2 = 84, más 6 m por los dos cambios de altura: <strong>90 m</strong>. Está justo en el límite, así que ese punto hay que replantearlo.'
+            },
+            {
+                topic: 'Distancias',
+                repaso: '#distancias',
+                text: '¿Por qué los 90 metros no se miden en línea recta sobre el plano?',
+                options: {
+                    a: 'Porque el cable sube al techo, rodea, baja por el tabique y da vueltas en el armario',
+                    b: 'Porque la norma usa otra unidad',
+                    c: 'Porque el cable se estira al instalarlo',
+                    d: 'Porque hay que descontar los latiguillos'
+                },
+                answer: 'a',
+                feedback: 'Son metros de <strong>cable</strong>. Es el error de cálculo más común al planificar una planta grande.'
+            },
+            {
+                topic: 'Enlace y canal',
+                repaso: '#enlace',
+                text: '¿Qué incluye el enlace permanente?',
+                options: {
+                    a: 'Todo, incluidos los dos latiguillos',
+                    b: 'Solo el cable, sin conectores',
+                    c: 'La parte fija: del panel de parcheo a la roseta, con sus dos conectores',
+                    d: 'Solo el latiguillo del área de trabajo'
+                },
+                answer: 'c',
+                feedback: 'Es de lo único que responde el instalador, porque los latiguillos los pone y los cambia el cliente.'
+            },
+            {
+                topic: 'Enlace y canal',
+                repaso: '#enlace',
+                text: 'De los dos modos de medida, ¿cuál es más exigente y por qué?',
+                options: {
+                    a: 'El canal, porque mide 100 m',
+                    b: 'El enlace permanente, porque al tener menos elementos se toleran menos pérdidas',
+                    c: 'Los dos igual',
+                    d: 'Depende del fabricante del certificador'
+                },
+                answer: 'b',
+                feedback: 'Por eso un enlace puede <strong>aprobar como canal y suspender como enlace permanente</strong>: hay que medir en el modo que corresponda.'
+            },
+            {
+                topic: 'Área de trabajo',
+                repaso: '#area',
+                text: '¿Cuántas tomas se recomiendan por área de trabajo?',
+                options: { a: 'Una', b: 'Cuatro', c: 'Las que pida el usuario', d: 'Dos, por cada unos 10 m²' },
+                answer: 'd',
+                feedback: 'Una para el equipo y otra de reserva. La segunda sale casi gratis mientras la canaleta está abierta.'
+            },
+            {
+                topic: 'Área de trabajo',
+                repaso: '#area',
+                text: '«Lo caro es el acceso, no el material». ¿Qué decisión de diseño se deduce de esa frase?',
+                options: {
+                    a: 'Usar el cable más barato posible',
+                    b: 'Reducir el número de tomas al mínimo',
+                    c: 'Sobredimensionar mientras la pared está abierta: más tomas, más categoría, más espacio libre',
+                    d: 'Dejar los cables vistos para poder cambiarlos'
+                },
+                answer: 'c',
+                feedback: 'Todo lo que se prevé durante la obra cuesta una fracción; lo que se añade después cuesta como la instalación original de ese punto.'
+            },
+            {
+                topic: 'Recuperación · Semana 6',
+                repaso: '../../Semana_06/Dia_02/teoria.html#errores',
+                text: '<em>Repaso.</em> Durante la instalación se destrenzan 3 cm de pares al montar una roseta. ¿Qué parámetro de la futura certificación se resentirá más?',
+                options: {
+                    a: 'La longitud del enlace',
+                    b: 'La continuidad',
+                    c: 'La diafonía, porque el tramo destrenzado deja de cancelar',
+                    d: 'Ninguno: el destrenzado no se mide'
+                },
+                answer: 'c',
+                feedback: 'Y es justo lo que el miércoles aparecerá en el informe como un <strong>NEXT</strong> insuficiente. La certificación no perdona el montaje descuidado.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

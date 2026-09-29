@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio: los subsistemas de tu edificio</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">66 min</span></div>
+        <div class="info-item"><strong>Material:</strong> el edificio donde estés · papel o FossFLOW</div>
+        <div class="info-item"><strong>Permisos:</strong> no abras ningún armario ajeno</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Los seis subsistemas no son una lista para memorizar: están <strong>en el edificio donde
+            estás</strong>. Vas a localizarlos, anotarlos, dibujar la estrella jerárquica y comprobar si las
+            distancias cuadran con la norma.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar: qué no hacer</strong>
+            <ul>
+                <li><strong>No abras armarios de comunicaciones</strong> que no sean tuyos, ni en un centro de
+                estudios ni en un edificio de vecinos. Mira lo que se ve desde fuera y pregunta si hace falta.</li>
+                <li><strong>No desconectes nada</strong>, ni siquiera «un momento para ver qué pasa».</li>
+                <li>Si vives en un piso, el «edificio» puede ser tu propia vivienda: el registro de
+                telecomunicaciones de la entrada hace de acometida y el router, de sala de equipos en miniatura.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Localizar los subsistemas (25 min)</h2>
+
+            <p>Recorre el edificio con esta lista y anota <strong>dónde está</strong> cada cosa. En una vivienda
+            todo se reduce de escala, pero los seis subsistemas siguen estando:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Subsistema</th><th>En un edificio de oficinas</th><th>En una vivienda</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Acometida</strong></td><td>Cuarto de entrada, con la fibra del operador</td><td>El registro de la entrada o la caja donde termina la fibra</td></tr>
+                    <tr><td><strong>Sala de equipos</strong></td><td>CPD o sala con los servidores</td><td>El router, y poco más</td></tr>
+                    <tr><td><strong>Vertical</strong></td><td>Patinillo con la fibra que sube a cada planta</td><td>Rara vez existe; en un chalé, lo que sube al piso de arriba</td></tr>
+                    <tr><td><strong>Cuarto de telecomunicaciones</strong></td><td>Armario de planta con paneles y switches</td><td>El registro con el router, si hay uno empotrado</td></tr>
+                    <tr><td><strong>Horizontal</strong></td><td>Cables por falso techo y tabiques hasta las rosetas</td><td>Los cables que van del router a cada habitación, si los hay</td></tr>
+                    <tr><td><strong>Área de trabajo</strong></td><td>Roseta, latiguillo y equipo</td><td>Lo mismo: roseta o cable suelto y el equipo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Si tu edificio no está estructurado</strong>
+                <p>Es lo más probable en una vivienda, y también es un resultado: significa que el cableado
+                <strong>no sigue la norma</strong>. Anótalo, y en la última pregunta describirás qué habría que
+                cambiar. Aprender a ver <strong>lo que falta</strong> es parte del ejercicio.</p>
+            </div>
+
+            <h2>Parte 2 — Medir un recorrido (20 min)</h2>
+
+            <p>Elige <strong>un</strong> recorrido concreto: del router o del armario hasta una toma alejada. Y
+            estima su longitud de cable con la regla práctica del día:</p>
+
+<pre><code>  metros en planta              ____ m
+  + 20 % por rodeos y curvas    ____ m
+  + 3 m por cada cambio de altura  ____ m
+                                ─────────
+  longitud estimada de cable    ____ m        ¿pasa de 90?</code></pre>
+
+            <p>Para medir en planta no hace falta un metro láser: cuenta pasos. Un paso normal de adulto ronda los
+            <strong>70 cm</strong>, así que diez pasos son unos siete metros. Con eso basta para una estimación.</p>
+
+            <h2>Parte 3 — El plano (21 min)</h2>
+
+            <p>Dibuja la <strong>estrella jerárquica</strong> de lo que has encontrado: el punto central arriba, los
+            puntos de distribución debajo y las tomas colgando de ellos. Marca con una línea distinta lo que sea
+            <strong>fijo</strong> y lo que sea <strong>latiguillo</strong>.</p>
+
+            <details class="ampliacion">
+                <summary>💡 Opcional: dibujarlo con FossFLOW</summary>
+                <div class="ampliacion-cuerpo">
+                    <p><a href="https://fossflow.apps.icarosoft.com/">FossFLOW</a> permite dibujarlo en isométrico
+                    desde el navegador (<a href="https://github.com/victortassinari/FossFLOW">código fuente</a>). Es
+                    <strong>opcional</strong>: lo que se evalúa es el plano, no la herramienta.</p>
+                    <ul>
+                        <li><strong>No guarda sola:</strong> usa <em>Export File</em> antes de cerrar.</li>
+                        <li><strong>No uses «Server Storage»:</strong> sube el diagrama al servidor de un tercero.</li>
+                    </ul>
+                </div>
+            </details>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has localizado —o descartado— los seis subsistemas en tu edificio.</li>
+                <li>Has estimado la longitud de cable de un recorrido real.</li>
+                <li>Tienes dibujada la estrella jerárquica, distinguiendo cable fijo de latiguillos.</li>
+                <li>Puedes decir qué se aparta de la norma en esa instalación y por qué.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/laboratorio.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Laboratorio: los subsistemas de tu edificio',
+    subtitulo: 'Localizar los seis subsistemas · estimar un recorrido · dibujar la estrella jerárquica',
+    tiempo: '66 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Lo que hay en tu edificio',
+            tiempo: '22 min',
+            enunciado: '<p>Anota lo que encuentres. Si algo no existe, escríbelo: también es información.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> ¿Dónde está la <strong>acometida</strong>, es decir, por dónde entra el servicio del operador?',
+                    ancho: '360px',
+                    placeholder: 'registro de la entrada, junto al cuadro eléctrico',
+                    explicacion: 'En una vivienda es la caja donde termina la fibra del operador; en un edificio, un cuarto o registro en la planta baja o el sótano.',
+                    pistas: ['Busca por dónde entra el cable de la calle.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> ¿Hay algo que haga de <strong>cuarto de telecomunicaciones</strong> o armario de distribución? Descríbelo.',
+                    ancho: '360px',
+                    placeholder: 'un armario de 12U en el pasillo, con un panel y un switch',
+                    explicacion: 'Si no hay armario y el switch está encima de una mesa o colgado de un clavo, eso es un hallazgo: es el punto por donde suelen empezar los problemas de mantenimiento.',
+                    pistas: ['Puede ser un armario, un registro empotrado o simplemente una balda.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Existe <strong>cableado vertical</strong> entre plantas?',
+                    libre: true,
+                    opciones: {
+                        a: 'Sí, y es de fibra',
+                        b: 'Sí, y es de cobre',
+                        c: 'No hay: el edificio tiene una sola planta o un solo punto de distribución',
+                        d: 'No lo sé: no he podido verlo'
+                    },
+                    explicacion: 'En instalaciones profesionales el vertical suele ser <strong>fibra</strong>; en instalaciones improvisadas es habitual encontrar cobre subiendo por un patinillo, con tramos que a veces pasan de los 90 m.',
+                    pistas: ['No hay respuesta incorrecta: se registra lo que hayas observado.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'entero_positivo',
+                    pregunta: '<strong>d)</strong> ¿Cuántas <strong>tomas de red</strong> hay en la habitación o despacho donde estudias?',
+                    ancho: '140px',
+                    placeholder: '1',
+                    explicacion: 'La norma recomienda <strong>dos por área de trabajo</strong>. Si hay una o ninguna —y el equipo va por Wi-Fi o con un cable cruzando el pasillo—, ya sabes qué habría que prever en una reforma.',
+                    pistas: ['Cuenta las rosetas, no los aparatos conectados.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: El recorrido medido',
+            tiempo: '18 min',
+            enunciado: '<p>Con la plantilla de la <strong>parte 2</strong>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>a)</strong> Metros <strong>en planta</strong> del recorrido que has elegido.',
+                    ancho: '140px',
+                    placeholder: '18',
+                    explicacion: 'Contar pasos basta: unos 70 cm por paso. La precisión al centímetro no aporta nada en una estimación de planificación.',
+                    pistas: ['Diez pasos son unos siete metros.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>b)</strong> Longitud de cable <strong>estimada</strong>, aplicando el 20 % y los cambios de altura.',
+                    ancho: '140px',
+                    placeholder: '27',
+                    explicacion: 'Si tu recorrido es doméstico, la cifra saldrá pequeña y muy lejos de los 90 m. En una planta de oficinas es donde el cálculo empieza a apretar.',
+                    pistas: ['Multiplica por 1,2 y suma 3 m por cada subida o bajada.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Comprobación con un caso tipo: 52 m en planta y dos cambios de altura. ¿Longitud estimada, en metros?',
+                    respuesta: 68.4,
+                    tolerancia: 1,
+                    unidad: 'm',
+                    explicacion: '52 × 1,2 = 62,4, más 6: <strong>68,4 m</strong>. Cabe con holgura suficiente.',
+                    pistas: ['Primero el 20 %, después los 3 m por cambio.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Si tu recorrido real diera 95 m estimados, ¿qué anotarías en el informe?',
+                    opciones: {
+                        a: 'Que cumple, porque no llega a 100',
+                        b: 'Que no cumple el cableado horizontal: hay que medirlo con precisión y, si se confirma, replantear el punto de distribución',
+                        c: 'Que hay que usar categoría 7',
+                        d: 'Que se instale un repetidor'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El límite del tramo fijo son <strong>90 m</strong>, no 100: los otros 10 son para los latiguillos. Y una estimación al límite siempre se comprueba midiendo.',
+                    pistas: ['¿Cuál es el límite del cableado fijo, y cuál el del enlace completo?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: El plano y el diagnóstico',
+            tiempo: '26 min',
+            enunciado: '<p>Dibuja primero, en papel o en digital, y después responde.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> En tu dibujo, ¿qué elemento ocupa el centro de la estrella?',
+                    libre: true,
+                    opciones: {
+                        a: 'Un armario de comunicaciones con panel de parcheo',
+                        b: 'El router del operador',
+                        c: 'Un switch suelto, sin armario',
+                        d: 'No hay un punto central claro: los cables salen de varios sitios'
+                    },
+                    explicacion: 'La última opción es más común de lo que parece en instalaciones crecidas sin plan, y es justo lo que la norma evita: sin un punto central no hay documentación posible ni diagnóstico rápido.',
+                    pistas: ['No hay respuesta incorrecta: se registra lo que hayas encontrado.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué partes de tu instalación son <strong>fijas</strong> y cuáles <strong>latiguillos</strong>? Marca lo correcto.',
+                    opciones: {
+                        a: 'Es fijo el cable que va por la pared del armario a la roseta; son latiguillos los que van de la roseta al equipo y del panel al switch',
+                        b: 'Es fijo todo el cable de la instalación',
+                        c: 'Son latiguillos todos los cables de menos de 5 m',
+                        d: 'La distinción solo existe en fibra'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'La distinción no es de longitud, es de <strong>función</strong>: lo fijo se instala una vez y no se toca; los latiguillos se cambian para reconfigurar.',
+                    pistas: ['¿Qué parte se toca al mover un puesto de sitio?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Escribe el <strong>diagnóstico</strong> de la instalación que has examinado: qué subsistemas existen, cuáles faltan o están improvisados, y qué tres cosas cambiarías si te encargaran reformarla siguiendo la norma.',
+                    filas: 9,
+                    modelo: '<p>Un diagnóstico típico de una vivienda o un local pequeño suele quedar así:</p><p><strong>Lo que hay.</strong> Existe <strong>acometida</strong> —el registro donde termina la fibra del operador— y algo que hace de <strong>sala de equipos</strong> y de <strong>cuarto de telecomunicaciones</strong> a la vez: el router, a veces acompañado de un switch. Del router salen unos pocos cables hacia las habitaciones, que hacen de <strong>cableado horizontal</strong>, y en el otro extremo hay una roseta o, con frecuencia, el cable directamente suelto: eso es el <strong>área de trabajo</strong>. <strong>Vertical</strong> normalmente no hay.</p><p><strong>Lo que falla.</strong> Suele faltar un punto de distribución en condiciones: sin armario, sin panel de parcheo y sin sujeción, con los cables apoyados o colgando. No hay separación entre cable fijo y latiguillo, así que cualquier cambio obliga a manipular el cable que va por la pared. Y casi nunca hay etiquetado, de modo que identificar qué cable va a qué habitación exige seguirlo a mano.</p><p><strong>Tres cambios.</strong> Primero, instalar un <strong>armario pequeño</strong> con panel de parcheo, de modo que el cableado fijo termine ahí y todo lo que se mueva sean latiguillos. Segundo, llevar el cableado a <strong>dos tomas por estancia</strong> con rosetas en condiciones, aprovechando cualquier obra. Y tercero, <strong>etiquetar</strong> cada enlace en los dos extremos y dejar un plano, aunque sea un folio, con la correspondencia entre puertos y habitaciones.</p>',
+                    rubrica: [
+                        'Identifica qué subsistemas existen realmente en la instalación',
+                        'Señala cuáles faltan o están improvisados',
+                        'Distingue lo fijo de lo móvil en esa instalación concreta',
+                        'Propone un punto de distribución con panel de parcheo',
+                        'Propone mejoras de tomas o de canalización',
+                        'Incluye el etiquetado y la documentación entre los cambios'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

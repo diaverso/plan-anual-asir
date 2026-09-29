@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Instalación física: canalizaciones y armarios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 2 — Instalación física</h1>
+        <p>Canalizaciones y ocupación · reglas de tirado · la unidad de rack · el reparto del armario</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 58 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 21 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 26 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Ayer quedó dibujado <strong>dónde</strong> va cada cosa. Hoy toca <strong>cómo</strong> se hace: por
+            dónde pasa el cable, en qué se mete, con cuánta fuerza se tira y cómo se ordena el armario donde
+            termina todo.
+        </div>
+
+        <div class="aviso">
+            <strong>De dónde sale lo de hoy</strong>
+            El libro trata la instalación en un solo párrafo: dice que los dispositivos de interconexión deben
+            alojarse en <strong>armarios de distribución</strong>, montados en <strong>estructura de rack</strong>
+            —atornillados a unas barras verticales perforadas— y conectados mediante <strong>paneles de
+            distribución</strong> con <strong>latiguillos de longitud reducida</strong>. Añade que así se organiza
+            mejor el cableado y se facilita el mantenimiento.
+            <br><br>
+            Todo lo demás de hoy —tipos de canalización, ocupación, tensión de tirado, unidades de rack y reparto
+            interno— procede de las <strong>normas de instalación y de la práctica profesional</strong>.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#canalizaciones">Por dónde va el cable: las canalizaciones</a></li>
+                <li><a href="#ocupacion">Cuántos cables caben: la ocupación</a></li>
+                <li><a href="#tirado">Las reglas del tirado</a></li>
+                <li><a href="#separacion">Separación de la energía eléctrica</a></li>
+                <li><a href="#armarios">Armarios: la unidad de rack</a></li>
+                <li><a href="#reparto">Cómo se reparte un armario</a></li>
+                <li><a href="#extras">Lo que un armario necesita además</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="canalizaciones">1. Por dónde va el cable: las canalizaciones</h2>
+
+            <p>Un cable de red no se deja suelto. Va dentro de una <strong>canalización</strong>, que lo protege,
+            lo ordena y permite sustituirlo sin romper nada.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Tipo</th><th>Qué es</th><th>Dónde se usa</th><th>Ventaja e inconveniente</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Canaleta</strong></td>
+                        <td>Perfil de PVC con tapa, vista sobre la pared o el rodapié</td>
+                        <td>Oficinas ya construidas, reformas sin obra</td>
+                        <td>Se instala sin romper nada · queda a la vista y se llena enseguida</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bandeja</strong><br><em>rejilla o rejiband</em></td>
+                        <td>Rejilla metálica abierta, colgada del techo</td>
+                        <td>Falsos techos, naves, centros de datos</td>
+                        <td>Mucha capacidad y fácil de ampliar · necesita techo accesible</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tubo corrugado</strong></td>
+                        <td>Tubo flexible empotrado en la pared</td>
+                        <td>Obra nueva, tabiques, suelo</td>
+                        <td>Queda oculto · hay que preverlo antes de cerrar la pared</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Suelo técnico</strong></td>
+                        <td>Suelo elevado sobre pedestales, registrable</td>
+                        <td>Centros de datos y oficinas diáfanas</td>
+                        <td>Flexibilidad total · caro y roba altura</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La regla que las une a todas</strong>
+                <p>Cualquier canalización debe permitir <strong>meter y sacar cable después</strong>, sin obra. Si
+                para añadir una toma hay que picar la pared, la canalización está mal resuelta, por muy ordenada
+                que quedara el primer día.</p>
+            </div>
+
+            <h2 id="ocupacion">2. Cuántos cables caben: la ocupación</h2>
+
+            <p>Y aquí viene el cálculo que más se ignora y más problemas causa. Una canaleta
+            <strong>no se llena</strong>: se ocupa como mucho un <strong>40 %</strong> de su sección.</p>
+
+            <div class="dato">
+                <strong>Por qué solo el 40 %</strong>
+                <ul>
+                    <li>Para poder <strong>tirar de un cable nuevo</strong> sin arrastrar ni aplastar los que ya
+                    están.</li>
+                    <li>Porque los cables no se apilan como ladrillos: entre círculos siempre queda aire
+                    perdido.</li>
+                    <li>Para que el <strong>calor</strong> se disipe y no se deforme el aislante.</li>
+                    <li>Porque un haz muy apretado <strong>presiona</strong> los cables y eso empeora la diafonía,
+                    que es lo que se mide el miércoles.</li>
+                </ul>
+            </div>
+
+            <div class="destacado">
+                <strong>El cálculo, paso a paso</strong>
+                <pre><code>sección de la canaleta = ancho × alto            (mm²)
+sección útil           = sección × 0,40
+sección de un cable    = π × radio²              (radio = diámetro / 2)
+nº de cables           = sección útil ÷ sección de un cable</code></pre>
+                <p>Ejemplo con una canaleta de <strong>40 × 25 mm</strong> y cable de <strong>6 mm</strong> de
+                diámetro:</p>
+                <pre><code>40 × 25            = 1 000 mm²
+1 000 × 0,40       =   400 mm² útiles
+π × 3²             =  28,3 mm² por cable
+400 ÷ 28,3         ≈  14 cables</code></pre>
+            </div>
+
+            <p>Catorce cables en una canaleta que, a la vista, parece que admitiría el doble. Esa diferencia entre
+            lo que cabe y lo que <strong>debe</strong> caber es la que hace que, tres años después, no entre ni un
+            cable más.</p>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="tirado">3. Las reglas del tirado</h2>
+
+            <p>Tirar de un cable parece la parte menos técnica del trabajo. Es, sin embargo, donde se estropean
+            instalaciones enteras, porque el daño <strong>no se ve</strong>: el cable queda entero por fuera y con
+            la geometría interna destrozada.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Regla</th><th>Valor de referencia</th><th>Qué pasa si se incumple</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tensión máxima de tirado</strong></td>
+                        <td>Unos <strong>110 N</strong>, es decir, el peso de unos <strong>11 kg</strong>, para un par trenzado de 4 pares</td>
+                        <td>Los pares se estiran y el paso del trenzado se abre: <strong>sube la diafonía</strong> para siempre</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Radio de curvatura</strong></td>
+                        <td>Al menos <strong>4 veces el diámetro</strong> del cable; en fibra, <strong>25 mm</strong></td>
+                        <td>Deforma los pares y altera la impedancia: <strong>pérdida por retorno</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bridas sin apretar</strong></td>
+                        <td>Deben poder <strong>girar</strong> sobre el haz con la mano</td>
+                        <td>Una brida apretada aplasta el cable y hace lo mismo que una curva cerrada</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sin empalmes</strong></td>
+                        <td>Ninguno, nunca</td>
+                        <td>Discontinuidad de impedancia y punto de entrada de ruido</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sin tramos aplastados</strong></td>
+                        <td>Ni bajo una pata de armario ni pinzado en una tapa</td>
+                        <td>Igual que la brida: geometría rota en ese punto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reserva en los extremos</strong></td>
+                        <td>Unos <strong>2-3 m</strong> en el armario y algo en la roseta</td>
+                        <td>Sin reserva, un error de montaje obliga a tirar el tramo entero</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>«Si tiras con las dos manos, tiras demasiado»</strong>
+                Once kilos es <strong>menos fuerza de la que parece</strong>: es levantar una garrafa grande de
+                agua. Cuando un cable se atasca en una curva, el reflejo es tirar más fuerte, y ahí es donde se
+                estropea. Lo correcto es soltar, averiguar dónde engancha y usar <strong>guía pasacables</strong> y
+                lubricante si hace falta.
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s08_d02_tirado.png"
+         width="1400" height="760" loading="lazy"
+         alt="Cuatro errores de instalación comparados con su versión correcta: un cable doblado en ángulo cerrado frente a una curva amplia, una brida apretada que deforma el haz frente a una brida floja, un cable pinzado bajo la pata de un armario y una canaleta llena hasta arriba frente a otra ocupada solo hasta un tercio.">
+    <figcaption>Ninguno de estos cuatro errores se ve en el cable acabado. Los cuatro aparecen en la certificación.</figcaption>
+</figure>
+<pre><code>MAL                          BIEN
+  ┐                            ╭─╮        curva amplia
+  │  curva en ángulo           │ │        ≥ 4 × diámetro
+  ┘                            ╰─╯
+
+  ▓▓▓  brida apretada          ○○○        brida que gira con la mano
+  ████ canaleta llena          ██··       ocupación ≤ 40 %</code></pre>
+
+            <h2 id="separacion">4. Separación de la energía eléctrica</h2>
+
+            <p>Ya lo viste en la Semana 6 como una de las cuatro reglas de seguridad del cobre: <strong>la
+            separación entre el cableado de datos y el de energía debe cumplir los códigos de
+            seguridad</strong>. En la práctica, eso se traduce en tres cosas:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Situación</th><th>Qué hacer</th></tr></thead>
+                <tbody>
+                    <tr><td>Canaleta compartida</td><td>Usar canaleta con <strong>tabique separador</strong>, o canalizaciones distintas</td></tr>
+                    <tr><td>Recorridos paralelos largos</td><td>Mantener <strong>distancia</strong>: cuanto más largo el paralelismo, más separación</td></tr>
+                    <tr><td>Cruces inevitables</td><td>Cruzar <strong>en ángulo recto</strong>: así el acoplamiento es mínimo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Por qué el ángulo recto</strong>
+                <p>El acoplamiento entre dos cables depende de cuánto <strong>camino comparten</strong>. Dos cables
+                paralelos a lo largo de veinte metros se acoplan durante veinte metros; dos cables que se cruzan
+                perpendicularmente se acoplan en un punto. Es el mismo razonamiento del trenzado: geometría contra
+                interferencia.</p>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="armarios">5. Armarios: la unidad de rack</h2>
+
+            <p>El libro lo dice: los dispositivos se montan <strong>atornillados a unas barras verticales
+            convenientemente perforadas</strong>. Esa estructura está normalizada, y su medida es universal:</p>
+
+            <div class="dato">
+                <strong>El estándar de 19 pulgadas</strong>
+                <ul>
+                    <li>El <strong>ancho útil</strong> entre las barras es de <strong>19 pulgadas</strong>, unos
+                    48,26 cm. Por eso todo el equipamiento profesional mide lo mismo de ancho.</li>
+                    <li>La altura se cuenta en <strong>unidades de rack</strong>, la <strong>U</strong>: <strong>1 U
+                    = 44,45 mm</strong>, redondeando, <strong>4,45 cm</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Armario</th><th>Altura útil</th><th>Dónde se usa</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Mural de 6U a 12U</strong></td><td>27 a 53 cm</td><td>Un despacho, una vivienda, una zona pequeña</td></tr>
+                    <tr><td><strong>De pie de 22U</strong></td><td>98 cm</td><td>Armario de planta de tamaño medio</td></tr>
+                    <tr><td><strong>De pie de 42U</strong></td><td><strong>1,87 m</strong></td><td>El clásico de sala de equipos y centros de datos</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Además de la altura hay que elegir el <strong>fondo</strong> —600, 800 o 1 000 mm— y ahí manda el
+            equipo más profundo: un switch ocupa poco, pero un servidor puede pasar de 70 cm, y aún hay que dejar
+            sitio detrás para los cables.</p>
+
+            <h2 id="reparto">6. Cómo se reparte un armario</h2>
+
+            <p>Los elementos no se colocan por orden de llegada. Cada uno ocupa su altura y tiene su sitio
+            lógico:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Elemento</th><th>Altura</th><th>Dónde va y por qué</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Panel de parcheo</strong> de 24 puertos</td><td>1U</td><td>Arriba, donde llega el cableado fijo</td></tr>
+                    <tr><td><strong>Pasahilos</strong> o peine</td><td>1U</td><td><strong>Entre panel y switch</strong>: guía los latiguillos y evita que cuelguen</td></tr>
+                    <tr><td><strong>Switch</strong> de 24 o 48 puertos</td><td>1U</td><td>Pegado a su panel, para que los latiguillos sean cortos</td></tr>
+                    <tr><td><strong>Bandeja</strong> para equipos sin orejas</td><td>1U o 2U</td><td>Donde haga falta</td></tr>
+                    <tr><td><strong>SAI</strong></td><td>2U o más</td><td><strong>Abajo</strong>: es lo más pesado con diferencia</td></tr>
+                    <tr><td><strong>Regleta de alimentación</strong></td><td>1U, o vertical</td><td>Atrás o abajo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Las cuatro reglas del reparto</strong>
+                <ol>
+                    <li><strong>Lo pesado, abajo.</strong> Un SAI arriba convierte el armario en algo que puede
+                    volcar.</li>
+                    <li><strong>Panel y switch, emparejados</strong>, con su pasahilos entre medias. Un panel arriba
+                    del todo y su switch abajo significa 24 latiguillos cruzando el armario entero.</li>
+                    <li><strong>Deja U libres.</strong> Entre un 20 y un 30 % del armario, para crecer y para que
+                    circule el aire.</li>
+                    <li><strong>Piensa en el aire.</strong> Los equipos suelen tomar aire por delante y expulsarlo
+                    por detrás: no se tapan las rejillas ni se apilan sin criterio.</li>
+                </ol>
+            </div>
+
+<pre><code>   42U ┌──────────────────────┐
+       │  1U  panel de parcheo│  ← el cableado fijo termina aquí arriba
+       │  1U  pasahilos       │
+       │  1U  switch          │
+       │  1U  panel           │
+       │  1U  pasahilos       │
+       │  1U  switch          │
+       │      …               │
+       │      libre (20-30 %) │  ← para crecer y para el aire
+       │  2U  SAI             │  ← lo más pesado, abajo
+    0U └──────────────────────┘</code></pre>
+
+            <h2 id="extras">7. Lo que un armario necesita además</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Necesidad</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Puesta a tierra</strong></td><td>Sin ella, las pantallas de los cables apantallados no sirven de nada, como viste en la Semana 6. Y es seguridad eléctrica</td></tr>
+                    <tr><td><strong>Alimentación protegida</strong></td><td>Un <strong>SAI</strong> mantiene la electrónica viva durante un corte y filtra la calidad de la red</td></tr>
+                    <tr><td><strong>Ventilación</strong></td><td>Un armario cerrado lleno de electrónica se calienta. Ventiladores, rejillas o sala climatizada</td></tr>
+                    <tr><td><strong>Cierre</strong></td><td>Un armario accesible a cualquiera es un problema de seguridad: ahí está toda la red</td></tr>
+                    <tr><td><strong>Espacio delante y detrás</strong></td><td>Para poder trabajar. Un armario pegado a la pared obliga a desmontarlo para tocar la parte trasera</td></tr>
+                    <tr><td><strong>Iluminación y un enchufe</strong></td><td>Suena menor, y se agradece a las once de la noche con una avería</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>El armario del pasillo</strong>
+                Un error clásico de las instalaciones pequeñas: colgar el armario en un pasillo, sin tierra
+                específica, sin SAI, sin ventilación y con la llave puesta. Funciona el primer año. El problema
+                aparece cuando hay que ampliar, cuando entra calor en verano o cuando alguien apoya algo contra
+                las rejillas.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Canalizaciones: <strong>canaleta</strong>, <strong>bandeja</strong>, <strong>tubo</strong> y
+                    <strong>suelo técnico</strong>. Todas deben permitir meter cable después.</li>
+                    <li>Ocupación máxima: <strong>40 %</strong> de la sección. Una canaleta de 40 × 25 admite unos
+                    <strong>14 cables</strong> de 6 mm.</li>
+                    <li>Tirado: <strong>110 N</strong> de tensión máxima, radio de curvatura de al menos
+                    <strong>4 veces el diámetro</strong>, bridas que giren, sin empalmes y con reserva.</li>
+                    <li>Datos y energía: <strong>separados</strong>, y si se cruzan, <strong>en ángulo
+                    recto</strong>.</li>
+                    <li><strong>1 U = 44,45 mm</strong>; el armario estándar es de <strong>19 pulgadas</strong> de
+                    ancho; uno de 42U mide <strong>1,87 m</strong>.</li>
+                    <li>Reparto: <strong>lo pesado abajo</strong>, panel y switch emparejados con pasahilos, y entre
+                    un <strong>20 y un 30 % libre</strong>.</li>
+                    <li>Un armario necesita <strong>tierra, SAI, ventilación, cierre y espacio</strong> para
+                    trabajar.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«En esta canaleta caben treinta cables»</td><td>Caben a presión; <strong>deben</strong> ir unos catorce. El 40 % no es un capricho</td></tr>
+                    <tr><td>«El cable aguanta, tira más fuerte»</td><td>Por encima de <strong>110 N</strong> se abre el trenzado y la diafonía sube para siempre</td></tr>
+                    <tr><td>«Una brida bien apretada deja el haz más limpio»</td><td>Aplasta los cables y altera su geometría: debe poder <strong>girar</strong> con la mano</td></tr>
+                    <tr><td>«El daño de una curva cerrada se ve»</td><td>No se ve: el cable queda entero por fuera y suspende en la certificación</td></tr>
+                    <tr><td>«Los cables de red y los de corriente pueden ir juntos si están bien aislados»</td><td>Hay que <strong>separarlos</strong>, y cruzarlos en ángulo recto cuando no quede otra</td></tr>
+                    <tr><td>«El armario lo lleno de arriba abajo, así aprovecho»</td><td>Hay que dejar <strong>20-30 % libre</strong> para crecer y para el aire</td></tr>
+                    <tr><td>«El SAI arriba, que pesa poco»</td><td>Es lo más pesado del armario: va <strong>abajo</strong>, o el conjunto puede volcar</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 21 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Un armario vacío y el material de una planta de 48 puestos. Hay que repartir las unidades, elegir
+            la altura del armario y comprobar si las canaletas previstas dan de sí.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 2</strong></a> (66 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 3</strong>
+            <p><strong>Comprobación y certificación</strong>, el día más denso de la semana y el que más sale del
+            libro: los tres tipos de comprobador, la reflectometría y los parámetros que deciden si la instalación
+            se acepta.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> de los errores de hoy —curva cerrada, brida apretada, cable
+            aplastado—, ¿cuál crees que aparecerá en el informe y con qué nombre?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Un instalador te dice: «en esa canaleta de 40 × 25 te meto los 25 cables sin problema, entran justos». ¿Qué le respondes, con números?',
+                modelo: 'Que <strong>entrar no es caber</strong>. La sección de esa canaleta es 40 × 25 = <strong>1 000 mm²</strong>, y la norma de buena práctica dice que se ocupe como máximo el <strong>40 %</strong>, es decir, <strong>400 mm²</strong>. Un cable de 6 mm de diámetro ocupa π × 3² ≈ <strong>28,3 mm²</strong>, así que caben unos <strong>14 cables</strong>, no 25.</p><p>Meter 25 tiene tres consecuencias: no se podrá <strong>tirar ningún cable más</strong> sin arrastrar los existentes, el haz quedará <strong>comprimido</strong> —lo que altera la geometría de los pares y empeora la diafonía— y el calor no se disipará bien. Todo eso aparece después en la certificación, y entonces ya no hay arreglo barato.</p><p>La solución es usar una canaleta mayor desde el principio, o dos recorridos. Sobredimensionar la canalización es de lo más rentable que hay: el perfil de PVC vale poco y la mano de obra de volver a abrirlo, mucho.',
+                puntos: [
+                    'Calcula la sección total y el 40 % útil',
+                    'Calcula la sección de un cable con π r²',
+                    'Da la cifra de cables admisibles',
+                    'Explica al menos dos consecuencias de sobrellenar',
+                    'Propone sobredimensionar la canalización'
+                ]
+            },
+            {
+                pregunta: 'Después de una instalación, varios enlaces suspenden la certificación por diafonía y pérdida por retorno, aunque los conectores están bien montados y los colores en orden. ¿Qué pudo pasar durante el tirado?',
+                modelo: 'Todo apunta a daños <strong>invisibles</strong> producidos al instalar, no al conectorizar. Los sospechosos habituales son tres.</p><p><strong>Exceso de tensión al tirar.</strong> Por encima de unos <strong>110 N</strong> los pares se estiran y el paso del trenzado se abre. Un trenzado más abierto cancela peor, y eso se traduce directamente en un <strong>NEXT</strong> insuficiente a lo largo de todo el tramo, no en un punto concreto.</p><p><strong>Curvas demasiado cerradas.</strong> Por debajo de unas <strong>cuatro veces el diámetro</strong> del cable, la curva deforma los pares y cambia la <strong>impedancia</strong> en ese punto; parte de la señal se refleja y aparece como <strong>pérdida por retorno</strong>.</p><p><strong>Bridas apretadas o cables aplastados.</strong> Producen el mismo efecto que la curva cerrada, pero localizado: una brida que no gira con la mano, un cable pinzado bajo la pata del armario o atrapado en la tapa de una canaleta.</p><p>Lo característico de estos tres fallos es que <strong>el cable se ve perfecto por fuera</strong>. Por eso conviene certificar antes de rematar y cerrar todo, y por eso un TDR es tan útil: indica <strong>a qué distancia</strong> está la anomalía.',
+                puntos: [
+                    'Descarta el montaje de conectores como causa única',
+                    'Cita el exceso de tensión y su efecto sobre el trenzado',
+                    'Cita el radio de curvatura y lo relaciona con la impedancia',
+                    'Menciona bridas o aplastamientos',
+                    'Señala que el daño es invisible y propone certificar o usar un TDR'
+                ]
+            },
+            {
+                pregunta: 'Te dan un armario de 12U para una planta con dos paneles de 24 puertos, dos switches, un SAI de 2U y un pasahilos por panel. ¿Cabe? ¿Cómo lo repartirías y qué problema ves?',
+                modelo: '<p>Contemos: 2 paneles (2U) + 2 pasahilos (2U) + 2 switches (2U) + SAI (2U) = <strong>8U ocupadas</strong> de las 12 disponibles. Cabe, y quedan <strong>4U libres</strong>, que es un 33 %: justo en el margen recomendado del 20-30 %.</p><p><strong>Reparto</strong>, de arriba abajo: panel, pasahilos, switch; panel, pasahilos, switch; después el espacio libre; y el <strong>SAI abajo del todo</strong>, porque es lo más pesado y un armario mural con el peso arriba es peligroso.</p><p><strong>El problema que veo</strong> no es el espacio, es el conjunto: un armario de 12U suele ser <strong>mural</strong>, y ahí hay que comprobar tres cosas. Que el <strong>fondo</strong> sea suficiente para los equipos y para los cables de detrás. Que la pared y los anclajes aguanten el peso con el SAI dentro. Y que haya <strong>ventilación</strong>, porque dos switches y un SAI en un volumen pequeño y cerrado calientan bastante.</p><p>Si la planta va a crecer, con 4U libres el margen es corto: cada nuevo panel arrastra su pasahilos y su switch, es decir, 3U por cada 24 puestos más.</p>',
+                puntos: [
+                    'Suma correctamente las unidades ocupadas y las libres',
+                    'Coloca el SAI abajo por el peso',
+                    'Empareja cada panel con su pasahilos y su switch',
+                    'Comprueba el margen libre frente al 20-30 % recomendado',
+                    'Añade una consideración de fondo, anclaje o ventilación',
+                    'Valora el crecimiento futuro en unidades'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: 'Los cuatro tipos de canalización', dorso: '<strong>Canaleta</strong> vista · <strong>bandeja</strong> o rejilla · <strong>tubo</strong> empotrado · <strong>suelo técnico</strong>.' },
+            { frente: '¿Qué debe permitir toda canalización?', dorso: '<strong>Meter y sacar cable después</strong>, sin obra. Si hay que picar para añadir una toma, está mal resuelta.' },
+            { frente: 'Ocupación máxima de una canalización', dorso: 'El <strong>40 %</strong> de su sección: para poder tirar más cable, disipar calor y no comprimir el haz.' },
+            { frente: '¿Cómo se calculan los cables que caben?', dorso: '(ancho × alto × 0,40) ÷ (π × radio²). En 40 × 25 mm con cable de 6 mm, unos <strong>14</strong>.' },
+            { frente: 'Tensión máxima de tirado', dorso: 'Unos <strong>110 N</strong>, el peso de <strong>11 kg</strong>. Más tensión abre el trenzado y sube la diafonía.' },
+            { frente: 'Radio de curvatura mínimo en par trenzado', dorso: 'Al menos <strong>4 veces el diámetro</strong> del cable. En fibra, <strong>25 mm</strong>.' },
+            { frente: '¿Cómo debe quedar una brida?', dorso: 'Floja: debe poder <strong>girar sobre el haz</strong> con la mano. Apretada, aplasta el cable.' },
+            { frente: 'Datos y energía en la misma canaleta', dorso: 'Hay que <strong>separarlos</strong> con tabique o canalizaciones distintas, y cruzarlos <strong>en ángulo recto</strong>.' },
+            { frente: '¿Cuánto mide una unidad de rack?', dorso: '<strong>1 U = 44,45 mm</strong>, unos 4,45 cm. El ancho útil normalizado es de <strong>19 pulgadas</strong>.' },
+            { frente: 'Altura de un armario de 42U', dorso: '42 × 4,45 cm ≈ <strong>1,87 m</strong> de altura útil.' },
+            { frente: 'Las cuatro reglas del reparto del armario', dorso: '<strong>Pesado abajo</strong> · panel y switch <strong>emparejados</strong> con pasahilos · <strong>20-30 % libre</strong> · cuidar el <strong>aire</strong>.' },
+            { frente: '¿Qué necesita un armario además de equipos?', dorso: '<strong>Tierra</strong>, <strong>SAI</strong>, <strong>ventilación</strong>, <strong>cierre</strong> y espacio para trabajar delante y detrás.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 2: Instalación física',
+        tiempo: '21 minutos',
+        minutos: 21,
+        questions: [
+            {
+                topic: 'Canalizaciones',
+                repaso: '#canalizaciones',
+                text: 'Hay que cablear una oficina ya construida, sin posibilidad de hacer obra. ¿Qué canalización encaja?',
+                options: {
+                    a: 'Tubo corrugado empotrado',
+                    b: 'Canaleta vista sobre la pared o el rodapié',
+                    c: 'Suelo técnico',
+                    d: 'Ninguna: hay que picar'
+                },
+                answer: 'b',
+                feedback: 'La canaleta se instala sin romper nada. Su precio es estético y de capacidad: se llena antes de lo que parece.'
+            },
+            {
+                topic: 'Canalizaciones',
+                repaso: '#canalizaciones',
+                text: '¿Qué requisito debe cumplir cualquier canalización, sea del tipo que sea?',
+                options: {
+                    a: 'Ser metálica',
+                    b: 'Ir siempre oculta',
+                    c: 'Permitir meter y sacar cable después, sin obra',
+                    d: 'Estar puesta a tierra'
+                },
+                answer: 'c',
+                feedback: 'Si añadir una toma obliga a picar la pared, la canalización no cumple su función aunque el primer día quedara perfecta.'
+            },
+            {
+                topic: 'Ocupación',
+                repaso: '#ocupacion',
+                text: '¿Cuál es la ocupación máxima recomendada de una canalización?',
+                options: { a: '40 %', b: '60 %', c: '80 %', d: '100 %, si entran' },
+                answer: 'a',
+                feedback: 'Cuatro motivos: poder tirar más cable, el aire perdido entre círculos, la disipación del calor y no comprimir los pares.'
+            },
+            {
+                topic: 'Ocupación',
+                repaso: '#ocupacion',
+                text: 'Canaleta de 60 × 40 mm y cable de 6 mm de diámetro. ¿Cuántos cables admite al 40 %?',
+                options: { a: 'Unos 14', b: 'Unos 85', c: 'Unos 34', d: 'Unos 50' },
+                answer: 'c',
+                feedback: '60 × 40 = 2 400 mm²; el 40 % son 960; y 960 ÷ 28,3 ≈ <strong>34 cables</strong>. Los 14 son los de la canaleta de 40 × 25.'
+            },
+            {
+                topic: 'Ocupación',
+                repaso: '#ocupacion',
+                text: '¿Por qué un haz de cables demasiado apretado empeora la certificación?',
+                options: {
+                    a: 'Porque aumenta la longitud del enlace',
+                    b: 'Porque la presión deforma los pares y empeora la diafonía',
+                    c: 'Porque reduce la categoría del cable',
+                    d: 'No la empeora: solo dificulta el montaje'
+                },
+                answer: 'b',
+                feedback: 'Todo lo que altere la <strong>geometría</strong> de los pares se paga en diafonía o en pérdida por retorno.'
+            },
+            {
+                topic: 'Tirado',
+                repaso: '#tirado',
+                text: '¿Cuál es la tensión máxima aproximada al tirar de un par trenzado de cuatro pares?',
+                options: { a: '11 N', b: '1 100 N', c: '110 N, el peso de unos 11 kg', d: 'No hay límite si el cable no se rompe' },
+                answer: 'c',
+                feedback: 'Es menos fuerza de la que parece. Si un cable se atasca, no se tira más fuerte: se busca dónde engancha.'
+            },
+            {
+                topic: 'Tirado',
+                repaso: '#tirado',
+                text: 'Una brida está bien puesta cuando…',
+                options: {
+                    a: 'No se mueve en absoluto',
+                    b: 'Está cortada al ras',
+                    c: 'Sujeta cables de datos y de energía juntos',
+                    d: 'Puede girar sobre el haz con la mano'
+                },
+                answer: 'd',
+                feedback: 'Una brida apretada hace lo mismo que una curva cerrada: deforma el cable en ese punto, y no se ve.'
+            },
+            {
+                topic: 'Tirado',
+                repaso: '#tirado',
+                text: 'El radio de curvatura mínimo de un par trenzado es, como referencia…',
+                options: {
+                    a: 'Cuatro veces el diámetro del cable',
+                    b: 'Igual al diámetro del cable',
+                    c: '25 mm, igual que la fibra',
+                    d: 'No existe límite en cobre'
+                },
+                answer: 'a',
+                feedback: 'Los 25 mm son el mínimo de la <strong>fibra</strong>, que viste en la Semana 6. En cobre la referencia es proporcional al diámetro.'
+            },
+            {
+                topic: 'Separación',
+                repaso: '#separacion',
+                text: 'Un cable de datos tiene que cruzar una línea eléctrica. ¿Cómo debe hacerlo?',
+                options: {
+                    a: 'En paralelo el mayor tramo posible',
+                    b: 'En ángulo recto, para que el acoplamiento se reduzca a un punto',
+                    c: 'Enrollándose alrededor de ella',
+                    d: 'Da igual, si el cable es apantallado'
+                },
+                answer: 'b',
+                feedback: 'El acoplamiento depende del <strong>camino compartido</strong>: en perpendicular, ese camino es casi nulo.'
+            },
+            {
+                topic: 'Armarios',
+                repaso: '#armarios',
+                text: '¿Cuánto mide una unidad de rack?',
+                options: { a: '19 mm', b: '10 cm', c: '19 pulgadas', d: '44,45 mm' },
+                answer: 'd',
+                feedback: 'Las <strong>19 pulgadas</strong> son el ancho útil entre las barras, no la altura. La U son <strong>44,45 mm</strong>.'
+            },
+            {
+                topic: 'Armarios',
+                repaso: '#armarios',
+                text: '¿Cuánta altura útil tiene un armario de 42U?',
+                options: { a: 'Unos 1,87 m', b: 'Unos 42 cm', c: 'Unos 2,60 m', d: 'Unos 95 cm' },
+                answer: 'a',
+                feedback: '42 × 4,45 cm ≈ <strong>1,87 m</strong>. Es el armario clásico de sala de equipos.'
+            },
+            {
+                topic: 'Reparto',
+                repaso: '#reparto',
+                text: '¿Dónde se coloca el SAI dentro del armario y por qué?',
+                options: {
+                    a: 'Arriba, para que se ventile mejor',
+                    b: 'En el centro, entre los switches',
+                    c: 'Abajo, porque es lo más pesado y el armario podría volcar',
+                    d: 'Fuera del armario siempre'
+                },
+                answer: 'c',
+                feedback: 'Primera regla del reparto: <strong>lo pesado, abajo</strong>. Especialmente en armarios murales.'
+            },
+            {
+                topic: 'Reparto',
+                repaso: '#reparto',
+                text: '¿Para qué sirve el pasahilos entre un panel y su switch?',
+                options: {
+                    a: 'Para guiar los latiguillos y evitar que cuelguen y se doblen',
+                    b: 'Para ventilar el armario',
+                    c: 'Para sujetar el peso del panel',
+                    d: 'Para conectar la tierra'
+                },
+                answer: 'a',
+                feedback: 'Y por eso panel y switch van <strong>emparejados</strong>: latiguillos cortos, ordenados y sin curvas forzadas.'
+            },
+            {
+                topic: 'Extras del armario',
+                repaso: '#extras',
+                text: '¿Qué proporción del armario conviene dejar libre?',
+                options: { a: 'Ninguna: se aprovecha todo', b: 'Un 5 %', c: 'La mitad', d: 'Entre un 20 y un 30 %' },
+                answer: 'd',
+                feedback: 'Para crecer sin cambiar de armario y para que circule el aire. Un armario lleno hasta arriba es un armario que habrá que sustituir.'
+            },
+            {
+                topic: 'Recuperación · Semana 6',
+                repaso: '../../Semana_06/Dia_01/teoria.html#apantallamientos',
+                text: '<em>Repaso.</em> Se instala cable apantallado y el armario no tiene puesta a tierra. ¿Qué ocurre?',
+                options: {
+                    a: 'Nada: la pantalla protege igual',
+                    b: 'Las pantallas quedan sin referencia y pueden comportarse como antena, metiendo más ruido que un UTP',
+                    c: 'El cable pierde categoría',
+                    d: 'Los switches no arrancan'
+                },
+                answer: 'b',
+                feedback: 'Es el mismo aviso de la Semana 6, ahora aplicado al armario: sin tierra, apantallar sale <strong>peor</strong> que no apantallar.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

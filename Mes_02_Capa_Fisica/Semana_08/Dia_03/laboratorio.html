@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: lee el informe</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">72 min</span></div>
+        <div class="info-item"><strong>Material:</strong> los tres informes de esta página</div>
+        <div class="info-item"><strong>Herramientas:</strong> ninguna</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Tres enlaces de la misma obra, tres informes de certificación. <strong>Uno aprueba y dos
+            suspenden.</strong> Hay que dar el veredicto de cada uno, señalar el parámetro culpable y deducir qué
+            se hizo mal durante la instalación.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>De dónde salen estos informes</strong>
+            Están <strong>construidos para el laboratorio</strong>, no copiados de un equipo real. Los parámetros
+            y sus causas son los del libro; los valores numéricos y los límites son realistas para
+            <strong>categoría 6, enlace permanente</strong>, pero no proceden de ninguna tabla oficial: el propio
+            libro avisa de que no es su propósito dar los valores máximos. Lo que se practica aquí es
+            <strong>leer e interpretar</strong>, no memorizar cifras.
+        </div>
+
+        <div class="teoria">
+
+            <h2>Cómo se lee esta tabla (8 min)</h2>
+
+            <p>En los tres informes, cada fila tiene lo mismo:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Columna</th><th>Qué es</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Medido</strong></td><td>Lo que ha obtenido el certificador</td></tr>
+                    <tr><td><strong>Límite</strong></td><td>Lo que exige la categoría en ese modo</td></tr>
+                    <tr><td><strong>Margen</strong></td><td>La distancia entre ambos. <strong>Positivo, cumple</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Ojo al sentido de cada parámetro</strong>
+                <ul>
+                    <li><strong>Longitud y atenuación</strong> son límites <strong>máximos</strong>: cumplir es
+                    quedarse <strong>por debajo</strong>.</li>
+                    <li><strong>NEXT, ACR y pérdida por retorno</strong> son <strong>mínimos</strong>: cumplir es
+                    quedarse <strong>por encima</strong>.</li>
+                </ul>
+                <p>Por eso el margen se calcula en un sentido o en otro según la fila. El certificador ya lo hace;
+                aquí lo harás tú para entenderlo.</p>
+            </div>
+
+            <h2>Informe 1 — Enlace A-07 (12 min)</h2>
+
+            <pre><code>CERTIFICACIÓN DE ENLACE · Cat 6 · ENLACE PERMANENTE
+Enlace: A-07   Planta 1   Fecha: 12/03   Operador: J.R.
+
+Parámetro              Medido    Límite    Margen
+─────────────────────────────────────────────────
+Mapeado de hilos       correcto      —        —
+Longitud                 78,0 m    90,0 m   +12,0 m
+Atenuación (peor par)    18,2 dB   21,3 dB   +3,1 dB
+NEXT (peor par 1-2)      42,1 dB   39,3 dB   +2,8 dB
+ACR (peor par)           23,9 dB   16,0 dB   +7,9 dB
+Pérdida por retorno      14,2 dB   12,0 dB   +2,2 dB</code></pre>
+
+            <h2>Informe 2 — Enlace A-14 (12 min)</h2>
+
+            <pre><code>CERTIFICACIÓN DE ENLACE · Cat 6 · ENLACE PERMANENTE
+Enlace: A-14   Planta 1   Fecha: 12/03   Operador: J.R.
+
+Parámetro              Medido    Límite    Margen
+─────────────────────────────────────────────────
+Mapeado de hilos       correcto      —        —
+Longitud                 61,0 m    90,0 m   +29,0 m
+Atenuación (peor par)    15,1 dB   21,3 dB   +6,2 dB
+NEXT (peor par 3-6)      33,5 dB   39,3 dB    −5,8 dB
+ACR (peor par)           18,4 dB   16,0 dB   +2,4 dB
+Pérdida por retorno       9,6 dB   12,0 dB    −2,4 dB</code></pre>
+
+            <h2>Informe 3 — Enlace B-03 (12 min)</h2>
+
+            <pre><code>CERTIFICACIÓN DE ENLACE · Cat 6 · ENLACE PERMANENTE
+Enlace: B-03   Planta 2   Fecha: 12/03   Operador: J.R.
+
+Parámetro              Medido    Límite    Margen
+─────────────────────────────────────────────────
+Mapeado de hilos       correcto      —        —
+Longitud                104,0 m    90,0 m   −14,0 m
+Atenuación (peor par)    24,8 dB   21,3 dB    −3,5 dB
+NEXT (peor par 4-5)      40,6 dB   39,3 dB   +1,3 dB
+ACR (peor par)           15,8 dB   16,0 dB    −0,2 dB
+Pérdida por retorno      13,1 dB   12,0 dB   +1,1 dB
+
+Nota del operador: el plano da 47 m para este recorrido.</code></pre>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has dado el veredicto de los tres enlaces con su parámetro culpable.</li>
+                <li>Has deducido el error de instalación que hay detrás de cada fallo.</li>
+                <li>Has detectado el enlace que aprueba pero con un margen preocupante.</li>
+                <li>Has escrito la respuesta al instalador con las acciones a tomar.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_02/laboratorio.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/laboratorio.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Laboratorio: lee el informe',
+    subtitulo: 'Tres certificaciones · un aprobado y dos suspensos · del parámetro a la causa',
+    tiempo: '72 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Enlace A-07',
+            tiempo: '16 min',
+            enunciado: '<p>El primer informe. Empieza por el veredicto y sigue por los detalles.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Cuál es el veredicto de este enlace?',
+                    opciones: {
+                        a: 'FAIL: la atenuación está muy alta',
+                        b: 'PASS: todos los márgenes son positivos',
+                        c: 'FAIL: la longitud supera el límite',
+                        d: 'No se puede saber sin conocer la categoría'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los seis parámetros cumplen. La categoría y el modo sí están en la cabecera: <strong>Cat 6, enlace permanente</strong>.',
+                    pistas: ['Mira la columna de márgenes: ¿hay alguno negativo?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Cuántos metros de margen tiene en longitud?',
+                    respuesta: 12,
+                    unidad: 'm',
+                    explicacion: '90 − 78 = <strong>12 m</strong>. Hay sitio de sobra para reubicar la roseta o reordenar el armario en el futuro.',
+                    pistas: ['Límite menos medido.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> El NEXT es de 42,1 dB frente a un límite de 39,3. ¿Cómo se interpreta?',
+                    opciones: {
+                        a: 'Mal: cuanto más bajo el NEXT, mejor',
+                        b: 'Mal: supera el límite',
+                        c: 'Bien: el NEXT es un mínimo, y estar por encima significa poca diafonía',
+                        d: 'No afecta al veredicto'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'NEXT, ACR y pérdida por retorno son <strong>mínimos</strong>. Superarlos es lo correcto: indica que la señal parásita está muy por debajo de la buena.',
+                    pistas: ['¿Es el NEXT una pérdida o un margen?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Qué dirías de la calidad de este enlace, más allá del PASS?',
+                    opciones: {
+                        a: 'Que está al límite y conviene rehacerlo',
+                        b: 'Que es un enlace sano: márgenes de entre 2 y 8 dB, holgados para Cat 6',
+                        c: 'Que habría que certificarlo como canal',
+                        d: 'Que el mapeado no se ha medido'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Márgenes de varios decibelios son lo que se espera de un trabajo bien hecho. Es el enlace de referencia con el que comparar los otros dos.',
+                    pistas: ['Compara sus márgenes con los del resto de informes.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Enlace A-14',
+            tiempo: '20 min',
+            enunciado: '<p>El segundo informe suspende. Hay que averiguar por qué y qué se hizo mal.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué parámetros suspenden en este enlace?',
+                    multiple: true,
+                    opciones: {
+                        a: 'Longitud',
+                        b: 'Atenuación',
+                        c: 'NEXT',
+                        d: 'Pérdida por retorno',
+                        e: 'Mapeado de hilos'
+                    },
+                    respuesta: ['c', 'd'],
+                    explicacion: 'Los dos con margen negativo: <strong>NEXT</strong> con −5,8 dB y <strong>pérdida por retorno</strong> con −2,4 dB. Longitud y atenuación van sobradas.',
+                    pistas: ['Busca los márgenes negativos.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> El enlace mide solo 61 m y la atenuación es buena. ¿Qué descarta eso?',
+                    opciones: {
+                        a: 'Descarta la longitud excesiva como causa: el problema no es la distancia ni el recorrido',
+                        b: 'Descarta que haya conectores',
+                        c: 'Descarta que el cable sea Cat 6',
+                        d: 'No descarta nada'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Con 29 m de margen en longitud y 6,2 dB en atenuación, el cable está entero y es corto. El problema está en otro sitio.',
+                    pistas: ['Si el cable fuera largo o estuviera dañado en todo su recorrido, ¿qué parámetros fallarían?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> NEXT y pérdida por retorno fallan a la vez, con el mapeado correcto. Según el libro, ¿cuál es la causa que explica los dos?',
+                    opciones: {
+                        a: 'Temperatura elevada en la sala',
+                        b: 'Longitud excesiva',
+                        c: 'Interferencia de una línea eléctrica cercana',
+                        d: 'Destrenzado excesivo de los pares en los conectores'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'El libro lo cita como causa de <strong>diafonía alta</strong> y también de <strong>pérdida por retorno excesiva</strong>. Es la firma inconfundible de una terminación mal hecha.',
+                    pistas: ['Busca la causa que aparece en las dos listas del libro.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> El peor par del NEXT es el <strong>3-6</strong>. ¿Por qué no sorprende?',
+                    opciones: {
+                        a: 'Porque es el par azul, el más largo',
+                        b: 'Porque el par 3-6 ocupa pines no contiguos y es el más fácil de destrenzar de más al conectorizar',
+                        c: 'Porque el 3-6 no se usa en Cat 6',
+                        d: 'Porque es el par que va a tierra'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es el par «partido» entre los pines 3 y 6 que viste en la Semana 6: al saltarse el 4 y el 5, hay que separar más sus hilos y es donde más se destrenza sin querer.',
+                    pistas: ['Recuerda qué pines ocupa cada par en la norma T568.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> ¿Qué acción propones para este enlace?',
+                    opciones: {
+                        a: 'Rehacer las dos terminaciones cuidando el destrenzado y volver a certificar',
+                        b: 'Sustituir todo el cable del tramo',
+                        c: 'Certificarlo como canal, que es menos exigente',
+                        d: 'Aceptarlo: solo falla en dos parámetros'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Es lo barato y lo correcto: el cable está sano —longitud y atenuación lo demuestran—, así que el problema está en los extremos. Cambiar el modo de medida para que apruebe sería hacer trampa.',
+                    pistas: ['¿Qué parte del enlace está bien y qué parte no?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Enlace B-03',
+            tiempo: '20 min',
+            enunciado: '<p>El tercer informe, con una nota del operador que es la clave.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué parámetros suspenden aquí?',
+                    multiple: true,
+                    opciones: {
+                        a: 'Longitud',
+                        b: 'Atenuación',
+                        c: 'ACR',
+                        d: 'NEXT',
+                        e: 'Pérdida por retorno'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'Longitud con −14 m, atenuación con −3,5 dB y ACR por muy poco, −0,2 dB. El NEXT y la pérdida por retorno aprueban, aunque justos.',
+                    pistas: ['Tres márgenes negativos, uno de ellos por décimas.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> El plano da 47 m y el certificador mide 104. ¿Cuántos metros hay sin explicar?',
+                    respuesta: 57,
+                    unidad: 'm',
+                    explicacion: '104 − 47 = <strong>57 m</strong>. Ni el 20 % de recorrido ni los cambios de altura justifican algo así.',
+                    pistas: ['Una resta entre lo medido y lo previsto.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué explica una diferencia así, según el libro?',
+                    opciones: {
+                        a: 'Un error del certificador',
+                        b: 'Que el plano esté a otra escala',
+                        c: 'Un rollo de cable sobrante escondido dentro del conducto',
+                        d: 'Que el cable sea de otra categoría'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'El libro lo dice expresamente: medir la longitud sirve para <strong>detectar posibles rollos en el interior de los conductos</strong>. Alguien dejó el sobrante enrollado en el falso techo en vez de cortarlo.',
+                    pistas: ['¿Para qué más sirve medir la longitud, además de comprobar el límite?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Por qué falla también la atenuación?',
+                    opciones: {
+                        a: 'Porque la longitud excesiva es la primera causa de atenuación alta que da el libro',
+                        b: 'Porque los conectores están mal',
+                        c: 'Porque hace calor en la planta 2',
+                        d: 'Por casualidad: son fallos independientes'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Un fallo explica al otro: 104 m de cable atenúan más que 47. Corrigiendo la longitud, la atenuación caerá sola.',
+                    pistas: ['¿Cuál de las tres causas del libro encaja con lo que ya sabemos de este enlace?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> El ACR falla por 0,2 dB. ¿Qué lo ha arrastrado?',
+                    opciones: {
+                        a: 'El NEXT, que es malísimo',
+                        b: 'La atenuación excesiva: el ACR es NEXT menos atenuación, y aquí el NEXT está bien pero la atenuación se ha disparado',
+                        c: 'La pérdida por retorno',
+                        d: 'El mapeado de hilos'
+                    },
+                    respuesta: 'b',
+                    explicacion: '40,6 − 24,8 = 15,8, justo por debajo del límite de 16. Con la atenuación en su sitio, el ACR volvería a cumplir sin tocar nada más.',
+                    pistas: ['Calcula el ACR restando los dos valores del informe.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>f)</strong> ¿Qué acción propones para B-03?',
+                    opciones: {
+                        a: 'Rehacer los conectores',
+                        b: 'Cambiar a categoría 6A',
+                        c: 'Localizar el rollo sobrante, retirarlo dejando la reserva justa, y volver a certificar',
+                        d: 'Aceptar el enlace, porque el NEXT cumple'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Con el tramo en su longitud real —unos 55-60 m contando recorridos—, la atenuación bajará y con ella se arreglará también el ACR. Un solo problema causaba tres fallos.',
+                    pistas: ['¿Qué causa única está detrás de los tres parámetros fallidos?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: El informe al instalador',
+            tiempo: '16 min',
+            enunciado: '<p>Cierra el laboratorio con el escrito que enviarías.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Volviendo al A-07, que aprobaba: ¿qué margen tiene más ajustado?',
+                    opciones: {
+                        a: 'La longitud, con 12 m',
+                        b: 'El ACR, con 7,9 dB',
+                        c: 'La pérdida por retorno, con 2,2 dB',
+                        d: 'La atenuación, con 3,1 dB'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Es el más bajo de los suyos, aunque sigue siendo un margen razonable. Conviene anotarlo: si algún día ese enlace da problemas, ya se sabe por dónde empezar.',
+                    pistas: ['Compara los cuatro márgenes en decibelios.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Redacta el <strong>escrito al instalador</strong>: veredicto de los tres enlaces, causa de cada fallo, acción que le pides y plazo o condición para aceptar la obra.',
+                    filas: 12,
+                    modelo: '<p><strong>A-07 · APROBADO.</strong> Cumple los seis parámetros con márgenes de entre 2,2 y 12 unidades. No requiere ninguna acción. Queda anotado que su margen más ajustado es la pérdida por retorno, con +2,2 dB, valor normal pero útil como referencia si en el futuro diera problemas.</p><p><strong>A-14 · RECHAZADO.</strong> Suspende en <strong>NEXT</strong> (33,5 dB frente a 39,3, margen −5,8) y en <strong>pérdida por retorno</strong> (9,6 frente a 12, margen −2,4). La longitud y la atenuación son correctas, así que el cable está sano y el problema está en las <strong>terminaciones</strong>: ambos parámetros los degrada el <strong>destrenzado excesivo</strong> de los pares en los conectores. Que el peor par sea el 3-6 lo confirma, por ser el que más se separa al conectorizar. <strong>Acción:</strong> rehacer las dos terminaciones respetando el destrenzado máximo de categoría 6 y comprobar la continuidad de la pantalla si el cable es apantallado. Después, recertificar.</p><p><strong>B-03 · RECHAZADO.</strong> Suspende en <strong>longitud</strong> (104 m frente a 90), <strong>atenuación</strong> (24,8 frente a 21,3) y <strong>ACR</strong> (15,8 frente a 16). Los tres fallos tienen una causa única: el recorrido previsto es de 47 m, así que sobran unos <strong>57 m</strong> que casi con seguridad están enrollados dentro del conducto. Esa longitud extra explica la atenuación, y la atenuación explica el ACR. <strong>Acción:</strong> localizar el rollo sobrante, retirarlo dejando solo la reserva necesaria en el armario, rematar la terminación y recertificar.</p><p><strong>Condición de aceptación.</strong> La obra se aceptará cuando se entregue la recertificación de A-14 y B-03 en modo <strong>enlace permanente</strong> y categoría 6, con todos los márgenes positivos. Se recuerda que la medida debe repetirse en el mismo modo: no se aceptarán informes en modo canal para estos enlaces.</p>',
+                    rubrica: [
+                        'Da el veredicto correcto de los tres enlaces',
+                        'Identifica los parámetros fallidos con sus cifras',
+                        'Atribuye A-14 al destrenzado, razonando por qué el cable está sano',
+                        'Atribuye B-03 al rollo de cable y encadena longitud, atenuación y ACR',
+                        'Propone una acción concreta para cada enlace rechazado',
+                        'Fija la condición de aceptación, incluido el modo de medida'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

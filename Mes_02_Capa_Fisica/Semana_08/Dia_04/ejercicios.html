@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios: etiquetado y documentación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">72 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 3 construye una <strong>tabla de enlaces</strong> real. Es el documento que más se
+            consulta en la vida de una instalación, y el que distingue una obra entregada de un montón de cables.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/ejercicios.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Ejercicios',
+    subtitulo: 'Código de etiquetado · qué se etiqueta · tabla de enlaces · dosier y garantía',
+    tiempo: '72 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: El código de etiquetado',
+            tiempo: '12 min',
+            enunciado: '<p>Inventar un código es la primera decisión de la documentación, y la que después no se puede cambiar sin rehacerlo todo.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Marca <strong>todas</strong> las condiciones que debe cumplir un código de etiquetado.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Único: dos elementos no pueden compartir identificador',
+                        b: 'Jerárquico: refleja edificio, planta y punto',
+                        c: 'Estable: no depende de quién ocupe el puesto',
+                        d: 'Corto: tiene que caber en la etiqueta',
+                        e: 'Descriptivo: incluye el nombre del departamento'
+                    },
+                    respuesta: ['a', 'b', 'c', 'd'],
+                    explicacion: 'Incluir el departamento choca con la condición de <strong>estabilidad</strong>: los departamentos se mueven y las tomas no.',
+                    pistas: ['Cuatro de las cinco. La falsa contradice a otra de la lista.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un edificio tiene tres plantas y <strong>dos armarios por planta</strong>. ¿Qué esquema de código encaja mejor?',
+                    opciones: {
+                        a: 'Numerar las tomas del 1 al 120, sin más',
+                        b: 'Edificio - planta - armario - número de toma, por ejemplo A-1-2-07',
+                        c: 'Nombre del usuario y número',
+                        d: 'Fecha de instalación y número de orden'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con dos armarios por planta hace falta un campo más. Numerar del 1 al 120 no dice dónde buscar, y la fecha no identifica nada útil.',
+                    pistas: ['¿Qué información necesitas para ir directamente al armario correcto?']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> Con el esquema edificio-planta-toma, ¿cómo etiquetarías la toma número 23 de la planta baja del edificio B? Escríbelo con guiones.',
+                    respuestas: ['B-0-23', 'b-0-23', 'B-0-23.', 'B 0 23'],
+                    explicacion: '<strong>B-0-23</strong>. La planta baja se numera como 0, que es lo habitual, y así el código sigue ordenándose bien al listarlo.',
+                    pistas: ['La planta baja suele ser el 0.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Qué se etiqueta',
+            tiempo: '11 min',
+            enunciado: '<p>El mismo identificador, en todos los puntos del recorrido.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Marca <strong>todos</strong> los sitios donde debe aparecer el identificador de un enlace.',
+                    multiple: true,
+                    opciones: {
+                        a: 'La roseta',
+                        b: 'El extremo del cable junto a la roseta',
+                        c: 'El extremo del cable junto al panel',
+                        d: 'El puerto del panel de parcheo',
+                        e: 'El equipo del usuario'
+                    },
+                    respuesta: ['a', 'b', 'c', 'd'],
+                    explicacion: 'El equipo del usuario se cambia cada pocos años y se mueve: etiquetarlo con el identificador del enlace crearía el mismo problema que etiquetar por usuario.',
+                    pistas: ['Cuatro de los cinco. El que sobra no forma parte del cableado fijo.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué se etiqueta también el cable, y no solo la roseta y el panel?',
+                    opciones: {
+                        a: 'Por estética',
+                        b: 'Para poder identificarlo cuando está suelto dentro del armario o del falso techo',
+                        c: 'Porque lo exige el fabricante del cable',
+                        d: 'Para saber su categoría'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un cable desconectado sin etiqueta es un cable anónimo: hay que rastrearlo entero para saber de dónde viene.',
+                    pistas: ['Piensa en un cable que se ha soltado del panel.']
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>c)</strong> Completa cómo deben ser las etiquetas.',
+                    frase: 'Las etiquetas deben estar {{0}} y no escritas a mano, ser {{1}} frente al roce y la humedad, poder leerse sin {{2}} nada, y mantener el mismo formato en toda la instalación.',
+                    respuestas: [
+                        ['impresas'],
+                        ['duraderas', 'resistentes'],
+                        ['desmontar', 'mover', 'tocar']
+                    ],
+                    explicacion: 'La cuarta condición —coherencia— es la que más se incumple cuando la instalación crece por partes y cada ampliación usa su propio formato.',
+                    pistas: ['La primera es lo contrario de «a rotulador».']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: La tabla de enlaces',
+            tiempo: '14 min',
+            enunciado: '<p>Con estos datos: la toma <strong>A-2-11</strong> está en la sala de reuniones de la planta 2, conectada al puerto 11 del panel B del armario ARM-2. Es categoría 6, mide 54 m, certificó <strong>PASS</strong> el 4 de abril y hoy la usa el proyector.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Rellena su fila en la tabla de enlaces.',
+                    esquina: 'Campo',
+                    cabecera: ['Valor'],
+                    filas: [
+                        { etiqueta: 'Identificador', celdas: [{ respuestas: ['A-2-11', 'a-2-11'], placeholder: '?' }] },
+                        { etiqueta: 'Armario', celdas: [{ respuestas: ['ARM-2', 'arm-2', 'armario 2'], placeholder: '?' }] },
+                        { etiqueta: 'Panel y puerto', celdas: [{ respuestas: ['B 11', 'B-11', 'panel B puerto 11', 'B · 11'], placeholder: '?' }] },
+                        { etiqueta: 'Categoría', celdas: [{ respuestas: ['6', 'cat 6', 'categoría 6', 'categoria 6'], placeholder: '?' }] },
+                        { etiqueta: 'Longitud', celdas: [{ respuestas: ['54 m', '54'], placeholder: '?' }] },
+                        { etiqueta: 'Uso actual', celdas: [{ respuestas: ['proyector', 'el proyector'], placeholder: '?' }] }
+                    ],
+                    explicacion: 'Fíjate en que la <strong>ubicación</strong> —«sala de reuniones»— va en su propia columna y el <strong>uso</strong> en otra: son cosas distintas y cambian a ritmos distintos.',
+                    pistas: ['Cada campo está literalmente en el enunciado.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Al año siguiente, la sala de reuniones se convierte en dos despachos y esa toma pasa a usarla un ordenador. ¿Qué se actualiza?',
+                    opciones: {
+                        a: 'El identificador, que ya no corresponde',
+                        b: 'La etiqueta de la roseta',
+                        c: 'La ubicación y el uso actual en la tabla; el identificador y la etiqueta no se tocan',
+                        d: 'Hay que recertificar el enlace'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Ese es justo el sentido de un identificador <strong>estable</strong>: el cable no se ha movido, así que su nombre tampoco cambia. Lo que cambia es la información asociada.',
+                    pistas: ['¿Se ha movido físicamente el cable?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué columna permite responder a «¿cuántas tomas libres quedan en la planta 2?» sin ir a mirar?',
+                    opciones: { a: 'Longitud', b: 'Categoría', c: 'Certificación', d: 'Uso actual' },
+                    respuesta: 'd',
+                    explicacion: 'Y por eso es la que hay que mantener al día: es la más consultada y la que más cambia.',
+                    pistas: ['La que dice qué hay conectado en cada toma.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> En la tabla, un enlace figura como «PASS» sin más. ¿Qué información falta para que sirva?',
+                    opciones: {
+                        a: 'La fecha y el modo de medida, porque enlace permanente y canal tienen límites distintos',
+                        b: 'El color del latiguillo',
+                        c: 'El nombre del usuario',
+                        d: 'Nada: PASS es suficiente'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Un mismo enlace puede aprobar como canal y suspender como enlace permanente. Sin el modo y la categoría, ese PASS no dice gran cosa.',
+                    pistas: ['Recuerda la distinción del lunes entre los dos modos de medida.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Planos y dosier',
+            tiempo: '12 min',
+            enunciado: '<p>Lo que se entrega al terminar la obra.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada documento del dosier con su contenido.',
+                    izquierda: ['Memoria', 'Planos as-built', 'Tabla de enlaces', 'Informes de certificación'],
+                    derecha: [
+                        'Qué se ha instalado, con qué criterios y qué normas se han seguido',
+                        'Tomas, recorridos y armarios tal como han quedado',
+                        'El registro enlace por enlace, con su ubicación y su estado',
+                        'Los resultados medidos de cada enlace, con norma, modo y márgenes'
+                    ],
+                    pares: {
+                        'Memoria': 'Qué se ha instalado, con qué criterios y qué normas se han seguido',
+                        'Planos as-built': 'Tomas, recorridos y armarios tal como han quedado',
+                        'Tabla de enlaces': 'El registro enlace por enlace, con su ubicación y su estado',
+                        'Informes de certificación': 'Los resultados medidos de cada enlace, con norma, modo y márgenes'
+                    },
+                    explicacion: 'Faltan dos documentos más en el dosier completo: el <strong>inventario de material</strong> y las <strong>garantías</strong>.',
+                    pistas: ['Uno describe decisiones, otro geometría, otro datos y otro medidas.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué se entrega el plano as-built y no el de proyecto?',
+                    opciones: {
+                        a: 'Porque el de proyecto no lleva escala',
+                        b: 'Porque durante la obra siempre hay cambios, y un plano que no los recoge miente',
+                        c: 'Porque el de proyecto es propiedad del arquitecto',
+                        d: 'Porque el as-built es más barato de imprimir'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Y confiar en un plano equivocado es peor que no tenerlo: el primer taladro en la pared lo demuestra.',
+                    pistas: ['¿Qué pasa si una canaleta se desvió durante la instalación?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> El instalador propone entregar la documentación «más adelante, cuando tenga tiempo». ¿Qué respondes?',
+                    opciones: {
+                        a: 'Que la documentación forma parte de la obra y suele ser condición de aceptación y de pago',
+                        b: 'Que no pasa nada, se puede hacer después',
+                        c: 'Que la haga el cliente',
+                        d: 'Que solo hacen falta los planos'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Además, reconstruirla después cuesta muchísimo más: el instalador sabe hoy lo que el cliente tendría que averiguar enlace por enlace.',
+                    pistas: ['¿Quién tiene ahora mismo la información en la cabeza?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Garantía y mantenimiento',
+            tiempo: '11 min',
+            enunciado: '<p>Lo que hace que la documentación siga sirviendo dentro de diez años.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Marca <strong>todo</strong> lo que suele exigir un fabricante para conceder la garantía del sistema.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Componentes suyos u homologados',
+                        b: 'Instalador certificado por el fabricante',
+                        c: 'Certificación completa de todos los enlaces',
+                        d: 'Documentación de la instalación',
+                        e: 'Contratar un mantenimiento mensual con el fabricante'
+                    },
+                    respuesta: ['a', 'b', 'c', 'd'],
+                    explicacion: 'La garantía del sistema cubre el <strong>rendimiento del conjunto</strong> durante veinte años o más, y por eso el fabricante exige control sobre material, ejecución y pruebas.',
+                    pistas: ['Cuatro de las cinco. La falsa suena a servicio de pago recurrente.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué una documentación desactualizada es peor que no tener ninguna?',
+                    opciones: {
+                        a: 'Porque ocupa sitio en el armario',
+                        b: 'Porque induce a error: quien la consulta se fía y actúa en consecuencia',
+                        c: 'Porque invalida la certificación',
+                        d: 'Porque impide ampliar la instalación'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Sin documentación uno comprueba antes de tocar; con documentación falsa, uno confía. De ahí la regla de anotar los cambios <strong>en el momento</strong>.',
+                    pistas: ['Piensa en la diferencia entre no saber y creer que sabes.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuál es la «prueba del algodón» de una instalación bien documentada?',
+                    opciones: {
+                        a: 'Que el armario esté ordenado',
+                        b: 'Que todos los enlaces sean categoría 6A',
+                        c: 'Que un técnico que nunca la ha visto localice un puesto y su puerto sin llamar a nadie',
+                        d: 'Que haya planos en papel y en digital'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Si hace falta una llamada, la documentación está incompleta, por muchos papeles que haya.',
+                    pistas: ['¿Para quién se escribe la documentación?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Documentar de verdad',
+            tiempo: '12 min',
+            enunciado: '<p>Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>a)</strong> Heredas la red de una empresa: 60 tomas, ninguna etiqueta, sin planos y sin tabla. El armario tiene 60 latiguillos idénticos. <strong>Escribe el plan</strong> para documentarla, por pasos, y di cuánto tiempo estimas para cada uno.',
+                    filas: 10,
+                    modelo: '<p><strong>Paso 1 · Definir el código (1 hora).</strong> Un esquema jerárquico del tipo <code>A-1-07</code>: edificio o armario, planta y número de toma. Se decide antes de tocar nada, porque todo lo demás depende de él.</p><p><strong>Paso 2 · Emparejar extremos (1 o 2 días para 60 tomas).</strong> Con un comprobador con sonda remota o con la función de localización de un tester, se va toma por toma viendo en qué puerto del panel aparece. Es el trabajo pesado y se hace una sola vez; conviene ir apuntando sobre la marcha en una hoja, no fiarse de la memoria.</p><p><strong>Paso 3 · Etiquetar (medio día).</strong> Con etiquetas <strong>impresas</strong>: roseta, los dos extremos del cable y el puerto del panel, los cuatro con el mismo identificador. Aprovechar para etiquetar también el armario y los paneles.</p><p><strong>Paso 4 · Construir la tabla (2 o 3 horas).</strong> Una fila por enlace: identificador, ubicación, armario, panel y puerto, categoría si se conoce, longitud si se ha medido, certificación y uso actual.</p><p><strong>Paso 5 · Dibujar el plano (medio día).</strong> Ubicación de tomas con su identificador, situación del armario y, en la medida de lo posible, recorridos de canalización. Aunque sea un plano sencillo, es lo que evita taladrar sobre un cable.</p><p><strong>Paso 6 · Certificar, si el cliente lo asume (depende).</strong> En una instalación heredada rara vez se sabe de qué categoría estamos hablando. Certificar da esa respuesta y, de paso, detecta los enlaces que ya vienen tocados.</p><p><strong>Y después:</strong> fijar la regla de que todo cambio se anota en el momento, y dejar la documentación en un sitio compartido, no en el ordenador de una persona.</p>',
+                    rubrica: [
+                        'Empieza definiendo el código antes de etiquetar',
+                        'Plantea un método concreto para emparejar los extremos',
+                        'Etiqueta los cuatro puntos con etiquetas impresas',
+                        'Construye la tabla con sus campos principales',
+                        'Incluye el plano y menciona los recorridos',
+                        'Plantea la certificación como forma de conocer la categoría real',
+                        'Cierra con la regla de mantenimiento y dónde vive la documentación'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Etiquetado, documentación y entrega</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 4 — Etiquetado y documentación</h1>
+        <p>La administración como subsistema · el código de etiquetado · la tabla de enlaces · el dosier de entrega</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 56 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 11 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            El lunes quedó pendiente el séptimo elemento, el que no es un lugar sino una tarea: la
+            <strong>administración</strong>. Ayer certificaste la instalación; hoy se documenta, que es lo que la
+            hace <strong>mantenible</strong>.
+        </div>
+
+        <div class="aviso">
+            <strong>De dónde sale lo de hoy</strong>
+            El libro cita el etiquetado una sola vez, y de pasada: al hablar de T568A y T568B dice que, para
+            distinguir fácilmente las conexiones en una instalación, <strong>no bastan las marcas del fabricante y
+            hay que utilizar una serie de normas de etiquetado</strong>.
+            <br><br>
+            Todo lo demás de hoy —el código de identificación, el registro de enlaces, el dosier y la garantía del
+            sistema— procede de las <strong>normas de administración de cableado</strong> y de la práctica
+            profesional.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#porque">Por qué se documenta</a></li>
+                <li><a href="#codigo">El código de etiquetado</a></li>
+                <li><a href="#que">Qué se etiqueta y cómo</a></li>
+                <li><a href="#registro">La tabla de enlaces</a></li>
+                <li><a href="#planos">Los planos</a></li>
+                <li><a href="#dosier">El dosier de entrega</a></li>
+                <li><a href="#garantia">La garantía del sistema</a></li>
+                <li><a href="#cambios">Mantener la documentación viva</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="porque">1. Por qué se documenta</h2>
+
+            <p>Imagina la escena, que es de las más frecuentes en este oficio: un puesto se queda sin red. Abres el
+            armario y te encuentras 48 latiguillos idénticos, sin una etiqueta. ¿Cuál corresponde a ese puesto?</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Sin documentación</th><th>Con documentación</th></tr></thead>
+                <tbody>
+                    <tr><td>Media hora siguiendo cables con la mano, o probando puertos a ciegas</td><td>Se mira la tabla: puesto 1-14 → panel A, puerto 14</td></tr>
+                    <tr><td>Cada cambio añade desorden</td><td>Cada cambio se anota y el sistema sigue siendo comprensible</td></tr>
+                    <tr><td>Solo quien lo instaló entiende la instalación</td><td>Cualquier técnico puede trabajar en ella</td></tr>
+                    <tr><td>Ampliar obliga a investigar primero</td><td>Ampliar es consultar qué hay libre</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>La idea de fondo</strong>
+                <p>El cableado estructurado se diseña para durar <strong>veinte años</strong> y para que
+                <strong>cualquiera</strong> pueda trabajar en él. Sin documentación, las dos cosas son falsas: la
+                instalación dura lo que dure la memoria de quien la montó.</p>
+            </div>
+
+            <h2 id="codigo">2. El código de etiquetado</h2>
+
+            <p>Documentar empieza por poder <strong>nombrar</strong> cada cosa. Y nombrar significa inventar un
+            código y aplicarlo sin excepciones. Un código útil cumple cuatro condiciones:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Condición</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Único</strong>: no hay dos elementos con el mismo identificador</td><td>Obvio, y se incumple más de lo que parece al ampliar</td></tr>
+                    <tr><td><strong>Jerárquico</strong>: refleja edificio, planta, armario y puerto</td><td>Leyendo el código ya sabes dónde buscar</td></tr>
+                    <tr><td><strong>Estable</strong>: no depende de quién se siente ahí ni de para qué se use</td><td>Los usuarios cambian de sitio; las tomas, no</td></tr>
+                    <tr><td><strong>Corto</strong>: tiene que caber en una etiqueta pequeña</td><td>Si no cabe, no se pone</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Un esquema que funciona</strong>
+                <pre><code>   A  -  1  -  07
+   │     │     └── número de toma dentro de esa planta
+   │     └──────── planta
+   └────────────── edificio o armario
+
+   A-1-07   = edificio A, planta 1, toma 7
+   B-0-23   = edificio B, planta baja, toma 23</code></pre>
+                <p>Con tres campos basta para una instalación normal. Si hay varios armarios por planta, se añade
+                uno: <code>A-1-2-07</code> para el armario 2.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>El error clásico: etiquetar por el usuario</strong>
+                Poner <em>«Despacho de Marta»</em> o <em>«Contabilidad»</em> en la roseta parece útil el primer día
+                y es un problema al segundo: Marta cambia de despacho, contabilidad se muda a la otra planta y la
+                etiqueta pasa a mentir. Se etiqueta <strong>la toma</strong>, no quién la usa. La correspondencia
+                entre toma y usuario va en la tabla, que sí se actualiza.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="que">3. Qué se etiqueta y cómo</h2>
+
+            <p>El principio es simple: <strong>el mismo identificador aparece en los dos extremos del
+            enlace</strong>, y en todo lo que haya por el camino.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Elemento</th><th>Qué lleva</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Roseta</strong></td><td>El identificador del enlace, visible sin desmontar nada</td></tr>
+                    <tr><td><strong>Puerto del panel</strong></td><td>El <strong>mismo</strong> identificador que su roseta</td></tr>
+                    <tr><td><strong>Cable</strong>, en los dos extremos</td><td>El identificador, en una etiqueta a unos centímetros del conector</td></tr>
+                    <tr><td><strong>Armario</strong></td><td>Su nombre y, dentro, un esquema de qué hay en cada U</td></tr>
+                    <tr><td><strong>Paneles y switches</strong></td><td>Su identificador dentro del armario: A, B, SW1…</td></tr>
+                    <tr><td><strong>Latiguillos</strong> del armario</td><td>Opcional, pero ayuda mucho en armarios grandes</td></tr>
+                    <tr><td><strong>Fibra y troncales</strong></td><td>Identificador del enlace y sentido, como viste en la Semana 6</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Cómo deben ser las etiquetas</strong>
+                <ul>
+                    <li><strong>Impresas</strong>, no escritas a mano: la tinta de un rotulador se borra con el
+                    roce y a los dos años no se lee.</li>
+                    <li><strong>Duraderas</strong>: resistentes al roce, al calor y a la humedad del sitio donde
+                    van.</li>
+                    <li><strong>Legibles sin desmontar</strong> nada ni mover el haz de cables.</li>
+                    <li><strong>Coherentes</strong>: el mismo formato en toda la instalación.</li>
+                </ul>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s08_d04_etiquetado.png"
+         width="1400" height="700" loading="lazy"
+         alt="Recorrido de un enlace con su etiquetado: la roseta de la pared marcada A-1-07, el cable etiquetado cerca de la roseta con el mismo código, el otro extremo del cable también etiquetado al llegar al armario, y el puerto 7 del panel A marcado igualmente A-1-07.">
+    <figcaption>El mismo identificador, cuatro veces: en la roseta, en los dos extremos del cable y en el puerto del panel.</figcaption>
+</figure>
+<pre><code>  [roseta A-1-07] ══ cable «A-1-07» ══════ cable «A-1-07» ══ [panel A, puerto 07]
+        ▲                                                            ▲
+   se lee sin abrir nada                            se lee desde delante del armario</code></pre>
+
+            <h2 id="registro">4. La tabla de enlaces</h2>
+
+            <p>Las etiquetas identifican; la <strong>tabla de enlaces</strong> —o registro— es donde se guarda todo
+            lo que se sabe de cada uno. Es el documento que más se consulta en la vida de una instalación:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>ID</th><th>Ubicación</th><th>Armario</th><th>Panel · puerto</th><th>Cat.</th><th>Long.</th><th>Certificación</th><th>Uso actual</th></tr></thead>
+                <tbody>
+                    <tr><td>A-1-07</td><td>Despacho 12, pared norte</td><td>ARM-1</td><td>A · 07</td><td>6</td><td>78 m</td><td>PASS 12/03</td><td>PC contabilidad</td></tr>
+                    <tr><td>A-1-08</td><td>Despacho 12, pared norte</td><td>ARM-1</td><td>A · 08</td><td>6</td><td>79 m</td><td>PASS 12/03</td><td>Libre</td></tr>
+                    <tr><td>A-1-14</td><td>Sala reuniones</td><td>ARM-1</td><td>A · 14</td><td>6</td><td>61 m</td><td><strong>FAIL</strong> 12/03</td><td>Pendiente</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Las dos columnas que más se agradecen</strong>
+                <ul>
+                    <li><strong>Certificación</strong>: saber que ese enlace aprobó, y cuándo, evita repetir
+                    medidas y sirve para reclamar si algo venía mal de origen.</li>
+                    <li><strong>Uso actual</strong>: es la única columna que cambia a menudo, y la que responde a
+                    «¿qué tomas tengo libres?» sin ir a mirar.</li>
+                </ul>
+            </div>
+
+            <h2 id="planos">5. Los planos</h2>
+
+            <p>Un plano de cableado no es un plano de arquitectura: es el mismo plano del edificio con
+            <strong>tres capas de información</strong> encima.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Capa</th><th>Qué muestra</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Ubicación de tomas</strong></td><td>Dónde está cada roseta, con su identificador</td></tr>
+                    <tr><td><strong>Recorridos</strong></td><td>Por dónde van las canalizaciones: esto es lo que evita taladrar encima de un cable</td></tr>
+                    <tr><td><strong>Armarios</strong></td><td>Dónde están, y un esquema aparte de qué hay dentro de cada uno, U por U</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>El plano «as-built»</strong>
+                El plano que vale es el <strong>de obra terminada</strong>, no el del proyecto. Durante la
+                instalación siempre hay cambios: una canaleta que se desvía, una toma que se mueve un metro, un
+                recorrido que resulta imposible. Si se entrega el plano de proyecto sin actualizar, la
+                documentación <strong>miente</strong>, y eso es peor que no tenerla, porque se confía en ella.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="dosier">6. El dosier de entrega</h2>
+
+            <p>Todo lo anterior se entrega junto, en papel y en digital. Un dosier completo tiene seis bloques:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Documento</th><th>Contenido</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td><strong>Memoria</strong></td><td>Qué se ha instalado, con qué criterios, qué normas se han seguido y qué categoría se ha certificado</td></tr>
+                    <tr><td>2</td><td><strong>Planos as-built</strong></td><td>Tomas, recorridos y armarios, tal como han quedado</td></tr>
+                    <tr><td>3</td><td><strong>Tabla de enlaces</strong></td><td>El registro completo, enlace por enlace</td></tr>
+                    <tr><td>4</td><td><strong>Informes de certificación</strong></td><td>Uno por enlace, con la norma, el modo y los márgenes</td></tr>
+                    <tr><td>5</td><td><strong>Inventario de material</strong></td><td>Marcas, modelos y cantidades: cable, paneles, rosetas, armarios</td></tr>
+                    <tr><td>6</td><td><strong>Garantías</strong></td><td>Del material y, si procede, del sistema</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El dosier forma parte de la obra</strong>
+                <p>No es un trámite posterior ni un favor: sin él, el cliente no tiene forma de saber
+                <strong>qué</strong> le han instalado ni de demostrar que cumple. Por eso la entrega de la
+                documentación suele ser una <strong>condición de aceptación</strong> y un hito de pago.</p>
+            </div>
+
+            <h2 id="garantia">7. La garantía del sistema</h2>
+
+            <p>Aquí aparece algo que sorprende a quien lo ve por primera vez. Además de la garantía normal del
+            material, existe la <strong>garantía del sistema</strong>, que da el fabricante del cableado y que
+            cubre el <strong>rendimiento del conjunto</strong> durante muchos años —habitualmente veinte o
+            veinticinco—.</p>
+
+            <div class="dato">
+                <strong>Qué exige normalmente el fabricante para concederla</strong>
+                <ul>
+                    <li>Que todos los componentes —cable, conectores, paneles— sean <strong>suyos</strong> o estén
+                    homologados.</li>
+                    <li>Que la instalación la haya hecho un <strong>instalador certificado</strong> por él.</li>
+                    <li>Que se entregue la <strong>certificación completa</strong> de todos los enlaces.</li>
+                    <li>Que exista la <strong>documentación</strong> de la instalación.</li>
+                </ul>
+            </div>
+
+            <p>Fíjate en lo que eso significa: la documentación y la certificación no son solo buenas prácticas,
+            son <strong>la condición</strong> para que alguien responda del sistema dentro de quince años. Y
+            explica por qué un instalador serio insiste en certificarlo todo aunque el cliente no lo pida.</p>
+
+            <h2 id="cambios">8. Mantener la documentación viva</h2>
+
+            <p>Una documentación desactualizada es peor que ninguna, porque induce a error. Y se desactualiza
+            sola, con el uso: un puesto que se mueve, una toma que se reasigna, un switch que se cambia.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Regla</th><th>En la práctica</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Todo cambio se anota</strong>, en el momento</td><td>Cambiar un latiguillo de puerto son diez segundos; anotarlo, cinco</td></tr>
+                    <tr><td>La documentación vive en un <strong>sitio conocido</strong></td><td>Compartida, no en el ordenador de una persona</td></tr>
+                    <tr><td><strong>Revisión periódica</strong></td><td>Una vez al año, comprobar que la tabla y la realidad coinciden</td></tr>
+                    <tr><td>Los <strong>cambios grandes</strong> se recertifican</td><td>Si se añaden enlaces, se certifican y se añaden al dosier</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>La prueba del algodón</strong>
+                Una instalación está bien documentada si un técnico que <strong>nunca la ha visto</strong> puede
+                localizar un puesto concreto, saber en qué puerto está y comprobar si ese enlace aprobó la
+                certificación, <strong>sin llamar a nadie</strong>. Si hace falta una llamada, la documentación
+                está incompleta.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">9. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>La <strong>administración</strong> es el subsistema transversal: sin ella, la instalación
+                    dura lo que la memoria de quien la montó.</li>
+                    <li>El código de etiquetado debe ser <strong>único, jerárquico, estable y corto</strong>. Por
+                    ejemplo <code>A-1-07</code>.</li>
+                    <li>Se etiqueta <strong>la toma, no el usuario</strong>.</li>
+                    <li>El mismo identificador va en la <strong>roseta</strong>, en los <strong>dos extremos del
+                    cable</strong> y en el <strong>puerto del panel</strong>.</li>
+                    <li>Las etiquetas: <strong>impresas, duraderas, legibles y coherentes</strong>.</li>
+                    <li>La <strong>tabla de enlaces</strong> recoge ubicación, panel y puerto, categoría, longitud,
+                    certificación y uso actual.</li>
+                    <li>Los planos válidos son los <strong>as-built</strong>, no los de proyecto.</li>
+                    <li>El <strong>dosier</strong>: memoria, planos, tabla, certificaciones, inventario y
+                    garantías.</li>
+                    <li>La <strong>garantía del sistema</strong> depende de usar material homologado, instalador
+                    certificado, certificación completa y documentación.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«La documentación se hace al final, si da tiempo»</td><td>Forma parte de la obra y suele ser <strong>condición de aceptación</strong></td></tr>
+                    <tr><td>«Etiqueto la roseta con el nombre del usuario»</td><td>Los usuarios cambian de sitio. Se etiqueta <strong>la toma</strong></td></tr>
+                    <tr><td>«Con etiquetar la roseta basta»</td><td>El identificador va también en el <strong>panel</strong> y en los <strong>dos extremos del cable</strong></td></tr>
+                    <tr><td>«Las etiquetas a rotulador se leen bien»</td><td>A los dos años, no. <strong>Impresas</strong> y duraderas</td></tr>
+                    <tr><td>«Entrego el plano del proyecto»</td><td>Hay que entregar el <strong>as-built</strong>: lo que de verdad se ha instalado</td></tr>
+                    <tr><td>«La garantía la da la tienda donde compré el cable»</td><td>La <strong>garantía del sistema</strong> la da el fabricante, y exige certificación y documentación</td></tr>
+                    <tr><td>«Ya actualizaré la tabla cuando tenga un rato»</td><td>Una documentación desactualizada <strong>induce a error</strong>: es peor que no tenerla</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">10. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Una oficina de dos plantas y 30 tomas, instalada y certificada, sin un solo papel. Hay que
+            inventarle el código, rellenar la tabla, dibujar el plano y montar el índice del dosier.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 4</strong></a> (60 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, viernes: doble evaluación</strong>
+            <p>Síntesis de la semana, <strong>test semanal</strong> de 24 preguntas y el <strong>examen
+            mensual</strong> del Mes 2, que empieza con un repaso de todo lo que has fallado durante el mes.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/teoria.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Un cliente quiere que las rosetas lleven el nombre del departamento: «Contabilidad 1», «Dirección», «Sala de juntas». ¿Qué le propondrías y por qué?',
+                modelo: 'Le propondría un código <strong>neutro y jerárquico</strong> en la etiqueta física —del tipo <code>A-1-07</code>: edificio, planta y número de toma— y dejar los nombres de departamento en la <strong>tabla de enlaces</strong>, en la columna de uso.</p><p>El motivo es que el identificador de una toma tiene que ser <strong>estable</strong> y la toma no se mueve nunca, mientras que los departamentos sí: contabilidad se reorganiza, dirección cambia de despacho y la sala de juntas se convierte en dos oficinas. En cuanto eso pasa, las etiquetas <strong>mienten</strong>, y una etiqueta que miente es peor que ninguna, porque la gente se fía de ella.</p><p>Además, el código jerárquico aporta algo que el nombre no: leyendo <code>A-1-07</code> ya sabes en qué edificio y planta buscar, y en qué panel estará el otro extremo. Y en la tabla no se pierde nada: ahí figura que A-1-07 es la toma de contabilidad, y el día que cambie, se actualiza una celda en lugar de despegar etiquetas.',
+                puntos: [
+                    'Propone un código neutro y jerárquico en la etiqueta',
+                    'Explica que la toma es estable y el uso no',
+                    'Advierte de que una etiqueta desactualizada induce a error',
+                    'Sitúa el nombre del departamento en la tabla de enlaces',
+                    'Menciona la ventaja de localización que da el código jerárquico'
+                ]
+            },
+            {
+                pregunta: 'Recibes una instalación heredada: hay etiquetas en las rosetas, pero ninguna en el panel ni en los cables, y no existe tabla ni planos. ¿Qué harías, y en qué orden?',
+                modelo: 'Lo primero es aceptar que hay que <strong>levantar la documentación desde cero</strong>, y hacerlo de forma ordenada en lugar de a golpe de avería.</p><p><strong>Paso 1: fijar el código.</strong> Si las rosetas ya tienen identificadores coherentes, los aprovecho; si son nombres de usuario o números sueltos sin lógica, defino un código jerárquico nuevo y planifico su sustitución.</p><p><strong>Paso 2: emparejar extremos.</strong> Con un comprobador con sonda remota o con la función de localización de un tester se va toma por toma viendo en qué puerto del panel aparece. Es el trabajo pesado, pero se hace una sola vez.</p><p><strong>Paso 3: etiquetar</strong> el puerto del panel y los dos extremos del cable con el mismo identificador que la roseta, con etiquetas impresas.</p><p><strong>Paso 4: construir la tabla</strong> con ubicación, panel y puerto, categoría si se conoce, y uso actual. Y dibujar un plano, aunque sea sencillo, con la ubicación de tomas y armarios.</p><p><strong>Paso 5:</strong> si el cliente lo asume, <strong>certificar</strong> los enlaces para saber de qué categoría estamos hablando realmente, porque en una instalación heredada eso rara vez está claro.</p><p>Y a partir de ahí, la regla de mantenimiento: cada cambio se anota en el momento.',
+                puntos: [
+                    'Reconoce que hay que levantar la documentación desde cero',
+                    'Define primero el código de etiquetado',
+                    'Propone un método para emparejar los dos extremos de cada enlace',
+                    'Etiqueta panel y cable con el mismo identificador que la roseta',
+                    'Construye tabla y plano',
+                    'Plantea certificar para conocer la categoría real'
+                ]
+            },
+            {
+                pregunta: 'El instalador entrega la obra funcionando, certificada y sin ningún papel: dice que la documentación «la puede hacer el cliente cuando quiera». ¿Qué problemas concretos tiene eso?',
+                modelo: 'Tiene cuatro problemas, y ninguno es teórico.</p><p><strong>Uno: nadie más puede reconstruirla.</strong> El instalador sabe qué toma va a qué puerto porque acaba de hacerlo; el cliente tendría que <strong>averiguarlo enlace por enlace</strong>, con un comprobador, invirtiendo días en algo que al instalador le costaba anotar mientras trabajaba.</p><p><strong>Dos: la certificación se queda coja.</strong> Los informes identifican cada enlace por un código; si ese código no existe en ninguna etiqueta ni en ninguna tabla, los informes no se pueden <strong>relacionar</strong> con la instalación real. Una certificación que no sabes a qué enlace corresponde no sirve para reclamar nada.</p><p><strong>Tres: la garantía del sistema puede caerse.</strong> Los fabricantes la condicionan, entre otras cosas, a que exista documentación de la instalación. Sin ella, el cliente pierde una cobertura de veinte años.</p><p><strong>Cuatro: no hay plano as-built.</strong> Nadie sabe por dónde van las canalizaciones, así que el primer taladro en una pared es una lotería.</p><p>Por eso la entrega del dosier —memoria, planos, tabla, certificaciones, inventario y garantías— es parte de la obra y suele ser condición de aceptación y de pago.',
+                puntos: [
+                    'Señala el coste de reconstruir la información después',
+                    'Explica que los informes de certificación quedan sin referencia',
+                    'Menciona el riesgo para la garantía del sistema',
+                    'Apunta la falta de plano as-built y su consecuencia práctica',
+                    'Concluye que el dosier es parte de la obra y condición de aceptación'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué dice el libro sobre el etiquetado?', dorso: 'Que para distinguir las conexiones <strong>no bastan las marcas del fabricante</strong>: hay que usar normas de etiquetado.' },
+            { frente: 'Las cuatro condiciones de un buen código', dorso: '<strong>Único</strong>, <strong>jerárquico</strong>, <strong>estable</strong> y <strong>corto</strong>.' },
+            { frente: '¿Qué se etiqueta: la toma o el usuario?', dorso: '<strong>La toma</strong>. Los usuarios y los departamentos cambian de sitio; la roseta no.' },
+            { frente: '¿En cuántos sitios aparece el identificador de un enlace?', dorso: 'Cuatro: <strong>roseta</strong>, los <strong>dos extremos del cable</strong> y el <strong>puerto del panel</strong>.' },
+            { frente: '¿Cómo deben ser las etiquetas?', dorso: '<strong>Impresas</strong>, duraderas, legibles sin desmontar nada y coherentes en toda la instalación.' },
+            { frente: '¿Qué columnas lleva la tabla de enlaces?', dorso: 'ID, ubicación, armario, panel y puerto, categoría, longitud, <strong>certificación</strong> y <strong>uso actual</strong>.' },
+            { frente: '¿Qué es un plano as-built?', dorso: 'El plano de <strong>obra terminada</strong>, con los cambios reales, no el de proyecto.' },
+            { frente: 'Las tres capas de un plano de cableado', dorso: '<strong>Tomas</strong> con su identificador, <strong>recorridos</strong> de canalización y <strong>armarios</strong>.' },
+            { frente: 'Los seis documentos del dosier de entrega', dorso: '<strong>Memoria</strong>, planos <strong>as-built</strong>, <strong>tabla de enlaces</strong>, <strong>certificaciones</strong>, <strong>inventario</strong> y <strong>garantías</strong>.' },
+            { frente: '¿Qué es la garantía del sistema?', dorso: 'La que da el <strong>fabricante</strong> sobre el rendimiento del conjunto, habitualmente 20 o 25 años.' },
+            { frente: '¿De qué depende que te la concedan?', dorso: 'Material <strong>homologado</strong>, <strong>instalador certificado</strong>, <strong>certificación completa</strong> y <strong>documentación</strong>.' },
+            { frente: 'La prueba del algodón de una buena documentación', dorso: 'Que un técnico que <strong>nunca ha visto</strong> la instalación localice un puesto y su puerto <strong>sin llamar a nadie</strong>.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 4: Etiquetado y documentación',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Por qué documentar',
+                repaso: '#porque',
+                text: '¿Por qué la documentación forma parte de la instalación y no es un extra?',
+                options: {
+                    a: 'Porque lo pide el fabricante del switch',
+                    b: 'Porque el cableado dura veinte años y debe poder mantenerlo cualquier técnico, no solo quien lo montó',
+                    c: 'Porque mejora el rendimiento del enlace',
+                    d: 'Porque abarata el material'
+                },
+                answer: 'b',
+                feedback: 'Sin documentación, la instalación dura lo que dure la memoria de quien la instaló.'
+            },
+            {
+                topic: 'Código de etiquetado',
+                repaso: '#codigo',
+                text: '¿Cuál de estas NO es una condición de un buen código de etiquetado?',
+                options: { a: 'Único', b: 'Jerárquico', c: 'Descriptivo del usuario que ocupa el puesto', d: 'Corto' },
+                answer: 'c',
+                feedback: 'Justo lo contrario: debe ser <strong>estable</strong>, y el usuario es lo que más cambia.'
+            },
+            {
+                topic: 'Código de etiquetado',
+                repaso: '#codigo',
+                text: 'En el código A-1-07, ¿qué representa cada campo?',
+                options: {
+                    a: 'Armario, panel y puerto',
+                    b: 'Categoría, planta y longitud',
+                    c: 'Año, mes y número de orden',
+                    d: 'Edificio, planta y número de toma'
+                },
+                answer: 'd',
+                feedback: 'Es jerárquico: leyendo el código ya sabes dónde buscar. Si hay varios armarios por planta, se añade un campo más.'
+            },
+            {
+                topic: 'Código de etiquetado',
+                repaso: '#codigo',
+                text: '¿Qué problema tiene etiquetar una roseta como «Despacho de Marta»?',
+                options: {
+                    a: 'Que es demasiado largo para la etiqueta, y además deja de ser cierto en cuanto Marta cambia de sitio',
+                    b: 'Ninguno: es lo más claro',
+                    c: 'Que la norma prohíbe usar nombres propios',
+                    d: 'Que no se puede imprimir'
+                },
+                answer: 'a',
+                feedback: 'Y una etiqueta que miente es peor que ninguna, porque la gente se fía. El nombre va en la tabla, que sí se actualiza.'
+            },
+            {
+                topic: 'Qué se etiqueta',
+                repaso: '#que',
+                text: '¿En cuántos sitios aparece el identificador de un enlace?',
+                options: {
+                    a: 'Solo en la roseta',
+                    b: 'En la roseta y en el panel',
+                    c: 'En cuatro: roseta, los dos extremos del cable y el puerto del panel',
+                    d: 'En el plano únicamente'
+                },
+                answer: 'c',
+                feedback: 'Etiquetar también el cable en sus extremos es lo que permite identificarlo cuando está suelto dentro del armario.'
+            },
+            {
+                topic: 'Qué se etiqueta',
+                repaso: '#que',
+                text: '¿Por qué las etiquetas no deben escribirse a mano con rotulador?',
+                options: {
+                    a: 'Porque la norma exige un tipo de letra concreto',
+                    b: 'Porque la tinta se borra con el roce y a los dos años no se lee',
+                    c: 'Porque el rotulador daña el cable',
+                    d: 'Porque no se pueden leer en la oscuridad'
+                },
+                answer: 'b',
+                feedback: 'Impresas y duraderas, resistentes al roce, al calor y a la humedad del sitio donde van.'
+            },
+            {
+                topic: 'Tabla de enlaces',
+                repaso: '#registro',
+                text: '¿Qué columna de la tabla de enlaces responde a «¿qué tomas tengo libres?»',
+                options: { a: 'Categoría', b: 'Longitud', c: 'Certificación', d: 'Uso actual' },
+                answer: 'd',
+                feedback: 'Y es la que más cambia: conviene mantenerla al día, porque es la que más se consulta.'
+            },
+            {
+                topic: 'Tabla de enlaces',
+                repaso: '#registro',
+                text: '¿Para qué sirve guardar en la tabla el resultado de la certificación de cada enlace?',
+                options: {
+                    a: 'Para evitar repetir medidas y poder reclamar si algo venía mal de origen',
+                    b: 'Para calcular la longitud',
+                    c: 'Para elegir el color del latiguillo',
+                    d: 'Para nada: los informes ya están aparte'
+                },
+                answer: 'a',
+                feedback: 'Los informes están aparte, sí, pero tener el resultado a mano en la tabla ahorra buscarlos cada vez.'
+            },
+            {
+                topic: 'Planos',
+                repaso: '#planos',
+                text: '¿Qué es un plano as-built?',
+                options: {
+                    a: 'El plano del proyecto, antes de empezar',
+                    b: 'Un plano en tres dimensiones',
+                    c: 'El plano de obra terminada, con los cambios que hubo durante la instalación',
+                    d: 'El plano del fabricante del armario'
+                },
+                answer: 'c',
+                feedback: 'Durante una instalación siempre hay desvíos. Entregar el plano de proyecto sin actualizar es entregar documentación que <strong>miente</strong>.'
+            },
+            {
+                topic: 'Planos',
+                repaso: '#planos',
+                text: '¿Qué capa del plano evita taladrar encima de un cable?',
+                options: {
+                    a: 'La ubicación de las tomas',
+                    b: 'Los recorridos de las canalizaciones',
+                    c: 'La situación de los armarios',
+                    d: 'El esquema interno del rack'
+                },
+                answer: 'b',
+                feedback: 'Es la capa que más se agradece años después, y la que más se olvida al documentar.'
+            },
+            {
+                topic: 'Dosier',
+                repaso: '#dosier',
+                text: '¿Cuál de estos NO forma parte del dosier de entrega?',
+                options: {
+                    a: 'La memoria de lo instalado',
+                    b: 'Los informes de certificación',
+                    c: 'El inventario de material',
+                    d: 'El presupuesto de la obra de albañilería del edificio'
+                },
+                answer: 'd',
+                feedback: 'El dosier documenta <strong>la instalación de cableado</strong>: memoria, planos as-built, tabla, certificaciones, inventario y garantías.'
+            },
+            {
+                topic: 'Garantía',
+                repaso: '#garantia',
+                text: '¿Qué cubre la garantía del sistema y quién la da?',
+                options: {
+                    a: 'El material defectuoso, y la da la tienda',
+                    b: 'El rendimiento del conjunto durante veinte años o más, y la da el fabricante del cableado',
+                    c: 'La mano de obra del instalador durante un año',
+                    d: 'Los equipos activos conectados'
+                },
+                answer: 'b',
+                feedback: 'Y por eso es tan valiosa: cubre que el sistema <strong>siga cumpliendo su categoría</strong> a largo plazo.'
+            },
+            {
+                topic: 'Garantía',
+                repaso: '#garantia',
+                text: '¿De qué depende que el fabricante conceda la garantía del sistema?',
+                options: {
+                    a: 'Solo de que el material sea suyo',
+                    b: 'De que la instalación tenga menos de 100 enlaces',
+                    c: 'De material homologado, instalador certificado, certificación completa y documentación',
+                    d: 'De que el cliente contrate mantenimiento'
+                },
+                answer: 'c',
+                feedback: 'Ahí está la razón de fondo por la que certificar y documentar no son opcionales en una obra seria.'
+            },
+            {
+                topic: 'Mantenimiento',
+                repaso: '#cambios',
+                text: '¿Por qué una documentación desactualizada es peor que no tener ninguna?',
+                options: {
+                    a: 'Porque ocupa espacio',
+                    b: 'Porque induce a error: la gente se fía de ella y actúa en consecuencia',
+                    c: 'Porque invalida la certificación',
+                    d: 'No es peor: siempre es mejor tener algo'
+                },
+                answer: 'b',
+                feedback: 'Sin documentación, uno comprueba; con documentación falsa, uno confía. De ahí la regla: todo cambio se anota <strong>en el momento</strong>.'
+            },
+            {
+                topic: 'Recuperación · Día 3',
+                repaso: '../Dia_03/teoria.html#informe',
+                text: '<em>Repaso.</em> En la tabla de enlaces, un enlace figura como «PASS» pero sin indicar el modo de medida. ¿Por qué es un problema?',
+                options: {
+                    a: 'Porque no se sabe si se certificó como enlace permanente o como canal, y los límites son distintos',
+                    b: 'Porque falta la fecha',
+                    c: 'Porque el PASS solo vale para fibra',
+                    d: 'No es un problema'
+                },
+                answer: 'a',
+                feedback: 'Un enlace puede aprobar como canal y suspender como enlace permanente. Sin el modo, ese PASS no dice gran cosa.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

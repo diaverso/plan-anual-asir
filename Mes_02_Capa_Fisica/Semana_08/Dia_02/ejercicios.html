@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Ejercicios: canalizaciones y armarios</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">74 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            Dos cuentas nuevas y ninguna difícil: la <strong>ocupación de la canaleta</strong> —sección por 0,40
+            entre π r²— y las <strong>unidades de rack</strong>. Las dos aparecen en cualquier presupuesto real.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/ejercicios.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/ejercicios.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Ejercicios',
+    subtitulo: 'Canalizaciones y ocupación · reglas de tirado · unidades de rack · reparto del armario',
+    tiempo: '74 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Elegir la canalización',
+            tiempo: '10 min',
+            enunciado: '<p>Cada situación pide un tipo distinto.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada escenario con su canalización.',
+                    izquierda: [
+                        'Oficina en funcionamiento, sin posibilidad de obra',
+                        'Nave con falso techo accesible y muchos cables',
+                        'Obra nueva: los tabiques aún no están cerrados',
+                        'Centro de datos donde los equipos se reorganizan a menudo'
+                    ],
+                    derecha: [
+                        'Canaleta vista',
+                        'Bandeja o rejilla colgada del techo',
+                        'Tubo corrugado empotrado',
+                        'Suelo técnico registrable'
+                    ],
+                    pares: {
+                        'Oficina en funcionamiento, sin posibilidad de obra': 'Canaleta vista',
+                        'Nave con falso techo accesible y muchos cables': 'Bandeja o rejilla colgada del techo',
+                        'Obra nueva: los tabiques aún no están cerrados': 'Tubo corrugado empotrado',
+                        'Centro de datos donde los equipos se reorganizan a menudo': 'Suelo técnico registrable'
+                    },
+                    explicacion: 'La elección depende sobre todo de <strong>cuándo</strong> se instala: antes de cerrar la pared, después, o en un espacio que va a cambiar cada poco.',
+                    pistas: ['Uno solo es posible si la obra aún no ha terminado.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Una instalación tiene el cable grapado directamente a la pared, sin canalización. ¿Cuál es el problema principal?',
+                    opciones: {
+                        a: 'Que queda feo',
+                        b: 'Que no se puede sustituir ni añadir cable sin rehacerlo todo, y el cable queda expuesto a golpes y aplastamientos',
+                        c: 'Que el cable pierde categoría',
+                        d: 'Que no se puede certificar'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Se puede certificar, y hasta puede aprobar. El problema es de <strong>mantenimiento y protección</strong>: la instalación queda congelada y frágil.',
+                    pistas: ['Piensa en qué pasa el día que haya que añadir una toma.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Ocupación de canalizaciones',
+            tiempo: '14 min',
+            enunciado: '<p>Con <strong>ocupación máxima del 40 %</strong> y cables de <strong>6 mm</strong> de diámetro, cuya sección es π × 3² ≈ <strong>28,3 mm²</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Sección total de una canaleta de 40 × 40 mm, en mm².',
+                    respuesta: 1600,
+                    unidad: 'mm²',
+                    explicacion: '40 × 40 = <strong>1 600 mm²</strong>.',
+                    pistas: ['Ancho por alto.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Sección útil de esa canaleta, al 40 %.',
+                    respuesta: 640,
+                    unidad: 'mm²',
+                    explicacion: '1 600 × 0,40 = <strong>640 mm²</strong>.',
+                    pistas: ['Multiplica por 0,4.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántos cables de 6 mm caben? Redondea hacia abajo.',
+                    respuesta: 22,
+                    tolerancia: 1,
+                    unidad: 'cables',
+                    explicacion: '640 ÷ 28,3 ≈ 22,6, así que <strong>22 cables</strong>. Nunca se redondea hacia arriba en una ocupación.',
+                    pistas: ['Sección útil entre sección de un cable.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Necesitas llevar <strong>40 cables</strong> por un tramo. ¿Qué sección útil mínima hace falta, en mm²?',
+                    respuesta: 1132,
+                    tolerancia: 15,
+                    unidad: 'mm²',
+                    explicacion: '40 × 28,3 = <strong>1 132 mm²</strong> de sección <strong>útil</strong>. Cuidado: esa no es la medida de la canaleta.',
+                    pistas: ['Número de cables por la sección de cada uno.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> ¿Y qué sección <strong>total</strong> debe tener la canaleta para que esos 1 132 mm² sean solo el 40 %?',
+                    respuesta: 2830,
+                    tolerancia: 40,
+                    unidad: 'mm²',
+                    explicacion: '1 132 ÷ 0,40 = <strong>2 830 mm²</strong>. Por ejemplo, una canaleta de 60 × 50 mm, que da 3 000 mm². Llevar 40 cables no es cosa de una canaleta pequeña.',
+                    pistas: ['Divide entre 0,4 en vez de multiplicar.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>f)</strong> ¿Por qué no se redondea hacia arriba al calcular cuántos cables caben?',
+                    opciones: {
+                        a: 'Porque el 40 % ya es un límite pensado con margen y apurarlo deja la canaleta sin capacidad de crecer',
+                        b: 'Porque los cables no se pueden cortar',
+                        c: 'Porque la norma exige números pares',
+                        d: 'Porque el cable se dilata con el calor'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'El 40 % no es un valor exacto de física: es una <strong>buena práctica</strong> que ya contempla lo que se pierde entre cables. Apurarlo al decimal va contra su propio sentido.',
+                    pistas: ['¿Para qué sirve ese 40 %?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Las reglas del tirado',
+            tiempo: '12 min',
+            enunciado: '<p>Lo que se estropea durante la instalación y no se ve después.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada error con su consecuencia.',
+                    izquierda: [
+                        'Tirar con más de 110 N',
+                        'Curva más cerrada que 4 veces el diámetro',
+                        'Brida demasiado apretada',
+                        'Hacer un empalme en mitad del tramo'
+                    ],
+                    derecha: [
+                        'Se abre el paso del trenzado y sube la diafonía en todo el tramo',
+                        'Cambia la impedancia en ese punto y aparece pérdida por retorno',
+                        'Aplasta el haz y deforma los pares justo ahí',
+                        'Crea una discontinuidad que refleja señal y capta ruido'
+                    ],
+                    pares: {
+                        'Tirar con más de 110 N': 'Se abre el paso del trenzado y sube la diafonía en todo el tramo',
+                        'Curva más cerrada que 4 veces el diámetro': 'Cambia la impedancia en ese punto y aparece pérdida por retorno',
+                        'Brida demasiado apretada': 'Aplasta el haz y deforma los pares justo ahí',
+                        'Hacer un empalme en mitad del tramo': 'Crea una discontinuidad que refleja señal y capta ruido'
+                    },
+                    explicacion: 'Fíjate en la diferencia: el exceso de tensión estropea <strong>todo el tramo</strong>; la curva, la brida y el empalme estropean <strong>un punto</strong>. Por eso un TDR, que localiza, es tan útil.',
+                    pistas: ['Solo uno de los cuatro afecta al cable entero.']
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>b)</strong> Completa las cifras del tirado.',
+                    frase: 'La tensión máxima al tirar de un par trenzado de cuatro pares es de unos {{0}} N, es decir, el peso de unos {{1}} kg. El radio de curvatura no debe bajar de {{2}} veces el diámetro del cable, y conviene dejar una reserva de {{3}} metros en el armario.',
+                    respuestas: [
+                        ['110', 'ciento diez'],
+                        ['11', 'once'],
+                        ['4', 'cuatro'],
+                        ['2', '3', '2-3', 'dos', 'tres']
+                    ],
+                    explicacion: 'Once kilos es <strong>menos</strong> de lo que uno tiende a aplicar cuando un cable se atasca. Ese es el punto del ejercicio.',
+                    pistas: ['La segunda cifra es la primera dividida entre diez, aproximadamente.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un cable se ha quedado atascado en una curva del tubo. ¿Qué haces?',
+                    opciones: {
+                        a: 'Tirar con las dos manos hasta que salga',
+                        b: 'Soltar, localizar dónde engancha y usar guía pasacables y lubricante si hace falta',
+                        c: 'Cortar el cable y empalmarlo al otro lado',
+                        d: 'Calentar el tubo para que ceda'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Tirar más fuerte es exactamente lo que abre el trenzado. Y el empalme está prohibido.',
+                    pistas: ['¿Cuál de las opciones no estropea el cable ni incumple la norma?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Por qué se deja reserva de cable en el armario?',
+                    opciones: {
+                        a: 'Para poder rehacer un conector o reubicar el panel sin tirar el tramo entero',
+                        b: 'Para mejorar la atenuación',
+                        c: 'Porque lo exige el fabricante del switch',
+                        d: 'Para poder alargar el enlace más allá de los 90 m'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Sin reserva, un error de montaje o un cambio de sitio del panel obliga a volver a tirar el cable. Con dos metros, se resuelve en diez minutos. Ojo: la reserva <strong>cuenta</strong> para los 90 m.',
+                    pistas: ['Piensa en qué pasa cuando hay que rehacer una conexión.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Unidades de rack',
+            tiempo: '13 min',
+            enunciado: '<p>Con <strong>1 U = 4,45 cm</strong> y ancho normalizado de <strong>19 pulgadas</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Altura útil de un armario de 22U, en centímetros. Al entero.',
+                    respuesta: 98,
+                    tolerancia: 2,
+                    unidad: 'cm',
+                    explicacion: '22 × 4,45 = <strong>97,9 cm</strong>, casi un metro.',
+                    pistas: ['Unidades por 4,45.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un armario mide 1,33 m de altura útil. ¿Cuántas U tiene?',
+                    respuesta: 30,
+                    tolerancia: 1,
+                    unidad: 'U',
+                    explicacion: '133 ÷ 4,45 ≈ <strong>30 U</strong>.',
+                    pistas: ['Divide los centímetros entre 4,45.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Necesitas 3 paneles, 3 pasahilos, 3 switches (1U cada uno) y un SAI de 2U. ¿Cuántas U ocupas?',
+                    respuesta: 11,
+                    unidad: 'U',
+                    explicacion: '3 + 3 + 3 + 2 = <strong>11 U</strong> ocupadas.',
+                    pistas: ['Suma los elementos, contando el SAI como 2.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Si además quieres dejar libre un 25 %, ¿de cuántas U debe ser el armario como mínimo? Redondea al entero superior.',
+                    respuesta: 15,
+                    tolerancia: 1,
+                    unidad: 'U',
+                    explicacion: 'Si 11 U son el 75 %, el total es 11 ÷ 0,75 = 14,7 → <strong>15 U</strong>. En la práctica se compraría uno de 16U o 18U, que son medidas comerciales.',
+                    pistas: ['Las 11 U ocupadas son el 75 % del total.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> Además de la altura, ¿qué otra medida hay que comprobar al elegir armario?',
+                    opciones: {
+                        a: 'El color',
+                        b: 'El peso del armario vacío',
+                        c: 'El fondo, que debe admitir el equipo más profundo y los cables de detrás',
+                        d: 'El número de tornillos'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Un switch ocupa poco fondo, pero un servidor puede pasar de 70 cm, y aún hay que dejar sitio detrás para los latiguillos y la alimentación.',
+                    pistas: ['¿Qué pasa si el servidor es más profundo que el armario?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Repartir el armario',
+            tiempo: '13 min',
+            enunciado: '<p>Colocar los elementos con criterio, no por orden de llegada.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los elementos <strong>de arriba abajo</strong> en un armario, siguiendo las reglas del reparto.',
+                    elementos: [
+                        'SAI de 2U',
+                        'Panel de parcheo',
+                        'Switch',
+                        'Pasahilos',
+                        'Espacio libre de reserva'
+                    ],
+                    orden: [
+                        'Panel de parcheo',
+                        'Pasahilos',
+                        'Switch',
+                        'Espacio libre de reserva',
+                        'SAI de 2U'
+                    ],
+                    explicacion: 'El cableado fijo llega arriba al panel; el pasahilos guía los latiguillos hasta el switch, que va pegado; abajo del todo, lo más pesado.',
+                    pistas: ['Empieza por donde llega el cableado fijo y termina por lo que más pesa.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Marca <strong>todas</strong> las reglas correctas del reparto de un armario.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Lo más pesado, en la parte baja',
+                        b: 'Cada panel, junto a su switch, con un pasahilos entre medias',
+                        c: 'Aprovechar todas las unidades disponibles',
+                        d: 'Dejar entre un 20 y un 30 % libre',
+                        e: 'Cuidar el paso del aire por los equipos'
+                    },
+                    respuesta: ['a', 'b', 'd', 'e'],
+                    explicacion: 'Llenar el armario hasta arriba impide crecer y estrangula la ventilación: es justo lo contrario de lo que se busca.',
+                    pistas: ['Cuatro de las cinco. La falsa suena a aprovechamiento y es un error.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un armario tiene el panel arriba del todo y su switch en la parte baja. ¿Qué problema genera?',
+                    opciones: {
+                        a: 'Ninguno si los latiguillos son largos',
+                        b: 'Veinticuatro latiguillos largos cruzando el armario: desorden, curvas forzadas y mantenimiento imposible',
+                        c: 'Que el switch se calienta más',
+                        d: 'Que hay que cambiar la categoría del cable'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Y con el tiempo esos latiguillos largos se convierten en una maraña que nadie se atreve a tocar. Panel y switch van <strong>emparejados</strong>.',
+                    pistas: ['Imagina 24 cables cruzando el armario de arriba abajo.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Marca <strong>todo</strong> lo que un armario necesita además de los equipos.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Puesta a tierra',
+                        b: 'Alimentación protegida con SAI',
+                        c: 'Ventilación',
+                        d: 'Cierre con llave',
+                        e: 'Estar pegado a la pared para ahorrar espacio'
+                    },
+                    respuesta: ['a', 'b', 'c', 'd'],
+                    explicacion: 'Pegarlo a la pared impide trabajar en la parte trasera, que es donde están la alimentación y buena parte de los cables.',
+                    pistas: ['Cuatro de las cinco. La falsa parece un ahorro y es un problema de mantenimiento.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Decidir sobre la instalación',
+            tiempo: '12 min',
+            enunciado: '<p>Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>a)</strong> Visitas una instalación existente y encuentras: canaletas llenas hasta la tapa, bridas muy apretadas cada 20 cm, el cable de datos compartiendo canaleta con el eléctrico y el armario colgado en un pasillo, sin llave y con el SAI en la balda superior. <strong>Redacta el informe de deficiencias</strong>, ordenado por gravedad, indicando qué consecuencia tiene cada una.',
+                    filas: 10,
+                    modelo: '<p><strong>1 · Cable de datos y eléctrico en la misma canaleta.</strong> Es la más grave porque afecta a la <strong>seguridad de las personas</strong> además de a la señal: incumple los códigos de seguridad y somete el cableado a interferencias permanentes. Corrección: separar en canalizaciones distintas o instalar canaleta con tabique separador, y donde haya cruces inevitables, hacerlos en ángulo recto.</p><p><strong>2 · SAI en la balda superior.</strong> Riesgo físico: es el elemento más pesado y arriba desequilibra el armario, que además está colgado. Corrección: bajarlo a la posición inferior y comprobar el anclaje del armario a la pared.</p><p><strong>3 · Bridas muy apretadas.</strong> Aplastan el haz y deforman los pares, lo que se traducirá en <strong>diafonía y pérdida por retorno</strong> en esos puntos. Corrección: sustituirlas por bridas que puedan girar con la mano, o por velcro.</p><p><strong>4 · Canaletas llenas hasta la tapa.</strong> Muy por encima del <strong>40 %</strong> recomendado: no se podrá tirar cable nuevo sin arrastrar el existente, el haz queda comprimido y el calor no se disipa. Corrección: ampliar la canalización o repartir en dos recorridos antes de añadir nada más.</p><p><strong>5 · Armario sin llave en un pasillo.</strong> Cualquiera accede a toda la electrónica de la red. Corrección: cerradura y, si es posible, reubicarlo en un espacio controlado; comprobar de paso la ventilación y la puesta a tierra.</p><p>Como criterio general: primero lo que afecta a las <strong>personas</strong>, después lo que puede <strong>dañar el equipamiento</strong>, y por último lo que degrada el servicio o impide crecer.</p>',
+                    rubrica: [
+                        'Ordena las deficiencias por gravedad y justifica el criterio',
+                        'Pone en primer lugar la mezcla de datos y energía, por seguridad',
+                        'Señala el riesgo físico del SAI arriba en un armario colgado',
+                        'Relaciona bridas y sobrellenado con diafonía o pérdida por retorno',
+                        'Cita el 40 % de ocupación como referencia',
+                        'Propone una corrección concreta para cada deficiencia'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

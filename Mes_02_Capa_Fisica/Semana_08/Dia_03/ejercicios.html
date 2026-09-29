@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Ejercicios: comprobación y certificación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">82 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 5 es el que de verdad se usa en el trabajo: dado un <strong>parámetro que falla</strong>,
+            deducir <strong>qué se hizo mal</strong>. La tabla de causas del libro es corta y hay que tenerla
+            automatizada.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/ejercicios.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/ejercicios.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Ejercicios',
+    subtitulo: 'Los tres comprobadores · reflectometría · parámetros · diagnóstico a partir del informe',
+    tiempo: '82 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Los tres comprobadores',
+            tiempo: '12 min',
+            enunciado: '<p>Cada escalón añade algo sobre el anterior.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa qué mide cada tipo. Escribe <em>sí</em> o <em>no</em>.',
+                    esquina: 'Capacidad',
+                    cabecera: ['Continuidad', 'Cableado', 'TDR'],
+                    filas: [
+                        {
+                            etiqueta: 'Detecta cortes en un hilo',
+                            celdas: [
+                                { respuestas: ['sí', 'si'], placeholder: 'sí/no' },
+                                { fijo: 'Sí' },
+                                { respuestas: ['sí', 'si'], placeholder: 'sí/no' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Mide diafonía y atenuación',
+                            celdas: [
+                                { respuestas: ['no'], placeholder: 'sí/no' },
+                                { respuestas: ['sí', 'si'], placeholder: 'sí/no' },
+                                { fijo: 'Sí' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'Dice en qué punto está la anomalía',
+                            celdas: [
+                                { respuestas: ['no'], placeholder: 'sí/no' },
+                                { respuestas: ['no'], placeholder: 'sí/no' },
+                                { respuestas: ['sí', 'si'], placeholder: 'sí/no' }
+                            ]
+                        }
+                    ],
+                    explicacion: 'La tabla se lee en escalera: cada tipo hace todo lo del anterior y añade algo. Lo que <strong>solo</strong> hace el TDR es <strong>localizar</strong>.',
+                    pistas: ['La última fila es la que distingue al TDR de los demás.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>b)</strong> ¿Cómo se llama el equivalente del TDR para fibra óptica?',
+                    respuestas: ['OTDR', 'otdr'],
+                    explicacion: '<strong>OTDR</strong>, <em>Optical Time Domain Reflector</em>. Calcula la atenuación del tramo y las pérdidas en los conectores.',
+                    pistas: ['Se le añade una letra al principio.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un técnico dice que ha «certificado» la instalación con un comprobador de continuidad de 25 euros. ¿Qué le corriges?',
+                    opciones: {
+                        a: 'Nada: es una certificación válida',
+                        b: 'Que ha comprobado, no certificado: ese aparato solo ve continuidad, y certificar exige medir diafonía y atenuación contra los límites de una categoría',
+                        c: 'Que debería haber usado un multímetro',
+                        d: 'Que la certificación solo se hace en fibra'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Comprobar es «hay cable y llega». Certificar es «este enlace cumple los valores de la categoría X en el modo Y».',
+                    pistas: ['¿Qué mide exactamente ese aparato?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Reflectometría',
+            tiempo: '12 min',
+            enunciado: '<p>Cómo el eco se convierte en una distancia.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa la explicación del libro.',
+                    frase: 'Una pequeña parte de la señal que circula por el cable {{0}} en el lugar donde existe una anomalía y vuelve a su extremo de origen. Si se mide el {{1}} que tarda la señal en volver, se puede calcular a qué {{2}} se encuentra esa anomalía.',
+                    respuestas: [
+                        ['rebota', 'se refleja'],
+                        ['tiempo'],
+                        ['distancia']
+                    ],
+                    explicacion: 'Es el principio del eco, aplicado a una señal eléctrica y medido en nanosegundos.',
+                    pistas: ['Piensa en gritar frente a una pared.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Cuál de estas anomalías NO detecta un TDR, según el libro?',
+                    opciones: {
+                        a: 'Empalmes',
+                        b: 'Nudos',
+                        c: 'La categoría impresa en la funda del cable',
+                        d: 'Radios de curvatura demasiado pronunciados'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Un TDR mide comportamiento eléctrico, no lee etiquetas. Lo que sí detecta, además, son los <strong>errores de impedancia</strong>.',
+                    pistas: ['Tres son fenómenos eléctricos o físicos del cable; la otra es información impresa.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué es tan valioso que el TDR indique la distancia a la avería?',
+                    opciones: {
+                        a: 'Porque permite cobrar más por la reparación',
+                        b: 'Porque evita tener que desmontar toda la instalación para encontrar el problema',
+                        c: 'Porque acorta el cable',
+                        d: 'Porque así se puede certificar sin sonda remota'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es exactamente el inconveniente que el libro señala de los comprobadores convencionales: detectan la anomalía pero no la localizan.',
+                    pistas: ['Piensa en el coste de buscar un fallo en 90 metros de cable oculto.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Además de localizar un punto, ¿qué pueden hacer los TDR de alta precisión?',
+                    opciones: {
+                        a: 'Reparar la anomalía automáticamente',
+                        b: 'Cambiar la categoría del enlace',
+                        c: 'Medir un parámetro a lo largo de todo el cable y representarlo en una gráfica',
+                        d: 'Sustituir al certificador de fibra'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Esa gráfica es la que permite ver <strong>dónde empeora</strong> un parámetro y cuánto, en vez de tener un único número final.',
+                    pistas: ['El libro muestra un ejemplo con ELFEXT a lo largo de 120 m.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Parámetros básicos',
+            tiempo: '14 min',
+            enunciado: '<p>Continuidad, mapeado, resistencia, longitud y atenuación.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada parámetro con lo que indica.',
+                    izquierda: ['Continuidad', 'Mapeado de hilos', 'Resistencia', 'Longitud'],
+                    derecha: [
+                        'Si existe alguna rotura que impida que llegue la señal',
+                        'Si los hilos están bien montados o hay cortocircuitos',
+                        'Un valor alto puede producir una atenuación anormalmente alta',
+                        'La distancia entre extremos, que no debe exceder el estándar'
+                    ],
+                    pares: {
+                        'Continuidad': 'Si existe alguna rotura que impida que llegue la señal',
+                        'Mapeado de hilos': 'Si los hilos están bien montados o hay cortocircuitos',
+                        'Resistencia': 'Un valor alto puede producir una atenuación anormalmente alta',
+                        'Longitud': 'La distancia entre extremos, que no debe exceder el estándar'
+                    },
+                    explicacion: 'Los dos primeros los mide hasta un comprobador sencillo; los otros dos exigen ya un comprobador de cableado.',
+                    pistas: ['Uno de los cuatro tiene efecto sobre otro parámetro de la lista.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué dos consecuencias tiene, según el libro, que un enlace exceda la longitud del estándar?',
+                    multiple: true,
+                    opciones: {
+                        a: 'Retardos excesivos que pueden hacer fallar los protocolos',
+                        b: 'Atenuaciones que deterioran los mensajes',
+                        c: 'Cambio de categoría del cable',
+                        d: 'Cortocircuitos entre pares'
+                    },
+                    respuesta: ['a', 'b'],
+                    explicacion: 'Tiempo y energía: llega <strong>tarde</strong> y llega <strong>débil</strong>. Son las dos razones por las que existe el límite.',
+                    pistas: ['Dos de las cuatro. Una tiene que ver con el tiempo y otra con la potencia.']
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>c)</strong> Ordena las tres causas de atenuación excesiva tal como las enumera el libro.',
+                    elementos: [
+                        'La temperatura es elevada, sobre todo en cables de PVC',
+                        'La longitud del enlace es excesiva',
+                        'Los conectores no se han montado correctamente'
+                    ],
+                    orden: [
+                        'La longitud del enlace es excesiva',
+                        'Los conectores no se han montado correctamente',
+                        'La temperatura es elevada, sobre todo en cables de PVC'
+                    ],
+                    explicacion: 'Y ese es también el orden en que conviene comprobarlas: primero lo que se mide, después lo que se ve, y por último lo del entorno.',
+                    pistas: ['Empieza por la causa que también aparece como parámetro propio.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Un enlace mide 84 m en el certificador y en el plano son 46 m. ¿Cuántos metros hay «de más»?',
+                    respuesta: 38,
+                    unidad: 'm',
+                    explicacion: '84 − 46 = <strong>38 m</strong>. Con esa diferencia, lo más probable es un <strong>rollo de cable sobrante</strong> escondido en el conducto, como apunta el libro.',
+                    pistas: ['Una resta, y después piensa qué puede explicarla.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: La familia de la diafonía',
+            tiempo: '15 min',
+            enunciado: '<p>NEXT, FEXT, ELFEXT y ACR: qué miden y en qué dirección son buenos.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa. En la última columna escribe <em>alto</em> o <em>bajo</em> según lo que se desea.',
+                    esquina: 'Parámetro',
+                    cabecera: ['Qué es', '¿Se desea alto o bajo?'],
+                    filas: [
+                        {
+                            etiqueta: 'NEXT',
+                            celdas: [
+                                { fijo: 'Diafonía medida en el extremo cercano' },
+                                { respuestas: ['alto'], placeholder: 'alto/bajo' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'FEXT',
+                            celdas: [
+                                { respuestas: ['diafonía en el extremo lejano', 'diafonia en el extremo lejano', 'diafonía del extremo lejano', 'la del extremo lejano'], placeholder: '¿qué es?' },
+                                { respuestas: ['alto'], placeholder: 'alto/bajo' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'ELFEXT',
+                            celdas: [
+                                { fijo: 'Cálculo: atenuación menos FEXT' },
+                                { respuestas: ['bajo'], placeholder: 'alto/bajo' }
+                            ]
+                        },
+                        {
+                            etiqueta: 'ACR',
+                            celdas: [
+                                { respuestas: ['diferencia entre NEXT y atenuación', 'next menos atenuación', 'next menos atenuacion', 'diferencia de next y atenuación'], placeholder: '¿qué es?' },
+                                { respuestas: ['alto'], placeholder: 'alto/bajo' }
+                            ]
+                        }
+                    ],
+                    explicacion: '<strong>ELFEXT es la excepción</strong>: se desea bajo. Los otros tres son márgenes, y los márgenes cuanto más grandes, mejor.',
+                    pistas: ['Tres van en un sentido y uno en el contrario.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Un enlace tiene un NEXT de 41 dB y una atenuación de 17 dB. ¿Cuánto vale el ACR?',
+                    respuesta: 24,
+                    unidad: 'dB',
+                    explicacion: 'ACR = NEXT − atenuación = 41 − 17 = <strong>24 dB</strong>. Cuanto mayor, más se distingue la señal del ruido de fondo.',
+                    pistas: ['Es una resta entre los dos valores.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Si en otro enlace la atenuación sube a 25 dB y el NEXT se mantiene en 41, ¿cuál es el nuevo ACR?',
+                    respuesta: 16,
+                    unidad: 'dB',
+                    explicacion: '41 − 25 = <strong>16 dB</strong>. El ACR ha empeorado <strong>sin que la diafonía haya cambiado</strong>: la culpa es de la atenuación.',
+                    pistas: ['Misma resta con el nuevo valor.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> A la vista de los dos apartados anteriores, ¿qué corregirías en el segundo enlace?',
+                    opciones: {
+                        a: 'El destrenzado de los conectores, para mejorar el NEXT',
+                        b: 'Lo que está causando la atenuación: longitud excesiva, conectores mal montados o temperatura',
+                        c: 'La pantalla del cable',
+                        d: 'Nada: el ACR no se puede corregir'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El ACR no se toca directamente: se arregla el término que se ha ido. Aquí el NEXT está igual que antes; lo que ha empeorado es la <strong>atenuación</strong>.',
+                    pistas: ['¿Cuál de los dos términos ha cambiado entre un enlace y otro?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> ¿Cuántas medidas de ELFEXT tiene un cable de cuatro pares?',
+                    respuesta: 12,
+                    unidad: 'medidas',
+                    explicacion: 'Se inyecta en un par y se mide en otro: <strong>12</strong> combinaciones posibles. Lo dice el libro expresamente.',
+                    pistas: ['Cuatro pares, y cada uno se mide contra los otros tres.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Del parámetro a la causa',
+            tiempo: '16 min',
+            enunciado: '<p>El ejercicio que se hace en el trabajo: el informe dice qué falla, y tú tienes que decir <strong>por qué</strong>.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada parámetro fallido con su causa más probable.',
+                    izquierda: [
+                        'NEXT insuficiente',
+                        'Longitud fuera de rango con el plano correcto',
+                        'Pérdida por retorno excesiva',
+                        'Mapeado de hilos incorrecto'
+                    ],
+                    derecha: [
+                        'Destrenzado excesivo en los conectores o pantalla deteriorada',
+                        'Un rollo de cable sobrante escondido en el conducto',
+                        'Curvas cerradas, cable aplastado o pantalla no mantenida hasta el extremo',
+                        'Conectores mal montados, con hilos cruzados'
+                    ],
+                    pares: {
+                        'NEXT insuficiente': 'Destrenzado excesivo en los conectores o pantalla deteriorada',
+                        'Longitud fuera de rango con el plano correcto': 'Un rollo de cable sobrante escondido en el conducto',
+                        'Pérdida por retorno excesiva': 'Curvas cerradas, cable aplastado o pantalla no mantenida hasta el extremo',
+                        'Mapeado de hilos incorrecto': 'Conectores mal montados, con hilos cruzados'
+                    },
+                    explicacion: 'Fíjate en que el <strong>destrenzado excesivo</strong> aparece en dos sitios: diafonía y pérdida por retorno. Es el error de montaje más caro de todos.',
+                    pistas: ['Dos de las cuatro causas están en los conectores.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un enlace suspende por atenuación y mide 103 m. ¿Por dónde empiezas?',
+                    opciones: {
+                        a: 'Por rehacer los conectores',
+                        b: 'Por la longitud: 103 m superan el límite, y la longitud excesiva es la primera causa de atenuación que da el libro',
+                        c: 'Por comprobar la temperatura de la sala',
+                        d: 'Por cambiar la categoría declarada en el certificador'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Cuando dos parámetros fallan a la vez, casi siempre uno explica al otro. Aquí la longitud explica la atenuación.',
+                    pistas: ['¿Qué dato del enunciado es ya una infracción por sí mismo?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Otro enlace aprueba en longitud y atenuación, pero suspende en NEXT y en pérdida por retorno a la vez. ¿Qué apuntas en el informe?',
+                    opciones: {
+                        a: 'Cable de categoría insuficiente',
+                        b: 'Longitud excesiva',
+                        c: 'Terminaciones mal ejecutadas: destrenzado excesivo, que degrada los dos parámetros al mismo tiempo',
+                        d: 'Interferencia de una línea eléctrica'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Es la firma característica del destrenzado: el libro lo cita como causa de diafonía alta <strong>y</strong> de pérdida por retorno excesiva.',
+                    pistas: ['¿Qué causa aparece en la lista del libro para los dos parámetros?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Un enlace falla solo en pérdida por retorno, y el TDR la sitúa a 24 m del extremo cercano. ¿Qué buscas?',
+                    opciones: {
+                        a: 'Una terminación mal hecha en el panel',
+                        b: 'Un problema en la roseta',
+                        c: 'La categoría del cable',
+                        d: 'Algo que haya deformado el cable en ese punto del recorrido: una curva cerrada, una brida apretada o un aplastamiento'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Que el fallo esté a 24 m y no en un extremo descarta las terminaciones: el problema está <strong>en mitad del recorrido</strong>. Para eso sirve la localización del TDR.',
+                    pistas: ['¿Dónde están los conectores y dónde está la anomalía?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Explicar la certificación',
+            tiempo: '13 min',
+            enunciado: '<p>Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>a)</strong> Un cliente pregunta por qué tiene que pagar una certificación «si los ordenadores ya navegan». <strong>Respóndele</strong> con argumentos concretos.',
+                    filas: 8,
+                    modelo: '<p>Que naveguen demuestra solo que el enlace <strong>funciona hoy, a la velocidad de hoy y con este tráfico</strong>. La certificación demuestra otra cosa: que cada enlace <strong>cumple los valores de una categoría</strong> y que, por tanto, soportará lo que esa categoría promete.</p><p>Hay tres cosas que navegar no detecta. La primera son los enlaces <strong>al límite</strong>: los que aprueban por décimas y fallarán con el calor del verano o dentro de dos años. La segunda son los que funcionan <strong>por debajo de lo contratado</strong> sin que nadie se entere: un enlace con un par dañado negocia 100 Mbps en una instalación pagada como gigabit, y nadie lo nota hasta que alguien copia un archivo grande. La tercera son los errores <strong>silenciosos</strong>, como un par partido, que dan continuidad perfecta y arruinan las velocidades altas.</p><p>Y hay un motivo contractual: la certificación es el <strong>documento</strong> que acredita lo que se ha entregado. Sin ella, dentro de un año no habrá forma de saber si un problema viene de la instalación o de los equipos, y muchos fabricantes condicionan su <strong>garantía del sistema</strong> a que exista.</p>',
+                    rubrica: [
+                        'Distingue entre funcionar hoy y cumplir una categoría',
+                        'Menciona los enlaces con margen escaso',
+                        'Cita errores silenciosos como el par partido o un par dañado',
+                        'Aporta el argumento documental y de garantía'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Explica con tus palabras <strong>qué es el NEXT</strong>, por qué se quiere alto y qué error de instalación lo estropea.',
+                    filas: 6,
+                    modelo: '<p>El <strong>NEXT</strong> —diafonía del extremo cercano— mide cuánta señal de un par <strong>se cuela</strong> en otro par del mismo cable y vuelve hacia el extremo donde está el comprobador, en sentido contrario al de la señal original.</p><p>Se expresa en <strong>decibelios</strong> y se quiere <strong>alto</strong> porque mide una <strong>diferencia</strong>: cuánto más fuerte es la señal buena que la que se ha colado. Un NEXT de 45 dB significa que lo acoplado es muchísimo más débil que lo transmitido, es decir, <strong>poca diafonía</strong>; un NEXT de 30 dB significa que la señal parásita está mucho más cerca de la buena.</p><p>Lo estropea, según el libro, no mantener el cable <strong>trenzado al máximo en los conectores</strong> —el destrenzado excesivo del que se habla desde la Semana 6— y también una <strong>pantalla deteriorada o de mala calidad</strong>. Tiene sentido: el trenzado es justo lo que cancela el acoplamiento entre pares, así que allí donde se deshace, la cancelación desaparece.</p>',
+                    rubrica: [
+                        'Define el NEXT como diafonía medida en el extremo cercano',
+                        'Explica que vuelve en sentido contrario al de la señal original',
+                        'Justifica por qué un valor alto es bueno',
+                        'Cita el destrenzado en los conectores como causa',
+                        'Menciona también la pantalla deteriorada',
+                        'Conecta la causa con el mecanismo del trenzado'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

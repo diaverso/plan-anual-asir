@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: documenta la instalación</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 8</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Material:</strong> papel o una hoja de cálculo</div>
+        <div class="info-item"><strong>Herramientas:</strong> ninguna</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>El encargo</strong>
+            <p>Una gestoría de dos plantas y <strong>30 tomas</strong> acaba de recibir su instalación: tirada,
+            conectorizada y certificada. Y <strong>sin un solo papel</strong>. Te piden que la documentes.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Lo que hay (8 min)</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Dato</th><th>Valor</th></tr></thead>
+                <tbody>
+                    <tr><td>Edificio</td><td>Uno solo, dos plantas: baja y primera</td></tr>
+                    <tr><td>Tomas</td><td>12 en la planta baja, 18 en la primera</td></tr>
+                    <tr><td>Armarios</td><td>Uno por planta: el de la baja y el de la primera</td></tr>
+                    <tr><td>Paneles</td><td>Uno de 24 puertos en la planta baja, dos en la primera</td></tr>
+                    <tr><td>Cable</td><td>Categoría 6, certificado en modo <strong>enlace permanente</strong> el 4 de abril</td></tr>
+                    <tr><td>Resultado</td><td>Todos PASS salvo uno, que quedó pendiente de rehacer</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2>Parte 1 — El código (12 min)</h2>
+
+            <p>Define el esquema y escríbelo antes de tocar nada. Recuerda las cuatro condiciones:
+            <strong>único, jerárquico, estable y corto</strong>. Con un solo edificio, un esquema de dos o tres
+            campos basta.</p>
+
+<pre><code>   ejemplo de esquema:   P - nn
+                         │   └── número de toma dentro de la planta
+                         └────── planta: 0 o 1
+
+   ejemplo de identificador:   1-07</code></pre>
+
+            <h2>Parte 2 — La tabla (20 min)</h2>
+
+            <p>Monta la tabla de enlaces con estas columnas, en papel o en una hoja de cálculo:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>ID</th><th>Ubicación</th><th>Armario</th><th>Panel · puerto</th><th>Cat.</th><th>Certificación</th><th>Uso actual</th></tr></thead>
+                <tbody>
+                    <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>No hace falta que rellenes las 30 filas: con <strong>seis</strong> bien hechas se ve si el sistema
+            funciona. Inventa las ubicaciones y los usos con sentido.</p>
+
+            <h2>Parte 3 — El plano y el dosier (20 min)</h2>
+
+            <p>Dibuja el plano de <strong>una</strong> de las dos plantas, con la ubicación de las tomas, su
+            identificador y el armario. Y después escribe el <strong>índice del dosier</strong> que entregarías.</p>
+
+            <details class="ampliacion">
+                <summary>💡 Opcional: el plano con FossFLOW</summary>
+                <div class="ampliacion-cuerpo">
+                    <p><a href="https://fossflow.apps.icarosoft.com/">FossFLOW</a> sirve también para esto
+                    (<a href="https://github.com/victortassinari/FossFLOW">código fuente</a>), aunque para un plano
+                    de planta con tomas y recorridos el papel cuadriculado suele ser más rápido. Es
+                    <strong>opcional</strong>.</p>
+                    <ul>
+                        <li><strong>No guarda sola:</strong> usa <em>Export File</em> antes de cerrar.</li>
+                        <li><strong>No uses «Server Storage»:</strong> sube el diagrama a un servidor ajeno.</li>
+                    </ul>
+                </div>
+            </details>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has definido un código y lo has aplicado de forma coherente.</li>
+                <li>Tienes al menos seis filas de la tabla de enlaces bien rellenadas.</li>
+                <li>Has dibujado el plano de una planta con tomas identificadas y armario.</li>
+                <li>Has escrito el índice del dosier con sus seis documentos.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_03/laboratorio.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Viernes →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Laboratorio: documenta la instalación',
+    subtitulo: 'Inventar el código · rellenar la tabla · dibujar el plano · montar el dosier',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: El código',
+            tiempo: '14 min',
+            enunciado: '<p>Primero se decide cómo se llaman las cosas.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> Escribe el <strong>esquema</strong> de código que has elegido, indicando qué significa cada campo.',
+                    ancho: '380px',
+                    placeholder: 'planta-toma, por ejemplo 1-07',
+                    explicacion: 'Con un solo edificio y un armario por planta, dos campos bastan. Si mañana hay un segundo edificio, se añade uno delante sin romper lo anterior: esa es la ventaja de un código jerárquico.',
+                    pistas: ['Piensa qué campos hacen falta aquí y cuáles sobran.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> Escribe cómo quedaría el identificador de la <strong>toma 7 de la planta primera</strong> con tu esquema.',
+                    ancho: '200px',
+                    placeholder: '1-07',
+                    explicacion: 'Numerar con <strong>dos dígitos</strong> —07 en vez de 7— tiene una ventaja práctica: al ordenar la tabla alfabéticamente, el 10 no se cuela delante del 7.',
+                    pistas: ['Aplica tu propio esquema.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> La gestoría te pide que las tomas de dirección lleven la etiqueta «DIR». ¿Qué haces?',
+                    opciones: {
+                        a: 'Cambiar el código para esas tomas',
+                        b: 'Mantener el código general en la etiqueta y anotar «dirección» en la columna de uso de la tabla',
+                        c: 'Poner las dos etiquetas',
+                        d: 'Etiquetar solo con DIR, que es más claro'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Si dirección se muda el año que viene, la etiqueta quedaría mintiendo. El código físico es <strong>estable</strong>; lo que cambia va en la tabla.',
+                    pistas: ['¿Qué pasa cuando dirección cambia de despacho?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Con 12 tomas en la planta baja y 18 en la primera, ¿cuántos identificadores distintos hay que generar?',
+                    respuesta: 30,
+                    unidad: 'identificadores',
+                    explicacion: '<strong>30</strong>, uno por enlace. Y cada uno aparecerá cuatro veces: roseta, dos extremos del cable y puerto del panel.',
+                    pistas: ['Uno por toma.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: La tabla de enlaces',
+            tiempo: '18 min',
+            enunciado: '<p>Rellena la tabla con los datos del encargo.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> La planta primera tiene 18 tomas y paneles de 24 puertos. ¿Cuántos paneles necesita como mínimo?',
+                    respuesta: 1,
+                    unidad: 'panel',
+                    explicacion: 'Con <strong>uno</strong> bastaría para 18 tomas. El encargo dice que hay dos, lo que deja 30 puertos libres: margen de crecimiento, que es justo lo recomendable.',
+                    pistas: ['18 tomas en paneles de 24 puertos.']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Completa la fila de la toma 3 de la planta baja: está en recepción, va al armario de la planta baja, puerto 3 del panel A, categoría 6, certificada PASS el 4 de abril y la usa el ordenador de recepción.',
+                    esquina: 'Campo',
+                    cabecera: ['Valor'],
+                    filas: [
+                        { etiqueta: 'Identificador', celdas: [{ respuestas: ['0-03', '0-3', 'P0-03', 'B-03'], placeholder: '?' }] },
+                        { etiqueta: 'Ubicación', celdas: [{ respuestas: ['recepción', 'recepcion'], placeholder: '?' }] },
+                        { etiqueta: 'Panel y puerto', celdas: [{ respuestas: ['A 3', 'A-3', 'A 03', 'A-03', 'panel A puerto 3'], placeholder: '?' }] },
+                        { etiqueta: 'Categoría', celdas: [{ respuestas: ['6', 'cat 6', 'categoría 6', 'categoria 6'], placeholder: '?' }] },
+                        { etiqueta: 'Certificación', celdas: [{ respuestas: ['PASS 4/04', 'pass', 'PASS', 'PASS 04/04', 'pass 4 abril'], placeholder: '?' }] },
+                        { etiqueta: 'Uso actual', celdas: [{ respuestas: ['ordenador de recepción', 'pc de recepción', 'ordenador', 'pc recepción', 'ordenador de recepcion'], placeholder: '?' }] }
+                    ],
+                    explicacion: 'Al anotar la certificación conviene añadir el <strong>modo</strong> —enlace permanente— y la <strong>categoría</strong> contra la que se midió: un PASS sin esos datos vale poco, como viste ayer.',
+                    pistas: ['Todos los datos están en el enunciado de la pregunta.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Uno de los 30 enlaces quedó pendiente de rehacer. ¿Cómo lo reflejas en la tabla?',
+                    opciones: {
+                        a: 'No lo incluyo hasta que esté bien',
+                        b: 'Lo incluyo con su identificador y en certificación anoto FAIL con la fecha, y en uso actual, «pendiente de rehacer»',
+                        c: 'Lo marco como PASS provisional',
+                        d: 'Lo anoto solo en el plano'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'La tabla refleja la <strong>realidad</strong>, incluida la mala. Un enlace omitido es un enlace que alguien usará sin saber que no cumple.',
+                    pistas: ['¿Qué pasa si alguien conecta un equipo ahí sin saberlo?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Qué dato de la certificación no puede faltar en la tabla, además del PASS o FAIL?',
+                    opciones: {
+                        a: 'El nombre del operario',
+                        b: 'El modelo del certificador',
+                        c: 'La categoría y el modo de medida contra los que se certificó',
+                        d: 'La temperatura del día de la medida'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Sin ellos no se sabe qué significa ese PASS: recuerda que un enlace puede aprobar como canal y suspender como enlace permanente.',
+                    pistas: ['Piensa qué hace que un PASS signifique una cosa u otra.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: El plano y el dosier',
+            tiempo: '18 min',
+            enunciado: '<p>Dibuja primero y después responde.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Marca <strong>todo</strong> lo que debe aparecer en el plano de una planta.',
+                    multiple: true,
+                    opciones: {
+                        a: 'La ubicación de cada toma con su identificador',
+                        b: 'La situación del armario',
+                        c: 'El recorrido de las canalizaciones',
+                        d: 'El nombre de cada empleado en su puesto',
+                        e: 'La orientación de la planta o alguna referencia para situarse'
+                    },
+                    respuesta: ['a', 'b', 'c', 'e'],
+                    explicacion: 'Los nombres de los empleados envejecen igual que las etiquetas por usuario. El recorrido de las canalizaciones, en cambio, es la capa que más se agradece años después.',
+                    pistas: ['Cuatro de las cinco. La falsa vuelve a ser la del usuario.']
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>b)</strong> Ordena los seis documentos del dosier tal como los enumera la teoría.',
+                    elementos: [
+                        'Inventario de material',
+                        'Memoria',
+                        'Informes de certificación',
+                        'Planos as-built',
+                        'Garantías',
+                        'Tabla de enlaces'
+                    ],
+                    orden: [
+                        'Memoria',
+                        'Planos as-built',
+                        'Tabla de enlaces',
+                        'Informes de certificación',
+                        'Inventario de material',
+                        'Garantías'
+                    ],
+                    explicacion: 'El orden tiene lógica: primero lo que <strong>explica</strong> la instalación, después lo que la <strong>describe</strong>, luego lo que la <strong>demuestra</strong> y al final lo <strong>administrativo</strong>.',
+                    pistas: ['Empieza por el documento que explica qué se ha hecho y por qué.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Escribe la <strong>carta de entrega</strong> a la gestoría: qué le entregas, cómo debe usarlo y qué le pides que haga para que la documentación siga sirviendo dentro de cinco años.',
+                    filas: 10,
+                    modelo: '<p><strong>Qué se entrega.</strong> El dosier completo de la instalación, en papel y en digital: la <strong>memoria</strong> con lo instalado y las normas seguidas; los <strong>planos as-built</strong> de las dos plantas con tomas, armarios y recorridos; la <strong>tabla de enlaces</strong> con los 30 enlaces; los <strong>informes de certificación</strong> —categoría 6, modo enlace permanente, 4 de abril—; el <strong>inventario de material</strong>; y las <strong>garantías</strong>.</p><p><strong>Cómo usarlo.</strong> Cada toma lleva un identificador impreso que se repite en el puerto del panel correspondiente: para localizar un puesto basta con leer la etiqueta de su roseta y buscar ese mismo código en el armario. La tabla dice, para cada enlace, dónde está, en qué puerto termina y si superó la certificación.</p><p><strong>Estado actual.</strong> Veintinueve enlaces aprobados y <strong>uno pendiente</strong>, señalado en la tabla como FAIL: no debe ponerse en servicio hasta que se rehaga y se recertifique.</p><p><strong>Lo que les pedimos.</strong> Primero, que la documentación viva en un <strong>sitio compartido</strong> y no en el ordenador de una sola persona. Segundo, que <strong>cada cambio se anote en el momento</strong>: mover un latiguillo de puerto cuesta diez segundos y anotarlo, cinco; no anotarlo cuesta media hora dentro de dos años. Tercero, una <strong>revisión anual</strong> en la que se compruebe que la tabla y la realidad siguen coincidiendo. Y cuarto, que cualquier ampliación se certifique y se incorpore al dosier, porque de ello depende también la garantía del sistema.</p>',
+                    rubrica: [
+                        'Enumera los seis documentos del dosier',
+                        'Explica cómo se localiza un puesto con el etiquetado y la tabla',
+                        'Advierte del enlace pendiente y de que no debe usarse',
+                        'Pide que la documentación esté en un sitio compartido',
+                        'Establece la regla de anotar los cambios en el momento',
+                        'Propone revisión periódica y certificar las ampliaciones'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

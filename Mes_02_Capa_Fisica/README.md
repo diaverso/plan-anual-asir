@@ -48,7 +48,11 @@ Todo el **Mes 1**, y en especial:
 | **[Semana 5](Semana_05/README.md)** | Conceptos de transmisión: señales, perturbaciones y ruido | ✅ Disponible (5 días) |
 | **[Semana 6](Semana_06/README.md)** | Medios cableados: par trenzado, coaxial y fibra óptica | ✅ Disponible (5 días) |
 | **[Semana 7](Semana_07/README.md)** | Medios inalámbricos: radio, microondas y satélite | ✅ Disponible (5 días) |
-| Semana 8 | Cableado estructurado: instalación y certificación | ⏳ Pendiente |
+| **[Semana 8](Semana_08/README.md)** | Cableado estructurado: instalación y certificación | ✅ Disponible (5 días) |
+
+Y al terminar la cuarta semana, el **[examen mensual](examen_mensual.html)**: 22 preguntas tipo test
+y 4 ejercicios prácticos que mezclan las cuatro semanas, precedidos de un repaso automático de todo
+lo que hayas fallado durante el mes.
 
 ---
 
@@ -66,6 +70,8 @@ Todo el **Mes 1**, y en especial:
 | **Cisco Packet Tracer** | Medios y conexiones | Semanas 6 y 8 |
 | **Tarjeta Wi-Fi** del equipo | Consultar bandas, modos y anchura de canal | Semana 7 |
 | `ping` | Medir la latencia real y compararla con la del satélite | Semana 7 |
+| **Metro o cinta métrica** | Medir recorridos y estimar longitudes de cable | Semana 8 |
+| Papel o **FossFLOW** | Plano de tomas y de recorridos, tabla de enlaces | Semana 8 |
 
 Los visualizadores de la Semana 5 funcionan **sin conexión y sin instalar nada**: calculan la señal
 en el propio navegador.
