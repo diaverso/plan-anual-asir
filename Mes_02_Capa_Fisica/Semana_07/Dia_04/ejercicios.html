@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios: infrarrojos, luz y comparativa</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            El ejercicio 5 reconstruye la <strong>tabla 3.5 entera</strong>, los siete medios. Es la tabla que más
+            cae en un examen de este tema, y ahora ya entiendes de dónde sale cada cifra.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/ejercicios.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/ejercicios.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Ejercicios',
+    subtitulo: 'Infrarrojos · ondas de luz · los cuatro no guiados · la tabla completa · cable o aire',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Infrarrojos',
+            tiempo: '11 min',
+            enunciado: '<p>El medio del mando a distancia, con sus dos limitaciones y sus tres ventajas.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa con lo que dice el libro.',
+                    frase: 'Las ondas infrarrojas se utilizan para la comunicación de {{0}} alcance, como los mandos remotos. Son relativamente {{1}}, baratos y fáciles de construir, pero tienen un inconveniente importante: no atraviesan los objetos {{2}}. No es necesario obtener {{3}} del gobierno para operar un sistema infrarrojo, y no pueden usarse en exteriores porque el {{4}} emite gran cantidad de radiaciones infrarrojas.',
+                    respuestas: [
+                        ['corto'],
+                        ['direccionales', 'direccionales.'],
+                        ['sólidos', 'solidos'],
+                        ['licencia', 'permiso'],
+                        ['Sol', 'sol']
+                    ],
+                    explicacion: 'Cinco datos que conviene retener juntos: <strong>corto alcance, direccional, no atraviesa sólidos, sin licencia y nada de exteriores</strong>.',
+                    pistas: ['El último hueco es la mayor fuente de infrarrojos que existe.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿En qué situación el «no atraviesa paredes» del infrarrojo es una <strong>ventaja</strong>?',
+                    opciones: {
+                        a: 'Cuando se quiere cubrir un edificio entero con pocos emisores',
+                        b: 'Cuando interesa que la comunicación no pueda escucharse desde fuera de la sala',
+                        c: 'Cuando hace falta mucho alcance',
+                        d: 'Cuando se instala en exteriores'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Es la ventaja de <strong>seguridad</strong> que cita el libro: lo que no sale de la habitación no lo intercepta nadie desde el rellano.',
+                    pistas: ['Piensa en una sala de reuniones con información sensible.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> El fallo del mando a distancia en la terraza es, en el fondo, un problema de…',
+                    opciones: {
+                        a: 'Ancho de banda',
+                        b: 'Longitud de onda',
+                        c: 'Atenuación por distancia',
+                        d: 'Relación señal/ruido: el Sol aporta tanto ruido infrarrojo que tapa la señal'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Misma idea de la Semana 5: si el ruido crece lo suficiente, la señal deja de distinguirse aunque llegue entera.',
+                    pistas: ['¿Qué magnitud relaciona lo que emites con lo que hay de fondo?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Ondas de luz',
+            tiempo: '11 min',
+            enunciado: '<p>El enlace láser entre edificios: barato, rápido y delicado.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Marca <strong>todas</strong> las ventajas que el libro atribuye a las ondas de luz.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Coste muy bajo',
+                        b: 'Fácil de instalar',
+                        c: 'Elevada velocidad de transmisión',
+                        d: 'Atraviesa obstáculos',
+                        e: 'Inmune a la meteorología'
+                    },
+                    respuesta: ['a', 'b', 'c'],
+                    explicacion: 'Las dos últimas son justo sus <strong>debilidades</strong>: necesita visión directa y le afectan la lluvia, la niebla y las corrientes de convección.',
+                    pistas: ['Tres de las cinco. Las otras dos describen lo contrario de la realidad.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué cada edificio necesita un emisor <strong>y</strong> un receptor?',
+                    opciones: {
+                        a: 'Por redundancia, en caso de avería',
+                        b: 'Porque la señalización óptica con láser es unidireccional: un haz va en un solo sentido',
+                        c: 'Porque el receptor debe amplificar la señal',
+                        d: 'Porque lo exige la normativa'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Igual que una fibra, que es <strong>símplex</strong>: para conversar hacen falta dos caminos.',
+                    pistas: ['¿Cuántos sentidos admite un haz de luz?']
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>c)</strong> Relaciona cada problema del enlace láser con su descripción.',
+                    izquierda: ['Lluvia', 'Niebla densa', 'Corrientes de convección', 'Alineación'],
+                    derecha: [
+                        'Las gotas dispersan y absorben el haz',
+                        'Las gotas en suspensión bloquean la visión directa',
+                        'El aire caliente que sube del edificio desvía el rayo',
+                        'Es difícil colocar correctamente emisores y receptores'
+                    ],
+                    pares: {
+                        'Lluvia': 'Las gotas dispersan y absorben el haz',
+                        'Niebla densa': 'Las gotas en suspensión bloquean la visión directa',
+                        'Corrientes de convección': 'El aire caliente que sube del edificio desvía el rayo',
+                        'Alineación': 'Es difícil colocar correctamente emisores y receptores'
+                    },
+                    explicacion: 'Tres son meteorológicos y uno es de montaje. El de las corrientes de convección es el que más sorprende: el enlace falla con <strong>buen</strong> tiempo.',
+                    pistas: ['Dos hablan de agua en el aire, de dos formas distintas.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Los cuatro no guiados',
+            tiempo: '12 min',
+            enunciado: '<p>Radio, microondas, infrarrojo y luz, comparados.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa. En «atraviesa obstáculos» escribe <em>sí</em> o <em>no</em>.',
+                    esquina: 'Medio',
+                    cabecera: ['¿Atraviesa obstáculos?', '¿Necesita apuntar?'],
+                    filas: [
+                        { etiqueta: 'Ondas de radio', celdas: [{ respuestas: ['sí', 'si'], placeholder: 'sí/no' }, { respuestas: ['no'], placeholder: 'sí/no' }] },
+                        { etiqueta: 'Microondas', celdas: [{ respuestas: ['no'], placeholder: 'sí/no' }, { respuestas: ['sí', 'si'], placeholder: 'sí/no' }] },
+                        { etiqueta: 'Infrarrojo', celdas: [{ respuestas: ['no'], placeholder: 'sí/no' }, { fijo: 'Sí, aunque sin precisión' }] },
+                        { etiqueta: 'Ondas de luz', celdas: [{ respuestas: ['no'], placeholder: 'sí/no' }, { respuestas: ['sí', 'si'], placeholder: 'sí/no' }] }
+                    ],
+                    explicacion: 'Solo la radio atraviesa obstáculos, y es también la única que no exige apuntar. Las dos cosas van de la mano: es la de mayor longitud de onda.',
+                    pistas: ['Solo hay una fila distinta a las demás.']
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>b)</strong> Ordena los cuatro medios de <strong>menor</strong> a <strong>mayor</strong> direccionalidad.',
+                    elementos: ['Microondas con parabólica', 'Ondas de radio', 'Láser', 'Infrarrojo'],
+                    orden: ['Ondas de radio', 'Infrarrojo', 'Microondas con parabólica', 'Láser'],
+                    explicacion: 'La radio va en todas direcciones; el infrarrojo es «relativamente» direccional; la parabólica concentra un haz estrecho; y el láser apunta a un punto.',
+                    pistas: ['Empieza por el que no hay que apuntar en absoluto.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué medio no guiado elegirías para comunicar dos naves con visión directa a 2 km, con lluvias frecuentes?',
+                    opciones: {
+                        a: 'Infrarrojo',
+                        b: 'Láser, porque es el más barato',
+                        c: 'Microondas: aguantan mejor la lluvia que el láser y cubren esa distancia de sobra',
+                        d: 'Ondas de radio omnidireccionales'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'El infrarrojo no llega a 2 km y el láser sufre demasiado con lluvia y niebla. La radio omnidireccional funcionaría, pero desperdicia energía y ofrece menos velocidad que un radioenlace dirigido.',
+                    pistas: ['Descarta primero por distancia y después por meteorología.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Cable o aire',
+            tiempo: '13 min',
+            enunciado: '<p>Aplica el método ampliado: distancia → ¿se puede tender cable? → ¿hay visión directa? → entorno → velocidad → coste → mantenimiento.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Oficina nueva, 25 puestos fijos, obra en marcha y falso techo accesible.',
+                    opciones: {
+                        a: 'Wi-Fi para todo: es más moderno',
+                        b: 'Cableado estructurado para los puestos y Wi-Fi como complemento',
+                        c: 'Enlace láser entre despachos',
+                        d: 'Radioenlace interior'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Se puede tender cable y los puestos no se mueven: el cable gana en velocidad, estabilidad y seguridad. El Wi-Fi aporta lo que el cable no puede dar, que es <strong>movilidad</strong>.',
+                    pistas: ['¿Qué responde la pregunta número 2 del método?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Dos edificios de una finca agrícola, a 1,5 km, sin posibilidad de canalizar y con un bosque en medio.',
+                    opciones: {
+                        a: 'Radioenlace de microondas',
+                        b: 'Enlace láser',
+                        c: 'Fibra óptica aérea entre los árboles',
+                        d: 'Radio en una banda que atraviese la vegetación, o un repetidor en un punto alto con visión directa'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'El bosque rompe la <strong>visión directa</strong>, y eso descarta microondas e infrarrojos. Quedan dos salidas: bajar en frecuencia hasta una banda que penetre mejor, o ganar altura para saltar por encima.',
+                    pistas: ['La tercera pregunta del método es la que falla aquí.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Edificio histórico protegido: no se permiten rozas ni canaletas vistas. 12 puestos en dos plantas.',
+                    opciones: {
+                        a: 'Cable por el suelo, con protectores',
+                        b: 'Wi-Fi, con puntos de acceso alimentados y enlazados como permita la normativa del edificio',
+                        c: 'Infrarrojos entre plantas',
+                        d: 'No es posible dar servicio'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Aquí la pregunta «¿se puede tender cable?» se responde por motivos <strong>legales</strong>, no técnicos ni económicos. Es el caso en el que lo inalámbrico deja de ser una opción y pasa a ser la única salida.',
+                    pistas: ['¿Qué impide el cable en este caso, el dinero o el permiso?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>d)</strong> Explica por qué, <strong>a igualdad de condiciones</strong>, el cable sigue ganando al aire. Da al menos cuatro razones.',
+                    filas: 6,
+                    modelo: '<p><strong>Velocidad.</strong> En la tabla 3.5, el peor medio guiado —el par trenzado, con 1 Gbps— multiplica por cien al mejor no guiado. Y la fibra está muy por encima.</p><p><strong>Estabilidad.</strong> Un cable no depende de la lluvia, de la niebla, del aire caliente ni de que alguien mueva una antena. Su rendimiento es el mismo en enero y en agosto.</p><p><strong>Medio propio.</strong> El cable es tuyo: nadie más transmite por él, así que no hay canales que repartir ni vecinos que interfieran. En el aire compartes el espectro con todo el que esté cerca.</p><p><strong>Seguridad.</strong> Para escuchar un cable hay que acceder físicamente a él; una emisión la recibe cualquiera dentro del alcance, y por eso el cifrado deja de ser opcional.</p><p><strong>Capacidad dedicada.</strong> En un enlace por cable cada puesto tiene su propio camino; en el aire, todos los clientes de una celda se reparten el mismo medio y se turnan.</p><p>El aire gana cuando el cable <strong>no puede estar</strong>: cuando no se puede tender, cuando el extremo se mueve o cuando hace falta ya.</p>',
+                    rubrica: [
+                        'Cita la ventaja de velocidad con datos de la tabla',
+                        'Menciona la estabilidad frente a la meteorología',
+                        'Explica que el cable no es un medio compartido',
+                        'Señala la diferencia de seguridad',
+                        'Cierra diciendo cuándo sí gana el aire'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: La tabla 3.5 completa',
+            tiempo: '13 min',
+            enunciado: '<p>Los siete medios del libro, de memoria. Escribe las velocidades como <em>1 Gbps</em>, <em>10 Mbps</em>…</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Reconstruye la tabla.',
+                    esquina: 'Medio',
+                    cabecera: ['Velocidad máxima', 'Distancia entre repetidores'],
+                    filas: [
+                        { etiqueta: 'Par trenzado', celdas: [{ respuestas: ['1 Gbps', '1Gbps', '1'], placeholder: '?' }, { fijo: '2-10 km' }] },
+                        { etiqueta: 'Coaxial', celdas: [{ respuestas: ['2 Gbps', '2Gbps', '2'], placeholder: '?' }, { respuestas: ['10-100 km', '10 a 100 km', '10-100'], placeholder: '?' }] },
+                        { etiqueta: 'Fibra óptica', celdas: [{ respuestas: ['más de 10 Gbps', 'mas de 10 Gbps', '10 Gbps', '>10 Gbps'], placeholder: '?' }, { respuestas: ['más de 100 km', 'mas de 100 km', '>100 km', '100 km'], placeholder: '?' }] },
+                        { etiqueta: 'Ondas de radio', celdas: [{ respuestas: ['1 Mbps', '1Mbps'], placeholder: '?' }, { respuestas: ['100-1000 km', '100-1.000 km', '100 a 1000 km', '100-1 000 km'], placeholder: '?' }] },
+                        { etiqueta: 'Microondas', celdas: [{ respuestas: ['10 Mbps', '10Mbps'], placeholder: '?' }, { respuestas: ['80 km', '80'], placeholder: '?' }] },
+                        { etiqueta: 'Infrarrojo', celdas: [{ fijo: '10 Mbps' }, { respuestas: ['200 m', '200'], placeholder: '?' }] },
+                        { etiqueta: 'Ondas de luz', celdas: [{ respuestas: ['1 Mbps', '1Mbps'], placeholder: '?' }, { respuestas: ['1 km', '1'], placeholder: '?' }] }
+                    ],
+                    explicacion: 'Trucos para retenerla: los tres guiados van en <strong>Gbps</strong> y los cuatro no guiados en <strong>Mbps</strong>; y en distancia, la radio es la reina con 1 000 km mientras el infrarrojo se queda en 200 metros.',
+                    pistas: ['Los medios guiados ocupan las tres primeras filas, y son los únicos en gigabits.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué parte de esta tabla ha envejecido peor y por qué?',
+                    opciones: {
+                        a: 'Las velocidades de los medios guiados',
+                        b: 'Las velocidades inalámbricas: un Wi-Fi actual supera de largo los 10 Mbps de las microondas',
+                        c: 'Las distancias entre repetidores',
+                        d: 'Ninguna: sigue exacta'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Las <strong>proporciones</strong> siguen siendo válidas —la fibra por delante, la radio la que más lejos llega—, pero las cifras inalámbricas son de otra época.',
+                    pistas: ['¿A qué velocidad va tu Wi-Fi comparado con los 10 Mbps de la tabla?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Razonar la elección',
+            tiempo: '10 min',
+            enunciado: '<p>Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: 'Un ayuntamiento quiere dar servicio de red a una <strong>caseta de información turística</strong> instalada en un parque, a 400 m del edificio consistorial. Hay visión directa entre la azotea del ayuntamiento y la caseta. La caseta es <strong>desmontable</strong>: se retira en invierno. <strong>Propón una solución</strong> y justifícala con el método de decisión.',
+                    filas: 9,
+                    modelo: '<p><strong>Distancia:</strong> 400 m descartan el par trenzado, que no pasa de 100 m de enlace.</p><p><strong>¿Se puede tender cable?</strong> Técnicamente sí, canalizando por el parque, pero aquí hay un dato que lo cambia todo: la caseta es <strong>desmontable</strong> y se retira cada invierno. Hacer obra en un parque público, con sus permisos, para un elemento temporal no tiene sentido económico.</p><p><strong>¿Hay visión directa?</strong> Sí, entre la azotea y la caseta. Eso mantiene en juego las microondas y descarta preocuparse por la penetración en obstáculos.</p><p><strong>Propuesta:</strong> un <strong>radioenlace de microondas</strong> punto a punto entre la azotea del ayuntamiento y la caseta, con antenas dirigidas. Se monta en unas horas, se desmonta igual de rápido en invierno y la parte del ayuntamiento queda instalada de forma permanente. A 400 m con visión directa, el enlace es holgado.</p><p><strong>Entorno y mantenimiento:</strong> hay que contar con que la antena de la caseta habrá que <strong>realinearla</strong> cada temporada, y con que la lluvia degrada algo el enlace. Como el uso es de información turística y no crítico, es asumible.</p><p><strong>Seguridad:</strong> al ir por el aire, la comunicación debe ir <strong>cifrada</strong>, y conviene dejar la caseta en una red separada de la del ayuntamiento.</p>',
+                    rubrica: [
+                        'Descarta el par trenzado por la distancia',
+                        'Detecta que el carácter temporal desaconseja la obra',
+                        'Comprueba la visión directa',
+                        'Propone un radioenlace dirigido y justifica el montaje y desmontaje rápidos',
+                        'Prevé el mantenimiento: realineación y efecto de la lluvia',
+                        'Añade la necesidad de cifrar y de separar la red'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

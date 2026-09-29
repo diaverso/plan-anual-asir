@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Ejercicios: Wi-Fi, canales y solapamiento</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Ejercicios</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">76 min</span></div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Nota mínima:</strong> 50%</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Foco del día</strong>
+            Dos cuentas y ninguna más: <strong>f = 2 412 + 5 · (canal − 1)</strong> para la frecuencia y
+            <strong>22 − separación</strong> para el solapamiento. Con esas dos se resuelve cualquier problema de
+            canales.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/ejercicios.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/ejercicios.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Ejercicios',
+    subtitulo: 'Estándares 802.11 · tasa adaptativa · frecuencias de canal · solapamiento y planificación',
+    tiempo: '76 min',
+    ejercicios: [
+
+        {
+            titulo: 'EJERCICIO 1: Los estándares',
+            tiempo: '11 min',
+            enunciado: '<p>La progresión de 802.11, del libro a hoy.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la tabla de estándares. En la banda escribe <em>2,4 GHz</em>, <em>5 GHz</em> o <em>2,4 y 5 GHz</em>.',
+                    esquina: 'Estándar',
+                    cabecera: ['Velocidad máxima', 'Banda'],
+                    filas: [
+                        { etiqueta: '802.11b', celdas: [{ respuestas: ['11 Mbps', '11'], placeholder: '?' }, { fijo: '2,4 GHz' }] },
+                        { etiqueta: '802.11g', celdas: [{ respuestas: ['54 Mbps', '54'], placeholder: '?' }, { respuestas: ['2,4 GHz', '2.4 GHz', '2,4'], placeholder: '?' }] },
+                        { etiqueta: '802.11a', celdas: [{ fijo: '54 Mbps' }, { respuestas: ['5 GHz', '5'], placeholder: '?' }] },
+                        { etiqueta: '802.11n', celdas: [{ respuestas: ['600 Mbps', '600'], placeholder: '?' }, { respuestas: ['2,4 y 5 GHz', '2,4 o 5 GHz', '2.4 y 5 GHz', 'ambas'], placeholder: '?' }] },
+                        { etiqueta: '802.11ac', celdas: [{ respuestas: ['1,3 Gbps', '1.3 Gbps', '1300 Mbps', '1,3'], placeholder: '?' }, { respuestas: ['5 GHz', '5'], placeholder: '?' }] }
+                    ],
+                    explicacion: 'Fíjate en el patrón: cuando un estándar busca velocidad de verdad, se va a <strong>5 GHz</strong>. Más frecuencia, más ancho de banda disponible.',
+                    pistas: ['La b y la g comparten banda; la a y la ac también.']
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Relaciona cada estándar con su nombre comercial.',
+                    izquierda: ['802.11n', '802.11ac', '802.11ax'],
+                    derecha: ['Wi-Fi 4', 'Wi-Fi 5', 'Wi-Fi 6'],
+                    pares: { '802.11n': 'Wi-Fi 4', '802.11ac': 'Wi-Fi 5', '802.11ax': 'Wi-Fi 6' },
+                    explicacion: 'Son <strong>el mismo estándar con dos nombres</strong>. En un examen de la asignatura conviene usar la nomenclatura 802.11.',
+                    pistas: ['Van en orden: el más antiguo de los tres es el 4.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> El libro dice que 802.11n «está todavía en borrador». ¿Cómo hay que leer eso hoy?',
+                    opciones: {
+                        a: 'Que 802.11n nunca llegó a aprobarse',
+                        b: 'Que el libro es de una época anterior a su aprobación: hoy es un estándar consolidado de 600 Mbps',
+                        c: 'Que 802.11n solo funciona en laboratorio',
+                        d: 'Que hay que usar 802.11b en su lugar'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Reconocer qué partes de una fuente han envejecido es parte del trabajo. La <strong>progresión</strong> que describe el libro sigue siendo válida; las cifras, no.',
+                    pistas: ['¿Qué router de los que conoces usa 802.11n?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 2: Frecuencias de canal',
+            tiempo: '12 min',
+            enunciado: '<p>Con <strong>f (MHz) = 2 412 + 5 · (canal − 1)</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Frecuencia central del canal 6, en MHz.',
+                    respuesta: 2437,
+                    unidad: 'MHz',
+                    explicacion: '2 412 + 5 · 5 = <strong>2 437 MHz</strong>, los 2,437 GHz de la tabla 3.4.',
+                    pistas: ['Ojo: el canal 6 lleva cinco saltos de 5 MHz, no seis.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Frecuencia central del canal 11, en MHz.',
+                    respuesta: 2462,
+                    unidad: 'MHz',
+                    explicacion: '2 412 + 5 · 10 = <strong>2 462 MHz</strong>.',
+                    pistas: ['Diez saltos desde el canal 1.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Frecuencia central del canal 13, el último de Europa, en MHz.',
+                    respuesta: 2472,
+                    unidad: 'MHz',
+                    explicacion: '2 412 + 5 · 12 = <strong>2 472 MHz</strong>. Este canal no existe en Estados Unidos, donde la banda se corta en el 11.',
+                    pistas: ['Doce saltos desde el canal 1.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> ¿Cuántos MHz separan el canal 1 del canal 11?',
+                    respuesta: 50,
+                    unidad: 'MHz',
+                    explicacion: '2 462 − 2 412 = <strong>50 MHz</strong>, o diez saltos de 5. Muy por encima de los 22 que ocupa cada canal.',
+                    pistas: ['Resta las dos frecuencias, o cuenta saltos y multiplica por 5.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 3: Solapamiento',
+            tiempo: '14 min',
+            enunciado: '<p>Cada canal ocupa <strong>22 MHz</strong>. El solapamiento es <strong>22 − separación</strong>; si sale cero o negativo, no hay solape.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la tabla. En la última columna escribe los MHz de solape, o <em>ninguno</em>.',
+                    esquina: 'Canales',
+                    cabecera: ['Separación (MHz)', 'Solapamiento'],
+                    filas: [
+                        { etiqueta: '3 y 5', celdas: [{ respuestas: ['10'], placeholder: 'MHz' }, { respuestas: ['12', '12 MHz'], placeholder: 'MHz o ninguno' }] },
+                        { etiqueta: '1 y 5', celdas: [{ respuestas: ['20'], placeholder: 'MHz' }, { respuestas: ['2', '2 MHz'], placeholder: 'MHz o ninguno' }] },
+                        { etiqueta: '1 y 6', celdas: [{ respuestas: ['25'], placeholder: 'MHz' }, { respuestas: ['ninguno', 'no hay', '0', 'ninguno.'], placeholder: 'MHz o ninguno' }] },
+                        { etiqueta: '6 y 11', celdas: [{ fijo: '25' }, { respuestas: ['ninguno', 'no hay', '0'], placeholder: 'MHz o ninguno' }] },
+                        { etiqueta: '9 y 10', celdas: [{ respuestas: ['5'], placeholder: 'MHz' }, { respuestas: ['17', '17 MHz'], placeholder: 'MHz o ninguno' }] }
+                    ],
+                    explicacion: 'La fila de 1 y 5 es la del «umbral»: 2 MHz de solape que muchos especialistas consideran aceptable, según el propio libro.',
+                    pistas: ['La separación son 5 MHz por cada canal de diferencia.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué el libro dice que dos redes cercanas tampoco pueden usar canales <strong>contiguos</strong>?',
+                    opciones: {
+                        a: 'Porque cada canal ocupa 22 MHz y solo hay 5 MHz de separación con el anterior y el siguiente',
+                        b: 'Porque los equipos no admiten canales contiguos',
+                        c: 'Porque lo prohíbe la normativa europea',
+                        d: 'Porque los canales contiguos tienen menos alcance'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Con 22 MHz de ocupación y 5 de separación, un canal invade a cuatro vecinos por cada lado.',
+                    pistas: ['Compara los dos números que da el libro.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántos canales de diferencia hacen falta, como mínimo, para que dos canales <strong>no se solapen</strong> nada?',
+                    respuesta: 5,
+                    unidad: 'canales',
+                    explicacion: 'Cinco canales son 25 MHz, más que los 22 de ocupación. Por eso el patrón es 1-6-11: de cinco en cinco.',
+                    pistas: ['Cada canal de diferencia son 5 MHz; necesitas pasar de 22.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Dos puntos de acceso de la misma empresa están en la misma planta, a 15 m. ¿Qué canales les asignas?',
+                    opciones: {
+                        a: 'El mismo a los dos, para que se coordinen',
+                        b: 'Canales contiguos, por ejemplo 6 y 7',
+                        c: 'Dos del trío sin solapamiento, por ejemplo 1 y 6',
+                        d: 'Da igual: están en la misma red'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Pertenecer a la misma red no evita la interferencia física: en el aire son dos emisores como cualquier otro. Contiguos sería lo peor.',
+                    pistas: ['La interferencia es física, no depende de quién sea el dueño.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 4: Planificar el espectro',
+            tiempo: '15 min',
+            enunciado: '<p>Casos reales de reparto de canales.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Escaneas y ves a los vecinos en los canales 1, 6 y 11, los tres ocupados. ¿Qué haces?',
+                    opciones: {
+                        a: 'Ponerme en el 3, que está libre',
+                        b: 'Ponerme en el 8, que también está libre',
+                        c: 'Compartir el menos cargado de los tres, o irme al 13 si mis equipos lo admiten',
+                        d: 'Apagar el Wi-Fi'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Compartir canal se gestiona por turnos; solaparse, no. Y en Europa el <strong>13</strong> suele estar libre porque muchos equipos vienen pensados para el mercado americano.',
+                    pistas: ['¿Qué es peor: compartir u ocupar el hueco entre dos?']
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>b)</strong> Ordena estas cuatro situaciones de <strong>mejor</strong> a <strong>peor</strong> para tu red, si el vecino está en el canal 6.',
+                    elementos: [
+                        'Ponerte en el canal 11: sin solapamiento',
+                        'Ponerte en el canal 6: compartís y os turnáis',
+                        'Ponerte en el canal 4: 12 MHz de solape',
+                        'Ponerte en el canal 5: 17 MHz de solape'
+                    ],
+                    orden: [
+                        'Ponerte en el canal 11: sin solapamiento',
+                        'Ponerte en el canal 6: compartís y os turnáis',
+                        'Ponerte en el canal 4: 12 MHz de solape',
+                        'Ponerte en el canal 5: 17 MHz de solape'
+                    ],
+                    explicacion: 'Primero no estorbarse; si no se puede, <strong>compartir</strong>; y solo en último caso solaparse, empezando por el solape menor.',
+                    pistas: ['Calcula el solape de cada uno con el canal 6: 22 menos la separación.']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>c)</strong> Un edificio de tres plantas con dos puntos de acceso por planta. Completa un reparto válido usando solo 1, 6 y 11, sin que dos vecinos —del mismo piso o del de arriba— repitan canal.',
+                    esquina: 'Planta',
+                    cabecera: ['Punto de acceso izquierdo', 'Punto de acceso derecho'],
+                    filas: [
+                        { etiqueta: 'Planta 2', celdas: [{ fijo: '6' }, { respuestas: ['11', '1'], placeholder: 'canal' }] },
+                        { etiqueta: 'Planta 1', celdas: [{ respuestas: ['11', '1'], placeholder: 'canal' }, { respuestas: ['1', '6'], placeholder: 'canal' }] },
+                        { etiqueta: 'Planta 0', celdas: [{ fijo: '1' }, { respuestas: ['6', '11'], placeholder: 'canal' }] }
+                    ],
+                    explicacion: 'Hay varias soluciones válidas. Lo importante es el criterio: <strong>ningún vecino inmediato repite canal</strong>, ni al lado ni encima, porque las señales atraviesan los forjados.',
+                    pistas: ['Ve rellenando de arriba abajo y comprueba cada casilla con la de al lado y la de arriba.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 5: Las dos bandas',
+            tiempo: '11 min',
+            enunciado: '<p>Cuándo 2,4 y cuándo 5.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Asigna la banda más adecuada a cada caso.',
+                    izquierda: [
+                        'Puesto de trabajo a 4 m del punto de acceso, con videollamadas',
+                        'Sensor de temperatura en el garaje, a dos plantas de distancia',
+                        'Sala de reuniones con 30 portátiles a la vez',
+                        'Cámara en la valla del jardín'
+                    ],
+                    derecha: [
+                        '5 GHz: cerca y exigente',
+                        '2,4 GHz: lejos y poco tráfico',
+                        '5 GHz: mucha densidad, más canales limpios',
+                        '2,4 GHz: alcance por encima de todo'
+                    ],
+                    pares: {
+                        'Puesto de trabajo a 4 m del punto de acceso, con videollamadas': '5 GHz: cerca y exigente',
+                        'Sensor de temperatura en el garaje, a dos plantas de distancia': '2,4 GHz: lejos y poco tráfico',
+                        'Sala de reuniones con 30 portátiles a la vez': '5 GHz: mucha densidad, más canales limpios',
+                        'Cámara en la valla del jardín': '2,4 GHz: alcance por encima de todo'
+                    },
+                    explicacion: 'La regla: <strong>5 GHz para lo cercano y exigente, 2,4 GHz para lo lejano y modesto</strong>.',
+                    pistas: ['Pregúntate en cada caso si pesa más el alcance o la velocidad.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Marca <strong>todas</strong> las ventajas ciertas de la banda de 5 GHz.',
+                    multiple: true,
+                    opciones: {
+                        a: 'Menos saturada y con menos ruido',
+                        b: 'Más canales sin solapamiento',
+                        c: 'Mayor alcance',
+                        d: 'Permite velocidades más altas',
+                        e: 'Atraviesa mejor los muros'
+                    },
+                    respuesta: ['a', 'b', 'd'],
+                    explicacion: 'Alcance y penetración son justamente sus <strong>debilidades</strong>: con 6 cm de longitud de onda pierde antes que los 12,5 cm de la banda de 2,4.',
+                    pistas: ['Dos de las cinco describen lo contrario de la realidad.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> ¿Qué tres canales de la banda de 2,4 GHz se usan tradicionalmente por no solaparse? Escríbelos separados por comas.',
+                    respuestas: ['1, 6, 11', '1,6,11', '1 6 11', '1, 6 y 11', '1,6 y 11'],
+                    explicacion: 'El clásico <strong>1, 6 y 11</strong>. En Europa también vale 1, 7 y 13, con más margen aún.',
+                    pistas: ['Van de cinco en cinco.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'EJERCICIO 6: Diagnóstico y diseño',
+            tiempo: '13 min',
+            enunciado: '<p>Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>a)</strong> En una academia con cuatro aulas quejas de «Internet lento» todas las tardes. Hay <strong>un solo punto de acceso</strong> en el pasillo, en canal automático, y el edificio tiene otras seis redes visibles. <strong>Diagnostica</strong> y propón un plan, sin hablar de contratar más megas.',
+                    filas: 10,
+                    modelo: '<p><strong>Qué está pasando, probablemente.</strong> Tres cosas a la vez. Primera, <strong>un único punto de acceso</strong> para cuatro aulas significa que los alumnos de las aulas del fondo negocian velocidades bajas por la tasa adaptativa y, al ocupar el aire más tiempo, <strong>frenan a todos los demás</strong>. Segunda, el medio se <strong>reparte entre todos</strong>: un solo punto de acceso tiene una capacidad total que se divide entre las decenas de equipos conectados. Y tercera, con seis redes vecinas y el canal en <strong>automático</strong>, es muy probable que el equipo haya acabado en un canal solapado con alguna de ellas, lo que añade ruido que no se gestiona.</p><p><strong>Qué haría.</strong> Primero, <strong>escanear</strong> para ver qué canales ocupan las seis redes vecinas y con qué intensidad. Después, poner <strong>un punto de acceso por aula</strong> o al menos uno cada dos, con potencia moderada, todos conectados por cable al armario. Asignarles canales <strong>fijos</strong> del trío 1-6-11 —o 1-7-13— de modo que dos vecinos nunca repitan, en lugar de dejarlo en automático. Y habilitar la banda de <strong>5 GHz</strong> en los equipos que la admitan: tiene más canales limpios y su menor alcance, que aquí es una ventaja, reduce la interferencia entre aulas.</p><p>Nada de esto tiene que ver con la velocidad contratada: el problema está en el aire, no en la línea.</p>',
+                    rubrica: [
+                        'Identifica que un solo punto de acceso obliga a tasas bajas en las aulas lejanas',
+                        'Explica que los clientes lentos frenan al resto',
+                        'Señala el riesgo del canal automático con seis redes vecinas',
+                        'Propone escanear antes de decidir',
+                        'Propone más puntos de acceso con potencia moderada y cable',
+                        'Asigna canales fijos del trío sin solapamiento',
+                        'Menciona 5 GHz y por qué su menor alcance ayuda aquí'
+                    ]
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Explica, con números, <strong>por qué solo caben tres redes</strong> sin estorbarse en una banda que tiene trece canales.',
+                    filas: 6,
+                    modelo: '<p>Porque los trece canales <strong>no son trece espacios independientes</strong>: se solapan entre sí. Están separados <strong>5 MHz</strong>, pero cada uno ocupa <strong>22 MHz</strong> de espectro, así que cada canal invade a sus cuatro vecinos por cada lado.</p><p>Para que dos canales no se toquen hace falta una separación mayor que esos 22 MHz, es decir, <strong>al menos cinco canales de diferencia</strong>: 5 × 5 = 25 MHz. Empezando por el 1, eso deja el 6 y luego el 11, y ahí se acaba la banda en la mayoría de los equipos: <strong>tres canales</strong>.</p><p>En Europa, con trece canales disponibles, se puede usar 1, 7 y 13, que están a 30 MHz: siguen siendo tres, pero con más margen. La banda de <strong>5 GHz</strong> resuelve esto ofreciendo muchos más canales sin solapar.</p>',
+                    rubrica: [
+                        'Dice que los canales se solapan y no son independientes',
+                        'Da las dos cifras: 5 MHz de separación y 22 MHz de ocupación',
+                        'Deduce que hacen falta cinco canales de diferencia',
+                        'Llega a 1, 6 y 11 razonadamente',
+                        'Menciona 1-7-13 en Europa o la salida de la banda de 5 GHz'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

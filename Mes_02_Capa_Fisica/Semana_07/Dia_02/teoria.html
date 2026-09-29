@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Microondas terrestres y por satélite</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 2 — Microondas y satélite</h1>
+        <p>El haz dirigido · la antena parabólica · visión directa y repetidores · el retardo de los 36 000 km</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 64 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 13 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 23 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 52 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Ayer las ondas de radio salían <strong>en todas direcciones</strong>, como las ondas de un estanque. Hoy
+            se hace lo contrario: concentrar toda esa energía en un <strong>haz estrecho</strong>. Cambia el
+            alcance, cambia la relación señal/ruido y aparece un requisito nuevo: <strong>apuntar bien</strong>.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#quees">Qué son las microondas</a></li>
+                <li><a href="#haz">El haz y la antena parabólica</a></li>
+                <li><a href="#vista">Visión directa, obstáculos y repetidores</a></li>
+                <li><a href="#satelite">Comunicaciones por satélite</a></li>
+                <li><a href="#retardo">El retardo, con números</a></li>
+                <li><a href="#orbitas">Órbitas: GEO, MEO y LEO</a></li>
+                <li><a href="#cuando">Cuándo compensa cada solución</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="quees">1. Qué son las microondas</h2>
+
+            <p>Además de su aplicación en los hornos, las microondas permiten transmisiones
+            <strong>terrestres</strong> y <strong>con satélites</strong>. Estos son los datos del libro:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Característica</th><th>Valor según el libro</th></tr></thead>
+                <tbody>
+                    <tr><td>Banda de frecuencias</td><td>Entre <strong>1 y 10 GHz</strong></td></tr>
+                    <tr><td>Velocidad de transmisión</td><td>Del orden de <strong>10 Mbps</strong></td></tr>
+                    <tr><td>Propagación</td><td>En <strong>línea recta</strong>, enfocable en un haz estrecho</td></tr>
+                    <tr><td>Frente a obstáculos</td><td><strong>No los atraviesan bien</strong></td></tr>
+                    <tr><td>Uso en redes locales</td><td>Wi-Fi: 2,4 y 5 GHz</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Fíjate en que el Wi-Fi está aquí dentro: <strong>una red inalámbrica es un enlace de
+            microondas</strong>, aunque no lo parezca porque no hay ninguna parabólica a la vista. Eso se ve
+            mañana.</p>
+
+            <div class="aviso">
+                <strong>Una errata del libro que conviene conocer</strong>
+                El libro dice literalmente: «Por encima de los <strong>1.000 Hz</strong>, las microondas viajan en
+                línea recta». Esa cifra <strong>no puede ser</strong>: 1 000 Hz no son microondas, son un tono
+                audible, y además contradice la banda de 1 a 10 GHz que la propia frase anterior acaba de dar.
+                <br><br>
+                Es casi con seguridad una errata por <strong>1 000 MHz</strong>, es decir, <strong>1 GHz</strong>,
+                que es justo donde el libro sitúa el principio de la banda. Si te lo preguntan, la idea correcta es:
+                <strong>a partir de aproximadamente 1 GHz la propagación es en línea recta</strong>.
+            </div>
+
+            <h2 id="haz">2. El haz y la antena parabólica</h2>
+
+            <p>Aquí está la idea central del día. Como las microondas viajan en línea recta, se pueden
+            <strong>enfocar en un haz de pequeña anchura</strong>, y eso se hace con una <strong>antena
+            parabólica</strong>.</p>
+
+            <div class="dato">
+                <strong>Qué se gana</strong>
+                <p>Concentrar toda la energía en un haz pequeño produce una <strong>relación señal/ruido muy
+                alta</strong>: la amplitud del ruido puede ser muy pequeña comparada con la de la señal.</p>
+            </div>
+
+            <p>Con <a href="../../Semana_05/Dia_04/teoria.html#shannon">Shannon</a> en la mano, eso es dinero: más
+            S/N es más capacidad en el mismo ancho de banda. Un enlace de microondas bien apuntado puede dar mucha
+            más velocidad que una emisión omnidireccional de la misma potencia, porque no está desperdiciando
+            energía en las direcciones donde no hay nadie escuchando.</p>
+
+            <div class="destacado">
+                <strong>Qué se paga</strong>
+                <p>Las antenas del emisor y del receptor deben estar <strong>muy bien alineadas entre sí</strong>.
+                Un haz estrecho que apunta dos grados de más no llega a ninguna parte. Por eso los enlaces de
+                microondas se instalan sobre mástiles rígidos y se realinean después de un temporal.</p>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s07_d02_haz_microondas.png"
+         width="1400" height="700" loading="lazy"
+         alt="Comparación entre dos emisores. A la izquierda, una antena omnidireccional cuya energía se reparte en círculos concéntricos en todas direcciones y llega débil a un receptor lejano. A la derecha, una antena parabólica que concentra la misma energía en un haz estrecho dirigido a otra parabólica, con la señal llegando fuerte.">
+    <figcaption>La misma energía repartida en todas direcciones o concentrada en un haz: esa es toda la diferencia.</figcaption>
+</figure>
+<pre><code>OMNIDIRECCIONAL              DIRIGIDA (parabólica)
+
+    ╲ │ ╱                      ▐▶────────────────▶◀▌
+   ── ● ──   la energía        ▐   haz estrecho   ▌
+    ╱ │ ╲    se reparte        ▐  toda la energía ▌
+              y llega débil         llega fuerte
+                                pero hay que APUNTAR</code></pre>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="vista">3. Visión directa, obstáculos y repetidores</h2>
+
+            <p>La contrapartida de propagarse en línea recta es evidente: <strong>a diferencia de las ondas de
+            radio, las microondas no atraviesan bien los obstáculos</strong>. Si hay un edificio, una colina o un
+            bosque por medio, no hay enlace.</p>
+
+            <p>De ahí la consecuencia que da el libro: <strong>es necesario situar antenas repetidoras cuando se
+            quieren realizar comunicaciones a largas distancias</strong>. Un enlace de microondas de 200 km no es un
+            salto, son varios saltos encadenados de torre en torre.</p>
+
+            <div class="aviso">
+                <strong>Y hay un obstáculo que no se puede quitar: la Tierra</strong>
+                Aunque no haya nada por medio, el planeta es curvo. Dos antenas a nivel del suelo dejan de verse a
+                unos pocos kilómetros, y por eso los enlaces de microondas se montan en <strong>torres, tejados y
+                cerros</strong>: no es por capricho, es para ganar horizonte.
+            </div>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: hasta dónde se ve, en números</summary>
+                <div class="ampliacion-cuerpo">
+                    <p><strong>Esta fórmula no sale del libro</strong>: es geometría aplicada al radio terrestre, y
+                    la usan a diario los instaladores de radioenlaces. La distancia al horizonte desde una antena a
+                    <strong>h</strong> metros de altura es, aproximadamente:</p>
+                    <div class="destacado">
+                        <strong>d (km) ≈ 4,12 · √h (m)</strong>
+                    </div>
+                    <p>Y como en un enlace hay <strong>dos</strong> antenas, el alcance es la suma de los dos
+                    horizontes:</p>
+                    <div class="tabla-wrap">
+                    <table>
+                        <thead><tr><th>Altura de cada antena</th><th>Horizonte de una</th><th>Alcance del enlace</th></tr></thead>
+                        <tbody>
+                            <tr><td>10 m</td><td>13 km</td><td>26 km</td></tr>
+                            <tr><td>30 m</td><td>22,6 km</td><td>45 km</td></tr>
+                            <tr><td>100 m</td><td>41,2 km</td><td>82 km</td></tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <p>Compara con el dato del libro: la tabla 3.5 daba <strong>80 km</strong> entre repetidores
+                    para las microondas. Ahora sabes de dónde sale ese número: es, más o menos, lo que se ve desde
+                    una torre de cien metros.</p>
+                </div>
+            </details>
+
+            <h2 id="satelite">4. Comunicaciones por satélite</h2>
+
+            <p>Un satélite de comunicaciones es, en el fondo, <strong>un repetidor de microondas colocado muy
+            alto</strong>. Tan alto que ve a la vez a media Tierra, así que resuelve de un golpe el problema del
+            horizonte y el de los obstáculos.</p>
+
+<pre><code>   estación A                 SATÉLITE                 estación B
+        ▲  ╲                    ▄▄▄▄                    ╱  ▼
+        │   ╲  subida          ▐    ▌         bajada   ╱   │
+        │    ╲───────────────▶ ▐    ▌ ───────────────▶╱    │
+        │                       ▀▀▀▀                        │
+        └──────────── 36 000 km de altura ──────────────────┘</code></pre>
+
+            <p>Y aquí aparece el precio, que el libro enuncia sin rodeos:</p>
+
+            <div class="dato">
+                <strong>El retardo</strong>
+                <p>En las comunicaciones por satélite hay que tener en cuenta que siempre existe un pequeño retardo,
+                porque la señal tarda aproximadamente <strong>0,3 segundos</strong> en llegar y volver. Para algunas
+                aplicaciones de envío y recepción de datos, esa espera puede resultar
+                <strong>inaceptable</strong>.</p>
+            </div>
+
+            <p>Trescientos milisegundos parecen poco escritos, pero son muchísimo para una red. Piensa que ayer
+            medías enlaces de cobre en nanosegundos.</p>
+
+            <h2 id="retardo">5. El retardo, con números</h2>
+
+            <p>El dato del libro se puede <strong>comprobar</strong>, y conviene hacerlo porque así se entiende de
+            dónde sale y por qué aparecen cifras distintas según quién lo cuente.</p>
+
+            <div class="destacado">
+                <strong>El cálculo</strong>
+                <p>Un satélite geoestacionario está a <strong>35 786 km</strong> de altura. Las ondas viajan a
+                <strong>300 000 km/s</strong>.</p>
+                <pre><code>subida    35 786 km ÷ 300 000 km/s = 0,119 s
+bajada    35 786 km ÷ 300 000 km/s = 0,119 s
+                                     ───────
+de un extremo al otro                0,239 s  ≈ 240 ms</code></pre>
+                <p>Eso es lo que tarda tu voz en llegar al otro interlocutor: unos <strong>240 ms</strong>, que
+                redondeados son los <strong>0,3 s</strong> del libro.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Cuidado con qué se está midiendo</strong>
+                Si lo que quieres es el tiempo de <strong>ida y vuelta completo</strong> —tu pregunta sube, baja,
+                llega al servidor, y la respuesta vuelve a subir y bajar—, hay que contar <strong>cuatro
+                trayectos</strong>: unos <strong>480 ms</strong>. Es el valor que verías en un <code>ping</code>.
+                <br><br>
+                Por eso encontrarás citadas las tres cifras: <strong>120 ms</strong> por trayecto,
+                <strong>240 ms</strong> de extremo a extremo y <strong>480 ms</strong> de ida y vuelta. Ninguna es
+                errónea: hay que mirar qué mide cada una.
+            </div>
+
+            <h3>Qué aplicaciones lo notan</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Aplicación</th><th>¿Aguanta 240-480 ms?</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr><td>Descargar un archivo, correo, copias de seguridad</td><td>✅ Sí</td><td>Importa el caudal, no la espera inicial</td></tr>
+                    <tr><td>Navegar por páginas web</td><td>⚠️ Regular</td><td>Cada elemento de la página añade su propia espera</td></tr>
+                    <tr><td>Videollamada</td><td>⚠️ Incómoda</td><td>Medio segundo de desfase obliga a hablar por turnos</td></tr>
+                    <tr><td>Telefonía en tiempo real</td><td>❌ Mala</td><td>Se pisan las frases: es el clásico «corte» de las conexiones vía satélite</td></tr>
+                    <tr><td>Juegos en red de acción</td><td>❌ Inviable</td><td>La partida va medio segundo por detrás de lo que ocurre</td></tr>
+                    <tr><td>Control remoto de maquinaria</td><td>❌ Peligroso</td><td>Reaccionas a lo que pasó hace medio segundo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Esta tabla es exactamente lo que el libro resume como «para algunas aplicaciones este tiempo de
+            espera puede resultar inaceptable». El satélite no es lento: tiene mucho caudal. Lo que tiene es
+            <strong>mucha latencia</strong>, que es otra cosa, como viste en el Mes 1.</p>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="orbitas">6. Órbitas: GEO, MEO y LEO</h2>
+
+            <div class="aviso">
+                <strong>Este apartado no sale del libro</strong>
+                El libro habla de «comunicaciones por satélite» sin distinguir órbitas, y da el retardo de la
+                geoestacionaria. Los tres tipos de órbita y sus cifras proceden de documentación técnica del sector
+                espacial y de la <strong>UIT</strong>. Lo incluyo porque desde que existen las constelaciones de
+                órbita baja, la afirmación «el satélite siempre tiene mucho retardo» ha dejado de ser cierta, y
+                conviene saber por qué.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Órbita</th><th>Altura</th><th>Retardo de extremo a extremo</th><th>Cobertura</th><th>Ejemplo de uso</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>GEO</strong><br>geoestacionaria</td>
+                        <td>35 786 km</td>
+                        <td>≈ <strong>240 ms</strong></td>
+                        <td>Un tercio del planeta con <strong>tres</strong> satélites; parece fija en el cielo</td>
+                        <td>Televisión, telefonía rural</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MEO</strong><br>media</td>
+                        <td>≈ 20 000 km</td>
+                        <td>≈ 135 ms</td>
+                        <td>Necesita una constelación</td>
+                        <td>Navegación: GPS y Galileo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LEO</strong><br>baja</td>
+                        <td>≈ 550 km</td>
+                        <td>≈ <strong>4 ms</strong></td>
+                        <td>Cada satélite pasa deprisa: hacen falta <strong>cientos o miles</strong></td>
+                        <td>Internet por satélite actual</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>El compromiso de las órbitas</strong>
+                <p>Cuanto más bajo, <strong>menos retardo</strong> y menos potencia hace falta… pero
+                <strong>menos superficie</strong> ve cada satélite y más rápido se mueve respecto al suelo. Un
+                satélite GEO permite apuntar una parabólica fija y olvidarse; uno LEO obliga a que la antena lo
+                siga y a que la red vaya pasando la conexión de un satélite al siguiente.</p>
+                <p>Es el mismo tipo de compromiso de toda la semana: lo que se gana por un lado se paga por
+                otro.</p>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s07_d02_orbitas.png"
+         width="1145" height="1374" loading="lazy"
+         alt="La Tierra con tres órbitas concéntricas a escala aproximada: la baja a 550 kilómetros muy pegada al planeta, la media a 20 000 kilómetros y la geoestacionaria a 35 786 kilómetros, cada una con su retardo anotado y una indicación de cuántos satélites hacen falta para dar cobertura.">
+    <figcaption>Cuanto más lejos, más superficie se ve y más se tarda. No hay órbita buena: hay órbita adecuada.</figcaption>
+</figure>
+
+            <h2 id="cuando">7. Cuándo compensa cada solución</h2>
+
+            <p>El libro da la razón de fondo para lo inalámbrico en general, y vale especialmente aquí: resulta de
+            mucha utilidad cuando <strong>sale muy costoso tender hilos de comunicación en zonas geográficas de
+            difícil acceso</strong>.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Escenario</th><th>Solución razonable</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr><td>Dos naves separadas por una carretera pública</td><td><strong>Radioenlace de microondas</strong></td><td>Hay visión directa y cruzar la vía con obra sería carísimo o imposible</td></tr>
+                    <tr><td>Oficina en una isla sin cable submarino</td><td><strong>Satélite</strong></td><td>No hay alternativa terrestre</td></tr>
+                    <tr><td>Barco, avión o plataforma petrolífera</td><td><strong>Satélite</strong></td><td>El extremo se mueve: no hay dónde anclar un cable</td></tr>
+                    <tr><td>Cobertura temporal de un evento</td><td><strong>Radioenlace o satélite</strong></td><td>Se monta en horas y se desmonta igual</td></tr>
+                    <tr><td>Dos edificios de un campus, 300 m con visión directa</td><td><strong>Fibra</strong>, si se puede canalizar</td><td>Más capacidad, sin licencias ni meteorología; el radioenlace es el plan B</td></tr>
+                    <tr><td>Enlace crítico entre dos centros de datos</td><td><strong>Fibra</strong>, y radioenlace como respaldo</td><td>El respaldo debe usar un medio <strong>distinto</strong>, para que no falle por la misma causa</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>La lluvia también cuenta</strong>
+                Un radioenlace de microondas se degrada con la lluvia intensa, y cuanto más alta es la frecuencia,
+                más. Es la parte de «condiciones atmosféricas» que aparecía en la definición de los medios no
+                guiados: un factor que sencillamente no existe en un cable enterrado.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Microondas: <strong>1 a 10 GHz</strong>, del orden de <strong>10 Mbps</strong> según el
+                    libro, propagación <strong>en línea recta</strong>.</li>
+                    <li>La <strong>antena parabólica</strong> concentra la energía en un haz: da una
+                    <strong>relación señal/ruido muy alta</strong> y exige <strong>alineación</strong>.</li>
+                    <li>No atraviesan obstáculos: hacen falta <strong>visión directa</strong> y
+                    <strong>repetidores</strong> para largas distancias.</li>
+                    <li>Un satélite es un repetidor muy alto. El retardo son unos <strong>240 ms</strong> de extremo
+                    a extremo, los <strong>0,3 s</strong> del libro; <strong>480 ms</strong> de ida y vuelta.</li>
+                    <li><strong>GEO</strong> 35 786 km y 240 ms · <strong>MEO</strong> 20 000 km y 135 ms ·
+                    <strong>LEO</strong> 550 km y 4 ms.</li>
+                    <li>El satélite no tiene poco caudal: tiene <strong>mucha latencia</strong>. Por eso falla en
+                    tiempo real y no en descargas.</li>
+                    <li>Lo inalámbrico brilla donde tender cable es <strong>caro o imposible</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«El satélite es lento»</td><td>Tiene <strong>mucha latencia</strong>, no poco caudal. Descargar va bien; hablar, no</td></tr>
+                    <tr><td>«Con más potencia se arregla el retardo»</td><td>El retardo lo impone la <strong>distancia</strong> y la velocidad de la luz. No hay potencia que lo baje</td></tr>
+                    <tr><td>«Una parabólica capta más señal y ya está»</td><td>También exige <strong>alineación precisa</strong>: un haz estrecho mal apuntado no llega</td></tr>
+                    <tr><td>«Las microondas atraviesan obstáculos como la radio»</td><td>No: por eso necesitan <strong>visión directa</strong> y repetidores</td></tr>
+                    <tr><td>«Todos los satélites tienen 240 ms»</td><td>Solo los <strong>GEO</strong>. En órbita baja el retardo baja a unos pocos milisegundos</td></tr>
+                    <tr><td>«Un enlace inalámbrico no depende del tiempo»</td><td>La <strong>lluvia intensa</strong> degrada los radioenlaces, y más cuanto mayor es la frecuencia</td></tr>
+                    <tr><td>«Si hay visión directa, radioenlace siempre»</td><td>Si se puede canalizar fibra, suele ganar la fibra: más capacidad y sin meteorología</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 23 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a calcular el retardo de las tres órbitas y luego a medir con <code>ping</code> la latencia real
+            de tu conexión contra destinos cada vez más lejanos. Uno de ellos se parece sospechosamente a un
+            satélite.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 2</strong></a> (72 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 3</strong>
+            <p><strong>Wi-Fi</strong>: las microondas dentro de casa. Estándares, tasa adaptativa, los trece canales
+            de la banda de 2,4 GHz y por qué todo el mundo repite «1, 6 y 11».</p>
+            <p><em>Tarea de calentamiento (5 min):</em> entra en la configuración de tu router y mira en qué canal
+            está emitiendo. Si dice «automático», anótalo también.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/teoria.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Un radioenlace de microondas y una emisión de radio omnidireccional usan la misma potencia de emisor. El radioenlace consigue mucha más velocidad. Explica por qué, enlazando con Shannon.',
+                modelo: 'Porque la <strong>antena parabólica concentra toda la energía en un haz estrecho</strong> en lugar de repartirla en todas direcciones. Al receptor le llega mucha más potencia útil, así que la <strong>relación señal/ruido</strong> en ese punto es altísima comparada con la de una emisión omnidireccional.</p><p>Y por Shannon, C = W · log₂(1 + S/N): con el mismo ancho de banda, una S/N mayor permite más capacidad. Dicho de otro modo, la emisión omnidireccional está <strong>desperdiciando</strong> casi toda su energía en direcciones donde no hay nadie escuchando, mientras que el radioenlace la entrega entera en el único sitio que importa. El precio es que hay que <strong>alinear</strong> las dos antenas con precisión, y que el enlace solo sirve para ese destino.',
+                puntos: [
+                    'Explica que la parabólica concentra la energía en un haz',
+                    'Relaciona más potencia recibida con mejor relación señal/ruido',
+                    'Cita Shannon para justificar más capacidad con el mismo ancho de banda',
+                    'Menciona el coste: alineación precisa y un único destino'
+                ]
+            },
+            {
+                pregunta: 'Una empresa contrata Internet por satélite geoestacionario para una finca aislada. Contratan 100 Mbps. Los usuarios se quejan de que «va lentísimo», aunque las descargas grandes van a la velocidad prometida. ¿Qué está pasando?',
+                modelo: 'Están confundiendo <strong>caudal</strong> con <strong>latencia</strong>. El enlace entrega de verdad sus 100 Mbps, y por eso una descarga grande alcanza la velocidad contratada. Lo que no puede cambiar es el <strong>retardo</strong>: unos 240 ms de extremo a extremo y cerca de <strong>480 ms de ida y vuelta</strong>, impuestos por los 36 000 km de altura de la órbita y la velocidad de la luz.</p><p>Eso se nota en todo lo que exige muchos intercambios pequeños: abrir una página web, que pide decenas de elementos y espera medio segundo por cada tanda; las videollamadas, donde el desfase obliga a hablar por turnos; y cualquier aplicación interactiva. La sensación de «lentitud» no viene del ancho de banda, así que <strong>contratar más megas no lo arreglará</strong>. Lo que ayudaría es reducir el número de idas y vueltas —cachés locales, DNS cercano— o cambiar a una constelación de <strong>órbita baja</strong>, donde el retardo baja a unos pocos milisegundos.',
+                puntos: [
+                    'Distingue caudal de latencia',
+                    'Cita las cifras del retardo GEO y su origen físico',
+                    'Explica por qué lo notan las aplicaciones interactivas y no las descargas',
+                    'Concluye que contratar más ancho de banda no lo soluciona',
+                    'Propone alguna salida: reducir idas y vueltas o cambiar de órbita'
+                ]
+            },
+            {
+                pregunta: 'Te piden unir dos naves separadas por 400 m con una carretera pública en medio, por la que no te dejan canalizar. ¿Radioenlace o satélite? Justifica la elección y di qué comprobarías antes de decidir.',
+                modelo: 'Un <strong>radioenlace de microondas</strong>, sin ninguna duda. El satélite está pensado para cuando no hay ninguna alternativa terrestre —una isla, un barco, una zona sin infraestructura—, y aquí las dos naves están a 400 metros: meter 240 ms de retardo y un coste de servicio mensual para cruzar una carretera no tiene sentido.</p><p>Antes de decidir comprobaría tres cosas. Primero, que hay <strong>visión directa</strong> entre los dos puntos de montaje: las microondas no atraviesan obstáculos, así que un árbol o una nave más alta en medio tumbarían el enlace. Segundo, la <strong>altura disponible</strong> en cada tejado y si permite montar los mástiles con estabilidad, porque un haz estrecho mal alineado no llega. Y tercero, si el equipo trabaja en <strong>banda libre o licenciada</strong>: en banda libre no pago licencia pero nadie me protege de interferencias, cosa a tener en cuenta en un polígono lleno de empresas.</p><p>Y dejaría dicho que, si algún día se puede canalizar por debajo de la carretera, la <strong>fibra</strong> seguirá siendo mejor: más capacidad y sin depender de la lluvia.',
+                puntos: [
+                    'Elige radioenlace y descarta el satélite razonadamente',
+                    'Comprueba la visión directa entre los dos puntos',
+                    'Tiene en cuenta la altura y la estabilidad del montaje por la alineación',
+                    'Menciona la cuestión de banda libre o licenciada',
+                    'Apunta que la fibra sería preferible si se pudiera canalizar'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: 'Banda y velocidad de las microondas, según el libro', dorso: 'Entre <strong>1 y 10 GHz</strong>, con velocidades del orden de <strong>10 Mbps</strong>.' },
+            { frente: '¿Cómo se propagan las microondas?', dorso: 'En <strong>línea recta</strong>, y se pueden enfocar en un haz de pequeña anchura.' },
+            { frente: '¿Qué aporta una antena parabólica?', dorso: 'Concentra la energía en un haz: <strong>relación señal/ruido muy alta</strong>. A cambio exige <strong>alineación precisa</strong>.' },
+            { frente: '¿Por qué las microondas necesitan repetidores?', dorso: 'Porque <strong>no atraviesan los obstáculos</strong> y la Tierra es curva: hacen falta saltos con visión directa.' },
+            { frente: 'Distancia entre repetidores de microondas (tabla 3.5)', dorso: '<strong>80 km</strong>, que es más o menos lo que se ve desde una torre de 100 m.' },
+            { frente: 'El retardo del satélite según el libro', dorso: 'La señal tarda aproximadamente <strong>0,3 s</strong> en llegar y volver; para algunas aplicaciones es inaceptable.' },
+            { frente: '¿De dónde sale ese retardo?', dorso: '35 786 km de subida y otros tantos de bajada, a 300 000 km/s: <strong>≈ 240 ms</strong> de extremo a extremo.' },
+            { frente: 'Retardo de ida y vuelta completo en GEO', dorso: 'Cuatro trayectos: unos <strong>480 ms</strong>. Es lo que marcaría un ping.' },
+            { frente: 'Órbitas GEO, MEO y LEO', dorso: '<strong>35 786 km</strong> y 240 ms · <strong>20 000 km</strong> y 135 ms · <strong>550 km</strong> y 4 ms.' },
+            { frente: '¿Por qué una constelación LEO necesita cientos de satélites?', dorso: 'Porque cada uno ve poca superficie y <strong>se mueve deprisa</strong> respecto al suelo: hay que ir pasando la conexión.' },
+            { frente: '¿Qué aplicaciones sufren con el satélite GEO?', dorso: 'Las de <strong>tiempo real</strong>: telefonía, videollamada, juegos y control remoto. Las descargas van bien.' },
+            { frente: 'Caudal y latencia en un enlace por satélite', dorso: 'Puede tener <strong>mucho caudal</strong> y aun así <strong>mucha latencia</strong>: son cosas distintas.' },
+            { frente: '¿Cuándo brilla lo inalámbrico, según el libro?', dorso: 'Cuando resulta <strong>muy costoso tender hilos</strong> en zonas de difícil acceso, y con usuarios móviles.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 2: Microondas y satélite',
+        tiempo: '23 minutos',
+        minutos: 23,
+        questions: [
+            {
+                topic: 'Microondas',
+                repaso: '#quees',
+                text: 'Según el libro, ¿en qué banda están las microondas y qué velocidades permiten?',
+                options: {
+                    a: 'Entre 1 y 10 GHz, con velocidades del orden de 10 Mbps',
+                    b: 'Entre 1 y 10 MHz, con velocidades de 1 Gbps',
+                    c: 'Entre 100 y 500 MHz, con velocidades de 100 Mbps',
+                    d: 'Por encima de 60 GHz, con velocidades de 7 Gbps'
+                },
+                answer: 'a',
+                feedback: 'Son las cifras del libro. Los 60 GHz corresponden a un estándar Wi-Fi posterior, que se menciona el miércoles.'
+            },
+            {
+                topic: 'Microondas',
+                repaso: '#quees',
+                text: 'El libro dice que «por encima de los 1.000 Hz las microondas viajan en línea recta». ¿Qué pasa con esa frase?',
+                options: {
+                    a: 'Es correcta tal cual',
+                    b: 'Es una errata: por coherencia con la banda de 1 a 10 GHz, debería decir 1 000 MHz, es decir 1 GHz',
+                    c: 'Debería decir 1 000 GHz',
+                    d: 'Se refiere al ancho de banda, no a la frecuencia'
+                },
+                answer: 'b',
+                feedback: 'Mil hercios es un tono audible, no una microonda, y además contradice la banda que el propio libro acaba de dar. La idea válida es: <strong>a partir de 1 GHz, propagación en línea recta</strong>.'
+            },
+            {
+                topic: 'El haz',
+                repaso: '#haz',
+                text: '¿Qué consigue concentrar toda la energía en un haz estrecho con una parabólica?',
+                options: {
+                    a: 'Que la señal atraviese obstáculos',
+                    b: 'Que se pueda emitir sin licencia',
+                    c: 'Una relación señal/ruido muy alta en el receptor',
+                    d: 'Que aumente la longitud de onda'
+                },
+                answer: 'c',
+                feedback: 'Y por Shannon, más S/N es más capacidad con el mismo ancho de banda. Lo que no cambia es la capacidad de atravesar obstáculos: sigue siendo nula.'
+            },
+            {
+                topic: 'El haz',
+                repaso: '#haz',
+                text: '¿Cuál es la contrapartida de usar un haz estrecho?',
+                options: {
+                    a: 'Que consume más potencia',
+                    b: 'Que las antenas del emisor y el receptor deben estar muy bien alineadas',
+                    c: 'Que baja la velocidad',
+                    d: 'Que aumenta el ruido'
+                },
+                answer: 'b',
+                feedback: 'Por eso los radioenlaces se montan en mástiles rígidos y se realinean tras un temporal: dos grados de desvío pueden dejar el enlace sin servicio.'
+            },
+            {
+                topic: 'Visión directa',
+                repaso: '#vista',
+                text: 'Hay que unir por microondas dos puntos separados 200 km. ¿Qué hace falta?',
+                options: {
+                    a: 'Nada especial: 200 km entran en el alcance de las microondas',
+                    b: 'Subir la potencia hasta que llegue',
+                    c: 'Encadenar varios saltos con antenas repetidoras, porque no atraviesan obstáculos ni la curvatura terrestre',
+                    d: 'Cambiar a infrarrojos'
+                },
+                answer: 'c',
+                feedback: 'El libro lo dice explícitamente: hacen falta <strong>antenas repetidoras</strong> para largas distancias. Y la tabla 3.5 da 80 km entre repetidores.'
+            },
+            {
+                topic: 'Visión directa',
+                repaso: '#vista',
+                text: 'Dos antenas están a 30 m de altura cada una, con la fórmula d ≈ 4,12 · √h. ¿Cuál es aproximadamente el alcance del enlace?',
+                options: { a: '22,6 km', b: '13 km', c: '82 km', d: '45 km' },
+                answer: 'd',
+                feedback: 'Cada antena ve 22,6 km, y el enlace suma los dos horizontes: unos <strong>45 km</strong>. Los 22,6 km son el horizonte de una sola.'
+            },
+            {
+                topic: 'Satélite',
+                repaso: '#satelite',
+                text: '¿Qué es, en esencia, un satélite de comunicaciones?',
+                options: {
+                    a: 'Un repetidor de microondas colocado muy alto',
+                    b: 'Un emisor de ondas de radio de baja frecuencia',
+                    c: 'Un espejo pasivo que refleja la señal',
+                    d: 'Un cable tendido por el espacio'
+                },
+                answer: 'a',
+                feedback: 'Al estar tan alto, ve a la vez a media Tierra: resuelve de un golpe el problema del horizonte y el de los obstáculos.'
+            },
+            {
+                topic: 'Satélite',
+                repaso: '#satelite',
+                text: 'Según el libro, ¿cuánto tarda la señal en llegar y volver en una comunicación por satélite?',
+                options: { a: '0,03 s', b: '3 s', c: '30 ms', d: 'Aproximadamente 0,3 s' },
+                answer: 'd',
+                feedback: 'Y el libro añade que para algunas aplicaciones de envío y recepción de datos ese tiempo de espera puede resultar <strong>inaceptable</strong>.'
+            },
+            {
+                topic: 'El retardo',
+                repaso: '#retardo',
+                text: 'Un satélite GEO está a 35 786 km. A 300 000 km/s, ¿cuánto tarda la señal en subir y bajar?',
+                options: { a: '≈ 120 ms', b: '≈ 240 ms', c: '≈ 480 ms', d: '≈ 60 ms' },
+                answer: 'b',
+                feedback: '0,119 s de subida más 0,119 de bajada: <strong>0,239 s</strong>. Los 120 ms son un solo trayecto y los 480, la ida y vuelta completa.'
+            },
+            {
+                topic: 'El retardo',
+                repaso: '#retardo',
+                text: 'Haces ping a un servidor a través de un enlace GEO. ¿Qué valor cabe esperar?',
+                options: {
+                    a: 'Unos 120 ms, un trayecto',
+                    b: 'Unos 240 ms, extremo a extremo',
+                    c: 'Unos 30 ms',
+                    d: 'Unos 480 ms, porque la señal sube y baja dos veces'
+                },
+                answer: 'd',
+                feedback: 'El ping mide ida y vuelta: cuatro trayectos por el satélite. Por eso conviene siempre preguntar <strong>qué mide</strong> cada cifra.'
+            },
+            {
+                topic: 'El retardo',
+                repaso: '#retardo',
+                text: 'De estas aplicaciones, ¿cuál funciona razonablemente bien sobre un enlace GEO?',
+                options: {
+                    a: 'Un juego de acción en red',
+                    b: 'El control remoto de una grúa',
+                    c: 'La descarga de una copia de seguridad grande',
+                    d: 'Una llamada telefónica fluida'
+                },
+                answer: 'c',
+                feedback: 'A las descargas les importa el <strong>caudal</strong>, y el satélite tiene. Lo que no puede dar es <strong>latencia baja</strong>, y eso arruina todo lo interactivo.'
+            },
+            {
+                topic: 'Órbitas',
+                repaso: '#orbitas',
+                text: '¿Por qué una constelación en órbita baja necesita cientos de satélites y la geoestacionaria solo tres para cubrir casi todo el planeta?',
+                options: {
+                    a: 'Porque los satélites LEO son más pequeños',
+                    b: 'Porque cada satélite LEO ve mucha menos superficie y además se mueve deprisa respecto al suelo',
+                    c: 'Porque los LEO tienen menos potencia',
+                    d: 'Porque los GEO usan otra frecuencia'
+                },
+                answer: 'b',
+                feedback: 'Cuanto más bajo, menos retardo y menos potencia, pero menos cobertura por satélite y una red que debe ir pasando la conexión de uno a otro.'
+            },
+            {
+                topic: 'Cuándo compensa',
+                repaso: '#cuando',
+                text: 'Una plataforma petrolífera en alta mar necesita conexión. ¿Qué medio corresponde?',
+                options: {
+                    a: 'Satélite: el extremo está aislado y no hay dónde anclar un cable',
+                    b: 'Radioenlace de microondas a la costa',
+                    c: 'Fibra óptica submarina propia',
+                    d: 'Infrarrojos'
+                },
+                answer: 'a',
+                feedback: 'Es el caso de manual del satélite: allí donde tender cable es <strong>imposible o carísimo</strong>. Un radioenlace exigiría visión directa a decenas de kilómetros sobre el mar.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: 'teoria.html#propiedades',
+                text: '<em>Repaso.</em> Un radioenlace de microondas pierde calidad durante una tormenta. ¿Con qué característica de los medios no guiados encaja?',
+                options: {
+                    a: 'Con la seguridad',
+                    b: 'Con que la velocidad depende también de las condiciones atmosféricas',
+                    c: 'Con la tasa adaptativa únicamente',
+                    d: 'Con que el espectro está regulado'
+                },
+                answer: 'b',
+                feedback: 'Estaba en la propia definición del libro: en los no guiados influyen mucho <strong>las condiciones atmosféricas</strong>. Es un factor que no existe en un cable enterrado.'
+            },
+            {
+                topic: 'Recuperación · Semana 6',
+                repaso: '../../Semana_06/Dia_04/teoria.html#decidir',
+                text: '<em>Repaso.</em> Se puede canalizar fibra entre dos edificios a 300 m, con visión directa entre los tejados. ¿Qué eliges?',
+                options: {
+                    a: 'Radioenlace, porque no hay que hacer obra',
+                    b: 'Satélite, por si acaso',
+                    c: 'Fibra: más capacidad, sin licencias y sin depender de la meteorología. El radioenlace queda como plan B',
+                    d: 'Par trenzado apantallado'
+                },
+                answer: 'c',
+                feedback: 'Cuando las dos opciones son viables, el criterio no cambia: decide el conjunto de coste, capacidad y fiabilidad. Y un cable enterrado no tiene días de lluvia.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

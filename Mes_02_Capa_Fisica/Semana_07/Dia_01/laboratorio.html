@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio: tu entorno radioeléctrico</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 1 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">66 min</span></div>
+        <div class="info-item"><strong>Material:</strong> los aparatos que tengas en casa</div>
+        <div class="info-item"><strong>Permisos:</strong> sin administrador</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Estás rodeado de emisores y casi ninguno lleva cable. Vas a <strong>inventariarlos</strong>, averiguar
+            en qué banda trabaja cada uno, calcular su <strong>longitud de onda</strong> y comprobar qué bandas
+            admite la radio de tu propio equipo.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Inventario de emisores (20 min)</h2>
+
+            <p>Da una vuelta por casa. Estos son los sospechosos habituales y la banda en la que suelen trabajar:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Aparato</th><th>Banda típica</th><th>Familia</th></tr></thead>
+                <tbody>
+                    <tr><td>Router Wi-Fi</td><td>2,4 GHz y 5 GHz</td><td>Microondas</td></tr>
+                    <tr><td>Teléfono móvil, datos</td><td>0,8 a 3,5 GHz según la banda</td><td>Microondas</td></tr>
+                    <tr><td>Bluetooth: auriculares, teclado, ratón</td><td>2,4 GHz</td><td>Microondas</td></tr>
+                    <tr><td>Horno microondas</td><td>2,45 GHz</td><td>Microondas</td></tr>
+                    <tr><td>Mando del televisor</td><td>~300 THz</td><td><strong>Infrarrojo</strong></td></tr>
+                    <tr><td>Mando del garaje o llave del coche</td><td>433 o 868 MHz</td><td><strong>Radio</strong></td></tr>
+                    <tr><td>Radio FM</td><td>88 a 108 MHz</td><td><strong>Radio</strong></td></tr>
+                    <tr><td>Televisión digital terrestre</td><td>470 a 694 MHz</td><td><strong>Radio</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>De dónde salen estas cifras</strong>
+                El libro no da un listado de bandas por aparato: solo cita los 2,4 y los 5 GHz del Wi-Fi. El resto
+                procede de las <strong>atribuciones de frecuencia</strong> vigentes en España y de las fichas de los
+                propios fabricantes. Es contenido de apoyo para el laboratorio, no materia de examen.
+            </div>
+
+            <p>La banda casi siempre está impresa en la <strong>etiqueta del aparato</strong>, junto al número de
+            serie y al marcado CE. Búscala: en el router pone las dos bandas, y en un mando de garaje suele poner
+            «433,92 MHz».</p>
+
+            <h2>Parte 2 — La radio de tu equipo (20 min)</h2>
+
+            <p>Ahora mira qué sabe hacer tu tarjeta inalámbrica:</p>
+
+            <div class="so-tabs" data-grupo="radio">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="radio" data-so="win">
+                <div class="comando"><pre><code>netsh wlan show drivers</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="radio" data-so="nix">
+                <div class="comando"><pre><code>iw list | grep -A10 "Frequencies"</code></pre></div>
+                <p><code>iw</code> no suele venir instalado (<code>sudo apt install iw</code>), y en
+                <strong>WSL o en una máquina virtual no sirve</strong>: la tarjeta es virtual y no hay radio
+                detrás. Este comando <strong>no se ha podido verificar</strong> en el equipo con el que se escribió
+                el laboratorio, por ese motivo.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de este equipo</strong>
+<pre><code>Nombre de interfaz: Wi-Fi
+    Tipos de radio admitidos    : 802.11b 802.11g 802.11n 802.11a 802.11ac 802.11ax</code></pre>
+                <p>Esa línea dice, indirectamente, <strong>en qué bandas puede trabajar</strong> la tarjeta:</p>
+                <div class="tabla-wrap">
+                <table>
+                    <thead><tr><th>Tipo de radio</th><th>Banda</th></tr></thead>
+                    <tbody>
+                        <tr><td>802.11<strong>b</strong> · <strong>g</strong></td><td>2,4 GHz</td></tr>
+                        <tr><td>802.11<strong>a</strong> · <strong>ac</strong></td><td>5 GHz</td></tr>
+                        <tr><td>802.11<strong>n</strong></td><td>2,4 y 5 GHz</td></tr>
+                        <tr><td>802.11<strong>ax</strong></td><td>2,4 y 5 GHz</td></tr>
+                    </tbody>
+                </table>
+                </div>
+                <p>Los estándares se ven a fondo el miércoles; hoy solo interesa la <strong>banda</strong>.</p>
+            </div>
+
+            <h2>Parte 3 — El efecto de los obstáculos (26 min)</h2>
+
+            <p>Si estás conectado por Wi-Fi, mira el indicador de señal del sistema —el icono de la barra de
+            tareas— desde tres sitios distintos: junto al router, a una habitación de distancia y en el punto más
+            alejado de la casa.</p>
+
+            <div class="aviso">
+                <strong>Dos avisos honestos sobre esto</strong>
+                <ul>
+                    <li>El comando <code>netsh wlan show networks mode=bssid</code>, que listaría las redes vecinas
+                    con su canal y su señal, <strong>exige permiso de ubicación</strong>. Sin activarlo responde:
+                    «Los comandos de shell de red necesitan permiso de ubicación para acceder a la información de
+                    WLAN». Puedes activarlo en <em>Configuración → Privacidad y seguridad → Ubicación</em>, pero no
+                    hace falta para este laboratorio: se usará el miércoles.</li>
+                    <li><code>netsh wlan show interfaces</code> muestra la señal en porcentaje, pero
+                    <strong>solo si estás conectado</strong>. En el equipo con el que se escribió esto la tarjeta
+                    estaba desconectada, así que esa salida <strong>no se ha podido verificar</strong>.</li>
+                </ul>
+            </div>
+
+            <p>Con el indicador del sistema basta para lo de hoy: lo que interesa no es la cifra exacta, sino
+            <strong>qué obstáculo hace caer la señal</strong> y cuánto.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has inventariado al menos tres emisores de tu casa con su banda.</li>
+                <li>Has calculado la longitud de onda de dos de ellos.</li>
+                <li>Sabes qué bandas admite la radio de tu equipo y por qué.</li>
+                <li>Puedes decir qué obstáculo de tu casa castiga más la señal.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/laboratorio.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 1 — Laboratorio: tu entorno radioeléctrico',
+    subtitulo: 'Inventario de emisores · longitudes de onda · las bandas de tu tarjeta · el efecto de las paredes',
+    tiempo: '66 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: El inventario',
+            tiempo: '18 min',
+            enunciado: '<p>Busca la etiqueta de cada aparato o usa la tabla de la parte 1.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> Escribe <strong>tres</strong> aparatos de tu casa que emitan sin cable, separados por comas.',
+                    ancho: '360px',
+                    placeholder: 'router, mando del televisor, auriculares Bluetooth',
+                    explicacion: 'Si te salen más de tres, mejor: la cuestión es darse cuenta de cuánta gente vive en el espectro de un piso normal.',
+                    pistas: ['Cuenta también los que no parecen «red»: mandos, llaves, básculas, bombillas.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> ¿Qué bandas anuncia tu <strong>router</strong>? Mira su etiqueta o la pegatina de la parte inferior.',
+                    ancho: '260px',
+                    placeholder: '2,4 GHz y 5 GHz',
+                    explicacion: 'Casi todos los routers actuales son de <strong>doble banda</strong>. Si el tuyo solo tiene 2,4 GHz, tiene ya unos cuantos años.',
+                    pistas: ['Suele venir junto al nombre de la red y la clave.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿A qué familia del espectro pertenece el mando del televisor?',
+                    opciones: {
+                        a: 'Ondas de radio',
+                        b: 'Microondas',
+                        c: 'Infrarrojo',
+                        d: 'Ondas de luz'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Por eso hay que <strong>apuntar</strong> con él y no funciona desde otra habitación: el infrarrojo no atraviesa los sólidos. El jueves se ve en detalle.',
+                    pistas: ['¿Hace falta apuntar? ¿Funciona a través de la pared?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> El mando del garaje funciona desde la calle, incluso desde dentro del coche y con el portón cerrado. ¿Qué explica ese alcance?',
+                    opciones: {
+                        a: 'Que emite a mucha potencia',
+                        b: 'Que trabaja en radio, a 433 MHz: onda larga que atraviesa obstáculos y es omnidireccional',
+                        c: 'Que usa infrarrojo de alta potencia',
+                        d: 'Que el receptor tiene una antena parabólica'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'A 433 MHz la longitud de onda ronda los <strong>70 cm</strong>: una chapa de coche o un portón no la detienen. Y no hay que apuntar, porque es omnidireccional.',
+                    pistas: ['Calcula su longitud de onda: 30 / 0,433 GHz.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Las longitudes de onda de tu casa',
+            tiempo: '16 min',
+            enunciado: '<p>Con <strong>λ (cm) = 30 / f (GHz)</strong>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Tu router en 2,4 GHz: longitud de onda en centímetros.',
+                    respuesta: 12.5,
+                    tolerancia: 0.2,
+                    unidad: 'cm',
+                    explicacion: '<strong>12,5 cm</strong>: del tamaño de una mano. Atraviesa un tabique sin demasiado esfuerzo.',
+                    pistas: ['30 dividido entre 2,4.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> El mando del garaje a 433 MHz, o sea 0,433 GHz: longitud de onda en centímetros. Redondea al entero.',
+                    respuesta: 69,
+                    tolerancia: 2,
+                    unidad: 'cm',
+                    explicacion: '30 / 0,433 ≈ <strong>69 cm</strong>, más de cinco veces la del Wi-Fi. Por eso llega desde la calle y el Wi-Fi no sale del piso.',
+                    pistas: ['Pasa los megahercios a gigahercios antes de dividir.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Un teléfono en la banda de 3,5 GHz de 5G: longitud de onda en centímetros. Un decimal.',
+                    respuesta: 8.6,
+                    tolerancia: 0.3,
+                    unidad: 'cm',
+                    explicacion: '30 / 3,5 ≈ <strong>8,6 cm</strong>. Más velocidad que las bandas bajas de móvil y, a cambio, mucha menos penetración en edificios: por eso hacen falta más antenas.',
+                    pistas: ['Mismo atajo de siempre.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Ordenando los tres resultados, ¿cuál llegará más lejos dentro de un edificio, a igualdad de potencia?',
+                    opciones: {
+                        a: 'El de 3,5 GHz, por tener más ancho de banda',
+                        b: 'Los tres igual: depende solo de la potencia',
+                        c: 'El de 2,4 GHz, por estar en medio',
+                        d: 'El de 433 MHz, porque su onda es la más larga'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'Onda larga, mejor penetración. A cambio, en esa banda hay poquísimo ancho de banda disponible: sirve para abrir un garaje, no para ver vídeo.',
+                    pistas: ['¿Cuál de las tres longitudes de onda es mayor?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Tu tarjeta inalámbrica',
+            tiempo: '14 min',
+            enunciado: '<p>Ejecuta el comando de la <strong>parte 2</strong>.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 6,
+                    minimo: 40,
+                    debe: [['802.11', 'Tipos de radio', 'Radio types', 'Frequencies']],
+                    pregunta: '<strong>a)</strong> Pega la línea con los <strong>tipos de radio admitidos</strong> por tu tarjeta.',
+                    placeholder: 'Tipos de radio admitidos : 802.11b 802.11g ...',
+                    explicacion: 'Si tu equipo no tiene tarjeta inalámbrica, el comando avisará de que no hay interfaz: anótalo y sigue con el resto del laboratorio.',
+                    pistas: ['Está en la salida de netsh wlan show drivers, hacia la mitad.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Con la tabla de la parte 2, ¿en qué bandas puede trabajar una tarjeta que admite 802.11b, g, n, a, ac y ax?',
+                    opciones: {
+                        a: 'Solo en 2,4 GHz',
+                        b: 'Solo en 5 GHz',
+                        c: 'En 2,4 GHz y en 5 GHz',
+                        d: 'En 60 GHz'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Los tipos <strong>b</strong> y <strong>g</strong> son de 2,4; <strong>a</strong> y <strong>ac</strong>, de 5; <strong>n</strong> y <strong>ax</strong>, de las dos. Es una tarjeta de doble banda.',
+                    pistas: ['Basta con que un solo tipo use una banda para que la tarjeta pueda usarla.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Intentas listar las redes vecinas y el sistema responde que hace falta permiso de ubicación. ¿Por qué lo pide?',
+                    opciones: {
+                        a: 'Porque las redes Wi-Fi visibles permiten deducir dónde estás, así que Windows lo trata como dato de ubicación',
+                        b: 'Porque el comando necesita privilegios de administrador',
+                        c: 'Porque la tarjeta está desconectada',
+                        d: 'Porque el escaneo consume mucha batería'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'La lista de redes cercanas es una <strong>huella del lugar</strong>: existen bases de datos que geolocalizan con solo esa lista. Por eso el sistema lo considera información de ubicación y no una consulta de red cualquiera.',
+                    pistas: ['¿Qué se podría deducir de saber qué redes hay alrededor?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Las paredes de tu casa',
+            tiempo: '18 min',
+            enunciado: '<p>Con el indicador de señal del sistema, desde tres puntos distintos.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>a)</strong> Describe el punto donde la señal es <strong>peor</strong> y qué hay entre él y el router.',
+                    ancho: '380px',
+                    placeholder: 'el baño del fondo: dos tabiques y la cocina con el frigorífico',
+                    explicacion: 'Los peores enemigos domésticos son los <strong>muros de carga</strong>, los electrodomésticos grandes, los espejos y las instalaciones de agua: todo lo que tenga metal o agua absorbe o refleja a 2,4 GHz.',
+                    pistas: ['Fíjate en si hay metal o agua por medio, no solo en la distancia.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Si tu router emite en las dos bandas, ¿qué esperas observar en ese punto malo?',
+                    libre: true,
+                    opciones: {
+                        a: 'La red de 2,4 GHz aguanta y la de 5 GHz se cae o va lentísima',
+                        b: 'Las dos van igual de mal',
+                        c: 'La de 5 GHz aguanta mejor',
+                        d: 'No puedo distinguirlas: tienen el mismo nombre'
+                    },
+                    explicacion: 'Lo habitual es lo primero: la onda de 12,5 cm atraviesa mejor que la de 6 cm. La última respuesta es muy frecuente, porque muchos routers presentan las dos bandas con un solo nombre y deciden ellos: eso se llama <em>band steering</em>.',
+                    pistas: ['No hay respuesta incorrecta: se registra lo que observes.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Escribe el <strong>informe</strong> del laboratorio: qué emisores conviven en tu casa, en qué bandas, cuáles pueden estorbarse entre sí y qué propondrías para mejorar la cobertura del punto peor. No vale «subir la potencia».',
+                    filas: 8,
+                    modelo: '<p>Un informe completo dice cuatro cosas.</p><p><strong>Quién emite.</strong> En un piso normal conviven el router en 2,4 y 5 GHz, dos o tres equipos con Bluetooth en 2,4 GHz, el horno microondas a 2,45 GHz, los móviles en bandas de 0,8 a 3,5 GHz, y varios mandos de radio a 433 MHz y de infrarrojo.</p><p><strong>Quién estorba a quién.</strong> Todo lo que está en <strong>2,4 GHz</strong> comparte banda: el Wi-Fi, el Bluetooth y el microondas. Los mandos de 433 MHz y los infrarrojos no molestan al Wi-Fi porque están en otra zona del espectro, y las redes de los vecinos sí, porque usan exactamente los mismos canales.</p><p><strong>Dónde falla.</strong> El punto peor suele estar detrás de dos o más obstáculos, y no por distancia: un muro de carga, una cocina con electrodomésticos o un espejo grande castigan más que diez metros de pasillo despejado.</p><p><strong>Qué hacer.</strong> Subir la potencia no arregla nada, porque el enlace es <strong>bidireccional</strong> y el móvil seguirá sin llegar al router. Lo que funciona es <strong>acercar el emisor</strong> —mover el router al centro de la vivienda, sacarlo del mueble metálico— o <strong>añadir un segundo punto de acceso</strong> cerca de la zona mala, preferiblemente conectado por cable. Y usar 5 GHz cerca del router y 2,4 GHz lejos, en lugar de forzar una sola banda.</p>',
+                    rubrica: [
+                        'Enumera emisores reales con su banda',
+                        'Identifica que los conflictos están dentro de la misma banda, sobre todo 2,4 GHz',
+                        'Menciona las redes de los vecinos como fuente de interferencia',
+                        'Explica el punto malo por los obstáculos y no solo por la distancia',
+                        'Descarta subir la potencia y razona por qué',
+                        'Propone reubicar el equipo o añadir otro punto de acceso'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

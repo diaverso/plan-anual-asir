@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: el retardo del satélite</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 2 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">72 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> calculadora y <code>ping</code></div>
+        <div class="info-item"><strong>Permisos:</strong> sin administrador</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Primero <strong>calcular</strong> el retardo de las tres órbitas con la velocidad de la luz. Después
+            <strong>medirlo</strong> en tu propia conexión contra destinos cada vez más lejanos. Y al final
+            comparar: hay un servidor real que está, en milisegundos, casi tan lejos como un satélite.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — El cálculo (18 min)</h2>
+
+            <div class="destacado">
+                <strong>Lo que necesitas</strong>
+                <ul>
+                    <li><strong>t = distancia ÷ velocidad</strong></li>
+                    <li>En el aire y el vacío: <strong>c = 300 000 km/s</strong></li>
+                    <li>En una <strong>fibra óptica</strong> la luz va más despacio, a unos
+                    <strong>200 000 km/s</strong>, porque el vidrio tiene un índice de refracción de
+                    aproximadamente 1,5</li>
+                    <li>Un <strong>ping</strong> mide la <strong>ida y vuelta</strong> completa</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Órbita</th><th>Altura</th></tr></thead>
+                <tbody>
+                    <tr><td>LEO · baja</td><td>550 km</td></tr>
+                    <tr><td>MEO · media</td><td>20 200 km</td></tr>
+                    <tr><td>GEO · geoestacionaria</td><td>35 786 km</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>El dato de la velocidad en la fibra no sale del libro</strong>
+                El libro no da la velocidad de propagación en el vidrio. Los 200 000 km/s salen de dividir la
+                velocidad de la luz entre el índice de refracción típico de una fibra, que ronda 1,5. Hace falta
+                para comparar honestamente el satélite con un enlace terrestre.
+            </div>
+
+            <h2>Parte 2 — La medida (30 min)</h2>
+
+            <p>Ahora mide de verdad. El comando es el mismo en los dos sistemas, con un parámetro distinto para
+            fijar el número de intentos:</p>
+
+            <div class="so-tabs" data-grupo="ping">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="ping" data-so="win">
+                <div class="comando"><pre><code>ping -n 5 8.8.8.8
+ping -n 5 ping.online.net
+ping -n 5 speedtest.tele2.net
+ping -n 5 www.iij.ad.jp</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="ping" data-so="nix">
+                <div class="comando"><pre><code>ping -c 5 8.8.8.8
+ping -c 5 ping.online.net
+ping -c 5 speedtest.tele2.net
+ping -c 5 www.iij.ad.jp</code></pre></div>
+            </div>
+
+            <div class="dato">
+                <strong>Medidas reales de este equipo</strong>
+<pre><code>8.8.8.8                (Google, servidor cercano)      9 ms
+1.1.1.1                (Cloudflare, servidor cercano)   7 ms
+ping.online.net        (Francia)                       28 ms
+speedtest.tele2.net    (Suecia)                        54 ms
+www.iij.ad.jp          (Japón)                        290 ms</code></pre>
+                <p>Fíjate en la última línea antes de seguir. <strong>290 ms</strong> es el mismo orden de magnitud
+                que el retardo de un satélite geoestacionario. Y ahí no hay ningún satélite: es fibra dando la
+                vuelta a medio planeta.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Si algún destino no responde</strong>
+                Es normal: muchos servidores <strong>descartan el ping</strong> por política de seguridad. En la
+                comprobación de este laboratorio, dos de los seis destinos probados no contestaron. Usa los que sí
+                respondan y anótalo; no es un fallo de tu equipo ni de tu red.
+            </div>
+
+            <h2>Parte 3 — La comparación (24 min)</h2>
+
+            <p>Con los cálculos y las medidas delante, ya se puede responder a la pregunta que importa:
+            <strong>¿de qué está hecho el retardo que mides?</strong> Una parte es distancia pura, que no se puede
+            evitar, y otra es todo lo demás: los equipos por los que pasa, las colas y los rodeos que da la ruta.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Destino</th><th>Distancia aproximada desde España</th></tr></thead>
+                <tbody>
+                    <tr><td>Francia</td><td>1 000 km</td></tr>
+                    <tr><td>Suecia</td><td>2 600 km</td></tr>
+                    <tr><td>Japón</td><td>10 800 km</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has calculado el retardo de las tres órbitas, de extremo a extremo y de ida y vuelta.</li>
+                <li>Has medido la latencia real de tu conexión a tres distancias distintas.</li>
+                <li>Sabes separar la parte del retardo que impone la distancia de la que añade la red.</li>
+                <li>Puedes decir qué aplicaciones aguantarían tu peor medida.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_01/laboratorio.html">← Día 1</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_03/laboratorio.html">Día 3 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 2 — Laboratorio: el retardo del satélite',
+    subtitulo: 'Calcular las tres órbitas · medir tu latencia real · separar la física de la red',
+    tiempo: '72 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: Las tres órbitas, calculadas',
+            tiempo: '18 min',
+            enunciado: '<p>Con c = 300 000 km/s. Cuidado con cuántos trayectos pide cada apartado.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa el retardo <strong>de extremo a extremo</strong> —subida más bajada— de cada órbita, en milisegundos. Un decimal.',
+                    esquina: 'Órbita',
+                    cabecera: ['Altura', 'Retardo extremo a extremo (ms)'],
+                    filas: [
+                        { etiqueta: 'LEO', celdas: [{ fijo: '550 km' }, { respuestas: ['3,7', '3.7', '3,67', '3.67'], placeholder: 'ms' }] },
+                        { etiqueta: 'MEO', celdas: [{ fijo: '20 200 km' }, { respuestas: ['134,7', '134.7', '135', '134,66'], placeholder: 'ms' }] },
+                        { etiqueta: 'GEO', celdas: [{ fijo: '35 786 km' }, { respuestas: ['238,6', '238.6', '239', '238,57'], placeholder: 'ms' }] }
+                    ],
+                    explicacion: 'En los tres casos: (2 × altura) ÷ 300 000. La GEO sale en los <strong>0,24 s</strong> que el libro redondea a 0,3.',
+                    pistas: ['Multiplica la altura por dos antes de dividir.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Cuántas veces más retardo tiene la órbita GEO que la LEO? Al entero.',
+                    respuesta: 65,
+                    tolerancia: 3,
+                    unidad: 'veces',
+                    explicacion: '238,6 / 3,67 ≈ <strong>65 veces</strong>. Esa es la razón de que las constelaciones modernas de Internet por satélite estén en órbita baja.',
+                    pistas: ['Divide los dos retardos del apartado anterior.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Ping a través de un enlace GEO: ida y vuelta completa, en milisegundos. Al entero.',
+                    respuesta: 477,
+                    tolerancia: 6,
+                    unidad: 'ms',
+                    explicacion: 'Cuatro trayectos de 119,3 ms: <strong>477 ms</strong>. Casi medio segundo antes de recibir la primera respuesta.',
+                    pistas: ['El doble del retardo de extremo a extremo.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Tu latencia real',
+            tiempo: '22 min',
+            enunciado: '<p>Ejecuta los comandos de la <strong>parte 2</strong> y anota las medias.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    minimo: 60,
+                    debe: [['ms', 'tiempo', 'time']],
+                    pregunta: '<strong>a)</strong> Pega la salida del ping a <code>8.8.8.8</code>.',
+                    placeholder: 'Respuesta desde 8.8.8.8: bytes=32 tiempo=9ms TTL=116 ...',
+                    explicacion: 'Con cinco intentos ya se ve si la conexión es estable: si los valores bailan mucho, hay congestión por el camino.',
+                    pistas: ['Copia también la línea del resumen con la media.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>b)</strong> Latencia media a un servidor <strong>cercano</strong>, en milisegundos.',
+                    ancho: '160px',
+                    placeholder: '9',
+                    explicacion: 'En una conexión de fibra doméstica en España lo normal son cifras de un dígito o poco más. En este equipo salieron <strong>9 ms</strong> a Google y <strong>7 ms</strong> a Cloudflare.',
+                    pistas: ['Es la media que da el resumen del ping.']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'numero',
+                    pregunta: '<strong>c)</strong> Latencia media al destino <strong>más lejano</strong> que te haya respondido, en milisegundos.',
+                    ancho: '160px',
+                    placeholder: '290',
+                    explicacion: 'En este equipo, Japón respondió a <strong>290 ms</strong>. Si tu destino más lejano fue europeo, estarás en torno a 30-60 ms.',
+                    pistas: ['Si Japón no responde, usa Suecia o Francia y anótalo.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Comparando tu medida más lejana con el retardo GEO de ida y vuelta, ¿qué observas?',
+                    libre: true,
+                    opciones: {
+                        a: 'Mi destino más lejano está en el mismo orden de magnitud que el satélite GEO',
+                        b: 'Mi destino más lejano tiene bastante menos retardo que el satélite GEO',
+                        c: 'Ningún destino lejano me ha respondido'
+                    },
+                    explicacion: 'Con Japón a 290 ms y el GEO a 477 ms, las cifras son comparables: un servidor al otro lado del mundo y un satélite geoestacionario juegan en la misma liga de latencia. Con destinos europeos, la diferencia es enorme.',
+                    pistas: ['No hay respuesta incorrecta: se registra lo que hayas medido.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: ¿De qué está hecho ese retardo?',
+            tiempo: '18 min',
+            enunciado: '<p>Parte es física pura y parte es la red. Calcula el mínimo teórico con <strong>200 000 km/s</strong>, la velocidad de la luz en la fibra.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Mínimo teórico de ida y vuelta hasta Japón, a 10 800 km. En milisegundos, al entero.',
+                    respuesta: 108,
+                    tolerancia: 3,
+                    unidad: 'ms',
+                    explicacion: 'Ida y vuelta son 21 600 km. 21 600 / 200 000 = 0,108 s = <strong>108 ms</strong>. Ni el mejor enlace del mundo puede bajar de ahí.',
+                    pistas: ['Dobla la distancia antes de dividir.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Si la medida real fue de 290 ms, ¿cuántos milisegundos añade la red por encima del mínimo físico?',
+                    respuesta: 182,
+                    tolerancia: 5,
+                    unidad: 'ms',
+                    explicacion: '290 − 108 = <strong>182 ms</strong>. Eso son los equipos intermedios, las colas y, sobre todo, que el cable no va en línea recta: los cables submarinos rodean continentes.',
+                    pistas: ['Una resta.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Mínimo teórico de ida y vuelta hasta Suecia, a 2 600 km. En milisegundos, al entero.',
+                    respuesta: 26,
+                    tolerancia: 2,
+                    unidad: 'ms',
+                    explicacion: '5 200 / 200 000 = <strong>26 ms</strong>, frente a los 54 ms medidos: la red añade unos 28 ms.',
+                    pistas: ['Mismo método que en el apartado a.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> En el enlace por satélite GEO, ¿qué proporción del retardo es física pura?',
+                    opciones: {
+                        a: 'Menos de la mitad: casi todo lo añaden los equipos',
+                        b: 'Prácticamente todo: los 36 000 km de subida y bajada no se pueden negociar',
+                        c: 'Nada: depende del proveedor',
+                        d: 'La mitad exacta'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Y esa es la diferencia clave con un enlace terrestre: en tierra, buena parte del retardo se puede mejorar con mejores rutas y equipos; en el satélite, la distancia manda y no se negocia.',
+                    pistas: ['Compara los 477 ms calculados con lo que puede aportar la electrónica.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: Conclusiones',
+            tiempo: '14 min',
+            enunciado: '<p>Interpreta lo que has calculado y medido.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> Con la latencia que has medido a tu servidor cercano, ¿qué aplicaciones funcionarían bien?',
+                    opciones: {
+                        a: 'Solo las descargas',
+                        b: 'Todas, incluidas videollamadas y juegos en tiempo real',
+                        c: 'Ninguna en tiempo real',
+                        d: 'Solo el correo electrónico'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Con menos de 30 ms no hay aplicación que sufra. El oído humano empieza a notar el desfase de una conversación por encima de los 150 ms aproximadamente.',
+                    pistas: ['¿Se nota una espera de 10 ms al hablar?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un compañero dice: «mi conexión de 600 megas tiene que ir mejor que la tuya de 300 para jugar en red». ¿Qué le respondes?',
+                    opciones: {
+                        a: 'Que tiene razón: más megas es menos retardo',
+                        b: 'Que da igual la velocidad: lo que decide en un juego es la latencia, y no depende de los megas contratados',
+                        c: 'Que depende del color del cable',
+                        d: 'Que necesita un satélite'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Caudal y latencia otra vez. Un enlace de 600 Mbps con 80 ms de latencia juega peor que uno de 100 Mbps con 10 ms.',
+                    pistas: ['¿Qué magnitud has medido hoy con el ping?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Escribe las <strong>conclusiones</strong> del laboratorio: qué has calculado, qué has medido, qué te ha sorprendido y qué le dirías a alguien que se plantea contratar Internet por satélite geoestacionario para teletrabajar.',
+                    filas: 9,
+                    modelo: '<p><strong>Lo calculado.</strong> El retardo de extremo a extremo de las tres órbitas: <strong>3,7 ms</strong> en LEO, <strong>134,7 ms</strong> en MEO y <strong>238,6 ms</strong> en GEO, que son los 0,3 s del libro redondeados. En ida y vuelta, la GEO se va a <strong>477 ms</strong>.</p><p><strong>Lo medido.</strong> En mi conexión, unos pocos milisegundos a servidores cercanos y cifras crecientes con la distancia, hasta los <strong>290 ms</strong> de un servidor en Japón.</p><p><strong>Lo que sorprende.</strong> Dos cosas. Que un servidor al otro lado del mundo esté, en tiempo, en la misma liga que un satélite geoestacionario. Y que buena parte de ese retardo <strong>no sea física</strong>: hasta Japón el mínimo teórico son 108 ms, así que la red añade casi 180 ms con rodeos, equipos y colas.</p><p><strong>La recomendación.</strong> Para teletrabajar con satélite GEO hay que contar con casi medio segundo de ida y vuelta. Las descargas, el correo y las copias de seguridad irán bien, porque solo dependen del caudal. Las <strong>videollamadas serán incómodas</strong>, con la gente pisándose, y cualquier aplicación interactiva o de escritorio remoto se hará pesada. Si hay alternativa terrestre, aunque sea de menos megas, suele ser preferible; y si el satélite es la única opción, conviene mirar si hay cobertura de una constelación de <strong>órbita baja</strong>, donde el retardo cae a unos pocos milisegundos.</p>',
+                    rubrica: [
+                        'Recoge los retardos calculados de las tres órbitas',
+                        'Recoge sus propias medidas reales de latencia',
+                        'Compara el destino lejano con el retardo del satélite',
+                        'Separa el mínimo físico de lo que añade la red',
+                        'Distingue qué aplicaciones sufren y cuáles no',
+                        'Recomienda con criterio, mencionando la órbita baja como alternativa'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

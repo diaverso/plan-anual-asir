@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Síntesis y test semanal: medios inalámbricos</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 5 — Síntesis y test semanal</h1>
+        <p>Los cuatro días en una página · mazo completo de flashcards · test de 24 preguntas con desglose por día</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Síntesis:</strong> 36 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 24 min</div>
+        <div class="info-item"><strong>Test:</strong> 45 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 3 h 41 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Hoy no hay contenido nuevo</strong>
+            Esta página recoge lo de los cuatro días. Léela entera antes del test: está escrita para repasarse de
+            un tirón.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido</h2>
+            <ol>
+                <li><a href="#mapa">El mapa de la semana</a></li>
+                <li><a href="#dia1">Día 1 — El aire como medio</a></li>
+                <li><a href="#dia2">Día 2 — Microondas y satélite</a></li>
+                <li><a href="#dia3">Día 3 — Wi-Fi</a></li>
+                <li><a href="#dia4">Día 4 — Infrarrojos, luz y comparativa</a></li>
+                <li><a href="#cifras">Todas las cifras, juntas</a></li>
+                <li><a href="#hilo">El hilo que une la semana</a></li>
+                <li><a href="#repaso">Flashcards de toda la semana</a></li>
+                <li><a href="#quiz-inicio">Test semanal</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="mapa">1. El mapa de la semana</h2>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s07_d05_mapa_semana.png"
+         width="1400" height="901" loading="lazy"
+         alt="Mapa de la semana: una barra del espectro en la parte superior con las cuatro zonas, y debajo cuatro columnas —radio, microondas, infrarrojos y luz— con sus rasgos principales; al pie, un bloque que recoge los criterios para decidir entre cable y aire.">
+    <figcaption>Cuatro medios que son cuatro zonas del mismo espectro, y una decisión final que los engloba.</figcaption>
+</figure>
+<pre><code>            EL AIRE: un medio de todos, que no dirige nada
+                              │
+   ┌──────────────┬───────────┴───────┬──────────────┐
+   ▼              ▼                   ▼              ▼
+ RADIO        MICROONDAS          INFRARROJO       LUZ
+ (día 1)      (días 2 y 3)         (día 4)       (día 4)
+ omnidireccional  haz + satélite   corto alcance  línea recta
+ atraviesa muros  Wi-Fi y canales  no sale de la  azotea a
+                                   habitación     azotea
+   └──────────────┴─────────┬─────────┴──────────────┘
+                            ▼
+                    ¿CABLE O AIRE?  (día 4)</code></pre>
+
+            <div class="dato">
+                <strong>Si te quedas con una sola idea</strong>
+                <p>En un medio guiado <strong>manda el medio</strong>; en el aire <strong>manda la
+                frecuencia</strong>. Y el aire tiene tres propiedades que el cable no tiene: es
+                <strong>compartido</strong>, es <strong>público</strong> y depende del <strong>tiempo que
+                haga</strong>.</p>
+            </div>
+
+            <h2 id="dia1">2. Día 1 — El aire como medio</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Medio no guiado</strong></td><td>Da <strong>soporte</strong> a las ondas pero <strong>no las dirige</strong>. Manda el espectro de frecuencia y las condiciones atmosféricas</td></tr>
+                    <tr><td><strong>Propagación</strong></td><td>Como las ondas del agua en un estanque: en todas direcciones, debilitándose y mezclándose</td></tr>
+                    <tr><td><strong>Longitud de onda</strong></td><td><strong>λ = c / f</strong>. Atajo: λ (cm) = 30 / f (GHz). A 2,4 GHz, <strong>12,5 cm</strong>; a 5 GHz, 6 cm</td></tr>
+                    <tr><td><strong>La regla</strong></td><td>Más frecuencia → más velocidad posible y <strong>menos alcance</strong></td></tr>
+                    <tr><td><strong>Las cuatro propiedades</strong></td><td>Área de <strong>cobertura</strong> limitada por obstáculos · <strong>tasa adaptativa</strong> · <strong>interferencia</strong> · <strong>seguridad</strong></td></tr>
+                    <tr><td><strong>Ondas de radio</strong></td><td>Fáciles de generar · largas distancias · <strong>penetran edificios</strong> · omnidireccionales</td></tr>
+                    <tr><td><strong>Baja y alta frecuencia</strong></td><td>La baja <strong>sigue la curvatura</strong> terrestre; la alta se absorbe y <strong>rebota en la ionosfera</strong></td></tr>
+                    <tr><td><strong>Regulación</strong></td><td>Licencia en largas distancias; en cortas, <strong>bandas libres</strong> sin permiso y <strong>sin protección</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="dia2">3. Día 2 — Microondas y satélite</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Microondas</strong></td><td><strong>1 a 10 GHz</strong>, unos <strong>10 Mbps</strong> según el libro, propagación <strong>en línea recta</strong></td></tr>
+                    <tr><td><strong>Antena parabólica</strong></td><td>Concentra la energía: <strong>relación señal/ruido muy alta</strong>. Exige <strong>alineación precisa</strong></td></tr>
+                    <tr><td><strong>Obstáculos</strong></td><td>No los atraviesan: hacen falta <strong>visión directa</strong> y <strong>repetidores</strong>; 80 km entre ellos</td></tr>
+                    <tr><td><strong>Horizonte</strong></td><td>d ≈ 4,12 · √h, y el enlace suma los dos horizontes</td></tr>
+                    <tr><td><strong>Satélite</strong></td><td>Un repetidor muy alto. Retardo de <strong>0,3 s</strong> en llegar y volver, según el libro</td></tr>
+                    <tr><td><strong>El cálculo</strong></td><td>35 786 km ÷ 300 000 km/s = 119 ms por trayecto → <strong>239 ms</strong> extremo a extremo → <strong>477 ms</strong> de ida y vuelta</td></tr>
+                    <tr><td><strong>Órbitas</strong></td><td><strong>GEO</strong> 35 786 km y 240 ms · <strong>MEO</strong> 20 000 km y 135 ms · <strong>LEO</strong> 550 km y 4 ms</td></tr>
+                    <tr><td><strong>Qué sufre</strong></td><td>Todo lo interactivo. Las descargas van bien: es <strong>latencia</strong>, no falta de caudal</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="dia3">4. Día 3 — Wi-Fi</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Qué es</strong></td><td><strong>Microondas</strong> en la red local, estándar <strong>IEEE 802.11</strong>, con punto de acceso y adaptadores</td></tr>
+                    <tr><td><strong>Estándares</strong></td><td>b 11 Mbps · g 54 Mbps · n 600 Mbps · ac 1,3 Gbps · ax varios Gbps. Wi-Fi 4, 5 y 6 son n, ac y ax</td></tr>
+                    <tr><td><strong>Tasa adaptativa</strong></td><td>Las cifras son <strong>nominales</strong>. Un cliente lento <strong>frena a todos</strong>, porque ocupa más tiempo el aire</td></tr>
+                    <tr><td><strong>Canales</strong></td><td><strong>13</strong> en Europa, separados <strong>5 MHz</strong>: f = 2 412 + 5 · (canal − 1)</td></tr>
+                    <tr><td><strong>Solapamiento</strong></td><td>Cada canal ocupa <strong>22 MHz</strong>: solape = <strong>22 − separación</strong></td></tr>
+                    <tr><td><strong>El trío</strong></td><td><strong>1, 6 y 11</strong>, a 25 MHz. En Europa también 1, 7 y 13</td></tr>
+                    <tr><td><strong>Compartir o solapar</strong></td><td>Mejor <strong>compartir</strong>: dos redes en el mismo canal se turnan; solapadas, solo hacen ruido</td></tr>
+                    <tr><td><strong>2,4 frente a 5 GHz</strong></td><td>2,4: más alcance y más saturada. 5: más canales y más velocidad, <strong>menos alcance</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="dia4">5. Día 4 — Infrarrojos, luz y comparativa</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Lo esencial</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Infrarrojos</strong></td><td>Corto alcance · direccionales · baratos · <strong>sin licencia</strong> · no atraviesan sólidos, lo que da <strong>seguridad</strong> · <strong>inútiles al sol</strong></td></tr>
+                    <tr><td><strong>Ondas de luz</strong></td><td>Láser, <strong>visión directa</strong>, <strong>unidireccional</strong>: emisor y receptor en cada extremo. Baratas, fáciles y rápidas</td></tr>
+                    <tr><td><strong>Sus enemigos</strong></td><td>Lluvia, niebla densa y <strong>corrientes de convección</strong>: falla con buen tiempo</td></tr>
+                    <tr><td><strong>Tabla 3.5</strong></td><td>Radio 1 Mbps y <strong>100-1 000 km</strong> · microondas 10 Mbps y 80 km · infrarrojo 10 Mbps y <strong>200 m</strong> · luz 1 Mbps y 1 km</td></tr>
+                    <tr><td><strong>Guiados frente a no guiados</strong></td><td>Los guiados ganan en <strong>velocidad</strong>; los no guiados, en <strong>distancia</strong> y flexibilidad</td></tr>
+                    <tr><td><strong>Las dos preguntas nuevas</strong></td><td><strong>¿Se puede tender cable?</strong> y <strong>¿hay visión directa?</strong></td></tr>
+                    <tr><td><strong>La regla final</strong></td><td>A igualdad de condiciones gana el <strong>cable</strong>. El aire gana cuando el cable <strong>no puede estar</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="cifras">6. Todas las cifras, juntas</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Dato</th><th>Valor</th><th>Día</th></tr></thead>
+                <tbody>
+                    <tr><td>Velocidad de la luz</td><td>300 000 km/s · 200 000 km/s en fibra</td><td>1 y 2</td></tr>
+                    <tr><td>λ a 2,4 GHz · 5 GHz · 60 GHz</td><td>12,5 cm · 6 cm · 5 mm</td><td>1</td></tr>
+                    <tr><td>Banda de microondas</td><td>1 a 10 GHz</td><td>2</td></tr>
+                    <tr><td>Velocidad de las microondas (libro)</td><td>≈ 10 Mbps</td><td>2</td></tr>
+                    <tr><td>Horizonte de una antena</td><td>d ≈ 4,12 · √h</td><td>2</td></tr>
+                    <tr><td>Altura de un satélite GEO</td><td>35 786 km</td><td>2</td></tr>
+                    <tr><td>Retardo GEO extremo a extremo · ida y vuelta</td><td>≈ 239 ms · ≈ 477 ms</td><td>2</td></tr>
+                    <tr><td>Retardo MEO · LEO</td><td>≈ 135 ms · ≈ 4 ms</td><td>2</td></tr>
+                    <tr><td>Canales de 2,4 GHz en Europa</td><td>13, separados 5 MHz</td><td>3</td></tr>
+                    <tr><td>Ancho de un canal</td><td>22 MHz</td><td>3</td></tr>
+                    <tr><td>Frecuencia del canal 1 · 6 · 11</td><td>2 412 · 2 437 · 2 462 MHz</td><td>3</td></tr>
+                    <tr><td>Velocidades 802.11 b · g · n · ac</td><td>11 · 54 · 600 Mbps · 1,3 Gbps</td><td>3</td></tr>
+                    <tr><td>Tabla 3.5, no guiados</td><td>Radio 1 Mbps/1 000 km · micro 10 Mbps/80 km · IR 10 Mbps/200 m · luz 1 Mbps/1 km</td><td>4</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="hilo">7. El hilo que une la semana</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Idea</th><th>Dónde apareció</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Más frecuencia, más velocidad y menos alcance</strong></td>
+                        <td>Las longitudes de onda del lunes · el 5 GHz del miércoles · el láser que no atraviesa nada del jueves</td>
+                    </tr>
+                    <tr>
+                        <td><strong>El medio es de todos</strong></td>
+                        <td>Las bandas libres sin protección · los canales que se pisan · la obligación de cifrar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>La física no se negocia</strong></td>
+                        <td>El retardo del satélite, que ninguna electrónica baja · el horizonte, que impone repetidores · el Sol, que tapa el infrarrojo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Caudal y latencia son cosas distintas</strong></td>
+                        <td>El satélite con 100 Mbps y medio segundo de espera · la tasa adaptativa, que da enlace pero poca velocidad</td>
+                    </tr>
+                    <tr>
+                        <td><strong>El aire es el último tramo, no la red</strong></td>
+                        <td>Los puntos de acceso van cableados · el radioenlace une dos redes que por dentro son de cobre y fibra</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Flashcards de toda la semana</h2>
+
+            <p>Veinticuatro tarjetas, seis por día. Piensa la respuesta <strong>antes</strong> de girarla.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Test semanal — Semana 7</h2>
+            <p>24 preguntas · 45 minutos · cinco por día más cuatro de <strong>integración</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro arranca al llegar aquí, al pulsar «Empezar
+            quiz» o al marcar tu primera respuesta. Al corregir verás el <strong>desglose por día</strong>.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir test</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por día</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Después del test: la hoja de recuperación</strong>
+            <p>Empieza por el día con peor resultado. La hoja repasa los tres cálculos de la semana —longitud de
+            onda, retardo y solapamiento— y termina con un caso que los junta.</p>
+            <p><a href="ejercicios.html"><strong>→ Ir a la hoja de recuperación</strong></a> (70 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>La semana que viene</strong>
+            <p><strong>Semana 8 — Cableado estructurado</strong>, la última del mes: normativa, instalación,
+            canalizaciones, armarios y certificación. Y el viernes, el <strong>examen mensual</strong> de las cuatro
+            semanas del Mes 2.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Recuperación</a></span>
+        <span><a href="../Dia_04/teoria.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a> · <a href="../../Semana_06/Dia_05/teoria.html">Semana 6</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        flashcards: [
+            { frente: '¿Qué hace un medio no guiado?', dorso: 'Da <strong>soporte</strong> a las ondas pero <strong>no las dirige</strong>. Manda la frecuencia, no el medio.' },
+            { frente: 'La fórmula de la longitud de onda', dorso: '<strong>λ = c / f</strong>. Atajo: λ (cm) = 30 / f (GHz).' },
+            { frente: 'λ a 2,4 GHz y a 5 GHz', dorso: '<strong>12,5 cm</strong> y <strong>6 cm</strong>.' },
+            { frente: 'La regla de la frecuencia', dorso: 'Más frecuencia → más velocidad posible y <strong>menos alcance</strong>.' },
+            { frente: 'Las cuatro propiedades de lo inalámbrico', dorso: '<strong>Cobertura</strong> limitada por obstáculos · <strong>tasa adaptativa</strong> · <strong>interferencia</strong> · <strong>seguridad</strong>.' },
+            { frente: 'Radio de baja y de alta frecuencia', dorso: 'La baja <strong>sigue la curvatura</strong> de la Tierra; la alta se absorbe y <strong>rebota en la ionosfera</strong>.' },
+            { frente: 'Banda y velocidad de las microondas', dorso: '<strong>1 a 10 GHz</strong> y del orden de <strong>10 Mbps</strong>, según el libro.' },
+            { frente: '¿Qué aporta y qué exige una parabólica?', dorso: 'Aporta una <strong>relación señal/ruido muy alta</strong>; exige <strong>alineación precisa</strong>.' },
+            { frente: '¿Por qué las microondas necesitan repetidores?', dorso: 'No atraviesan obstáculos y la Tierra es curva: <strong>80 km</strong> entre repetidores en la tabla 3.5.' },
+            { frente: 'La fórmula del horizonte', dorso: '<strong>d (km) ≈ 4,12 · √h (m)</strong>, y el enlace suma los dos horizontes.' },
+            { frente: 'El retardo del satélite GEO', dorso: '<strong>0,3 s</strong> según el libro; calculado, <strong>239 ms</strong> extremo a extremo y <strong>477 ms</strong> de ida y vuelta.' },
+            { frente: 'GEO, MEO y LEO', dorso: '35 786 km y 240 ms · 20 000 km y 135 ms · 550 km y <strong>4 ms</strong>.' },
+            { frente: '¿Por qué el satélite estropea las videollamadas y no las descargas?', dorso: 'Porque el problema es la <strong>latencia</strong>, no el caudal.' },
+            { frente: '¿Qué es el Wi-Fi, en términos de medio?', dorso: '<strong>Microondas</strong> aplicadas a la red local, con el estándar <strong>IEEE 802.11</strong>.' },
+            { frente: 'Velocidades de 802.11 b, g, n y ac', dorso: '<strong>11</strong>, <strong>54</strong>, <strong>600 Mbps</strong> y <strong>1,3 Gbps</strong>.' },
+            { frente: 'Canales de 2,4 GHz y su fórmula', dorso: '<strong>13</strong> en Europa, a 5 MHz: <strong>f = 2 412 + 5 · (canal − 1)</strong>.' },
+            { frente: 'Cálculo del solapamiento entre canales', dorso: '<strong>22 − separación en MHz</strong>. Canales 3 y 5: 12 MHz de solape.' },
+            { frente: '¿Por qué 1, 6 y 11?', dorso: 'Están a <strong>25 MHz</strong>, más que los 22 que ocupa cada canal. En Europa también vale 1, 7 y 13.' },
+            { frente: '¿Compartir canal o solaparse?', dorso: '<strong>Compartir</strong>: las redes se turnan. Solaparse solo genera ruido que nadie gestiona.' },
+            { frente: 'Tres ventajas del infrarrojo', dorso: '<strong>Barato</strong>, <strong>sin licencia</strong> y <strong>seguro</strong>, porque no sale de la habitación.' },
+            { frente: '¿Por qué el infrarrojo no sirve en exteriores?', dorso: 'Porque el <strong>Sol</strong> emite gran cantidad de infrarrojos y tapa la señal.' },
+            { frente: '¿Qué estropea un enlace láser en un día despejado?', dorso: 'Las <strong>corrientes de convección</strong>: el aire caliente que sube del edificio desvía el rayo.' },
+            { frente: 'Tabla 3.5: radio e infrarrojo', dorso: 'Radio <strong>1 Mbps</strong> y <strong>100-1 000 km</strong>; infrarrojo <strong>10 Mbps</strong> y <strong>200 m</strong>.' },
+            { frente: '¿Cuándo gana el aire al cable?', dorso: 'Cuando el cable <strong>no puede estar</strong>: no se puede tender, el extremo se mueve o hace falta ya.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Test semanal — Semana 7: Medios inalámbricos',
+        tiempo: '45 minutos',
+        minutos: 45,
+        questions: [
+            {
+                topic: 'Día 1 — El aire como medio',
+                repaso: '../Dia_01/teoria.html#noguiado',
+                text: 'Según el libro, ¿qué determina sobre todo la velocidad máxima de un medio no guiado?',
+                options: {
+                    a: 'La potencia del emisor',
+                    b: 'El espectro de frecuencia utilizado, junto con las condiciones atmosféricas',
+                    c: 'La distancia entre emisor y receptor',
+                    d: 'La categoría del equipamiento'
+                },
+                answer: 'b',
+                feedback: 'En los guiados manda el medio; en el aire, la <strong>banda</strong>. Y con un factor que en el cable no existe: el tiempo que haga.'
+            },
+            {
+                topic: 'Día 1 — El aire como medio',
+                repaso: '../Dia_01/teoria.html#lambda',
+                text: '¿Cuál es la longitud de onda aproximada de una señal de 2,4 GHz?',
+                options: { a: '24 cm', b: '6 cm', c: '12,5 cm', d: '2,4 cm' },
+                answer: 'c',
+                feedback: '30 / 2,4 = <strong>12,5 cm</strong>. Los 6 cm corresponden a la banda de 5 GHz.'
+            },
+            {
+                topic: 'Día 1 — El aire como medio',
+                repaso: '../Dia_01/teoria.html#propiedades',
+                text: 'Un portátil tiene buena cobertura y aun así descarga muy despacio. ¿Qué propiedad lo explica?',
+                options: { a: 'La seguridad', b: 'El área de cobertura', c: 'La interferencia del microondas', d: 'La tasa adaptativa' },
+                answer: 'd',
+                feedback: 'Tener enlace y tener velocidad son cosas distintas: al bajar la relación señal/ruido, el protocolo <strong>reduce la velocidad</strong> para poder entenderse.'
+            },
+            {
+                topic: 'Día 1 — El aire como medio',
+                repaso: '../Dia_01/teoria.html#radio',
+                text: '¿Cuál de estos rasgos corresponde a las ondas de radio?',
+                options: {
+                    a: 'Penetran en los edificios y viajan en todas direcciones',
+                    b: 'Necesitan visión directa',
+                    c: 'Se concentran en un haz con una parabólica',
+                    d: 'No funcionan en exteriores'
+                },
+                answer: 'a',
+                feedback: 'Es lo que las hace cómodas —no hay que apuntar— y, a la vez, fáciles de interferir y de escuchar.'
+            },
+            {
+                topic: 'Día 1 — El aire como medio',
+                repaso: '../Dia_01/teoria.html#regulacion',
+                text: '¿Qué NO garantiza emitir en una banda libre como la de 2,4 GHz?',
+                options: {
+                    a: 'Poder hacerlo sin licencia',
+                    b: 'Poder cambiar de canal',
+                    c: 'Estar protegido frente a las interferencias de terceros',
+                    d: 'Poder usar equipos comerciales'
+                },
+                answer: 'c',
+                feedback: 'Gratis y sin protección: si el vecino interfiere, no hay a quién reclamar. Esa es la contrapartida de no pagar licencia.'
+            },
+            {
+                topic: 'Día 2 — Microondas y satélite',
+                repaso: '../Dia_02/teoria.html#quees',
+                text: 'Según el libro, las microondas están entre…',
+                options: { a: '1 y 10 MHz', b: '100 y 500 MHz', c: '1 y 10 GHz', d: '10 y 100 GHz' },
+                answer: 'c',
+                feedback: 'Y con velocidades del orden de 10 Mbps. El Wi-Fi, con sus 2,4 y 5 GHz, está dentro de esa banda.'
+            },
+            {
+                topic: 'Día 2 — Microondas y satélite',
+                repaso: '../Dia_02/teoria.html#haz',
+                text: '¿Qué se gana y qué se paga al usar una antena parabólica?',
+                options: {
+                    a: 'Se gana alcance y se paga con velocidad',
+                    b: 'Se gana relación señal/ruido y se paga con la necesidad de alinear con precisión',
+                    c: 'Se gana capacidad de atravesar obstáculos y se paga con el precio',
+                    d: 'No se paga nada'
+                },
+                answer: 'b',
+                feedback: 'Toda la energía va al receptor en lugar de repartirse, pero un haz estrecho mal apuntado no llega a ninguna parte.'
+            },
+            {
+                topic: 'Día 2 — Microondas y satélite',
+                repaso: '../Dia_02/teoria.html#vista',
+                text: 'Dos antenas a 100 m de altura cada una, con d ≈ 4,12 · √h. ¿Alcance aproximado del enlace?',
+                options: { a: '41 km', b: '82 km', c: '120 km', d: '20 km' },
+                answer: 'b',
+                feedback: 'Cada una ve 41,2 km y el enlace suma los dos horizontes: <strong>82 km</strong>, muy cerca de los 80 km que da la tabla 3.5.'
+            },
+            {
+                topic: 'Día 2 — Microondas y satélite',
+                repaso: '../Dia_02/teoria.html#retardo',
+                text: 'Un satélite geoestacionario está a 35 786 km. ¿Cuánto tarda la señal en subir y bajar?',
+                options: { a: '≈ 60 ms', b: '≈ 480 ms', c: '≈ 120 ms', d: '≈ 240 ms' },
+                answer: 'd',
+                feedback: 'Dos trayectos de 119 ms. Los 480 ms son la <strong>ida y vuelta completa</strong>, con cuatro trayectos.'
+            },
+            {
+                topic: 'Día 2 — Microondas y satélite',
+                repaso: '../Dia_02/teoria.html#orbitas',
+                text: '¿Por qué una constelación LEO necesita cientos de satélites?',
+                options: {
+                    a: 'Porque cada uno cubre poca superficie y se mueve deprisa respecto al suelo',
+                    b: 'Porque son más baratos',
+                    c: 'Porque tienen menos potencia',
+                    d: 'Porque el retardo es mayor'
+                },
+                answer: 'a',
+                feedback: 'Cuanto más baja la órbita, menos retardo y menos cobertura por satélite. Es el compromiso de siempre.'
+            },
+            {
+                topic: 'Día 3 — Wi-Fi',
+                repaso: '../Dia_03/teoria.html#canales',
+                text: '¿En qué frecuencia está el canal 6 de la banda de 2,4 GHz?',
+                options: { a: '2 437 MHz', b: '2 412 MHz', c: '2 462 MHz', d: '2 442 MHz' },
+                answer: 'a',
+                feedback: '2 412 + 5 · 5 = <strong>2 437 MHz</strong>. El 2 412 es el canal 1 y el 2 462, el 11.'
+            },
+            {
+                topic: 'Día 3 — Wi-Fi',
+                repaso: '../Dia_03/teoria.html#solape',
+                text: 'Dos redes usan los canales 1 y 5. ¿Cuánto se solapan?',
+                options: { a: 'Nada', b: '5 MHz', c: '2 MHz', d: '12 MHz' },
+                answer: 'c',
+                feedback: 'Separación de 20 MHz: 22 − 20 = <strong>2 MHz</strong>. Es el caso que el libro considera aceptable para muchos especialistas.'
+            },
+            {
+                topic: 'Día 3 — Wi-Fi',
+                repaso: '../Dia_03/teoria.html#plan',
+                text: 'Los vecinos ocupan el 1 y el 6. ¿Qué canal eliges?',
+                options: { a: 'El 3, que está libre', b: 'El 4, que está en medio', c: 'El 2, pegado al 1', d: 'El 11, que no se solapa con ninguno de los dos' },
+                answer: 'd',
+                feedback: 'Un canal «libre» entre dos ocupados recoge el solape de ambos. Lo correcto es irse al que no toca a ninguno.'
+            },
+            {
+                topic: 'Día 3 — Wi-Fi',
+                repaso: '../Dia_03/teoria.html#tasa',
+                text: 'Un cliente lejano conectado a baja velocidad, ¿cómo afecta al resto de usuarios?',
+                options: {
+                    a: 'Los frena, porque ocupa el aire más tiempo para enviar lo mismo',
+                    b: 'No les afecta',
+                    c: 'Mejora su rendimiento',
+                    d: 'Solo les afecta si usan la misma banda que él'
+                },
+                answer: 'a',
+                feedback: 'El medio es compartido y se transmite por turnos. Es el argumento para poner <strong>varios puntos de acceso</strong> en lugar de uno potente.'
+            },
+            {
+                topic: 'Día 3 — Wi-Fi',
+                repaso: '../Dia_03/teoria.html#cincoghz',
+                text: '¿Qué afirmación sobre la banda de 5 GHz es correcta?',
+                options: {
+                    a: 'Tiene más alcance que la de 2,4 GHz',
+                    b: 'Atraviesa mejor los muros',
+                    c: 'Está más saturada',
+                    d: 'Tiene más canales sin solapar y permite más velocidad, a cambio de menos alcance'
+                },
+                answer: 'd',
+                feedback: 'El alcance y la penetración son sus debilidades: 6 cm de longitud de onda frente a 12,5 cm.'
+            },
+            {
+                topic: 'Día 4 — Infrarrojos, luz y comparativa',
+                repaso: '../Dia_04/teoria.html#infrarrojos',
+                text: '¿Por qué los infrarrojos no se usan en exteriores?',
+                options: {
+                    a: 'Porque el viento dispersa la señal',
+                    b: 'Porque el Sol emite gran cantidad de infrarrojos y perturba la señal',
+                    c: 'Porque necesitan licencia en exteriores',
+                    d: 'Porque la lluvia los bloquea'
+                },
+                answer: 'b',
+                feedback: 'Es un problema de <strong>relación señal/ruido</strong>: el Sol es una fuente de infrarrojos enorme.'
+            },
+            {
+                topic: 'Día 4 — Infrarrojos, luz y comparativa',
+                repaso: '../Dia_04/teoria.html#infrarrojos',
+                text: 'Que el infrarrojo no atraviese paredes, ¿en qué se convierte en ventaja?',
+                options: {
+                    a: 'En alcance',
+                    b: 'En velocidad',
+                    c: 'En seguridad: la comunicación no sale de la habitación',
+                    d: 'En menor consumo'
+                },
+                answer: 'c',
+                feedback: 'Lo que en Wi-Fi obliga a cifrar, aquí lo resuelve la física del medio.'
+            },
+            {
+                topic: 'Día 4 — Infrarrojos, luz y comparativa',
+                repaso: '../Dia_04/teoria.html#luz',
+                text: 'Un enlace láser entre dos edificios necesita…',
+                options: {
+                    a: 'Un emisor láser y un receptor en cada edificio, porque es unidireccional',
+                    b: 'Un solo emisor',
+                    c: 'Un repetidor intermedio',
+                    d: 'Una antena parabólica'
+                },
+                answer: 'a',
+                feedback: 'Un haz va en un solo sentido, igual que una fibra: para conversar hacen falta dos caminos.'
+            },
+            {
+                topic: 'Día 4 — Infrarrojos, luz y comparativa',
+                repaso: '../Dia_04/teoria.html#luz',
+                text: 'Además de la lluvia y la niebla, ¿qué interfiere un rayo láser según el libro?',
+                options: {
+                    a: 'Las ondas de radio cercanas',
+                    b: 'Los campos magnéticos',
+                    c: 'La luz solar directa únicamente',
+                    d: 'Las corrientes de convección: el aire caliente que sube del edificio'
+                },
+                answer: 'd',
+                feedback: 'El enlace puede fallar justo en los días despejados de verano, que es lo más contraintuitivo de este medio.'
+            },
+            {
+                topic: 'Día 4 — Infrarrojos, luz y comparativa',
+                repaso: '../Dia_04/teoria.html#tabla35',
+                text: 'Según la tabla 3.5, ¿qué medio tiene la menor distancia entre repetidores?',
+                options: { a: 'Las ondas de luz, con 1 km', b: 'El infrarrojo, con 200 m', c: 'Las microondas, con 80 km', d: 'El par trenzado, con 2-10 km' },
+                answer: 'b',
+                feedback: '<strong>200 m</strong>: el más limitado de los siete medios de la tabla.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_02/teoria.html#retardo',
+                text: '<strong>Integración.</strong> Una empresa contrata 200 Mbps por satélite GEO y se queja de que «la web va lentísima» aunque las descargas van a tope. ¿Diagnóstico?',
+                options: {
+                    a: 'El caudal contratado es insuficiente',
+                    b: 'Es problema de latencia, no de caudal: cada elemento de la página espera cerca de medio segundo',
+                    c: 'La antena está mal alineada',
+                    d: 'Hay interferencias en la banda'
+                },
+                answer: 'b',
+                feedback: 'Con 60 elementos por página y 480 ms de ida y vuelta, son casi 30 segundos de pura espera. Contratar más megas no lo arregla.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_01/teoria.html#lambda',
+                text: '<strong>Integración.</strong> ¿Qué tienen en común que el 5 GHz llegue menos lejos que el 2,4 y que el láser no atraviese una cortina?',
+                options: {
+                    a: 'Que los dos usan menos potencia',
+                    b: 'Que los dos son medios guiados',
+                    c: 'Que a mayor frecuencia, menor longitud de onda y peor paso por los obstáculos',
+                    d: 'Que los dos están regulados'
+                },
+                answer: 'c',
+                feedback: 'Es la regla que atraviesa toda la semana, aplicada en dos puntos muy distintos del espectro.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../Dia_04/teoria.html#decidir',
+                text: '<strong>Integración.</strong> Dos naves propias a 600 m con visión directa, sin poder canalizar por una carretera pública, y el enlace hace falta en tres semanas. ¿Qué propones?',
+                options: {
+                    a: 'Fibra: es mejor medio',
+                    b: 'Satélite, que se instala rápido',
+                    c: 'Radioenlace de microondas: hay visión directa, no hay obra y se monta en días',
+                    d: 'Par trenzado apantallado'
+                },
+                answer: 'c',
+                feedback: 'Aquí deciden dos preguntas: <strong>no se puede tender cable</strong> y <strong>sí hay visión directa</strong>. El satélite metería 240 ms de retardo sin necesidad.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '../../Semana_06/Dia_04/teoria.html#decidir',
+                text: '<strong>Integración.</strong> Con las mismas condiciones y sin impedimentos, ¿por qué se prefiere el cable al aire?',
+                options: {
+                    a: 'Porque es más barato de instalar',
+                    b: 'Porque da más velocidad, es estable, no se comparte con nadie y no obliga a cifrar para evitar escuchas',
+                    c: 'Porque no necesita mantenimiento de ningún tipo',
+                    d: 'Porque la normativa lo exige'
+                },
+                answer: 'b',
+                feedback: 'Instalar cable es justamente lo <strong>caro</strong>: ahí gana el aire. Lo que gana el cable es todo lo demás.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

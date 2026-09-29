@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: cable o aire</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 4 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">60 min</span></div>
+        <div class="info-item"><strong>Material:</strong> un mando a distancia y un móvil</div>
+        <div class="info-item"><strong>Integra:</strong> los cuatro días</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Un experimento de dos minutos para <strong>ver</strong> luz infrarroja, seis decisiones de
+            <strong>cable o aire</strong> y un caso con presupuesto y plazos donde hay que comparar
+            <strong>radioenlace y fibra</strong> con cifras.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Ver lo invisible (10 min)</h2>
+
+            <p>El diodo del mando a distancia emite luz infrarroja, que el ojo humano no percibe. Pero muchos
+            sensores de cámara <strong>sí la captan</strong>, porque su filtro no la elimina del todo.</p>
+
+            <div class="destacado">
+                <strong>El experimento</strong>
+                <ol>
+                    <li>Abre la cámara del móvil y apunta al <strong>extremo emisor</strong> del mando, el que
+                    apuntas al televisor.</li>
+                    <li>Pulsa cualquier botón del mando mirando la pantalla del móvil.</li>
+                    <li>Deberías ver el diodo <strong>parpadear</strong> en un tono blanco o violáceo que a simple
+                    vista no existe.</li>
+                </ol>
+            </div>
+
+            <div class="aviso">
+                <strong>Si no lo ves, prueba con la otra cámara</strong>
+                Muchos móviles actuales llevan un filtro infrarrojo bastante bueno en la cámara
+                <strong>trasera</strong> y peor en la <strong>frontal</strong>, así que la de los selfis suele
+                funcionar mejor para esto. No he podido comprobar el experimento en el equipo con el que se escribió
+                el laboratorio, porque depende del móvil de cada uno: si con las dos cámaras no se ve nada,
+                anótalo y sigue.
+            </div>
+
+            <p>Si lo consigues, estarás viendo dos cosas a la vez: que la comunicación existe aunque no la percibas,
+            y que es <strong>direccional</strong> —si tapas el diodo con un dedo, desaparece— y de
+            <strong>corto alcance</strong>.</p>
+
+            <h2>Parte 2 — Seis decisiones (25 min)</h2>
+
+            <p>Para cada escenario, aplica el método en orden y quédate con la <strong>primera pregunta que
+            descarte</strong> algo. Los medios candidatos son los siete de la tabla 3.5.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Escenario</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Doce puestos fijos en una oficina en obras, todos a menos de 50 m del armario</td></tr>
+                    <tr><td>2</td><td>Dos naves propias separadas por 700 m de terreno propio, con visión directa</td></tr>
+                    <tr><td>3</td><td>Un faro en una isla a 40 km de la costa, sin cable submarino</td></tr>
+                    <tr><td>4</td><td>Los operarios de un almacén, con terminales de mano</td></tr>
+                    <tr><td>5</td><td>Dos sedes en la misma ciudad, a 9 km, con canalización municipal disponible</td></tr>
+                    <tr><td>6</td><td>Una sala donde se manejan datos confidenciales y no debe salir señal al exterior</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2>Parte 3 — El caso con números (25 min)</h2>
+
+            <p>Dos naves de una empresa de transporte, separadas por <strong>600 m</strong>, con una
+            <strong>carretera comarcal</strong> en medio. Hay visión directa entre los tejados. Necesitan un enlace
+            de al menos <strong>200 Mbps</strong> para sincronizar el sistema de gestión y las cámaras.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Concepto</th><th>Radioenlace</th><th>Fibra</th></tr></thead>
+                <tbody>
+                    <tr><td>Equipamiento</td><td>2 200 € el par de equipos</td><td>1 400 € los dos conversores</td></tr>
+                    <tr><td>Obra y canalización</td><td>400 € los soportes en los tejados</td><td><strong>18 000 €</strong> los 600 m, con cruce de carretera</td></tr>
+                    <tr><td>Permisos</td><td>No necesarios en banda libre</td><td>Licencia de cruce: <strong>3 meses</strong> de trámite</td></tr>
+                    <tr><td>Plazo de puesta en marcha</td><td><strong>1 semana</strong></td><td>4 meses</td></tr>
+                    <tr><td>Capacidad realista</td><td>300-900 Mbps según equipo</td><td>1 Gbps o más</td></tr>
+                    <tr><td>Mantenimiento</td><td>Revisión y realineación periódicas</td><td>Prácticamente nulo</td></tr>
+                    <tr><td>Sensible a…</td><td>Lluvia intensa, obstáculos nuevos</td><td>Excavadoras</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Las cifras de esta tabla son orientativas</strong>
+                No salen del libro ni de un catálogo concreto: son órdenes de magnitud realistas para que el
+                ejercicio tenga sentido. Lo que se evalúa no es acertar el precio, sino <strong>razonar con
+                criterios</strong>.
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has intentado el experimento del infrarrojo y anotado el resultado.</li>
+                <li>Has resuelto los seis escenarios diciendo qué pregunta descarta en cada uno.</li>
+                <li>Has calculado la diferencia de coste entre las dos soluciones del caso.</li>
+                <li>Has escrito una recomendación que tiene en cuenta plazo, coste y mantenimiento.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_03/laboratorio.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Viernes →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 4 — Laboratorio: cable o aire',
+    subtitulo: 'Ver luz infrarroja · seis decisiones · radioenlace frente a fibra, con cifras',
+    tiempo: '60 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: El experimento del infrarrojo',
+            tiempo: '10 min',
+            enunciado: '<p>Con un mando a distancia y la cámara del móvil.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Has conseguido ver el diodo parpadear?',
+                    libre: true,
+                    opciones: {
+                        a: 'Sí, con la cámara frontal',
+                        b: 'Sí, con la cámara trasera',
+                        c: 'Sí, con las dos',
+                        d: 'No lo he conseguido con ninguna'
+                    },
+                    explicacion: 'Depende del filtro infrarrojo de cada cámara: es habitual que la frontal lo deje pasar y la trasera no. Que no se vea no significa que el mando no emita.',
+                    pistas: ['No hay respuesta incorrecta: se registra lo que hayas observado.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Si tapas el diodo con un dedo, la señal desaparece. ¿Qué dos propiedades del infrarrojo demuestra eso?',
+                    opciones: {
+                        a: 'Que es omnidireccional y de largo alcance',
+                        b: 'Que es direccional y no atraviesa los objetos sólidos',
+                        c: 'Que necesita licencia',
+                        d: 'Que funciona mejor en exteriores'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Un dedo basta para cortar el enlace. Ese mismo hecho es lo que le da su ventaja de <strong>seguridad</strong>: la señal no sale de la habitación.',
+                    pistas: ['¿Qué pasaría con una onda de radio si le pones un dedo delante?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Apuntas el mando a la pared, de espaldas al televisor, y aun así el aparato responde. ¿Cómo se explica?',
+                    opciones: {
+                        a: 'El infrarrojo atraviesa la pared y vuelve',
+                        b: 'El mando emite también en radio',
+                        c: 'La luz infrarroja se refleja en las superficies claras y llega al receptor rebotada',
+                        d: 'Es imposible: no puede funcionar'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Como cualquier luz, <strong>rebota</strong>. Por eso los mandos funcionan en una habitación aunque no apuntes bien, y por eso el libro los llama «relativamente» direccionales.',
+                    pistas: ['Piensa en lo que hace la luz de una linterna contra una pared blanca.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Las seis decisiones',
+            tiempo: '25 min',
+            enunciado: '<p>Para cada escenario de la parte 2, el medio y la pregunta que resulta decisiva.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Asigna a cada escenario el medio más adecuado.',
+                    izquierda: [
+                        '1 · Doce puestos fijos, oficina en obras',
+                        '2 · Dos naves propias a 700 m con visión directa',
+                        '3 · Faro en una isla a 40 km',
+                        '4 · Operarios con terminales de mano',
+                        '5 · Dos sedes a 9 km con canalización disponible',
+                        '6 · Sala con datos confidenciales'
+                    ],
+                    derecha: [
+                        'Par trenzado: cableado estructurado',
+                        'Radioenlace de microondas',
+                        'Satélite o radioenlace de largo alcance con repetidor',
+                        'Wi-Fi con puntos de acceso cableados',
+                        'Fibra óptica',
+                        'Cable, y sin emisión inalámbrica en la sala'
+                    ],
+                    pares: {
+                        '1 · Doce puestos fijos, oficina en obras': 'Par trenzado: cableado estructurado',
+                        '2 · Dos naves propias a 700 m con visión directa': 'Radioenlace de microondas',
+                        '3 · Faro en una isla a 40 km': 'Satélite o radioenlace de largo alcance con repetidor',
+                        '4 · Operarios con terminales de mano': 'Wi-Fi con puntos de acceso cableados',
+                        '5 · Dos sedes a 9 km con canalización disponible': 'Fibra óptica',
+                        '6 · Sala con datos confidenciales': 'Cable, y sin emisión inalámbrica en la sala'
+                    },
+                    explicacion: 'Fíjate en el escenario 2: al ser <strong>terreno propio</strong> también cabría fibra, y si la empresa puede hacer la zanja sería mejor. El radioenlace gana si la obra no compensa o hace falta rapidez.',
+                    pistas: ['Empieza por los extremos: el que no se puede cablear y el que no se debe.']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Indica qué pregunta del método resulta decisiva en cada caso. Escribe <em>distancia</em>, <em>tender cable</em>, <em>visión directa</em>, <em>movilidad</em> o <em>seguridad</em>.',
+                    esquina: 'Escenario',
+                    cabecera: ['Pregunta decisiva'],
+                    filas: [
+                        { etiqueta: '1 · Puestos fijos en obras', celdas: [{ respuestas: ['tender cable', 'se puede tender cable', 'tender'], placeholder: '?' }] },
+                        { etiqueta: '3 · Faro en una isla', celdas: [{ respuestas: ['distancia'], placeholder: '?' }] },
+                        { etiqueta: '4 · Terminales de mano', celdas: [{ respuestas: ['movilidad'], placeholder: '?' }] },
+                        { etiqueta: '6 · Datos confidenciales', celdas: [{ respuestas: ['seguridad'], placeholder: '?' }] }
+                    ],
+                    explicacion: 'Cada escenario está construido para que <strong>una</strong> pregunta decida. Reconocer cuál es lo que convierte el método en algo rápido de aplicar.',
+                    pistas: ['En el caso 1, se puede tender cable y los puestos no se mueven: eso ya decide.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> En el escenario 4, los terminales van por Wi-Fi. ¿Qué parte de esa red va por cable?',
+                    opciones: {
+                        a: 'Ninguna: es una red totalmente inalámbrica',
+                        b: 'Solo el router de salida a Internet',
+                        c: 'Los puntos de acceso, que se conectan al armario por cable',
+                        d: 'Los propios terminales, cuando se cargan'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Lo inalámbrico es siempre <strong>el último tramo</strong>. Detrás de cada punto de acceso hay un cable, y suele ser el que también lo alimenta.',
+                    pistas: ['¿Cómo llega el tráfico desde el punto de acceso hasta el servidor?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: Radioenlace frente a fibra',
+            tiempo: '25 min',
+            enunciado: '<p>Con la tabla de la <strong>parte 3</strong>: dos naves a 600 m, carretera en medio, 200 Mbps necesarios.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Coste total del radioenlace, en euros.',
+                    respuesta: 2600,
+                    unidad: '€',
+                    explicacion: '2 200 de equipos más 400 de soportes: <strong>2 600 €</strong>.',
+                    pistas: ['Suma equipamiento y obra.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Coste total de la fibra, en euros.',
+                    respuesta: 19400,
+                    unidad: '€',
+                    explicacion: '1 400 de conversores más 18 000 de canalización: <strong>19 400 €</strong>.',
+                    pistas: ['El grueso está en la obra.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántas veces más cara es la fibra en este caso? Un decimal.',
+                    respuesta: 7.5,
+                    tolerancia: 0.3,
+                    unidad: 'veces',
+                    explicacion: '19 400 / 2 600 ≈ <strong>7,5 veces</strong>. Y la diferencia no está en el material: está en <strong>cruzar la carretera</strong>.',
+                    pistas: ['Divide los dos totales.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Cumple el radioenlace el requisito de 200 Mbps?',
+                    opciones: {
+                        a: 'No: las microondas solo dan 10 Mbps según la tabla 3.5',
+                        b: 'Sí: los equipos actuales dan de 300 a 900 Mbps, muy por encima de lo pedido',
+                        c: 'Solo con visión directa perfecta y sin lluvia',
+                        d: 'No se puede saber'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Aquí se ve por qué conviene saber <strong>qué parte del libro ha envejecido</strong>: los 10 Mbps de la tabla 3.5 son de otra época. Las proporciones entre medios siguen valiendo; las cifras absolutas inalámbricas, no.',
+                    pistas: ['Mira la fila «capacidad realista» de la tabla del enunciado.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> La empresa necesita el enlace funcionando para la campaña de Navidad, dentro de seis semanas. ¿Qué implica?',
+                    opciones: {
+                        a: 'Nada: los dos plazos caben',
+                        b: 'Que la fibra queda descartada para esa fecha: solo el trámite del permiso son tres meses',
+                        c: 'Que hay que contratar satélite',
+                        d: 'Que hay que acelerar la obra pagando más'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El <strong>plazo</strong> es un criterio que no aparece en la lista clásica y que en la práctica decide muchos proyectos. Aquí el radioenlace gana sin discusión.',
+                    pistas: ['Compara las seis semanas con los plazos de la tabla.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>f)</strong> Escribe la <strong>recomendación</strong> para la empresa. Incluye qué instalarías ahora, qué riesgos asume y si plantearías algo distinto a medio plazo.',
+                    filas: 9,
+                    modelo: '<p><strong>Ahora: radioenlace de microondas.</strong> Cuesta <strong>2 600 €</strong> frente a los 19 400 € de la fibra, siete veces y media menos, y sobre todo está funcionando en <strong>una semana</strong> frente a los cuatro meses de la fibra, plazo que no encaja con la campaña. Hay visión directa entre los tejados, que es la condición que lo hace viable, y la capacidad de 300 a 900 Mbps cubre con holgura los 200 Mbps necesarios.</p><p><strong>Riesgos que se asumen.</strong> La <strong>lluvia intensa</strong> degradará el enlace algunos días al año; conviene elegir equipos con margen de capacidad para que una degradación no baje de los 200 Mbps útiles. Habrá que <strong>realinear</strong> las antenas periódicamente y después de temporales. Y cualquier <strong>obstáculo nuevo</strong> en la línea de visión —una nave más alta, una grúa— puede dejar el enlace inservible, cosa que con un cable enterrado no pasaría.</p><p><strong>Medidas que acompañan.</strong> Cifrar el enlace, porque va por el aire, y dejarlo monitorizado para detectar degradaciones antes de que las note el usuario.</p><p><strong>A medio plazo.</strong> Si el enlace se vuelve crítico para el negocio, plantearía iniciar el trámite del permiso de cruce y tender la <strong>fibra</strong> sin prisa, manteniendo después el radioenlace como <strong>respaldo</strong>. Es la mejor combinación posible: dos caminos que usan medios distintos, de modo que una excavadora o una tormenta no puedan dejar sin servicio a la vez a los dos.</p>',
+                    rubrica: [
+                        'Recomienda el radioenlace con las cifras de coste',
+                        'Da al plazo el peso decisivo que tiene en este caso',
+                        'Comprueba que la capacidad cubre los 200 Mbps requeridos',
+                        'Enumera riesgos: lluvia, realineación y obstáculos nuevos',
+                        'Añade el cifrado por ir la señal por el aire',
+                        'Propone la fibra a medio plazo y el radioenlace como respaldo de medio distinto'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Wi-Fi: estándares, canales y solapamiento</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 3 — Wi-Fi</h1>
+        <p>Las microondas en la LAN · los estándares 802.11 · trece canales que se pisan · el plan 1-6-11</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 62 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 38 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Ayer, dos parabólicas apuntándose a 40 km. Hoy, la misma banda de microondas metida en un piso, sin
+            apuntar a nada y <strong>compartida con todo el edificio</strong>. Cambia todo menos la física.
+        </div>
+
+        <div class="aviso">
+            <strong>Esto no es el tema de Wi-Fi del curso</strong>
+            La <strong>Semana 12</strong> está dedicada entera a configurar un punto de acceso: seguridad, cifrado,
+            SSID, filtrado. Hoy se ve solo lo que corresponde a la <strong>capa física</strong>: frecuencias,
+            canales y por qué se estorban.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#quees">Wi-Fi: microondas en la red local</a></li>
+                <li><a href="#estandares">Los estándares 802.11</a></li>
+                <li><a href="#tasa">La tasa adaptativa, en la práctica</a></li>
+                <li><a href="#canales">Los canales de la banda de 2,4 GHz</a></li>
+                <li><a href="#solape">Por qué se pisan: el solapamiento</a></li>
+                <li><a href="#plan">El plan de canales</a></li>
+                <li><a href="#cincoghz">La banda de 5 GHz</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="quees">1. Wi-Fi: microondas en la red local</h2>
+
+            <p>El libro lo dice en una frase que conviene leer despacio: <strong>las redes locales inalámbricas
+            utilizan microondas para transmitir la información</strong>. No es una tecnología aparte: es la misma
+            familia de ayer, aplicada a distancias de metros en lugar de kilómetros.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Radioenlace de ayer</th><th>Wi-Fi</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Banda</strong></td><td>1 a 10 GHz</td><td><strong>2,4 y 5 GHz</strong>: dentro de esa misma banda</td></tr>
+                    <tr><td><strong>Antena</strong></td><td>Parabólica, haz estrecho</td><td>Omnidireccional: no hay que apuntar</td></tr>
+                    <tr><td><strong>Alcance</strong></td><td>Decenas de kilómetros</td><td>Metros</td></tr>
+                    <tr><td><strong>Licencia</strong></td><td>Según la banda</td><td><strong>Banda libre</strong>, sin licencia ni protección</td></tr>
+                    <tr><td><strong>Con quién compartes</strong></td><td>Con nadie: el haz va a un punto</td><td>Con <strong>todos los vecinos</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Una red inalámbrica necesita solo dos cosas, según el currículo Cisco: un <strong>punto de acceso</strong>
+            y <strong>adaptadores de red inalámbricos</strong> en los equipos. El punto de acceso hace de puente entre
+            el aire y la red cableada, como viste en el Mes 1.</p>
+
+            <p>Las redes inalámbricas siguen el estándar <strong>IEEE 802.11</strong>. Y la banda: la mayoría opera
+            a <strong>2,4 GHz</strong>, aunque las revisiones más recientes permiten transmitir también a
+            <strong>5 GHz</strong>, lo que posibilita usar <strong>bandas mucho menos saturadas y con mayor
+            ausencia de ruido</strong>.</p>
+
+            <h2 id="estandares">2. Los estándares 802.11</h2>
+
+            <p>El libro enumera las versiones que existían cuando se escribió:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Versión</th><th>Velocidad según el libro</th></tr></thead>
+                <tbody>
+                    <tr><td>La primera versión</td><td>1,5 Mbps</td></tr>
+                    <tr><td>IEEE 802.11<strong>b</strong></td><td>De 5,5 a 11 Mbps</td></tr>
+                    <tr><td>IEEE 802.11<strong>g</strong></td><td>54 Mbps</td></tr>
+                    <tr><td>IEEE 802.11<strong>a</strong></td><td>Trabaja en una banda de frecuencia superior, con menos interferencias</td></tr>
+                    <tr><td>IEEE 802.11<strong>n</strong></td><td>«Todavía en borrador», con mayores velocidades esperadas</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Esta tabla ha envejecido, y conviene saberlo</strong>
+                El libro es de una época en la que 802.11n aún no estaba aprobado. La lista sigue siendo válida
+                para entender la <strong>progresión</strong>, pero las cifras se han quedado muy atrás. La tabla que
+                viene a continuación procede del capítulo 4 del currículo <strong>Cisco ITN</strong>, y la última
+                fila, de los estándares <strong>IEEE</strong> posteriores.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Estándar</th><th>Velocidad máxima</th><th>Frecuencia</th><th>Compatible con</th></tr></thead>
+                <tbody>
+                    <tr><td>802.11a</td><td>54 Mbps</td><td>5 GHz</td><td>—</td></tr>
+                    <tr><td>802.11b</td><td>11 Mbps</td><td>2,4 GHz</td><td>—</td></tr>
+                    <tr><td>802.11g</td><td>54 Mbps</td><td>2,4 GHz</td><td>802.11b</td></tr>
+                    <tr><td>802.11n</td><td>600 Mbps</td><td>2,4 o 5 GHz</td><td>802.11b/g</td></tr>
+                    <tr><td>802.11ac</td><td>1,3 Gbps</td><td>5 GHz</td><td>802.11b/g/n</td></tr>
+                    <tr><td>802.11ad</td><td>7 Gbps</td><td>2,4, 5 y <strong>60 GHz</strong></td><td>802.11b/g/n/ac</td></tr>
+                    <tr><td><em>802.11ax</em> · Wi-Fi 6</td><td><em>≈ 9,6 Gbps teóricos</em></td><td><em>2,4 y 5 GHz</em></td><td><em>todos los anteriores</em></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Los nombres comerciales</strong>
+                <p>Desde 2018 los estándares también se numeran para el público: <strong>802.11n es Wi-Fi 4</strong>,
+                <strong>802.11ac es Wi-Fi 5</strong> y <strong>802.11ax es Wi-Fi 6</strong>. Es la misma cosa con dos
+                nombres; en un examen de la asignatura conviene usar la nomenclatura <strong>802.11</strong>.</p>
+            </div>
+
+            <p>Mira la columna de frecuencias y fíjate en el patrón: los estándares que buscan velocidad se van a
+            <strong>5 GHz o más</strong>. Es la regla del lunes: más frecuencia, más ancho de banda disponible, más
+            velocidad… y menos alcance.</p>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="tasa">3. La tasa adaptativa, en la práctica</h2>
+
+            <p>Aquella tabla de velocidades máximas hay que leerla con una advertencia que el libro subraya: son
+            valores <strong>nominales</strong>, y la velocidad real puede quedarse muy lejos.</p>
+
+            <div class="dato">
+                <strong>Tasa adaptativa</strong>
+                <p>Como la capacidad de una red inalámbrica depende directamente de la <strong>potencia de la
+                señal</strong>, esta adapta su velocidad a la cobertura disponible. Al debilitarse la señal con la
+                distancia, los protocolos establecen una <strong>tasa adaptativa</strong>, y la velocidad disponible
+                <strong>puede reducirse considerablemente</strong> respecto a los valores anunciados.</p>
+            </div>
+
+            <p>Esto tiene una consecuencia práctica que sorprende a mucha gente: un usuario lejano
+            <strong>perjudica a todos los demás</strong>. Como el medio es compartido y se transmite por turnos, el
+            equipo que va lento ocupa el aire mucho más tiempo para enviar lo mismo. Un solo portátil conectado a
+            baja velocidad desde el fondo de la casa puede frenar a los que están al lado del router.</p>
+
+            <div class="destacado">
+                <strong>La conclusión de diseño</strong>
+                <p>Por eso una red inalámbrica bien hecha no lleva <strong>un punto de acceso potentísimo</strong>,
+                sino <strong>varios puntos de acceso con menos potencia</strong>, de forma que todos los clientes
+                estén cerca de alguno y negocien velocidades altas. Es exactamente lo contrario de lo que sugiere la
+                intuición.</p>
+            </div>
+
+            <h2 id="canales">4. Los canales de la banda de 2,4 GHz</h2>
+
+            <p>Dentro de la banda de 2,4 GHz se han definido rangos llamados <strong>canales</strong>. En Europa hay
+            <strong>trece</strong>, y están separados <strong>5 MHz</strong> entre sí. Esta es la tabla 3.4 del
+            libro:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Canal</th><th>Frecuencia (GHz)</th><th>Canal</th><th>Frecuencia (GHz)</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1</strong></td><td>2,412</td><td>8</td><td>2,447</td></tr>
+                    <tr><td>2</td><td>2,417</td><td>9</td><td>2,452</td></tr>
+                    <tr><td>3</td><td>2,422</td><td>10</td><td>2,457</td></tr>
+                    <tr><td>4</td><td>2,427</td><td><strong>11</strong></td><td>2,462</td></tr>
+                    <tr><td>5</td><td>2,432</td><td>12</td><td>2,467</td></tr>
+                    <tr><td><strong>6</strong></td><td>2,437</td><td><strong>13</strong></td><td>2,472</td></tr>
+                    <tr><td>7</td><td>2,442</td><td></td><td></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La fórmula, para no memorizar la tabla</strong>
+                <p><strong>f (MHz) = 2 412 + 5 · (canal − 1)</strong></p>
+                <p>Canal 1 → 2 412 MHz. Canal 6 → 2 412 + 25 = 2 437 MHz. Canal 11 → 2 462 MHz.</p>
+            </div>
+
+            <h2 id="solape">5. Por qué se pisan: el solapamiento</h2>
+
+            <p>Y ahora el detalle que lo explica todo. Los canales están separados 5 MHz… pero
+            <strong>cada canal ocupa 22 MHz</strong>. Es decir: un canal <strong>invade</strong> a sus cuatro
+            vecinos de cada lado.</p>
+
+            <div class="dato">
+                <strong>Lo que dice el libro</strong>
+                <p>Dos redes cercanas no pueden transmitir en el mismo canal, porque se crean interferencias entre
+                ellas. De igual forma, <strong>tampoco pueden transmitir en canales contiguos</strong>, ya que cada
+                canal tiene un rango de transmisión de <strong>22 MHz</strong> y solo una separación de
+                <strong>5 MHz</strong> con el canal anterior y el siguiente.</p>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s07_d03_canales_wifi.png"
+         width="1400" height="821" loading="lazy"
+         alt="Eje de frecuencias de la banda de 2,4 GHz con los trece canales europeos. Cada canal se dibuja como una campana de 22 megahercios de ancho, y las campanas de canales próximos se superponen. Los canales 1, 6 y 11 aparecen resaltados y sus campanas apenas se tocan, mientras que un par de canales contiguos aparece en rojo con su zona de solapamiento sombreada.">
+    <figcaption>Cada canal ocupa 22 MHz y solo hay 5 entre uno y el siguiente: por eso casi todos se pisan.</figcaption>
+</figure>
+<pre><code>canal:    1    2    3    4    5    6    7    8    9   10   11
+MHz:   2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462
+        └────────── 22 MHz ──────────┘
+                   └────────── 22 MHz ──────────┘   ← el 6 no toca al 1
+                                        └────── 22 MHz ──────┘</code></pre>
+
+            <h3>Los tres ejemplos del libro</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Canales</th><th>Separación</th><th>Resultado</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>3 y 5</strong></td>
+                        <td>10 MHz</td>
+                        <td>Cada uno necesita 22 MHz, así que hay <strong>12 MHz donde se interfieren</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>1 y 6</strong></td>
+                        <td><strong>25 MHz</strong></td>
+                        <td>Suficiente: <strong>no se interfieren</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Separación de <strong>4 canales</strong><br>(por ejemplo 1 y 5)</td>
+                        <td>20 MHz</td>
+                        <td>Quedan <strong>2 MHz</strong> de solapamiento. Muchos especialistas lo consideran suficiente</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Cómo se calcula el solapamiento</strong>
+                <p><strong>solapamiento = 22 − separación en MHz</strong>, y si sale negativo o cero, no hay
+                solapamiento.</p>
+                <p>Canales 3 y 5: separación 10 MHz → 22 − 10 = <strong>12 MHz</strong> de solape, el número del
+                libro. Canales 1 y 6: separación 25 MHz → 22 − 25 = negativo → <strong>no se pisan</strong>.</p>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="plan">6. El plan de canales</h2>
+
+            <p>De todo lo anterior sale la regla práctica más repetida de las redes inalámbricas:</p>
+
+            <div class="dato">
+                <strong>1, 6 y 11</strong>
+                <p>Son tres canales separados <strong>25 MHz</strong> entre sí, es decir, más de los 22 que ocupa
+                cada uno. Son los <strong>únicos tres</strong> que caben sin pisarse en la banda de 2,4 GHz.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>En Europa hay una alternativa que en Estados Unidos no existe</strong>
+                <strong>Esto no sale del libro</strong>, pero se deduce de su propia tabla: en Estados Unidos solo
+                se usan 11 canales, y de ahí viene el famoso 1-6-11. En Europa hay <strong>13</strong>, así que
+                también cabe el trío <strong>1, 7 y 13</strong>, con 30 MHz de separación: aún más limpio. Las dos
+                combinaciones son válidas; 1-6-11 es la más extendida porque los equipos vienen configurados de
+                fábrica pensando en el mercado americano.
+            </div>
+
+            <p>Con esos tres canales se cubre un edificio entero repitiendo el patrón, de forma que dos puntos de
+            acceso vecinos —en la misma planta o en la de arriba— nunca compartan canal:</p>
+
+<pre><code>  planta 2:     6        11        1
+  planta 1:    11         1        6
+  planta 0:     1         6       11
+              ↑ ningún vecino, ni al lado ni arriba, repite canal</code></pre>
+
+            <div class="aviso">
+                <strong>El error clásico: «pongo el canal 4, que está libre»</strong>
+                Si los vecinos usan el 1 y el 6, el canal 4 parece vacío… y es la <strong>peor</strong> elección
+                posible: se solapa con los dos a la vez. Con el 1 ocupado y el 6 ocupado, lo correcto es ponerse en
+                el <strong>11</strong>, aunque haya alguien ahí: es mejor <strong>compartir</strong> un canal —los
+                equipos se turnan de forma ordenada— que <strong>solaparse</strong> con dos, porque un solape no se
+                gestiona: es ruido.
+            </div>
+
+            <h2 id="cincoghz">7. La banda de 5 GHz</h2>
+
+            <p>El libro ya apunta la salida: las revisiones recientes permiten transmitir a 5 GHz, con
+            <strong>bandas mucho menos saturadas y mayor ausencia de ruido</strong>. Esto es lo que se gana y lo que
+            se pierde:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>2,4 GHz</th><th>5 GHz</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Canales sin solapar</strong></td><td>3 (o 4 en Europa)</td><td><strong>Muchos más</strong></td></tr>
+                    <tr><td><strong>Saturación</strong></td><td>Alta: la usa todo el mundo</td><td>Baja</td></tr>
+                    <tr><td><strong>Otros aparatos en la banda</strong></td><td>Microondas, Bluetooth, mandos</td><td>Prácticamente ninguno doméstico</td></tr>
+                    <tr><td><strong>Longitud de onda</strong></td><td>12,5 cm</td><td>6 cm</td></tr>
+                    <tr><td><strong>Alcance y obstáculos</strong></td><td><strong>Mejor</strong></td><td>Peor: menos alcance y peor paso por muros</td></tr>
+                    <tr><td><strong>Velocidad alcanzable</strong></td><td>Menor</td><td><strong>Mayor</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La regla práctica</strong>
+                <p><strong>5 GHz para lo cercano y exigente</strong> —el ordenador del despacho, el televisor del
+                salón—; <strong>2,4 GHz para lo lejano y modesto</strong> —un sensor en el garaje, el móvil en la
+                terraza—. No es que una banda sea mejor: es que sirven para cosas distintas, y por eso los routers
+                actuales emiten en las dos a la vez.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>El Wi-Fi son <strong>microondas</strong> en la red local, con estándar <strong>IEEE
+                    802.11</strong>, punto de acceso y adaptadores inalámbricos.</li>
+                    <li>Bandas: <strong>2,4 GHz</strong> la mayoría, y <strong>5 GHz</strong> las revisiones
+                    recientes, menos saturada.</li>
+                    <li>Las velocidades anunciadas son <strong>nominales</strong>: la <strong>tasa
+                    adaptativa</strong> las reduce con la distancia, y un cliente lento <strong>frena a los
+                    demás</strong>.</li>
+                    <li>En Europa hay <strong>13 canales</strong> separados <strong>5 MHz</strong>:
+                    <strong>f = 2 412 + 5 · (canal − 1)</strong>.</li>
+                    <li>Cada canal ocupa <strong>22 MHz</strong>, así que los contiguos <strong>se
+                    solapan</strong>: solapamiento = 22 − separación.</li>
+                    <li><strong>1, 6 y 11</strong> están a 25 MHz: los únicos tres que no se pisan. En Europa
+                    también vale 1, 7 y 13.</li>
+                    <li>Mejor <strong>compartir</strong> un canal ocupado que <strong>solaparse</strong> con dos.</li>
+                    <li>Mejor <strong>varios puntos de acceso con poca potencia</strong> que uno muy potente.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«Me pongo en un canal que nadie usa, el 4»</td><td>Un canal «libre» entre dos ocupados es la <strong>peor</strong> opción: se solapa con los dos</td></tr>
+                    <tr><td>«Los canales están separados, no se molestan»</td><td>Separados <strong>5 MHz</strong> y cada uno ocupa <strong>22</strong>: se invaden</td></tr>
+                    <tr><td>«802.11ac da 1,3 Gbps, así que voy a esa velocidad»</td><td>Es la cifra <strong>nominal</strong>. La tasa adaptativa manda, y el medio se comparte</td></tr>
+                    <tr><td>«Un punto de acceso más potente da mejor cobertura»</td><td>El enlace es <strong>bidireccional</strong>, y los clientes lejanos frenan a todos. Mejor varios puntos</td></tr>
+                    <tr><td>«5 GHz es mejor que 2,4»</td><td>Más rápida y menos saturada, pero con <strong>menos alcance</strong>. Sirven para cosas distintas</td></tr>
+                    <tr><td>«Wi-Fi 6 y 802.11ax son cosas distintas»</td><td>Son <strong>el mismo estándar</strong> con dos nombres</td></tr>
+                    <tr><td>«Con 13 canales caben 13 redes»</td><td>Caben <strong>tres</strong> sin solaparse, o cuatro apurando con 1-7-13 más uno</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 22 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Un edificio de tres plantas, seis puntos de acceso y un vecino que ya ocupa dos canales. Tienes que
+            repartir el espectro justificando cada elección, y después leer la configuración real de tu propia
+            radio.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 3</strong></a> (70 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 4</strong>
+            <p><strong>Infrarrojos y ondas de luz</strong>, los dos medios que quedan, y la <strong>comparativa
+            final</strong> de los siete medios de transmisión: cuándo cable y cuándo aire.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> apunta con el mando del televisor a la pared, de espaldas al
+            aparato. ¿Funciona? ¿Y si lo apuntas a un espejo?</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_02/teoria.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/teoria.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Un router anuncia «hasta 1 300 Mbps» y un usuario mide 45 Mbps desde el sofá. El comercial dice que le han vendido mal el equipo. ¿Qué le explicarías, con lo de hoy y con lo del lunes?',
+                modelo: 'Que la cifra del envoltorio es <strong>nominal</strong>: la velocidad máxima teórica del estándar en condiciones ideales, con el cliente pegado al punto de acceso, sin obstáculos y sin nadie más emitiendo.</p><p>En el sofá intervienen tres cosas. La <strong>tasa adaptativa</strong>: al llegar la señal más débil, el protocolo elige una modulación más robusta y más lenta, porque es lo único que permite la relación señal/ruido disponible. Los <strong>obstáculos</strong>: cada pared entre el router y el sofá se come una parte de la señal, sobre todo en 5 GHz, cuya onda de 6 cm penetra peor. Y que el medio es <strong>compartido</strong>: el aire se reparte entre todos los clientes de esa red y también con las redes vecinas que usen canales solapados.</p><p>No le han vendido mal el equipo: le han vendido una cifra de laboratorio. Lo que mejoraría su caso no es un router «más potente», sino estar más cerca de un punto de acceso.',
+                puntos: [
+                    'Distingue velocidad nominal de velocidad real',
+                    'Explica la tasa adaptativa como ajuste a la relación señal/ruido',
+                    'Menciona los obstáculos y su efecto según la banda',
+                    'Recuerda que el medio es compartido',
+                    'Concluye que la solución es acercar el punto de acceso, no subir la potencia'
+                ]
+            },
+            {
+                pregunta: 'Vives en un bloque. Escaneas y ves que los vecinos ocupan el canal 1 y el canal 6. Tu router está en «automático» y ha elegido el 3. ¿Es buena elección? ¿Qué pondrías tú y por qué, con números?',
+                modelo: 'Es la <strong>peor</strong> elección posible. El canal 3 está a 10 MHz del 1 y a 15 MHz del 6; como cada canal ocupa <strong>22 MHz</strong>, se solapa con los dos a la vez: 22 − 10 = <strong>12 MHz</strong> de solape con el canal 1 y 22 − 15 = <strong>7 MHz</strong> con el 6. Estar «en medio» no es estar libre.</p><p>Yo pondría el <strong>canal 11</strong>: está a 50 MHz del 1 y a 25 MHz del 6, así que no se solapa con ninguno de los dos. Si el 11 también estuviera ocupado, seguiría prefiriendo <strong>compartirlo</strong> antes que solaparme: dos redes en el mismo canal <strong>se turnan</strong> de forma ordenada, mientras que dos redes solapadas se generan <strong>ruido</strong> mutuo que nadie gestiona.</p><p>En Europa hay otra salida: el <strong>canal 13</strong>, que está a 35 MHz del 6 y suele estar vacío porque muchos equipos vienen configurados para el mercado americano, donde solo existen once canales.',
+                puntos: [
+                    'Identifica que el canal 3 se solapa con los dos vecinos',
+                    'Calcula el solapamiento como 22 menos la separación',
+                    'Propone el canal 11 y justifica la separación',
+                    'Explica que compartir canal es preferible a solaparse',
+                    'Menciona la alternativa europea del canal 13'
+                ]
+            },
+            {
+                pregunta: 'Te encargan la red inalámbrica de una oficina diáfana de 40 × 20 m con 60 personas. Un compañero propone un solo punto de acceso de alta potencia en el centro. Argumenta por qué no, y qué harías tú.',
+                modelo: 'Un único punto de acceso tiene tres problemas. El primero es la <strong>tasa adaptativa</strong>: los usuarios de los extremos negociarán velocidades bajas, y como el medio se reparte por turnos, <strong>ocuparán el aire mucho más tiempo</strong> para enviar lo mismo, frenando también a los que están cerca. El segundo es la <strong>capacidad</strong>: sesenta personas compartiendo un solo punto de acceso comparten también su capacidad total, que se reparte entre todas. Y el tercero es que el enlace es <strong>bidireccional</strong>: por mucha potencia que tenga el punto de acceso, un portátil o un móvil tiene una antena pequeña y poca potencia, así que puede oír y no ser oído.</p><p>Yo pondría <strong>varios puntos de acceso con potencia moderada</strong>, repartidos por la planta, de modo que todos los usuarios estén cerca de uno y negocien velocidades altas. A cada uno le asignaría un canal del trío <strong>1, 6 y 11</strong> sin que dos vecinos repitan, y conectaría cada punto de acceso por <strong>cable</strong> al armario. Donde haga falta densidad alta, la banda de <strong>5 GHz</strong> ayuda: tiene más canales sin solapar y menos alcance, que aquí es una ventaja porque reduce la interferencia entre celdas.',
+                puntos: [
+                    'Explica que los clientes lejanos frenan al resto por la tasa adaptativa',
+                    'Señala que la capacidad de un punto de acceso se reparte entre sus usuarios',
+                    'Recuerda que el cliente tiene menos potencia que el punto de acceso',
+                    'Propone varios puntos de acceso con potencia moderada',
+                    'Reparte canales 1, 6 y 11 sin repetir entre vecinos',
+                    'Menciona 5 GHz y su menor alcance como ventaja en alta densidad'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué tipo de ondas usa el Wi-Fi?', dorso: '<strong>Microondas</strong>: 2,4 y 5 GHz, dentro de la banda de 1 a 10 GHz.' },
+            { frente: '¿Qué hace falta para montar una red inalámbrica?', dorso: 'Un <strong>punto de acceso</strong> y <strong>adaptadores inalámbricos</strong> en los equipos.' },
+            { frente: 'Velocidades de 802.11b y 802.11g', dorso: '<strong>11 Mbps</strong> y <strong>54 Mbps</strong>, las dos en 2,4 GHz.' },
+            { frente: '802.11n, ac y ax: velocidad y banda', dorso: 'n: 600 Mbps en 2,4 y 5 · ac: 1,3 Gbps en 5 · ax (Wi-Fi 6): varios Gbps en 2,4 y 5.' },
+            { frente: 'Nombres comerciales de n, ac y ax', dorso: '<strong>Wi-Fi 4</strong>, <strong>Wi-Fi 5</strong> y <strong>Wi-Fi 6</strong>. Es el mismo estándar con otro nombre.' },
+            { frente: '¿Qué es la tasa adaptativa y a quién perjudica?', dorso: 'La velocidad <strong>baja</strong> al debilitarse la señal. Un cliente lento ocupa más tiempo el aire y <strong>frena a todos</strong>.' },
+            { frente: 'Canales de 2,4 GHz en Europa y su separación', dorso: '<strong>13 canales</strong> separados <strong>5 MHz</strong>.' },
+            { frente: 'La fórmula de la frecuencia de un canal', dorso: '<strong>f (MHz) = 2 412 + 5 · (canal − 1)</strong>. El canal 6 son 2 437 MHz.' },
+            { frente: '¿Cuánto ocupa un canal de 2,4 GHz?', dorso: '<strong>22 MHz</strong>, frente a los 5 MHz que lo separan del siguiente: por eso se solapan.' },
+            { frente: 'Cómo se calcula el solapamiento entre dos canales', dorso: '<strong>22 − separación en MHz</strong>. Canales 3 y 5: 22 − 10 = <strong>12 MHz</strong> de solape.' },
+            { frente: '¿Por qué 1, 6 y 11?', dorso: 'Están a <strong>25 MHz</strong> entre sí, más que los 22 que ocupa cada uno: son los únicos tres que no se pisan.' },
+            { frente: 'Canal ocupado o canal solapado, ¿qué es peor?', dorso: 'Peor <strong>solaparse</strong>: dos redes en el mismo canal se turnan; dos solapadas solo se hacen ruido.' },
+            { frente: '2,4 GHz frente a 5 GHz', dorso: '2,4: más alcance, más saturada, 3 canales limpios. 5: más velocidad y más canales, <strong>menos alcance</strong>.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 3: Wi-Fi',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'Wi-Fi y microondas',
+                repaso: '#quees',
+                text: 'Según el libro, ¿qué tipo de ondas usan las redes locales inalámbricas?',
+                options: { a: 'Ondas de radio de baja frecuencia', b: 'Infrarrojos', c: 'Ondas de luz', d: 'Microondas' },
+                answer: 'd',
+                feedback: 'El Wi-Fi está en la banda de microondas: 2,4 y 5 GHz, dentro del rango de 1 a 10 GHz que el libro asigna a esa familia.'
+            },
+            {
+                topic: 'Wi-Fi y microondas',
+                repaso: '#quees',
+                text: '¿Qué ventaja atribuye el libro a la banda de 5 GHz frente a la de 2,4?',
+                options: {
+                    a: 'Que llega más lejos',
+                    b: 'Que atraviesa mejor las paredes',
+                    c: 'Que permite usar bandas mucho menos saturadas y con mayor ausencia de ruido',
+                    d: 'Que no necesita punto de acceso'
+                },
+                answer: 'c',
+                feedback: 'Menos saturación y menos ruido. El alcance, en cambio, es <strong>peor</strong>: su onda de 6 cm penetra peor que la de 12,5 cm.'
+            },
+            {
+                topic: 'Estándares',
+                repaso: '#estandares',
+                text: '¿Qué velocidad y banda corresponden a 802.11g?',
+                options: { a: '11 Mbps en 2,4 GHz', b: '54 Mbps en 5 GHz', c: '600 Mbps en 2,4 GHz', d: '54 Mbps en 2,4 GHz' },
+                answer: 'd',
+                feedback: 'La g llegó a 54 Mbps manteniéndose en 2,4 GHz y siendo compatible con la b. Los 54 Mbps en 5 GHz son de la <strong>a</strong>.'
+            },
+            {
+                topic: 'Estándares',
+                repaso: '#estandares',
+                text: 'Un fabricante anuncia un router «Wi-Fi 6». ¿A qué estándar corresponde?',
+                options: { a: '802.11ac', b: '802.11n', c: '802.11ax', d: '802.11ad' },
+                answer: 'c',
+                feedback: 'Wi-Fi 4 es 802.11n, Wi-Fi 5 es 802.11ac y Wi-Fi 6 es <strong>802.11ax</strong>. Son nombres comerciales de los mismos estándares.'
+            },
+            {
+                topic: 'Tasa adaptativa',
+                repaso: '#tasa',
+                text: 'Un cliente muy alejado se conecta a velocidad baja. ¿Qué efecto tiene sobre el resto de la red?',
+                options: {
+                    a: 'Ninguno: cada cliente va a su ritmo',
+                    b: 'Mejora el rendimiento general',
+                    c: 'Solo afecta si usa otra banda',
+                    d: 'Los frena: al ir lento ocupa el aire mucho más tiempo para enviar lo mismo'
+                },
+                answer: 'd',
+                feedback: 'El medio es <strong>compartido</strong> y se transmite por turnos. Es el argumento de peso para poner varios puntos de acceso en vez de uno potente.'
+            },
+            {
+                topic: 'Tasa adaptativa',
+                repaso: '#tasa',
+                text: '¿Qué significa que las velocidades de la tabla de estándares sean «nominales»?',
+                options: {
+                    a: 'Que son las velocidades garantizadas por contrato',
+                    b: 'Que son máximos teóricos: la velocidad real baja con la distancia y el medio compartido',
+                    c: 'Que se miden en baudios',
+                    d: 'Que solo valen para 5 GHz'
+                },
+                answer: 'b',
+                feedback: 'El libro avisa: la velocidad disponible <strong>puede reducirse considerablemente</strong> respecto a los valores citados.'
+            },
+            {
+                topic: 'Canales',
+                repaso: '#canales',
+                text: '¿Cuántos canales hay en la banda de 2,4 GHz en Europa y cuánto los separa?',
+                options: {
+                    a: '11 canales separados 22 MHz',
+                    b: '13 canales separados 5 MHz',
+                    c: '3 canales separados 25 MHz',
+                    d: '13 canales separados 22 MHz'
+                },
+                answer: 'b',
+                feedback: 'Trece canales a 5 MHz de separación. Los 22 MHz son lo que <strong>ocupa</strong> cada canal, que es otra cosa.'
+            },
+            {
+                topic: 'Canales',
+                repaso: '#canales',
+                text: 'Con f = 2 412 + 5 · (canal − 1), ¿en qué frecuencia está el canal 9?',
+                options: { a: '2 452 MHz', b: '2 447 MHz', c: '2 457 MHz', d: '2 437 MHz' },
+                answer: 'a',
+                feedback: '2 412 + 5 · 8 = <strong>2 452 MHz</strong>, que coincide con la tabla 3.4 del libro: 2,452 GHz.'
+            },
+            {
+                topic: 'Solapamiento',
+                repaso: '#solape',
+                text: 'Dos redes usan los canales 3 y 5. ¿Cuántos megahercios se solapan?',
+                options: { a: '5 MHz', b: '10 MHz', c: '12 MHz', d: 'No se solapan' },
+                answer: 'c',
+                feedback: 'Separación 10 MHz y ocupación 22: 22 − 10 = <strong>12 MHz</strong>. Es el ejemplo exacto que da el libro.'
+            },
+            {
+                topic: 'Solapamiento',
+                repaso: '#solape',
+                text: '¿Por qué los canales 1 y 6 pueden convivir?',
+                options: {
+                    a: 'Porque están separados 25 MHz, más que los 22 que ocupa cada canal',
+                    b: 'Porque uno es de 2,4 GHz y otro de 5 GHz',
+                    c: 'Porque los equipos los alternan en el tiempo',
+                    d: 'Porque el canal 1 ocupa menos ancho'
+                },
+                answer: 'a',
+                feedback: 'Cinco canales de separación son 25 MHz. Como cada uno ocupa 22, no llegan a tocarse.'
+            },
+            {
+                topic: 'Plan de canales',
+                repaso: '#plan',
+                text: 'Los vecinos ocupan el 1 y el 6. Tu router elige automáticamente el canal 3. ¿Qué opinas?',
+                options: {
+                    a: 'Buena elección: está libre',
+                    b: 'Da igual: todos los canales son equivalentes',
+                    c: 'Mala: se solapa con los dos a la vez. Sería mejor el 11',
+                    d: 'Mala: debería ponerse también en el 1'
+                },
+                answer: 'c',
+                feedback: 'El canal 3 se lleva 12 MHz de solape con el 1 y 7 MHz con el 6. Estar «en medio» es lo peor que se puede hacer.'
+            },
+            {
+                topic: 'Plan de canales',
+                repaso: '#plan',
+                text: 'Los tres canales sin solapamiento están ocupados por los vecinos. ¿Qué es preferible?',
+                options: {
+                    a: 'Compartir uno de ellos: dos redes en el mismo canal se turnan de forma ordenada',
+                    b: 'Ponerse en un canal intermedio para repartir el daño',
+                    c: 'Subir la potencia al máximo',
+                    d: 'Apagar la red'
+                },
+                answer: 'a',
+                feedback: 'Compartir se gestiona; solaparse, no. Dos redes en el mismo canal se ceden el turno, mientras que dos solapadas solo se hacen ruido mutuo.'
+            },
+            {
+                topic: 'Plan de canales',
+                repaso: '#plan',
+                text: 'En Europa, además de 1-6-11, ¿qué otro trío de canales no se solapa?',
+                options: { a: '2-7-12', b: '1-7-13', c: '3-8-13', d: '1-5-9' },
+                answer: 'b',
+                feedback: 'Con 30 MHz de separación, el trío <strong>1, 7 y 13</strong> queda aún más limpio que el clásico. Solo es posible porque en Europa hay 13 canales.'
+            },
+            {
+                topic: 'Banda de 5 GHz',
+                repaso: '#cincoghz',
+                text: 'En una oficina con mucha densidad de usuarios, ¿por qué ayuda la banda de 5 GHz?',
+                options: {
+                    a: 'Porque llega más lejos y cubre más',
+                    b: 'Porque atraviesa mejor los muros',
+                    c: 'Porque tiene más canales sin solapar y su menor alcance reduce la interferencia entre celdas vecinas',
+                    d: 'Porque no necesita canales'
+                },
+                answer: 'c',
+                feedback: 'Aquí el menor alcance es una <strong>ventaja</strong>: cada punto de acceso molesta menos a los de al lado, y se pueden poner más cerca unos de otros.'
+            },
+            {
+                topic: 'Recuperación · Día 1',
+                repaso: '../Dia_01/teoria.html#lambda',
+                text: '<em>Repaso.</em> ¿Por qué la banda de 5 GHz penetra peor las paredes que la de 2,4?',
+                options: {
+                    a: 'Porque emite con menos potencia por ley',
+                    b: 'Porque su longitud de onda es de 6 cm frente a los 12,5 cm de la de 2,4: cuanto más corta, peor atraviesa obstáculos',
+                    c: 'Porque usa canales más estrechos',
+                    d: 'Porque es una banda licenciada'
+                },
+                answer: 'b',
+                feedback: 'Es la regla del lunes, aplicada: <strong>más frecuencia, más velocidad y menos alcance</strong>.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

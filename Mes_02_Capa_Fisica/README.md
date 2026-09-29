@@ -47,7 +47,7 @@ Todo el **Mes 1**, y en especial:
 |---|---|---|
 | **[Semana 5](Semana_05/README.md)** | Conceptos de transmisión: señales, perturbaciones y ruido | ✅ Disponible (5 días) |
 | **[Semana 6](Semana_06/README.md)** | Medios cableados: par trenzado, coaxial y fibra óptica | ✅ Disponible (5 días) |
-| Semana 7 | Medios inalámbricos: radio, microondas y satélite | ⏳ Pendiente |
+| **[Semana 7](Semana_07/README.md)** | Medios inalámbricos: radio, microondas y satélite | ✅ Disponible (5 días) |
 | Semana 8 | Cableado estructurado: instalación y certificación | ⏳ Pendiente |
 
 ---
@@ -64,6 +64,8 @@ Todo el **Mes 1**, y en especial:
 | Papel o **FossFLOW** | Planos de cableado · siempre opcional en digital | Semana 6 |
 | Crimpadora y conectores · *opcional* | Ampliación del laboratorio del Día 2 | Semana 6 |
 | **Cisco Packet Tracer** | Medios y conexiones | Semanas 6 y 8 |
+| **Tarjeta Wi-Fi** del equipo | Consultar bandas, modos y anchura de canal | Semana 7 |
+| `ping` | Medir la latencia real y compararla con la del satélite | Semana 7 |
 
 Los visualizadores de la Semana 5 funcionan **sin conexión y sin instalar nada**: calculan la señal
 en el propio navegador.

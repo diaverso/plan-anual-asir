@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Infrarrojos, ondas de luz y la comparativa final</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 4 — Infrarrojos, luz y la comparativa final</h1>
+        <p>El mando del televisor · el enlace láser · los siete medios en una tabla · cable o aire</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 56 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 09 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            Radio, microondas y Wi-Fi. Hoy, los dos medios del extremo alto del espectro: <strong>infrarrojos</strong>
+            y <strong>ondas de luz</strong>. Y con ellos se cierra el catálogo que empezó hace dos semanas con el par
+            trenzado.
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#infrarrojos">Ondas infrarrojas</a></li>
+                <li><a href="#luz">Ondas de luz</a></li>
+                <li><a href="#cuatro">Los cuatro medios no guiados, cara a cara</a></li>
+                <li><a href="#tabla35">La tabla completa: siete medios</a></li>
+                <li><a href="#decidir">Cable o aire: el método ampliado</a></li>
+                <li><a href="#casos">Cinco casos comentados</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="infrarrojos">1. Ondas infrarrojas</h2>
+
+            <p>Las ondas <strong>infrarrojas</strong> y <strong>milimétricas</strong> se usan mucho para la
+            comunicación de <strong>corto alcance</strong>: los mandos a distancia de televisores, grabadoras de
+            vídeo y equipos de música, y en su día el puerto de infrarrojos de los portátiles.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Característica</th><th>Consecuencia</th></tr></thead>
+                <tbody>
+                    <tr><td>Son <strong>relativamente direccionales</strong></td><td>Hay que apuntar, aunque no con precisión milimétrica</td></tr>
+                    <tr><td>Son <strong>baratos y fáciles de construir</strong></td><td>Por eso están en cualquier mando de cinco euros</td></tr>
+                    <tr><td><strong>No atraviesan los objetos sólidos</strong></td><td>Es su gran inconveniente… y su gran ventaja</td></tr>
+                    <tr><td><strong>No necesitan licencia</strong></td><td>No hay que pedir permiso a ningún gobierno para operarlos</td></tr>
+                    <tr><td><strong>No sirven en exteriores</strong></td><td>El Sol emite gran cantidad de infrarrojos y perturba la señal</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>El defecto que es una virtud</strong>
+                <p>Que la comunicación <strong>no atraviese las paredes</strong> de un edificio parece una
+                limitación, y el libro señala que a veces resulta una ventaja: ofrece <strong>más
+                seguridad</strong>. Lo que no sale de la habitación no lo puede escuchar nadie desde fuera.</p>
+                <p>Compáralo con lo del lunes: en Wi-Fi hay que cifrar porque cualquiera dentro del alcance recibe
+                la señal. En infrarrojos, el alcance <strong>termina en la pared</strong>.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Por qué no funcionan al sol</strong>
+                El Sol es un emisor de infrarrojos gigantesco. En exteriores, su radiación es ruido de fondo tan
+                fuerte que <strong>tapa</strong> la señal del emisor: es un problema de <strong>relación
+                señal/ruido</strong>, exactamente el de la Semana 5, llevado al extremo. Por eso nunca has visto un
+                mando a distancia funcionando bien en la terraza a mediodía.
+            </div>
+
+            <h2 id="luz">2. Ondas de luz</h2>
+
+            <p>Subiendo un poco más en frecuencia se llega a la <strong>luz</strong>. Las ondas de luz permiten
+            comunicar zonas distintas <strong>siempre que exista visión directa entre ellas</strong>, porque se
+            transmiten en línea recta y no atraviesan los objetos.</p>
+
+            <p>La señal más utilizada es el <strong>láser</strong>, porque el haz se mantiene enfocado en un punto
+            muy estrecho a lo largo de su trayecto. Un uso típico: unir dos edificios enfrentados, colocando el
+            equipo en las azoteas.</p>
+
+            <div class="destacado">
+                <strong>Un detalle importante: es unidireccional</strong>
+                <p>La señalización óptica mediante láser es <strong>unidireccional</strong>, de modo que
+                <strong>cada edificio necesita un emisor láser y un receptor</strong>. Es la misma idea que viste en
+                la fibra: un solo haz va en un solo sentido, así que para conversar hacen falta dos.</p>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>A favor</th><th>En contra</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Coste muy bajo</strong></td><td>Es <strong>difícil colocar</strong> correctamente emisores y receptores</td></tr>
+                    <tr><td><strong>Fácil de instalar</strong></td><td>El rayo se interfiere con facilidad</td></tr>
+                    <tr><td><strong>Velocidad de transmisión elevada</strong></td><td>Lo estropean la <strong>lluvia</strong>, la <strong>niebla densa</strong> y las <strong>corrientes de convección</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="aviso">
+                <strong>Las corrientes de convección: el enemigo invisible</strong>
+                El libro las cita expresamente, y es el problema menos intuitivo de todos: el <strong>aire caliente
+                que sube del edificio</strong> en un día de sol hace que el aire tenga densidades distintas, y eso
+                <strong>desvía el rayo</strong> igual que una cuchara metida en un vaso de agua parece torcida. El
+                enlace no se corta por mal tiempo, sino por <strong>buen</strong> tiempo: a mediodía, en verano, y
+                justo encima del tejado caliente.
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="cuatro">3. Los cuatro medios no guiados, cara a cara</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Radio</th><th>Microondas</th><th>Infrarrojo</th><th>Luz (láser)</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Direccionalidad</strong></td><td>Ninguna: omnidireccional</td><td>Alta: haz enfocable</td><td>Media: hay que apuntar</td><td><strong>Máxima</strong>: un punto</td></tr>
+                    <tr><td><strong>¿Atraviesa obstáculos?</strong></td><td><strong>Sí</strong>, incluidos edificios</td><td>No</td><td>No</td><td>No</td></tr>
+                    <tr><td><strong>Alcance típico</strong></td><td>De kilómetros a miles</td><td>Decenas de km por salto</td><td>Metros</td><td>Cientos de metros</td></tr>
+                    <tr><td><strong>Velocidad (tabla 3.5)</strong></td><td>1 Mbps</td><td>10 Mbps</td><td>10 Mbps</td><td>1 Mbps</td></tr>
+                    <tr><td><strong>Licencia</strong></td><td>Sí en largas distancias</td><td>Según banda</td><td><strong>No</strong></td><td>No</td></tr>
+                    <tr><td><strong>Su peor enemigo</strong></td><td>Otras emisiones</td><td>Obstáculos y lluvia</td><td><strong>El Sol</strong></td><td>Niebla y convección</td></tr>
+                    <tr><td><strong>Seguridad</strong></td><td>La peor: se oye desde lejos</td><td>Buena: haz estrecho</td><td><strong>Muy buena</strong>: no sale de la sala</td><td>Muy buena</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s07_d04_cuatro_medios.png"
+         width="1400" height="781" loading="lazy"
+         alt="Cuatro escenas en fila que comparan los medios no guiados. La radio emite círculos en todas direcciones que atraviesan una pared. Las microondas salen de una parabólica como un haz estrecho que choca contra un obstáculo. El infrarrojo es un cono corto de un mando a un televisor dentro de una habitación. El láser es una línea recta entre las azoteas de dos edificios.">
+    <figcaption>De izquierda a derecha, cada vez más dirigido y cada vez menos capaz de atravesar nada.</figcaption>
+</figure>
+<pre><code>RADIO          MICROONDAS        INFRARROJO       LUZ / LÁSER
+  ((( ● )))      ▐▶────────▶       ●··▷ ▭           ●───────────▶
+ cruza muros    haz, sin muros    dentro de        azotea a azotea
+                                  la habitación</code></pre>
+
+            <h2 id="tabla35">4. La tabla completa: siete medios</h2>
+
+            <p>Ya puedes leer entera la <strong>tabla 3.5</strong> del libro, la misma que la semana pasada quedó a
+            medias:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Medio</th><th>Velocidad máxima</th><th>Distancia entre repetidores</th><th>Tipo</th></tr></thead>
+                <tbody>
+                    <tr><td>Par trenzado</td><td>1 Gbps</td><td>2-10 km</td><td rowspan="3">Guiado</td></tr>
+                    <tr><td>Coaxial</td><td>2 Gbps</td><td>10-100 km</td></tr>
+                    <tr><td><strong>Fibra óptica</strong></td><td><strong>más de 10 Gbps</strong></td><td><strong>más de 100 km</strong></td></tr>
+                    <tr><td>Ondas de radio</td><td>1 Mbps</td><td><strong>100-1 000 km</strong></td><td rowspan="4">No guiado</td></tr>
+                    <tr><td>Microondas</td><td>10 Mbps</td><td>80 km</td></tr>
+                    <tr><td>Infrarrojo</td><td>10 Mbps</td><td><strong>200 m</strong></td></tr>
+                    <tr><td>Ondas de luz</td><td>1 Mbps</td><td>1 km</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Tres lecturas de la tabla completa</strong>
+                <ul>
+                    <li>Los <strong>guiados ganan en velocidad</strong> por goleada: el peor de ellos, el par
+                    trenzado, va cien veces más rápido que el mejor de los no guiados.</li>
+                    <li>Los <strong>no guiados ganan en distancia</strong> cuando se trata de radio: 1 000 km sin
+                    tender nada por el camino es algo que ningún cable puede ofrecer.</li>
+                    <li>El infrarrojo es el <strong>más limitado en distancia</strong> de los siete: 200 m, menos que
+                    dos tramos de par trenzado.</li>
+                </ul>
+            </div>
+
+            <div class="aviso">
+                <strong>Una advertencia sobre estas cifras</strong>
+                Son las del libro y hay que sabérselas, pero han envejecido en la parte inalámbrica: un Wi-Fi
+                doméstico actual supera de largo los 10 Mbps que la tabla asigna a las microondas, y un radioenlace
+                profesional llega a cientos de Mbps. Lo que <strong>no</strong> ha cambiado son las
+                <strong>proporciones</strong>: la fibra sigue muy por delante y la radio sigue siendo la que más
+                lejos llega.
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="decidir">5. Cable o aire: el método ampliado</h2>
+
+            <p>La semana pasada terminaste con cinco preguntas para elegir medio. Siguen valiendo, pero ahora hay
+            que insertar <strong>dos preguntas nuevas</strong> que solo tienen sentido con el aire de por medio:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Pregunta</th><th>Qué decide</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>¿Qué <strong>distancia</strong> hay?</td><td>Por encima de 100 m se cae el par trenzado</td></tr>
+                    <tr><td><strong>2</strong></td><td><strong>¿Se puede tender cable?</strong> ¿Hay obra posible, permiso, propiedad?</td><td>Si no se puede, el aire pasa de opción a <strong>única salida</strong></td></tr>
+                    <tr><td><strong>3</strong></td><td><strong>¿Hay visión directa?</strong> ¿Y la habrá dentro de dos años?</td><td>Sin ella caen microondas, infrarrojos y láser; queda la radio</td></tr>
+                    <tr><td>4</td><td>¿Cómo es el <strong>entorno</strong>? Interferencias, meteorología, otros emisores</td><td>Afina entre las opciones que quedan</td></tr>
+                    <tr><td>5</td><td>¿Qué <strong>velocidad</strong> hace falta, hoy y en diez años?</td><td>Dimensiona</td></tr>
+                    <tr><td>6</td><td>¿Cuánto cuesta <strong>en total</strong>?</td><td>Aquí el aire suele ganar: no hay obra</td></tr>
+                    <tr><td>7</td><td>¿Quién lo va a <strong>mantener</strong>?</td><td>Un radioenlace hay que realinearlo; un cable enterrado se olvida</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>La regla de fondo</strong>
+                <p>Con las mismas condiciones, <strong>gana el cable</strong>: más velocidad, más estable, sin
+                meteorología, sin vecinos y sin licencias. El aire gana cuando el cable <strong>no puede
+                estar</strong>: porque no se puede tender, porque el destino se mueve o porque hace falta ya.</p>
+                <p>Y hay un matiz de seguridad que conviene no olvidar: en el aire <strong>cualquiera</strong>
+                dentro del alcance recibe la señal. Eso no descarta lo inalámbrico, pero obliga a cifrar siempre.</p>
+            </div>
+
+            <h2 id="casos">6. Cinco casos comentados</h2>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Escenario</th><th>Decisión</th><th>Por qué</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>Puestos fijos de una oficina, 30 m</td>
+                        <td><strong>Cable</strong>, par trenzado</td>
+                        <td>Se puede tender, es más rápido y más estable. El Wi-Fi, como complemento para los portátiles</td>
+                    </tr>
+                    <tr>
+                        <td>Dos naves separadas por una carretera pública</td>
+                        <td><strong>Radioenlace de microondas</strong></td>
+                        <td>No se puede canalizar y hay visión directa. Es el caso clásico del aire</td>
+                    </tr>
+                    <tr>
+                        <td>Almacén con carretillas y lectores de códigos</td>
+                        <td><strong>Wi-Fi</strong>, con varios puntos de acceso cableados</td>
+                        <td>Los equipos <strong>se mueven</strong>: no hay cable posible. El cable va a los puntos de acceso</td>
+                    </tr>
+                    <tr>
+                        <td>Edificio protegido donde no se pueden hacer rozas</td>
+                        <td><strong>Wi-Fi</strong> o radioenlace entre plantas</td>
+                        <td>La pregunta 2 decide: no se puede tender cable, y no por dinero</td>
+                    </tr>
+                    <tr>
+                        <td>Sala de reuniones donde se tratan datos sensibles</td>
+                        <td><strong>Cable</strong>, y punto de acceso apagado</td>
+                        <td>Lo que se emite por el aire sale del edificio. Aquí el infrarrojo, que no sale de la sala, era la vieja solución</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">7. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li><strong>Infrarrojos</strong>: corto alcance, direccionales, baratos, <strong>sin
+                    licencia</strong>, no atraviesan sólidos —lo que da <strong>seguridad</strong>— y
+                    <strong>no sirven en exteriores</strong> por la radiación del Sol.</li>
+                    <li><strong>Ondas de luz</strong>: láser, visión directa, <strong>unidireccional</strong> —hace
+                    falta emisor y receptor en cada extremo—, coste bajo y alta velocidad.</li>
+                    <li>Al láser lo estropean la <strong>lluvia</strong>, la <strong>niebla densa</strong> y las
+                    <strong>corrientes de convección</strong>.</li>
+                    <li>Tabla 3.5: radio <strong>1 Mbps y 100-1 000 km</strong> · microondas <strong>10 Mbps y
+                    80 km</strong> · infrarrojo <strong>10 Mbps y 200 m</strong> · luz <strong>1 Mbps y
+                    1 km</strong>.</li>
+                    <li>Los medios <strong>guiados</strong> ganan en velocidad; los <strong>no guiados</strong>, en
+                    distancia y en flexibilidad.</li>
+                    <li>Dos preguntas nuevas al decidir: <strong>¿se puede tender cable?</strong> y <strong>¿hay
+                    visión directa?</strong></li>
+                    <li>A igualdad de condiciones gana el <strong>cable</strong>. El aire gana cuando el cable no
+                    puede estar.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«El infrarrojo no vale para nada por no atravesar paredes»</td><td>Eso mismo le da <strong>seguridad</strong>: la señal no sale de la habitación</td></tr>
+                    <tr><td>«Un enlace láser falla con mal tiempo»</td><td>También con <strong>buen</strong> tiempo: las corrientes de convección del aire caliente desvían el rayo</td></tr>
+                    <tr><td>«Con un láser en un edificio basta»</td><td>Es <strong>unidireccional</strong>: hace falta emisor y receptor en <strong>cada</strong> extremo</td></tr>
+                    <tr><td>«Los infrarrojos funcionan mejor al aire libre»</td><td>Justo al revés: el <strong>Sol</strong> emite infrarrojos y tapa la señal</td></tr>
+                    <tr><td>«Lo inalámbrico es más rápido, que es lo moderno»</td><td>En la tabla 3.5, el <strong>peor</strong> medio guiado supera cien veces al mejor no guiado</td></tr>
+                    <tr><td>«Si hay Wi-Fi, no hace falta cablear»</td><td>Los <strong>puntos de acceso</strong> se conectan por cable. Lo inalámbrico es el último tramo, no toda la red</td></tr>
+                    <tr><td>«Elijo aire porque es más barato»</td><td>Es más barato de <strong>instalar</strong>; después hay que mantenerlo, realinearlo y convivir con los vecinos</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Seis escenarios y una sola pregunta para cada uno: cable o aire. Después, un caso completo con
+            presupuesto y plazos donde hay que comparar radioenlace y fibra. Y un experimento de dos minutos para
+            <strong>ver</strong> la luz infrarroja de un mando a distancia.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 4</strong></a> (60 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, viernes</strong>
+            <p><strong>Síntesis y test semanal</strong>: los cuatro días en una página, mazo completo de flashcards
+            y test de 24 preguntas con desglose por día y hoja de recuperación.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../Dia_03/teoria.html">← Día 3</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_05/teoria.html">Día 5 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Los infrarrojos no atraviesan paredes y no funcionan al aire libre. Con dos limitaciones así, ¿por qué siguen usándose en millones de aparatos?',
+                modelo: 'Porque en su terreno esas limitaciones no molestan y sus ventajas son enormes. Un mando a distancia trabaja a tres metros, dentro de una habitación y bajo techo: no necesita atravesar nada ni salir al sol. A cambio, los emisores y receptores infrarrojos son <strong>baratísimos y fáciles de construir</strong>, y <strong>no requieren licencia</strong> de ningún tipo.</p><p>Y hay una tercera razón, que el libro subraya: que la señal <strong>no salga de la habitación</strong> es una ventaja de <strong>seguridad</strong>. Nadie puede interceptar desde el rellano lo que se transmite por infrarrojos, ni interferirlo desde el piso de al lado. Lo que en Wi-Fi obliga a cifrar, aquí lo resuelve la propia física.',
+                puntos: [
+                    'Señala que las limitaciones no afectan a su uso típico de corto alcance',
+                    'Cita el bajo coste y la facilidad de construcción',
+                    'Menciona que no necesitan licencia',
+                    'Explica la ventaja de seguridad de no atravesar paredes'
+                ]
+            },
+            {
+                pregunta: 'Un enlace láser entre dos azoteas funciona perfectamente por la mañana y falla todos los días entre las dos y las cinco de la tarde, con el cielo despejado. ¿Qué está pasando?',
+                modelo: 'Casi con seguridad son las <strong>corrientes de convección</strong>. En las horas de más calor, el tejado y el aire sobre él se calientan y ese aire caliente <strong>sube</strong>, mezclándose con el frío. El resultado es un aire de densidad irregular y cambiante, que <strong>desvía el rayo láser</strong> como lo haría una lente defectuosa: el haz deja de caer sobre el receptor y el enlace se degrada o se cae.</p><p>Es el problema menos intuitivo de este medio, porque uno espera que falle con lluvia o niebla —que también lo estropean— y no con un día espléndido. Encaja con la definición del libro sobre los medios no guiados: las <strong>condiciones atmosféricas</strong> influyen mucho. Posibles mitigaciones: montar los equipos más altos y alejados de la superficie caliente, o acortar el enlace; si el problema persiste, este medio no es el adecuado para ese emplazamiento.',
+                puntos: [
+                    'Identifica las corrientes de convección como causa',
+                    'Explica que el aire caliente ascendente desvía el rayo',
+                    'Relaciona el horario y el cielo despejado con el calentamiento',
+                    'Descarta implícitamente lluvia y niebla por las condiciones descritas',
+                    'Propone alguna mitigación razonable'
+                ]
+            },
+            {
+                pregunta: 'Un cliente quiere «quitar todos los cables» de su oficina de 40 puestos fijos y pasarlo todo a Wi-Fi. Valora la propuesta.',
+                modelo: 'La propuesta parte de un error de base: <strong>quitar los cables del todo no es posible</strong>, porque los propios puntos de acceso hay que conectarlos por cable al armario. Lo inalámbrico es el <strong>último tramo</strong>, no la red entera.</p><p>Y para puestos <strong>fijos</strong>, el cable gana en casi todo: da más velocidad, es estable, no se reparte entre usuarios, no depende de los vecinos ni del canal, no sufre tasa adaptativa y no exige cifrado para que nadie escuche desde la calle. Cuarenta puestos compartiendo el aire, además, es mucha densidad: habría que montar varios puntos de acceso bien repartidos y planificar canales, con lo que el ahorro se reduce bastante.</p><p>Lo razonable es lo intermedio: <strong>cable para los puestos fijos</strong> y <strong>Wi-Fi como complemento</strong> para portátiles, móviles, visitas y salas de reuniones. El Wi-Fi aporta movilidad, que es exactamente lo que el cable no puede dar; sustituir por Wi-Fi lo que no se mueve es cambiar algo mejor por algo peor.',
+                puntos: [
+                    'Señala que los puntos de acceso necesitan cable igualmente',
+                    'Enumera ventajas del cable para puestos fijos: velocidad, estabilidad, no compartido',
+                    'Menciona la densidad de usuarios y la planificación de canales',
+                    'Propone un modelo mixto: cable para fijos, Wi-Fi para lo móvil',
+                    'Identifica la movilidad como el valor real de lo inalámbrico'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Para qué se usan las ondas infrarrojas?', dorso: 'Comunicación de <strong>corto alcance</strong>: mandos de televisor, vídeo y equipos de música, y el antiguo puerto infrarrojo de los portátiles.' },
+            { frente: 'Tres ventajas del infrarrojo', dorso: 'Es <strong>barato y fácil de construir</strong>, <strong>no necesita licencia</strong> y, al no atravesar paredes, ofrece <strong>seguridad</strong>.' },
+            { frente: '¿Por qué el infrarrojo no sirve en exteriores?', dorso: 'Porque el <strong>Sol</strong> emite gran cantidad de radiación infrarroja y perturba la señal enviada.' },
+            { frente: '¿Qué exigen las ondas de luz?', dorso: '<strong>Visión directa</strong>: se transmiten en línea recta y no atraviesan los objetos.' },
+            { frente: '¿Por qué un enlace láser necesita dos equipos por edificio?', dorso: 'Porque la señalización óptica con láser es <strong>unidireccional</strong>: hace falta un emisor y un receptor en cada extremo.' },
+            { frente: 'Ventajas del enlace por ondas de luz', dorso: '<strong>Coste muy bajo</strong>, <strong>fácil de instalar</strong> y <strong>velocidad elevada</strong>.' },
+            { frente: '¿Qué interfiere a un rayo láser?', dorso: 'La <strong>lluvia</strong>, la <strong>niebla densa</strong> y las <strong>corrientes de convección</strong>, es decir, el aire caliente que sube del edificio.' },
+            { frente: 'Tabla 3.5: ondas de radio', dorso: '<strong>1 Mbps</strong> y repetidores cada <strong>100-1 000 km</strong>: es el medio que más lejos llega.' },
+            { frente: 'Tabla 3.5: infrarrojo y ondas de luz', dorso: 'Infrarrojo <strong>10 Mbps y 200 m</strong>; ondas de luz <strong>1 Mbps y 1 km</strong>.' },
+            { frente: '¿Quién gana en velocidad, guiados o no guiados?', dorso: 'Los <strong>guiados</strong>, de largo: el par trenzado da 1 Gbps frente a los 10 Mbps del mejor no guiado de la tabla.' },
+            { frente: 'Las dos preguntas nuevas al elegir medio', dorso: '<strong>¿Se puede tender cable?</strong> y <strong>¿hay visión directa?</strong>' },
+            { frente: '¿Cuándo gana el aire al cable?', dorso: 'Cuando el cable <strong>no puede estar</strong>: no se puede tender, el destino se mueve o hace falta ya.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 4: Infrarrojos, luz y comparativa',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Infrarrojos',
+                repaso: '#infrarrojos',
+                text: '¿Cuál de estos NO es un rasgo de las ondas infrarrojas según el libro?',
+                options: {
+                    a: 'Son relativamente direccionales',
+                    b: 'Atraviesan bien los objetos sólidos',
+                    c: 'Son baratas y fáciles de construir',
+                    d: 'No necesitan licencia del gobierno'
+                },
+                answer: 'b',
+                feedback: 'Justo lo contrario: <strong>no atraviesan</strong> los sólidos. Y esa limitación es la que les da su ventaja de seguridad.'
+            },
+            {
+                topic: 'Infrarrojos',
+                repaso: '#infrarrojos',
+                text: '¿Por qué el libro dice que la comunicación infrarroja ofrece más seguridad?',
+                options: {
+                    a: 'Porque va cifrada por defecto',
+                    b: 'Porque necesita licencia',
+                    c: 'Porque no atraviesa las paredes: la señal no sale de la habitación',
+                    d: 'Porque es más rápida'
+                },
+                answer: 'c',
+                feedback: 'Lo que en Wi-Fi hay que resolver cifrando, aquí lo resuelve la física: el alcance <strong>termina en la pared</strong>.'
+            },
+            {
+                topic: 'Infrarrojos',
+                repaso: '#infrarrojos',
+                text: 'Un mando a distancia funciona mal en una terraza a mediodía. ¿Por qué?',
+                options: {
+                    a: 'Porque el Sol emite gran cantidad de infrarrojos y perturba la señal',
+                    b: 'Porque hace demasiado calor para el diodo',
+                    c: 'Porque al aire libre no hay paredes donde rebotar',
+                    d: 'Porque la señal se dispersa por el viento'
+                },
+                answer: 'a',
+                feedback: 'Es un problema de <strong>relación señal/ruido</strong> llevado al extremo: el Sol es un emisor de infrarrojos enorme y tapa la señal del mando.'
+            },
+            {
+                topic: 'Ondas de luz',
+                repaso: '#luz',
+                text: 'Se instala un enlace láser entre dos edificios. ¿Qué equipo hace falta?',
+                options: {
+                    a: 'Un emisor en un edificio y un receptor en el otro',
+                    b: 'Un emisor láser y un receptor en cada edificio, porque la señalización es unidireccional',
+                    c: 'Solo un emisor: el receptor es pasivo',
+                    d: 'Un repetidor a mitad de camino'
+                },
+                answer: 'b',
+                feedback: 'Un haz va en un solo sentido. Es la misma idea que en la fibra, donde cada hilo es símplex y hacen falta dos.'
+            },
+            {
+                topic: 'Ondas de luz',
+                repaso: '#luz',
+                text: 'Un enlace láser entre azoteas falla cada tarde de verano con el cielo despejado. ¿Causa más probable?',
+                options: {
+                    a: 'Niebla densa',
+                    b: 'Lluvia',
+                    c: 'Interferencia de otra red',
+                    d: 'Corrientes de convección: el aire caliente que sube del edificio desvía el rayo'
+                },
+                answer: 'd',
+                feedback: 'Es el problema menos intuitivo del láser: falla con <strong>buen</strong> tiempo. El aire de densidad irregular actúa como una lente que desvía el haz.'
+            },
+            {
+                topic: 'Ondas de luz',
+                repaso: '#luz',
+                text: 'Marca la afirmación correcta sobre las ondas de luz como medio de transmisión.',
+                options: {
+                    a: 'Ofrecen coste bajo, instalación fácil y velocidad elevada, pero exigen visión directa',
+                    b: 'Tienen coste elevado y son difíciles de instalar',
+                    c: 'Atraviesan la niebla sin problemas',
+                    d: 'Son omnidireccionales'
+                },
+                answer: 'a',
+                feedback: 'El libro destaca esas tres ventajas. Los problemas son la <strong>alineación</strong> y la meteorología.'
+            },
+            {
+                topic: 'Comparativa',
+                repaso: '#cuatro',
+                text: 'De los cuatro medios no guiados, ¿cuál es el único que atraviesa los edificios?',
+                options: { a: 'Las microondas', b: 'El infrarrojo', c: 'Las ondas de radio', d: 'El láser' },
+                answer: 'c',
+                feedback: 'Es el rasgo que las hace tan cómodas y, a la vez, tan fáciles de interferir y de escuchar.'
+            },
+            {
+                topic: 'Comparativa',
+                repaso: '#cuatro',
+                text: 'Ordenando radio, microondas, infrarrojo y luz por direccionalidad creciente, ¿cuál va al final?',
+                options: { a: 'La radio', b: 'Las microondas', c: 'El infrarrojo', d: 'El láser' },
+                answer: 'd',
+                feedback: 'El láser apunta a un punto. La radio, en el otro extremo, emite en todas direcciones.'
+            },
+            {
+                topic: 'Tabla 3.5',
+                repaso: '#tabla35',
+                text: 'Según la tabla 3.5, ¿qué medio permite la mayor distancia entre repetidores?',
+                options: {
+                    a: 'La fibra óptica, con más de 100 km',
+                    b: 'Las ondas de radio, con 100 a 1 000 km',
+                    c: 'Las microondas, con 80 km',
+                    d: 'El coaxial, con 10 a 100 km'
+                },
+                answer: 'b',
+                feedback: 'Es el gran argumento de la radio: mil kilómetros <strong>sin tender nada</strong> por el camino. Su precio es la velocidad: 1 Mbps en esa tabla.'
+            },
+            {
+                topic: 'Tabla 3.5',
+                repaso: '#tabla35',
+                text: 'Según la tabla 3.5, ¿cuál es la distancia entre repetidores del infrarrojo?',
+                options: { a: '1 km', b: '80 km', c: '200 m', d: '10 km' },
+                answer: 'c',
+                feedback: '<strong>200 m</strong>: el más limitado de los siete medios, incluso por debajo de dos tramos de par trenzado.'
+            },
+            {
+                topic: 'Tabla 3.5',
+                repaso: '#tabla35',
+                text: 'Comparando guiados y no guiados en la tabla 3.5, ¿qué conclusión es correcta?',
+                options: {
+                    a: 'Los no guiados son más rápidos',
+                    b: 'Los guiados llegan más lejos en todos los casos',
+                    c: 'Son equivalentes',
+                    d: 'Los guiados ganan en velocidad y los no guiados destacan en distancia, sobre todo la radio'
+                },
+                answer: 'd',
+                feedback: 'El par trenzado, el peor de los guiados, da 1 Gbps frente a los 10 Mbps del mejor no guiado. Pero ningún cable cubre mil kilómetros sin tenderse.'
+            },
+            {
+                topic: 'Decidir',
+                repaso: '#decidir',
+                text: 'Entre las preguntas para elegir medio, ¿cuál es específica del mundo inalámbrico?',
+                options: {
+                    a: '¿Hay visión directa entre los dos puntos?',
+                    b: '¿Qué distancia hay?',
+                    c: '¿Cuánto cuesta en total?',
+                    d: '¿Quién lo va a mantener?'
+                },
+                answer: 'a',
+                feedback: 'Junto con «¿se puede tender cable?». Sin visión directa caen microondas, infrarrojos y láser, y solo queda la radio.'
+            },
+            {
+                topic: 'Decidir',
+                repaso: '#casos',
+                text: 'Un almacén usa carretillas con lectores de códigos que se mueven todo el día. ¿Qué medio corresponde?',
+                options: {
+                    a: 'Par trenzado hasta cada carretilla',
+                    b: 'Wi-Fi, con varios puntos de acceso conectados por cable',
+                    c: 'Enlace láser',
+                    d: 'Infrarrojos'
+                },
+                answer: 'b',
+                feedback: 'Los equipos <strong>se mueven</strong>: ahí no hay cable posible. Pero los puntos de acceso sí se cablean: lo inalámbrico es el último tramo, no toda la red.'
+            },
+            {
+                topic: 'Recuperación · Semana 6',
+                repaso: '../../Semana_06/Dia_04/teoria.html#cobrefibra',
+                text: '<em>Repaso.</em> Una empresa quiere unir dos edificios propios separados 300 m, con canalización disponible. ¿Qué medio gana y por qué?',
+                options: {
+                    a: 'Radioenlace, porque no hay que hacer obra',
+                    b: 'Par trenzado apantallado',
+                    c: 'Fibra: más capacidad, sin meteorología ni vecinos, y aísla eléctricamente los dos edificios',
+                    d: 'Enlace láser entre azoteas'
+                },
+                answer: 'c',
+                feedback: 'Si el cable <strong>puede estar</strong>, el cable gana. El aire entra en juego cuando canalizar es imposible, muy caro o demasiado lento.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

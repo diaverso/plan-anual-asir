@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 5 — Hoja de recuperación: medios inalámbricos</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 5 — Hoja de recuperación</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Bloques:</strong> 5</div>
+        <div class="info-item"><strong>Se hace:</strong> después del test</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Cómo usar esta hoja</strong>
+            <p>Empieza por el bloque del <strong>día con peor resultado</strong> en el desglose del test. Si has
+            aprobado holgado, ve al bloque 5, que junta toda la semana en un caso.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Cierre de la Semana 7</strong>
+            <ul>
+                <li>⏱️ <strong>Tiempo previsto:</strong> 21 h 47 min en cinco sesiones.</li>
+                <li>📚 <strong>Contenido:</strong> propagación y espectro · longitud de onda · las cuatro
+                propiedades de lo inalámbrico · ondas de radio y la ionosfera · microondas, parabólicas y visión
+                directa · satélite y sus órbitas · Wi-Fi, estándares, canales y solapamiento · infrarrojos y ondas
+                de luz · la tabla 3.5 completa y la decisión entre cable y aire.</li>
+                <li>🛠️ <strong>Prácticas:</strong> inventario radioeléctrico de tu casa · cálculo y medida real del
+                retardo · plan de canales de un edificio y configuración de tu radio · seis decisiones de medio y un
+                caso con presupuesto.</li>
+                <li>🧠 <strong>Lo que conviene reforzar antes de la Semana 8:</strong> las tres fórmulas —longitud
+                de onda, retardo y solapamiento— y la diferencia entre caudal y latencia.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Síntesis y test</a></span>
+        <span><a href="../Dia_04/ejercicios.html">← Día 4</a> · <a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 5 — Hoja de recuperación',
+    subtitulo: 'Las tres fórmulas de la semana y las decisiones que sostienen',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1 · Día 1: el aire y sus reglas',
+            tiempo: '14 min',
+            enunciado: '<p><a href="../Dia_01/teoria.html">Teoría del Día 1</a>.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Longitud de onda de una señal de 3 GHz, en centímetros.',
+                    respuesta: 10,
+                    tolerancia: 0.3,
+                    unidad: 'cm',
+                    explicacion: '30 / 3 = <strong>10 cm</strong>.',
+                    pistas: ['Atajo: 30 entre la frecuencia en GHz.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Una señal tiene una longitud de onda de 15 cm. ¿A qué frecuencia trabaja, en GHz?',
+                    respuesta: 2,
+                    tolerancia: 0.1,
+                    unidad: 'GHz',
+                    explicacion: 'La fórmula se puede invertir: f = 30 / λ = 30 / 15 = <strong>2 GHz</strong>.',
+                    pistas: ['Despeja la frecuencia en el mismo atajo.']
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>c)</strong> Empareja cada propiedad de los medios inalámbricos con su definición.',
+                    izquierda: ['Área de cobertura', 'Tasa adaptativa', 'Interferencia', 'Seguridad'],
+                    derecha: [
+                        'Las señales no atraviesan bien los obstáculos',
+                        'La velocidad baja cuando la señal se debilita',
+                        'Otras emisiones en la misma banda degradan el enlace',
+                        'Cualquiera dentro del alcance accede a la señal'
+                    ],
+                    pares: {
+                        'Área de cobertura': 'Las señales no atraviesan bien los obstáculos',
+                        'Tasa adaptativa': 'La velocidad baja cuando la señal se debilita',
+                        'Interferencia': 'Otras emisiones en la misma banda degradan el enlace',
+                        'Seguridad': 'Cualquiera dentro del alcance accede a la señal'
+                    },
+                    explicacion: 'Las cuatro reaparecen cada día de la semana: son el catálogo de problemas de cualquier red inalámbrica.',
+                    pistas: ['Una habla de obstáculos y otra de terceros emitiendo.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Qué ondas de radio llegan más lejos rebotando en la ionosfera?',
+                    opciones: {
+                        a: 'Las de baja frecuencia, que siguen la curvatura terrestre',
+                        b: 'Las de alta frecuencia, que son absorbidas por la superficie',
+                        c: 'Todas por igual',
+                        d: 'Ninguna: la ionosfera absorbe las ondas'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Las de baja frecuencia no lo necesitan: <strong>bordean</strong> el planeta. Las altas se absorben en la superficie, así que su camino es hacia arriba y de vuelta.',
+                    pistas: ['¿Cuáles necesitan un espejo en el cielo y cuáles no?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2 · Día 2: microondas y retardo',
+            tiempo: '15 min',
+            enunciado: '<p><a href="../Dia_02/teoria.html">Teoría del Día 2</a>. Con c = 300 000 km/s.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Retardo de extremo a extremo de un satélite a 30 000 km, en milisegundos. Al entero.',
+                    respuesta: 200,
+                    tolerancia: 5,
+                    unidad: 'ms',
+                    explicacion: '2 × 30 000 / 300 000 = 0,2 s = <strong>200 ms</strong>.',
+                    pistas: ['Subida más bajada.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> ¿Y el retardo de ida y vuelta de ese mismo enlace, en milisegundos?',
+                    respuesta: 400,
+                    tolerancia: 10,
+                    unidad: 'ms',
+                    explicacion: 'Cuatro trayectos: <strong>400 ms</strong>. Es lo que marcaría un ping.',
+                    pistas: ['El doble del anterior.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Dos antenas, una a 49 m y otra a 16 m. Alcance del enlace con d ≈ 4,12 · √h, en kilómetros. Un decimal.',
+                    respuesta: 45.3,
+                    tolerancia: 0.8,
+                    unidad: 'km',
+                    explicacion: '4,12 · 7 = 28,8 y 4,12 · 4 = 16,5. Total <strong>45,3 km</strong>.',
+                    pistas: ['Las dos alturas son cuadrados perfectos.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Un cliente quiere jugar en red por satélite GEO y pregunta si contratando más velocidad mejorará. ¿Qué respondes?',
+                    opciones: {
+                        a: 'Sí, con el doble de megas irá el doble de fluido',
+                        b: 'No: el problema es la latencia, que la impone la distancia y no cambia con el caudal contratado',
+                        c: 'Sí, si además cambia la antena',
+                        d: 'Depende del juego'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Medio segundo de ida y vuelta es medio segundo, se contraten 10 o 500 Mbps. La única salida real sería una órbita más baja.',
+                    pistas: ['¿Qué magnitud es la que estropea los juegos en red?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3 · Día 3: canales',
+            tiempo: '15 min',
+            enunciado: '<p><a href="../Dia_03/teoria.html">Teoría del Día 3</a>. Con f = 2 412 + 5 · (canal − 1) y solape = 22 − separación.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Frecuencia central del canal 4, en MHz.',
+                    respuesta: 2427,
+                    unidad: 'MHz',
+                    explicacion: '2 412 + 5 · 3 = <strong>2 427 MHz</strong>.',
+                    pistas: ['Tres saltos desde el canal 1.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Solapamiento entre los canales 4 y 6, en MHz.',
+                    respuesta: 12,
+                    unidad: 'MHz',
+                    explicacion: 'Separación de 10 MHz: 22 − 10 = <strong>12 MHz</strong>.',
+                    pistas: ['Dos canales de diferencia son 10 MHz.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Solapamiento entre los canales 2 y 7, en MHz. Si no hay, escribe 0.',
+                    respuesta: 0,
+                    unidad: 'MHz',
+                    explicacion: 'Cinco canales de diferencia son 25 MHz, más que los 22 de ocupación: <strong>no se solapan</strong>. Cualquier pareja separada cinco canales vale, no solo 1-6.',
+                    pistas: ['Cuenta cuántos canales hay de diferencia.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Tres puntos de acceso en la misma planta. ¿Qué asignación es correcta?',
+                    opciones: {
+                        a: '1, 2 y 3',
+                        b: '1, 4 y 8',
+                        c: '1, 6 y 11',
+                        d: '5, 6 y 7'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Es el único trío con 25 MHz entre cada par. En Europa también valdría 1, 7 y 13.',
+                    pistas: ['Necesitas cinco canales de diferencia entre cada dos.']
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>e)</strong> Completa el razonamiento.',
+                    frase: 'En Europa hay {{0}} canales en la banda de 2,4 GHz, separados {{1}} MHz entre sí. Como cada canal ocupa {{2}} MHz, hacen falta al menos {{3}} canales de diferencia para que dos redes no se solapen.',
+                    respuestas: [
+                        ['13', 'trece'],
+                        ['5', 'cinco'],
+                        ['22', 'veintidós', 'veintidos'],
+                        ['5', 'cinco']
+                    ],
+                    explicacion: 'Las tres cifras de la semana: <strong>13 canales, 5 MHz de separación y 22 MHz de ocupación</strong>. De ahí sale todo lo demás.',
+                    pistas: ['El primero y el último hueco no son el mismo número por casualidad… pero tampoco significan lo mismo.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4 · Día 4: los cuatro medios y la decisión',
+            tiempo: '12 min',
+            enunciado: '<p><a href="../Dia_04/teoria.html">Teoría del Día 4</a>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa la tabla 3.5 en su parte inalámbrica.',
+                    esquina: 'Medio',
+                    cabecera: ['Velocidad máxima', 'Distancia entre repetidores'],
+                    filas: [
+                        { etiqueta: 'Ondas de radio', celdas: [{ respuestas: ['1 Mbps', '1Mbps', '1'], placeholder: '?' }, { respuestas: ['100-1000 km', '100-1.000 km', '100 a 1000 km', '100-1 000 km'], placeholder: '?' }] },
+                        { etiqueta: 'Microondas', celdas: [{ respuestas: ['10 Mbps', '10Mbps', '10'], placeholder: '?' }, { respuestas: ['80 km', '80'], placeholder: '?' }] },
+                        { etiqueta: 'Infrarrojo', celdas: [{ respuestas: ['10 Mbps', '10Mbps', '10'], placeholder: '?' }, { respuestas: ['200 m', '200'], placeholder: '?' }] },
+                        { etiqueta: 'Ondas de luz', celdas: [{ fijo: '1 Mbps' }, { respuestas: ['1 km', '1'], placeholder: '?' }] }
+                    ],
+                    explicacion: 'Los cuatro no guiados van en <strong>Mbps</strong>, frente a los Gbps de los guiados. Y fíjate en el contraste de distancias: de 1 000 km a 200 m.',
+                    pistas: ['Dos van a 1 Mbps y dos a 10 Mbps.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué dos preguntas se añaden al método de decisión cuando entra en juego lo inalámbrico?',
+                    opciones: {
+                        a: '¿Cuánto cuesta? y ¿quién lo mantiene?',
+                        b: '¿Se puede tender cable? y ¿hay visión directa?',
+                        c: '¿Qué distancia hay? y ¿qué velocidad hace falta?',
+                        d: '¿Qué categoría? y ¿qué conector?'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Las demás ya estaban en la Semana 6. Estas dos son las que abren o cierran la puerta al aire.',
+                    pistas: ['Las dos se responden yendo a ver el sitio.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un enlace láser entre azoteas falla en verano a mediodía con cielo despejado. ¿Causa?',
+                    opciones: {
+                        a: 'Lluvia',
+                        b: 'Interferencia de otra red',
+                        c: 'Corrientes de convección: el aire caliente desvía el rayo',
+                        d: 'Exceso de potencia'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'El fallo con <strong>buen</strong> tiempo es la firma de la convección.',
+                    pistas: ['Descarta lo meteorológico obvio: el cielo está despejado.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 5 · Toda la semana en un caso',
+            tiempo: '14 min',
+            enunciado: '<p>El ejercicio que junta los cuatro días. Escribe tu respuesta antes de ver la solución modelo.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: 'Un complejo deportivo municipal tiene: <strong>(1)</strong> unas oficinas con 15 puestos fijos; <strong>(2)</strong> un pabellón donde el personal usa tabletas en movimiento; <strong>(3)</strong> una piscina exterior a 250 m, en un edificio aparte con visión directa desde el tejado de las oficinas; y <strong>(4)</strong> un refugio de montaña de la misma entidad, a 30 km, sin línea fija ni cobertura móvil. <strong>Propón el medio de cada tramo</strong>, justifícalo y añade una precaución para cada uno.',
+                    filas: 12,
+                    modelo: '<p><strong>1 · Oficinas, 15 puestos fijos.</strong> <strong>Cable</strong>, par trenzado con cableado estructurado. Se puede tender, los puestos no se mueven y el cable gana en velocidad, estabilidad y seguridad. <em>Precaución:</em> ningún enlace debe pasar de 100 m contando latiguillos, y conviene dejar margen de categoría para el futuro.</p><p><strong>2 · Pabellón con tabletas.</strong> <strong>Wi-Fi</strong>, con varios puntos de acceso de potencia moderada conectados por cable, en lugar de uno potente. Aquí lo inalámbrico no es una alternativa al cable: es la única opción, porque los equipos <strong>se mueven</strong>. <em>Precaución:</em> planificar canales del trío 1-6-11 para que dos puntos de acceso vecinos no se solapen, y usar 5 GHz donde haya densidad, porque su menor alcance reduce la interferencia entre celdas.</p><p><strong>3 · Piscina a 250 m con visión directa.</strong> Dos opciones válidas. Si se puede canalizar, <strong>fibra</strong>: más capacidad, sin meteorología y, al ser otro edificio, aporta aislamiento eléctrico. Si la obra no compensa o hay prisa, <strong>radioenlace de microondas</strong>, que a 250 m con visión directa va sobrado. <em>Precaución:</em> con radioenlace, prever la <strong>realineación</strong> periódica y que la lluvia degrada el enlace; con fibra, cuidar el radio de curvatura y usar cable de exterior.</p><p><strong>4 · Refugio a 30 km sin cobertura.</strong> Aquí caen casi todas las opciones: la distancia descarta el cable y el Wi-Fi, y sin cobertura móvil no hay red terrestre que aprovechar. Quedan dos: un <strong>radioenlace de largo alcance</strong> si se consigue visión directa —posiblemente con un repetidor en un punto alto, lo que en montaña suele ser viable— o <strong>satélite</strong>, que funciona en cualquier sitio a cambio de <strong>240 ms</strong> de retardo. Si el uso es correo, partes de trabajo y consulta, el satélite basta; si hacen falta videollamadas fluidas, merece la pena estudiar el radioenlace. <em>Precaución:</em> en los dos casos, prever alimentación eléctrica fiable en el refugio, que suele ser el verdadero problema.</p><p><strong>Común a todo lo inalámbrico:</strong> cifrar, porque cualquiera dentro del alcance recibe la señal.</p>',
+                    rubrica: [
+                        'Elige cable para los puestos fijos y lo justifica',
+                        'Reconoce que en el pabellón la movilidad obliga a Wi-Fi, con puntos de acceso cableados',
+                        'Plantea fibra o radioenlace para la piscina y dice de qué depende',
+                        'Analiza el refugio descartando opciones por distancia y falta de infraestructura',
+                        'Distingue radioenlace y satélite por el retardo y el uso previsto',
+                        'Añade una precaución pertinente por tramo',
+                        'Cierra con la necesidad de cifrar lo inalámbrico'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: plan de canales</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1 id="ejTitulo">Día 3 — Laboratorio</h1>
+        <p id="ejSubtitulo"></p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Tiempo:</strong> <span id="ejTiempo">70 min</span></div>
+        <div class="info-item"><strong>Herramientas:</strong> PowerShell o terminal</div>
+        <div class="info-item"><strong>Permisos:</strong> sin administrador</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer hoy</strong>
+            <p>Primero <strong>repartir el espectro</strong> de un edificio real con seis puntos de acceso y un
+            vecino ya instalado. Después leer la <strong>configuración de tu propia radio</strong>: qué anchura de
+            canal usa, qué banda prefiere y en qué modo trabaja.</p>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — El edificio (25 min)</h2>
+
+            <p>Una gestoría ocupa tres plantas de un edificio de oficinas. Quieren cobertura completa con
+            <strong>seis puntos de acceso</strong>, dos por planta: uno en la zona norte y otro en la sur.</p>
+
+<pre><code>            NORTE              SUR
+  planta 2   [ AP-2N ]        [ AP-2S ]
+  planta 1   [ AP-1N ]        [ AP-1S ]
+  planta 0   [ AP-0N ]        [ AP-0S ]
+
+  Las señales atraviesan los forjados: cada AP «ve»
+  al de al lado y al de arriba y abajo.</code></pre>
+
+            <p>Y hay un condicionante: en la planta 1 comparten rellano con otra empresa, cuya red ya emite en el
+            <strong>canal 6</strong> con mucha potencia, y en la planta baja se cuela la red de una cafetería en el
+            <strong>canal 1</strong>.</p>
+
+            <div class="destacado">
+                <strong>Las reglas del reparto</strong>
+                <ul>
+                    <li>Canales disponibles sin solapamiento: <strong>1, 6 y 11</strong>, y en Europa también el
+                    <strong>13</strong>.</li>
+                    <li>Dos puntos de acceso que se «oigan» no deben usar canales <strong>solapados</strong>.</li>
+                    <li>Si no queda más remedio, es mejor <strong>compartir</strong> canal que solaparse.</li>
+                    <li>Solapamiento = <strong>22 − separación en MHz</strong>; cada canal de diferencia son 5 MHz.</li>
+                </ul>
+            </div>
+
+            <h2>Parte 2 — Tu radio, por dentro (25 min)</h2>
+
+            <p>Ahora mira cómo está configurada tu tarjeta inalámbrica. Estas propiedades no se ven en la interfaz
+            normal de Windows:</p>
+
+            <div class="so-tabs" data-grupo="cfg">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="cfg" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapterAdvancedProperty -Name "Wi-Fi" | Select-Object DisplayName, DisplayValue | Format-Table -AutoSize</code></pre></div>
+                <p>Si tu adaptador se llama de otra forma, mira antes su nombre con <code>Get-NetAdapter</code>.</p>
+            </div>
+            <div class="so-panel" data-grupo="cfg" data-so="nix">
+                <div class="comando"><pre><code>iw dev
+iw phy | grep -E "Band|MHz|VHT|HE"</code></pre></div>
+                <p><code>iw</code> no viene instalado por defecto (<code>sudo apt install iw</code>) y en WSL o en
+                una máquina virtual no sirve, porque la tarjeta es virtual. <strong>No se ha podido verificar</strong>
+                en el equipo con el que se escribió este laboratorio.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de este equipo</strong>
+<pre><code>DisplayName                       DisplayValue
+-----------                       ------------
+Ancho de canal para 2,4GHz        Automático
+Ancho de canal para 5 GHz         Automático
+No compatible con canal de 40 MHz Desactivado
+Modo inalámbrico 802.11n/ac/ax    4. 802.11ax
+Banda preferida                   1. Sin preferencias
+Modo inalámbrico 802.11a/b/g      6. Doble banda 802.11a/b/g</code></pre>
+                <p>Traducido: es una tarjeta de <strong>doble banda</strong> que llega hasta
+                <strong>802.11ax</strong>, sin preferencia por ninguna de las dos bandas, y con la anchura de canal
+                decidida automáticamente.</p>
+            </div>
+
+            <h2>Parte 3 — La anchura de canal (20 min)</h2>
+
+            <div class="aviso">
+                <strong>Este apartado no sale del libro</strong>
+                El libro describe canales de <strong>22 MHz</strong>, que es lo que usaban 802.11b y g. Desde
+                802.11n los equipos pueden <strong>juntar dos canales</strong> para formar uno de 40 MHz, y en 5 GHz
+                llegan a 80 y 160 MHz. La fuente son los estándares <strong>IEEE 802.11</strong>. Lo incluyo porque
+                aparece en la salida del comando anterior y porque explica una mala práctica muy extendida.
+            </div>
+
+            <p>La idea es sencilla: <strong>el doble de anchura, el doble de velocidad</strong>. Y el problema
+            también:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Anchura</th><th>En 2,4 GHz</th><th>En 5 GHz</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>20 MHz</strong></td><td>Lo razonable: caben tres canales limpios</td><td>Conservador</td></tr>
+                    <tr><td><strong>40 MHz</strong></td><td><strong>Mala idea</strong>: ocupa casi la mitad de la banda y solo caben dos redes en todo el edificio</td><td>Razonable</td></tr>
+                    <tr><td><strong>80 / 160 MHz</strong></td><td>Imposible</td><td>Solo con pocos vecinos y buena señal</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Por eso muchos equipos traen una casilla del tipo «no compatible con canal de 40 MHz»: es una forma
+            de <strong>obligar a comportarse bien</strong> en la banda estrecha.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has asignado canal a los seis puntos de acceso y puedes justificar cada uno.</li>
+                <li>Has calculado al menos dos solapamientos en megahercios.</li>
+                <li>Has leído la configuración real de tu tarjeta y sabes qué significa cada línea.</li>
+                <li>Puedes explicar por qué 40 MHz de anchura en 2,4 GHz es mala idea.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría y quiz</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../Dia_02/laboratorio.html">← Día 2</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_04/laboratorio.html">Día 4 →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    titulo: 'Día 3 — Laboratorio: plan de canales',
+    subtitulo: 'Repartir el espectro de un edificio · leer la configuración real de tu radio · la anchura de canal',
+    tiempo: '70 min',
+    ejercicios: [
+
+        {
+            titulo: 'BLOQUE 1: El plan de canales',
+            tiempo: '25 min',
+            enunciado: '<p>Seis puntos de acceso, un vecino en el canal 6 en la planta 1 y una cafetería en el canal 1 en la planta baja.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Antes de repartir: ¿cuántos MHz de solapamiento habría entre tu punto de acceso en el canal 4 y el vecino del canal 6?',
+                    respuesta: 12,
+                    unidad: 'MHz',
+                    explicacion: 'Dos canales de diferencia son 10 MHz: 22 − 10 = <strong>12 MHz</strong> de solape. Es el mismo caso que el ejemplo del libro con los canales 3 y 5.',
+                    pistas: ['Separación = 5 MHz por canal de diferencia.']
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Asigna canal a los seis puntos de acceso. Usa 1, 6, 11 o 13, y evita que dos que se oigan —al lado o arriba y abajo— se solapen.',
+                    esquina: 'Planta',
+                    cabecera: ['Zona norte', 'Zona sur'],
+                    filas: [
+                        { etiqueta: 'Planta 2', celdas: [{ respuestas: ['1'], placeholder: 'canal' }, { respuestas: ['6'], placeholder: 'canal' }] },
+                        { etiqueta: 'Planta 1', celdas: [{ respuestas: ['11'], placeholder: 'canal' }, { respuestas: ['1'], placeholder: 'canal' }] },
+                        { etiqueta: 'Planta 0', celdas: [{ respuestas: ['6'], placeholder: 'canal' }, { respuestas: ['11'], placeholder: 'canal' }] }
+                    ],
+                    explicacion: 'Un reparto válido: planta 2 con <strong>1 y 6</strong>, planta 1 con <strong>11 y 1</strong>, planta 0 con <strong>6 y 11</strong>. Ningún vecino inmediato repite ni se solapa, y en la planta 1 se evita el canal 6 del vecino ruidoso. Otros repartos son igualmente correctos si cumplen las mismas condiciones; este es el que corrige el ejercicio.',
+                    pistas: ['Empieza por la planta 1, que es la más condicionada: ahí no deberías usar el 6.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué conviene evitar el canal 6 justo en la planta 1?',
+                    opciones: {
+                        a: 'Porque el canal 6 es más lento',
+                        b: 'Porque el vecino emite ahí con mucha potencia: compartir con una red fuerte deja poco aire disponible',
+                        c: 'Porque el canal 6 no existe en Europa',
+                        d: 'Porque el canal 6 no es compatible con 802.11ax'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Compartir canal significa <strong>turnarse</strong>, y turnarse con quien habla mucho y fuerte deja pocos turnos. Si hubiera que compartir, mejor con la red más floja.',
+                    pistas: ['¿Qué implica compartir canal con una red muy activa?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> En la planta baja, la cafetería ocupa el canal 1 y tú has puesto ahí el 6 y el 11. ¿Qué habría pasado con el 3?',
+                    opciones: {
+                        a: 'Nada: el 3 está libre',
+                        b: 'Habría ido mejor que el 6',
+                        c: 'Se habría solapado 12 MHz con la cafetería y además con tu propio punto de acceso si estuviera en el 6',
+                        d: 'El 3 solo se solapa en 5 GHz'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'El canal «hueco» entre dos ocupados es siempre la peor opción: recoge el solape de los dos lados.',
+                    pistas: ['Calcula el solape del 3 con el 1 y con el 6.']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 2: Tu radio real',
+            tiempo: '22 min',
+            enunciado: '<p>Ejecuta el comando de la <strong>parte 2</strong> y trabaja con su salida.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    validador: 'salida',
+                    multilinea: true,
+                    filas: 8,
+                    minimo: 50,
+                    debe: [['DisplayName', 'Ancho de canal', 'Modo inalámbrico', '802.11', 'Band']],
+                    pregunta: '<strong>a)</strong> Pega la salida del comando, o la parte que hable de bandas, modos y anchura de canal.',
+                    placeholder: 'Ancho de canal para 2,4GHz   Automático ...',
+                    explicacion: 'Si el equipo no tiene tarjeta inalámbrica, el comando no devolverá nada: anótalo y usa los datos de ejemplo para el resto del bloque.',
+                    pistas: ['Pega al menos las líneas de «Ancho de canal» y «Modo inalámbrico».']
+                },
+                {
+                    tipo: 'validado',
+                    validador: 'texto',
+                    pregunta: '<strong>b)</strong> ¿Qué <strong>anchura de canal</strong> tiene configurada tu tarjeta en la banda de 2,4 GHz?',
+                    ancho: '220px',
+                    placeholder: 'Automático',
+                    explicacion: 'Lo habitual es «Automático», que deja la decisión al punto de acceso. Algunos fabricantes permiten fijarlo en 20 MHz, que en la banda de 2,4 es lo recomendable.',
+                    pistas: ['Busca la línea «Ancho de canal para 2,4GHz».']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Tu tarjeta indica «Modo inalámbrico 802.11n/ac/ax: 802.11ax» y «Doble banda 802.11a/b/g». ¿Qué significa?',
+                    opciones: {
+                        a: 'Que solo puede conectarse a redes 802.11ax',
+                        b: 'Que trabaja en las dos bandas y admite hasta 802.11ax, manteniendo compatibilidad con los estándares anteriores',
+                        c: 'Que está limitada a 2,4 GHz',
+                        d: 'Que no admite 5 GHz'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Los estándares 802.11 mantienen la <strong>compatibilidad hacia atrás</strong>: una tarjeta ax se conecta sin problema a un punto de acceso g, aunque entonces vaya a velocidad de g.',
+                    pistas: ['Fíjate en que aparecen a, b, g, n, ac y ax a la vez.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Qué significa que la «Banda preferida» esté en «Sin preferencias»?',
+                    opciones: {
+                        a: 'Que la tarjeta elige según la señal que encuentre, sin favorecer 2,4 ni 5 GHz',
+                        b: 'Que no puede usar 5 GHz',
+                        c: 'Que usa las dos bandas a la vez para sumar velocidad',
+                        d: 'Que el punto de acceso no puede decidir'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Se puede forzar la preferencia por 5 GHz en equipos que siempre estén cerca del punto de acceso. Y no: un cliente normal <strong>no usa las dos bandas a la vez</strong>, elige una.',
+                    pistas: ['¿Qué haría la tarjeta si las dos bandas están disponibles?']
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 3: La anchura de canal',
+            tiempo: '13 min',
+            enunciado: '<p>Lo que cambia al juntar dos canales en uno.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> La banda de 2,4 GHz va, en la práctica, de 2 401 a 2 483 MHz: unos 82 MHz útiles. ¿Cuántos canales de <strong>40 MHz</strong> caben sin solaparse?',
+                    respuesta: 2,
+                    unidad: 'canales',
+                    explicacion: '82 / 40 = 2,05: caben <strong>dos</strong>, y muy justos. Por eso usar 40 MHz en esta banda es tan agresivo: un solo equipo se lleva la mitad del espectro del edificio.',
+                    pistas: ['Divide el ancho útil entre la anchura de cada canal.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué en la banda de 5 GHz sí es razonable usar 40 u 80 MHz?',
+                    opciones: {
+                        a: 'Porque las ondas son más largas',
+                        b: 'Porque hay muchos más canales disponibles y menos redes compitiendo',
+                        c: 'Porque los equipos son más caros',
+                        d: 'Porque no hay solapamiento en 5 GHz'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Espacio de sobra y poca competencia. El solapamiento existe igual: lo que cambia es que hay sitio para todos.',
+                    pistas: ['Compara el número de canales de una banda y de la otra.']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Un compañero activa los 40 MHz en 2,4 GHz «para ir al doble de velocidad» en una oficina con cinco redes vecinas. <strong>Explícale</strong> por qué probablemente vaya más lento.',
+                    filas: 6,
+                    modelo: '<p>Porque la velocidad que promete esa configuración solo se consigue si el canal está <strong>limpio</strong>, y en esa oficina no lo está. Al usar 40 MHz, su red ocupa el doble de espectro: pasa de pisar a unos pocos canales a <strong>solaparse con casi todos los vecinos a la vez</strong>, en una banda donde apenas caben dos canales de esa anchura.</p><p>El resultado es que su red y las cinco vecinas se interfieren mutuamente. Cuando hay interferencia, aumentan los errores y las retransmisiones, y la <strong>tasa adaptativa</strong> baja la velocidad para poder entenderse: acaba yendo más lento que con 20 MHz limpios. Además, molesta a los vecinos, que a su vez reaccionarán, y todos pierden.</p><p>En 2,4 GHz lo sensato es <strong>20 MHz</strong>. Si de verdad quiere velocidad, el sitio para ensanchar el canal es la banda de <strong>5 GHz</strong>, donde hay canales de sobra.</p>',
+                    rubrica: [
+                        'Explica que 40 MHz ocupa el doble de espectro y se solapa con más redes',
+                        'Señala que en 2,4 GHz apenas caben dos canales de esa anchura',
+                        'Relaciona la interferencia con errores, retransmisiones y tasa adaptativa',
+                        'Menciona el perjuicio mutuo con los vecinos',
+                        'Recomienda 20 MHz en 2,4 y ensanchar solo en 5 GHz'
+                    ]
+                }
+            ]
+        },
+
+        {
+            titulo: 'BLOQUE 4: El informe',
+            tiempo: '10 min',
+            enunciado: '<p>Cierra el laboratorio con una recomendación escrita.</p>',
+            items: [
+                {
+                    tipo: 'desarrollo',
+                    pregunta: 'Redacta la <strong>propuesta de canales</strong> para la gestoría: qué canal lleva cada punto de acceso, por qué, qué harías con la banda de 5 GHz y qué comprobarías después de instalarlo.',
+                    filas: 9,
+                    modelo: '<p><strong>Reparto propuesto.</strong> Planta 2: norte en el <strong>1</strong> y sur en el <strong>6</strong>. Planta 1: norte en el <strong>11</strong> y sur en el <strong>1</strong>. Planta 0: norte en el <strong>6</strong> y sur en el <strong>11</strong>. Con este reparto ningún punto de acceso comparte ni solapa canal con otro que esté al lado o justo encima o debajo, y en la planta 1 se evita el canal 6 del vecino, que emite con mucha potencia.</p><p><strong>Por qué no dejarlo en automático.</strong> El modo automático reacciona a lo que ve en cada arranque y puede acabar eligiendo un canal intermedio que se solape con dos redes a la vez. Con seis puntos de acceso propios conviene <strong>fijar los canales</strong> y documentarlos.</p><p><strong>Banda de 5 GHz.</strong> Activarla en los seis equipos y dejar en ella los puestos fijos de trabajo, que están cerca de su punto de acceso: hay muchos más canales sin solapar y menos competencia. La banda de 2,4 GHz queda para los dispositivos lejanos o antiguos. Ahí sí se pueden usar canales de 40 MHz; en 2,4 GHz, nunca.</p><p><strong>Qué comprobar después.</strong> Escanear desde varios puntos de cada planta para verificar que se ve el punto de acceso previsto con buena señal y que no aparece un vecino nuevo en los canales elegidos; medir la velocidad real en los puntos más alejados, que son los que marcan la tasa adaptativa de todos; y repetir el escaneo pasado un tiempo, porque el vecindario cambia.</p>',
+                    rubrica: [
+                        'Asigna un canal concreto a cada uno de los seis puntos de acceso',
+                        'Justifica que no haya solapamiento entre vecinos, incluidos los de otra planta',
+                        'Tiene en cuenta los canales ocupados por las redes ajenas',
+                        'Recomienda fijar los canales en lugar de dejarlos en automático',
+                        'Propone un uso razonado de la banda de 5 GHz',
+                        'Incluye comprobaciones posteriores a la instalación'
+                    ]
+                }
+            ]
+        }
+
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

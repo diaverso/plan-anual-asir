@@ -157,3 +157,24 @@ quedan por debajo de 160 KB porque venían a 1 024 px.
 Se confirma que **se quedan en ASCII**: las salidas de comandos, la ficha impresa del cable, los
 desgloses de decibelios, la lista de tramos medidos, los tres factores de la categoría y los
 bloques de respaldo de las figuras que ya existen.
+
+---
+
+## Semana 7 — Medios inalámbricos · completa
+
+Siete imágenes, todas correctas a la primera y todas en PNG de verdad, sin el problema de los JPEG
+disfrazados de la tanda anterior. En conjunto pasaron de **6 559 KB a 1 079 KB**, un 84 % menos, y
+ninguna supera los 212 KB.
+
+| # | Archivo de destino | Dónde va |
+|--:|---|---|
+| 1 | `m02_s07_d01_espectro.png` | D1 · el espectro por bandas, de la radio a la luz |
+| 2 | `m02_s07_d01_propagacion_radio.png` | D1 · onda que sigue la curvatura frente a rebote en la ionosfera |
+| 3 | `m02_s07_d02_haz_microondas.png` | D2 · emisión omnidireccional frente a haz de parabólica |
+| 4 | `m02_s07_d02_orbitas.png` | D2 · las órbitas GEO, MEO y LEO con sus retardos |
+| 5 | `m02_s07_d03_canales_wifi.png` | D3 · los trece canales de 2,4 GHz y su solapamiento |
+| 6 | `m02_s07_d04_cuatro_medios.png` | D4 · radio, microondas, infrarrojo y láser comparados |
+| 7 | `m02_s07_d05_mapa_semana.png` | D5 · el mapa de la semana |
+
+Se quedan en ASCII: los cálculos de retardo, la fórmula del horizonte, el esquema de los canales por
+frecuencia, el plano del edificio del laboratorio y las salidas de comandos.

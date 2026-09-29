@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — El aire como medio: propagación, espectro y ondas de radio</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Día 1 — El aire como medio</h1>
+        <p>Propagación · frecuencia y longitud de onda · las cuatro propiedades · ondas de radio y la ionosfera</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Semana:</strong> 7</div>
+        <div class="info-item"><strong>Teoría + checkpoints:</strong> 60 min</div>
+        <div class="info-item"><strong>Flashcards:</strong> 12 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 21 min</div>
+        <div class="info-item"><strong>Sesión:</strong> 4 h 27 min</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>De dónde venimos</strong>
+            La semana pasada terminó con una tabla en la que cuatro filas quedaron sin tocar: ondas de radio,
+            microondas, infrarrojo y ondas de luz. Son los <strong>medios no guiados</strong>, y esta semana son los
+            protagonistas.
+        </div>
+
+        <div class="aviso">
+            <strong>El cambio de mentalidad</strong>
+            En un cable la pregunta era <em>¿qué cable pongo?</em>, porque el medio decidía. En el aire el medio es
+            el mismo para todos y no se puede cambiar. Las preguntas pasan a ser <strong>¿en qué frecuencia
+            trabajo?</strong> y <strong>¿quién más está emitiendo ahí?</strong>
+        </div>
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#noguiado">Qué significa «no guiado»</a></li>
+                <li><a href="#propagacion">Cómo se propagan las ondas</a></li>
+                <li><a href="#lambda">Frecuencia y longitud de onda</a></li>
+                <li><a href="#espectro">El espectro, por bandas</a></li>
+                <li><a href="#propiedades">Las cuatro propiedades de lo inalámbrico</a></li>
+                <li><a href="#radio">Las ondas de radio</a></li>
+                <li><a href="#regulacion">Por qué el espectro está regulado</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+                <li><a href="#quiz-inicio">Quiz del día</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="noguiado">1. Qué significa «no guiado»</h2>
+
+            <p>Recuperemos la definición exacta del libro, porque cada palabra cuenta:</p>
+
+            <div class="dato">
+                <strong>Medios no guiados</strong>
+                <p>Proporcionan un <strong>soporte para que las ondas se transmitan</strong>, pero
+                <strong>no las dirigen</strong>.</p>
+            </div>
+
+            <p>El aire no hace nada activo: no conduce, no encauza, no protege. Deja pasar. Y de esa diferencia
+            salen todas las consecuencias de la semana:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Medio guiado</th><th>Medio no guiado</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Quién limita la velocidad</strong></td><td>El propio medio: categoría, longitud, apantallamiento</td><td>El <strong>espectro de frecuencia</strong> usado, más las condiciones atmosféricas</td></tr>
+                    <tr><td><strong>Se puede mejorar…</strong></td><td>Cambiando el cable</td><td>Cambiando de <strong>banda</strong> o de técnica de modulación, no «de aire»</td></tr>
+                    <tr><td><strong>Quién más lo usa</strong></td><td>Nadie: el cable es tuyo</td><td><strong>Todos</strong>: el espectro es compartido</td></tr>
+                    <tr><td><strong>Quién puede escuchar</strong></td><td>Quien pinche el cable</td><td><strong>Cualquiera</strong> dentro del alcance</td></tr>
+                    <tr><td><strong>Coste de instalación</strong></td><td>Obra, canalizaciones, conectores</td><td>Casi nulo: dos equipos y nada por el medio</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Las dos últimas filas explican por qué lo inalámbrico se ha comido el mundo y por qué, a la vez, es
+            un dolor de cabeza: <strong>es baratísimo de instalar y no controlas el medio</strong>.</p>
+
+            <h2 id="propagacion">2. Cómo se propagan las ondas</h2>
+
+            <p>Las comunicaciones inalámbricas consisten en el envío y recepción de electrones —o fotones— que
+            circulan por el espacio libre. El libro usa una comparación muy visual: esas partículas viajan en forma
+            de <strong>ondas electromagnéticas</strong> que se propagan <strong>como las ondas del agua en un
+            estanque</strong>.</p>
+
+            <div class="destacado">
+                <strong>La imagen del estanque explica tres cosas de golpe</strong>
+                <ul>
+                    <li>Las ondas salen <strong>en todas direcciones</strong> desde el emisor, no hacia un sitio
+                    concreto.</li>
+                    <li>Se van <strong>debilitando</strong> a medida que se alejan, porque la misma energía se
+                    reparte en un círculo cada vez mayor. Es la <a href="../../Semana_05/Dia_04/teoria.html#atenuacion">atenuación</a>
+                    de la Semana 5, ahora con una causa geométrica.</li>
+                    <li>Si dos emisores trabajan a la vez, sus ondas <strong>se cruzan y se mezclan</strong>. Eso es
+                    la interferencia.</li>
+                </ul>
+            </div>
+
+            <p>Y aparece la primera regla de la semana: <strong>dependiendo de la frecuencia de la señal, existen
+            diferentes tipos de enlaces inalámbricos, con propiedades distintas</strong>. Los cuatro tipos que
+            estudiaremos —radio, microondas, infrarrojos y luz— no son tecnologías rivales: son <strong>zonas
+            distintas del mismo espectro</strong>.</p>
+
+            <h2 id="lambda">3. Frecuencia y longitud de onda</h2>
+
+            <div class="aviso">
+                <strong>Esta parte no sale del libro</strong>
+                El libro habla de frecuencias, pero no introduce la <strong>longitud de onda</strong>. La incluyo
+                porque sin ella no se entiende por qué unas señales atraviesan una pared y otras no, y es física
+                básica, no una fuente discutible.
+            </div>
+
+            <p>Toda onda electromagnética viaja en el vacío a la <strong>velocidad de la luz</strong>, unos
+            <strong>300 000 km/s</strong>. Su <strong>longitud de onda</strong> es la distancia que recorre en un
+            ciclo completo:</p>
+
+            <div class="dato">
+                <strong>λ = c / f</strong>
+                <p>Donde <strong>λ</strong> es la longitud de onda en metros, <strong>c</strong> son 3 · 10⁸ m/s y
+                <strong>f</strong> la frecuencia en hercios.</p>
+                <p>Con la frecuencia en <strong>GHz</strong>, el atajo práctico es: <strong>λ (cm) = 30 / f
+                (GHz)</strong>.</p>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Señal</th><th>Frecuencia</th><th>Longitud de onda</th><th>Comportamiento</th></tr></thead>
+                <tbody>
+                    <tr><td>Onda media (radio AM)</td><td>1 MHz</td><td><strong>300 m</strong></td><td>Rodea obstáculos y edificios sin enterarse</td></tr>
+                    <tr><td>Radio FM</td><td>100 MHz</td><td>3 m</td><td>Atraviesa paredes con facilidad</td></tr>
+                    <tr><td>Wi-Fi 2,4 GHz</td><td>2,4 GHz</td><td><strong>12,5 cm</strong></td><td>Atraviesa una pared, sufre con dos</td></tr>
+                    <tr><td>Wi-Fi 5 GHz</td><td>5 GHz</td><td>6 cm</td><td>Más velocidad, menos alcance y peor con obstáculos</td></tr>
+                    <tr><td>Wi-Fi 60 GHz</td><td>60 GHz</td><td><strong>5 mm</strong></td><td>Prácticamente no sale de la habitación</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La regla que hay que interiorizar</strong>
+                <p><strong>Más frecuencia → más ancho de banda disponible → más velocidad… y menos alcance</strong>,
+                porque las ondas cortas rebotan y se absorben con cualquier obstáculo.</p>
+                <p>Esa tensión recorre toda la semana, y es la misma que viste en el cobre entre categoría y
+                distancia: lo que se gana por un lado se paga por otro.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="espectro">4. El espectro, por bandas</h2>
+
+            <p>Los cuatro medios no guiados del libro ocupan zonas consecutivas del espectro. Vistos en orden de
+            frecuencia creciente:</p>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s07_d01_espectro.png"
+         width="1400" height="622" loading="lazy"
+         alt="Barra horizontal del espectro electromagnético con la frecuencia creciendo hacia la derecha, dividida en cuatro zonas: ondas de radio, microondas, infrarrojos y luz visible, con ejemplos de uso bajo cada zona y la longitud de onda decreciendo en sentido contrario.">
+    <figcaption>Cuatro medios distintos que son, en realidad, cuatro zonas del mismo espectro.</figcaption>
+</figure>
+<pre><code>  ◀── más longitud de onda            más frecuencia ──▶
+
+  RADIO          MICROONDAS        INFRARROJO      LUZ
+  kHz - MHz      1 - 10 GHz        ~300 GHz        ~500 THz
+  omnidireccional  haz dirigido    corto alcance   línea recta
+  atraviesa muros  necesita vista  no atraviesa    no atraviesa</code></pre>
+
+            <p>Fíjate en que la <strong>direccionalidad</strong> aumenta con la frecuencia: la radio se va por todas
+            partes, el láser va a un punto. Y la <strong>capacidad de atravesar obstáculos</strong> hace lo
+            contrario.</p>
+
+            <h2 id="propiedades">5. Las cuatro propiedades de lo inalámbrico</h2>
+
+            <div class="aviso">
+                <strong>Esta lista es del currículo Cisco</strong>
+                El libro describe cada medio por separado; estas cuatro propiedades, que valen para
+                <strong>todos</strong> los medios inalámbricos, proceden del capítulo 4 del currículo
+                <strong>Cisco ITN</strong>. Las pongo juntas porque ahorran mucho trabajo: cada una reaparecerá
+                esta semana tres o cuatro veces.
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Propiedad</th><th>Qué significa</th><th>Consecuencia práctica</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Área de cobertura</strong></td>
+                        <td>Las señales <strong>no atraviesan bien los obstáculos</strong></td>
+                        <td>La cobertura real la dibujan las paredes, no un círculo perfecto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tasa adaptativa</strong></td>
+                        <td>La velocidad <strong>baja</strong> cuando la señal se debilita</td>
+                        <td>«Tengo cobertura» no significa «tengo velocidad»</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Interferencia</strong></td>
+                        <td>Les afectan otras emisiones en la misma banda</td>
+                        <td>El vecino, el microondas de la cocina o un mando pueden tirarte la red</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Seguridad</strong></td>
+                        <td><strong>Cualquiera accede a la señal</strong>: no hace falta tocar nada</td>
+                        <td>Hay que <strong>cifrar</strong>; en un cable puedes no hacerlo, aquí no</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La tasa adaptativa, con sus palabras</strong>
+                <p>El libro lo explica así: como la capacidad de transmisión de una red inalámbrica depende
+                directamente de la <strong>potencia de la señal</strong>, esta puede adaptar su velocidad a la
+                cobertura disponible. Cuando la señal se debilita con la distancia, los protocolos establecen una
+                <strong>tasa adaptativa</strong>, y la velocidad disponible puede reducirse muchísimo respecto a la
+                nominal.</p>
+                <p>Con Shannon en la mano ya sabes por qué: menos potencia es peor relación señal/ruido, y peor S/N
+                es menos capacidad. La tasa adaptativa no es más que <strong>rendirse a Shannon</strong> de forma
+                ordenada.</p>
+            </div>
+
+            <h2 id="radio">6. Las ondas de radio</h2>
+
+            <p>Primera de las cuatro familias. El libro les da cuatro rasgos:</p>
+
+            <ol>
+                <li>Son <strong>fáciles de generar</strong>.</li>
+                <li>Pueden <strong>recorrer largas distancias</strong>.</li>
+                <li><strong>Penetran en los edificios</strong> sin problemas.</li>
+                <li>Viajan <strong>en todas direcciones</strong> desde la fuente emisora, es decir, son
+                omnidireccionales.</li>
+            </ol>
+
+            <p>La tercera y la cuarta son las que las hacen cómodas: no hay que apuntar a ningún sitio y la señal
+            entra en las casas. Son también las que las hacen <strong>fáciles de interferir y de escuchar</strong>.</p>
+
+            <h3>Baja frecuencia y alta frecuencia se comportan distinto</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Radio de <strong>baja</strong> frecuencia</th><th>Radio de <strong>alta</strong> frecuencia</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Frente a la Tierra</strong></td><td><strong>Siguen su curvatura</strong> y no son absorbidas</td><td><strong>Son absorbidas</strong> por la superficie</td></tr>
+                    <tr><td><strong>Cómo llegan lejos</strong></td><td>Bordeando el planeta</td><td>Haciéndolas <strong>rebotar en la ionosfera</strong>, o con repetidores intermedios</td></tr>
+                    <tr><td><strong>Ejemplo</strong></td><td>Onda larga y onda media</td><td>Onda corta, radioaficionados</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+<figure class="figura">
+    <img src="../../../imagenes/m02_s07_d01_propagacion_radio.png"
+         width="1400" height="700" loading="lazy"
+         alt="Corte de la Tierra con dos formas de propagación. A la izquierda, una onda de baja frecuencia que sigue la curvatura del planeta hasta un receptor lejano. A la derecha, una onda de alta frecuencia que sale hacia arriba, rebota en la capa de la ionosfera y vuelve a bajar a un receptor situado más allá del horizonte.">
+    <figcaption>Dos maneras de esquivar el horizonte: bordear la Tierra o rebotar en la ionosfera.</figcaption>
+</figure>
+<pre><code>BAJA FRECUENCIA            ALTA FRECUENCIA
+                                  ─ ─ ─ ionosfera ─ ─ ─
+   ~~~~~~~~~~~~~~                    ╱╲
+  ╱              ╲                  ╱  ╲
+ ▲ sigue la curva ▲                ▲    ▲  rebota y vuelve a bajar
+  ╲______________╱                  ╲__╱</code></pre>
+
+            <div class="dato">
+                <strong>Por qué de noche se oyen emisoras lejanas</strong>
+                <p>Es la propagación por ionosfera: de noche esa capa cambia y refleja mejor, así que una emisora
+                de onda media que de día apenas cubre su provincia puede oírse a cientos de kilómetros. La señal no
+                ha ganado potencia; ha encontrado un <strong>espejo</strong> en el cielo.</p>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="regulacion">7. Por qué el espectro está regulado</h2>
+
+            <p>Aquí aparece algo que no existía con el cobre: <strong>un tercero que manda</strong>.</p>
+
+            <div class="dato">
+                <strong>Lo que dice el libro</strong>
+                <p>Cuando las redes de radio cubren <strong>largas distancias</strong>, es necesario un control
+                estricto por parte de los gobiernos para que las distintas transmisiones no se interfieran entre sí.
+                En señales que cubren <strong>distancias cortas</strong> no hacen falta permisos especiales, y varias
+                redes cercanas pueden usar frecuencias diferentes.</p>
+            </div>
+
+            <p>Esa es exactamente la frontera entre una emisora de radio comercial, que necesita licencia y paga por
+            ella, y tu router Wi-Fi, que no la necesita.</p>
+
+            <details class="ampliacion">
+                <summary>💡 Ampliación: las bandas libres, que el libro no nombra</summary>
+                <div class="ampliacion-cuerpo">
+                    <p><strong>No sale de la bibliografía de la asignatura.</strong> El libro dice que en distancias
+                    cortas «no es necesario solicitar permisos especiales», pero no explica por qué. El motivo tiene
+                    nombre: las <strong>bandas ISM</strong> (industriales, científicas y médicas), reservadas
+                    internacionalmente para uso sin licencia. Las más conocidas son la de <strong>2,4 GHz</strong> y
+                    parte de la de <strong>5 GHz</strong>, que es donde vive el Wi-Fi.</p>
+                    <p>Usarlas sin licencia tiene una contrapartida: <strong>nadie te protege de las
+                    interferencias</strong>. En esa misma banda de 2,4 GHz trabajan los hornos microondas, el
+                    Bluetooth, muchos mandos y los teclados inalámbricos. Si te interfieren, no hay a quién
+                    reclamar; en una banda con licencia, sí.</p>
+                    <p>En España quien gestiona el espectro es la <strong>Secretaría de Estado de
+                    Telecomunicaciones</strong>, dentro del marco que fija la <strong>UIT</strong> a nivel
+                    internacional. Se retoma en el Mes 12.</p>
+                </div>
+            </details>
+
+            <div class="aviso">
+                <strong>El microondas de la cocina no es una casualidad</strong>
+                Un horno microondas doméstico funciona a unos <strong>2,45 GHz</strong>, en plena banda del Wi-Fi.
+                No es que interfiera «por mala suerte»: es que esa frecuencia se eligió por cómo agita las moléculas
+                de agua, y la banda quedó marcada como libre precisamente porque ya estaba «sucia». Por eso el Wi-Fi
+                se lleva mal con la cocina.
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="resumen">8. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible de hoy</strong>
+                <ul>
+                    <li>Un medio <strong>no guiado</strong> da soporte a las ondas pero <strong>no las
+                    dirige</strong>. El espectro es <strong>compartido</strong> y cualquiera puede escuchar.</li>
+                    <li>Las ondas se propagan <strong>como en un estanque</strong>: en todas direcciones,
+                    debilitándose y mezclándose entre sí.</li>
+                    <li><strong>λ = c / f</strong>. A 2,4 GHz son <strong>12,5 cm</strong>; a 5 GHz, 6 cm.</li>
+                    <li><strong>Más frecuencia</strong> significa más velocidad posible y <strong>menos
+                    alcance</strong>.</li>
+                    <li>Cuatro propiedades: <strong>cobertura</strong> limitada por los obstáculos, <strong>tasa
+                    adaptativa</strong>, <strong>interferencias</strong> y <strong>seguridad</strong>.</li>
+                    <li>Las ondas de radio son fáciles de generar, llegan lejos, <strong>atraviesan
+                    edificios</strong> y son omnidireccionales.</li>
+                    <li>Las de <strong>baja</strong> frecuencia siguen la curvatura terrestre; las de
+                    <strong>alta</strong> se absorben y se hacen <strong>rebotar en la ionosfera</strong>.</li>
+                    <li>El espectro está <strong>regulado</strong>: licencia para largas distancias, bandas libres
+                    para las cortas.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Se dice…</th><th>…pero en realidad</th></tr></thead>
+                <tbody>
+                    <tr><td>«El aire es un medio como el cobre»</td><td>El cobre <strong>conduce</strong>; el aire solo deja pasar. Y es de todos</td></tr>
+                    <tr><td>«Más frecuencia siempre es mejor»</td><td>Más velocidad posible, pero <strong>menos alcance</strong> y peor frente a obstáculos</td></tr>
+                    <tr><td>«Si tengo cobertura, tengo velocidad»</td><td>La <strong>tasa adaptativa</strong> baja la velocidad cuando la señal se debilita</td></tr>
+                    <tr><td>«La radio de alta frecuencia llega más lejos»</td><td>Se <strong>absorbe</strong> en la superficie; para ir lejos necesita rebotar en la ionosfera o repetidores</td></tr>
+                    <tr><td>«Wi-Fi es una frecuencia»</td><td>Wi-Fi es una <strong>familia de estándares</strong> que usa microondas en bandas libres. Se ve el miércoles</td></tr>
+                    <tr><td>«Como no hay cable, no hay que cifrar»</td><td>Justo al revés: <strong>cualquiera</strong> dentro del alcance recibe la señal</td></tr>
+                    <tr><td>«Las bandas libres son gratis y sin problemas»</td><td>Son gratis y <strong>sin protección</strong>: si te interfieren, no hay a quién reclamar</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">9. Repaso con flashcards</h2>
+
+            <p>Piensa la respuesta <strong>antes</strong> de girar la tarjeta.</p>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 21 minutos · Contesta <strong>sin volver a la teoría</strong></p>
+            <p style="margin-top:6px; font-size:0.92em">El cronómetro <strong>no corre mientras lees</strong>:
+            arranca al llegar aquí, al pulsar «Empezar quiz» o al marcar tu primera respuesta.</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir Quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por tema</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="dato" style="margin-top:30px">
+            <strong>Siguiente paso: el laboratorio</strong>
+            <p>Vas a inventariar los emisores que tienes en casa, anotar su banda y calcular su longitud de onda,
+            para explicar por qué unos llegan a toda la casa y otros no salen de la habitación.</p>
+            <p><a href="laboratorio.html"><strong>→ Ir al laboratorio del Día 1</strong></a> (66 min)</p>
+        </div>
+
+        <div class="destacado">
+            <strong>Mañana, Día 2</strong>
+            <p><strong>Microondas y satélite</strong>: el haz estrecho, la antena parabólica, la alineación
+            milimétrica y el retardo que deja inservibles algunas aplicaciones.</p>
+            <p><em>Tarea de calentamiento (5 min):</em> ¿cuánto tarda la luz en recorrer 36 000 km? Multiplícalo por
+            dos y piensa si notarías esa espera en una videollamada.</p>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="ejercicios.html">Ejercicios</a> · <a href="laboratorio.html">Laboratorio</a></span>
+        <span><a href="../../Semana_06/Dia_05/teoria.html">← Semana 6</a> · <a href="../README.md">Índice de la semana</a> · <a href="../Dia_02/teoria.html">Día 2 →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Tu router emite a la vez en 2,4 GHz y en 5 GHz. Desde el salón, pegado al router, la banda de 5 GHz va mucho más rápida; desde el dormitorio del fondo, con dos paredes de por medio, la de 2,4 GHz aguanta y la de 5 GHz se cae. Explica por qué, usando la longitud de onda.',
+                modelo: 'A 2,4 GHz la longitud de onda es de unos <strong>12,5 cm</strong>; a 5 GHz, de unos <strong>6 cm</strong>. Las ondas más largas <strong>atraviesan mejor los obstáculos</strong>: los rodean o los cruzan perdiendo menos energía, mientras que las más cortas se absorben y se reflejan con facilidad en muros y muebles.</p><p>A cambio, la banda de 5 GHz dispone de <strong>más ancho de banda</strong> y de canales menos saturados, así que cuando la señal llega bien —en el salón, sin obstáculos— da mucha más velocidad. Es el compromiso de la semana: <strong>más frecuencia es más velocidad y menos alcance</strong>. Y con la <strong>tasa adaptativa</strong>, en el dormitorio la de 5 GHz no solo va más lenta: llega a ser inutilizable.',
+                puntos: [
+                    'Calcula o cita las dos longitudes de onda: 12,5 cm y 6 cm',
+                    'Relaciona la onda más larga con mejor penetración de obstáculos',
+                    'Explica que 5 GHz ofrece más ancho de banda cuando la señal es buena',
+                    'Enuncia el compromiso entre frecuencia, velocidad y alcance'
+                ]
+            },
+            {
+                pregunta: 'Un cliente te dice: «no hace falta que cifres la red Wi-Fi de la oficina, está dentro del edificio y la puerta se cierra con llave». ¿Qué le respondes? Usa las cuatro propiedades de los medios inalámbricos.',
+                modelo: 'Que la llave protege el <strong>cable</strong>, no el aire. En un medio inalámbrico <strong>cualquiera dentro del alcance accede a la señal</strong>, sin tocar nada y sin dejar rastro: basta con estar en el rellano, en el piso de arriba o en un coche en la calle. La señal no se detiene en la puerta porque las ondas de radio <strong>atraviesan los edificios</strong>.</p><p>Por eso la seguridad es una de las cuatro propiedades que definen a estos medios, junto con el <strong>área de cobertura</strong> limitada por los obstáculos, la <strong>tasa adaptativa</strong> y la vulnerabilidad a las <strong>interferencias</strong>. En un cable puedes plantearte no cifrar; en el aire, la protección no es física, así que tiene que ser criptográfica.',
+                puntos: [
+                    'Señala que cualquiera dentro del alcance recibe la señal',
+                    'Recuerda que las ondas de radio atraviesan los edificios',
+                    'Nombra la seguridad como una de las cuatro propiedades',
+                    'Contrasta la protección física del cable con la criptográfica del aire'
+                ]
+            },
+            {
+                pregunta: 'Un radioaficionado con un equipo modesto habla con otro que está a 3 000 km, y sin embargo su emisora de FM favorita, mucho más potente, no se oye a 80 km. ¿Cómo se explica?',
+                modelo: 'No decide la potencia, decide la <strong>frecuencia</strong> y cómo se propaga. La emisora de FM trabaja en torno a los <strong>100 MHz</strong>: esas ondas viajan prácticamente en línea recta y se pierden en el horizonte, así que su alcance es poco más que la visión directa desde la antena, por mucha potencia que tenga.</p><p>El radioaficionado usa <strong>onda corta</strong>, de frecuencia más alta que la onda media pero con una propiedad muy útil: se <strong>refleja en la ionosfera</strong>. La señal sube, rebota en esa capa y vuelve a bajar mucho más allá del horizonte, y puede repetir el salto varias veces. Es el mecanismo que explica también que de noche se oigan emisoras de onda media lejanísimas: la ionosfera cambia y refleja mejor.',
+                puntos: [
+                    'Descarta la potencia como explicación principal',
+                    'Relaciona el alcance con la frecuencia y el modo de propagación',
+                    'Explica el rebote en la ionosfera',
+                    'Menciona que la propagación cambia según las condiciones, por ejemplo de noche'
+                ]
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué hace un medio no guiado?', dorso: 'Da <strong>soporte</strong> para que las ondas se propaguen, pero <strong>no las dirige</strong>. Y es compartido.' },
+            { frente: '¿Qué limita la velocidad en un medio no guiado?', dorso: 'El <strong>espectro de frecuencia</strong> utilizado, muy influido por las condiciones atmosféricas.' },
+            { frente: '¿Con qué compara el libro la propagación de las ondas?', dorso: 'Con las <strong>ondas del agua en un estanque</strong>: salen en todas direcciones y se debilitan al alejarse.' },
+            { frente: 'La fórmula de la longitud de onda', dorso: '<strong>λ = c / f</strong>, con c = 3 · 10⁸ m/s. Atajo: λ (cm) = 30 / f (GHz).' },
+            { frente: 'Longitud de onda de 2,4 GHz y de 5 GHz', dorso: '<strong>12,5 cm</strong> y <strong>6 cm</strong>.' },
+            { frente: '¿Qué pasa al subir de frecuencia?', dorso: 'Más ancho de banda y más velocidad posible, pero <strong>menos alcance</strong> y peor paso por obstáculos.' },
+            { frente: 'Las cuatro propiedades de los medios inalámbricos', dorso: '<strong>Área de cobertura</strong> (obstáculos) · <strong>tasa adaptativa</strong> · <strong>interferencia</strong> · <strong>seguridad</strong>.' },
+            { frente: '¿Qué es la tasa adaptativa?', dorso: 'Que la velocidad <strong>se reduce</strong> al debilitarse la señal, en lugar de cortarse. Es Shannon aplicado.' },
+            { frente: 'Los cuatro rasgos de las ondas de radio', dorso: 'Fáciles de generar · llegan lejos · <strong>penetran edificios</strong> · viajan en <strong>todas direcciones</strong>.' },
+            { frente: 'Radio de baja frecuencia frente a alta', dorso: 'La baja <strong>sigue la curvatura</strong> terrestre; la alta <strong>se absorbe</strong> y se hace <strong>rebotar en la ionosfera</strong>.' },
+            { frente: '¿Cuándo hace falta licencia para emitir?', dorso: 'En <strong>largas distancias</strong> los gobiernos lo controlan; en distancias cortas no hacen falta permisos especiales.' },
+            { frente: '¿Qué es una banda libre y qué no garantiza?', dorso: 'Una banda de uso <strong>sin licencia</strong>, como 2,4 GHz. No garantiza <strong>protección frente a interferencias</strong>.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz — Día 1: El aire como medio',
+        tiempo: '21 minutos',
+        minutos: 21,
+        questions: [
+            {
+                topic: 'Medios no guiados',
+                repaso: '#noguiado',
+                text: 'En un medio no guiado, ¿qué determina principalmente la velocidad máxima?',
+                options: {
+                    a: 'La potencia del emisor, únicamente',
+                    b: 'La longitud del enlace',
+                    c: 'El espectro de frecuencia utilizado, junto con las condiciones atmosféricas',
+                    d: 'La categoría del equipamiento'
+                },
+                answer: 'c',
+                feedback: 'En los guiados manda el medio; en el aire, la <strong>banda</strong> en la que trabajas. Y las «categorías» no existen aquí.'
+            },
+            {
+                topic: 'Medios no guiados',
+                repaso: '#noguiado',
+                text: '¿Cuál de estas diferencias entre cable y aire es correcta?',
+                options: {
+                    a: 'El cable es un medio compartido y el aire no',
+                    b: 'El espectro es compartido: otros emiten en tu misma banda y cualquiera dentro del alcance puede escucharte',
+                    c: 'En el aire la instalación es más cara',
+                    d: 'En el aire la velocidad no depende de la distancia'
+                },
+                answer: 'b',
+                feedback: 'Las dos consecuencias de que el medio no sea tuyo: <strong>interferencias</strong> y <strong>seguridad</strong>. Instalar es justo lo barato.'
+            },
+            {
+                topic: 'Propagación',
+                repaso: '#propagacion',
+                text: 'El libro compara la propagación de las ondas con las ondas del agua en un estanque. ¿Qué idea NO se deduce de esa comparación?',
+                options: {
+                    a: 'Que se debilitan al alejarse del origen',
+                    b: 'Que salen en todas direcciones',
+                    c: 'Que las ondas de dos emisores se mezclan',
+                    d: 'Que viajan siempre en línea recta hacia un destino'
+                },
+                answer: 'd',
+                feedback: 'Justo lo contrario: son <strong>omnidireccionales</strong>. La propagación dirigida en haz llega mañana, con las microondas.'
+            },
+            {
+                topic: 'Longitud de onda',
+                repaso: '#lambda',
+                text: '¿Cuál es la longitud de onda de una señal de 5 GHz?',
+                options: { a: '6 cm', b: '12,5 cm', c: '60 cm', d: '5 mm' },
+                answer: 'a',
+                feedback: 'λ = 30 / 5 = <strong>6 cm</strong>. Los 12,5 cm son los de 2,4 GHz y los 5 mm, los de 60 GHz.'
+            },
+            {
+                topic: 'Longitud de onda',
+                repaso: '#lambda',
+                text: 'Dos redes emiten con la misma potencia, una en 2,4 GHz y otra en 5 GHz. ¿Qué cabe esperar detrás de dos paredes?',
+                options: {
+                    a: 'Que las dos lleguen igual: la potencia es la misma',
+                    b: 'Que llegue mejor la de 5 GHz, por tener más ancho de banda',
+                    c: 'Que llegue mejor la de 2,4 GHz, porque su onda es más larga y atraviesa mejor los obstáculos',
+                    d: 'Que ninguna llegue'
+                },
+                answer: 'c',
+                feedback: 'Más ancho de banda no es más alcance. La de 5 GHz gana en velocidad <strong>cuando la señal llega bien</strong>; a través de obstáculos pierde.'
+            },
+            {
+                topic: 'Espectro',
+                repaso: '#espectro',
+                text: 'Ordenando radio, microondas, infrarrojo y luz de menor a mayor frecuencia, ¿qué ocurre con la direccionalidad?',
+                options: {
+                    a: 'Disminuye: la luz se dispersa más',
+                    b: 'Aumenta: se pasa de emitir en todas direcciones a un haz muy estrecho',
+                    c: 'No cambia',
+                    d: 'Aumenta solo hasta las microondas'
+                },
+                answer: 'b',
+                feedback: 'Y la capacidad de <strong>atravesar obstáculos</strong> hace lo contrario: la radio cruza paredes, el láser no pasa ni una cortina.'
+            },
+            {
+                topic: 'Las cuatro propiedades',
+                repaso: '#propiedades',
+                text: 'Un usuario tiene tres barras de cobertura pero la copia de un archivo va lentísima. ¿Qué propiedad lo explica?',
+                options: {
+                    a: 'El área de cobertura',
+                    b: 'La seguridad',
+                    c: 'La tasa adaptativa: al debilitarse la señal, la velocidad baja en lugar de cortarse',
+                    d: 'Ninguna: debe ser el servidor'
+                },
+                answer: 'c',
+                feedback: 'Tener enlace y tener velocidad son cosas distintas. Con peor relación señal/ruido, Shannon deja menos capacidad y el protocolo baja la tasa.'
+            },
+            {
+                topic: 'Las cuatro propiedades',
+                repaso: '#propiedades',
+                text: '¿Por qué en una red inalámbrica el cifrado no es opcional?',
+                options: {
+                    a: 'Porque lo exige el fabricante del punto de acceso',
+                    b: 'Porque cualquiera dentro del alcance recibe la señal sin tener que tocar nada',
+                    c: 'Porque si no, la velocidad baja',
+                    d: 'Porque las ondas se degradan sin cifrar'
+                },
+                answer: 'b',
+                feedback: 'En un cable, para escuchar hay que acceder físicamente a él. En el aire, basta con estar cerca: la protección tiene que ser <strong>criptográfica</strong>.'
+            },
+            {
+                topic: 'Ondas de radio',
+                repaso: '#radio',
+                text: '¿Cuál de estos NO es uno de los rasgos que el libro atribuye a las ondas de radio?',
+                options: {
+                    a: 'Penetran en los edificios sin problemas',
+                    b: 'Son fáciles de generar',
+                    c: 'Viajan en todas direcciones desde la fuente',
+                    d: 'Se concentran en un haz estrecho con una antena parabólica'
+                },
+                answer: 'd',
+                feedback: 'Eso es propio de las <strong>microondas</strong>, que se ven mañana. La radio es omnidireccional, que es justo su comodidad y su problema.'
+            },
+            {
+                topic: 'Ondas de radio',
+                repaso: '#radio',
+                text: '¿Qué hacen las ondas de radio de alta frecuencia al encontrarse con la superficie terrestre?',
+                options: {
+                    a: 'Siguen su curvatura sin absorberse',
+                    b: 'La atraviesan',
+                    c: 'Son absorbidas, y para llegar lejos se las hace rebotar en la ionosfera',
+                    d: 'Cambian de frecuencia'
+                },
+                answer: 'c',
+                feedback: 'Las de <strong>baja</strong> frecuencia son las que bordean el planeta. Las altas necesitan el rebote en la ionosfera o repetidores intermedios.'
+            },
+            {
+                topic: 'Regulación',
+                repaso: '#regulacion',
+                text: 'Según el libro, ¿cuándo es necesario un control estricto de las transmisiones por parte de los gobiernos?',
+                options: {
+                    a: 'Siempre, en cualquier emisión',
+                    b: 'Solo para emisiones digitales',
+                    c: 'Nunca: el espectro es libre',
+                    d: 'Cuando las redes cubren largas distancias; en distancias cortas no hacen falta permisos especiales'
+                },
+                answer: 'd',
+                feedback: 'Es la frontera entre una emisora comercial, que necesita licencia, y tu router Wi-Fi, que no.'
+            },
+            {
+                topic: 'Regulación',
+                repaso: '#regulacion',
+                text: 'Trabajas en una banda libre como la de 2,4 GHz y un vecino instala un equipo que te interfiere. ¿Qué puedes hacer?',
+                options: {
+                    a: 'Reclamar a la administración, que le obligará a apagarlo',
+                    b: 'Nada legalmente: la banda es sin licencia y sin protección. Toca cambiar de canal o de banda',
+                    c: 'Aumentar la potencia sin límite',
+                    d: 'Exigir al fabricante que cambie la frecuencia'
+                },
+                answer: 'b',
+                feedback: 'Es el precio de no pagar licencia: <strong>nadie te protege</strong>. Por eso el miércoles se dedica entero a repartir canales.'
+            },
+            {
+                topic: 'Recuperación · Semana 6',
+                repaso: '../../Semana_06/Dia_04/teoria.html#cobrefibra',
+                text: '<em>Repaso.</em> Un enlace de 200 m entre dos edificios con tierras distintas. ¿Qué medio guiado corresponde y por qué?',
+                options: {
+                    a: 'Par trenzado apantallado, por la distancia',
+                    b: 'Coaxial delgado, que admite 200 m',
+                    c: 'Fibra óptica: supera los 100 m del par trenzado y además aísla eléctricamente los dos edificios',
+                    d: 'Cualquiera: a 200 m no hay problema'
+                },
+                answer: 'c',
+                feedback: 'Dos razones independientes, como la semana pasada. Esta semana aparecerá una tercera opción para ese caso: el <strong>radioenlace</strong>.'
+            },
+            {
+                topic: 'Recuperación · Semana 5',
+                repaso: '../../Semana_05/Dia_04/teoria.html#shannon',
+                text: '<em>Repaso.</em> La tasa adaptativa baja la velocidad cuando el usuario se aleja. ¿Qué fórmula lo justifica?',
+                options: {
+                    a: 'Shannon: al bajar la relación señal/ruido, baja la capacidad del canal',
+                    b: 'Nyquist, porque cambia el número de niveles del cable',
+                    c: 'La ley de Ohm',
+                    d: 'La fórmula de la atenuación en decibelios'
+                },
+                answer: 'a',
+                feedback: 'C = W · log₂(1 + S/N). Menos potencia recibida es peor S/N, y peor S/N es menos capacidad. El protocolo se limita a ajustarse a ese límite.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>
