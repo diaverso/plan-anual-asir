@@ -193,3 +193,41 @@ Optimización: **4.280 KB → 725 KB (−83 %)**. Además del redondeo de fondo 
 tonos, esta tanda se pasó por un **recorte de márgenes blancos** (`apng3.js`), que quita el
 lienzo sobrante que dejan estas herramientas: la del etiquetado pasó de 1774 × 887 a
 1400 × 394 sin perder nada.
+
+## Auditoría de bloques ASCII (repaso de todo el proyecto)
+
+Revisión de los **101 bloques ASCII** de las teorías publicadas contra la regla de la sección 8.5.
+Resultado: **11 pedían imagen y no la tenían**. Ocho ya están; tres se rechazaron y están pedidas
+de nuevo.
+
+| Archivo | Qué enseña | Dónde |
+|---|---|---|
+| `m01_s01_d05_anillo.png` | Topología en anillo: sentido único y qué pasa si un equipo cae | M1 · S1 · D5 |
+| `m01_s02_d01_anatomia_mac.png` | Los 48 bits de una MAC partidos en OUI e identificador de tarjeta | M1 · S2 · D1 |
+| `m01_s02_d06_metodo_seis_pasos.png` | El método de diseño, de requisitos a riesgos | M1 · S2 · D6 |
+| `m01_s02_d07_mapa_semana.png` | Mapa de la Semana 2, de la tarjeta al diseño completo | M1 · S2 · D7 |
+| `m02_s07_d02_enlace_satelite.png` | Subida y bajada de un enlace GEO, con los 35.786 km acotados | M2 · S7 · D2 |
+| `m02_s07_d03_plan_canales_plantas.png` | Reutilización de 1, 6 y 11 en tres plantas | M2 · S7 · D3 |
+| `m02_s08_d01_estrella_jerarquica.png` | Los dos niveles de estrella y el bucle prohibido | M2 · S8 · D1 |
+| `m02_s08_d01_enlace_vs_canal.png` | El mismo enlace medido como enlace permanente y como canal | M2 · S8 · D1 |
+
+Optimización de esta tanda: **4.080 KB → 1.247 KB**. Cuatro llegaron en JPEG con extensión `.png`
+y al convertirse a PNG real engordan un poco; compensa, porque el texto de un diagrama no debe
+guardarse con compresión con pérdida.
+
+### Pendientes de rehacer
+
+| Archivo | Por qué se rechazó |
+|---|---|
+| `m01_s01_d06_contar_dominios.png` | Dibujaba una elipse de dominio de colisión por cada puerto del **hub**, que es justo lo contrario de lo que enseña la sección |
+| `m02_s08_d02_reparto_armario.png` | La escala lateral no cuadra con las bandas y la zona libre ocupa la mitad del armario pese a rotular «20-30 %» |
+| `m02_s08_d05_mapa_semana.png` | Comilla angular inventada en «DISEÑAR |
+
+Los tres bloques ASCII correspondientes siguen en su sitio y sus páginas funcionan; el `<figure>`
+se reinsertará cuando llegue la imagen corregida.
+
+### Nota sobre el lector de dimensiones
+
+Siete archivos de `imagenes/` son **JPEG con extensión `.png`**. Un lector que asuma PNG y lea el
+IHDR en el desplazamiento fijo devuelve basura con ellos. `dims2.py` detecta el formato y busca el
+marcador SOF en los JPEG; es el que hay que usar.
