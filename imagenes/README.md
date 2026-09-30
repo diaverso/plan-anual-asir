@@ -178,3 +178,18 @@ ninguna supera los 212 KB.
 
 Se quedan en ASCII: los cálculos de retardo, la fórmula del horizonte, el esquema de los canales por
 frecuencia, el plano del edificio del laboratorio y las salidas de comandos.
+
+## Semana 8 — Cableado estructurado (5 imágenes) ✅
+
+| Archivo | Qué enseña | Día |
+|---|---|---|
+| `m02_s08_d01_subsistemas.png` | Corte de un edificio con los seis subsistemas, el vertical, el horizontal y las acotaciones 90 + 10 | 1 |
+| `m02_s08_d02_tirado.png` | Cuatro errores de instalación frente a su versión correcta: curvatura, brida, aplastamiento y ocupación | 2 |
+| `m02_s08_d03_tdr.png` | Cómo el TDR convierte el tiempo del eco en distancia a la avería | 3 |
+| `m02_s08_d03_next_fext.png` | La misma diafonía medida en los dos extremos: NEXT y FEXT | 3 |
+| `m02_s08_d04_etiquetado.png` | El mismo identificador A-1-07 en la roseta, los dos extremos del cable y el puerto del panel | 4 |
+
+Optimización: **4.280 KB → 725 KB (−83 %)**. Además del redondeo de fondo y el agrupado de
+tonos, esta tanda se pasó por un **recorte de márgenes blancos** (`apng3.js`), que quita el
+lienzo sobrante que dejan estas herramientas: la del etiquetado pasó de 1774 × 887 a
+1400 × 394 sin perder nada.
