@@ -3,470 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen Mensual 1 - Fundamentos de Redes</title>
+    <title>Examen Mensual 1 — Fundamentos de Redes</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../assets/estudio.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .info-bar {
-            background: #f8f9fa;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .info-item strong {
-            color: #667eea;
-        }
-
-        .content {
-            padding: 30px;
-        }
-
-        /* ---- Repaso de lo fallado durante el mes ---------------------------
-         * Bloque autocontenido: usa la misma paleta que el resto del examen
-         * para no romper su identidad visual.                              */
+        /* ---- Repaso de fallos del mes: autocontenido en esta página ---- */
         .repaso-mes {
-            background: #fff8e6;
-            border-left: 5px solid #e8a33d;
-            border-radius: 10px;
-            padding: 22px 25px;
-            margin-bottom: 30px;
+            background: var(--info-bg);
+            border-left: 5px solid var(--info-bd);
+            border-radius: 8px;
+            padding: 22px 24px;
+            margin-bottom: 34px;
         }
-        .repaso-mes > h2 {
-            margin: 0 0 6px;
-            font-size: 1.25em;
-            color: #7a5100;
+        .repaso-mes h2 {
+            color: var(--info-txt);
+            font-size: 1.35em;
+            margin: 0 0 10px;
+            border: none;
+            padding: 0;
         }
-        .repaso-mes .intro {
-            color: #6b5320;
-            margin-bottom: 18px;
-            line-height: 1.55;
-        }
+        .repaso-mes .intro,
         .repaso-mes .vacio {
-            color: #6b5320;
-            line-height: 1.55;
-            margin: 0;
+            color: var(--info-txt);
+            margin-bottom: 16px;
+            line-height: 1.6;
         }
-        .repaso-dia {
-            background: white;
-            border: 1px solid #f0dcb4;
+        .repaso-mes .aviso-borrado {
+            color: var(--texto-tenue);
+            font-size: 0.86em;
+            margin-top: 14px;
+            line-height: 1.5;
+        }
+        details.repaso-dia {
+            background: var(--superficie);
+            border: 1px solid var(--borde);
             border-radius: 8px;
             margin-bottom: 10px;
+            overflow: hidden;
         }
-        .repaso-dia > summary {
+        details.repaso-dia > summary {
             cursor: pointer;
             padding: 12px 16px;
             font-weight: 600;
-            color: #7a5100;
+            color: var(--texto);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
             list-style: none;
         }
-        .repaso-dia > summary::-webkit-details-marker { display: none; }
-        .repaso-dia > summary::before {
-            content: '▸';
-            display: inline-block;
-            margin-right: 10px;
-            transition: transform .2s;
-        }
-        .repaso-dia[open] > summary::before { transform: rotate(90deg); }
-        .repaso-dia > summary:hover { background: #fffaf0; }
-        .repaso-dia .cuantas {
-            float: right;
-            font-weight: 400;
-            font-size: .9em;
-            color: #a07b30;
+        details.repaso-dia > summary::-webkit-details-marker { display: none; }
+        details.repaso-dia > summary:hover { background: var(--superficie-alt); }
+        details.repaso-dia .cuantas {
+            background: var(--mal-bg);
+            color: var(--mal-txt);
+            border-radius: 12px;
+            padding: 2px 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
         }
         .repaso-item {
-            border-top: 1px solid #f4e7cd;
-            padding: 14px 16px 16px;
+            border-top: 1px solid var(--borde);
+            padding: 14px 16px;
         }
-        .repaso-item .preg {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-        .repaso-item .sol {
-            color: #157347;
-            margin-bottom: 6px;
-            line-height: 1.5;
-        }
-        .repaso-item .porque {
-            color: #555;
-            font-size: .95em;
-            line-height: 1.55;
-        }
-        .repaso-item .volver {
-            display: inline-block;
-            margin-top: 8px;
-            font-size: .9em;
-            color: #4e6ae7;
-        }
-        .repaso-mes .aviso-borrado {
-            margin-top: 16px;
-            font-size: .9em;
-            color: #6b5320;
-        }
+        .repaso-item .preg { font-weight: 600; color: var(--texto); margin-bottom: 6px; }
+        .repaso-item .sol { color: var(--ok-txt); background: var(--ok-bg); border-radius: 6px; padding: 6px 10px; margin-bottom: 6px; }
+        .repaso-item .porque { color: var(--texto-suave); font-size: 0.93em; line-height: 1.55; }
+        .repaso-item .volver { display: inline-block; margin-top: 8px; font-size: 0.88em; color: var(--enlace, var(--primario-txt)); }
 
-        .question {
-            background: #f8f9fa;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
-            transition: all 0.3s ease;
+        /* ---- Parte práctica ---- */
+        .bloque-titulo {
+            margin: 42px 0 18px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primario);
+            color: var(--texto);
         }
+        .bloque-titulo h2 { margin: 0 0 4px; font-size: 1.6em; }
+        .bloque-titulo p { margin: 0; color: var(--texto-suave); }
 
-        .question:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-
-        .question.correct {
-            border-left-color: #28a745;
-            background: #d4edda;
-        }
-
-        .question.incorrect {
-            border-left-color: #dc3545;
-            background: #f8d7da;
-        }
-
-        .question-header {
+        .rubrica-check { list-style: none; padding: 0; margin: 10px 0 0; }
+        .rubrica-check li {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .question-number {
-            background: #667eea;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-
-        .question-topic {
-            background: #e9ecef;
-            color: #495057;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-        }
-
-        .question-text {
-            font-size: 1.1em;
-            font-weight: 500;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-
-        .options {
-            margin-top: 15px;
-        }
-
-        .option {
-            background: white;
-            padding: 12px 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid #e9ecef;
-            display: flex;
-            align-items: center;
             gap: 10px;
+            align-items: flex-start;
+            padding: 7px 0;
+            border-bottom: 1px dashed var(--borde);
+            line-height: 1.5;
         }
+        .rubrica-check li:last-child { border-bottom: none; }
+        .rubrica-check input { margin-top: 4px; flex-shrink: 0; width: 17px; height: 17px; accent-color: var(--primario); }
+        .puntos-ej { font-size: 0.9em; color: var(--texto-suave); margin-top: 10px; }
 
-        .option:hover {
-            background: #f1f3f5;
-            border-color: #667eea;
-            transform: translateX(5px);
-        }
-
-        .option input[type="radio"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .option label {
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .option.correct {
-            background: #d4edda;
-            border-color: #28a745;
-        }
-
-        .option.incorrect {
-            background: #f8d7da;
-            border-color: #dc3545;
-        }
-
-        .feedback {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .feedback.show {
-            display: block;
-        }
-
-        .feedback.correct {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .feedback.incorrect {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            justify-content: center;
-        }
-
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 25px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        button:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .results {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            display: none;
-            margin-top: 30px;
-        }
-
-        .results.show {
-            display: block;
-        }
-
-        .results h2 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-
-        .score {
-            font-size: 4em;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-
-        .score-details {
-            font-size: 1.3em;
-            margin-top: 15px;
-        }
-
-        .breakdown {
-            background: rgba(255,255,255,0.15);
+        .nota-final {
+            margin-top: 34px;
+            background: var(--superficie-alt);
+            border: 2px solid var(--primario);
             border-radius: 12px;
-            padding: 20px;
-            margin-top: 25px;
-            text-align: left;
-            font-size: 1em;
-        }
-
-        .breakdown h3 {
-            margin-bottom: 15px;
+            padding: 24px;
             text-align: center;
         }
-
-        .breakdown-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .breakdown-row:last-child {
-            border-bottom: none;
-        }
-
-        .progress-bar {
-            background: #e9ecef;
-            height: 18px;
-            border-radius: 9px;
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
-
-        .progress-fill {
-            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
-            height: 100%;
-            transition: width 0.5s ease;
-        }
-
-        /* La etiqueta va FUERA del relleno: dentro se recortaba con
-         * porcentajes bajos y quedaba texto blanco sobre fondo gris. */
-        .progress-texto {
-            display: block;
-            margin-bottom: 20px;
-            font-size: .92em;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .info-bar {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .content {
-                padding: 15px;
-            }
-
-            .question-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-
-            .buttons {
-                flex-direction: column;
-            }
-
-            button {
-                width: 100%;
-            }
-        }
+        .nota-final h2 { margin: 0 0 12px; color: var(--texto); }
+        .nota-final .cifra { font-size: 3em; font-weight: 700; color: var(--primario-txt); }
+        .nota-final .desglose { color: var(--texto-suave); margin-top: 8px; line-height: 1.7; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Examen Mensual 1</h1>
-            <p>Fundamentos de Redes (Semanas 1-4) - Planificación y Administración de Redes</p>
-        </div>
+<div class="container">
 
-        <div class="info-bar">
-            <div class="info-item">
-                <strong>Preguntas:</strong> <span id="totalQuestions">25</span>
-            </div>
-            <div class="info-item">
-                <strong>Tiempo:</strong> <span id="timer">90 minutos</span>
-            </div>
-            <div class="info-item">
-                <strong>Nota mínima:</strong> 50%
-            </div>
-        </div>
-
-        <div class="content">
-            <div id="repasoMes"></div>
-
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
-                <span class="progress-texto" id="progressTexto"></span>
-            </div>
-
-            <div id="quiz"></div>
-
-            <div class="buttons">
-                <button onclick="checkAnswers()">Corregir Examen</button>
-                <button onclick="resetQuiz()">Reiniciar Examen</button>
-            </div>
-
-            <div class="results" id="results">
-                <h2>Resultados del Examen</h2>
-                <div class="score" id="score">0%</div>
-                <div class="score-details">
-                    <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">25</span></p>
-                    <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
-                    <p id="verdict"></p>
-                </div>
-                <div class="breakdown" id="breakdown">
-                    <h3>Resultado por semana</h3>
-                    <div id="breakdownRows"></div>
-                </div>
-            </div>
-        </div>
+    <div class="header">
+        <h1>Examen Mensual 1 — Fundamentos de Redes</h1>
+        <p>Semanas 1 a 4 · Introducción · Componentes · Arquitecturas y modelos · Dispositivos</p>
     </div>
 
-    <script src="../assets/progreso.js"></script>
+    <div class="info-bar">
+        <div class="info-item"><strong>Test:</strong> 25 preguntas (50 %)</div>
+        <div class="info-item"><strong>Práctica:</strong> 4 ejercicios (50 %)</div>
+        <div class="info-item"><strong>Tiempo:</strong> 105 min</div>
+        <div class="info-item"><strong>Aprobado:</strong> 5/10</div>
+    </div>
 
-    <script>
-        // Banco de preguntas del examen mensual: cubre las 4 semanas del Mes 1.
-        // El campo "week" permite desglosar el resultado y saber qué repasar.
-        const questions = [
+    <div class="content">
+
+        <div id="repasoMes"></div>
+
+        <div class="aviso">
+            <strong>Cómo se corrige</strong>
+            El test se corrige solo. La parte práctica se <strong>autoevalúa</strong>: escribes tu respuesta,
+            revelas la solución modelo y marcas en la rúbrica los puntos que realmente habías puesto. Sé honesto:
+            la nota es para ti, no para nadie más.
+        </div>
+
+        <div class="bloque-titulo">
+            <h2>Parte 1 — Test</h2>
+            <p>25 preguntas · vale el 50 % de la nota</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTest()">Corregir test</button>
+            <button onclick="reiniciarTest()">Reiniciar test</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultado del test</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">25</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown">
+                <h3>Resultado por semana</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+        <div class="bloque-titulo">
+            <h2>Parte 2 — Práctica</h2>
+            <p>4 ejercicios · vale el 50 % de la nota · ninguna solución aparece antes de que escribas la tuya</p>
+        </div>
+
+        <div id="practicas"></div>
+
+        <div class="buttons">
+            <button onclick="calcularNota()">Calcular nota final</button>
+        </div>
+
+        <div class="nota-final" id="notaFinal" style="display:none">
+            <h2>Nota final del Mes 1</h2>
+            <div class="cifra" id="notaCifra">—</div>
+            <div class="desglose" id="notaDesglose"></div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Índice del Mes 1</a></span>
+        <span><a href="Semana_04/Dia_05/teoria.html">← Test semanal de la Semana 4</a> · <a href="../Mes_02_Capa_Fisica/README.md">Mes 2 →</a></span>
+    </div>
+
+</div>
+
+<script src="../assets/progreso.js"></script>
+<script src="../assets/interactivo.js"></script>
+<script>
+/* ==================================================================
+ * EXAMEN MENSUAL DEL MES 1
+ *
+ * Página autocontenida: usa estudio.css y progreso.js, pero lleva su
+ * propio motor porque quiz.js y ejercicios.js comparten los mismos
+ * identificadores del DOM y no pueden convivir en una página.
+ * ================================================================== */
+
+const semanas = {
+    1: 'Introducción a las Redes',
+    2: 'Componentes de una red',
+    3: 'Arquitecturas y modelos',
+    4: 'Dispositivos de red'
+};
+
+const questions = [
             {
                 week: 1,
                 text: '¿Cuáles son los 5 componentes básicos de un sistema de comunicación?',
@@ -769,300 +512,525 @@
             }
         ];
 
-        // Respuestas correctas indexadas como q1, q2, ... para la corrección
-        const correctAnswers = {};
-        questions.forEach((q, i) => {
-            correctAnswers['q' + (i + 1)] = q.answer;
-        });
+const practicas = [
+    {
+        semana: 1,
+        titulo: 'Ejercicio 1 — Cuánto tarda de verdad',
+        tiempo: '15 min',
+        enunciado:
+            '<p>Una delegación envía cada noche una copia de seguridad de <strong>18 GB</strong> a la central por un ' +
+            'enlace de <strong>200 Mbps</strong>. La latencia de ida y vuelta medida con <code>ping</code> es de ' +
+            '<strong>28 ms</strong>.</p>' +
+            '<ol>' +
+            '<li>Calcula el tiempo de transferencia. Indica qué conversión de unidades has aplicado y por qué.</li>' +
+            '<li>¿Influye la latencia de 28 ms en el resultado? Razónalo.</li>' +
+            '<li>La ventana de copia es de <strong>6 horas</strong>. ¿Cabe? Si no, ¿qué dos cosas distintas se ' +
+            'podrían tocar?</li>' +
+            '</ol>',
+        modelo:
+            '<p><strong>1.</strong> Los 18 GB son <strong>bytes</strong> y los 200 Mbps son <strong>bits</strong> por ' +
+            'segundo: hay que pasar a la misma unidad, y ese es el error clásico.<br>' +
+            '18 GB × 8 = <strong>144 Gb</strong> = 144.000 Mb.<br>' +
+            '144.000 ÷ 200 = <strong>720 s</strong> = <strong>12 minutos</strong>.<br>' +
+            'Si se trabaja con GiB binarios (18 × 1024 × 8 = 147.456 Mb) salen unos 737 s, algo más de 12 minutos: la ' +
+            'conclusión no cambia, pero conviene decir con qué convenio se calcula.</p>' +
+            '<p><strong>2.</strong> Prácticamente <strong>no</strong>. La latencia es un retardo de ida y vuelta que se ' +
+            'paga una vez al establecer la conversación, no por cada bit; 28 ms frente a 720 s es despreciable. ' +
+            'La latencia sí sería determinante en lo contrario: muchas transferencias pequeñas, o un protocolo que ' +
+            'espere confirmación constantemente. Aquí manda el <strong>ancho de banda</strong>.</p>' +
+            '<p><strong>3.</strong> Cabe de sobra: 12 minutos dentro de una ventana de 6 horas, con un margen enorme. ' +
+            'Si no cupiera, las dos palancas son de naturaleza distinta: <strong>subir la capacidad</strong> del ' +
+            'enlace —que es dinero recurrente— o <strong>reducir lo que se envía</strong>, con copias incrementales, ' +
+            'compresión o deduplicación, que es trabajo de diseño. Casi siempre la segunda sale mejor.</p>',
+        rubrica: [
+            'Convertí los 18 GB a bits antes de dividir',
+            'Obtuve unos 720 segundos, es decir 12 minutos',
+            'Dije que la latencia es despreciable frente al tiempo de transferencia',
+            'Expliqué por qué: la latencia se paga una vez, no por bit',
+            'Concluí que cabe en la ventana de 6 horas',
+            'Propuse las dos palancas: más capacidad o enviar menos datos'
+        ]
+    },
+    {
+        semana: 2,
+        titulo: 'Ejercicio 2 — Diseñar la red de una gestoría',
+        tiempo: '20 min',
+        enunciado:
+            '<p>Una gestoría ocupa una planta con <strong>14 puestos de trabajo</strong>, una impresora en red, un ' +
+            'servidor de archivos y conexión a internet. Quieren red cableada en los puestos y Wi-Fi para las visitas.</p>' +
+            '<ol>' +
+            '<li>Elige la <strong>topología</strong> y justifícala frente a las otras dos que conoces.</li>' +
+            '<li>Enumera los <strong>componentes</strong> que hacen falta, hardware y software.</li>' +
+            '<li>¿Cliente-servidor o P2P para los archivos? Justifícalo con dos argumentos.</li>' +
+            '<li>Nombra <strong>tres servicios de red</strong> que la instalación necesitará sí o sí, y di para qué ' +
+            'sirve cada uno.</li>' +
+            '</ol>',
+        modelo:
+            '<p><strong>1. Estrella.</strong> Cada puesto con su propio cable hasta un switch central. Frente al ' +
+            '<strong>bus</strong>, evita que un corte en el cable tumbe a todos y elimina las colisiones del medio ' +
+            'compartido; frente al <strong>anillo</strong>, permite añadir o quitar un puesto sin tocar a los demás. ' +
+            'Su punto débil conocido es que el switch central es un punto único de fallo, y se asume porque a cambio ' +
+            'localizar una avería es inmediato: si falla un puesto, falla ese cable.</p>' +
+            '<p><strong>2. Componentes.</strong> Hardware: tarjeta de red en cada equipo, cableado de par trenzado con ' +
+            'sus rosetas y latiguillos, un panel de parcheo, un <strong>switch</strong> de al menos 24 puertos, un ' +
+            '<strong>router</strong> con salida a internet, un <strong>punto de acceso</strong> Wi-Fi para las visitas, ' +
+            'el servidor de archivos y un SAI. Software: sistema operativo de red en el servidor, sistema operativo y ' +
+            'cliente de red en los puestos, y los protocolos de la pila TCP/IP.</p>' +
+            '<p><strong>3. Cliente-servidor</strong>, por dos razones. Primera, <strong>control</strong>: los permisos, ' +
+            'las copias de seguridad y la auditoría se gestionan en un solo sitio, y en una gestoría eso no es un lujo ' +
+            'sino una obligación, porque maneja datos de terceros. Segunda, <strong>disponibilidad y rendimiento</strong>: ' +
+            'los archivos no dependen de que el equipo de un compañero esté encendido. El P2P tiene sentido en redes ' +
+            'muy pequeñas y sin requisitos de control, que no es el caso.</p>' +
+            '<p><strong>4. Tres servicios.</strong> <strong>DHCP</strong>, para repartir direcciones IP ' +
+            'automáticamente en lugar de configurar catorce equipos a mano y arriesgarse a duplicados. ' +
+            '<strong>DNS</strong>, para traducir nombres en direcciones IP, sin lo cual no se navega ni se llega al ' +
+            'servidor por su nombre. Y un servicio de <strong>directorio y autenticación</strong>, para tener usuarios ' +
+            'y permisos centralizados. También valen respuestas como copias de seguridad, impresión en red o correo, ' +
+            'si se justifican.</p>',
+        rubrica: [
+            'Elegí la estrella y la comparé con bus y anillo',
+            'Mencioné que el nodo central es el punto único de fallo',
+            'Enumeré hardware: tarjetas, cableado, switch, router, punto de acceso, servidor',
+            'Mencioné también el software de red, no solo el hardware',
+            'Elegí cliente-servidor con al menos dos argumentos',
+            'Nombré tres servicios y expliqué para qué sirve cada uno'
+        ]
+    },
+    {
+        semana: 3,
+        titulo: 'Ejercicio 3 — El viaje de un mensaje',
+        tiempo: '20 min',
+        enunciado:
+            '<p>Escribes un mensaje en un chat web y pulsas Enter. El mensaje sale de tu equipo y llega al servidor.</p>' +
+            '<ol>' +
+            '<li>Describe la <strong>encapsulación</strong> capa a capa en el modelo OSI, diciendo qué añade cada capa ' +
+            'y cómo se llama la <strong>PDU</strong> resultante.</li>' +
+            '<li>Indica qué ocurre en el destino.</li>' +
+            '<li>Sitúa las mismas fases en el modelo <strong>TCP/IP</strong> y explica en qué se diferencian los dos ' +
+            'modelos.</li>' +
+            '<li>¿Por qué se diseñó por capas, en lugar de un solo bloque que lo hiciera todo?</li>' +
+            '</ol>',
+        modelo:
+            '<p><strong>1. Bajada por la pila.</strong> En <strong>aplicación</strong> el mensaje es simplemente datos; ' +
+            '<strong>presentación</strong> se ocupa del formato, la codificación de caracteres y, si procede, el ' +
+            'cifrado; <strong>sesión</strong> mantiene el diálogo abierto. A partir de ahí cada capa añade su cabecera:<br>' +
+            '<strong>Transporte</strong> añade puertos de origen y destino y los mecanismos de fiabilidad; la PDU pasa ' +
+            'a llamarse <strong>segmento</strong> (si es TCP) o datagrama (si es UDP).<br>' +
+            '<strong>Red</strong> añade las direcciones IP de origen y destino; la PDU es el <strong>paquete</strong>.<br>' +
+            '<strong>Enlace</strong> añade las direcciones MAC y una cola de comprobación de errores; la PDU es la ' +
+            '<strong>trama</strong>.<br>' +
+            '<strong>Física</strong> no añade cabecera: convierte la trama en <strong>bits</strong>, señales en el medio.</p>' +
+            '<p><strong>2. En el destino, desencapsulación:</strong> el mismo recorrido al revés. Cada capa lee la ' +
+            'cabecera que puso su homóloga del emisor, la retira y entrega el resto a la capa de arriba, hasta que la ' +
+            'aplicación recibe exactamente los datos originales. Cada capa habla con <strong>su igual</strong> del otro ' +
+            'extremo, sin enterarse de lo que hacen las demás.</p>' +
+            '<p><strong>3. En TCP/IP</strong> las cuatro capas superiores de OSI —aplicación, presentación y sesión— se ' +
+            'funden en una sola, <strong>Aplicación</strong>; transporte y red se mantienen (<strong>Transporte</strong> ' +
+            'e <strong>Internet</strong>); y enlace y física se funden en <strong>Acceso a la red</strong>. La ' +
+            'diferencia de fondo es de origen: OSI es un modelo <strong>teórico</strong>, diseñado antes y usado sobre ' +
+            'todo para enseñar y para hablar con precisión de en qué capa está un problema; TCP/IP es el modelo ' +
+            '<strong>real</strong>, que salió de una implementación que ya funcionaba y es la que mueve internet.</p>' +
+            '<p><strong>4. Por qué capas.</strong> Porque permite <strong>cambiar una capa sin tocar las demás</strong>: ' +
+            'se pasa de cable a Wi-Fi sin reescribir el navegador. Porque reparte un problema enorme en problemas ' +
+            'pequeños y tratables. Porque distintos fabricantes pueden hacer piezas distintas que encajan, si respetan ' +
+            'las interfaces. Y porque permite <strong>localizar las averías</strong>: decir «esto es un problema de ' +
+            'capa 2» acota el sitio donde buscar.</p>',
+        rubrica: [
+            'Nombré las siete capas de OSI en orden',
+            'Dije qué añade transporte, red y enlace (puertos, IP, MAC)',
+            'Nombré las PDU: segmento, paquete, trama, bits',
+            'Expliqué la desencapsulación en el destino',
+            'Dije que cada capa dialoga con su homóloga del otro extremo',
+            'Mapeé las siete capas de OSI sobre las cuatro de TCP/IP',
+            'Distinguí OSI como modelo teórico y TCP/IP como modelo real',
+            'Di al menos dos razones del diseño por capas'
+        ]
+    },
+    {
+        semana: 4,
+        titulo: 'Ejercicio 4 — Una red que va lenta',
+        tiempo: '25 min',
+        enunciado:
+            '<p>Un aula tiene <strong>20 equipos</strong> conectados a un <strong>hub</strong> de 24 puertos, y ese hub ' +
+            'cuelga de un <strong>switch</strong> que también conecta la sala de profesores —otros 6 equipos, uno por ' +
+            'puerto— y el <strong>router</strong> de salida a internet. Los alumnos se quejan de lentitud, sobre todo ' +
+            'cuando varios copian archivos a la vez. En la sala de profesores no se nota nada.</p>' +
+            '<ol>' +
+            '<li>¿Cuántos <strong>dominios de colisión</strong> hay? ¿Y cuántos <strong>dominios de difusión</strong>?</li>' +
+            '<li>Explica por qué la lentitud aparece en el aula y no en la sala de profesores.</li>' +
+            '<li>Se sustituye el hub por un switch de 24 puertos. ¿Cómo quedan los dominios? ¿Se resuelve el problema?</li>' +
+            '<li>¿Qué haría falta para separar el tráfico del aula del de los profesores, y en qué capa trabaja ese ' +
+            'dispositivo?</li>' +
+            '</ol>',
+        modelo:
+            '<p><strong>1.</strong> El <strong>hub</strong> es un único dominio de colisión compartido por sus 20 ' +
+            'equipos: los repite todos por todos los puertos. El <strong>switch</strong> crea un dominio de colisión ' +
+            '<em>por puerto</em>: uno por cada equipo de profesores (6), uno para el enlace al router y uno para el ' +
+            'enlace al hub —que es el mismo dominio compartido del aula—. Así que hay <strong>8 dominios de ' +
+            'colisión</strong>: el del aula, los 6 de profesores y el del router.<br>' +
+            'Dominios de <strong>difusión</strong>, <strong>uno solo</strong>: ni el hub ni el switch detienen el ' +
+            'broadcast. Quien lo detiene es el <strong>router</strong>.</p>' +
+            '<p><strong>2.</strong> Porque los 20 equipos del aula <strong>comparten</strong> el ancho de banda y el ' +
+            'medio. Cuando varios transmiten a la vez hay <strong>colisiones</strong>, y cada colisión obliga a callar ' +
+            'y retransmitir, así que el rendimiento cae mucho más deprisa que proporcionalmente. Además el hub trabaja ' +
+            'en <strong>half-duplex</strong>. En profesores, cada equipo tiene su propio puerto de switch: su propio ' +
+            'dominio de colisión, ancho de banda dedicado y full-duplex. Por eso no se nota.</p>' +
+            '<p><strong>3.</strong> Con un switch en lugar del hub, cada equipo del aula pasa a tener su dominio de ' +
+            'colisión: <strong>27 dominios de colisión</strong> (20 del aula + 6 de profesores + el del router), y ' +
+            'sigue habiendo <strong>un solo dominio de difusión</strong>. El problema de lentitud por colisiones ' +
+            '<strong>sí se resuelve</strong>: desaparecen las colisiones y se pasa a full-duplex. Lo que no se resuelve ' +
+            'es el broadcast, que sigue llegando a todos, ni un posible cuello de botella en el enlace que sube al ' +
+            'switch principal o en la salida a internet.</p>' +
+            '<p><strong>4.</strong> Para separar el tráfico hace falta cortar el <strong>dominio de difusión</strong>. ' +
+            'Eso lo hace un <strong>router</strong>, que trabaja en la <strong>capa 3</strong>, la de red, y que no ' +
+            'reenvía broadcast de un lado a otro: cada lado sería una red distinta. La alternativa habitual en un ' +
+            'edificio es un switch gestionable con <strong>VLAN</strong>, que separa lógicamente en capa 2 aunque sigue ' +
+            'necesitando un elemento de capa 3 para que las dos partes se hablen.</p>',
+        rubrica: [
+            'Dije que el hub es un único dominio de colisión para sus 20 equipos',
+            'Dije que el switch crea un dominio de colisión por puerto',
+            'Conté 8 dominios de colisión',
+            'Dije que hay un solo dominio de difusión y que quien lo corta es el router',
+            'Expliqué la lentitud por medio compartido, colisiones y half-duplex',
+            'Contrasté con el puerto dedicado y full-duplex de los profesores',
+            'Con el switch nuevo conté 27 dominios de colisión y 1 de difusión',
+            'Dije que se resuelven las colisiones pero no el broadcast',
+            'Propuse el router, o VLAN, y lo situé en la capa 3'
+        ]
+    }
+];
 
-        // Temas asociados a cada semana, para el desglose de resultados
-        const weekTopics = {
-            1: 'Introducción a las Redes',
-            2: 'Componentes y Tipos de Redes',
-            3: 'Arquitecturas y Modelos',
-            4: 'Dispositivos de Red'
-        };
+/* ------------------------------------------------------- render del test */
 
-        // Generar el HTML de las preguntas
-        function renderQuiz() {
-            const quiz = document.getElementById('quiz');
-            quiz.innerHTML = questions.map((q, i) => {
-                const n = i + 1;
-                const opciones = Object.keys(q.options).map(letra => `
+const respuestasCorrectas = {};
+questions.forEach((q, i) => { respuestasCorrectas['q' + (i + 1)] = q.answer; });
+
+function escaparTexto(t) {
+    const d = document.createElement('div');
+    d.textContent = t == null ? '' : String(t);
+    return d.innerHTML;
+}
+
+function renderTest() {
+    document.getElementById('quiz').innerHTML = questions.map((q, i) => {
+        const n = i + 1;
+        const opciones = Object.keys(q.options).map(letra => `
                     <div class="option">
                         <input type="radio" id="q${n}${letra}" name="q${n}" value="${letra}">
                         <label for="q${n}${letra}">${q.options[letra]}</label>
                     </div>`).join('');
-
-                return `
+        return `
             <div class="question" data-question="${n}">
                 <div class="question-header">
                     <span class="question-number">Pregunta ${n}</span>
-                    <span class="question-topic">Semana ${q.week} · ${weekTopics[q.week]}</span>
+                    <span class="question-topic">Semana ${q.week} · ${semanas[q.week]}</span>
                 </div>
                 <div class="question-text">${q.text}</div>
                 <div class="options">${opciones}</div>
-                <div class="feedback">
-                    <strong>Respuesta correcta: ${q.answer.toUpperCase()}</strong><br>
-                    ${q.feedback}
-                </div>
+                <div class="feedback">${q.feedback}</div>
             </div>`;
-            }).join('');
+    }).join('');
 
-            document.getElementById('totalQuestions').textContent = questions.length;
-            document.getElementById('total').textContent = questions.length;
+    document.getElementById('total').textContent = questions.length;
+    document.querySelectorAll('#quiz input[type="radio"]').forEach(inp => {
+        inp.addEventListener('change', actualizarProgreso);
+    });
+}
 
-            document.querySelectorAll('input[type="radio"]').forEach(input => {
-                input.addEventListener('change', updateProgress);
+function actualizarProgreso() {
+    const total = questions.length;
+    let hechas = 0;
+    for (let i = 1; i <= total; i++) {
+        if (document.querySelector(`input[name="q${i}"]:checked`)) hechas++;
+    }
+    const pct = Math.round((hechas / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressTexto').textContent = pct + '% contestado';
+}
+
+let notaTest = null;
+
+function corregirTest() {
+    const total = questions.length;
+    const sinResponder = [];
+    const porSemana = {};
+    Object.keys(semanas).forEach(s => { porSemana[s] = { correct: 0, total: 0 }; });
+    questions.forEach(q => { porSemana[q.week].total++; });
+
+    for (let i = 1; i <= total; i++) {
+        if (!document.querySelector(`input[name="q${i}"]:checked`)) sinResponder.push(i);
+    }
+    if (sinResponder.length) {
+        alert('Faltan preguntas por responder: ' + sinResponder.join(', '));
+        return;
+    }
+
+    let correctas = 0;
+    const fallos = [];
+
+    for (let i = 1; i <= total; i++) {
+        const q = questions[i - 1];
+        const elegida = document.querySelector(`input[name="q${i}"]:checked`);
+        const div = document.querySelector(`[data-question="${i}"]`);
+        const feedback = div.querySelector('.feedback');
+        div.querySelectorAll('.option').forEach(o => o.classList.remove('correct', 'incorrect'));
+
+        if (elegida.value === q.answer) {
+            correctas++;
+            porSemana[q.week].correct++;
+            div.classList.add('correct');
+            div.classList.remove('incorrect');
+            feedback.classList.add('show', 'correct');
+            feedback.classList.remove('incorrect');
+            elegida.parentElement.classList.add('correct');
+        } else {
+            div.classList.add('incorrect');
+            div.classList.remove('correct');
+            feedback.classList.add('show', 'incorrect');
+            feedback.classList.remove('correct');
+            elegida.parentElement.classList.add('incorrect');
+            div.querySelector(`input[value="${q.answer}"]`).parentElement.classList.add('correct');
+            fallos.push({
+                texto: q.text,
+                solucion: q.options[q.answer],
+                porque: q.feedback,
+                tema: 'Semana ' + q.week + ' — ' + semanas[q.week],
+                repaso: '',
+                titulo: 'Examen mensual del Mes 1'
             });
         }
+    }
 
-        // Desglose por semana: indica qué bloques hay que repasar
-        function renderBreakdown(aciertosPorSemana) {
-            const rows = Object.keys(weekTopics).map(week => {
-                const datos = aciertosPorSemana[week];
-                const pct = Math.round((datos.correct / datos.total) * 100);
-                const aviso = pct < 50 ? ' — repasar' : '';
-                return `
-                    <div class="breakdown-row">
-                        <span>Semana ${week}: ${weekTopics[week]}</span>
-                        <span><strong>${datos.correct}/${datos.total}</strong> (${pct}%)${aviso}</span>
-                    </div>`;
-            }).join('');
+    const pct = Math.round((correctas / total) * 100);
+    notaTest = correctas / total;
 
-            document.getElementById('breakdownRows').innerHTML = rows;
-        }
+    document.getElementById('score').textContent = pct + '%';
+    document.getElementById('correct').textContent = correctas;
+    document.getElementById('incorrect').textContent = total - correctas;
 
-        function checkAnswers() {
-            let correct = 0;
-            let total = Object.keys(correctAnswers).length;
-            let unanswered = [];
+    const veredicto = document.getElementById('verdict');
+    if (pct >= 90)      veredicto.innerHTML = '<strong>Excelente.</strong> El mes está dominado.';
+    else if (pct >= 70) veredicto.innerHTML = '<strong>Muy bien.</strong> Puedes pasar al Mes 2.';
+    else if (pct >= 50) veredicto.innerHTML = '<strong>Aprobado.</strong> Repasa las semanas que marque el desglose antes de continuar.';
+    else                veredicto.innerHTML = '<strong>Suspenso.</strong> Rehaz los tests semanales de las semanas flojas y repite el examen.';
 
-            // Aciertos por semana para el desglose final
-            const aciertosPorSemana = {};
-            Object.keys(weekTopics).forEach(week => {
-                aciertosPorSemana[week] = { correct: 0, total: 0 };
-            });
-            questions.forEach(q => aciertosPorSemana[q.week].total++);
+    document.getElementById('breakdownRows').innerHTML = Object.keys(semanas).map(s => {
+        const d = porSemana[s];
+        const p = Math.round((d.correct / d.total) * 100);
+        const aviso = p < 50
+            ? ' — <a href="Semana_0' + s + '/README.md">repasar</a>'
+            : '';
+        return `<div class="breakdown-row">
+                    <span>Semana ${s}: ${semanas[s]}</span>
+                    <span><strong>${d.correct}/${d.total}</strong> (${p}%)${aviso}</span>
+                </div>`;
+    }).join('');
 
-            // Verificar cada pregunta
-            for (let qNum in correctAnswers) {
-                const index = parseInt(qNum.substring(1), 10) - 1;
-                const selected = document.querySelector(`input[name="${qNum}"]:checked`);
-                const questionDiv = document.querySelector(`[data-question="${qNum.substring(1)}"]`);
-                const feedback = questionDiv.querySelector('.feedback');
-                const options = questionDiv.querySelectorAll('.option');
+    if (typeof PARProgreso !== 'undefined') {
+        PARProgreso.registrar(correctas, total, fallos);
+    }
 
-                if (!selected) {
-                    unanswered.push(qNum.substring(1));
-                    continue;
-                }
+    document.getElementById('results').classList.add('show');
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressTexto').textContent = pct + '% de aciertos';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
 
-                // Limpiar clases previas
-                options.forEach(opt => {
-                    opt.classList.remove('correct', 'incorrect');
-                });
+function reiniciarTest() {
+    document.querySelectorAll('#quiz input[type="radio"]').forEach(i => { i.checked = false; });
+    document.querySelectorAll('#quiz .question').forEach(q => q.classList.remove('correct', 'incorrect'));
+    document.querySelectorAll('#quiz .option').forEach(o => o.classList.remove('correct', 'incorrect'));
+    document.querySelectorAll('#quiz .feedback').forEach(f => f.classList.remove('show', 'correct', 'incorrect'));
+    document.getElementById('results').classList.remove('show');
+    document.getElementById('breakdownRows').innerHTML = '';
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressTexto').textContent = '';
+    notaTest = null;
+    document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+}
 
-                if (selected.value === correctAnswers[qNum]) {
-                    correct++;
-                    aciertosPorSemana[questions[index].week].correct++;
-                    questionDiv.classList.add('correct');
-                    questionDiv.classList.remove('incorrect');
-                    feedback.classList.add('show', 'correct');
-                    feedback.classList.remove('incorrect');
-                    selected.parentElement.classList.add('correct');
-                } else {
-                    questionDiv.classList.add('incorrect');
-                    questionDiv.classList.remove('correct');
-                    feedback.classList.add('show', 'incorrect');
-                    feedback.classList.remove('correct');
-                    selected.parentElement.classList.add('incorrect');
+/* -------------------------------------------------- render de la práctica */
 
-                    // Marcar la respuesta correcta
-                    const correctOption = questionDiv.querySelector(`input[value="${correctAnswers[qNum]}"]`).parentElement;
-                    correctOption.classList.add('correct');
-                }
-            }
+function renderPracticas() {
+    document.getElementById('practicas').innerHTML = practicas.map((p, i) => {
+        const rub = p.rubrica.map((r, j) => `
+                    <li><input type="checkbox" id="r${i}_${j}" data-ej="${i}">
+                        <label for="r${i}_${j}">${r}</label></li>`).join('');
+        return `
+        <div class="ejercicio" data-ej="${i}">
+            <div class="ejercicio-header">
+                <h2>${p.titulo}</h2>
+                <span class="tiempo-ej">⏱️ ${p.tiempo} · Semana ${p.semana}</span>
+            </div>
+            <div class="enunciado">${p.enunciado}</div>
+            <div class="item-ej">
+                <div class="pregunta-ej"><p>Escribe aquí tu respuesta. Hasta que no escribas algo,
+                    el botón de la solución modelo no se activa.</p></div>
+                <textarea class="resp-desarrollo" id="resp${i}" rows="9"
+                          placeholder="Tu razonamiento, con los cálculos si los hay..."></textarea>
+                <div class="ejercicio-acciones">
+                    <button type="button" class="btn-solucion" id="btnSol${i}" disabled
+                            onclick="verModelo(${i})">Ver solución modelo</button>
+                </div>
+            </div>
+            <div class="feedback-ej modelo" id="modelo${i}">
+                <strong>Solución modelo</strong>
+                ${p.modelo}
+                <p style="margin-top:14px"><strong>Marca lo que realmente habías puesto:</strong></p>
+                <ul class="rubrica-check">${rub}</ul>
+                <p class="puntos-ej" id="puntos${i}">0 de ${p.rubrica.length} puntos marcados.</p>
+            </div>
+        </div>`;
+    }).join('');
 
-            if (unanswered.length > 0) {
-                alert(`Por favor, responde todas las preguntas. Faltan: ${unanswered.join(', ')}`);
-                return;
-            }
+    practicas.forEach((p, i) => {
+        const ta = document.getElementById('resp' + i);
+        ta.addEventListener('input', () => {
+            document.getElementById('btnSol' + i).disabled = ta.value.trim().length < 15;
+        });
+        document.querySelectorAll(`input[data-ej="${i}"]`).forEach(chk => {
+            chk.addEventListener('change', () => contarPuntos(i));
+        });
+    });
+}
 
-            // Mostrar resultados
-            const percentage = Math.round((correct / total) * 100);
-            const incorrect = total - correct;
+function verModelo(i) {
+    document.getElementById('modelo' + i).classList.add('show');
+    document.getElementById('btnSol' + i).disabled = true;
+    document.getElementById('btnSol' + i).textContent = 'Solución mostrada';
+}
 
-            document.getElementById('score').textContent = percentage + '%';
-            document.getElementById('correct').textContent = correct;
-            document.getElementById('total').textContent = total;
-            document.getElementById('incorrect').textContent = incorrect;
+function contarPuntos(i) {
+    const marcados = document.querySelectorAll(`input[data-ej="${i}"]:checked`).length;
+    const total = practicas[i].rubrica.length;
+    document.getElementById('puntos' + i).textContent =
+        marcados + ' de ' + total + ' puntos marcados.';
+}
 
-            const verdict = document.getElementById('verdict');
-            if (percentage >= 90) {
-                verdict.innerHTML = '<strong style="color: #28a745;">EXCELENTE</strong> - Dominas completamente el mes';
-            } else if (percentage >= 70) {
-                verdict.innerHTML = '<strong style="color: #20c997;">MUY BIEN</strong> - Buen nivel de comprensión';
-            } else if (percentage >= 50) {
-                verdict.innerHTML = '<strong style="color: #ffc107;">APROBADO</strong> - Revisa los errores antes del Mes 2';
-            } else {
-                verdict.innerHTML = '<strong style="color: #dc3545;">SUSPENSO</strong> - Debes repasar el mes completo';
-            }
+/* ------------------------------------------------------------ nota final */
 
-            renderBreakdown(aciertosPorSemana);
+function calcularNota() {
+    if (notaTest === null) {
+        alert('Corrige primero el test: su resultado es la mitad de la nota.');
+        document.getElementById('quiz').scrollIntoView({ behavior: 'smooth' });
+        return;
+    }
 
-            document.getElementById('results').classList.add('show');
-            document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressTexto').textContent = percentage + '% contestado';
+    let marcados = 0, puntosTotales = 0;
+    const detalle = practicas.map((p, i) => {
+        const m = document.querySelectorAll(`input[data-ej="${i}"]:checked`).length;
+        marcados += m;
+        puntosTotales += p.rubrica.length;
+        return `<div>${p.titulo}: <strong>${m}/${p.rubrica.length}</strong></div>`;
+    }).join('');
 
-            // Scroll to results
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-        }
+    const notaPractica = puntosTotales ? marcados / puntosTotales : 0;
+    const final = (notaTest * 0.5 + notaPractica * 0.5) * 10;
 
-        function resetQuiz() {
-            // Limpiar selecciones
-            document.querySelectorAll('input[type="radio"]').forEach(input => {
-                input.checked = false;
-            });
+    document.getElementById('notaCifra').textContent = final.toFixed(1) + ' / 10';
+    document.getElementById('notaDesglose').innerHTML =
+        `<p><strong>Test:</strong> ${(notaTest * 10).toFixed(1)}/10 · pesa el 50 %</p>` +
+        `<p><strong>Práctica:</strong> ${(notaPractica * 10).toFixed(1)}/10 (${marcados} de ${puntosTotales} puntos de rúbrica) · pesa el 50 %</p>` +
+        detalle +
+        `<p style="margin-top:12px"><strong>${final >= 5 ? '✅ Aprobado.' : '❌ Suspenso.'}</strong> ` +
+        (final >= 7
+            ? 'Adelante con el Mes 2.'
+            : final >= 5
+                ? 'Repasa las semanas que marque el desglose del test antes de continuar.'
+                : 'Rehaz los tests semanales de las semanas flojas y vuelve a este examen.') + '</p>';
 
-            // Limpiar clases
-            document.querySelectorAll('.question').forEach(q => {
-                q.classList.remove('correct', 'incorrect');
-            });
+    document.getElementById('notaFinal').style.display = 'block';
+    document.getElementById('notaFinal').scrollIntoView({ behavior: 'smooth' });
+}
 
-            document.querySelectorAll('.option').forEach(opt => {
-                opt.classList.remove('correct', 'incorrect');
-            });
+/* ============================================================
+ * REPASO DE LO FALLADO DURANTE EL MES
+ * Se construye con lo que progreso.js ha ido guardando en los
+ * quizzes diarios y los tests semanales de las semanas 1 a 4.
+ * ============================================================ */
 
-            document.querySelectorAll('.feedback').forEach(fb => {
-                fb.classList.remove('show', 'correct', 'incorrect');
-            });
+const MES_DE_ESTE_EXAMEN = 1;
 
-            // Ocultar resultados
-            document.getElementById('results').classList.remove('show');
-            document.getElementById('breakdownRows').innerHTML = '';
+function nombreActividad(a) {
+    const tipo = a.archivo === 'teoria' ? 'Quiz' : a.archivo;
+    if (!a.semana) return tipo;
+    if (!a.dia) return 'Semana ' + a.semana + ' — ' + tipo;
+    return 'Semana ' + a.semana + ' · Día ' + a.dia;
+}
 
-            // Reset progress bar
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('progressTexto').textContent = '';
+// Las rutas de repaso se guardaron relativas a la página del día;
+// este examen vive en Mes_01_Fundamentos/, así que hay que rehacerlas.
+function enlaceRepaso(clave, repaso) {
+    if (!repaso) return '';
+    const dir = clave.split('/').slice(1, -1).join('/');   // Semana_0X/Dia_0Y
+    if (!dir) return '';
+    if (repaso.charAt(0) === '#') return dir + '/teoria.html' + repaso;
+    const base = dir.split('/');
+    const partes = repaso.split('/');
+    while (partes.length && partes[0] === '..') { partes.shift(); base.pop(); }
+    return base.concat(partes).join('/');
+}
 
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+function pintarRepasoMes() {
+    const cont = document.getElementById('repasoMes');
+    if (!cont || typeof PARProgreso === 'undefined') return;
 
-        function updateProgress() {
-            const total = Object.keys(correctAnswers).length;
-            let answered = 0;
+    let actividades = [];
+    try { actividades = PARProgreso.fallosDelMes(MES_DE_ESTE_EXAMEN, 60) || []; }
+    catch (e) { return; }
 
-            for (let qNum in correctAnswers) {
-                if (document.querySelector(`input[name="${qNum}"]:checked`)) {
-                    answered++;
-                }
-            }
+    // Este examen también guarda sus fallos; no tiene sentido que aparezcan
+    // en su propio repaso al repetirlo.
+    actividades = actividades.filter(a => a.archivo !== 'examen_mensual');
 
-            const percentage = Math.round((answered / total) * 100);
-            document.getElementById('progressBar').style.width = percentage + '%';
-            document.getElementById('progressTexto').textContent = percentage + '% contestado';
-        }
+    const total = actividades.reduce((n, a) => n + a.fallos.length, 0);
 
-        renderQuiz();
+    if (!total) {
+        cont.innerHTML =
+            '<div class="repaso-mes">' +
+            '<h2>🧠 Repaso de lo que fallaste este mes</h2>' +
+            '<p class="vacio">No hay nada guardado todavía. Este apartado se rellena solo con las preguntas ' +
+            'que falles en los <strong>quizzes diarios y los tests semanales</strong> de las semanas 1 a 4. ' +
+            'Si haces el examen en otro navegador, o después de borrar los datos de navegación, aparecerá ' +
+            'vacío aunque hayas hecho los quizzes.</p>' +
+            '</div>';
+        return;
+    }
 
-        /* ================================================================
-         * REPASO DE LO FALLADO DURANTE EL MES
-         *
-         * Antes de examinarse, el alumno ve todas las preguntas que fallo
-         * en los quizzes y tests de las cuatro semanas de este mes, con su
-         * respuesta correcta y un enlace al apartado de teoria.
-         *
-         * Los datos salen de localStorage via PARProgreso.fallosDelMes().
-         * Solo se registran fallos de quiz y test: los ejercicios guardan
-         * la nota, no que apartado se fallo.
-         * ================================================================ */
-        const MES_DE_ESTE_EXAMEN = 1;
-
-        function escaparTexto(t) {
-            const d = document.createElement('div');
-            d.textContent = t == null ? '' : String(t);
-            return d.innerHTML;
-        }
-
-        function nombreActividad(a) {
-            const tipo = a.archivo === 'teoria' ? 'Quiz' : a.archivo;
-            if (!a.semana) return tipo;
-            if (!a.dia) return 'Semana ' + a.semana + ' — ' + tipo;
-            return 'Semana ' + a.semana + ' · Día ' + a.dia;
-        }
-
-        // El examen esta en Mes_01_Fundamentos/, asi que las rutas de repaso
-        // guardadas (relativas a la pagina del dia) hay que reconstruirlas.
-        function enlaceRepaso(clave, repaso) {
-            if (!repaso) return '';
-            const dir = clave.split('/').slice(1, -1).join('/');   // Semana_0X/Dia_0Y
-            if (!dir) return '';
-            if (repaso.charAt(0) === '#') return dir + '/teoria.html' + repaso;
-            // rutas como ../Dia_01/teoria.html#ancla o ../../Semana_03/...
-            const base = dir.split('/');
-            const partes = repaso.split('/');
-            while (partes.length && partes[0] === '..') { partes.shift(); base.pop(); }
-            return base.concat(partes).join('/');
-        }
-
-        function pintarRepasoMes() {
-            const cont = document.getElementById('repasoMes');
-            if (!cont || typeof PARProgreso === 'undefined') return;
-
-            let actividades = [];
-            try { actividades = PARProgreso.fallosDelMes(MES_DE_ESTE_EXAMEN, 60) || []; }
-            catch (e) { return; }
-
-            const total = actividades.reduce((n, a) => n + a.fallos.length, 0);
-
-            if (!total) {
-                cont.innerHTML =
-                    '<div class="repaso-mes">' +
-                    '<h2>🧠 Repaso de lo que fallaste este mes</h2>' +
-                    '<p class="vacio">No hay nada guardado todavía. Este apartado se rellena solo ' +
-                    'con las preguntas que falles en los <strong>quizzes diarios y los tests ' +
-                    'semanales</strong> del mes. Si haces el examen en otro navegador o después de ' +
-                    'borrar los datos de navegación, aparecerá vacío.</p>' +
-                    '</div>';
-                return;
-            }
-
-            const bloques = actividades.map(function (a) {
-                const items = a.fallos.map(function (f) {
-                    const destino = enlaceRepaso(a.clave, f.repaso);
-                    return '<div class="repaso-item">' +
-                        '<div class="preg">' + escaparTexto(f.texto) + '</div>' +
-                        '<div class="sol">✔ ' + escaparTexto(f.solucion) + '</div>' +
-                        (f.porque ? '<div class="porque">' + f.porque + '</div>' : '') +
-                        (destino ? '<a class="volver" href="' + destino +
-                                   '">→ Repasar este apartado</a>' : '') +
-                        '</div>';
-                }).join('');
-
-                return '<details class="repaso-dia">' +
-                    '<summary>' + escaparTexto(nombreActividad(a)) +
-                    '<span class="cuantas">' + a.fallos.length +
-                    (a.fallos.length === 1 ? ' fallo' : ' fallos') + '</span></summary>' +
-                    items + '</details>';
-            }).join('');
-
-            cont.innerHTML =
-                '<div class="repaso-mes">' +
-                '<h2>🧠 Repaso de lo que fallaste este mes</h2>' +
-                '<p class="intro">Antes de empezar el examen, repasa las <strong>' + total +
-                '</strong> preguntas que fallaste en los quizzes y tests de este mes. ' +
-                'Están ordenadas por semana y por día. Pulsa en cada una para desplegarla.</p>' +
-                bloques +
-                '<p class="aviso-borrado">Este repaso se genera con el progreso guardado en ' +
-                'este navegador. Al repetir un quiz, sus fallos se sustituyen por los de la ' +
-                'última vez.</p>' +
+    const bloques = actividades.map(function (a) {
+        const items = a.fallos.map(function (f) {
+            const destino = enlaceRepaso(a.clave, f.repaso);
+            return '<div class="repaso-item">' +
+                '<div class="preg">' + escaparTexto(f.texto) + '</div>' +
+                '<div class="sol">✔ ' + escaparTexto(f.solucion) + '</div>' +
+                (f.porque ? '<div class="porque">' + f.porque + '</div>' : '') +
+                (destino ? '<a class="volver" href="' + destino + '">→ Repasar este apartado</a>' : '') +
                 '</div>';
-        }
+        }).join('');
 
-        pintarRepasoMes();
+        return '<details class="repaso-dia">' +
+            '<summary>' + escaparTexto(nombreActividad(a)) +
+            '<span class="cuantas">' + a.fallos.length +
+            (a.fallos.length === 1 ? ' fallo' : ' fallos') + '</span></summary>' +
+            items + '</details>';
+    }).join('');
 
-    </script>
+    cont.innerHTML =
+        '<div class="repaso-mes">' +
+        '<h2>🧠 Repaso de lo que fallaste este mes</h2>' +
+        '<p class="intro">Antes de empezar, repasa las <strong>' + total + '</strong> preguntas que fallaste ' +
+        'en los quizzes y tests del Mes 1. Están ordenadas por semana y por día, siguiendo el orden del ' +
+        'temario. Pulsa en cada bloque para desplegarlo.</p>' +
+        bloques +
+        '<p class="aviso-borrado">Este repaso se genera con el progreso guardado en este navegador. Al ' +
+        'repetir un quiz, sus fallos sustituyen a los de la vez anterior. Solo se registran fallos de quiz ' +
+        'y test: el motor de ejercicios guarda la nota, no qué apartado se falló.</p>' +
+        '</div>';
+}
+
+renderTest();
+renderPracticas();
+pintarRepasoMes();
+</script>
 </body>
 </html>

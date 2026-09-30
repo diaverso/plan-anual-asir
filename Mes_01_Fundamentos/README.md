@@ -70,6 +70,12 @@ Packet Tracer se descarga gratuitamente registrándose en [Cisco NetAcad](https:
 | Tests semanales | Día 7 de cada semana | **50 %** |
 | **[Examen mensual](examen_mensual.html)** | Al terminar la Semana 4 | **50 %** |
 
+El **[examen mensual](examen_mensual.html)** empieza con un repaso automático de todo lo que hayas
+fallado en los quizzes y tests del mes, y se divide en **25 preguntas tipo test** (50 %) y **4
+ejercicios prácticos** con solución modelo y rúbrica (50 %), que cubren el cálculo de tiempos de
+transmisión, el diseño de una red pequeña, la encapsulación por capas y los dominios de colisión y
+difusión.
+
 **Nota mínima para superar el mes**: 5/10
 
 ### Criterio de avance
