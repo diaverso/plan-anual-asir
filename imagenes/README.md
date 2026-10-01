@@ -221,13 +221,17 @@ guardarse con compresión con pérdida.
 |---|---|---|
 | `m02_s08_d02_reparto_armario.png` | La escala lateral no cuadraba con las bandas y la zona libre ocupaba la mitad del armario pese a rotular «20-30 %» | ✅ corregida |
 | `m02_s08_d05_mapa_semana.png` | Comilla angular inventada en «DISEÑAR | ✅ corregida |
-| `m01_s01_d06_contar_dominios.png` | Separa el enlace SW1–HUB del propio hub en dos elipses, cuando la teoría los cuenta como **un solo** dominio. Un alumno leería 8 donde el texto dice 7 | ⏳ tercera versión pedida |
+| `m01_s01_d06_contar_dominios.png` | Primero dibujaba una elipse por puerto del hub; luego separaba el enlace SW1–HUB del propio hub, dando 8 donde el texto dice 7 | ✅ corregida a la tercera |
 
-El bloque ASCII de la que falta sigue en su sitio y su página funciona; el `<figure>` se
-reinsertará cuando llegue la imagen buena.
+**Las once están publicadas.**
 
-**Al pedirla, conviene dar el número como autocomprobación**: en esa red hay 7 dominios de
-colisión y 2 de difusión, y la teoría del día lo detalla enlace por enlace.
+### Lo que se aprendió pidiendo estas imágenes
+
+Las tres que hubo que rehacer fallaban todas en lo mismo: el **recuento o la proporción** que el
+dibujo implica, no el texto ni el estilo. La forma de evitarlo es meter la comprobación numérica
+dentro del propio prompt —«tiene que haber exactamente siete elipses, cuéntalas antes de dar la
+imagen por buena»— en lugar de describir solo qué hay que dibujar. Con esa frase salió a la
+primera.
 
 ### Nota sobre el lector de dimensiones
 

@@ -254,6 +254,15 @@
 
             <p>Analicemos esta red:</p>
 
+<figure class="figura">
+    <img src="../../../imagenes/m01_s01_d06_contar_dominios.png"
+         width="1400" height="893" loading="lazy"
+         alt="Red de ejemplo para contar dominios: un router del que cuelgan dos switches; del primero salen dos
+              ordenadores y un hub con otros dos, y del segundo, dos ordenadores. Sombreados de color delimitan los
+              dominios de colisión, uno por puerto de switch y uno compartido en el hub, y los dominios de difusión, uno
+              por interfaz del router.">
+    <figcaption>El switch parte los dominios de colisión; el router, los de difusión. El hub no parte nada.</figcaption>
+</figure>
 <pre><code>                    [ROUTER R1]
                     /          \
              [SWITCH SW1]   [SWITCH SW2]
