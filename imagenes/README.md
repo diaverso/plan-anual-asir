@@ -215,16 +215,19 @@ Optimización de esta tanda: **4.080 KB → 1.247 KB**. Cuatro llegaron en JPEG 
 y al convertirse a PNG real engordan un poco; compensa, porque el texto de un diagrama no debe
 guardarse con compresión con pérdida.
 
-### Pendientes de rehacer
+### Las tres rechazadas en la primera tanda
 
-| Archivo | Por qué se rechazó |
-|---|---|
-| `m01_s01_d06_contar_dominios.png` | Dibujaba una elipse de dominio de colisión por cada puerto del **hub**, que es justo lo contrario de lo que enseña la sección |
-| `m02_s08_d02_reparto_armario.png` | La escala lateral no cuadra con las bandas y la zona libre ocupa la mitad del armario pese a rotular «20-30 %» |
-| `m02_s08_d05_mapa_semana.png` | Comilla angular inventada en «DISEÑAR |
+| Archivo | Por qué se rechazó | Estado |
+|---|---|---|
+| `m02_s08_d02_reparto_armario.png` | La escala lateral no cuadraba con las bandas y la zona libre ocupaba la mitad del armario pese a rotular «20-30 %» | ✅ corregida |
+| `m02_s08_d05_mapa_semana.png` | Comilla angular inventada en «DISEÑAR | ✅ corregida |
+| `m01_s01_d06_contar_dominios.png` | Separa el enlace SW1–HUB del propio hub en dos elipses, cuando la teoría los cuenta como **un solo** dominio. Un alumno leería 8 donde el texto dice 7 | ⏳ tercera versión pedida |
 
-Los tres bloques ASCII correspondientes siguen en su sitio y sus páginas funcionan; el `<figure>`
-se reinsertará cuando llegue la imagen corregida.
+El bloque ASCII de la que falta sigue en su sitio y su página funciona; el `<figure>` se
+reinsertará cuando llegue la imagen buena.
+
+**Al pedirla, conviene dar el número como autocomprobación**: en esa red hay 7 dominios de
+colisión y 2 de difusión, y la teoría del día lo detalla enlace por enlace.
 
 ### Nota sobre el lector de dimensiones
 
