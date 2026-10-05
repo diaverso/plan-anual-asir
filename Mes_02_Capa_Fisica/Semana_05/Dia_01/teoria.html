@@ -124,6 +124,51 @@
                 de 1/2 = <strong>0,5 Hz</strong>.</p>
             </div>
 
+            <h4>Cómo se calcula, paso a paso</h4>
+
+            <p>La fórmula es de una línea, pero el resultado casi nunca sale en segundos redondos, y ahí es donde
+            se falla. <strong>El cálculo no termina en la división: termina cuando el número está en una unidad
+            que se pueda leer.</strong></p>
+
+            <p>Una señal de <strong>200 Hz</strong>, por ejemplo:</p>
+
+<pre><code>1. Escribe la fórmula        T = 1 / f
+2. Sustituye                 T = 1 / 200
+3. Divide                    T = 0,005 s        ← correcto, pero incómodo de leer
+4. Pasa a una unidad útil    0,005 s × 1 000 = 5 ms</code></pre>
+
+            <p>El paso 4 es el que se olvida. Un periodo de <code>0,005 s</code> y uno de <code>5 ms</code> son
+            exactamente lo mismo, pero el segundo se compara de un vistazo con los demás y el primero no.</p>
+
+            <div class="dato">
+                <strong>Las tres conversiones que necesitas</strong>
+                <p>Siempre se <strong>multiplica</strong> al bajar de unidad, porque hacen falta más unidades
+                pequeñas para medir lo mismo:</p>
+<pre><code>segundos → milisegundos (ms)    × 1 000           1 s = 1 000 ms
+segundos → microsegundos (µs)   × 1 000 000       1 s = 1 000 000 µs
+segundos → nanosegundos (ns)    × 1 000 000 000   1 s = 1 000 000 000 ns</code></pre>
+                <p>Y al revés, de ms a s, se divide. Si dudas, comprueba el orden de magnitud: un periodo
+                <strong>más corto</strong> significa una frecuencia <strong>más alta</strong>. Si te sale al revés,
+                has invertido algo.</p>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Frecuencia</th><th>T = 1 / f</th><th>En segundos</th><th>Leído bien</th></tr></thead>
+                <tbody>
+                    <tr><td>50 Hz</td><td>1 / 50</td><td>0,02 s</td><td><strong>20 ms</strong></td></tr>
+                    <tr><td>200 Hz</td><td>1 / 200</td><td>0,005 s</td><td><strong>5 ms</strong></td></tr>
+                    <tr><td>1 kHz</td><td>1 / 1 000</td><td>0,001 s</td><td><strong>1 ms</strong></td></tr>
+                    <tr><td>1 MHz</td><td>1 / 1 000 000</td><td>0,000001 s</td><td><strong>1 µs</strong></td></tr>
+                    <tr><td>2,4 GHz</td><td>1 / 2 400 000 000</td><td>0,00000000042 s</td><td><strong>0,42 ns</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Fíjate en la columna de la derecha: según sube la frecuencia, el periodo se hace más corto y la
+            unidad cambia. Esa escalera —<strong>ms, µs, ns</strong>— reaparece en toda la asignatura, desde el
+            retardo de un enlace hasta el eco de un reflectómetro.</p>
+
             <div class="tabla-wrap">
             <table>
                 <thead><tr><th>Múltiplo</th><th>Equivale a</th><th>Un ejemplo cercano</th></tr></thead>
