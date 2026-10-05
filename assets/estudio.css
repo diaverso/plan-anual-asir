@@ -221,7 +221,16 @@ summary:focus-visible,
     background: var(--superficie);
     border-radius: 20px;
     box-shadow: var(--sombra);
-    overflow: hidden;
+    /* clip y no hidden: recorta igual las esquinas, pero no crea un contenedor
+       de desplazamiento, que es lo que impedía funcionar a position: sticky
+       en los paneles de los laboratorios. */
+    overflow: clip;
+}
+
+/* Los laboratorios con panel lateral necesitan más ancho que una página de
+   lectura: 950 px dejarían el texto en una columna demasiado estrecha. */
+.container:has(.lab-split) {
+    max-width: 1320px;
 }
 
 /* ---------------------------------------------------------------- cabecera */
@@ -2060,4 +2069,126 @@ select:focus {
     color: var(--mal-txt);
     background: var(--mal-bg);
     border-radius: 3px;
+}
+
+/* ------------------------------------- laboratorio con visualizador acompañante
+ *
+ * En los laboratorios de la Semana 5 el alumno contesta mirando el visualizador.
+ * Si el visualizador vive al principio de la página, hay que subir a tocarlo y
+ * bajar a responder en cada pregunta. Con esto se queda a la vista: a la derecha
+ * en pantalla ancha, y pegado arriba en pantalla estrecha.
+ *
+ *   <div class="lab-split">
+ *       <div class="lab-col">  ...pasos, ejercicios, resultados...  </div>
+ *       <aside class="lab-panel"><div class="senal" data-senal="..."></div></aside>
+ *   </div>
+ */
+
+.lab-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 430px);
+    gap: 30px;
+    align-items: start;      /* imprescindible: sin esto el sticky no se despega */
+}
+
+/* El panel va primero en el HTML para que en pantalla estrecha, donde la
+   rejilla se deshace, aparezca arriba y no al final de la página. En pantalla
+   ancha se le manda a la segunda columna. */
+.lab-panel { grid-column: 2; grid-row: 1; }
+.lab-col   { grid-column: 1; grid-row: 1; min-width: 0; }
+
+.lab-panel {
+    position: sticky;
+    /* 72 px y no 16: ahí arriba a la derecha vive el botón del tema, que es
+       fijo y se solaparía con la cabecera del panel. */
+    top: 72px;
+    max-height: calc(100vh - 88px);
+    overflow-y: auto;
+    overscroll-behavior: contain;   /* al llegar al final no arrastra la página */
+}
+
+/* El panel ya no necesita el margen vertical que lleva suelto en la teoría */
+.lab-panel > .simulacion,
+.lab-panel > .senal {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Barra de desplazamiento discreta, solo dentro del panel */
+.lab-panel::-webkit-scrollbar { width: 9px; }
+.lab-panel::-webkit-scrollbar-track { background: transparent; }
+.lab-panel::-webkit-scrollbar-thumb {
+    background: var(--borde);
+    border-radius: 5px;
+}
+.lab-panel::-webkit-scrollbar-thumb:hover { background: var(--texto-tenue); }
+
+.lab-panel { scrollbar-width: thin; scrollbar-color: var(--borde) transparent; }
+
+/* Aviso de que el panel acompaña: solo se ve en pantalla ancha */
+.lab-pista {
+    font-size: 0.88em;
+    color: var(--texto-tenue);
+    margin: 0 0 14px;
+    padding-left: 22px;
+    position: relative;
+}
+.lab-pista::before {
+    content: '📌';
+    position: absolute;
+    left: 0;
+}
+
+/* Botón de vuelta al visualizador. Solo existe en pantalla estrecha, donde el
+   panel no puede acompañar sin comerse media pantalla. */
+.ir-al-panel {
+    display: none;
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 99;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border-radius: 24px;
+    background: var(--primario);
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+}
+
+.ir-al-panel:hover,
+.ir-al-panel:focus {
+    color: #fff;
+    text-decoration: none;
+    filter: brightness(1.08);
+}
+
+/* Pantalla estrecha: una sola columna. Aquí un panel pegajoso ocuparía media
+   pantalla y saldría recortado, que es peor que el problema que resuelve. Se
+   queda arriba, quieto, y para volver a él está el botón flotante. */
+@media (max-width: 1100px) {
+    .lab-split {
+        display: block;
+    }
+    .lab-panel {
+        position: static;
+        max-height: none;
+        overflow: visible;
+        margin-bottom: 26px;
+        scroll-margin-top: 16px;    /* al saltar con el enlace, no pegado al borde */
+    }
+    .lab-pista {
+        display: none;
+    }
+    .ir-al-panel {
+        display: inline-flex;
+    }
+}
+
+/* Si el visitante prefiere menos movimiento, el panel deja de perseguirle */
+@media (prefers-reduced-motion: reduce) {
+    .lab-panel { position: static; max-height: none; overflow: visible; }
 }
