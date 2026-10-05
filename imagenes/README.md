@@ -225,6 +225,19 @@ guardarse con compresión con pérdida.
 
 **Las once están publicadas.**
 
+### Una doceava, añadida después
+
+La auditoría dio por exento el bloque de los armónicos a 300 y a 2 400 bps, clasificándolo como
+desglose numérico. Estaba mal clasificado: muestra **proporciones** —unos armónicos muy juntos
+y los otros ocho veces más separados— y es una **comparación lado a lado**, que son dos de los
+casos que piden imagen.
+
+| Archivo | Qué enseña | Dónde |
+|---|---|---|
+| `m02_s05_d01_armonicos_velocidad.png` | Dos espectros a la misma escala: al multiplicar por ocho la velocidad, los armónicos se separan y dejan de caber bajo los 3.000 Hz de la línea telefónica | M2 · S5 · D1 |
+
+De 938 KB a 122 KB.
+
 ### Lo que se aprendió pidiendo estas imágenes
 
 Las tres que hubo que rehacer fallaban todas en lo mismo: el **recuento o la proporción** que el
