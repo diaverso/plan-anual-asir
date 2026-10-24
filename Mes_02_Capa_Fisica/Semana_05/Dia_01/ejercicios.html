@@ -118,7 +118,26 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 2: De frecuencia a periodo y vuelta',
             tiempo: '12 min',
-            enunciado: '<p>Usa <strong>f = 1/T</strong> y <strong>T = 1/f</strong>. Cuidado con los prefijos: 1 ms = 0,001 s y 1 kHz = 1 000 Hz.</p>',
+            enunciado:
+                '<p>Frecuencia y periodo son inversos: <strong>f = 1/T</strong> y <strong>T = 1/f</strong>. ' +
+                'La fórmula es lo fácil; lo que se falla son las unidades.</p>' +
+                '<p><strong>Cómo se hace, en tres pasos:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Pasa el dato a la unidad base</strong>, hercios o segundos. Si te dan ' +
+                'milisegundos, divide entre 1 000; si te dan kilohercios, multiplica por 1 000.</li>' +
+                '<li><strong>Divide: 1 entre lo que te han dado.</strong> Ahí ya tienes el resultado, ' +
+                'pero en segundos o en hercios pelados.</li>' +
+                '<li><strong>Pasa el resultado a la unidad que te piden.</strong> Este es el paso que se ' +
+                'olvida: 0,02 s y 20 ms son lo mismo, pero solo uno responde a la pregunta.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo completo, con 200 Hz y el periodo pedido en milisegundos:</p>' +
+                '<pre><code>1. Ya está en hercios          f = 200 Hz\n' +
+                '2. Divido                      T = 1 / 200 = 0,005 s\n' +
+                '3. Lo paso a milisegundos      0,005 × 1 000 = 5 ms</code></pre>' +
+                '<p><strong>Las equivalencias que necesitas:</strong> 1 s = 1 000 ms = 1 000 000 µs = ' +
+                '1 000 000 000 ns · 1 kHz = 1 000 Hz · 1 MHz = 1 000 000 Hz · 1 GHz = 1 000 000 000 Hz.</p>' +
+                '<p>Y una comprobación rápida: <strong>a más frecuencia, menos periodo</strong>. Si subes ' +
+                'la frecuencia y te sale un periodo más largo, has invertido algo.</p>',
             items: [
                 {
                     tipo: 'numero',
