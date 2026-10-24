@@ -2188,7 +2188,8 @@ select:focus {
     }
 }
 
-/* Si el visitante prefiere menos movimiento, el panel deja de perseguirle */
-@media (prefers-reduced-motion: reduce) {
-    .lab-panel { position: static; max-height: none; overflow: visible; }
-}
+/* Aquí hubo una regla que anulaba el panel pegajoso con
+   prefers-reduced-motion. Estaba mal: esa preferencia es para animaciones y
+   transiciones que pueden marear, no para un panel que simplemente se queda
+   quieto en su sitio. En Windows basta con desactivar los efectos de
+   animación para activarla, y el panel dejaba de acompañar sin motivo. */
