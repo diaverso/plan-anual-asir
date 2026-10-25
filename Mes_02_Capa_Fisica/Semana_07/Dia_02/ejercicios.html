@@ -175,7 +175,17 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 3: Hasta dónde se ve',
             tiempo: '13 min',
-            enunciado: '<p>Con <strong>d (km) ≈ 4,12 · √h (m)</strong>, y recordando que en un enlace hay <strong>dos</strong> antenas.</p>',
+            enunciado:
+                '<p><strong>Cómo se calcula el alcance de un radioenlace:</strong></p>' +
+                '<ol>' +
+                '<li><strong>El horizonte de una antena</strong> es <code>d (km) ≈ 4,12 · √h (m)</code>, con la altura en metros. Busca alturas que sean cuadrados perfectos: √25 = 5, √36 = 6, √49 = 7, √100 = 10.</li>' +
+                '<li><strong>Un enlace tiene dos antenas</strong>, y cada una ve hasta su propio horizonte. El alcance total es <strong>la suma de los dos</strong>, no el de una sola.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con una antena a 36 m y otra a 16 m:</p>' +
+                '<pre><code>antena 1   4,12 × √36 = 4,12 × 6 = 24,7 km\n' +
+                'antena 2   4,12 × √16 = 4,12 × 4 = 16,5 km\n' +
+                'alcance    24,7 + 16,5           = 41,2 km</code></pre>' +
+                '<p>Fíjate en que la altura entra bajo una raíz: <strong>cuadruplicar la altura solo dobla el alcance</strong>. Por eso compensa más subir la antena baja que la que ya está alta.</p>',
             items: [
                 {
                     tipo: 'numero',
@@ -223,7 +233,19 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 4: El retardo, trayecto a trayecto',
             tiempo: '16 min',
-            enunciado: '<p>Con <strong>t = distancia ÷ velocidad</strong> y c = 300 000 km/s. Lee bien cuántos trayectos pide cada apartado.</p>',
+            enunciado:
+                '<p><strong>Cómo se calcula un retardo de propagación:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Cuenta los trayectos</strong>, que es donde se falla. Un satélite tiene <em>dos</em> trayectos de extremo a extremo —subida y bajada—, y un <strong>ping mide ida y vuelta</strong>, así que por satélite son <strong>cuatro</strong>. En un enlace terrestre, el ping son dos.</li>' +
+                '<li><strong>Suma los kilómetros</strong> de todos esos trayectos.</li>' +
+                '<li><strong>Divide entre la velocidad:</strong> <code>t = distancia / v</code>. En el aire o el vacío, 300 000 km/s; dentro de una fibra, unos <strong>200 000 km/s</strong>.</li>' +
+                '<li><strong>Pasa a milisegundos</strong> multiplicando por 1 000. El resultado de la división sale en segundos.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con un satélite a 35 786 km:</p>' +
+                '<pre><code>1 trayecto (subida)   35 786 / 300 000 = 0,1193 s = 119,3 ms\n' +
+                'extremo a extremo     2 trayectos            = 238,6 ms\n' +
+                'ping (ida y vuelta)   4 trayectos            = 477 ms</code></pre>' +
+                '<p>Antes de dividir, <strong>relee el enunciado</strong> y decide cuántos trayectos te está pidiendo: ahí está casi todo el error posible.</p>',
             items: [
                 {
                     tipo: 'numero',
@@ -280,7 +302,16 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 5: Caudal y latencia no son lo mismo',
             tiempo: '15 min',
-            enunciado: '<p>Un enlace por satélite GEO de <strong>100 Mbps</strong> con <strong>480 ms</strong> de ida y vuelta.</p>',
+            enunciado:
+                '<p>Un enlace por satélite GEO de <strong>100 Mbps</strong> con <strong>480 ms</strong> de ida y vuelta.</p>' +
+                '<p><strong>Son dos cuentas distintas, y esa es la idea del ejercicio:</strong></p>' +
+                '<ul>' +
+                '<li><strong>Tiempo de transferencia</strong> = tamaño ÷ caudal. Pasa el tamaño a bits antes de dividir: 1 GB son 8 000 Mbit, porque un byte son 8 bits.</li>' +
+                '<li><strong>Tiempo de espera</strong> = número de idas y vueltas × latencia. Aquí el caudal no interviene para nada.</li>' +
+                '</ul>' +
+                '<pre><code>transferir 400 Mbit a 100 Mbps   400 / 100        = 4 s\n' +
+                '20 peticiones seguidas de 480 ms  20 × 0,48        = 9,6 s</code></pre>' +
+                '<p>Un archivo grande lo arregla más caudal; muchas peticiones pequeñas, no: eso solo lo arregla menos latencia.</p>',
             items: [
                 {
                     tipo: 'numero',

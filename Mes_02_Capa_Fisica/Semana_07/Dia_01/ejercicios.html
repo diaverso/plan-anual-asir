@@ -150,7 +150,17 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 3: Longitud de onda',
             tiempo: '15 min',
-            enunciado: '<p>Usa <strong>λ = c / f</strong> con c = 3 · 10⁸ m/s, o el atajo <strong>λ (cm) = 30 / f (GHz)</strong>.</p>',
+            enunciado:
+                '<p><strong>Cómo se calcula la longitud de onda:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Con el atajo</strong>, que es lo práctico: <code>λ (cm) = 30 / f (GHz)</code>. Mete la frecuencia en gigahercios y sale directamente en centímetros.</li>' +
+                '<li><strong>Si la frecuencia no está en GHz, pásala antes:</strong> 100 MHz son 0,1 GHz; 433 MHz son 0,433 GHz.</li>' +
+                '<li><strong>Convierte el resultado</strong> a lo que te pidan: de centímetros a metros se divide entre 100, y a milímetros se multiplica por 10.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con 5 GHz:</p>' +
+                '<pre><code>λ = 30 / 5 = 6 cm      (y si lo piden en mm: 60 mm)</code></pre>' +
+                '<p>La fórmula completa es <code>λ = c / f</code> con <code>c = 3 · 10⁸ m/s</code> y la frecuencia en hercios; el atajo sale de ahí. También se puede <strong>invertir</strong>: <code>f (GHz) = 30 / λ (cm)</code>.</p>' +
+                '<p>Comprobación: <strong>a más frecuencia, onda más corta</strong>. Si subes la frecuencia y te sale una onda más larga, has dividido al revés.</p>',
             items: [
                 {
                     tipo: 'numero',

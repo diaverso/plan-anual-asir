@@ -117,7 +117,17 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 2: Frecuencias de canal',
             tiempo: '12 min',
-            enunciado: '<p>Con <strong>f (MHz) = 2 412 + 5 · (canal − 1)</strong>.</p>',
+            enunciado:
+                '<p><strong>Las dos cuentas de los canales de 2,4 GHz:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Frecuencia central:</strong> <code>f (MHz) = 2 412 + 5 · (canal − 1)</code>. Ojo al <strong>menos uno</strong>: el canal 1 está en 2 412, no en 2 417.</li>' +
+                '<li><strong>Solapamiento:</strong> primero la separación, <code>5 × (diferencia de canales)</code> en megahercios; después <code>solape = 22 − separación</code>, porque cada canal ocupa 22 MHz. Si sale negativo o cero, <strong>no hay solape</strong> y se responde 0.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con los canales 9 y 11:</p>' +
+                '<pre><code>f del canal 9   2 412 + 5 × 8 = 2 452 MHz\n' +
+                'separación      5 × 2         = 10 MHz\n' +
+                'solape          22 − 10       = 12 MHz  → se pisan</code></pre>' +
+                '<p>De ahí sale la regla de 1, 6 y 11: hacen falta <strong>cinco canales de diferencia</strong> (25 MHz) para superar los 22 de ocupación.</p>',
             items: [
                 {
                     tipo: 'numero',

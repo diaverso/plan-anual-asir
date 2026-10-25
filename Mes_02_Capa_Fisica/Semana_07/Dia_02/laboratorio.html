@@ -265,7 +265,16 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 3: ¿De qué está hecho ese retardo?',
             tiempo: '18 min',
-            enunciado: '<p>Parte es física pura y parte es la red. Calcula el mínimo teórico con <strong>200 000 km/s</strong>, la velocidad de la luz en la fibra.</p>',
+            enunciado:
+                '<p>Parte es física pura y parte es la red. El mínimo teórico se calcula con <strong>200 000 km/s</strong>, que es la velocidad de la luz dentro de la fibra, no los 300 000 del vacío.</p>' +
+                '<ol>' +
+                '<li><strong>Dobla la distancia</strong>, porque el ping va y vuelve.</li>' +
+                '<li><strong>Divide entre 200 000</strong> y multiplica por 1 000 para tener milisegundos.</li>' +
+                '<li><strong>Resta ese mínimo a la medida real</strong>: lo que sobra es lo que añaden los equipos, las colas y que el cable no va en línea recta.</li>' +
+                '</ol>' +
+                '<pre><code>a 1 500 km:  ida y vuelta 3 000 km\n' +
+                '             3 000 / 200 000 = 0,015 s = 15 ms mínimo\n' +
+                '             si el ping marca 40 ms → la red añade 25 ms</code></pre>',
             items: [
                 {
                     tipo: 'numero',

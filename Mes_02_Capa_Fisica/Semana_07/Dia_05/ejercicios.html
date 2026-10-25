@@ -87,7 +87,10 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 1 · Día 1: el aire y sus reglas',
             tiempo: '14 min',
-            enunciado: '<p><a href="../Dia_01/teoria.html">Teoría del Día 1</a>.</p>',
+            enunciado:
+                '<p><a href="../Dia_01/teoria.html">Teoría del Día 1</a>.</p>' +
+                '<p>Para las longitudes de onda, el atajo <code>λ (cm) = 30 / f (GHz)</code>, que también se puede invertir: <code>f (GHz) = 30 / λ (cm)</code>. Pasa la frecuencia a gigahercios antes de dividir.</p>' +
+                '<pre><code>5 GHz → 30 / 5 = 6 cm        ·        6 cm → 30 / 6 = 5 GHz</code></pre>',
             items: [
                 {
                     tipo: 'numero',
@@ -145,7 +148,15 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 2 · Día 2: microondas y retardo',
             tiempo: '15 min',
-            enunciado: '<p><a href="../Dia_02/teoria.html">Teoría del Día 2</a>. Con c = 300 000 km/s.</p>',
+            enunciado:
+                '<p><a href="../Dia_02/teoria.html">Teoría del Día 2</a>. Con <code>c = 300 000 km/s</code>.</p>' +
+                '<p>Dos recordatorios, que es donde se falla:</p>' +
+                '<ul>' +
+                '<li><strong>Retardo:</strong> cuenta los trayectos antes de dividir. Por satélite, de extremo a extremo son <strong>dos</strong> (subida y bajada) y un ping son <strong>cuatro</strong>.</li>' +
+                '<li><strong>Alcance:</strong> <code>d ≈ 4,12 · √h</code> por antena, y el enlace <strong>suma las dos</strong>.</li>' +
+                '</ul>' +
+                '<pre><code>satélite a 30 000 km, extremo a extremo:  2 × 30 000 / 300 000 = 0,2 s = 200 ms\n' +
+                'antenas a 36 m y 16 m:  4,12×6 + 4,12×4 = 24,7 + 16,5 = 41,2 km</code></pre>',
             items: [
                 {
                     tipo: 'numero',
@@ -193,7 +204,11 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 3 · Día 3: canales',
             tiempo: '15 min',
-            enunciado: '<p><a href="../Dia_03/teoria.html">Teoría del Día 3</a>. Con f = 2 412 + 5 · (canal − 1) y solape = 22 − separación.</p>',
+            enunciado:
+                '<p><a href="../Dia_03/teoria.html">Teoría del Día 3</a>.</p>' +
+                '<p><strong>Frecuencia:</strong> <code>f = 2 412 + 5 · (canal − 1)</code>, con el menos uno. <strong>Solape:</strong> la separación es <code>5 × (diferencia de canales)</code> y el solape, <code>22 − separación</code>; si sale cero o negativo, no hay solape y se responde 0.</p>' +
+                '<pre><code>canal 9      2 412 + 5 × 8 = 2 452 MHz\n' +
+                'canales 9-11  separación 10 → 22 − 10 = 12 MHz de solape</code></pre>',
             items: [
                 {
                     tipo: 'numero',
