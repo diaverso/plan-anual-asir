@@ -251,3 +251,24 @@ primera.
 Siete archivos de `imagenes/` son **JPEG con extensión `.png`**. Un lector que asuma PNG y lea el
 IHDR en el desplazamiento fijo devuelve basura con ellos. `dims2.py` detecta el formato y busca el
 marcador SOF en los JPEG; es el que hay que usar.
+
+## Una figura que estaba en la sección equivocada
+
+El Día 5 de la Semana 1 tenía `m01_s01_d05_bus_y_estrella.png`, pero colocada en la sección de
+la **estrella**. La sección del **bus**, que va antes, se quedaba sin nada: la auditoría de
+bloques ASCII no lo detectó porque solo miraba si había una figura cerca, no si era la que
+explicaba esa sección.
+
+| Archivo | Qué enseña | Dónde |
+|---|---|---|
+| `m01_s01_d05_bus.png` | El bus con sus terminadores, la señal viajando en los dos sentidos, el rebote cuando falta un terminador y la red partida en dos al cortarse el cable | M1 · S1 · D5 |
+
+De 1.180 KB a 97 KB, un **92 %**.
+
+### El optimizador, ahora en Python
+
+`apng3.js` dependía de Chromium a través de Playwright, que dejó de funcionar en este equipo.
+Se reescribió como **`optimizar.py`**, con Pillow: hace lo mismo —recorte del margen blanco,
+escalado a 1400 px, redondeo del fondo y agrupado de tonos— y además **convierte a paleta**
+cuando la imagen tiene 256 colores o menos, que es el caso de todos estos diagramas. Comprime
+bastante mejor que la versión anterior.
