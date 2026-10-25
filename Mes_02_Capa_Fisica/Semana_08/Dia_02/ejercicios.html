@@ -116,7 +116,27 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 2: Ocupación de canalizaciones',
             tiempo: '14 min',
-            enunciado: '<p>Con <strong>ocupación máxima del 40 %</strong> y cables de <strong>6 mm</strong> de diámetro, cuya sección es π × 3² ≈ <strong>28,3 mm²</strong>.</p>',
+            enunciado:
+                '<p>Ocupación máxima del <strong>40 %</strong> y cables de 6 mm de diámetro, cuya sección es <code>π × 3² ≈ 28,3 mm²</code>.</p>' +
+                '<p><strong>Cómo se calcula una ocupación.</strong> La cuenta va en dos direcciones y conviene saber en cuál estás, porque el error típico es confundir la <em>sección útil</em> con la <em>sección total</em> de la canaleta.</p>' +
+                '<p><strong>De la canaleta a los cables</strong> (cuántos caben):</p>' +
+                '<ol>' +
+                '<li>Sección total: <code>ancho × alto</code>, en mm².</li>' +
+                '<li>Sección útil: <code>total × 0,40</code>.</li>' +
+                '<li>Número de cables: <code>útil ÷ sección de un cable</code>, <strong>redondeando hacia abajo</strong>. Medio cable no cabe.</li>' +
+                '</ol>' +
+                '<p><strong>De los cables a la canaleta</strong> (qué tamaño hace falta):</p>' +
+                '<ol>' +
+                '<li>Sección útil necesaria: <code>nº de cables × sección de un cable</code>.</li>' +
+                '<li>Sección total: <code>útil ÷ 0,40</code>. Este es el paso que se olvida: lo calculado antes era solo el 40 %.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo en los dos sentidos, con cables de 6 mm (28,3 mm² cada uno):</p>' +
+                '<pre><code>canaleta 60 × 40   2 400 mm² × 0,40 = 960 mm² útiles\n' +
+                '                   960 / 28,3 = 33,9 → caben 33 cables\n' +
+                '\n' +
+                '30 cables          30 × 28,3 = 849 mm² útiles\n' +
+                '                   849 / 0,40 = 2 123 mm² de canaleta</code></pre>' +
+                '<p>Comprobación: la sección total siempre es <strong>bastante mayor</strong> que la útil. Si te sale menor, has multiplicado por 0,40 donde tocaba dividir.</p>',
             items: [
                 {
                     tipo: 'numero',
@@ -251,7 +271,19 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 4: Unidades de rack',
             tiempo: '13 min',
-            enunciado: '<p>Con <strong>1 U = 4,45 cm</strong> y ancho normalizado de <strong>19 pulgadas</strong>.</p>',
+            enunciado:
+                '<p><strong>Las cuentas del armario, con 1 U = 4,45 cm:</strong></p>' +
+                '<ol>' +
+                '<li><strong>De U a centímetros:</strong> multiplica por 4,45. De centímetros a U, divide.</li>' +
+                '<li><strong>Suma las U del material</strong>, contando 1U por panel, pasahilos y switch, y lo que ocupe cada elemento mayor.</li>' +
+                '<li><strong>Para dejar un porcentaje libre, divide, no multipliques.</strong> Si quieres un 25 % libre, lo ocupado es el 75 %, así que el total es <code>ocupadas ÷ 0,75</code>, redondeando hacia arriba.</li>' +
+                '<li><strong>Y luego elige la medida comercial</strong> que alcance ese mínimo: los armarios no se fabrican en cualquier número de U.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con 8 U de material y un 25 % libre:</p>' +
+                '<pre><code>mínimo    8 / 0,75 = 10,67 → 11 U\n' +
+                'comercial el primero que llegue: 12 U\n' +
+                'altura    12 × 4,45 = 53,4 cm</code></pre>' +
+                '<p>Error frecuente: sumarle el 25 % a las 8 U, que daría 10. No es lo mismo: <strong>el porcentaje libre se mide sobre el armario entero</strong>, no sobre lo ocupado.</p>',
             items: [
                 {
                     tipo: 'numero',

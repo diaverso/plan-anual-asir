@@ -258,7 +258,16 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 4: La familia de la diafonía',
             tiempo: '15 min',
-            enunciado: '<p>NEXT, FEXT, ELFEXT y ACR: qué miden y en qué dirección son buenos.</p>',
+            enunciado:
+                '<p>NEXT, FEXT, ELFEXT y ACR: qué miden y en qué dirección son buenos.</p>' +
+                '<p><strong>Las cuentas de esta familia son restas</strong>, no logaritmos:</p>' +
+                '<ul>' +
+                '<li><code>ACR = NEXT − atenuación</code>. Mide cuánto destaca la señal sobre el ruido de fondo del propio cable, y se quiere <strong>alto</strong>.</li>' +
+                '<li><code>ELFEXT = FEXT − atenuación</code>. Es un cálculo, no una medida, y se desea <strong>bajo</strong>: es la excepción de la familia.</li>' +
+                '</ul>' +
+                '<pre><code>NEXT 38 dB, atenuación 14 dB  →  ACR = 38 − 14 = 24 dB</code></pre>' +
+                '<p>Fíjate en la consecuencia: el ACR puede empeorar <strong>sin que la diafonía haya cambiado</strong>, solo porque suba la atenuación. Por eso un ACR malo tiene dos sospechosos.</p>' +
+                '<p>Y para contar combinaciones entre pares —las medidas de ELFEXT—, piensa en cuántas parejas ordenadas se pueden formar: se inyecta en uno y se mide en otro.</p>',
             items: [
                 {
                     tipo: 'tabla',

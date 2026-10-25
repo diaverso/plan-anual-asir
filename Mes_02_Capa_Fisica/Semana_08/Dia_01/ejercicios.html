@@ -182,7 +182,17 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 3: Distancias',
             tiempo: '14 min',
-            enunciado: '<p>Con los <strong>90 m</strong> de cableado fijo, los <strong>10 m</strong> de latiguillos y la regla práctica: distancia en planta <strong>+ 20 %</strong> y <strong>3 m</strong> por cada cambio de altura.</p>',
+            enunciado:
+                '<p><strong>Cómo se estima la longitud de un tramo</strong> antes de tener el cable tirado:</p>' +
+                '<ol>' +
+                '<li><strong>Mide en planta</strong> la distancia del armario a la toma.</li>' +
+                '<li><strong>Añade un 20 %</strong>: multiplica por 1,2. Cubre que el cable no va en línea recta, sino rodeando pilares y siguiendo canalizaciones.</li>' +
+                '<li><strong>Suma 3 m por cada cambio de altura</strong>: subir al falso techo y bajar a la roseta son dos cambios, es decir 6 m.</li>' +
+                '<li><strong>Compara con los 90 m</strong> del cableado fijo. Los 10 m de latiguillos van aparte y no se tocan.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con 50 m en planta y un cambio de altura:</p>' +
+                '<pre><code>50 × 1,2 = 60 m   +3 m   =  63 m   →  ¿≤ 90?  sí</code></pre>' +
+                '<p>Si el resultado se acerca a los 90 m, ese punto <strong>se mide de verdad</strong> antes de instalar: una estimación no sirve para apurar el límite.</p>',
             items: [
                 {
                     tipo: 'numero',

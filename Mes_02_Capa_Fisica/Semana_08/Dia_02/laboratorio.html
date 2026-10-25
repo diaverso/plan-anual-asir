@@ -149,7 +149,20 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 1: Las cuentas del armario',
             tiempo: '18 min',
-            enunciado: '<p>Con el material del encargo y los datos de arriba.</p>',
+            enunciado:
+                '<p>Con el material del encargo y los datos de arriba.</p>' +
+                '<p><strong>Las cuentas del armario, con 1 U = 4,45 cm:</strong></p>' +
+                '<ol>' +
+                '<li><strong>De U a centímetros:</strong> multiplica por 4,45. De centímetros a U, divide.</li>' +
+                '<li><strong>Suma las U del material</strong>, contando 1U por panel, pasahilos y switch, y lo que ocupe cada elemento mayor.</li>' +
+                '<li><strong>Para dejar un porcentaje libre, divide, no multipliques.</strong> Si quieres un 25 % libre, lo ocupado es el 75 %, así que el total es <code>ocupadas ÷ 0,75</code>, redondeando hacia arriba.</li>' +
+                '<li><strong>Y luego elige la medida comercial</strong> que alcance ese mínimo: los armarios no se fabrican en cualquier número de U.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con 8 U de material y un 25 % libre:</p>' +
+                '<pre><code>mínimo    8 / 0,75 = 10,67 → 11 U\n' +
+                'comercial el primero que llegue: 12 U\n' +
+                'altura    12 × 4,45 = 53,4 cm</code></pre>' +
+                '<p>Error frecuente: sumarle el 25 % a las 8 U, que daría 10. No es lo mismo: <strong>el porcentaje libre se mide sobre el armario entero</strong>, no sobre lo ocupado.</p>',
             items: [
                 {
                     tipo: 'numero',
@@ -268,7 +281,11 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 3: La canalización de la planta',
             tiempo: '16 min',
-            enunciado: '<p>Los 48 cables tienen que llegar al armario. Cable de 6 mm: <strong>28,3 mm²</strong> por cable, ocupación máxima <strong>40 %</strong>.</p>',
+            enunciado:
+                '<p>Los 48 cables tienen que llegar al armario. Cable de 6 mm: <strong>28,3 mm²</strong> por cable, ocupación máxima <strong>40 %</strong>.</p>' +
+                '<p>Aquí la cuenta va <strong>de los cables a la canaleta</strong>: primero la sección útil que necesitan (<code>nº × 28,3</code>) y después la sección total de la canalización (<code>útil ÷ 0,40</code>). No te quedes en el primer número: ese es solo el 40 %.</p>' +
+                '<pre><code>30 cables   30 × 28,3 = 849 mm² útiles\n' +
+                '            849 / 0,40 = 2 123 mm² de canalización</code></pre>',
             items: [
                 {
                     tipo: 'numero',
