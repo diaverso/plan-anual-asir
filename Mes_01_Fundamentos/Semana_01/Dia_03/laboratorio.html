@@ -280,7 +280,18 @@ const ejerciciosData = {
         {
             titulo: 'LAB 3 — Tu velocidad real en MB/s',
             tiempo: '13 min',
-            enunciado: '<p>Traduce lo que tienes contratado a lo que de verdad ves al descargar.</p>',
+            enunciado:
+                '<p>Traduce lo que tienes contratado a lo que de verdad ves al descargar.</p>' +
+                '<p><strong>Cómo se hacen estas conversiones.</strong> Solo hay una regla y un factor, pero hay que tenerlos claros: <strong>las velocidades van en bits</strong> (Mbps, con b minúscula) y <strong>los tamaños en bytes</strong> (MB, con B mayúscula). Entre unos y otros, el factor <strong>8</strong>.</p>' +
+                '<ol>' +
+                '<li><strong>De bits a bytes se divide entre 8</strong>; de bytes a bits se multiplica por 8. Si dudas de la dirección: los bytes son números <em>más pequeños</em>, porque cada uno vale por ocho bits.</li>' +
+                '<li><strong>Para un tiempo de transferencia</strong>, pon las dos cantidades en la misma familia antes de dividir: pasa el tamaño a bits y divídelo entre la velocidad en bits por segundo.</li>' +
+                '<li><strong>Los prefijos son decimales:</strong> en redes 1 Mbps son 1 000 000 bps exactos, y 1 GB son 1 000 MB. Los prefijos binarios se llaman mebi y gibi, y no son estos.</li>' +
+                '</ol>' +
+                '<p>Dos ejemplos:</p>' +
+                '<pre><code>velocidad   300 Mbps / 8 = 37,5 MB/s\n' +
+                'tiempo      250 MB × 8 = 2 000 Mb   →   2 000 / 50 Mbps = 40 s</code></pre>' +
+                '<p>Comprobación: los <strong>MB/s siempre salen unas ocho veces menores</strong> que los Mbps. Si te sale un número mayor, has multiplicado donde tocaba dividir.</p>',
             items: [
                 {
                     tipo: 'validado',

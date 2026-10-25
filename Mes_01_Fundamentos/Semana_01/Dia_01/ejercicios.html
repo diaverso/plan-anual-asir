@@ -229,7 +229,20 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 3: Conmutación de circuitos vs paquetes',
             tiempo: '20 min',
-            enunciado: '<p>Compara ambos modelos de conmutación y cuantifica el desperdicio que genera reservar un circuito.</p>',
+            enunciado:
+                '<p>Compara ambos modelos de conmutación y cuantifica el desperdicio que genera reservar un circuito.</p>' +
+                '<p><strong>Cómo se calcula lo que reserva un circuito:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Pasa el tiempo a segundos</strong>: los minutos se multiplican por 60. ' +
+                'Es el paso que se olvida.</li>' +
+                '<li><strong>Multiplica caudal por tiempo:</strong> Kbps × segundos = kilobits reservados. Y para pasar a megabits, divide entre 1 000.</li>' +
+                '<li><strong>Aplica el porcentaje de uso</strong> para saber cuánto transporta información real, y <strong>el resto es el desperdicio</strong>.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con una llamada de 5 minutos en la que se habla el 70 % del tiempo:</p>' +
+                '<pre><code>1. Tiempo       5 × 60 = 300 s\n' +
+                '2. Reservado    64 × 300 = 19 200 Kb = 19,2 Mb\n' +
+                '3. Útil         19,2 × 0,70 = 13,44 Mb  →  se desperdicia el 30 %</code></pre>' +
+                '<p>Ese desperdicio es justo lo que evita la conmutación de paquetes: sin reserva fija, el silencio no ocupa nada.</p>',
             items: [
                 {
                     tipo: 'tabla',

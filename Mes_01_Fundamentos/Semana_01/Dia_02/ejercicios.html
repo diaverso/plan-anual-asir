@@ -213,9 +213,16 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 3: Colisiones y rendimiento',
             tiempo: '20 min',
-            enunciado: `
-                <p>Una oficina tiene <strong>8 PCs</strong> conectados a un dispositivo de <strong>100 Mbps</strong>.
-                Compara qué ocurre según se use un hub o un switch.</p>`,
+            enunciado:
+                '<p>Una oficina tiene <strong>8 PCs</strong> conectados a un dispositivo de <strong>100 Mbps</strong>. Compara qué ocurre según se use un hub o un switch.</p>' +
+                '<p><strong>Las dos reglas que necesitas:</strong></p>' +
+                '<ul>' +
+                '<li><strong>El hub comparte.</strong> Hay un solo medio, así que el ancho de banda se <strong>divide</strong> entre los equipos: <code>100 / 8</code>. Y es <strong>un único dominio de colisión</strong>, cuente los equipos que cuente.</li>' +
+                '<li><strong>El switch dedica.</strong> Cada puerto es un enlace punto a punto, así que cada equipo tiene el <strong>caudal entero</strong> y su <strong>propio dominio de colisión</strong>: tantos dominios como puertos ocupados.</li>' +
+                '</ul>' +
+                '<pre><code>hub de 100 Mbps con 5 PCs    100 / 5 = 20 Mbps cada uno · 1 dominio\n' +
+                'switch de 100 Mbps con 5 PCs 100 Mbps cada uno       · 5 dominios</code></pre>' +
+                '<p>Cuidado con una cosa: el switch <strong>no multiplica los dominios de difusión</strong>. Esos solo los parte un router.</p>',
             items: [
                 {
                     tipo: 'numero',

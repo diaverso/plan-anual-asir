@@ -172,7 +172,16 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 3 — Señales y velocidad (Día 3)',
             tiempo: '12 min',
-            enunciado: '<p>Trabaja este bloque si fallaste cálculos o unidades. Es lo que más se arrastra durante el curso.</p>',
+            enunciado:
+                '<p>Trabaja este bloque si fallaste cálculos o unidades. Es lo que más se arrastra durante el curso. <a href="../Dia_03/teoria.html">Teoría del Día 3</a>.</p>' +
+                '<p><strong>Los dos métodos del día:</strong></p>' +
+                '<ul>' +
+                '<li><strong>Unidades:</strong> velocidades en bits y tamaños en bytes, factor 8. De bits a bytes se divide; de bytes a bits se multiplica. Para un tiempo, pasa el tamaño a bits <em>antes</em> de dividir entre la velocidad.</li>' +
+                '<li><strong>Digitalización:</strong> muestras por segundo (el doble de la frecuencia máxima) × bits por muestra × canales.</li>' +
+                '</ul>' +
+                '<pre><code>300 Mbps / 8 = 37,5 MB/s\n' +
+                '250 MB × 8 = 2 000 Mb → 2 000 / 50 Mbps = 40 s\n' +
+                '16 000 muestras/s × 12 bits = 192 000 bps = 192 Kbps</code></pre>',
             items: [
                 {
                     tipo: 'numero',
