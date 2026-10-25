@@ -85,7 +85,10 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 1 · Día 1: las cifras del cobre',
             tiempo: '12 min',
-            enunciado: '<p>Si has fallado preguntas del Día 1, empieza aquí. <a href="../Dia_01/teoria.html">Teoría del Día 1</a>.</p>',
+            enunciado:
+                '<p>Si has fallado preguntas del Día 1, empieza aquí. <a href="../Dia_01/teoria.html">Teoría del Día 1</a>.</p>' +
+                '<p>Para el apartado de capacidad, <strong>Nyquist</strong>: cuenta los bits por símbolo con <code>log₂ M</code> —2→1, 4→2, 8→3, 16→4— y multiplica por el doble del ancho de banda. Con W en megahercios el resultado sale en megabits por segundo.</p>' +
+                '<pre><code>2 × 50 MHz × log₂(16) = 2 × 50 × 4 = 400 Mbps</code></pre>',
             items: [
                 {
                     tipo: 'huecos',
@@ -200,7 +203,10 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 3 · Día 3: la luz y sus cuentas',
             tiempo: '14 min',
-            enunciado: '<p>Coaxial y fibra. <a href="../Dia_03/teoria.html">Teoría del Día 3</a>.</p>',
+            enunciado:
+                '<p>Coaxial y fibra. <a href="../Dia_03/teoria.html">Teoría del Día 3</a>.</p>' +
+                '<p>Para las cuentas de la luz, <strong>suma</strong>: fibra (km × dB/km, 0,4 en monomodo y 3 en multimodo), uniones (0,75 por par de conectores y 0,3 por empalme) y los 3 dB de margen. El total se compara con lo que aguanta el transceptor.</p>' +
+                '<pre><code>3 km monomodo  3×0,4 + 1×0,75 + 2×0,3 + 3 = 5,55 dB</code></pre>',
             items: [
                 {
                     tipo: 'tabla',

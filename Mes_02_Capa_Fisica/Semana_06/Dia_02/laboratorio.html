@@ -247,7 +247,11 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 2: Comprobar las longitudes',
             tiempo: '10 min',
-            enunciado: '<p>Antes de comprar nada, hay que verificar que la instalación es posible. Usa la lista de tramos de la parte 2.</p>',
+            enunciado:
+                '<p>Antes de comprar nada, hay que verificar que la instalación es posible. Usa la lista de tramos de la parte 2.</p>' +
+                '<p><strong>Recuerda las dos distancias y en qué se diferencian:</strong> el <strong>cableado fijo</strong> —del panel a la roseta— no puede pasar de <strong>90 m</strong>, y el <strong>enlace completo</strong> —sumándole los dos latiguillos— no puede pasar de <strong>100 m</strong>. Para comprobar un puesto, mira primero el tramo fijo contra los 90, y después la suma contra los 100.</p>' +
+                '<pre><code>tramo fijo 41 m  →  ¿≤ 90?  sí\n' +
+                '41 + 3 + 2 = 46 m  →  ¿≤ 100?  sí  →  el puesto es viable</code></pre>',
             items: [
                 {
                     tipo: 'numero',
@@ -284,7 +288,20 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 3: La lista de materiales',
             tiempo: '18 min',
-            enunciado: '<p>Doce puestos, una toma cada uno. Calcula qué hay que comprar.</p>',
+            enunciado:
+                '<p>Doce puestos, una toma cada uno. Calcula qué hay que comprar.</p>' +
+                '<p><strong>Cómo se saca una lista de materiales:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Suma todos los tramos</strong> de cableado fijo.</li>' +
+                '<li><strong>Añade el 10 % de holgura:</strong> multiplica por 1,1. Cubre curvas, reserva dentro del armario y algún corte estropeado.</li>' +
+                '<li><strong>Divide entre la longitud de la bobina y redondea hacia arriba</strong>, porque media bobina no se vende. Pasarse por tres metros obliga a comprar la segunda entera.</li>' +
+                '<li><strong>Cuenta los conectores:</strong> cada tramo fijo lleva un conector hembra en cada punta, uno en la roseta y otro en el panel, así que son <strong>dos por puesto</strong>. Y otros dos <strong>latiguillos</strong> por puesto, que se compran hechos.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con cinco puestos que suman 150 m:</p>' +
+                '<pre><code>1. Suma de tramos    150 m\n' +
+                '2. Con holgura       150 × 1,1 = 165 m\n' +
+                '3. Bobinas de 305 m  165 / 305 = 0,54 → 1 bobina\n' +
+                '4. Conectores        5 rosetas + 5 puertos = 10   ·   latiguillos: 10</code></pre>',
             items: [
                 {
                     tipo: 'numero',

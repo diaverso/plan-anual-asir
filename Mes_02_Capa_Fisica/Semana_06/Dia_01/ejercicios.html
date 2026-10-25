@@ -290,7 +290,21 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 5: De megahercios a megabits',
             tiempo: '14 min',
-            enunciado: '<p>Aquí se juntan las dos semanas. Usa <strong>Nyquist</strong>: <strong>C = 2 · W · log₂ M</strong>, donde W es el ancho de banda en hercios y M el número de niveles. Responde en <strong>Mbps</strong>.</p>',
+            enunciado:
+                '<p>Aquí se juntan las dos semanas. Responde en <strong>Mbps</strong>.</p>' +
+                '<p><strong>Cómo se aplica Nyquist:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Cuenta los bits por símbolo:</strong> <code>log₂ M</code>, donde M son los ' +
+                'niveles. Sin calculadora: cuántas veces hay que doblar 1 hasta llegar a M. ' +
+                '2→1, 4→2, 8→3, 16→4, 32→5.</li>' +
+                '<li><strong>Multiplica por el doble del ancho de banda:</strong> <code>C = 2 · W · log₂ M</code>.</li>' +
+                '<li><strong>Cuida la unidad.</strong> Si metes W en megahercios, el resultado sale directamente en megabits por segundo; si lo metes en hercios, en bits por segundo.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con 50 MHz y 16 niveles:</p>' +
+                '<pre><code>1. Bits por símbolo   log₂(16) = 4\n' +
+                '2. Capacidad          2 × 50 × 4 = 400 Mbps</code></pre>' +
+                '<p>Para ir al revés —cuántos niveles hacen falta para cierta velocidad— despeja: ' +
+                '<code>log₂ M = C / (2 · W)</code>, y luego eleva 2 a ese número. Con 1 000 Mbps en 100 MHz salen 5, y 2⁵ = 32 niveles.</p>',
             items: [
                 {
                     tipo: 'numero',

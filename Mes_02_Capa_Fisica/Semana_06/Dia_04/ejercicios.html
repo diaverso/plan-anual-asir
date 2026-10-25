@@ -338,7 +338,17 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 5: Números de toda la semana',
             tiempo: '12 min',
-            enunciado: '<p>Cálculos que cruzan los cuatro días.</p>',
+            enunciado:
+                '<p>Cálculos que cruzan los cuatro días. Cada apartado usa un método distinto:</p>' +
+                '<ul>' +
+                '<li><strong>Distancias:</strong> el cableado fijo son 90 m y el enlace completo 100 m, y el límite del fijo no sube por usar latiguillos más cortos.</li>' +
+                '<li><strong>Presupuesto óptico:</strong> suma fibra (km × dB/km), uniones (conectores y empalmes) y el margen de 3 dB.</li>' +
+                '<li><strong>Nyquist:</strong> <code>C = 2 · W · log₂ M</code>, con W en MHz para obtener Mbps.</li>' +
+                '<li><strong>Materiales:</strong> suma de tramos, × 1,1 de holgura, y división entre la bobina <strong>redondeando hacia arriba</strong>.</li>' +
+                '</ul>' +
+                '<pre><code>Nyquist   2 × 50 MHz × log₂(16) = 400 Mbps\n' +
+                'Óptico    3×0,4 + 1×0,75 + 2×0,3 + 3 = 5,55 dB\n' +
+                'Bobinas   150 m × 1,1 = 165 → 165/305 = 0,54 → 1 bobina</code></pre>',
             items: [
                 {
                     tipo: 'numero',

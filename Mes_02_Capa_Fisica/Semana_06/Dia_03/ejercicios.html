@@ -311,7 +311,23 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 5: Cuentas con la luz',
             tiempo: '14 min',
-            enunciado: '<p>Usa los valores típicos de la teoría: <strong>monomodo 0,4 dB/km · multimodo 3 dB/km · par de conectores 0,75 dB · empalme por fusión 0,3 dB · margen 3 dB</strong>.</p>',
+            enunciado:
+                '<p>Valores típicos de la teoría: <strong>monomodo 0,4 dB/km</strong> · <strong>multimodo 3 dB/km</strong> · <strong>par de conectores 0,75 dB</strong> · <strong>empalme por fusión 0,3 dB</strong> · <strong>margen 3 dB</strong>.</p>' +
+                '<p><strong>Cómo se hace un presupuesto óptico:</strong> no hay fórmula que memorizar, es una suma. Los decibelios de cada elemento <strong>se suman</strong>, y por eso conviene no convertir nada a porcentajes por el camino.</p>' +
+                '<ol>' +
+                '<li><strong>La fibra:</strong> kilómetros × dB/km, según sea monomodo o multimodo.</li>' +
+                '<li><strong>Las uniones:</strong> número de pares de conectores × su pérdida, más número de empalmes × la suya.</li>' +
+                '<li><strong>El margen de seguridad</strong>, que se suma siempre y entero: cubre el envejecimiento y las reparaciones futuras.</li>' +
+                '<li><strong>Compara el total con lo que aguanta el transceptor.</strong> Si el total es menor, el enlace llega; si lo supera, no.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con 3 km de monomodo, 1 par de conectores y 2 empalmes:</p>' +
+                '<pre><code>fibra       3 × 0,4  = 1,20 dB\n' +
+                'conectores  1 × 0,75 = 0,75 dB\n' +
+                'empalmes    2 × 0,3  = 0,60 dB\n' +
+                'margen                 3,00 dB\n' +
+                '                      ───────\n' +
+                'total                  5,55 dB</code></pre>' +
+                '<p>Comprobación: en tramos cortos <strong>las uniones pesan más que el cable</strong>. Si te sale lo contrario en un enlace de pocos kilómetros, revisa si has usado el dB/km de la multimodo en una monomodo.</p>',
             items: [
                 {
                     tipo: 'numero',

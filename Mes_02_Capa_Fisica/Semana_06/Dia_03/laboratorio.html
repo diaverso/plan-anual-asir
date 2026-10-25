@@ -185,7 +185,23 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 1: Enlace A — campus, 1,8 km monomodo',
             tiempo: '12 min',
-            enunciado: '<p>Monomodo, 1,8 km, 2 pares de conectores, 2 empalmes por fusión, transceptor LX.</p>',
+            enunciado:
+                '<p>Monomodo, <strong>1,8 km</strong>, 2 pares de conectores, 2 empalmes por fusión, transceptor LX.</p>' +
+                '<p><strong>Cómo se hace un presupuesto óptico:</strong> no hay fórmula que memorizar, es una suma. Los decibelios de cada elemento <strong>se suman</strong>, y por eso conviene no convertir nada a porcentajes por el camino.</p>' +
+                '<ol>' +
+                '<li><strong>La fibra:</strong> kilómetros × dB/km, según sea monomodo o multimodo.</li>' +
+                '<li><strong>Las uniones:</strong> número de pares de conectores × su pérdida, más número de empalmes × la suya.</li>' +
+                '<li><strong>El margen de seguridad</strong>, que se suma siempre y entero: cubre el envejecimiento y las reparaciones futuras.</li>' +
+                '<li><strong>Compara el total con lo que aguanta el transceptor.</strong> Si el total es menor, el enlace llega; si lo supera, no.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con 3 km de monomodo, 1 par de conectores y 2 empalmes:</p>' +
+                '<pre><code>fibra       3 × 0,4  = 1,20 dB\n' +
+                'conectores  1 × 0,75 = 0,75 dB\n' +
+                'empalmes    2 × 0,3  = 0,60 dB\n' +
+                'margen                 3,00 dB\n' +
+                '                      ───────\n' +
+                'total                  5,55 dB</code></pre>' +
+                '<p>Comprobación: en tramos cortos <strong>las uniones pesan más que el cable</strong>. Si te sale lo contrario en un enlace de pocos kilómetros, revisa si has usado el dB/km de la multimodo en una monomodo.</p>',
             items: [
                 {
                     tipo: 'numero',
@@ -276,7 +292,9 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 3: Enlace C — el que no llega',
             tiempo: '20 min',
-            enunciado: '<p>Multimodo, 2 km, 3 pares de conectores, 4 empalmes por fusión, transceptor SX.</p>',
+            enunciado:
+                '<p>Multimodo, <strong>2 km</strong>, 3 pares de conectores, 4 empalmes por fusión, transceptor SX.</p>' +
+                '<p>Mismo procedimiento que en los bloques anteriores: fibra, uniones, margen, y el total contra lo que aguanta el transceptor. Aquí la fibra es <strong>multimodo</strong>, así que el dB/km es el alto.</p>',
             items: [
                 {
                     tipo: 'numero',
