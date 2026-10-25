@@ -294,7 +294,13 @@ const ejerciciosData = {
             tiempo: '20 min',
             enunciado:
                 '<p>Multimodo, <strong>2 km</strong>, 3 pares de conectores, 4 empalmes por fusión, transceptor SX.</p>' +
-                '<p>Mismo procedimiento que en los bloques anteriores: fibra, uniones, margen, y el total contra lo que aguanta el transceptor. Aquí la fibra es <strong>multimodo</strong>, así que el dB/km es el alto.</p>',
+                '<p>Mismo procedimiento que en los bloques anteriores: fibra, uniones, margen, y el total contra lo que aguanta el transceptor. Aquí la fibra es <strong>multimodo</strong>, así que el dB/km es el alto: <strong>3</strong> en lugar de 0,4.</p>' +
+                '<pre><code>fibra       km × 3,0   (multimodo)\n' +
+                'conectores  pares × 0,75\n' +
+                'empalmes    nº × 0,3\n' +
+                'margen      + 3,0\n' +
+                '            ─────────\n' +
+                'total       se compara con el transceptor</code></pre>',
             items: [
                 {
                     tipo: 'numero',

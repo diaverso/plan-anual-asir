@@ -460,7 +460,12 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 4: Cierre y cálculo',
             tiempo: '10 min',
-            enunciado: '<p>Convierte la medición en un número que signifique algo.</p>',
+            enunciado:
+                '<p>Convierte la medición en un número que signifique algo.</p>' +
+                '<p><strong>Eficiencia</strong> = datos útiles ÷ total transmitido, contando todas las cabeceras. Y para traducirla a caudal real, <strong>multiplica la velocidad contratada por esa eficiencia</strong> en tanto por uno.</p>' +
+                '<pre><code>800 útiles / 858 totales = 93,2 % de eficiencia\n' +
+                '300 Mbps × 0,932         ≈ 280 Mbps de datos útiles</code></pre>' +
+                '<p>No es que el operador engañe: la velocidad contratada se mide sobre el cable, y por el cable viajan también las cabeceras.</p>',
             items: [
                 {
                     tipo: 'numero',

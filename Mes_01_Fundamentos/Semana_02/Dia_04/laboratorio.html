@@ -184,7 +184,21 @@ const ejerciciosData = {
         {
             titulo: 'PARTE A: Los nueves en minutos',
             tiempo: '15 min',
-            enunciado: '<p>Cálculos con la fórmula del Paso 1. Estos <strong>sí</strong> tienen respuesta única.</p>',
+            enunciado:
+                '<p>Cálculos con la fórmula del Paso 1. Estos sí tienen respuesta única.</p>' +
+                '<p><strong>Cómo se calcula la disponibilidad.</strong> Un año tiene <strong>525 600 minutos</strong>: ese es el número del que cuelga todo.</p>' +
+                '<p><strong>Del porcentaje a los minutos de caída:</strong></p>' +
+                '<ol>' +
+                '<li>Saca el <strong>porcentaje de indisponibilidad</strong>: 100 menos el dado. ' +
+                'Con 99,9 % queda 0,1 %.</li>' +
+                '<li>Pásalo a tanto por uno dividiendo entre 100: 0,1 % → 0,001.</li>' +
+                '<li>Multiplica por 525 600. Y si piden horas, divide entre 60.</li>' +
+                '</ol>' +
+                '<p><strong>De los minutos al porcentaje</strong>, al revés: divide los minutos caídos entre 525 600 y <strong>resta el resultado a 1</strong>.</p>' +
+                '<p><strong>Con MTBF y MTTR:</strong> <code>disponibilidad = MTBF ÷ (MTBF + MTTR)</code>. El denominador lleva los dos sumados, no solo el MTBF.</p>' +
+                '<pre><code>99,9 %        525 600 × 0,001 = 525,6 min = 8,76 h al año\n' +
+                'MTBF 8 000 h  8 000 / (8 000 + 2) = 0,99975 → 99,975 %</code></pre>' +
+                '<p>Comprobación: <strong>cada nueve que se añade divide la caída entre diez</strong>. Si pasas de 99,9 a 99,99 y los minutos no bajan a la décima parte, revisa la cuenta.</p>',
             items: [
                 {
                     tipo: 'numero',

@@ -300,9 +300,17 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 4: Cálculos de cabeceras y eficiencia',
             tiempo: '18 min',
-            enunciado: `
-                <p>Recuerda los tamaños: <strong>Ethernet 14 + 4 de FCS</strong>, <strong>IP 20</strong>,
-                <strong>TCP 20</strong>, <strong>UDP 8</strong>. MTU de Ethernet: <strong>1500</strong>.</p>`,
+            enunciado:
+                '<p>Tamaños que hacen falta: <strong>Ethernet 14 + 4</strong> de FCS, <strong>IP 20</strong>, <strong>TCP 20</strong>, <strong>UDP 8</strong>. MTU de Ethernet: <strong>1 500</strong>.</p>' +
+                '<p><strong>Las dos cuentas del día:</strong></p>' +
+                '<ol>' +
+                '<li><strong>MSS = MTU − cabeceras de red y transporte.</strong> Con TCP son <code>MTU − 20 − 20</code>, es decir <strong>MTU − 40</strong>; con UDP, <code>MTU − 28</code>. ' +
+                'Fíjate en que la cabecera Ethernet <strong>no</strong> entra aquí: el MTU ya es lo que cabe dentro de la trama.</li>' +
+                '<li><strong>Eficiencia = datos útiles ÷ total transmitido</strong>, en tanto por ciento. El total incluye <em>todas</em> las cabeceras, también los 18 bytes de Ethernet.</li>' +
+                '</ol>' +
+                '<pre><code>MSS con MTU 1 280    1 280 − 40 = 1 240 bytes\n' +
+                'eficiencia           800 útiles / 858 totales = 93,2 %</code></pre>' +
+                '<p>La idea que se persigue: las cabeceras son <strong>de tamaño fijo</strong>, así que cuanto más pequeño es el paquete, más pesan y peor es la eficiencia.</p>',
             items: [
                 {
                     tipo: 'numero',

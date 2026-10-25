@@ -270,7 +270,16 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 4 · Día 4 — RAID y disponibilidad',
             tiempo: '11 min',
-            enunciado: '<p>Los cálculos hay que hacerlos, no reconocerlos. Papel y lápiz.</p>',
+            enunciado:
+                '<p>Los cálculos hay que hacerlos, no reconocerlos. Papel y lápiz. <a href="../Dia_04/teoria.html">Teoría del Día 4</a>.</p>' +
+                '<p><strong>Capacidad útil de un RAID:</strong> se cuenta cuántos discos se <em>sacrifican</em> y se multiplica el resto por el tamaño de cada uno.</p>' +
+                '<ul>' +
+                '<li><strong>RAID 5:</strong> <code>(n − 1) × tamaño</code>. Reserva el equivalente a un disco para la paridad.</li>' +
+                '<li><strong>RAID 6:</strong> <code>(n − 2) × tamaño</code>. Dos de paridad, y a cambio aguanta que fallen dos discos.</li>' +
+                '</ul>' +
+                '<p><strong>Disponibilidad:</strong> el porcentaje de caída por 525 600 minutos al año; entre 60 si lo piden en horas.</p>' +
+                '<pre><code>6 discos de 4 TB   RAID 5: (6−1)×4 = 20 TB   ·   RAID 6: (6−2)×4 = 16 TB\n' +
+                '99,9 %             525 600 × 0,001 = 525,6 min = 8,76 h</code></pre>',
             items: [
                 {
                     tipo: 'numero',
