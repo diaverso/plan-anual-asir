@@ -226,7 +226,16 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 3: Otras muestras y Shannon',
             tiempo: '20 min',
-            enunciado: '<p>Parte 3. Ahora sí puedes pulsar <em>Otra muestra de ruido</em>.</p>',
+            enunciado:
+                '<p>Parte 3. Ahora sí puedes pulsar <strong>Otra muestra de ruido</strong>.</p>' +
+                '<p>Las capacidades que vas a leer salen de <code>C = W · log₂(1 + S/N)</code>, con la S/N en ' +
+                'lineal. Para comprobar de cabeza que el visualizador y tú decís lo mismo: ' +
+                '<strong>pasa los decibelios a lineal</strong> (cada 10 dB, un cero más: 20 dB → 100), ' +
+                '<strong>suma 1</strong>, saca el <strong>log₂</strong> y multiplícalo por el ancho de banda. ' +
+                'Cuida la unidad del resultado: si el ancho está en hercios salen bps, y si está en megahercios ' +
+                'salen megabits por segundo.</p>' +
+                '<pre><code>canal 2 000 Hz, S/N 20 dB → 100\n' +
+                'C = 2 000 × log₂(101) ≈ 2 000 × 6,66 ≈ 13 300 bps ≈ 13,3 kbps</code></pre>',
             items: [
                 {
                     tipo: 'validado',

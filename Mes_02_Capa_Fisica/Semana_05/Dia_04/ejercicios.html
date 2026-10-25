@@ -121,7 +121,21 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 2: Decibelios',
             tiempo: '14 min',
-            enunciado: '<p>Usa <strong>dB = 10 · log<sub>10</sub>(relación)</strong>, y recuerda que 3 dB es el doble y cada 10 dB un cero más.</p>',
+            enunciado:
+                '<p>La fórmula es <code>dB = 10 · log₁₀(relación)</code>, pero casi nunca hace falta la ' +
+                'calculadora: basta con dos equivalencias y el hecho de que ' +
+                '<strong>los decibelios se suman mientras las relaciones se multiplican</strong>.</p>' +
+                '<p><strong>Las dos que hay que saber:</strong></p>' +
+                '<pre><code>  3 dB  →  × 2      (el doble)\n' +
+                ' 10 dB  →  × 10     (un cero más)</code></pre>' +
+                '<p><strong>De decibelios a relación</strong>, descompón en sumas de 10 y de 3:</p>' +
+                '<pre><code>23 dB = 10 + 10 + 3  →  × 10 × 10 × 2  =  × 200</code></pre>' +
+                '<p><strong>De relación a decibelios</strong>, al revés: cuenta los ceros y multiplica por 10, ' +
+                'y añade 3 por cada vez que quede un factor 2.</p>' +
+                '<p>En <strong>atenuación</strong> el signo va implícito: «atenúa 10 dB» significa que llega la ' +
+                '<em>décima parte</em>, así que se divide. Y si hay varios tramos, se ' +
+                '<strong>suman los decibelios</strong> antes de convertir, que es mucho más fácil que ' +
+                'multiplicar fracciones.</p>',
             items: [
                 {
                     tipo: 'tabla',
@@ -262,7 +276,28 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 5: Shannon y los dos límites',
             tiempo: '16 min',
-            enunciado: '<p><strong>C = W · log<sub>2</sub>(1 + S/N)</strong>, con la S/N <strong>lineal</strong>. Redondea a enteros salvo que se indique otra cosa.</p>',
+            enunciado:
+                '<p>La fórmula de Shannon es <code>C = W · log₂(1 + S/N)</code>, con la relación señal/ruido ' +
+                'en <strong>lineal</strong>, no en decibelios. Ahí está la trampa de la mitad de los fallos.</p>' +
+                '<p><strong>Los cuatro pasos:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Pasa la S/N a lineal</strong> si te la dan en decibelios: ' +
+                '<code>lineal = 10^(dB/10)</code>. Atajo: cada 10 dB es un cero más, así que 10 dB → 10, ' +
+                '20 dB → 100, 30 dB → 1 000.</li>' +
+                '<li><strong>Suma 1</strong> a esa relación.</li>' +
+                '<li><strong>Saca el logaritmo en base 2</strong> del resultado.</li>' +
+                '<li><strong>Multiplica por el ancho de banda</strong> en hercios. El resultado sale en bits ' +
+                'por segundo.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con un canal de 2 000 Hz y 20 dB de S/N:</p>' +
+                '<pre><code>1. A lineal        20 dB → 100\n' +
+                '2. Sumo 1          1 + 100 = 101\n' +
+                '3. log₂(101)       ≈ 6,66\n' +
+                '4. Por el ancho    2 000 × 6,66 ≈ 13 300 bps</code></pre>' +
+                '<p>Comprobación: usar los decibelios sin convertir da siempre un resultado ' +
+                '<strong>mucho menor</strong>. Si con 30 dB te salen 15 kbps en vez de 30 kbps, te has saltado ' +
+                'el paso 1.</p>' +
+                '<p>Redondea a enteros salvo que se indique otra cosa.</p>',
             items: [
                 {
                     tipo: 'numero',

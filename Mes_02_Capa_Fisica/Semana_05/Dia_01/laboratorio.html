@@ -302,7 +302,24 @@ const ejerciciosData = {
         {
             titulo: 'BLOQUE 4: Arregla el enlace',
             tiempo: '15 min',
-            enunciado: '<p>Velocidad en <strong>9 600 bps</strong>, parte 4.</p>',
+            enunciado:
+                '<p>Velocidad en <strong>9 600 bps</strong>, parte 4.</p>' +
+                '<p><strong>Cómo se calcula qué ancho de banda hace falta:</strong></p>' +
+                '<ol>' +
+                '<li><strong>El primer armónico es la velocidad dividida entre 8</strong>, porque el patrón ' +
+                'que se repite son los 8 bits de un byte: <code>f₁ = b / 8</code>.</li>' +
+                '<li><strong>El tercer armónico está en el triple</strong>: <code>3 × f₁</code>. Con los tres ' +
+                'primeros armónicos el receptor ya distingue los bits.</li>' +
+                '<li><strong>Compara con el ancho de banda del medio.</strong> Si el tercer armónico cae ' +
+                'dentro, se lee bien; si cae fuera, empiezan los errores.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo con 2 400 bps:</p>' +
+                '<pre><code>1. Primer armónico     2 400 / 8 = 300 Hz\n' +
+                '2. Tercer armónico     3 × 300   = 900 Hz\n' +
+                '3. ¿Cabe en 3 000 Hz?  sí, de sobra → se lee bien</code></pre>' +
+                '<p>Para ir al revés —de un ancho de banda a la velocidad máxima— despeja: ' +
+                '<code>b = ancho de banda × 8 / 3</code>, y luego quédate con la velocidad de la tabla que ' +
+                'no lo supere.</p>',
             items: [
                 {
                     tipo: 'numero',

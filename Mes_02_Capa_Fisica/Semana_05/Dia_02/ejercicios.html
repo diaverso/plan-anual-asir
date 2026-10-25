@@ -258,7 +258,22 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 5: Ethernet por dentro',
             tiempo: '12 min',
-            enunciado: '<p>Las cifras de Gigabit Ethernet que viste en la teoría.</p>',
+            enunciado:
+                '<p>Las cifras de Gigabit Ethernet que viste en la teoría.</p>' +
+                '<p><strong>Las dos cuentas que necesitas:</strong></p>' +
+                '<ol>' +
+                '<li><strong>De baudios a bits por segundo:</strong> <code>bps = baudios × bits por ' +
+                'símbolo</code>. Y si hay varios pares trabajando a la vez, se multiplica por el número de ' +
+                'pares. Ojo: un baudio no es un bit; solo coinciden cuando cada símbolo lleva un bit.</li>' +
+                '<li><strong>De baudios a frecuencia:</strong> en el caso peor la señal alterna en cada ' +
+                'símbolo, así que hacen falta <strong>dos símbolos para un ciclo completo</strong> y la ' +
+                'fundamental queda en <code>baudios / 2</code>.</li>' +
+                '</ol>' +
+                '<p>Un ejemplo inventado, con un par que va a 50 millones de baudios y 3 bits por símbolo:</p>' +
+                '<pre><code>velocidad     50 × 3  = 150 Mbps por par\n' +
+                'fundamental   50 / 2  =  25 MHz</code></pre>' +
+                '<p>Fíjate en que las dos cuentas tiran en sentidos opuestos: meter más bits en cada símbolo ' +
+                'sube la velocidad <em>sin</em> subir la frecuencia, que es justo de lo que se trata.</p>',
             items: [
                 {
                     tipo: 'numero',

@@ -192,7 +192,23 @@ const ejerciciosData = {
         {
             titulo: 'EJERCICIO 4: Multibit y QAM',
             tiempo: '16 min',
-            enunciado: '<p>Usa <strong>bits por símbolo = log<sub>2</sub>(estados)</strong> y <strong>bps = símbolos por segundo × bits por símbolo</strong>.</p>',
+            enunciado:
+                '<p><strong>Cómo se hacen estas cuentas:</strong></p>' +
+                '<ol>' +
+                '<li><strong>De estados a bits:</strong> <code>bits por símbolo = log₂(estados)</code>. Sin ' +
+                'calculadora: cuenta cuántas veces hay que doblar 1 hasta llegar al número de estados. ' +
+                '2→1, 4→2, 8→3, 16→4, 32→5, 64→6.</li>' +
+                '<li><strong>De bits a estados</strong>, al revés: <code>estados = 2^bits</code>.</li>' +
+                '<li><strong>De símbolos a velocidad:</strong> <code>bps = símbolos por segundo × bits por ' +
+                'símbolo</code>.</li>' +
+                '</ol>' +
+                '<p>Y si te dan amplitudes y fases por separado, <strong>multiplícalas</strong> para saber ' +
+                'cuántos estados hay en total antes de aplicar el logaritmo.</p>' +
+                '<p>Un ejemplo con QAM-8 a 2 millones de símbolos por segundo:</p>' +
+                '<pre><code>1. Estados → bits     log₂(8) = 3 bits por símbolo\n' +
+                '2. Velocidad          2 × 3   = 6 Mbps</code></pre>' +
+                '<p>Comprobación: <strong>doblar los puntos de la constelación solo añade un bit</strong>. ' +
+                'Si te sale que de QAM-16 a QAM-32 la velocidad se dobla, has confundido estados con bits.</p>',
             items: [
                 {
                     tipo: 'tabla',
