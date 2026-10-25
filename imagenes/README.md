@@ -272,3 +272,28 @@ Se reescribió como **`optimizar.py`**, con Pillow: hace lo mismo —recorte del
 escalado a 1400 px, redondeo del fondo y agrupado de tonos— y además **convierte a paleta**
 cuando la imagen tiene 256 colores o menos, que es el caso de todos estos diagramas. Comprime
 bastante mejor que la versión anterior.
+
+## Revisión de figuras mal colocadas
+
+Tras el caso de la topología de bus se revisaron las **82 figuras** del proyecto con el criterio
+correcto: no «¿hay una figura cerca?» sino «¿la figura de esta sección habla de lo mismo que su
+título?». Se buscó en concreto el patrón del fallo, una figura cuyo concepto tiene sección propia
+*antes* del sitio donde está puesta.
+
+Resultado: **un caso real**, ya corregido.
+
+| Figura | Estaba en | Problema | Ahora |
+|---|---|---|---|
+| `m01_s04_d03_router_domestico.png` | M1 · S4 · D3, sección «El switch de capa 3» | Huérfana: ningún texto de ese día hablaba del router doméstico, y el nombre decía Día 4 aunque solo se usaba en el Día 3 | Sección «Qué es un router», con el apartado que la sostiene; renombrada al día que la usa |
+
+Los demás avisos eran ruido de la heurística. Dos que parecían sospechosos y están bien:
+
+- `m01_s01_d02_cadena_comunicacion.png` muestra la petición **y** la respuesta con los papeles
+  invertidos, así que su sitio es la sección de casos reales, no la que presenta el modelo.
+- `m01_s02_d03_cliente_servidor_vs_p2p.png` es comparativa y está en la sección del **primero** de
+  los dos modelos, es decir, el alumno la ve antes de necesitarla. El orden correcto.
+
+### Lo que esta revisión no cubre
+
+Comprueba que las figuras existentes estén donde toca, no si **faltan** figuras en secciones que
+no tienen bloque ASCII. Esa pasada sigue pendiente.
