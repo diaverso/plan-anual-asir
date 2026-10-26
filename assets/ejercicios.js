@@ -425,18 +425,24 @@ function corregirItem(e, i, item) {
     if (item.tipo === 'tabla') {
         let ok = true;
         let respondido = false;
-        let fallos = 0;
+        // Se guarda cuáles han fallado, no solo cuántas: el alumno necesita
+        // saber qué debía poner en cada casilla, no solo que está en rojo.
+        const celdasMal = [];
         item.filas.forEach((fila, f) => {
             fila.celdas.forEach((celda, c) => {
                 if (celda.fijo !== undefined) return;
                 const input = document.getElementById(`${id}_${f}_${c}`);
                 if (input.value.trim()) respondido = true;
                 const acierto = esTextoCorrecto(input.value, celda.respuestas);
-                if (!acierto) { ok = false; fallos++; }
+                if (!acierto) {
+                    ok = false;
+                    celdasMal.push({ fila: f, columna: c });
+                }
                 marcarCampo(input, acierto, input.value.trim() !== '');
             });
         });
-        return { correcto: ok, respondido: respondido, fallos: fallos };
+        return { correcto: ok, respondido: respondido,
+                 fallos: celdasMal.length, celdasMal: celdasMal };
     }
 
     if (item.tipo === 'huecos') {
@@ -512,13 +518,13 @@ function mostrarFeedbackItem(e, i, item, resultado, revelarSolucion) {
         // En los ítems validados el fallo es de formato, no de contenido:
         // se explica qué forma debía tener el dato en lugar de dar «la» solución.
         const titulo = item.tipo === 'validado' ? 'Revisa este dato' : 'Incorrecto';
-        const motivo = resultado.motivo ? `<p>${resultado.motivo}</p>` : textoSolucion(item);
+        const motivo = resultado.motivo ? `<p>${resultado.motivo}</p>` : textoSolucion(item, resultado);
         fb.innerHTML = `<strong>${titulo}</strong>${motivo}${explicacion}`;
     }
 }
 
 // Redacta la solución de un ítem según su tipo
-function textoSolucion(item) {
+function textoSolucion(item, resultado) {
     if (item.tipo === 'texto') {
         return `<p>Respuesta válida: <em>${escapar(item.respuestas[0])}</em></p>`;
     }
@@ -538,7 +544,30 @@ function textoSolucion(item) {
         return `<ul class="rubrica">${pares}</ul>`;
     }
     if (item.tipo === 'tabla') {
-        return '<p>Revisa las casillas marcadas en rojo: contienen la respuesta incorrecta.</p>';
+        // Se nombra cada casilla por su fila y su columna, porque en una tabla
+        // de varias columnas «la de arriba» no identifica nada.
+        const nombre = (f, c) => {
+            const col = (item.cabecera && item.cabecera[c]) ? item.cabecera[c] : 'columna ' + (c + 1);
+            return `${item.filas[f].etiqueta} · ${col}`;
+        };
+        const linea = (f, c) =>
+            `<li>${nombre(f, c)}: <em>${escapar(item.filas[f].celdas[c].respuestas[0])}</em></li>`;
+
+        // Tras corregir se listan solo las falladas; si se pidió la solución
+        // sin responder, la tabla entera.
+        const mal = (resultado && resultado.celdasMal) ? resultado.celdasMal : null;
+        let lista;
+        if (mal && mal.length) {
+            lista = mal.map(x => linea(x.fila, x.columna)).join('');
+        } else {
+            lista = item.filas.map((fila, f) => fila.celdas
+                .map((celda, c) => celda.fijo === undefined ? linea(f, c) : '')
+                .join('')).join('');
+        }
+        const enc = (mal && mal.length)
+            ? (mal.length === 1 ? 'La casilla que falta:' : 'Las casillas que fallan:')
+            : 'La tabla completa:';
+        return `<p>${enc}</p><ul class="rubrica">${lista}</ul>`;
     }
     if (item.tipo === 'huecos') {
         const sol = item.respuestas.map((r, n) => `<li>Hueco ${n + 1}: <em>${escapar(r[0])}</em></li>`).join('');
