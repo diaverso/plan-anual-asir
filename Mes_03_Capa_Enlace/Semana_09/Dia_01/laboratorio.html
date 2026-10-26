@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 — Laboratorio: las direcciones MAC de tu equipo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Laboratorio — Las direcciones MAC de tu equipo</h1>
+        <p>Semana 9 · Día 1 · 62 minutos · Con datos reales de tu máquina</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Tiempo:</strong> 62 min</div>
+        <div class="info-item"><strong>Herramienta:</strong> terminal</div>
+        <div class="info-item"><strong>Instalar:</strong> nada</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer</strong>
+            <p>Sacar las direcciones MAC de tu propio equipo y <strong>clasificarlas una por una</strong> con
+            lo que has aprendido hoy. Después vas a mirar la tabla ARP, donde aparecen juntas la difusión, el
+            multicast y las direcciones de tus vecinos de red.</p>
+            <p>Al terminar sabrás, mirando una dirección, si pertenece a una tarjeta real o a algo que ha
+            inventado el software de tu propia máquina.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>No hace falta <strong>instalar nada</strong> ni ser administrador.</li>
+                <li>Si tienes <strong>WSL, Docker, VirtualBox o VMware</strong>, mejor: sus adaptadores
+                virtuales son los que enseñan lo más interesante. Si no tienes ninguno, el laboratorio
+                funciona igual con menos ejemplos.</li>
+                <li>Las direcciones que veas <strong>serán distintas de las de los ejemplos</strong>. Eso es lo
+                normal: aquí se corrige la <em>forma</em> del dato, no su valor.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Las MAC de tus adaptadores (15 min)</h2>
+
+            <p>Lo primero es ver cuántos adaptadores tiene tu equipo. Serán más de los que esperas.</p>
+
+            <div class="so-tabs" data-grupo="mac">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="mac" data-so="win">
+                <div class="comando"><pre><code>getmac /v /fo list</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="mac" data-so="nix">
+                <div class="comando"><pre><code>ip -br link</code></pre></div>
+            </div>
+
+            <p>Esta es la salida real de la máquina en la que se escribió este laboratorio, recortada:</p>
+
+<pre><code>Nombre de la co  Adaptador de re  Dirección física
+===============  ===============  ===================
+Ethernet         Intel(R) Ethern  50-EB-F6-26-B4-2F
+Wi-Fi            Intel(R) Wi-Fi   0C-9A-3C-84-EB-3F
+Conexión de red  Bluetooth Devic  0C-9A-3C-84-EB-43
+Ethernet 3       VirtualBox Host  0A-00-27-00-00-0F</code></pre>
+
+            <p>Fíjate en los dos últimos. La Bluetooth es <code>0C:9A:3C:84:EB:43</code>, casi idéntica a la
+            del Wi-Fi: mismo fabricante y un número correlativo, porque están en el mismo chip. Y la de
+            VirtualBox empieza por <code>0A</code>, que ya sabes leer.</p>
+
+            <h2>Parte 2 — Clasifica las tuyas (18 min)</h2>
+
+            <p>Coge <strong>tres</strong> de tus adaptadores y analízalos. Usa el truco del segundo dígito:
+            impar es de grupo; <strong>0, 4, 8, C</strong> es unicast de fábrica; <strong>2, 6, A, E</strong>
+            es unicast local.</p>
+
+            <h2>Parte 3 — La tabla ARP (16 min)</h2>
+
+            <p>La tabla ARP guarda las correspondencias entre direcciones IP y direcciones MAC que tu equipo
+            ha ido aprendiendo. Es el sitio donde conviven los tres tipos que has estudiado.</p>
+
+            <div class="so-tabs" data-grupo="arp">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="arp" data-so="win">
+                <div class="comando"><pre><code>arp -a</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="arp" data-so="nix">
+                <div class="comando"><pre><code>ip neigh</code></pre></div>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de la máquina de referencia</strong>
+<pre><code>Interfaz: 192.168.1.70 --- 0x13
+  Dirección de Internet     Dirección física      Tipo
+  192.168.1.1               e4-ab-89-b8-6f-38     dinámico
+  192.168.1.2               bc-24-11-fd-d4-34     dinámico
+  192.168.1.41              bc-24-11-be-87-58     dinámico
+  192.168.1.61              40-16-7e-a5-12-38     dinámico
+
+Interfaz: 192.168.56.1 --- 0xf
+  192.168.56.255            ff-ff-ff-ff-ff-ff     estático
+  224.0.0.2                 01-00-5e-00-00-02     estático
+  224.0.0.22                01-00-5e-00-00-16     estático
+  224.0.0.251               01-00-5e-00-00-fb     estático
+  239.255.255.250           01-00-5e-7f-ff-fa     estático</code></pre>
+                <p>Ahí está todo lo de hoy: unicast de vecinos, la <strong>difusión</strong> y cinco
+                <strong>multicast</strong> del rango <code>01:00:5E</code>. Nadie los ha configurado: aparecen
+                solos.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Si tu tabla sale casi vacía</strong>
+                <p>Es normal: las entradas dinámicas caducan en pocos minutos. Haz un <code>ping</code> a tu
+                puerta de enlace o navega un poco y vuelve a mirar. En Linux, <code>ip neigh</code> suele
+                mostrar bastantes menos entradas que <code>arp -a</code> en Windows, y dentro de WSL verás
+                sobre todo la red virtual, no la de casa.</p>
+            </div>
+
+            <h2>Parte 4 — El bit que delata al software (13 min)</h2>
+
+            <p>Esta es la parte que más se recuerda. En la máquina de referencia, dentro de WSL, conviven
+            adaptadores reales y puentes creados por Docker:</p>
+
+<pre><code>eth0              00:15:5D:E5:81:04     ← Hyper-V, OUI real de Microsoft
+br-018baefea160   7E:3D:4C:F7:FC:AC     ← puente de Docker
+docker0           DE:75:E5:FB:BB:E5     ← puente de Docker
+br-9f93d2ab6df0   F6:13:D8:1D:2A:36     ← puente de Docker</code></pre>
+
+            <p>Los tres puentes tienen el segundo dígito <strong>E</strong> o <strong>6</strong>: U/L = 1,
+            direcciones inventadas. El <code>eth0</code> tiene un <strong>0</strong>: U/L = 0, OUI auténtico
+            asignado a Microsoft. <strong>Un solo bit distingue el hardware del software</strong>, y no hace
+            falta más herramienta que mirar.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has anotado y clasificado al menos tres direcciones MAC de tu equipo.</li>
+                <li>Sabes distinguir, de un vistazo, una dirección de fábrica de una inventada.</li>
+                <li>Has localizado en tu tabla ARP al menos una dirección de grupo.</li>
+                <li>Puedes explicar por qué la MAC de tu router aparece en la tabla y la de un servidor de
+                internet no.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    ejercicios: [
+        {
+            titulo: 'PARTE 2: Clasifica tus adaptadores',
+            tiempo: '18 min',
+            enunciado: '<p>Anota tres adaptadores de tu equipo. Si tienes alguno virtual, inclúyelo: es el ' +
+                       'que da juego.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    pregunta: '<strong>a)</strong> La MAC de tu adaptador principal, el que usas para salir a internet.',
+                    validador: 'mac',
+                    explicacion: 'Con cualquier separador: guiones, dos puntos o puntos. Son la misma dirección.'
+                },
+                {
+                    tipo: 'validado',
+                    pregunta: '<strong>b)</strong> La MAC de un segundo adaptador: Wi-Fi, Bluetooth o el que tengas.',
+                    validador: 'mac',
+                    explicacion: 'Si el Wi-Fi y el Bluetooth se parecen mucho, no es casualidad: suelen compartir chip.'
+                },
+                {
+                    tipo: 'validado',
+                    pregunta: '<strong>c)</strong> Un tercer adaptador. Si tienes WSL, Docker o VirtualBox, usa uno de los suyos.',
+                    validador: 'mac',
+                    explicacion: 'Los adaptadores virtuales casi siempre tienen el bit U/L a 1. Compruébalo en el apartado siguiente.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> Mira el segundo dígito del adaptador que anotaste en <em>a)</em>. ¿Qué es?',
+                    opciones: {
+                        a: 'Unicast de fábrica: 0, 4, 8 o C',
+                        b: 'Unicast local: 2, 6, A o E',
+                        c: 'De grupo: un dígito impar'
+                    },
+                    libre: true,
+                    explicacion: 'Lo habitual en una tarjeta física es la primera, unicast de fábrica. Si te ha salido la segunda, tu sistema está anunciando una dirección distinta de la grabada: algunos portátiles lo hacen por privacidad en Wi-Fi. La tercera no debería salir nunca en un adaptador propio: una dirección de grupo no puede asignarse a una tarjeta.'
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>e)</strong> De los tres que has anotado, ¿cuántos tienen el bit U/L a 1, es decir, segundo dígito 2, 6, A o E? Escribe solo el número.',
+                    respuestas: ['0', '1', '2', '3', 'cero', 'uno', 'dos', 'tres'],
+                    explicacion: 'Cualquier número entre 0 y 3 es válido: depende de tu equipo. Si tienes virtualización, lo normal es que al menos uno lo tenga. Si no tienes ninguno virtual, lo normal es que sean cero.'
+                }
+            ]
+        },
+        {
+            titulo: 'PARTE 3: Lo que cuenta tu tabla ARP',
+            tiempo: '16 min',
+            enunciado: '<p>Con la salida de <code>arp -a</code> o <code>ip neigh</code> delante.</p>',
+            items: [
+                {
+                    tipo: 'validado',
+                    pregunta: '<strong>a)</strong> La dirección IP de tu puerta de enlace, la que aparece primera en el grupo de tu red.',
+                    validador: 'ip',
+                    explicacion: 'Suele acabar en .1 o en .254, pero no siempre. Lo importante es que esté en tu misma red.'
+                },
+                {
+                    tipo: 'validado',
+                    pregunta: '<strong>b)</strong> La MAC asociada a esa puerta de enlace.',
+                    validador: 'mac',
+                    explicacion: 'Esta es la dirección a la que tu equipo entrega <strong>todo</strong> el tráfico que sale de la red.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> ¿Cuántas entradas de tu tabla tienen una dirección física que empieza por <code>01-00-5e</code>? Si no tienes ninguna, escribe 0.',
+                    respuesta: 0,
+                    tolerancia: 99,
+                    unidad: 'entradas',
+                    explicacion: 'Cualquier número vale: depende de lo que haya en tu red. Todas ellas son <strong>multicast IPv4</strong>, y ninguna la has configurado tú: aparecen solas con los servicios de descubrimiento.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>d)</strong> ¿Aparece en tu tabla la dirección ff-ff-ff-ff-ff-ff?',
+                    opciones: {
+                        a: 'Sí, asociada a una dirección IP que acaba en .255',
+                        b: 'No aparece',
+                        c: 'Sí, pero asociada a otra cosa'
+                    },
+                    libre: true,
+                    explicacion: 'Lo habitual es que aparezca asociada a la <strong>dirección de difusión de la red</strong>, que acaba en .255. Es coherente: enviar a esa IP significa enviar a todos, y a nivel de enlace eso es la difusión.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>e)</strong> En tu tabla ARP está la MAC de tu router, pero no la de ningún servidor de internet, aunque acabes de navegar. Explica por qué.',
+                    modelo: '<p>Porque las direcciones MAC <strong>solo tienen sentido dentro de la propia red</strong>. Mi equipo únicamente necesita saber la dirección física de aquello a lo que puede entregar una trama directamente, y eso son los equipos de mi red y el router.</p><p>Cuando navego, el paquete lleva la IP del servidor remoto como destino, pero la trama que lo transporta lleva como MAC de destino la <strong>del router</strong>. A partir de ahí el router rehace la cabecera de enlace en cada salto, y mi equipo no interviene ni se entera.</p><p>Por eso la tabla ARP solo guarda vecinos: preguntar por la MAC de una máquina remota no tendría sentido, porque nunca podría usarla.</p>',
+                    rubrica: [
+                        'Digo que las MAC solo valen dentro de la misma red',
+                        'Explico que la trama sale con la MAC del router como destino',
+                        'Menciono que la IP de destino sí es la del servidor remoto',
+                        'Añado que cada router rehace las direcciones de enlace en su salto'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'PARTE 4: Hardware o software, en un bit',
+            tiempo: '13 min',
+            enunciado: '<p>Sobre los datos reales de la máquina de referencia que aparecen arriba. Estos ' +
+                       'apartados <strong>sí tienen respuesta única</strong>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Clasifica los cuatro adaptadores de la Parte 4. En «U/L» escribe <em>0</em> o <em>1</em>; en «Qué es», <em>real</em> o <em>virtual</em>.',
+                    esquina: 'Adaptador',
+                    cabecera: ['U/L', 'Qué es'],
+                    filas: [
+                        { etiqueta: 'eth0 · 00:15:5D:E5:81:04', celdas: [{ respuestas: ['0'] }, { respuestas: ['real'] }] },
+                        { etiqueta: 'br-018baefea160 · 7E:3D:4C:F7:FC:AC', celdas: [{ respuestas: ['1'] }, { respuestas: ['virtual'] }] },
+                        { etiqueta: 'docker0 · DE:75:E5:FB:BB:E5', celdas: [{ respuestas: ['1'] }, { respuestas: ['virtual'] }] },
+                        { etiqueta: 'br-9f93d2ab6df0 · F6:13:D8:1D:2A:36', celdas: [{ respuestas: ['1'] }, { respuestas: ['virtual'] }] }
+                    ],
+                    explicacion: 'Segundo dígito: <strong>0</strong> → U/L = 0, OUI real. <strong>E</strong>, <strong>E</strong> y <strong>6</strong> → U/L = 1, inventadas. En binario: 00 = 00000000, 7E = 01111110, DE = 11011110, F6 = 11110110; mira siempre el penúltimo bit.',
+                    pistas: ['El segundo dígito 0, 4, 8 o C significa U/L = 0. El 2, 6, A o E significa U/L = 1.']
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>b)</strong> El eth0 de ese equipo empieza por 00:15:5D. ¿A qué fabricante corresponde ese OUI, sabiendo que es el adaptador que crea Hyper-V?',
+                    respuestas: ['microsoft', 'micro soft'],
+                    explicacion: 'El rango 00:15:5D está asignado a <strong>Microsoft</strong> y lo usa Hyper-V para sus adaptadores virtuales. Es un caso curioso: la dirección es «virtual» en el sentido de que no hay una tarjeta física, pero el OUI es auténtico, registrado en el IEEE.',
+                    pistas: ['Lo dice el enunciado: ¿de quién es Hyper-V?']
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> El adaptador de Hyper-V no corresponde a ninguna tarjeta física, pero su dirección tiene el bit U/L a 0, como si fuera de fábrica. ¿Es una contradicción? Razónalo.',
+                    modelo: '<p>No lo es, aunque lo parezca. El bit U/L no dice si existe una tarjeta física: dice <strong>quién ha asignado la dirección</strong>. Con U/L = 0 significa que procede de un OUI registrado en el IEEE; con U/L = 1, que la ha puesto alguien por su cuenta sin pedir permiso a nadie.</p><p>Microsoft tiene registrado el rango 00:15:5D y lo utiliza para los adaptadores que crea Hyper-V. Son direcciones asignadas de forma ordenada dentro de un rango propio, así que son universales con todo derecho, aunque el adaptador sea software.</p><p>Docker, en cambio, no registra nada: genera direcciones al vuelo y por eso marca el bit U/L a 1, que es exactamente para lo que existe. Las dos formas son correctas; lo que cambia es si hay un registro detrás.</p>',
+                    rubrica: [
+                        'Digo que el bit U/L indica quién asignó la dirección, no si el adaptador es físico',
+                        'Explico que Microsoft tiene un OUI registrado y lo usa para Hyper-V',
+                        'Contrasto con Docker, que genera direcciones sin registro y por eso pone U/L a 1',
+                        'Concluyo que las dos formas son correctas'
+                    ]
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>
