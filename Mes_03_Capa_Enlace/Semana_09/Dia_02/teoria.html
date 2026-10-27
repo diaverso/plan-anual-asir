@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — La trama: estructura y detección de errores</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>La trama: estructura, delimitación y errores</h1>
+        <p>Semana 9 · Día 2 · Cómo se empaqueta un mensaje en la capa 2</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Duración:</strong> 4 h 20 min</div>
+        <div class="info-item"><strong>Teoría:</strong> 60 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Capa:</strong> 2 · Enlace</div>
+    </div>
+
+    <div class="content">
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#delimitar">El problema: ¿dónde empieza un mensaje?</a></li>
+                <li><a href="#campos">La trama, campo a campo</a></li>
+                <li><a href="#formatos">Dos formatos: 802.3 y Ethernet II</a></li>
+                <li><a href="#tamanos">Los dos límites: 64 y 1518</a></li>
+                <li><a href="#fcs">El FCS: detectar sin corregir</a></li>
+                <li><a href="#sobrecarga">Cuánto es envoltorio</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="delimitar">1. El problema: ¿dónde empieza un mensaje?</h2>
+
+            <p>Ponte en el lugar del receptor. Lo que te llega del cable es una señal que cambia de nivel
+            muchos millones de veces por segundo. Sabes recuperar los bits —eso lo resolvió el Mes 2—, pero
+            tienes delante una ristra sin cortes:</p>
+
+<pre><code>…0101100011010010110100101101001011010010110100100110…</code></pre>
+
+            <p>¿Dónde acaba un mensaje y empieza el siguiente? La capa física no lo sabe: ella solo entrega
+            bits. Hace falta una convención, y esa convención es la <strong>trama</strong>.</p>
+
+            <div class="dato">
+                <strong>El nombre, según el libro</strong>
+                <p>«La unidad mínima de datos que se transfiere entre entidades pares a este nivel se llama
+                <strong>trama</strong> o <strong>marco</strong>.»</p>
+                <p>Ya lo viste en el Mes 1 al estudiar la encapsulación: segmento en transporte, paquete en
+                red, <strong>trama</strong> en enlace, bits en física.</p>
+            </div>
+
+            <p>Una trama no es solo «los datos con una cabecera». Es un paquete con <strong>principio
+            reconocible, final reconocible y una firma</strong> que permite saber si ha llegado íntegro.</p>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="campos">2. La trama, campo a campo</h2>
+
+            <div class="aviso">
+                <strong>De dónde sale esto</strong>
+                <p>El libro de la asignatura <strong>no desarrolla el formato de la trama</strong>: la nombra
+                al hablar de la encapsulación y poco más. Los campos y los tamaños de este apartado salen de
+                la presentación <strong>Cisco ITN, capítulo 5</strong>, y del estándar
+                <strong>IEEE 802.3</strong>.</p>
+            </div>
+
+<pre><code> 7          1      6         6        2        46-1500        4
+┌────────┬──────┬────────┬────────┬────────┬─────────────┬────────┐
+│Preámb. │ SFD  │ MAC    │ MAC    │ Long./ │    Datos    │  FCS   │
+│        │      │destino │ origen │  Tipo  │  (+relleno) │        │
+└────────┴──────┴────────┴────────┴────────┴─────────────┴────────┘
+ └─ sincronizar ─┘└──── cabecera: 14 bytes ────┘              └ cola
+                  └──────────── la trama: de 64 a 1518 ───────────┘</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Campo</th><th>Bytes</th><th>Para qué sirve</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Preámbulo</strong></td><td>7</td>
+                        <td>Una alternancia de unos y ceros que permite al receptor <strong>sincronizar su reloj</strong> con el del emisor antes de que llegue nada importante</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SFD</strong><br><small>delimitador de inicio</small></td><td>1</td>
+                        <td>Marca que <strong>aquí empieza la trama de verdad</strong>. Es el pistoletazo de salida</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MAC de destino</strong></td><td>6</td>
+                        <td>A quién va. Lo primero que lee la tarjeta, para decidir en seguida si le interesa</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MAC de origen</strong></td><td>6</td>
+                        <td>Quién la envía. Es lo que permite al conmutador <strong>aprender</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Longitud / Tipo</strong></td><td>2</td>
+                        <td>O cuántos bytes de datos vienen, o qué protocolo va dentro. Depende del formato</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Datos</strong></td><td>46 a 1500</td>
+                        <td>Lo que de verdad se quería mandar: normalmente un paquete IP entero</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FCS</strong></td><td>4</td>
+                        <td>La firma que permite detectar si algo ha cambiado por el camino</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Dos detalles que se preguntan</strong>
+                <ul>
+                    <li>El <strong>preámbulo y el SFD no cuentan</strong> dentro del tamaño de la trama. Por
+                    eso los 1518 bytes del máximo no los incluyen: son 8 bytes de preparación que van delante.</li>
+                    <li>La <strong>dirección de destino va primero</strong>, antes que la de origen. No es
+                    casual: así el receptor decide cuanto antes si la trama le incumbe y puede descartarla sin
+                    leer el resto.</li>
+                </ul>
+            </div>
+
+            <h2 id="formatos">3. Dos formatos: 802.3 y Ethernet II</h2>
+
+            <p>Aquí hay una curiosidad histórica con consecuencias prácticas. Existen <strong>dos formatos de
+            trama</strong> que conviven, y se diferencian en un solo campo: los dos bytes que van después de
+            las direcciones.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>IEEE 802.3</th><th>Ethernet II</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Ese campo es</strong></td><td><strong>Longitud</strong>: cuántos bytes de datos vienen</td><td><strong>Tipo</strong>: qué protocolo va dentro</td></tr>
+                    <tr><td><strong>Cómo se distinguen</strong></td><td>Valor ≤ 1500: es una longitud</td><td>Valor ≥ 1536 (0x0600): es un tipo</td></tr>
+                    <tr><td><strong>Quién va dentro</strong></td><td>Una cabecera LLC 802.2, que ya dice el protocolo</td><td>Directamente el paquete</td></tr>
+                    <tr><td><strong>Dónde se usa</strong></td><td>Casi en desuso</td><td><strong>El formato de las redes TCP/IP</strong></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>La presentación de Cisco lo dice sin rodeos: <strong>«Ethernet II es el formato de trama de
+            Ethernet utilizado en las redes TCP/IP»</strong>. Si abres Wireshark en cualquier red moderna, eso
+            es lo que vas a ver.</p>
+
+            <div class="dato">
+                <strong>El truco de los 1500</strong>
+                <p>Como los datos nunca pasan de 1500 bytes, cualquier valor <strong>mayor que 1500</strong>
+                en ese campo no puede ser una longitud. Así que el receptor lo interpreta como un
+                <strong>tipo</strong>. Los dos formatos conviven sin ambigüedad gracias a ese hueco.</p>
+                <p>Los tipos más comunes: <code>0x0800</code> es IPv4, <code>0x0806</code> es ARP —el
+                protocolo del jueves— y <code>0x86DD</code> es IPv6.</p>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="tamanos">4. Los dos límites: 64 y 1518</h2>
+
+            <p>Cisco lo enuncia así: <strong>«Los estándares Ethernet II e IEEE 802.3 definen la trama mínima
+            en 64 bytes y la trama máxima en 1518 bytes»</strong>. Y añade qué pasa si no se cumple: «si el
+            tamaño de una trama transmitida es menor que el mínimo o mayor que el máximo, el dispositivo
+            receptor <strong>descarta la trama</strong>».</p>
+
+            <h3>El máximo: 1518 bytes</h3>
+
+<pre><code>14 (cabecera) + 1500 (datos) + 4 (FCS) = 1518 bytes</code></pre>
+
+            <p>Esos 1500 bytes de datos tienen nombre propio: es el <strong>MTU</strong>, la unidad máxima de
+            transmisión, que ya apareció en el Mes 1. Si el paquete que viene de arriba es más grande, hay
+            que trocearlo, y de eso se encarga la capa de red.</p>
+
+            <h3>El mínimo: 64 bytes, y el relleno</h3>
+
+            <p>El mínimo es más raro. ¿Por qué obligar a que una trama ocupe al menos 64 bytes, aunque se
+            quiera mandar un solo byte de datos?</p>
+
+            <p>Porque en las redes de medio compartido la detección de colisiones solo funciona si la trama
+            dura lo suficiente como para que el emisor <strong>siga transmitiendo</strong> cuando le llegue la
+            noticia del choque. Lo verás con detalle en la Semana 10, con CSMA/CD.</p>
+
+            <p>La consecuencia práctica es el <strong>relleno</strong> o <em>pad</em>: si los datos no llegan a
+            46 bytes, la tarjeta añade ceros hasta completarlos.</p>
+
+            <div class="destacado">
+                <strong>Un ejemplo incómodo</strong>
+                <p>Quieres enviar <strong>20 bytes</strong> de datos. La tarjeta añade <strong>26 bytes de
+                relleno</strong> para llegar a 46, y la trama sale con sus 64 bytes. Has transmitido 64 bytes
+                para mover 20: más de la mitad del envío no es nada.</p>
+            </div>
+
+            <p>A una trama más corta de 64 bytes se la llama <strong>«fragmento de colisión» o
+            <em>runt frame</em></strong>, y se descarta. Si en un diagnóstico aparecen muchas, no es casualidad:
+            suele haber colisiones o un adaptador defectuoso.</p>
+
+            <h2 id="fcs">5. El FCS: detectar sin corregir</h2>
+
+            <p>Los últimos 4 bytes son la <strong>secuencia de verificación de trama</strong>. Cisco explica
+            para qué: <strong>«se utiliza para detectar errores en una trama con comprobación de redundancia
+            cíclica (4 bytes); si los cálculos coinciden en el origen y el receptor, no se produjo ningún
+            error»</strong>.</p>
+
+            <h3>Cómo funciona, sin matemáticas</h3>
+
+<pre><code>EN EL EMISOR                          EN EL RECEPTOR
+  1. Toma toda la trama                 1. Recibe la trama
+  2. Le aplica el CRC                   2. Le aplica el MISMO CRC
+  3. Mete el resultado en el FCS        3. Compara con el FCS que viene
+  4. La envía                           4. ¿Coinciden? → la acepta
+                                           ¿No? → la descarta y se acabó</code></pre>
+
+            <p>Es una cuenta que depende de <strong>todos</strong> los bits de la trama: cambiar uno solo da
+            un resultado distinto. No es una suma simple, sino una división polinómica, pero la idea es esa:
+            una firma que no sobrevive a una modificación.</p>
+
+            <div class="aviso">
+                <strong>Detectar no es corregir, y aquí está la diferencia</strong>
+                <p>El libro, al describir el nivel de enlace en general, dice que «su tarea principal es
+                detectar <strong>y corregir</strong> todos los errores que se produzcan en la línea». Eso vale
+                como descripción teórica del nivel, pero <strong>Ethernet no corrige nada</strong>: detecta la
+                trama corrupta, la tira y no avisa a nadie.</p>
+                <p>Es una decisión de diseño deliberada. Corregir exige enviar mucha más información
+                redundante, y en una LAN moderna los errores son tan raros que no compensa. Quien se da cuenta
+                de que falta algo es <strong>TCP</strong>, en la capa 4, y lo vuelve a pedir.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Un protocolo que sí lo hace al revés</strong>
+                <p>💡 <strong>Ampliación.</strong> El libro cuenta que X.25 hacía control de errores en todas
+                las capas y por eso era fiable pero lento, y que se sustituyó por <strong>Frame Relay</strong>,
+                que renuncia a ese control «ya que las redes de comunicación modernas poseen unas tasas de
+                errores menores». Es exactamente la misma decisión que toma Ethernet.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="sobrecarga">6. Cuánto es envoltorio</h2>
+
+            <p>Toda esa estructura se paga. La pregunta práctica es cuánto.</p>
+
+            <h3>Cómo se calcula</h3>
+
+            <ol>
+                <li><strong>Suma el tamaño total de la trama</strong>: 14 de cabecera + datos + 4 de FCS. Si
+                los datos no llegan a 46, usa 46, porque el relleno también viaja.</li>
+                <li><strong>Divide los datos útiles entre el total</strong> y multiplica por 100.</li>
+            </ol>
+
+<pre><code>Con 100 bytes de datos:
+  total       14 + 100 + 4 = 118 bytes
+  eficiencia  100 / 118    = 84,7 %</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Datos útiles</th><th>Trama total</th><th>Eficiencia</th><th>Comentario</th></tr></thead>
+                <tbody>
+                    <tr><td>1500 bytes</td><td>1518</td><td><strong>98,8 %</strong></td><td>Lo mejor posible: una trama llena</td></tr>
+                    <tr><td>500 bytes</td><td>518</td><td>96,5 %</td><td>Todavía muy bien</td></tr>
+                    <tr><td>100 bytes</td><td>118</td><td>84,7 %</td><td>Empieza a notarse</td></tr>
+                    <tr><td>46 bytes</td><td>64</td><td><strong>71,9 %</strong></td><td>Lo peor sin relleno</td></tr>
+                    <tr><td>20 bytes</td><td>64</td><td><strong>31,3 %</strong></td><td>Con 26 de relleno: dos tercios desperdiciados</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La regla que hay que llevarse</strong>
+                <p>Las cabeceras son de <strong>tamaño fijo</strong>. Por eso, cuanto más pequeño es el envío,
+                más pesan y peor es la eficiencia. Mover un fichero grande aprovecha casi todo el cable; mandar
+                miles de mensajitos, no.</p>
+            </div>
+
+            <div class="dato">
+                <strong>Y aún hay más envoltorio</strong>
+                <p>💡 <strong>Ampliación.</strong> Entre trama y trama hay que dejar un hueco obligatorio, el
+                <strong>espacio entre tramas</strong>, equivalente a 12 bytes. Sumado a los 8 del preámbulo,
+                una trama llena ocupa en el cable <strong>1538 bytes</strong> y la eficiencia real baja al
+                <strong>97,5 %</strong>. No lo preguntaremos, pero explica por qué una conexión de 1 Gbps
+                nunca entrega 1 Gbps de datos.</p>
+            </div>
+
+            <h2 id="resumen">7. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible</strong>
+                <ul>
+                    <li>La trama existe para <strong>delimitar</strong>: el receptor solo ve bits seguidos.</li>
+                    <li>Campos: <strong>preámbulo, SFD, destino, origen, longitud/tipo, datos y FCS</strong>.</li>
+                    <li>La cabecera son <strong>14 bytes</strong> y la cola, <strong>4</strong>.</li>
+                    <li>El destino va <strong>antes</strong> que el origen, para descartar cuanto antes.</li>
+                    <li><strong>Ethernet II</strong> es el formato de las redes TCP/IP; se distingue de 802.3
+                    porque su campo vale más de 1500.</li>
+                    <li>Tamaños: <strong>mínimo 64</strong>, <strong>máximo 1518</strong>. Fuera de ahí, se
+                    descarta.</li>
+                    <li>Si los datos no llegan a 46 bytes, se añade <strong>relleno</strong>.</li>
+                    <li>El <strong>FCS</strong> detecta errores con un CRC; Ethernet <strong>no corrige</strong>.</li>
+                    <li>Eficiencia = datos ÷ total. Va del <strong>98,8 %</strong> al <strong>31 %</strong>
+                    según el tamaño.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error frecuente</th><th>Lo correcto</th></tr></thead>
+                <tbody>
+                    <tr><td>«El preámbulo cuenta en los 1518 bytes»</td><td>Va <strong>delante</strong> y no cuenta. Son 8 bytes aparte</td></tr>
+                    <tr><td>«El MTU es 1518»</td><td>El MTU son los <strong>1500 de datos</strong>. La trama entera es 1518</td></tr>
+                    <tr><td>«El FCS corrige el bit estropeado»</td><td>Solo <strong>detecta</strong>. La trama se descarta</td></tr>
+                    <tr><td>«Si mando 10 bytes, la trama ocupa 28»</td><td>Ocupa <strong>64</strong>: hay un mínimo, y se rellena</td></tr>
+                    <tr><td>«Ethernet II y 802.3 son incompatibles»</td><td>Conviven: se distinguen por el valor de ese campo</td></tr>
+                    <tr><td>«La MAC de origen va primero»</td><td>Va <strong>la de destino</strong>, y por una buena razón</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Repaso con flashcards</h2>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por apartado</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a></span>
+        <span><a href="../Dia_01/teoria.html">← Día 1</a> · <a href="ejercicios.html">Ejercicios →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Si no existiera el preámbulo ni el delimitador de inicio, ¿qué le pasaría al receptor?',
+                modelo: 'No sabría dónde empieza la trama. Vería una corriente de bits sin referencia y tendría que adivinar por dónde cortar, lo que haría que leyera las direcciones desplazadas y no entendiera nada. Además, su reloj no estaría sincronizado con el del emisor: aunque acertara el punto de inicio, iría acumulando desfase y leería bits equivocados. El preámbulo resuelve lo segundo y el delimitador, lo primero.'
+            },
+            {
+                pregunta: 'Lees en una captura que el campo longitud/tipo vale 0x0800. ¿Qué formato de trama es y qué viene dentro?',
+                modelo: 'Es Ethernet II, porque 0x0800 son 2048 en decimal, muy por encima de 1500: no puede ser una longitud, así que es un tipo. Y el tipo 0x0800 corresponde a IPv4, de modo que dentro viene un paquete IPv4 directamente, sin cabecera LLC por medio. Es lo que se ve en cualquier red TCP/IP actual.'
+            },
+            {
+                pregunta: 'Una aplicación manda 2.000 mensajes de 20 bytes cada uno. ¿Cuántos bytes pasan realmente por el cable y qué porcentaje es útil? ¿Qué le recomendarías al programador?',
+                modelo: 'Cada mensaje de 20 bytes necesita 26 de relleno para llegar al mínimo de 46, y con la cabecera y el FCS sale una trama de 64 bytes. Son 2.000 × 64 = 128.000 bytes por el cable para mover 2.000 × 20 = 40.000 útiles: un 31,3 % de eficiencia, o sea que casi siete de cada diez bytes son envoltorio. La recomendación es agrupar: si juntara los mensajes en envíos más grandes, la misma cabecera de 18 bytes serviría para muchos más datos y la eficiencia subiría muchísimo.'
+            }
+        ],
+        flashcards: [
+            { frente: '¿Por qué existe la trama?', dorso: 'Para <strong>delimitar</strong>: el receptor solo ve bits seguidos y necesita saber dónde empieza y acaba cada mensaje.' },
+            { frente: 'Los siete campos, en orden', dorso: 'Preámbulo · SFD · MAC destino · MAC origen · Longitud/Tipo · Datos · FCS.' },
+            { frente: '¿Para qué sirve el preámbulo?', dorso: 'Para que el receptor <strong>sincronice su reloj</strong> antes de que llegue nada importante. Son 7 bytes, y no cuentan en el tamaño de la trama.' },
+            { frente: '¿Por qué va primero la MAC de destino?', dorso: 'Para que el receptor decida <strong>cuanto antes</strong> si la trama le interesa y pueda descartarla sin leer el resto.' },
+            { frente: '¿Cuánto ocupan cabecera y cola?', dorso: '<strong>14 bytes</strong> de cabecera (6+6+2) y <strong>4</strong> de FCS. En total, 18 de envoltorio.' },
+            { frente: '802.3 frente a Ethernet II', dorso: 'El mismo campo es <strong>longitud</strong> en 802.3 y <strong>tipo</strong> en Ethernet II. Se distinguen porque un tipo siempre vale más de 1500.' },
+            { frente: '¿Qué formato usan las redes TCP/IP?', dorso: '<strong>Ethernet II</strong>. Tipos comunes: 0x0800 IPv4, 0x0806 ARP, 0x86DD IPv6.' },
+            { frente: 'Los dos límites de tamaño', dorso: '<strong>Mínimo 64</strong>, <strong>máximo 1518</strong> bytes. Fuera de ahí, el receptor descarta.' },
+            { frente: '¿Qué es el relleno o pad?', dorso: 'Ceros que se añaden cuando los datos no llegan a <strong>46 bytes</strong>, para alcanzar el mínimo de trama.' },
+            { frente: '¿Qué es un runt frame?', dorso: 'Una trama de <strong>menos de 64 bytes</strong>, también llamada fragmento de colisión. Se descarta.' },
+            { frente: '¿Qué hace el FCS?', dorso: '<strong>Detecta</strong> errores con un CRC de 4 bytes. Si no cuadra, la trama se descarta: Ethernet no corrige.' },
+            { frente: 'Eficiencia de una trama', dorso: 'datos ÷ (14 + datos + 4). Con 1500 datos, <strong>98,8 %</strong>; con 20 datos, <strong>31,3 %</strong>.' },
+            { frente: '¿Qué es el MTU?', dorso: 'Los <strong>1500 bytes</strong> de datos, no la trama entera. La trama con ese MTU ocupa 1518.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz del Día 2 — La trama',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'Delimitación',
+                repaso: '#delimitar',
+                text: '¿Cuál es el problema que resuelve la trama y que la capa física no puede resolver?',
+                options: {
+                    a: 'Saber dónde empieza y dónde acaba cada mensaje dentro de una corriente de bits',
+                    b: 'Aumentar la velocidad de transmisión',
+                    c: 'Elegir el mejor camino hasta el destino',
+                    d: 'Convertir los bits en señales eléctricas'
+                },
+                answer: 'a',
+                feedback: 'La capa física entrega bits sin cortes. Sin una convención de delimitación, el receptor no sabría por dónde partirlos.'
+            },
+            {
+                topic: 'Campos',
+                repaso: '#campos',
+                text: '¿Cuántos bytes ocupa la cabecera de una trama Ethernet, sin contar preámbulo ni FCS?',
+                options: { a: '14 bytes', b: '8 bytes', c: '18 bytes', d: '26 bytes' },
+                answer: 'a',
+                feedback: '6 de destino + 6 de origen + 2 de longitud/tipo = <strong>14</strong>. Sumando el FCS, el envoltorio total son 18.'
+            },
+            {
+                topic: 'Campos',
+                repaso: '#campos',
+                text: '¿Por qué la dirección de destino va antes que la de origen?',
+                options: {
+                    a: 'Por razones históricas, sin ninguna utilidad',
+                    b: 'Porque así el receptor sabe antes si la trama le interesa y puede descartarla sin leer el resto',
+                    c: 'Porque ocupa menos espacio',
+                    d: 'Porque el conmutador solo lee el primer campo'
+                },
+                answer: 'b',
+                feedback: 'Es una decisión de eficiencia: la mayoría de las tramas que ve una tarjeta en un medio compartido no van para ella.'
+            },
+            {
+                topic: 'Campos',
+                repaso: '#campos',
+                text: '¿Qué campo de la trama es el que permite a un conmutador aprender dónde está cada equipo?',
+                options: { a: 'El FCS', b: 'El preámbulo', c: 'La MAC de destino', d: 'La MAC de origen' },
+                answer: 'd',
+                feedback: 'El conmutador anota: «quien manda esta trama está en el puerto por el que me ha llegado». Con el destino lo que hace es <em>decidir</em>, no aprender.'
+            },
+            {
+                topic: 'Formatos',
+                repaso: '#formatos',
+                text: 'En una captura, el campo longitud/tipo vale 0x0806. ¿Qué significa?',
+                options: {
+                    a: 'Que la trama transporta 2.054 bytes de datos',
+                    b: 'Que es una trama 802.3 con cabecera LLC',
+                    c: 'Que es Ethernet II y dentro viene un mensaje ARP',
+                    d: 'Que la trama está corrupta'
+                },
+                answer: 'c',
+                feedback: '0x0806 son 2.054 en decimal, más de 1500, así que no puede ser una longitud: es un <strong>tipo</strong>. Y ese tipo es ARP.'
+            },
+            {
+                topic: 'Formatos',
+                repaso: '#formatos',
+                text: '¿Cómo distingue el receptor si ese campo es una longitud o un tipo?',
+                options: {
+                    a: 'Por el valor: hasta 1500 es longitud, de 1536 en adelante es tipo',
+                    b: 'Por un bit indicador en el preámbulo',
+                    c: 'No puede: hay que configurarlo en la tarjeta',
+                    d: 'Por el tamaño total de la trama'
+                },
+                answer: 'a',
+                feedback: 'Como los datos nunca pasan de 1500, cualquier valor mayor no puede ser una longitud. Ese hueco permite que los dos formatos convivan.'
+            },
+            {
+                topic: 'Tamaños',
+                repaso: '#tamanos',
+                text: 'Una aplicación quiere enviar 30 bytes de datos. ¿Qué tamaño tendrá la trama?',
+                options: { a: '48 bytes', b: '46 bytes', c: '30 bytes', d: '64 bytes' },
+                answer: 'd',
+                feedback: 'Se añaden 16 bytes de relleno para llegar a los 46 mínimos de datos, y con los 18 de envoltorio salen <strong>64</strong>, el mínimo de trama.'
+            },
+            {
+                topic: 'Tamaños',
+                repaso: '#tamanos',
+                text: 'En un diagnóstico aparecen muchas tramas de menos de 64 bytes. ¿Qué son y qué sugieren?',
+                options: {
+                    a: 'Tramas normales de control, no indican nada',
+                    b: 'Tramas de difusión',
+                    c: 'Tramas comprimidas por el conmutador',
+                    d: 'Runt frames o fragmentos de colisión: suelen apuntar a colisiones o a un adaptador defectuoso'
+                },
+                answer: 'd',
+                feedback: 'Una trama válida nunca baja de 64 bytes, porque el relleno lo impide. Si aparecen, algo las está cortando.'
+            },
+            {
+                topic: 'Tamaños',
+                repaso: '#tamanos',
+                text: 'Si el MTU de un enlace es 1500, ¿cuánto ocupa la trama que lo aprovecha al máximo?',
+                options: { a: '1500 bytes', b: '1526 bytes', c: '1518 bytes', d: '1538 bytes' },
+                answer: 'c',
+                feedback: '1500 de datos + 14 de cabecera + 4 de FCS. Los 1538 serían contando también preámbulo y espacio entre tramas, que no forman parte de la trama.'
+            },
+            {
+                topic: 'FCS',
+                repaso: '#fcs',
+                text: 'El FCS del receptor no coincide con el calculado. ¿Qué ocurre?',
+                options: {
+                    a: 'Se reconstruye la trama con la información redundante',
+                    b: 'Se entrega a la capa superior marcada como dudosa',
+                    c: 'Se pide al emisor que la reenvíe',
+                    d: 'Se descarta la trama, sin avisar al emisor'
+                },
+                answer: 'd',
+                feedback: 'Ethernet detecta y tira. Quien echa en falta los datos y los reclama es TCP, dos capas más arriba.'
+            },
+            {
+                topic: 'FCS',
+                repaso: '#fcs',
+                text: '¿Por qué Ethernet no corrige los errores que detecta, si el libro dice que ese es el cometido del nivel de enlace?',
+                options: {
+                    a: 'Porque el hardware no da para tanto',
+                    b: 'Porque corregir solo funciona en fibra',
+                    c: 'Porque corregir exige mucha información redundante y en una LAN moderna los errores son demasiado raros para que compense',
+                    d: 'Porque los errores de una LAN no se pueden corregir'
+                },
+                answer: 'c',
+                feedback: 'Es la misma decisión que llevó de X.25 a Frame Relay, y el libro la cuenta: las redes modernas tienen tasas de error tan bajas que el control exhaustivo sale caro para lo que aporta.'
+            },
+            {
+                topic: 'Sobrecarga',
+                repaso: '#sobrecarga',
+                text: 'Una trama transporta 200 bytes de datos. ¿Qué eficiencia tiene, aproximadamente?',
+                options: { a: '98 %', b: '92 %', c: '85 %', d: '72 %' },
+                answer: 'b',
+                feedback: '200 ÷ (14 + 200 + 4) = 200 ÷ 218 ≈ <strong>91,7 %</strong>. El 98 % se alcanza con tramas llenas y el 72 %, con las mínimas.'
+            },
+            {
+                topic: 'Sobrecarga',
+                repaso: '#sobrecarga',
+                text: 'Dos aplicaciones mueven el mismo volumen de datos: una en envíos de 1500 bytes y otra en envíos de 40. ¿Qué se puede afirmar?',
+                options: {
+                    a: 'Las dos ocupan el cable por igual: son los mismos datos',
+                    b: 'La de envíos pequeños es más rápida porque las tramas son más cortas',
+                    c: 'La de envíos pequeños pondrá muchísimos más bytes en el cable, porque la cabecera es fija y además hay relleno',
+                    d: 'La diferencia es inapreciable'
+                },
+                answer: 'c',
+                feedback: 'Con 40 bytes de datos hay 6 de relleno y 18 de envoltorio: 64 bytes para mover 40. Es el argumento para agrupar envíos siempre que se pueda.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '#tamanos',
+                text: '<strong>Integración con el Mes 1.</strong> En el Mes 1 calculaste que el MSS de TCP con MTU 1500 es 1460. ¿Cómo encaja con la trama de hoy?',
+                options: {
+                    a: 'No encaja: son cálculos de capas distintas que no se relacionan',
+                    b: 'Los 1460 son los 1500 del MTU menos 20 de IP y 20 de TCP; y esos 1500, más los 18 de la trama, dan los 1518',
+                    c: 'El MSS incluye los 18 bytes de la trama',
+                    d: 'El MSS es 1460 porque la trama mínima son 40 bytes'
+                },
+                answer: 'b',
+                feedback: 'Es la encapsulación entera en una línea: 1460 de datos de aplicación, 1500 con las cabeceras de IP y TCP, 1518 con la de enlace.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

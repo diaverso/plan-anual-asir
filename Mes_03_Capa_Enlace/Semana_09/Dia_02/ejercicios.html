@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Ejercicios: la trama</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Ejercicios — La trama</h1>
+        <p>Semana 9 · Día 2 · 74 minutos · 6 ejercicios</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Tiempo:</strong> 74 min</div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Teoría:</strong> <a href="teoria.html">volver</a></div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            Hoy hay bastante cálculo. Ten a mano los tamaños: cabecera <strong>14</strong>, FCS
+            <strong>4</strong>, datos de <strong>46 a 1500</strong>, trama de <strong>64 a 1518</strong>.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría</a></span>
+        <span><a href="laboratorio.html">Laboratorio →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    ejercicios: [
+        {
+            titulo: 'EJERCICIO 1: Los campos en su sitio',
+            tiempo: '12 min',
+            enunciado: '<p>Fija la estructura antes de calcular nada con ella.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los campos de una trama Ethernet, del primero que sale al cable al último.',
+                    elementos: ['MAC de origen', 'FCS', 'Preámbulo', 'Datos', 'MAC de destino', 'Delimitador de inicio (SFD)', 'Longitud / Tipo'],
+                    orden: ['Preámbulo', 'Delimitador de inicio (SFD)', 'MAC de destino', 'MAC de origen', 'Longitud / Tipo', 'Datos', 'FCS'],
+                    explicacion: 'Primero sincronizar, después avisar de que empieza, y en cuanto empieza, <strong>a quién va</strong>: así el receptor descarta pronto lo que no le incumbe.'
+                },
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>b)</strong> Completa el tamaño en bytes de cada campo.',
+                    esquina: 'Campo',
+                    cabecera: ['Bytes'],
+                    filas: [
+                        { etiqueta: 'Preámbulo', celdas: [{ respuestas: ['7'] }] },
+                        { etiqueta: 'Delimitador de inicio (SFD)', celdas: [{ respuestas: ['1'] }] },
+                        { etiqueta: 'MAC de destino', celdas: [{ respuestas: ['6'] }] },
+                        { etiqueta: 'MAC de origen', celdas: [{ respuestas: ['6'] }] },
+                        { etiqueta: 'Longitud / Tipo', celdas: [{ respuestas: ['2'] }] },
+                        { etiqueta: 'FCS', celdas: [{ respuestas: ['4'] }] }
+                    ],
+                    explicacion: 'Los de direcciones son 6 porque una MAC son 48 bits. Preámbulo y SFD suman 8 y <strong>no cuentan</strong> en el tamaño de la trama.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Qué campo usa el conmutador para aprender?',
+                    opciones: { a: 'La MAC de destino', b: 'El FCS', c: 'La MAC de origen', d: 'El campo longitud/tipo' },
+                    respuesta: 'c',
+                    explicacion: 'Aprende quién está dónde mirando <strong>de dónde viene</strong> la trama. Con el destino decide, no aprende.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 2: 802.3 o Ethernet II',
+            tiempo: '10 min',
+            enunciado: '<p>Los dos formatos se distinguen por el valor de un solo campo. Si vale ' +
+                       '<strong>1500 o menos</strong>, es una longitud (802.3); si vale ' +
+                       '<strong>1536 o más</strong>, es un tipo (Ethernet II).</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Clasifica según el valor del campo. En «Formato» escribe <em>802.3</em> o <em>Ethernet II</em>.',
+                    esquina: 'Valor del campo',
+                    cabecera: ['Formato', 'Qué indica'],
+                    filas: [
+                        { etiqueta: '0x0800 (2048)', celdas: [{ respuestas: ['Ethernet II', 'ethernet ii', 'ethernetII'] }, { respuestas: ['tipo'] }] },
+                        { etiqueta: '0x002E (46)', celdas: [{ respuestas: ['802.3'] }, { respuestas: ['longitud'] }] },
+                        { etiqueta: '0x0806 (2054)', celdas: [{ respuestas: ['Ethernet II', 'ethernet ii', 'ethernetII'] }, { respuestas: ['tipo'] }] },
+                        { etiqueta: '0x05DC (1500)', celdas: [{ respuestas: ['802.3'] }, { respuestas: ['longitud'] }] }
+                    ],
+                    explicacion: 'La frontera está en 1500. Por encima no puede ser una longitud, porque los datos nunca pasan de ahí.'
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Empareja cada valor de tipo con su protocolo.',
+                    izquierda: ['0x0800', '0x0806', '0x86DD'],
+                    pares: { '0x0800': 'IPv4', '0x0806': 'ARP', '0x86DD': 'IPv6' },
+                    explicacion: 'El de ARP es el del jueves. Son los tres que verás en cualquier captura de una red doméstica.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 3: Cuánto ocupa de verdad',
+            tiempo: '16 min',
+            enunciado:
+                '<p><strong>Cómo se calcula el tamaño de una trama:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Mira si los datos llegan a 46 bytes.</strong> Si no llegan, se rellenan hasta ' +
+                '46: el relleno viaja por el cable igual que los datos.</li>' +
+                '<li><strong>Suma el envoltorio:</strong> 14 de cabecera y 4 de FCS, es decir ' +
+                '<strong>18 bytes fijos</strong>.</li>' +
+                '<li><strong>Comprueba los límites:</strong> el resultado nunca puede bajar de 64 ni pasar ' +
+                'de 1518.</li>' +
+                '</ol>' +
+                '<p>Dos ejemplos, uno de cada caso:</p>' +
+                '<pre><code>300 bytes de datos   300 ≥ 46, no hay relleno\n' +
+                '                     300 + 18 = 318 bytes de trama\n\n' +
+                ' 12 bytes de datos   12 &lt; 46 → se rellena con 34\n' +
+                '                      46 + 18 = 64 bytes de trama</code></pre>' +
+                '<p><strong>Comprobación:</strong> si te sale una trama de menos de 64, te has olvidado del ' +
+                'relleno.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Una trama transporta 800 bytes de datos. ¿Cuántos bytes ocupa la trama?',
+                    respuesta: 818,
+                    unidad: 'bytes',
+                    explicacion: '800 + 18 = <strong>818</strong>. No hay relleno porque 800 pasa de sobra de 46.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Otra transporta solo 8 bytes de datos. ¿Cuántos bytes ocupa la trama?',
+                    respuesta: 64,
+                    unidad: 'bytes',
+                    explicacion: '8 bytes se rellenan hasta 46, y 46 + 18 = <strong>64</strong>, el mínimo. Se transmiten 64 bytes para mover 8.',
+                    pistas: ['¿Llegan los 8 bytes al mínimo de 46?']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> En ese caso, ¿cuántos bytes son de relleno?',
+                    respuesta: 38,
+                    unidad: 'bytes',
+                    explicacion: '46 − 8 = <strong>38 bytes</strong> de ceros, que ocupan cable sin transportar nada.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> ¿Cuál es la eficiencia de esa trama, en porcentaje? Un decimal.',
+                    respuesta: 12.5,
+                    tolerancia: 0.3,
+                    unidad: '%',
+                    explicacion: '8 ÷ 64 = 0,125 → <strong>12,5 %</strong>. Siete de cada ocho bytes no transportan nada útil.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>e)</strong> Y una trama llena, con 1500 bytes de datos: ¿qué eficiencia tiene? Un decimal.',
+                    respuesta: 98.8,
+                    tolerancia: 0.3,
+                    unidad: '%',
+                    explicacion: '1500 ÷ 1518 = 0,988 → <strong>98,8 %</strong>. Es lo mejor que puede dar Ethernet.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 4: Los límites y qué pasa al rebasarlos',
+            tiempo: '12 min',
+            enunciado: '<p>Fuera de los dos límites, la trama se descarta. Conviene saber por qué existen.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Por qué existe un tamaño mínimo de trama?',
+                    opciones: {
+                        a: 'Para que la detección de colisiones funcione: la trama debe durar lo suficiente como para que el emisor siga transmitiendo cuando le llegue la noticia del choque',
+                        b: 'Para que quepa la cabecera',
+                        c: 'Porque las tarjetas no saben leer menos de 64 bytes',
+                        d: 'Para igualar la velocidad de todos los equipos'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Es una herencia del medio compartido. Lo verás a fondo en la Semana 10, con CSMA/CD.'
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>b)</strong> Completa.',
+                    frase: 'Una trama de menos de 64 bytes se llama {{0}} y el receptor la {{1}}. El tamaño máximo es de {{2}} bytes, de los cuales {{3}} son de datos.',
+                    respuestas: [
+                        ['runt frame', 'runt', 'fragmento de colision', 'fragmento de colisión'],
+                        ['descarta', 'tira', 'desecha'],
+                        ['1518'],
+                        ['1500']
+                    ],
+                    explicacion: 'Los 1500 son el MTU; los 1518, la trama con su envoltorio.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Un paquete IP de 2.000 bytes tiene que salir por un enlace Ethernet. ¿Qué ocurre?',
+                    opciones: {
+                        a: 'Se envía en una trama gigante',
+                        b: 'La capa de red lo trocea antes, porque no cabe en el MTU de 1500',
+                        c: 'La capa de enlace lo comprime',
+                        d: 'Se descarta sin más'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Trocear es cosa de la <strong>capa de red</strong>: la de enlace no fragmenta, solo acepta o descarta.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 5: El FCS',
+            tiempo: '12 min',
+            enunciado: '<p>Cuatro bytes que deciden si la trama vive o muere.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena lo que ocurre con el FCS, del emisor al receptor.',
+                    elementos: [
+                        'El receptor compara su resultado con el FCS recibido',
+                        'El emisor calcula el CRC sobre toda la trama',
+                        'El receptor aplica el mismo CRC a la trama que le ha llegado',
+                        'El emisor escribe el resultado en el campo FCS',
+                        'Si no coinciden, la trama se descarta'
+                    ],
+                    orden: [
+                        'El emisor calcula el CRC sobre toda la trama',
+                        'El emisor escribe el resultado en el campo FCS',
+                        'El receptor aplica el mismo CRC a la trama que le ha llegado',
+                        'El receptor compara su resultado con el FCS recibido',
+                        'Si no coinciden, la trama se descarta'
+                    ],
+                    explicacion: 'Los dos extremos hacen la misma cuenta. Si el resultado difiere, por el camino ha cambiado algo.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un enlace pierde tramas por errores de FCS y el usuario dice que «la web va lenta pero carga bien». ¿Cómo se explica?',
+                    opciones: {
+                        a: 'Que el FCS repara las tramas y eso lleva tiempo',
+                        b: 'Que el navegador ignora los errores',
+                        c: 'Que las tramas perdidas las vuelve a pedir TCP, así que todo llega, pero con retraso',
+                        d: 'Que es imposible: con errores de FCS la web no cargaría'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Es el reparto de papeles: Ethernet descarta en silencio y TCP se encarga de echar en falta y reclamar. El usuario solo nota la lentitud.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> El libro dice que la tarea del nivel de enlace es «detectar y corregir todos los errores». Explica por qué Ethernet no hace lo segundo y si eso contradice al libro.',
+                    modelo: '<p>No lo contradice: el libro describe <strong>lo que el nivel puede hacer en general</strong>, no lo que hace cada tecnología concreta. Hay protocolos de enlace que sí corrigen, pero Ethernet decidió no hacerlo.</p><p>La razón es de coste. Corregir exige añadir mucha más <strong>información redundante</strong> a cada trama, y esa redundancia viaja siempre, se use o no. En una LAN moderna la tasa de errores es tan baja que estarías pagando ese peso en todas las tramas para arreglar una entre millones.</p><p>Sale más barato <strong>descartar y dejar que TCP lo reclame</strong>, porque TCP ya tiene ese mecanismo montado para otras cosas, como la congestión. Es la misma lógica que el libro cuenta al explicar el paso de X.25 a Frame Relay: cuando el medio mejora, el control exhaustivo deja de compensar.</p>',
+                    rubrica: [
+                        'Digo que el libro describe el nivel en general, no Ethernet en particular',
+                        'Explico que corregir exige mucha información redundante en todas las tramas',
+                        'Menciono que la tasa de errores de una LAN moderna es muy baja',
+                        'Señalo que TCP ya se encarga de reclamar lo que falta',
+                        'Relaciono la idea con el paso de X.25 a Frame Relay'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 6: Integración',
+            tiempo: '12 min',
+            enunciado: '<p>Cruce con el Mes 1 y con el día de ayer.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Una conexión transmite 10.000 tramas llenas de 1500 bytes de datos. ¿Cuántos bytes pasan por el cable en total, contando el envoltorio de 18 bytes por trama?',
+                    respuesta: 15180000,
+                    unidad: 'bytes',
+                    explicacion: '10.000 × 1518 = <strong>15.180.000 bytes</strong>. De ellos, 180.000 son cabeceras y FCS.',
+                    pistas: ['Calcula primero lo que ocupa una sola trama.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Ayer viste que la MAC de destino se reescribe en cada salto. ¿Qué le pasa al FCS cuando un router reenvía una trama?',
+                    opciones: {
+                        a: 'Se conserva, porque los datos no han cambiado',
+                        b: 'Se recalcula, porque la cabecera de enlace es nueva y el CRC depende de toda la trama',
+                        c: 'Se elimina: solo lo lleva la primera trama',
+                        d: 'Lo recalcula el equipo de destino'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'El router construye una trama nueva con otras direcciones, así que el CRC anterior ya no valdría. Cada salto tiene su propio FCS.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Un servicio envía una medida de temperatura cada segundo: 4 bytes de dato. Calcula lo que ocupa al día en el cable y propón una mejora.',
+                    modelo: '<p>Cada medida son 4 bytes, muy por debajo de los 46 mínimos, así que se rellena con 42 y la trama sale con <strong>64 bytes</strong>. En un día hay 86.400 segundos, de modo que son 86.400 × 64 = <strong>5.529.600 bytes</strong>, unos 5,5 MB, para transportar 86.400 × 4 = 345.600 bytes útiles: apenas 345 KB.</p><p>La eficiencia es de 4 ÷ 64 = <strong>6,25 %</strong>. Más de nueve de cada diez bytes son envoltorio y relleno.</p><p>La mejora evidente es <strong>agrupar</strong>: si en vez de enviar cada medida se acumulan las de un minuto y se mandan juntas, son 60 × 4 = 240 bytes de datos en una sola trama de 258 bytes, con una eficiencia del 93 %. Se pasa de 5,5 MB diarios a unos 370 KB. El coste es un retardo de hasta un minuto, que para una temperatura no suele importar.</p>',
+                    rubrica: [
+                        'Me doy cuenta de que 4 bytes exigen relleno y la trama son 64',
+                        'Calculo el total diario, unos 5,5 MB',
+                        'Calculo la eficiencia, alrededor del 6 %',
+                        'Propongo agrupar varias medidas en una sola trama',
+                        'Menciono que la contrapartida es un retardo'
+                    ]
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

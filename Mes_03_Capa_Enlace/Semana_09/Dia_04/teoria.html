@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — ARP: el puente entre la IP y la MAC</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>ARP: el puente entre la IP y la MAC</h1>
+        <p>Semana 9 · Día 4 · Cómo encajan las direcciones de dos capas distintas</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Duración:</strong> 4 h 33 min</div>
+        <div class="info-item"><strong>Teoría:</strong> 62 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 22 min</div>
+        <div class="info-item"><strong>Fuente:</strong> libro §5.5</div>
+    </div>
+
+    <div class="content">
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#lio">El lío de las direcciones</a></li>
+                <li><a href="#pasos">Los cinco pasos de una resolución</a></li>
+                <li><a href="#difusion">Por qué la pregunta grita y la respuesta susurra</a></li>
+                <li><a href="#tabla">La tabla: dinámicas y estáticas</a></li>
+                <li><a href="#fuera">Cuando el destino está en otra red</a></li>
+                <li><a href="#rarp">RARP, y quién ocupó su sitio</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="lio">1. El lío de las direcciones</h2>
+
+            <p>El libro abre el apartado reconociendo el problema sin rodeos:</p>
+
+            <div class="destacado">
+                <strong>Lo que dice el libro</strong>
+                <p>«Un equipo conectado a una red tiene <strong>muchas direcciones a diferentes niveles</strong>
+                de la arquitectura que lo identifican: una dirección MAC, una dirección de red y una dirección
+                de dominio.»</p>
+                <p>«La cuestión fundamental es que debe existir en la red algún protocolo o mecanismo que
+                permita <strong>controlar este lío de direcciones</strong>, de forma que la identificación de
+                un equipo dentro de cada nivel sea coherente con el resto.»</p>
+            </div>
+
+            <p>Dicho de otro modo: tu equipo es <code>192.168.1.70</code> para la capa de red,
+            <code>50:EB:F6:26:B4:2F</code> para la de enlace y quizá <code>portatil.casa</code> para las
+            aplicaciones. Tres nombres para la misma máquina, puestos por sistemas que no se conocen entre sí.</p>
+
+            <h3>Por qué esto es un problema real</h3>
+
+            <p>El libro lo plantea con precisión:</p>
+
+            <p>«Puesto que en una LAN las tramas se transmiten teniendo en cuenta la dirección MAC, cuando un
+            paquete entra en ella el protocolo <strong>no es capaz de distinguir la dirección del
+            destinatario</strong>, porque se establece a un nivel superior de la arquitectura. Entonces,
+            ¿cómo se proyectan las direcciones IP en las direcciones a nivel MAC?»</p>
+
+            <p>Esa es la pregunta del día. Tienes un paquete con una IP de destino y necesitas meterlo en una
+            trama, pero la trama pide una MAC que no conoces.</p>
+
+<pre><code>Capa 3 te da:     «esto va para 192.168.1.41»
+                            │
+                            ▼
+Capa 2 pregunta:  «vale, ¿y cuál es su MAC?»
+                            │
+                            ▼
+                   ... silencio ...
+                            │
+                            ▼
+                      Hace falta ARP</code></pre>
+
+            <div class="dato">
+                <strong>El nombre</strong>
+                <p><strong>ARP</strong>, de <em>Address Resolution Protocol</em>, Protocolo de Resolución de
+                Direcciones. El libro precisa que «se definió en el <strong>RFC 826</strong>».</p>
+                <p>Y una curiosidad de clasificación: el libro lo llama «protocolo de red», aunque sirva a la
+                capa de enlace. Vive justo entre las dos, y por eso el apartado se titula «coordinación entre
+                niveles».</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="pasos">2. Los cinco pasos de una resolución</h2>
+
+            <p>El libro enumera el proceso en cinco pasos. Vamos uno a uno, con un ejemplo: tu equipo
+            (<code>192.168.1.70</code>) quiere hablar con <code>192.168.1.41</code> y no sabe su MAC.</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>#</th><th>Paso</th><th>Qué ocurre</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td><td>Comprobación de la tabla local</td>
+                        <td>«Intenta primero obtener su dirección MAC en una <strong>tabla local</strong>.» Si está, se acabó: no hay tráfico ninguno</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td><td>Envío de la solicitud ARP</td>
+                        <td>«Enviará una trama con la <strong>dirección MAC de difusión</strong> y la dirección IP del destinatario»</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td><td>Se añade la entrada a la tabla</td>
+                        <td>Quien recibe la pregunta aprende de paso quién la hace, y lo apunta</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td><td>Envío de la respuesta ARP</td>
+                        <td>«<strong>Solo contestará la estación que tenga esa dirección</strong>, y lo hace dando su dirección MAC»</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td><td>Se añade la entrada a la tabla</td>
+                        <td>«El emisor aprende que esa dirección IP se corresponde con esa MAC y <strong>guarda esa correspondencia</strong>»</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Lo mismo, en forma de conversación</h3>
+
+<pre><code>  192.168.1.70                      TODA LA RED
+       │                                 │
+       │  ¿Quién tiene 192.168.1.41?     │
+       │  Contéstame a 50:EB:F6:26:B4:2F │
+       ├────────── DIFUSIÓN ────────────▶│  (la oyen todos)
+       │                                 │
+       │                      ┌──────────┴──────────┐
+       │                   .41 dice:            los demás:
+       │                   «soy yo»             «no soy yo»
+       │                                        y la descartan
+       │                                 │
+       │◀───────── UNICAST ──────────────┤
+       │  «192.168.1.41 está en          │
+       │   BC:24:11:BE:87:58»            │
+       │                                 │
+   lo apunta en su tabla</code></pre>
+
+            <div class="destacado">
+                <strong>El detalle que casi nadie nota</strong>
+                <p>En el paso 3, <strong>el que recibe la pregunta también aprende</strong>. La solicitud
+                lleva dentro la IP y la MAC de quien pregunta, así que el destinatario puede apuntarlas sin
+                preguntar nada.</p>
+                <p>Es sensato: si alguien te pregunta tu dirección, es casi seguro que vas a tener que
+                contestarle, así que mejor tener ya la suya a mano. Y es la razón de que una conversación
+                entre dos equipos solo necesite <strong>una</strong> resolución ARP, no dos.</p>
+            </div>
+
+            <h2 id="difusion">3. Por qué la pregunta grita y la respuesta susurra</h2>
+
+            <p>Hay una asimetría deliberada en el protocolo:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>La pregunta</th><th>La respuesta</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Va en</strong></td><td><strong>Difusión</strong>: FF:FF:FF:FF:FF:FF</td><td><strong>Unicast</strong>: directa al que preguntó</td></tr>
+                    <tr><td><strong>La reciben</strong></td><td>Todos los equipos de la red</td><td>Solo el que preguntó</td></tr>
+                    <tr><td><strong>Por qué</strong></td><td>No se sabe dónde está el destinatario: hay que preguntar a todos</td><td>Ya se sabe exactamente a quién va: molestar a los demás no aportaría nada</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Es coherente con lo que viste el lunes: la difusión es cara, porque <strong>obliga a trabajar a
+            toda la red</strong>. Se usa solo cuando no hay alternativa, y en cuanto se conoce el destinatario
+            se vuelve al unicast.</p>
+
+            <div class="aviso">
+                <strong>Una consecuencia para el diseño de redes</strong>
+                <p>Cuanto más grande es un dominio de difusión, <strong>más caro sale ARP</strong>: cada
+                pregunta interrumpe a todos. En una red con cientos de equipos, el tráfico ARP de fondo deja de
+                ser despreciable.</p>
+                <p>Es uno de los argumentos para <strong>segmentar</strong> con VLAN, y lo verás en el Mes 9.
+                El libro lo apunta al hablar de conmutadores: los mensajes de difusión «son capaces de
+                atravesar diferentes segmentos de red a no ser que se utilicen dispositivos encaminadores».</p>
+            </div>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="tabla">4. La tabla: dinámicas y estáticas</h2>
+
+            <p>Si hubiera que preguntar cada vez, la red se ahogaría en difusiones. Por eso cada equipo guarda
+            lo que aprende. El libro lo explica:</p>
+
+            <p>«Cada estación de la red dispone de una tabla local <strong>por cada adaptador de red
+            instalado</strong> con el objetivo de <strong>reducir el tráfico de mensajes de difusión</strong>,
+            en el caso de consultar direcciones resueltas anteriormente.»</p>
+
+            <h3>Los dos tipos de entrada</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Dinámicas</th><th>Estáticas</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Quién las pone</strong></td><td>El propio protocolo, automáticamente</td><td>El administrador, a mano</td></tr>
+                    <tr><td><strong>Cuánto duran</strong></td><td>Un tiempo limitado y luego caducan</td><td>Hasta que se apaga el sistema</td></tr>
+                    <tr><td><strong>Para qué</strong></td><td>El funcionamiento normal</td><td>Fijar una correspondencia concreta</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Por qué caducan las dinámicas</strong>
+                <p>Porque la correspondencia entre IP y MAC <strong>no es permanente</strong>. Un equipo puede
+                apagarse y otro recibir su IP; una tarjeta puede sustituirse; un portátil puede cambiar de red.
+                Si las entradas no caducaran, tu equipo seguiría enviando tramas a una MAC que ya no está.</p>
+                <p>El libro dice que el tiempo de vida es «de unos pocos segundos». En los sistemas actuales es
+                algo más —del orden de minutos—, pero la idea es la misma: <strong>olvidar para no
+                equivocarse</strong>.</p>
+            </div>
+
+            <h2 id="fuera">5. Cuando el destino está en otra red</h2>
+
+            <p>Aquí vuelve la idea del lunes: la MAC solo vale para un salto. ¿Qué pasa entonces si el destino
+            está fuera?</p>
+
+            <p>El libro lo explica con detalle. «Cuando una estación desea enviar un paquete a otra situada en
+            otra subred, coloca su dirección de red y pasa ese paquete al nivel de enlace. Este nivel debe
+            inyectar la trama en el medio, así que debe obtener la dirección MAC del destinatario. Puesto que
+            no la conoce, enviará una solicitud ARP y <strong>ésta será contestada por el puente o el
+            encaminador, que devuelve la dirección MAC de su puerto</strong>.»</p>
+
+<pre><code>  Tu PC quiere hablar con 93.184.216.34 (está en internet)
+
+  1. ¿Está en mi red?  →  NO
+  2. Entonces va al router. ¿Sé la MAC del router?
+  3. Si no, ARP:  «¿quién tiene 192.168.1.1?»     ← la del ROUTER,
+                                                     no la del destino
+  4. El router contesta con su MAC
+  5. La trama sale así:
+         MAC destino: la del router      ← cambia en cada salto
+         IP destino:  93.184.216.34      ← no cambia nunca</code></pre>
+
+            <div class="destacado">
+                <strong>La regla</strong>
+                <p>ARP solo pregunta por <strong>direcciones de la propia red</strong>. Si el destino está
+                fuera, lo que se resuelve es la MAC de la <strong>puerta de enlace</strong>, no la del destino
+                final.</p>
+                <p>Por eso ayer, en el laboratorio, tu tabla ARP tenía la MAC del router y ninguna de ningún
+                servidor de internet.</p>
+            </div>
+
+            <p>Y el proceso se repite en cada salto: el libro explica que el router, al recibir la trama,
+            «primero debe obtener la dirección IP encapsulada en el paquete para generar una petición ARP», y
+            esta vez «sí que es contestada por la estación destinataria». Cada tramo tiene su propia resolución.</p>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="rarp">6. RARP, y quién ocupó su sitio</h2>
+
+            <p>El libro menciona un protocolo gemelo que funciona al revés:</p>
+
+            <p>«El protocolo <strong>RARP</strong> (<em>Reverse Address Resolution Protocol</em>) realiza el
+            proceso contrario al del protocolo ARP, es decir, <strong>dada una dirección física de una
+            estación, obtiene su dirección IP</strong> correspondiente enviando mensajes de difusión a la red.»</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>ARP</th><th>RARP</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Sabes</strong></td><td>La IP</td><td>La MAC (la tuya)</td></tr>
+                    <tr><td><strong>Quieres</strong></td><td>La MAC</td><td>Tu IP</td></tr>
+                    <tr><td><strong>La pregunta</strong></td><td>«¿Quién tiene esta IP?»</td><td>«¿Alguien sabe qué IP me toca?»</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Para qué servía y por qué desapareció</strong>
+                <p>💡 <strong>Ampliación.</strong> RARP lo usaban equipos sin disco, que al arrancar solo
+                conocían su propia MAC y necesitaban que alguien les dijera su IP.</p>
+                <p>Quedó obsoleto porque hacía muy poco: daba una IP y nada más. Lo sustituyó
+                <strong>DHCP</strong>, que entrega la IP, la máscara, la puerta de enlace, los servidores DNS y
+                lo que haga falta, con un tiempo de alquiler. Es el mismo problema resuelto de forma
+                completa.</p>
+                <p>Si en una prueba te preguntan quién asigna direcciones IP automáticamente, la respuesta hoy
+                es <strong>DHCP</strong>. RARP solo aparece por motivos históricos.</p>
+            </div>
+
+            <h2 id="resumen">7. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible</strong>
+                <ul>
+                    <li>ARP existe porque un equipo tiene <strong>varias direcciones</strong> en capas
+                    distintas y hay que relacionarlas.</li>
+                    <li>Traduce <strong>de IP a MAC</strong>, y está definido en el RFC 826.</li>
+                    <li>Cinco pasos: mirar la tabla · preguntar en difusión · el otro aprende · responder en
+                    unicast · apuntar.</li>
+                    <li>La pregunta va en <strong>difusión</strong> y la respuesta en
+                    <strong>unicast</strong>.</li>
+                    <li>Quien recibe la pregunta <strong>también aprende</strong>, porque la solicitud lleva
+                    los datos del que pregunta.</li>
+                    <li>La tabla tiene entradas <strong>dinámicas</strong>, que caducan, y
+                    <strong>estáticas</strong>, que no.</li>
+                    <li>Caducan para <strong>no equivocarse</strong> cuando algo cambia en la red.</li>
+                    <li>Si el destino está fuera, se resuelve la MAC de la <strong>puerta de enlace</strong>.</li>
+                    <li><strong>RARP</strong> hacía lo contrario y lo sustituyó <strong>DHCP</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error frecuente</th><th>Lo correcto</th></tr></thead>
+                <tbody>
+                    <tr><td>«ARP resuelve la MAC de cualquier equipo de internet»</td><td>Solo de la <strong>propia red</strong>. Fuera, se resuelve la del router</td></tr>
+                    <tr><td>«La respuesta ARP también va en difusión»</td><td>Va en <strong>unicast</strong>: ya se sabe a quién</td></tr>
+                    <tr><td>«Hay que hacer ARP para cada trama»</td><td>Solo la primera vez: después está en la <strong>tabla</strong></td></tr>
+                    <tr><td>«Las entradas caducan por falta de memoria»</td><td>Caducan porque la relación IP-MAC <strong>puede cambiar</strong></td></tr>
+                    <tr><td>«ARP asigna direcciones IP»</td><td>Eso es <strong>DHCP</strong>. ARP solo traduce</td></tr>
+                    <tr><td>«Todos los equipos responden a la solicitud»</td><td>Solo el que <strong>tiene esa IP</strong>. Los demás la descartan</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Repaso con flashcards</h2>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>15 preguntas · 22 minutos</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por apartado</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a></span>
+        <span><a href="../Dia_03/teoria.html">← Día 3</a> · <a href="ejercicios.html">Ejercicios →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'Imagina que ARP no existiera. ¿Qué habría que hacer para que un equipo pudiera enviar una trama a otro de su red?',
+                modelo: 'Habría que configurar a mano, en cada equipo, la correspondencia entre la IP y la MAC de todos los demás. Sería inviable: en una red de cincuenta equipos cada uno necesitaría cuarenta y nueve entradas, y habría que actualizarlas todas cada vez que se cambiara una tarjeta, se añadiera un equipo o se reasignara una IP. ARP automatiza exactamente eso, y por eso una red funciona sin que nadie configure nada de esto.'
+            },
+            {
+                pregunta: 'La solicitud ARP va en difusión y la respuesta en unicast. Explica por qué tiene sentido esa asimetría.',
+                modelo: 'La pregunta tiene que ir en difusión porque el que pregunta no sabe dónde está el destinatario: si lo supiera, no preguntaría. La única forma de llegar a alguien cuya dirección física desconoces es dirigirte a todos. La respuesta, en cambio, ya tiene un destinatario conocido, porque la solicitud llevaba dentro la MAC de quien preguntaba. Mandarla en difusión obligaría a toda la red a procesar un mensaje que solo le interesa a uno, y la difusión es cara: interrumpe a todos los equipos del dominio.'
+            },
+            {
+                pregunta: 'Tu equipo tiene en la tabla ARP la MAC de tu router, pero el router se estropea y lo sustituyes por otro con la misma IP. ¿Qué ocurre durante los minutos siguientes y por qué?',
+                modelo: 'Durante un rato mi equipo seguiría enviando tramas a la MAC del router viejo, que ya no existe en la red, así que ese tráfico se perdería: habría una interrupción que no se explica mirando las IP, porque la configuración es correcta. El problema se resuelve solo cuando la entrada dinámica caduca y mi equipo vuelve a preguntar, descubriendo la MAC nueva. Esto es justo la razón de que las entradas tengan tiempo de vida limitado: si fueran permanentes, el fallo duraría hasta reiniciar o vaciar la tabla a mano.'
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué problema resuelve ARP?', dorso: 'Que un equipo tiene <strong>varias direcciones en capas distintas</strong>. Traduce la IP que conoce la capa 3 en la MAC que necesita la capa 2.' },
+            { frente: '¿En qué RFC se definió ARP?', dorso: 'El <strong>RFC 826</strong>.' },
+            { frente: 'Los cinco pasos', dorso: '1. Mirar la tabla local · 2. Preguntar en difusión · 3. El destinatario apunta al que pregunta · 4. Responder en unicast · 5. El que preguntó apunta.' },
+            { frente: '¿Cómo va la solicitud ARP?', dorso: 'En <strong>difusión</strong>, a FF:FF:FF:FF:FF:FF, porque no se sabe dónde está el destinatario.' },
+            { frente: '¿Cómo va la respuesta ARP?', dorso: 'En <strong>unicast</strong>, directa al que preguntó: ya se sabe su MAC porque venía en la solicitud.' },
+            { frente: '¿Quién contesta una solicitud ARP?', dorso: '<strong>Solo la estación que tiene esa IP.</strong> Las demás la reciben y la descartan.' },
+            { frente: 'El detalle del paso 3', dorso: 'El que <strong>recibe</strong> la pregunta también aprende, porque la solicitud lleva la IP y la MAC de quien pregunta.' },
+            { frente: '¿Para qué sirve la tabla ARP?', dorso: 'Para <strong>reducir el tráfico de difusión</strong>: si la correspondencia ya se conoce, no hay que preguntar.' },
+            { frente: 'Entradas dinámicas y estáticas', dorso: 'Dinámicas: las pone el protocolo y <strong>caducan</strong>. Estáticas: las pone el administrador y duran hasta apagar el sistema.' },
+            { frente: '¿Por qué caducan las entradas dinámicas?', dorso: 'Porque la relación IP-MAC <strong>puede cambiar</strong>: una tarjeta nueva, otra IP, otro equipo. Olvidar evita errores.' },
+            { frente: 'Destino en otra red: ¿por quién pregunta ARP?', dorso: 'Por la <strong>puerta de enlace</strong>, nunca por el destino final. Fuera de la red, su MAC no sirve de nada.' },
+            { frente: '¿Qué hacía RARP?', dorso: 'Lo contrario: dada <strong>la MAC</strong>, obtener <strong>la IP</strong>. Lo usaban equipos sin disco al arrancar.' },
+            { frente: '¿Qué sustituyó a RARP?', dorso: '<strong>DHCP</strong>, que además de la IP entrega máscara, puerta de enlace, DNS y un tiempo de alquiler.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz del Día 4 — ARP',
+        tiempo: '22 minutos',
+        minutos: 22,
+        questions: [
+            {
+                topic: 'El problema',
+                repaso: '#lio',
+                text: '¿Cuál es el problema de fondo que resuelve ARP?',
+                options: {
+                    a: 'Que las direcciones IP se agotan',
+                    b: 'Que un equipo tiene direcciones distintas en capas distintas y hay que relacionarlas',
+                    c: 'Que las tramas se pierden por el camino',
+                    d: 'Que hay que asignar direcciones IP a los equipos nuevos'
+                },
+                answer: 'b',
+                feedback: 'El libro lo llama «el lío de las direcciones». Lo último es DHCP, que es otra cosa.'
+            },
+            {
+                topic: 'El problema',
+                repaso: '#lio',
+                text: 'La capa de red entrega un paquete para 192.168.1.41. ¿Por qué no puede enviarse directamente?',
+                options: {
+                    a: 'Porque hay que comprobar antes que el equipo esté encendido',
+                    b: 'Porque la IP no es válida en una LAN',
+                    c: 'Porque falta la máscara de red',
+                    d: 'Porque la trama necesita una dirección MAC de destino, y esa IP no la proporciona'
+                },
+                answer: 'd',
+                feedback: 'La trama se dirige por MAC, no por IP. Sin esa traducción, el paquete no puede salir al cable.'
+            },
+            {
+                topic: 'Los pasos',
+                repaso: '#pasos',
+                text: '¿Cuál es el PRIMER paso de una resolución ARP?',
+                options: {
+                    a: 'Consultar la tabla local, por si la correspondencia ya se conoce',
+                    b: 'Enviar la solicitud en difusión',
+                    c: 'Preguntar al router',
+                    d: 'Consultar el servidor DNS'
+                },
+                answer: 'a',
+                feedback: 'Si está en la tabla, <strong>no se genera tráfico ninguno</strong>. Por eso en una red en marcha se ven pocas solicitudes ARP.'
+            },
+            {
+                topic: 'Los pasos',
+                repaso: '#pasos',
+                text: 'Se envía una solicitud ARP preguntando por 192.168.1.41. ¿Quién la responde?',
+                options: {
+                    a: 'El router, que conoce todas las direcciones',
+                    b: 'Todos los equipos de la red',
+                    c: 'Solo el equipo que tiene esa dirección IP',
+                    d: 'El conmutador, consultando su tabla'
+                },
+                answer: 'c',
+                feedback: 'Lo dice el libro: «solo contestará la estación que tenga esa dirección». Los demás la reciben y la descartan.'
+            },
+            {
+                topic: 'Los pasos',
+                repaso: '#pasos',
+                text: 'Tras una sola resolución ARP entre A y B, ¿qué han aprendido?',
+                options: {
+                    a: 'Solo A ha aprendido la dirección de B',
+                    b: 'Los dos: A por la respuesta, y B porque la solicitud llevaba los datos de A',
+                    c: 'Solo B ha aprendido la de A',
+                    d: 'Ninguno: hay que repetir el proceso al revés'
+                },
+                answer: 'b',
+                feedback: 'Es el paso 3 del libro, el que casi nadie recuerda. Por eso una conversación entre dos equipos solo necesita <strong>una</strong> resolución.'
+            },
+            {
+                topic: 'Difusión',
+                repaso: '#difusion',
+                text: '¿Por qué la solicitud ARP se envía en difusión?',
+                options: {
+                    a: 'Para que todos actualicen su tabla',
+                    b: 'Porque es más rápido',
+                    c: 'Porque lo exige el conmutador',
+                    d: 'Porque no se sabe dónde está el destinatario: si se supiera su MAC, no haría falta preguntar'
+                },
+                answer: 'd',
+                feedback: 'Es la única forma de llegar a alguien cuya dirección física desconoces.'
+            },
+            {
+                topic: 'Difusión',
+                repaso: '#difusion',
+                text: '¿Y por qué la respuesta va en unicast?',
+                options: {
+                    a: 'Porque ya se conoce la MAC del que preguntó: venía en la solicitud',
+                    b: 'Porque la difusión no funciona en sentido contrario',
+                    c: 'Porque la respuesta es más corta',
+                    d: 'Porque el router lo impone'
+                },
+                answer: 'a',
+                feedback: 'Molestar a toda la red con un mensaje que solo interesa a uno no tendría sentido: la difusión es cara.'
+            },
+            {
+                topic: 'Difusión',
+                repaso: '#difusion',
+                text: '¿Qué consecuencia tiene ARP para el tamaño de los dominios de difusión?',
+                options: {
+                    a: 'Ninguna: ARP no usa difusión',
+                    b: 'Cuanto mayor es el dominio, más caro sale ARP, porque cada pregunta interrumpe a todos',
+                    c: 'Los dominios grandes aceleran ARP',
+                    d: 'ARP obliga a tener dominios grandes'
+                },
+                answer: 'b',
+                feedback: 'Es uno de los argumentos para segmentar con VLAN, que verás en el Mes 9.'
+            },
+            {
+                topic: 'La tabla',
+                repaso: '#tabla',
+                text: 'Según el libro, ¿para qué sirve la tabla ARP local?',
+                options: {
+                    a: 'Para guardar las direcciones IP de la red',
+                    b: 'Para que el conmutador sepa por dónde enviar',
+                    c: 'Para reducir el tráfico de mensajes de difusión en consultas ya resueltas',
+                    d: 'Para asignar direcciones a equipos nuevos'
+                },
+                answer: 'c',
+                feedback: 'Sin tabla habría que preguntar en difusión para cada trama, y la red se ahogaría.'
+            },
+            {
+                topic: 'La tabla',
+                repaso: '#tabla',
+                text: '¿Qué diferencia a una entrada estática de una dinámica?',
+                options: {
+                    a: 'La estática la pone el administrador y dura hasta que se apaga el sistema',
+                    b: 'La estática es más rápida de consultar',
+                    c: 'La dinámica solo vale para el router',
+                    d: 'La estática caduca antes'
+                },
+                answer: 'a',
+                feedback: 'Las dinámicas las pone el protocolo solo y <strong>caducan</strong>; las estáticas se escriben a mano.'
+            },
+            {
+                topic: 'La tabla',
+                repaso: '#tabla',
+                text: '¿Por qué caducan las entradas dinámicas?',
+                options: {
+                    a: 'Para ahorrar memoria',
+                    b: 'Porque la correspondencia entre IP y MAC puede cambiar, y una entrada vieja llevaría a enviar tramas a una MAC que ya no está',
+                    c: 'Porque lo exige el RFC 826',
+                    d: 'Para forzar al usuario a reconectarse'
+                },
+                answer: 'b',
+                feedback: 'Un equipo apagado, una tarjeta sustituida o una IP reasignada bastan para invalidar la entrada. <strong>Olvidar evita errores.</strong>'
+            },
+            {
+                topic: 'Fuera de la red',
+                repaso: '#fuera',
+                text: 'Tu equipo quiere conectarse a un servidor de internet. ¿Por qué dirección pregunta ARP?',
+                options: {
+                    a: 'Por la del servidor de internet',
+                    b: 'Por la del servidor DNS',
+                    c: 'Por ninguna: fuera de la red no se usa ARP',
+                    d: 'Por la de la puerta de enlace'
+                },
+                answer: 'd',
+                feedback: 'La MAC del servidor remoto no serviría de nada: solo valen dentro de la propia red. Lo que hace falta es entregarle la trama al router.'
+            },
+            {
+                topic: 'Fuera de la red',
+                repaso: '#fuera',
+                text: 'Un paquete cruza tres routers. ¿Cuántas resoluciones ARP distintas pueden hacer falta, como mínimo?',
+                options: {
+                    a: 'Una sola, al principio',
+                    b: 'Ninguna: solo se usa ARP dentro de una LAN',
+                    c: 'Una por cada tramo, porque cada salto necesita la MAC del siguiente equipo',
+                    d: 'Tres, una por router'
+                },
+                answer: 'c',
+                feedback: 'El libro lo describe: el router «primero debe obtener la dirección IP encapsulada en el paquete para generar una petición ARP». Cada tramo resuelve la suya.'
+            },
+            {
+                topic: 'RARP',
+                repaso: '#rarp',
+                text: '¿Qué hacía RARP?',
+                options: {
+                    a: 'Dada una MAC, obtener la IP correspondiente',
+                    b: 'Resolver nombres de dominio en direcciones IP',
+                    c: 'Lo mismo que ARP, pero más rápido',
+                    d: 'Asignar máscaras de red'
+                },
+                answer: 'a',
+                feedback: 'El proceso inverso al de ARP. Lo usaban equipos sin disco que al arrancar solo conocían su propia dirección física.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '#rarp',
+                text: '<strong>Integración.</strong> ¿Por qué DHCP dejó obsoleto a RARP?',
+                options: {
+                    a: 'Porque RARP era inseguro',
+                    b: 'Porque DHCP entrega además máscara, puerta de enlace y DNS, con un tiempo de alquiler, mientras que RARP solo daba la IP',
+                    c: 'Porque RARP no funcionaba con Ethernet',
+                    d: 'Porque DHCP no usa difusión'
+                },
+                answer: 'b',
+                feedback: 'Es el mismo problema resuelto de forma completa. Con solo la IP, un equipo recién arrancado todavía no puede salir de su red.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>

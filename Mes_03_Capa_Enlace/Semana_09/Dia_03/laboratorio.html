@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Laboratorio: busca colisiones donde ya no quedan</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Laboratorio — Busca colisiones donde ya no quedan</h1>
+        <p>Semana 9 · Día 3 · 62 minutos · Dúplex, velocidad y contadores reales</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Tiempo:</strong> 62 min</div>
+        <div class="info-item"><strong>Herramienta:</strong> terminal</div>
+        <div class="info-item"><strong>Instalar:</strong> nada</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer</strong>
+            <p>Comprobar <strong>en tu propio equipo</strong> lo que dice la teoría: que las colisiones han
+            desaparecido. Vas a ver el dúplex negociado, el contador de colisiones y a explicar por qué marca
+            lo que marca.</p>
+            <p>Un laboratorio donde lo interesante es encontrar <strong>un cero</strong>, y saber por qué.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>No hace falta instalar nada. En Windows, PowerShell basta sin ser administrador.</li>
+                <li>Si estás por <strong>Wi-Fi</strong>, algunos datos no aparecerán: el dúplex no tiene
+                sentido en un medio inalámbrico. Se indica dónde.</li>
+                <li>Los números serán distintos de los del ejemplo. Lo que se corrige es la
+                <strong>forma</strong> del dato y tu razonamiento.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Velocidad y dúplex negociados (16 min)</h2>
+
+            <p>Dos equipos conectados por cable <strong>negocian</strong> al enchufarse: acuerdan la velocidad
+            más alta que ambos soportan y si pueden ir en full-dúplex. Vamos a ver el resultado.</p>
+
+            <div class="so-tabs" data-grupo="dup">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="dup" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object Name, LinkSpeed, FullDuplex, MediaType</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="dup" data-so="nix">
+                <div class="comando"><pre><code>ip -br link
+cat /sys/class/net/eth0/speed /sys/class/net/eth0/duplex</code></pre></div>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de la máquina de referencia</strong>
+<pre><code>Name                       LinkSpeed  FullDuplex  MediaType
+----                       ---------  ----------  ---------
+Ethernet                   1 Gbps     True        802.3
+Ethernet 3                 1 Gbps     True        802.3
+vEthernet (WSL)            10 Gbps                802.3
+Ethernet 2                 600 Mbps   True        802.3</code></pre>
+                <p><strong>FullDuplex: True</strong> en todas las físicas. Ahí está la razón de que el
+                laboratorio vaya a dar cero colisiones.</p>
+                <p>Fíjate en la de WSL: <strong>10 Gbps</strong> y sin dato de dúplex. No es una tarjeta: es
+                un adaptador virtual, y su «velocidad» es un número inventado porque no hay cable que
+                limite nada.</p>
+            </div>
+
+            <div class="aviso">
+                <strong>Si estás por Wi-Fi</strong>
+                <p>El campo de dúplex puede salir vacío, y es correcto: en el aire <strong>no existe el
+                full-dúplex</strong> tal como lo hemos visto. Una antena no puede transmitir y recibir a la
+                vez en la misma frecuencia, así que Wi-Fi es half-dúplex por naturaleza. Es justamente la
+                razón de que allí la contienda siga viva.</p>
+            </div>
+
+            <h2>Parte 2 — El contador de colisiones (18 min)</h2>
+
+            <p>Ahora el dato que importa.</p>
+
+            <div class="so-tabs" data-grupo="col">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="col" data-so="win">
+                <div class="comando"><pre><code>Get-NetAdapterStatistics | Select-Object Name, ReceivedBytes, SentBytes, OutboundDiscardedPackets, ReceivedDiscardedPackets</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="col" data-so="nix">
+                <div class="comando"><pre><code>ip -s link show eth0</code></pre></div>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real, en Linux</strong>
+<pre><code>RX:  bytes  packets  errors  dropped  missed  mcast
+      5028       16       0        0       0      5
+TX:  bytes  packets  errors  dropped  carrier  collsns
+      2506       23       0        0        0        0</code></pre>
+                <p>La última columna, <code>collsns</code>, es el contador de colisiones: <strong>0</strong>.
+                Y los de errores y descartes, también.</p>
+            </div>
+
+            <p>En Windows no hay una columna de colisiones en ese comando, porque el sistema ya ni se molesta
+            en exponerla para enlaces modernos. Lo que sí hay son los <strong>paquetes descartados</strong>,
+            que es donde aparecerían los síntomas de un problema.</p>
+
+            <h2>Parte 3 — La avería que sí produce colisiones (16 min)</h2>
+
+            <p>Un contador de colisiones distinto de cero en un enlace conmutado es un <strong>síntoma</strong>,
+            y casi siempre el mismo: <strong>desajuste de dúplex</strong>.</p>
+
+<pre><code>  PC                              SWITCH
+  cree que está en FULL           está en HALF
+  transmite cuando quiere         escucha antes de hablar
+         │                               │
+         └──────── los dos a la vez ─────┘
+                        ▼
+         el switch detecta colisión y reintenta
+         el PC no la detecta: para él no existe
+                        ▼
+         tramas perdidas, lentitud rarísima,
+         y un enlace que "funciona" pero va fatal</code></pre>
+
+            <div class="destacado">
+                <strong>Por qué cuesta tanto diagnosticarlo</strong>
+                <p>Porque el enlace <strong>no se cae</strong>. Hay conectividad, el ping responde, las webs
+                cargan. Simplemente todo va mucho peor de lo que debería, y de forma intermitente. Mirar el
+                contador de colisiones en los dos extremos es lo que lo destapa.</p>
+            </div>
+
+            <h2>Parte 4 — Dónde sí hay contienda (12 min)</h2>
+
+            <p>Si tienes Wi-Fi, ahí sigue vivo todo lo de hoy. Comprueba cuántos equipos comparten tu punto
+            de acceso: todos ellos compiten por el mismo aire, en el mismo canal, y se turnan mediante
+            CSMA/CA.</p>
+
+            <div class="so-tabs" data-grupo="wifi">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="wifi" data-so="win">
+                <div class="comando"><pre><code>netsh wlan show interfaces</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="wifi" data-so="nix">
+                <div class="comando"><pre><code>iw dev wlan0 link</code></pre></div>
+            </div>
+
+            <div class="aviso">
+                <strong>Si no tienes Wi-Fi activo</strong>
+                <p>En la máquina de referencia el adaptador Wi-Fi está desconectado, así que estos comandos
+                no devuelven datos útiles. <strong>Sáltate esta parte si es tu caso</strong>: no se evalúa.
+                La volverás a ver en la Semana 12, dedicada entera a 802.11.</p>
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Conoces la velocidad y el dúplex negociados por tu adaptador.</li>
+                <li>Has mirado el contador de colisiones y sabes explicar su valor.</li>
+                <li>Sabes qué avería produce colisiones en un enlace conmutado y cómo se detecta.</li>
+                <li>Puedes decir dónde sigue habiendo contienda por el medio.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    ejercicios: [
+        {
+            titulo: 'PARTE 1: Tu enlace',
+            tiempo: '16 min',
+            enunciado: '<p>Con la salida del comando delante.</p>',
+            items: [
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>a)</strong> La velocidad negociada por tu adaptador activo, tal cual aparece.',
+                    respuestas: ['1 gbps', '1gbps', '100 mbps', '100mbps', '10 gbps', '10gbps', '2.5 gbps', '2,5 gbps', '600 mbps', '2500 mbps', '1000 mbps', '54 mbps', '867 mbps', '433 mbps'],
+                    explicacion: 'Lo habitual por cable es <strong>1 Gbps</strong>. Si sale 100 Mbps y tu equipo es moderno, puede que el cable solo tenga dos pares útiles o esté dañado: merece la pena mirarlo.',
+                    pistas: ['Cópialo tal cual lo muestra el comando, con la unidad.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué dice el campo de dúplex?',
+                    opciones: {
+                        a: 'Full-dúplex',
+                        b: 'Half-dúplex',
+                        c: 'No aparece o está vacío'
+                    },
+                    libre: true,
+                    explicacion: 'Lo esperable por cable es <strong>full-dúplex</strong>. Si sale half en un enlace a un switch moderno, hay un problema de negociación que conviene revisar. Y si está vacío, seguramente es Wi-Fi o un adaptador virtual, donde el campo no aplica.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> El adaptador virtual de WSL declara 10 Gbps y ninguna velocidad real lo respalda. ¿Qué significa ese número?',
+                    modelo: '<p>No significa casi nada: es un valor <strong>declarado por software</strong>, no negociado con nadie. Un adaptador virtual no está conectado a ningún cable, así que no hay un extremo remoto con el que acordar velocidad ni dúplex, y tampoco hay un medio físico que imponga un límite.</p><p>El tráfico que pasa por ahí es en realidad una <strong>copia de memoria a memoria</strong> dentro del mismo equipo, y su velocidad real depende de la CPU y de la memoria, no de ninguna norma Ethernet. El sistema pone una cifra alta simplemente porque la interfaz tiene que declarar alguna.</p><p>Por eso tampoco aparece el dúplex: el concepto no aplica cuando no hay hilos que compartir.</p>',
+                    rubrica: [
+                        'Digo que es un valor declarado por software, no negociado',
+                        'Explico que no hay cable ni extremo remoto con el que negociar',
+                        'Menciono que el tráfico es en realidad copia de memoria',
+                        'Relaciono eso con que tampoco aparezca el dúplex'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'PARTE 2: El contador',
+            tiempo: '18 min',
+            enunciado: '<p>El dato que confirma la teoría del día.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Las colisiones registradas por tu interfaz. En Windows, usa los paquetes descartados de salida.',
+                    respuesta: 0,
+                    tolerancia: 999999,
+                    unidad: 'colisiones',
+                    explicacion: 'Lo normal es <strong>0</strong>. Si no lo es, merece la pena mirar el dúplex de los dos extremos del enlace.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Los bytes recibidos por esa interfaz desde que se levantó.',
+                    respuesta: 0,
+                    tolerancia: 999999999999,
+                    unidad: 'bytes',
+                    explicacion: 'Cualquier valor vale. Sirve para comprobar que el enlace lleva tráfico de verdad y que el cero de colisiones no es porque no se haya usado.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Tu contador de colisiones está a cero. ¿Cuál es la explicación correcta?',
+                    opciones: {
+                        a: 'Que el sistema operativo ya no cuenta colisiones',
+                        b: 'Que la red tiene poco tráfico y por eso no ha habido choques',
+                        c: 'Que el enlace es punto a punto y full-dúplex, así que las colisiones son imposibles, no solo improbables',
+                        d: 'Que el conmutador las corrige automáticamente'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'La diferencia importa: no es que sean raras por poco tráfico, es que <strong>no hay forma física</strong> de que ocurran. Con más tráfico seguiría siendo cero.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>d)</strong> Tu interfaz ha movido millones de bytes y no ha registrado ni una colisión. Si en lugar de un conmutador tuvieras un concentrador con otros siete equipos, ¿qué esperarías ver? Razona qué cambiaría exactamente.',
+                    modelo: '<p>Esperaría ver un contador de colisiones <strong>claramente distinto de cero</strong>, y creciendo con el uso.</p><p>Con un concentrador el medio vuelve a ser compartido: los ocho equipos forman un único dominio de colisión y todos compiten por el mismo cable. Además el concentrador obliga a trabajar en <strong>half-dúplex</strong>, porque no puede haber dos transmitiendo a la vez. Cada vez que dos equipos empiezan a transmitir en el mismo instante, hay choque, y con ocho equipos activos eso pasa constantemente.</p><p>También esperaría que el <strong>rendimiento efectivo cayera</strong> mucho más de lo que sugiere repartir el ancho de banda entre ocho, porque cada colisión no solo desperdicia las dos tramas, sino también el tiempo de espera aleatoria de los dos equipos antes de reintentar. Y cuanto más tráfico, más choques: el problema se agrava solo.</p>',
+                    rubrica: [
+                        'Digo que el contador dejaría de ser cero y crecería con el uso',
+                        'Explico que el concentrador devuelve el medio compartido y un solo dominio de colisión',
+                        'Menciono que el concentrador obliga a half-dúplex',
+                        'Señalo que el rendimiento cae más de lo que sugiere el simple reparto',
+                        'Añado que el problema empeora al aumentar la carga'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'PARTE 3: Diagnosticar el desajuste',
+            tiempo: '16 min',
+            enunciado: '<p>Sobre el escenario descrito arriba: un PC que cree estar en full-dúplex ' +
+                       'conectado a un puerto de switch configurado en half.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Qué síntoma describiría el usuario?',
+                    opciones: {
+                        a: 'Que no tiene conexión',
+                        b: 'Que la red funciona pero va muy mal y de forma intermitente',
+                        c: 'Que no obtiene dirección IP',
+                        d: 'Que el cable no enlaza'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Eso es lo que lo hace difícil: <strong>no se cae</strong>. Hay conectividad, responde el ping, cargan las webs. Solo que todo va peor de lo que debería.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿En cuál de los dos extremos aparecerán contadores anómalos?',
+                    opciones: {
+                        a: 'En el que está en half-dúplex, que sí detecta las colisiones',
+                        b: 'En el que está en full-dúplex',
+                        c: 'En los dos por igual',
+                        d: 'En ninguno: no se registra'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'El extremo en full-dúplex <strong>ni siquiera busca</strong> colisiones: para él no existen. Por eso hay que mirar los dos lados del enlace.'
+                },
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>c)</strong> Ordena los pasos para diagnosticar y resolver el problema.',
+                    elementos: [
+                        'Forzar la misma configuración en ambos extremos, o dejar la autonegociación en los dos',
+                        'Comprobar los contadores de errores y colisiones en el equipo',
+                        'Comprobar el dúplex y la velocidad en el puerto del conmutador',
+                        'Verificar que los contadores dejan de crecer',
+                        'Observar que la red funciona pero rinde mal'
+                    ],
+                    orden: [
+                        'Observar que la red funciona pero rinde mal',
+                        'Comprobar los contadores de errores y colisiones en el equipo',
+                        'Comprobar el dúplex y la velocidad en el puerto del conmutador',
+                        'Forzar la misma configuración en ambos extremos, o dejar la autonegociación en los dos',
+                        'Verificar que los contadores dejan de crecer'
+                    ],
+                    explicacion: 'El error clásico al arreglarlo es forzar <strong>un solo</strong> extremo: eso suele empeorar el desajuste. O los dos forzados igual, o los dos negociando.'
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

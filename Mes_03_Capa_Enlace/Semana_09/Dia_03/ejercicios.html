@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Ejercicios: acceso al medio y control de flujo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Ejercicios — Acceso al medio y control de flujo</h1>
+        <p>Semana 9 · Día 3 · 74 minutos · 6 ejercicios</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Tiempo:</strong> 74 min</div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Teoría:</strong> <a href="teoria.html">volver</a></div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            Hoy hay más razonamiento que cálculo. La pregunta que resuelve casi todo es:
+            <strong>¿se comparte el medio o no?</strong>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría</a></span>
+        <span><a href="laboratorio.html">Laboratorio →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    ejercicios: [
+        {
+            titulo: 'EJERCICIO 1: ¿Puede haber colisión?',
+            tiempo: '12 min',
+            enunciado: '<p>Una sola pregunta decide: <strong>¿comparten el medio dos o más transmisores?</strong> ' +
+                       'Si la respuesta es no, no hay colisiones posibles.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica si puede haber colisiones. Escribe <em>sí</em> o <em>no</em>.',
+                    esquina: 'Situación',
+                    cabecera: ['¿Colisiones?'],
+                    filas: [
+                        { etiqueta: 'Ocho equipos conectados a un concentrador', celdas: [{ respuestas: ['si', 'sí'] }] },
+                        { etiqueta: 'Un PC y un switch, en full-dúplex', celdas: [{ respuestas: ['no'] }] },
+                        { etiqueta: 'Seis portátiles en el mismo punto de acceso Wi-Fi', celdas: [{ respuestas: ['si', 'sí'] }] },
+                        { etiqueta: 'Un bus coaxial con cinco estaciones', celdas: [{ respuestas: ['si', 'sí'] }] },
+                        { etiqueta: 'Dos switches unidos por fibra en full-dúplex', celdas: [{ respuestas: ['no'] }] },
+                        { etiqueta: 'Un PC y un switch, en half-dúplex', celdas: [{ respuestas: ['si', 'sí'] }] }
+                    ],
+                    explicacion: 'Los dos «no» son enlaces <strong>punto a punto en full-dúplex</strong>: un camino por sentido y un solo equipo al otro lado. El último sí puede: el switch no basta si el enlace es half-dúplex.',
+                    pistas: ['Fíjate en el último: tiene switch, pero ¿y el dúplex?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Qué ocurre exactamente cuando colisionan dos tramas?',
+                    opciones: {
+                        a: 'La segunda espera a que termine la primera',
+                        b: 'Se mezclan las señales y se pierden las dos',
+                        c: 'Se pierde la que viene del equipo más lento',
+                        d: 'El concentrador decide cuál pasa'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Nadie arbitra y nadie gana. Lo que llega al receptor es una suma de señales sin sentido.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 2: Contienda frente a turnos',
+            tiempo: '12 min',
+            enunciado: '<p>Las dos familias tienen virtudes opuestas. Conviene saber cuál conviene en cada ' +
+                       'escenario.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa con <strong>contienda</strong> o <strong>turnos</strong>.',
+                    esquina: 'Característica',
+                    cabecera: ['Familia'],
+                    filas: [
+                        { etiqueta: 'Garantiza un tiempo máximo de espera', celdas: [{ respuestas: ['turnos'] }] },
+                        { etiqueta: 'Transmite enseguida si la red está vacía', celdas: [{ respuestas: ['contienda'] }] },
+                        { etiqueta: 'Se degrada cuando sube mucho la carga', celdas: [{ respuestas: ['contienda'] }] },
+                        { etiqueta: 'Electrónica más barata y sencilla', celdas: [{ respuestas: ['contienda'] }] },
+                        { etiqueta: 'Por diseño, no produce colisiones', celdas: [{ respuestas: ['turnos'] }] },
+                        { etiqueta: 'Si se pierde el permiso, la red se para', celdas: [{ respuestas: ['turnos'] }] }
+                    ],
+                    explicacion: 'La contienda es barata y rápida con poca carga; los turnos son predecibles y aguantan la carga alta. Ganó la primera por coste.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Una célula robotizada necesita que cada orden llegue siempre en menos de 5 ms. ¿Qué familia encaja?',
+                    opciones: {
+                        a: 'Contienda, porque es más rápida de media',
+                        b: 'Da igual: con poca carga se comportan igual',
+                        c: 'Turnos, porque garantizan un máximo aunque la media sea peor',
+                        d: 'Ninguna: hace falta fibra'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'En tiempo real no se busca la media sino el <strong>peor caso</strong>. Un método que casi siempre es rápido pero a veces tarda mucho no sirve.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> El paso de testigo es más justo y más predecible, y aun así perdió frente a Ethernet. Explica por qué.',
+                    modelo: '<p>Perdió por <strong>coste y sencillez</strong>. Una tarjeta de contienda solo tiene que hacer dos cosas: escuchar si el medio está libre y detectar si ha habido choque. Una de testigo tiene que gestionar la circulación del permiso, detectar que se ha perdido, regenerarlo, mantener el anillo cuando un equipo se apaga… Es mucha más electrónica, y en los años en que se decidió eso se traducía en un precio bastante mayor por puesto.</p><p>Además, en las redes de oficina de entonces la <strong>carga era baja</strong>, y con poca carga la contienda rinde mejor: se transmite de inmediato en lugar de esperar un turno que nadie disputa. La desventaja de la contienda solo aparece con mucho tráfico.</p><p>Es un patrón que se repite en la historia de la tecnología: se impone lo <strong>suficientemente bueno y barato</strong> antes que lo técnicamente superior. Y a la larga el problema se resolvió por otro lado: llegaron los conmutadores y las colisiones desaparecieron sin necesidad de turnos.</p>',
+                    rubrica: [
+                        'Menciono el coste y la sencillez de la electrónica',
+                        'Explico que con poca carga la contienda rinde mejor',
+                        'Digo que la desventaja de la contienda solo aparece con mucho tráfico',
+                        'Añado que el problema acabó resolviéndose con los conmutadores'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 3: La espera aleatoria',
+            tiempo: '12 min',
+            enunciado: '<p>La parte menos intuitiva de la contienda es que, tras chocar, cada equipo espera ' +
+                       '<strong>un tiempo distinto al azar</strong>.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los pasos de un equipo que quiere transmitir en un medio compartido.',
+                    elementos: [
+                        'Espera un tiempo aleatorio',
+                        'Escucha si el medio está libre',
+                        'Transmite la trama',
+                        'Detecta que ha habido una colisión',
+                        'Vuelve a intentarlo desde el principio'
+                    ],
+                    orden: [
+                        'Escucha si el medio está libre',
+                        'Transmite la trama',
+                        'Detecta que ha habido una colisión',
+                        'Espera un tiempo aleatorio',
+                        'Vuelve a intentarlo desde el principio'
+                    ],
+                    explicacion: 'Escuchar antes y esperar al azar después. Ese orden es toda la idea de la contienda.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Imagina que la espera no fuera aleatoria, sino un valor fijo igual para todos los equipos. Describe qué pasaría tras una colisión.',
+                    modelo: '<p>Los dos equipos que han chocado esperarían <strong>exactamente lo mismo</strong>, así que volverían a encontrar el medio libre en el mismo instante y transmitirían a la vez otra vez. Nueva colisión, nueva espera idéntica, nueva colisión: un bucle del que no se sale.</p><p>La red quedaría bloqueada para esos dos equipos mientras quisieran transmitir, y de paso se llenaría de señales inútiles que impedirían hablar a los demás. El problema es la <strong>simetría</strong>: dos equipos en el mismo estado tomando la misma decisión.</p><p>El azar la rompe. Cada uno saca un número distinto, uno despierta antes, encuentra el medio libre y transmite; el otro, al despertar, lo encuentra ocupado y espera a que termine. Con una sola colisión basta para desempatarlos.</p>',
+                    rubrica: [
+                        'Digo que volverían a transmitir a la vez y a chocar',
+                        'Explico que sería un bucle indefinido',
+                        'Identifico la simetría como el problema de fondo',
+                        'Explico cómo el azar desempata a los dos equipos'
+                    ]
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> En Wi-Fi no se usa la detección de colisiones sino la prevención. ¿Por qué?',
+                    opciones: {
+                        a: 'Porque en el aire no hay colisiones',
+                        b: 'Porque una antena no puede escuchar mientras transmite, así que no hay forma de detectar el choque mientras ocurre',
+                        c: 'Porque el aire es un medio punto a punto',
+                        d: 'Porque las tramas de Wi-Fi son más cortas'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Su propia señal tapa cualquier otra. Al no poder detectar, solo queda <strong>evitar</strong>: avisar antes de transmitir y esperar confirmación.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 4: Control de flujo',
+            tiempo: '14 min',
+            enunciado: '<p>Dos problemas que se confunden mucho. La pregunta que los separa: ' +
+                       '<strong>¿la trama llegó estropeada o llegó bien pero demasiado pronto?</strong></p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Clasifica cada síntoma. Escribe <em>errores</em> o <em>flujo</em>.',
+                    esquina: 'Síntoma',
+                    cabecera: ['Qué control falta'],
+                    filas: [
+                        { etiqueta: 'El FCS no cuadra en muchas tramas', celdas: [{ respuestas: ['errores'] }] },
+                        { etiqueta: 'Un equipo antiguo pierde datos de un servidor rápido', celdas: [{ respuestas: ['flujo'] }] },
+                        { etiqueta: 'Un cable pasa junto a un motor y llegan tramas corruptas', celdas: [{ respuestas: ['errores'] }] },
+                        { etiqueta: 'El receptor desborda su memoria y descarta lo que no cabe', celdas: [{ respuestas: ['flujo'] }] }
+                    ],
+                    explicacion: 'En los de flujo <strong>no hay nada estropeado</strong>: las tramas llegan perfectas y aun así se pierden, porque el receptor no da abasto.'
+                },
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>b)</strong> Empareja cada mecanismo con su descripción.',
+                    izquierda: ['Parada y espera', 'Ventana deslizante', 'Trama de pausa 802.3x'],
+                    pares: {
+                        'Parada y espera': 'Una trama, confirmación, otra trama: seguro pero desaprovecha el enlace',
+                        'Ventana deslizante': 'Varias tramas en vuelo sin confirmar, y el receptor dice cuántas aguanta',
+                        'Trama de pausa 802.3x': 'El receptor pide callar durante un tiempo concreto; frena el enlace entero'
+                    },
+                    explicacion: 'La ventana deslizante es la que se impuso, y es la misma idea que usa TCP en la capa 4.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué la trama de pausa se usa poco?',
+                    opciones: {
+                        a: 'Porque frena todo el enlace, no solo la conversación que causa el problema',
+                        b: 'Porque no está estandarizada',
+                        c: 'Porque solo funciona en half-dúplex',
+                        d: 'Porque es muy lenta de procesar'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Es un freno demasiado tosco: callan todas las conversaciones, incluidas las que iban bien.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 5: La red que ya no choca',
+            tiempo: '12 min',
+            enunciado: '<p>Las colisiones no se eliminaron con un protocolo mejor, sino cambiando las ' +
+                       'condiciones que las hacían posibles.</p>',
+            items: [
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>a)</strong> Completa.',
+                    frase: 'El {{0}} eliminó el medio compartido porque convierte cada puerto en un enlace {{1}}. Y el {{2}} dio un par de hilos a cada sentido, de modo que emisor y receptor ya no compiten. Con los dos a la vez, las colisiones son {{3}}.',
+                    respuestas: [
+                        ['conmutador', 'switch'],
+                        ['punto a punto', 'punto-a-punto'],
+                        ['full-duplex', 'full duplex', 'full-dúplex', 'fullduplex'],
+                        ['imposibles', 'imposible']
+                    ],
+                    explicacion: 'Hacen falta los dos. Un conmutador con el enlace en half-dúplex todavía puede dar colisiones.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Un servidor registra colisiones en su interfaz. ¿Qué compruebas primero?',
+                    opciones: {
+                        a: 'La longitud del cable',
+                        b: 'El número de equipos de la red',
+                        c: 'La versión del sistema operativo',
+                        d: 'El dúplex negociado en los dos extremos del enlace'
+                    },
+                    respuesta: 'd',
+                    explicacion: 'La causa típica es un <strong>desajuste de dúplex</strong>: un extremo en half y otro en full. El de half detecta colisiones que el de full ni se plantea.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Dónde sigue habiendo contienda por el medio hoy en día?',
+                    opciones: {
+                        a: 'En Wi-Fi, en redes industriales y en enlaces donde varios transmisores comparten frecuencia',
+                        b: 'En ninguna parte: es historia',
+                        c: 'Solo dentro de los conmutadores',
+                        d: 'Solo en redes de fibra'
+                    },
+                    respuesta: 'a',
+                    explicacion: 'Lo que desapareció fue el <strong>cable</strong> compartido. El aire se comparte por definición, y ahí la contienda está más viva que nunca.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 6: Integración',
+            tiempo: '12 min',
+            enunciado: '<p>Cruce con el Mes 1, el Mes 2 y los días anteriores.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> En el Mes 1 viste que un concentrador crea un único dominio de colisión. ¿Cómo se relaciona con el día de hoy?',
+                    opciones: {
+                        a: 'No se relacionan: son conceptos de capas distintas',
+                        b: 'Un dominio de colisión es justamente el conjunto de equipos que comparten medio y entre los que puede haber choques',
+                        c: 'El dominio de colisión lo define el método de acceso',
+                        d: 'Los concentradores usan paso de testigo'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Contar dominios de colisión es contar <strong>en cuántos grupos puede haber contienda</strong>. Por eso el conmutador, al dar un dominio por puerto, la elimina.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Ayer viste que la trama mínima son 64 bytes. ¿Qué tiene que ver con el tema de hoy?',
+                    opciones: {
+                        a: 'Nada: el mínimo es por el tamaño de la cabecera',
+                        b: 'Es para que quepa el relleno',
+                        c: 'Es un requisito de la detección de colisiones: la trama debe durar lo suficiente para que el emisor siga transmitiendo cuando le llegue la noticia del choque',
+                        d: 'Es para que el FCS pueda calcularse'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'Si el emisor terminara antes de enterarse, no sabría que su trama se perdió y no la repetiría. Lo verás con los números en la Semana 10.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Una oficina sustituye su viejo concentrador de 16 puertos por un conmutador. Explica qué cambia para los equipos, usando lo de hoy y lo del Mes 1.',
+                    modelo: '<p><strong>Desaparece el medio compartido.</strong> Con el concentrador, los 16 equipos formaban un único dominio de colisión: todos veían todas las tramas y competían por el mismo medio. Con el conmutador, cada puerto es un enlace punto a punto y hay 16 dominios de colisión distintos.</p><p><strong>Desaparecen las colisiones</strong>, siempre que los enlaces negocien full-dúplex, que es lo normal. Ya no hace falta escuchar antes de hablar ni esperar al azar tras un choque: cada equipo transmite cuando quiere por su propio hilo.</p><p><strong>Cada equipo pasa a tener el ancho de banda entero</strong> en lugar de repartirlo. Donde antes 16 equipos se dividían 100 Mbps, ahora cada uno dispone de 100 Mbps en cada sentido.</p><p><strong>Lo que NO cambia</strong> es el dominio de difusión: sigue habiendo uno solo, porque el conmutador está obligado a inundar las tramas dirigidas a FF:FF:FF:FF:FF:FF. Para partirlo haría falta un router o VLAN.</p>',
+                    rubrica: [
+                        'Digo que se pasa de un dominio de colisión a uno por puerto',
+                        'Explico que las colisiones desaparecen con full-dúplex',
+                        'Menciono que cada equipo deja de repartir el ancho de banda',
+                        'Señalo que el dominio de difusión sigue siendo uno',
+                        'Indico que para partirlo haría falta un router o VLAN'
+                    ]
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

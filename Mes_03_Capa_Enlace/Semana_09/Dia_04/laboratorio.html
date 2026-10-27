@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Laboratorio: ARP en vivo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Laboratorio — ARP en vivo</h1>
+        <p>Semana 9 · Día 4 · 66 minutos · Vacía la tabla y mírala rehacerse</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Tiempo:</strong> 66 min</div>
+        <div class="info-item"><strong>Herramienta:</strong> terminal</div>
+        <div class="info-item"><strong>Permisos:</strong> admin en la parte 2</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer</strong>
+            <p><strong>Borrar la tabla ARP de tu equipo y verla reconstruirse sola.</strong> Es la forma más
+            directa de entender un protocolo: lo tiras y observas cómo vuelve.</p>
+            <p>Después comprobarás que tu equipo <strong>no pregunta por destinos de internet</strong>, sino
+            siempre por tu router, que es lo que se ha explicado hoy.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>La Parte 2 necesita <strong>permisos de administrador</strong>: vaciar la tabla ARP está
+                restringido. Comprobado en este equipo: sin elevación, el comando responde
+                <em>«La operación solicitada requiere elevación»</em>.</li>
+                <li>Si no puedes elevar, hay una <strong>alternativa sin privilegios</strong> en esa misma
+                parte. No te saltes el laboratorio por esto.</li>
+                <li>Ten a mano la IP de tu puerta de enlace y la de algún equipo de tu red.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Fotografía de partida (14 min)</h2>
+
+            <div class="so-tabs" data-grupo="ver">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="ver" data-so="win">
+                <div class="comando"><pre><code>arp -a</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="ver" data-so="nix">
+                <div class="comando"><pre><code>ip neigh show</code></pre></div>
+            </div>
+
+            <p>Cuenta las entradas <strong>dinámicas</strong> que tienes en la interfaz de tu red real. Esas
+            son las que ha aprendido ARP; las estáticas de multicast y difusión no cuentan, porque no se
+            aprenden preguntando.</p>
+
+            <h2>Parte 2 — Vacía y observa (22 min)</h2>
+
+            <div class="so-tabs" data-grupo="borrar">
+                <button type="button" class="so-tab activa" data-so="win">Windows (como administrador)</button>
+                <button type="button" class="so-tab" data-so="nix">Linux (con sudo)</button>
+            </div>
+            <div class="so-panel activo" data-grupo="borrar" data-so="win">
+                <div class="comando"><pre><code>arp -d *</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="borrar" data-so="nix">
+                <div class="comando"><pre><code>sudo ip neigh flush all</code></pre></div>
+            </div>
+
+            <div class="aviso">
+                <strong>Si no tienes permisos de administrador</strong>
+                <p>No pasa nada. Haz esto en su lugar: <strong>espera</strong>. Las entradas dinámicas caducan
+                solas en unos minutos si no se usan. Deja el equipo quieto un rato, vuelve a mirar la tabla y
+                verás que se ha vaciado parcialmente. Después sigue con la parte 3 igual.</p>
+                <p>También puedes hacer <code>ping</code> a una IP de tu red que no exista, por ejemplo
+                <code>192.168.1.250</code>: verás que no aparece ninguna entrada para ella, porque nadie ha
+                contestado a la solicitud ARP.</p>
+            </div>
+
+            <p>Después de vaciar, mira la tabla <strong>inmediatamente</strong>: estará casi vacía. Luego haz
+            un ping a tu puerta de enlace y vuelve a mirarla. Habrá vuelto a aparecer.</p>
+
+            <div class="dato">
+                <strong>Lo que acabas de ver</strong>
+                <p>No has configurado nada. Has borrado la tabla y ha vuelto sola, porque al necesitar enviar
+                una trama el equipo ha ejecutado los cinco pasos: miró la tabla, no estaba, preguntó en
+                difusión, le respondieron y lo apuntó. <strong>Todo en milisegundos y sin que nadie
+                intervenga.</strong></p>
+            </div>
+
+            <h2>Parte 3 — Lo que nunca aparece (18 min)</h2>
+
+            <p>Ahora la comprobación clave del día. Haz un ping o navega a un sitio de internet, y después
+            busca en tu tabla la dirección de ese servidor.</p>
+
+            <div class="comando"><pre><code>ping -n 2 8.8.8.8</code></pre></div>
+
+            <p>Después vuelve a mirar la tabla ARP y busca una entrada para <code>8.8.8.8</code>.</p>
+
+            <div class="destacado">
+                <strong>No estará, y eso es lo correcto</strong>
+                <p>Tu equipo ha hablado con 8.8.8.8 sin conocer nunca su MAC, porque no la necesita: entregó
+                la trama al router y el router se encargó del resto. En la tabla solo verás la entrada de tu
+                <strong>puerta de enlace</strong>, que es la que de verdad se usó.</p>
+            </div>
+
+            <h2>Parte 4 — Una entrada estática (12 min)</h2>
+
+            <p>💡 <strong>Ampliación, solo si tienes permisos de administrador.</strong> Puedes añadir una
+            entrada estática y comprobar que no caduca:</p>
+
+            <div class="so-tabs" data-grupo="estatica">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux</button>
+            </div>
+            <div class="so-panel activo" data-grupo="estatica" data-so="win">
+                <div class="comando"><pre><code>arp -s 192.168.1.250 aa-bb-cc-dd-ee-ff</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="estatica" data-so="nix">
+                <div class="comando"><pre><code>sudo ip neigh add 192.168.1.250 lladdr aa:bb:cc:dd:ee:ff dev eth0</code></pre></div>
+            </div>
+
+            <div class="aviso">
+                <strong>Usa una IP que no exista en tu red</strong>
+                <p>Si pones la de un equipo real con una MAC inventada, <strong>dejarás de poder hablar con
+                él</strong> hasta que borres la entrada, porque tu equipo enviará las tramas a una dirección
+                física que no existe. Con una IP libre no molestas a nadie.</p>
+                <p>Para deshacerlo: <code>arp -d 192.168.1.250</code> en Windows, o
+                <code>sudo ip neigh del 192.168.1.250 dev eth0</code> en Linux.</p>
+            </div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Has visto la tabla antes y después de vaciarla, o de esperar a que caduque.</li>
+                <li>Has comprobado que una entrada vuelve sola al usarla.</li>
+                <li>Has verificado que no aparece ninguna MAC de un servidor de internet.</li>
+                <li>Puedes explicar por qué la del router sí está y la del servidor no.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    ejercicios: [
+        {
+            titulo: 'PARTE 1: Tu tabla de partida',
+            tiempo: '14 min',
+            enunciado: '<p>Con la salida del comando delante.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Entradas <strong>dinámicas</strong> en la interfaz de tu red real.',
+                    respuesta: 0,
+                    tolerancia: 999,
+                    unidad: 'entradas',
+                    explicacion: 'Cualquier número vale. En una casa suelen ser pocas: el router, algún móvil, la impresora. En una oficina, muchas más.'
+                },
+                {
+                    tipo: 'validado',
+                    pregunta: '<strong>b)</strong> La MAC que tu tabla asocia a la puerta de enlace.',
+                    validador: 'mac',
+                    explicacion: 'Esta es la dirección a la que va <strong>todo</strong> tu tráfico hacia fuera, sea cual sea el destino.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Aparecen entradas marcadas como estáticas?',
+                    opciones: {
+                        a: 'Sí, las de multicast y difusión',
+                        b: 'Sí, pero de equipos normales',
+                        c: 'No aparece ninguna estática'
+                    },
+                    libre: true,
+                    explicacion: 'Lo habitual es la primera: las de multicast (01-00-5e…) y la de difusión salen como estáticas porque <strong>no se aprenden preguntando</strong>, se deducen de la IP. Si ves estáticas de equipos normales, alguien las ha puesto a mano.'
+                }
+            ]
+        },
+        {
+            titulo: 'PARTE 2: Vaciar y observar',
+            tiempo: '22 min',
+            enunciado: '<p>Si no tienes permisos, usa la alternativa de esperar a que caduquen.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Entradas dinámicas <strong>justo después</strong> de vaciar (o de esperar).',
+                    respuesta: 0,
+                    tolerancia: 999,
+                    unidad: 'entradas',
+                    explicacion: 'Lo normal es <strong>0</strong> o muy pocas. Si tu equipo está generando tráfico de fondo, puede que alguna vuelva antes de que te dé tiempo a mirar.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Entradas dinámicas después de hacer ping a tu puerta de enlace.',
+                    respuesta: 1,
+                    tolerancia: 999,
+                    unidad: 'entradas',
+                    explicacion: 'Al menos la del router. Puede haber más si tu equipo ha hablado con algún vecino mientras tanto.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Cuánto has tardado en recuperar la entrada del router?',
+                    opciones: {
+                        a: 'Fue inmediato: apareció con el primer ping',
+                        b: 'Tardó varios segundos',
+                        c: 'No llegó a aparecer'
+                    },
+                    libre: true,
+                    explicacion: 'Lo normal es lo primero: la resolución ocurre en <strong>milisegundos</strong>, antes incluso de que salga la primera respuesta del ping. Si no apareció, comprueba que la IP del router sea la correcta y que responda.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>d)</strong> Has borrado una tabla y ha vuelto sola. Describe, paso a paso, qué ha hecho tu equipo en ese intervalo.',
+                    modelo: '<p>Al pedirle un ping al router, la capa de red preparó un paquete con la IP del router como destino y se lo pasó a la capa de enlace para que lo metiera en una trama. Ahí hizo falta una MAC de destino que el equipo no tenía, porque yo acababa de borrarla.</p><p>Entonces se ejecutaron los cinco pasos: <strong>consultó su tabla local</strong> y no encontró nada; <strong>envió una solicitud ARP en difusión</strong> preguntando quién tenía esa IP, incluyendo en ella su propia IP y su propia MAC; el <strong>router recibió la pregunta y apuntó mis datos</strong>; <strong>me respondió en unicast</strong> con su dirección física; y mi equipo <strong>guardó la correspondencia</strong> en la tabla.</p><p>Solo entonces pudo construir la trama del ping y enviarla. Todo eso ocurrió en milisegundos, antes de que apareciera la primera línea de respuesta en pantalla, y sin que yo configurara absolutamente nada.</p>',
+                    rubrica: [
+                        'Digo que la capa de enlace necesitaba una MAC que no tenía',
+                        'Menciono la consulta a la tabla local como primer paso',
+                        'Describo la solicitud en difusión',
+                        'Señalo que el router también aprende mis datos de la solicitud',
+                        'Indico que la respuesta llega en unicast y se guarda en la tabla',
+                        'Observo que todo ocurre en milisegundos y sin configuración'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'PARTE 3: Lo que nunca aparece',
+            tiempo: '18 min',
+            enunciado: '<p>Tras hacer ping a una dirección de internet.</p>',
+            items: [
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>a)</strong> ¿Aparece alguna entrada ARP para 8.8.8.8, o para el servidor al que hayas hecho ping?',
+                    opciones: {
+                        a: 'Sí, con su dirección MAC',
+                        b: 'No aparece ninguna',
+                        c: 'Aparece pero sin MAC'
+                    },
+                    libre: true,
+                    explicacion: 'Lo correcto es que <strong>no aparezca</strong>. Si te apareciera, sería porque esa dirección está en tu propia red, cosa que con 8.8.8.8 es imposible.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Tu equipo acaba de intercambiar paquetes con una máquina de internet y no tiene ni idea de su MAC. Explica cómo es posible.',
+                    modelo: '<p>Porque <strong>nunca la necesitó</strong>. Al preparar el envío, mi equipo comparó la IP de destino con su propia red y vio que estaba fuera. En ese caso la regla es entregar la trama a la <strong>puerta de enlace</strong>, así que la MAC que hizo falta fue la del router, no la del destino.</p><p>La trama salió con la IP de 8.8.8.8 como destino pero con la MAC del router, y a partir de ahí mi equipo se desentendió. El router quitó esa cabecera de enlace, miró la IP, decidió por dónde seguir y <strong>construyó una trama nueva</strong> con otras direcciones MAC. Lo mismo hizo cada router del camino.</p><p>Las direcciones MAC solo tienen sentido dentro de un mismo segmento, así que conocer la del servidor no me serviría de nada: no hay forma de entregarle una trama directamente. Por eso ARP solo pregunta por direcciones de la propia red.</p>',
+                    rubrica: [
+                        'Digo que el equipo comparó el destino con su red y vio que estaba fuera',
+                        'Explico que por eso usó la MAC de la puerta de enlace',
+                        'Menciono que la IP de destino sí era la del servidor',
+                        'Describo que cada router rehace la cabecera de enlace',
+                        'Concluyo que la MAC del servidor no serviría de nada'
+                    ]
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Si visitas cincuenta sitios web distintos, ¿cuántas entradas ARP nuevas necesita tu equipo para todos ellos?',
+                    respuesta: 0,
+                    unidad: 'entradas',
+                    explicacion: '<strong>Ninguna.</strong> Todos están fuera de tu red, así que todos se entregan a la misma puerta de enlace, cuya MAC ya está en la tabla. Esta es la razón de que una red en marcha genere tan poco tráfico ARP.',
+                    pistas: ['¿Cuántas MAC distintas necesitas para hablar con cincuenta sitios que están todos fuera de tu red?']
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

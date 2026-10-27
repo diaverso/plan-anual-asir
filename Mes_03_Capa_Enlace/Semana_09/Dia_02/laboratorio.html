@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 2 — Laboratorio: encuentra tu MTU</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Laboratorio — Encuentra tu MTU y mide la sobrecarga</h1>
+        <p>Semana 9 · Día 2 · 62 minutos · Con tu propia conexión</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Tiempo:</strong> 62 min</div>
+        <div class="info-item"><strong>Herramienta:</strong> terminal</div>
+        <div class="info-item"><strong>Instalar:</strong> nada</div>
+    </div>
+
+    <div class="content">
+
+        <div class="destacado">
+            <strong>Qué vas a hacer</strong>
+            <p>Averiguar el <strong>MTU real</strong> de tu conexión de dos maneras: preguntándoselo al
+            sistema y, sobre todo, <strong>deduciéndolo a golpe de ping</strong>, que es como se hace cuando
+            el dato que da el sistema no es el que vale de verdad.</p>
+            <p>Después calcularás cuánto del tráfico de tu equipo es envoltorio.</p>
+        </div>
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            <ul>
+                <li>No hace falta instalar nada ni ser administrador.</li>
+                <li>Necesitas la <strong>IP de tu puerta de enlace</strong>, la que anotaste ayer. Si no la
+                tienes, sale con <code>ipconfig</code> o <code>ip route</code>.</li>
+                <li>Si tu router no responde a <code>ping</code>, usa otra IP de tu red o una pública como
+                <code>8.8.8.8</code>. Los números cambian poco.</li>
+            </ul>
+        </div>
+
+        <div class="teoria">
+
+            <h2>Parte 1 — Lo que dice el sistema (12 min)</h2>
+
+            <div class="so-tabs" data-grupo="mtu">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="mtu" data-so="win">
+                <div class="comando"><pre><code>netsh interface ipv4 show subinterfaces</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="mtu" data-so="nix">
+                <div class="comando"><pre><code>ip -br link</code></pre></div>
+            </div>
+
+            <div class="dato">
+                <strong>Salida real de la máquina de referencia</strong>
+<pre><code>       MTU  MediaSenseState   Bytes entrada   Bytes salida  Interfaz
+----------  ---------------  --------------  -------------  ---------
+4294967295                1               0         993224  Loopback
+      1500                5               0              0  Wi-Fi
+      1500                1       136178757       39101431  Ethernet</code></pre>
+                <p>Los <strong>1500</strong> esperados. Fíjate en el <em>loopback</em>: su MTU es absurdo
+                porque ese tráfico nunca sale a ningún cable, así que no hay límite físico que respetar.</p>
+            </div>
+
+            <div class="destacado">
+                <strong>Un contraste que merece la pena</strong>
+                <p>En la misma máquina, dentro de WSL, el adaptador <code>eth0</code> no tiene 1500 sino
+                <strong>1492</strong>. Son 8 bytes menos, exactamente lo que ocupa una cabecera añadida por
+                la capa de virtualización. Es el mismo efecto que produce <strong>PPPoE</strong> en muchas
+                conexiones domésticas, y la causa de bastantes averías raras: webs que no cargan del todo,
+                VPN que van a trompicones.</p>
+            </div>
+
+            <h2>Parte 2 — Deducirlo a golpe de ping (22 min)</h2>
+
+            <p>El dato del sistema es el de <em>tu</em> adaptador. Pero si por el camino hay un enlace con un
+            MTU menor, el que manda es el más pequeño de todos. Para averiguarlo se usa un ping con dos
+            opciones: un tamaño concreto y la orden de <strong>no fragmentar</strong>.</p>
+
+            <div class="so-tabs" data-grupo="ping">
+                <button type="button" class="so-tab activa" data-so="win">Windows</button>
+                <button type="button" class="so-tab" data-so="nix">Linux / macOS</button>
+            </div>
+            <div class="so-panel activo" data-grupo="ping" data-so="win">
+                <div class="comando"><pre><code>ping -f -l 1472 -n 1 192.168.1.1</code></pre></div>
+            </div>
+            <div class="so-panel" data-grupo="ping" data-so="nix">
+                <div class="comando"><pre><code>ping -M do -s 1472 -c 1 192.168.1.1</code></pre></div>
+            </div>
+
+            <div class="dato">
+                <strong>Las dos respuestas, reales</strong>
+                <p>Con <strong>1472</strong>:</p>
+<pre><code>Respuesta desde 192.168.1.1: bytes=1472 tiempo&lt;1m TTL=64
+    Paquetes: enviados = 1, recibidos = 1, perdidos = 0</code></pre>
+                <p>Con <strong>1473</strong>, un solo byte más:</p>
+<pre><code>Es necesario fragmentar el paquete pero se especificó DF.
+    Paquetes: enviados = 1, recibidos = 0, perdidos = 1</code></pre>
+                <p>Ese salto entre 1472 y 1473 es la frontera, y de ahí sale el MTU.</p>
+            </div>
+
+            <h3>Por qué 1472 y no 1500</h3>
+
+            <p>Porque el tamaño que se le pasa al ping son <strong>solo los datos de ICMP</strong>, sin
+            contar las cabeceras que se añaden después:</p>
+
+<pre><code>1472  datos de ICMP          ← esto es lo que escribes en el comando
++  8  cabecera ICMP
++ 20  cabecera IP
+─────
+1500  = el MTU                ← esto es lo que viaja dentro de la trama
++ 18  cabecera Ethernet y FCS
+─────
+1518  = la trama completa</code></pre>
+
+            <div class="aviso">
+                <strong>La regla para no liarse</strong>
+                <p><strong>MTU = tamaño que pasa + 28.</strong> Si el ping más grande que pasa es 1472, el
+                MTU es 1500. Si es 1464, el MTU es 1492, y seguramente hay PPPoE por medio.</p>
+            </div>
+
+            <h2>Parte 3 — Cuánto de tu tráfico es envoltorio (16 min)</h2>
+
+            <p>En la salida de la Parte 1 aparecen los bytes que han entrado y salido por cada interfaz. En
+            la máquina de referencia, la Ethernet llevaba <strong>136.178.757 bytes</strong> de entrada.</p>
+
+            <p>Con eso se puede estimar la sobrecarga. No es exacto —habría que saber el tamaño de cada
+            trama—, pero sirve para entender el orden de magnitud en los dos casos extremos.</p>
+
+            <h2>Parte 4 — La trama en una captura (12 min)</h2>
+
+            <div class="aviso">
+                <strong>Esta parte necesita Wireshark, que puede no estar instalado</strong>
+                <p>Para ver una trama de verdad, campo a campo, hace falta <strong>Wireshark</strong>
+                (<code>wireshark.org</code>, gratuito). <strong>No se ha podido verificar en el equipo donde
+                se escribió este laboratorio</strong>, porque no está instalado, así que los pasos van sin
+                salida de ejemplo.</p>
+                <p>Si no lo tienes y no quieres instalarlo, <strong>sáltate esta parte</strong>: no se
+                evalúa. La trama se estudia a fondo con Wireshark en la Semana 10.</p>
+            </div>
+
+            <p>Si lo tienes: captura en tu interfaz activa, detén a los pocos segundos y abre cualquier
+            trama. En el panel central verás <em>Ethernet II</em> con las dos direcciones y el campo
+            <em>Type</em>. Comprueba que el tipo es <code>0x0800</code> cuando dentro va IPv4.</p>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+        <div class="dato">
+            <strong>Criterios de finalización</strong>
+            <ul>
+                <li>Conoces el MTU que declara tu sistema y el que has deducido con ping.</li>
+                <li>Sabes explicar de dónde salen los 28 bytes de diferencia.</li>
+                <li>Has calculado la sobrecarga de tu tráfico en los dos casos extremos.</li>
+                <li>Puedes decir qué pasaría si un enlace del camino tuviera un MTU menor.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría</a> · <a href="ejercicios.html">Ejercicios</a></span>
+        <span><a href="../README.md">Índice de la semana</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    ejercicios: [
+        {
+            titulo: 'PARTE 1: Lo que dice tu sistema',
+            tiempo: '12 min',
+            enunciado: '<p>Con la salida del comando delante.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> El MTU de tu interfaz activa, la que usas para salir a internet.',
+                    respuesta: 1500,
+                    tolerancia: 600,
+                    unidad: 'bytes',
+                    explicacion: 'Lo normal en Ethernet y Wi-Fi es <strong>1500</strong>. Si te sale 1492, hay PPPoE o virtualización por medio; si sale 1280, puede ser un túnel.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Coincide con los 1500 teóricos?',
+                    opciones: {
+                        a: 'Sí, exactamente 1500',
+                        b: 'No: es menor',
+                        c: 'No: es mayor'
+                    },
+                    libre: true,
+                    explicacion: 'Lo habitual es que sí. Un valor menor casi siempre significa que algo añade su propia cabecera: PPPoE, una VPN o una capa de virtualización. Mayor que 1500 solo pasa con <em>jumbo frames</em>, que hay que activar a propósito.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> El adaptador de bucle local declara un MTU enorme, de más de cuatro mil millones. ¿Por qué puede permitírselo?',
+                    modelo: '<p>Porque el tráfico de bucle local <strong>nunca sale a un medio físico</strong>: no hay cable, ni colisiones, ni un receptor remoto que pueda desincronizarse. Es una copia de memoria a memoria dentro del propio equipo.</p><p>Los límites de la trama existen por razones del medio compartido: el máximo, para que un equipo no lo acapare indefinidamente y para acotar el tamaño de los búferes; el mínimo, para que funcione la detección de colisiones. Ninguna de las dos razones aplica cuando no hay medio que compartir.</p><p>Así que el sistema pone un valor que en la práctica significa «sin límite».</p>',
+                    rubrica: [
+                        'Digo que el tráfico de loopback no sale a ningún medio físico',
+                        'Explico que los límites de trama existen por razones del medio compartido',
+                        'Menciono alguna de esas razones: colisiones, acaparar el medio o tamaño de búferes',
+                        'Concluyo que sin medio físico no hay motivo para limitar'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'PARTE 2: El MTU a golpe de ping',
+            tiempo: '22 min',
+            enunciado: '<p>Busca el tamaño exacto a partir del cual el ping deja de pasar. Empieza por 1472 ' +
+                       'y baja de 10 en 10 si falla; cuando encuentres uno que pase, sube de uno en uno.</p>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> El tamaño más grande que pasa sin fragmentar.',
+                    respuesta: 1472,
+                    tolerancia: 600,
+                    unidad: 'bytes',
+                    explicacion: 'Con un MTU de 1500, el máximo es <strong>1472</strong>. Si tu MTU es 1492, será 1464.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> A partir de ese dato, ¿cuál es el MTU del camino? Suma 28.',
+                    respuesta: 1500,
+                    tolerancia: 600,
+                    unidad: 'bytes',
+                    explicacion: '20 de cabecera IP más 8 de cabecera ICMP son los <strong>28</strong> que el comando no cuenta.'
+                },
+                {
+                    tipo: 'texto',
+                    pregunta: '<strong>c)</strong> Copia el mensaje exacto que da tu sistema cuando el paquete no cabe. Basta con las primeras palabras.',
+                    respuestas: [
+                        'es necesario fragmentar el paquete pero se especifico df',
+                        'es necesario fragmentar el paquete pero se especificó df',
+                        'es necesario fragmentar',
+                        'packet needs to be fragmented',
+                        'frag needed',
+                        'message too long',
+                        'mensaje demasiado largo'
+                    ],
+                    explicacion: 'En Windows: «Es necesario fragmentar el paquete pero se especificó DF». En Linux: «Frag needed and DF set» o «Message too long». Dicen lo mismo: no cabe y has prohibido trocearlo.',
+                    pistas: ['Es el mensaje que sale al probar con un byte de más.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>d)</strong> Si el MTU del camino fuera 1400, ¿qué tamaño sería el máximo que pasaría en el ping?',
+                    respuesta: 1372,
+                    unidad: 'bytes',
+                    explicacion: '1400 − 28 = <strong>1372</strong>. La resta es siempre la misma.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>e)</strong> ¿Por qué hace falta la opción de «no fragmentar» para que esto funcione?',
+                    opciones: {
+                        a: 'Para que el ping vaya más rápido',
+                        b: 'Para que el paquete no se trocee por el camino y falle en vez de llegar partido, que es lo que delata el límite',
+                        c: 'Porque sin ella el comando no admite tamaños grandes',
+                        d: 'Para evitar que el router responda'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Sin esa opción, un paquete grande simplemente se trocearía y llegaría igual: no habría error y no podrías localizar la frontera.'
+                }
+            ]
+        },
+        {
+            titulo: 'PARTE 3: La sobrecarga de tu tráfico',
+            tiempo: '16 min',
+            enunciado:
+                '<p>Vas a estimar cuánto del tráfico de tu interfaz es envoltorio, en los dos casos ' +
+                'extremos.</p>' +
+                '<p><strong>Cómo se estima:</strong></p>' +
+                '<ol>' +
+                '<li><strong>Divide los bytes totales entre el tamaño de una trama</strong> para saber ' +
+                'cuántas tramas harían falta.</li>' +
+                '<li><strong>Multiplica por 18</strong>, que es el envoltorio de cada una.</li>' +
+                '</ol>' +
+                '<pre><code>10.000.000 bytes en tramas llenas de 1518:\n' +
+                '   10.000.000 / 1518 = 6.588 tramas\n' +
+                '   6.588 × 18        = 118.584 bytes de envoltorio  (1,2 %)</code></pre>',
+            items: [
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>a)</strong> Los bytes de entrada de tu interfaz activa, tal como aparecen en la salida del comando.',
+                    respuesta: 0,
+                    tolerancia: 999999999999,
+                    unidad: 'bytes',
+                    explicacion: 'Cualquier valor vale: depende de cuánto lleve encendido tu equipo. Es el contador acumulado desde el último arranque de la interfaz.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Si todo ese tráfico hubieran sido tramas llenas de 1518 bytes, ¿qué porcentaje habría sido envoltorio? Un decimal.',
+                    respuesta: 1.2,
+                    tolerancia: 0.2,
+                    unidad: '%',
+                    explicacion: '18 ÷ 1518 = 0,0119 → <strong>1,2 %</strong>. Da igual el volumen total: la proporción es fija porque las tramas son todas iguales.',
+                    pistas: ['No necesitas el total: basta con la proporción de una sola trama.']
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>c)</strong> Y si todo hubieran sido tramas mínimas de 64 bytes, ¿qué porcentaje sería envoltorio? Un decimal.',
+                    respuesta: 28.1,
+                    tolerancia: 0.5,
+                    unidad: '%',
+                    explicacion: '18 ÷ 64 = 0,281 → <strong>28,1 %</strong>. Y eso sin contar el relleno, que en tramas mínimas puede ser casi todo lo demás.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>d)</strong> Tu tráfico real está entre esos dos extremos. ¿Qué tipo de uso lo acerca a cada uno?',
+                    modelo: '<p>Se acerca al <strong>1,2 %</strong> cuando se mueven ficheros grandes: descargas, copias de seguridad, vídeo, actualizaciones. Ahí hay datos de sobra para llenar cada trama hasta los 1500 bytes, y el envoltorio se reparte entre muchísima carga útil.</p><p>Se acerca al <strong>28 %</strong> cuando hay muchos envíos pequeños: juegos en red, mensajería, llamadas de voz, telemetría, tráfico de control de la propia red —ARP, descubrimiento, anuncios de servicios— y las confirmaciones de TCP, que son tramas casi vacías.</p><p>Lo normal en un equipo de uso general es una mezcla con predominio de tramas grandes en volumen de bytes, aunque las pequeñas suelen ser más numerosas. Por eso conviene mirar las dos cifras: el número de tramas y los bytes.</p>',
+                    rubrica: [
+                        'Asocio la eficiencia alta con transferencias de ficheros grandes',
+                        'Asocio la eficiencia baja con envíos pequeños y frecuentes',
+                        'Doy al menos dos ejemplos concretos de cada caso',
+                        'Menciono que las confirmaciones de TCP son tramas pequeñas',
+                        'Señalo que el tráfico real es una mezcla de los dos'
+                    ]
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

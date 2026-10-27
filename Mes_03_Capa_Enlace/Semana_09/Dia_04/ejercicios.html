@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 4 — Ejercicios: ARP</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Ejercicios — ARP</h1>
+        <p>Semana 9 · Día 4 · 76 minutos · 6 ejercicios</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Tiempo:</strong> 76 min</div>
+        <div class="info-item"><strong>Ejercicios:</strong> 6</div>
+        <div class="info-item"><strong>Teoría:</strong> <a href="teoria.html">volver</a></div>
+    </div>
+
+    <div class="content">
+
+        <div class="aviso">
+            <strong>Antes de empezar</strong>
+            La pregunta que resuelve la mitad de los ejercicios de hoy:
+            <strong>¿el destino está en mi red o fuera?</strong> De ahí sale por quién pregunta ARP.
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="ejercicios"></div>
+
+        <div class="buttons">
+            <button onclick="corregirTodo()">Corregir todo</button>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Apartados correctos:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Apartados incorrectos:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a> · <a href="teoria.html">Teoría</a></span>
+        <span><a href="laboratorio.html">Laboratorio →</a></span>
+    </div>
+
+</div>
+
+<script>
+const ejerciciosData = {
+    ejercicios: [
+        {
+            titulo: 'EJERCICIO 1: Los cinco pasos',
+            tiempo: '12 min',
+            enunciado: '<p>Fija la secuencia antes de razonar sobre ella.</p>',
+            items: [
+                {
+                    tipo: 'ordenar',
+                    pregunta: '<strong>a)</strong> Ordena los pasos de una resolución ARP, tal como los enumera el libro.',
+                    elementos: [
+                        'El destinatario responde con su dirección MAC, en unicast',
+                        'Se consulta la tabla local por si ya se conoce',
+                        'El que preguntó apunta la correspondencia en su tabla',
+                        'Se envía la solicitud en difusión',
+                        'El destinatario apunta los datos del que pregunta'
+                    ],
+                    orden: [
+                        'Se consulta la tabla local por si ya se conoce',
+                        'Se envía la solicitud en difusión',
+                        'El destinatario apunta los datos del que pregunta',
+                        'El destinatario responde con su dirección MAC, en unicast',
+                        'El que preguntó apunta la correspondencia en su tabla'
+                    ],
+                    explicacion: 'Fíjate en que hay <strong>dos pasos de aprendizaje</strong>, uno en cada extremo. El tercero es el que casi nadie recuerda.'
+                },
+                {
+                    tipo: 'huecos',
+                    pregunta: '<strong>b)</strong> Completa.',
+                    frase: 'La solicitud ARP viaja con la dirección MAC de destino {{0}}, así que la reciben {{1}} los equipos de la red. Pero solo responde el que {{2}}, y lo hace en {{3}}.',
+                    respuestas: [
+                        ['FF:FF:FF:FF:FF:FF', 'ff:ff:ff:ff:ff:ff', 'FF-FF-FF-FF-FF-FF', 'de difusion', 'de difusión'],
+                        ['todos'],
+                        ['tiene esa ip', 'tiene esa direccion ip', 'tiene esa dirección ip', 'posee esa ip'],
+                        ['unicast']
+                    ],
+                    explicacion: 'Preguntar a gritos y contestar en voz baja: la difusión solo se usa cuando no hay más remedio.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> Tras una resolución ARP entre A y B, ¿cuántas entradas nuevas hay en total sumando las dos tablas?',
+                    opciones: { a: 'Una', b: 'Ninguna hasta que se envíe tráfico', c: 'Dos', d: 'Cuatro' },
+                    respuesta: 'c',
+                    explicacion: 'Una en cada equipo. B aprende de la solicitud y A, de la respuesta. Por eso la conversación de vuelta no necesita otra resolución.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 2: ¿Dentro o fuera?',
+            tiempo: '14 min',
+            enunciado: '<p>Tu equipo es <strong>192.168.1.70</strong> con máscara <strong>255.255.255.0</strong>, ' +
+                       'lo que significa que tu red es la <strong>192.168.1.x</strong>. Tu puerta de enlace es ' +
+                       '<strong>192.168.1.1</strong>.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Para cada destino, indica por qué dirección IP preguntaría ARP.',
+                    esquina: 'Destino del paquete',
+                    cabecera: ['ARP pregunta por'],
+                    filas: [
+                        { etiqueta: '192.168.1.41', celdas: [{ respuestas: ['192.168.1.41'] }] },
+                        { etiqueta: '8.8.8.8', celdas: [{ respuestas: ['192.168.1.1'] }] },
+                        { etiqueta: '192.168.1.200', celdas: [{ respuestas: ['192.168.1.200'] }] },
+                        { etiqueta: '93.184.216.34', celdas: [{ respuestas: ['192.168.1.1'] }] },
+                        { etiqueta: '10.0.0.5', celdas: [{ respuestas: ['192.168.1.1'] }] }
+                    ],
+                    explicacion: 'Si el destino está en <strong>192.168.1.x</strong>, se pregunta por él. Si no, por la <strong>puerta de enlace</strong>: su MAC es la única que sirve para sacar la trama de la red.',
+                    pistas: ['Compara los tres primeros octetos con los tuyos: 192.168.1.']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> ¿Por qué no tiene sentido preguntar por la MAC de 8.8.8.8?',
+                    opciones: {
+                        a: 'Porque es una dirección reservada',
+                        b: 'Porque las direcciones MAC solo valen dentro de la propia red, y esa máquina está fuera',
+                        c: 'Porque 8.8.8.8 no responde a ARP',
+                        d: 'Porque haría falta permiso del proveedor'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Aunque alguien te dijera su MAC, no podrías usarla: la trama no llegaría nunca hasta allí sin cruzar routers, y cada uno la reescribe.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Un compañero configura mal la máscara de su equipo y pone 255.255.0.0 en lugar de 255.255.255.0. Explica qué le pasará al intentar hablar con 192.168.5.10, que está en otra red real.',
+                    modelo: '<p>Con esa máscara, su equipo creerá que <strong>192.168.5.10 está en su propia red</strong>, porque la máscara /16 hace que todo 192.168.x.x le parezca local. Así que en lugar de mandar el paquete al router, intentará entregarlo directamente.</p><p>Hará una <strong>solicitud ARP preguntando por 192.168.5.10</strong>, que saldrá en difusión por su segmento. Pero ese equipo no está ahí: no lo oirá nadie que pueda contestar, así que <strong>no habrá respuesta</strong>.</p><p>El resultado es que la comunicación falla sin dar un error claro: el equipo se queda esperando, reintenta la solicitud unas cuantas veces y acaba dando un tiempo de espera agotado. Lo desconcertante es que el <strong>ping al router sí funciona</strong> y el de dentro de su red también, con lo que parece que la red va bien. El síntoma típico es «veo a los de mi planta pero no salgo a ningún sitio», y la causa está en una máscara mal puesta, no en ARP.</p>',
+                    rubrica: [
+                        'Digo que con esa máscara creerá que el destino es local',
+                        'Explico que hará ARP por el destino en vez de por el router',
+                        'Señalo que nadie responderá a esa solicitud',
+                        'Describo el síntoma: falla sin error claro, con tiempo de espera agotado',
+                        'Menciono que el tráfico dentro de su red sí funciona, lo que despista'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 3: Leer una tabla ARP',
+            tiempo: '14 min',
+            enunciado: '<p>Esta es una salida real de <code>arp -a</code>, recortada:</p>' +
+                       '<pre><code>Interfaz: 192.168.1.70 --- 0x13\n' +
+                       '  Dirección de Internet     Dirección física      Tipo\n' +
+                       '  192.168.1.1               e4-ab-89-b8-6f-38     dinámico\n' +
+                       '  192.168.1.2               bc-24-11-fd-d4-34     dinámico\n' +
+                       '  192.168.1.41              bc-24-11-be-87-58     dinámico\n' +
+                       '  192.168.1.255             ff-ff-ff-ff-ff-ff     estático\n' +
+                       '  224.0.0.251               01-00-5e-00-00-fb     estático</code></pre>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Clasifica cada entrada. En «Tipo de MAC» escribe <em>unicast</em>, <em>multicast</em> o <em>difusión</em>.',
+                    esquina: 'Entrada',
+                    cabecera: ['Tipo de MAC'],
+                    filas: [
+                        { etiqueta: '192.168.1.1 → e4-ab-89-b8-6f-38', celdas: [{ respuestas: ['unicast'] }] },
+                        { etiqueta: '192.168.1.255 → ff-ff-ff-ff-ff-ff', celdas: [{ respuestas: ['difusion', 'difusión', 'broadcast'] }] },
+                        { etiqueta: '224.0.0.251 → 01-00-5e-00-00-fb', celdas: [{ respuestas: ['multicast'] }] },
+                        { etiqueta: '192.168.1.41 → bc-24-11-be-87-58', celdas: [{ respuestas: ['unicast'] }] }
+                    ],
+                    explicacion: 'Repaso del lunes: segundo dígito <strong>4</strong> y <strong>c</strong> son pares, luego unicast; <strong>f</strong> y <strong>1</strong> son impares, luego de grupo.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Dos entradas distintas empiezan por bc-24-11. ¿Qué indica eso?',
+                    opciones: {
+                        a: 'Que hay un error en la tabla',
+                        b: 'Que son el mismo equipo con dos direcciones IP',
+                        c: 'Que comparten los primeros 24 bits, el OUI: son del mismo fabricante',
+                        d: 'Que están en la misma VLAN'
+                    },
+                    respuesta: 'c',
+                    explicacion: 'El OUI identifica al <strong>fabricante</strong>, no al equipo. Dos máquinas del mismo fabricante comparten esos tres primeros bytes y se diferencian en los otros tres.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Por qué las entradas de multicast y difusión aparecen como estáticas y no como dinámicas?',
+                    opciones: {
+                        a: 'Porque las puso el administrador',
+                        b: 'Porque no se aprenden preguntando: se calculan a partir de la IP siguiendo una regla fija',
+                        c: 'Porque son más importantes',
+                        d: 'Porque caducan antes'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Nadie pregunta «¿quién tiene 224.0.0.251?»: la MAC de un grupo multicast se deduce de su IP, y la de difusión es siempre la misma. No hay nada que resolver.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 4: Cuándo hay tráfico ARP y cuándo no',
+            tiempo: '12 min',
+            enunciado: '<p>El protocolo está diseñado para hablar lo menos posible.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Indica si se genera una solicitud ARP. Escribe <em>sí</em> o <em>no</em>.',
+                    esquina: 'Situación',
+                    cabecera: ['¿Solicitud ARP?'],
+                    filas: [
+                        { etiqueta: 'Primer envío a un equipo de mi red, tabla vacía', celdas: [{ respuestas: ['si', 'sí'] }] },
+                        { etiqueta: 'Segundo envío al mismo equipo, un segundo después', celdas: [{ respuestas: ['no'] }] },
+                        { etiqueta: 'Envío al mismo equipo una hora después, con la entrada ya caducada', celdas: [{ respuestas: ['si', 'sí'] }] },
+                        { etiqueta: 'Envío a un servidor de internet, con la MAC del router ya en la tabla', celdas: [{ respuestas: ['no'] }] },
+                        { etiqueta: 'Responder a alguien que acaba de preguntarme por ARP', celdas: [{ respuestas: ['no'] }] }
+                    ],
+                    explicacion: 'La última es el detalle del paso 3: al recibir la pregunta ya aprendí los datos del que pregunta, así que puedo contestarle <strong>sin preguntar yo</strong>.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>b)</strong> Explica por qué, en una red en funcionamiento normal, se ven pocas solicitudes ARP aunque haya mucho tráfico.',
+                    modelo: '<p>Porque el <strong>primer paso</strong> de ARP es mirar la tabla local, y en una red en marcha esa tabla ya está poblada. Una vez resuelta una correspondencia, todas las tramas siguientes a ese destino salen sin preguntar nada: la resolución se hace una vez y sirve para miles de tramas.</p><p>Además, la mayor parte del tráfico de un equipo va <strong>hacia fuera de la red</strong>, y para todo eso basta con una única entrada: la del router. No importa que se visiten cien sitios distintos, porque la MAC de destino es siempre la misma.</p><p>Las solicitudes reaparecen cuando una entrada <strong>caduca</strong> o cuando se habla con un equipo nuevo, pero eso ocurre con mucha menos frecuencia que el envío de tramas normales.</p>',
+                    rubrica: [
+                        'Digo que la tabla evita preguntar en los envíos siguientes',
+                        'Explico que una resolución sirve para muchísimas tramas',
+                        'Menciono que casi todo el tráfico externo usa la misma entrada, la del router',
+                        'Señalo que las solicitudes vuelven al caducar una entrada o aparecer un equipo nuevo'
+                    ]
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 5: ARP a través de routers',
+            tiempo: '12 min',
+            enunciado: '<p>El paquete va de <strong>PC-A</strong> (192.168.1.70) a <strong>PC-B</strong> ' +
+                       '(10.0.0.5), cruzando un router con dos interfaces: 192.168.1.1 del lado de A y ' +
+                       '10.0.0.1 del lado de B.</p>',
+            items: [
+                {
+                    tipo: 'tabla',
+                    pregunta: '<strong>a)</strong> Completa las direcciones de la trama en cada tramo.',
+                    esquina: 'Tramo',
+                    cabecera: ['IP origen', 'IP destino', 'MAC destino'],
+                    filas: [
+                        { etiqueta: 'De PC-A al router', celdas: [{ respuestas: ['192.168.1.70'] }, { respuestas: ['10.0.0.5'] }, { respuestas: ['la del router', 'router', 'la del router (192.168.1.1)', 'la de 192.168.1.1'] }] },
+                        { etiqueta: 'Del router a PC-B', celdas: [{ respuestas: ['192.168.1.70'] }, { respuestas: ['10.0.0.5'] }, { respuestas: ['la de pc-b', 'pc-b', 'la del pc-b', 'la de 10.0.0.5'] }] }
+                    ],
+                    explicacion: 'Las <strong>IP no cambian</strong> en ningún tramo; la <strong>MAC de destino sí</strong>. Es la idea del lunes vista en acción.'
+                },
+                {
+                    tipo: 'numero',
+                    pregunta: '<strong>b)</strong> Suponiendo las tablas vacías, ¿cuántas resoluciones ARP distintas hacen falta para que el paquete llegue?',
+                    respuesta: 2,
+                    unidad: 'resoluciones',
+                    explicacion: 'Una en cada tramo: PC-A pregunta por el router, y el router pregunta por PC-B. <strong>Cada salto resuelve la suya.</strong>',
+                    pistas: ['¿Cuántos tramos de red distintos recorre la trama?']
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>c)</strong> ¿Quién responde a la solicitud ARP que hace PC-A?',
+                    opciones: {
+                        a: 'PC-B, porque es el destino final',
+                        b: 'El router, dando la MAC de la interfaz por la que ha recibido la pregunta',
+                        c: 'Nadie: PC-A ya conoce la respuesta',
+                        d: 'El servidor DHCP'
+                    },
+                    respuesta: 'b',
+                    explicacion: 'Lo dice el libro: la solicitud «será contestada por el puente o el encaminador, que devuelve <strong>la dirección MAC de su puerto</strong>». No la de la otra interfaz: la del lado por donde llegó.'
+                }
+            ]
+        },
+        {
+            titulo: 'EJERCICIO 6: Integración y repaso de la semana',
+            tiempo: '12 min',
+            enunciado: '<p>Cruce con los tres días anteriores.</p>',
+            items: [
+                {
+                    tipo: 'relacionar',
+                    pregunta: '<strong>a)</strong> Empareja cada concepto de la semana con el día en que se vio.',
+                    izquierda: ['Los bits I/G y U/L', 'El FCS y el CRC', 'La espera aleatoria tras un choque', 'La solicitud en difusión'],
+                    pares: {
+                        'Los bits I/G y U/L': 'Día 1 · la dirección MAC',
+                        'El FCS y el CRC': 'Día 2 · la trama',
+                        'La espera aleatoria tras un choque': 'Día 3 · acceso al medio',
+                        'La solicitud en difusión': 'Día 4 · ARP'
+                    },
+                    explicacion: 'Los cuatro días encajan: direccionar, empaquetar, repartir el medio y coordinar con la capa de arriba.'
+                },
+                {
+                    tipo: 'opcion',
+                    pregunta: '<strong>b)</strong> Una solicitud ARP viaja dentro de una trama Ethernet II. ¿Qué valor tendrá su campo tipo?',
+                    opciones: { a: '0x0800', b: '0x0806', c: '0x86DD', d: '0x0046' },
+                    respuesta: 'b',
+                    explicacion: 'El del Día 2: <strong>0x0806</strong> es ARP. El 0x0800 es IPv4 y el 0x86DD, IPv6.'
+                },
+                {
+                    tipo: 'desarrollo',
+                    pregunta: '<strong>c)</strong> Alguien configura una entrada ARP estática en su equipo asociando la IP del router a una MAC equivocada. Describe qué pasará y relaciona el caso con lo visto esta semana.',
+                    modelo: '<p>Su equipo construirá todas las tramas con destino fuera de la red poniendo esa <strong>MAC equivocada</strong> como destino. Las tramas saldrán al cable perfectamente formadas, con su FCS correcto, y el conmutador las reenviará hacia donde esté esa MAC, o las inundará si no la conoce. Pero el router <strong>nunca las recogerá</strong>, porque no van dirigidas a él.</p><p>El síntoma es que el equipo no sale de la red, aunque dentro funcione todo: ve a sus vecinos, responde al ping local y su configuración IP parece correcta. Y lo peor es que <strong>no se arregla solo</strong>: al ser una entrada estática no caduca, así que seguirá fallando indefinidamente hasta que alguien la borre.</p><p>Conecta con toda la semana: la trama se entrega por <strong>MAC</strong> y no por IP (Día 1), sale bien formada y con el FCS correcto, de modo que nadie detecta ningún error (Día 2), y el problema está en la <strong>correspondencia</strong> entre las dos direcciones, que es justo lo que ARP mantiene (Día 4).</p>',
+                    rubrica: [
+                        'Digo que las tramas se enviarán a una MAC que no es la del router',
+                        'Explico que el router no las recogerá porque no van dirigidas a él',
+                        'Describo el síntoma: no sale de la red pero dentro funciona',
+                        'Señalo que al ser estática no caduca y no se arregla sola',
+                        'Relaciono el caso con que la entrega se hace por MAC, no por IP'
+                    ]
+                }
+            ]
+        }
+    ]
+};
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/ejercicios.js"></script>
+</body>
+</html>

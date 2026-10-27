@@ -55,7 +55,7 @@ Del **Mes 2**:
 
 | Semana | Tema | Estado |
 |---|---|---|
-| **[Semana 9](Semana_09/README.md)** | Capa de enlace: direcciones MAC, tramas y LLC | 🚧 En curso |
+| **[Semana 9](Semana_09/README.md)** | Capa de enlace: direcciones MAC, tramas y LLC | ✅ Disponible (5 días) |
 | Semana 10 | Ethernet (IEEE 802.3): CSMA/CD, estándares, Fast y Gigabit | ⏳ Pendiente |
 | Semana 11 | Switches: funcionamiento, tabla CAM y STP | ⏳ Pendiente |
 | Semana 12 | Redes inalámbricas (IEEE 802.11): Wi-Fi y seguridad WPA2/WPA3 | ⏳ Pendiente |

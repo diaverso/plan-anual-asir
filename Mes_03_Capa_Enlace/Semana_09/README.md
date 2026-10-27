@@ -1,6 +1,6 @@
 # Semana 9 — La capa de enlace de datos
 
-> 🚧 **En curso**: el Día 1 está publicado; los demás llegan a continuación.
+> ✅ **Semana completa**: cinco días, **4 laboratorios** y test semanal.
 
 ---
 
@@ -76,10 +76,12 @@ Todo lo que no procede del libro va señalado en el propio material.
 | Día | Tema | Duración | Materiales |
 |-----|------|---------:|------------|
 | **[Día 1](Dia_01/README.md)** · lunes | **Qué resuelve la capa de enlace** y cómo direcciona | 4 h 22 min | [Teoría y quiz](Dia_01/teoria.html) · [Ejercicios](Dia_01/ejercicios.html) · [Laboratorio](Dia_01/laboratorio.html) |
-| Día 2 · martes | **La trama**: estructura, delimitación y detección de errores | — | ⏳ |
-| Día 3 · miércoles | **Acceso al medio** y control de flujo | — | ⏳ |
-| Día 4 · jueves | **ARP**: unir la dirección lógica con la física | — | ⏳ |
-| Día 5 · viernes | Síntesis y **test semanal** | — | ⏳ |
+| **[Día 2](Dia_02/README.md)** · martes | **La trama**: estructura, delimitación y detección de errores | 4 h 20 min | [Teoría y quiz](Dia_02/teoria.html) · [Ejercicios](Dia_02/ejercicios.html) · [Laboratorio](Dia_02/laboratorio.html) |
+| **[Día 3](Dia_03/README.md)** · miércoles | **Acceso al medio** y control de flujo | 4 h 18 min | [Teoría y quiz](Dia_03/teoria.html) · [Ejercicios](Dia_03/ejercicios.html) · [Laboratorio](Dia_03/laboratorio.html) |
+| **[Día 4](Dia_04/README.md)** · jueves | **ARP**: unir la dirección lógica con la física | 4 h 33 min | [Teoría y quiz](Dia_04/teoria.html) · [Ejercicios](Dia_04/ejercicios.html) · [Laboratorio](Dia_04/laboratorio.html) |
+| **[Día 5](Dia_05/README.md)** · viernes | Síntesis y **test semanal** de 22 preguntas | 3 h 04 min | [Síntesis y test](Dia_05/teoria.html) · [Recuperación](Dia_05/ejercicios.html) |
+
+**Semana completa: 20 h 37 min.**
 
 ---
 

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 3 — Acceso al medio y control de flujo</title>
+    <script>document.documentElement.dataset.tema = localStorage.getItem('parTema') || 'auto';</script>
+    <link rel="stylesheet" href="../../../assets/estudio.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Acceso al medio y control de flujo</h1>
+        <p>Semana 9 · Día 3 · Quién habla, cuándo, y qué pasa si el otro no da abasto</p>
+    </div>
+
+    <div class="info-bar">
+        <div class="info-item"><strong>Duración:</strong> 4 h 18 min</div>
+        <div class="info-item"><strong>Teoría:</strong> 58 min</div>
+        <div class="info-item"><strong>Quiz:</strong> 20 min</div>
+        <div class="info-item"><strong>Capa:</strong> 2 · Enlace</div>
+    </div>
+
+    <div class="content">
+
+        <div id="repaso-fallos"></div>
+
+        <div class="toc">
+            <h2>Contenido del día</h2>
+            <ol>
+                <li><a href="#colision">La colisión: el problema del walkie-talkie</a></li>
+                <li><a href="#familias">Dos familias de soluciones</a></li>
+                <li><a href="#contienda">Contienda: escuchar antes de hablar</a></li>
+                <li><a href="#turnos">Turnos: el paso de testigo</a></li>
+                <li><a href="#flujo">Control de flujo: que no te ahoguen</a></li>
+                <li><a href="#final">Por qué hoy casi no hay colisiones</a></li>
+                <li><a href="#resumen">Resumen y errores frecuentes</a></li>
+                <li><a href="#repaso">Repaso con flashcards</a></li>
+            </ol>
+        </div>
+
+        <div class="teoria">
+
+            <h2 id="colision">1. La colisión: el problema del walkie-talkie</h2>
+
+            <p>El libro plantea el problema con una comparación que se queda:</p>
+
+            <div class="destacado">
+                <strong>Lo que dice el libro</strong>
+                <p>«El control de acceso al medio en una red es muy similar a una comunicación mediante
+                <em>walkie-talkie</em>, donde los dos interlocutores deben evitar hablar a la vez o se
+                producirá una <strong>colisión</strong>. Esta situación es indeseable en las redes que usan un
+                medio compartido, ya que los mensajes se mezclan y resulta imposible interpretarlos.»</p>
+            </div>
+
+            <p>Y en otro punto lo precisa: «si dos estaciones transmiten a la vez en la misma frecuencia, la
+            señal recogida en los receptores será <strong>una mezcla de las dos</strong>».</p>
+
+            <p>Fíjate en que no se pierde una de las dos: se pierden <strong>las dos</strong>. Lo que llega al
+            receptor no es ni un mensaje ni el otro, sino una suma de señales que no significa nada.</p>
+
+            <div class="dato">
+                <strong>Cuándo hay colisión y cuándo no</strong>
+                <p>Solo puede haberla si <strong>el medio es compartido</strong>. El libro lo dice: «para las
+                redes que no posean un medio compartido, el método de acceso al cable es trivial y no es
+                necesario llevar a cabo ningún control para transmitir».</p>
+                <p>Un enlace punto a punto entre dos equipos, con un hilo para cada sentido, no tiene este
+                problema. Y ahí está la clave de lo que verás al final del día.</p>
+            </div>
+
+            <div data-checkpoint="0"></div>
+
+            <h2 id="familias">2. Dos familias de soluciones</h2>
+
+            <p>Para repartir un medio entre varios que quieren hablar solo hay dos enfoques posibles, y los
+            dos tienen su equivalente humano:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th></th><th>Por contienda</th><th>Por turnos</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>La idea</strong></td><td>Hablar cuando parece libre y resolver el choque si ocurre</td><td>Pasarse la palabra ordenadamente; solo habla quien la tiene</td></tr>
+                    <tr><td><strong>En humano</strong></td><td>Una conversación entre amigos</td><td>Un turno de palabra en una asamblea</td></tr>
+                    <tr><td><strong>¿Hay colisiones?</strong></td><td><strong>Sí</strong>, y hay que gestionarlas</td><td><strong>No</strong>, por diseño</td></tr>
+                    <tr><td><strong>Con poca carga</strong></td><td>Muy eficiente: transmites enseguida</td><td>Hay que esperar el turno aunque nadie más hable</td></tr>
+                    <tr><td><strong>Con mucha carga</strong></td><td>Se degrada: muchos choques y reintentos</td><td>Se mantiene: el reparto es ordenado</td></tr>
+                    <tr><td><strong>¿Tiempo predecible?</strong></td><td>No: puedes tener mala suerte varias veces</td><td><strong>Sí</strong>: hay un máximo garantizado</td></tr>
+                    <tr><td><strong>Ejemplo</strong></td><td>Ethernet con CSMA/CD · Wi-Fi con CSMA/CA</td><td>Token Ring · FDDI</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>Cuál ganó, y por qué no fue el mejor</strong>
+                <p>Ganó la <strong>contienda</strong>, aunque sobre el papel los turnos son más justos y más
+                predecibles. Las razones fueron el <strong>coste</strong> y la <strong>sencillez</strong>: una
+                tarjeta que solo tiene que escuchar y hablar es mucho más barata que una que gestiona un
+                testigo, y en redes poco cargadas iba mejor.</p>
+                <p>Es un patrón que se repite en la historia de las redes: suele imponerse lo
+                <strong>suficientemente bueno y barato</strong>, no lo técnicamente superior.</p>
+            </div>
+
+            <h2 id="contienda">3. Contienda: escuchar antes de hablar</h2>
+
+            <p>La familia de la contienda se basa en una regla de cortesía elemental: <strong>antes de
+            hablar, escucha</strong>. Si el medio está ocupado, espera. Si está libre, transmite.</p>
+
+<pre><code>¿Está libre el medio?
+        │
+   ┌────┴────┐
+  NO         SÍ
+   │          │
+ espera    transmite
+   │          │
+   └──► vuelve a mirar
+              │
+         ¿ha habido choque?
+              │
+         ┌────┴────┐
+        NO         SÍ
+         │          │
+      hecho    espera un rato
+                 al azar y
+                 reintenta</code></pre>
+
+            <p>Ese «espera un rato <strong>al azar</strong>» es la parte ingeniosa. Si los dos que han chocado
+            esperaran lo mismo, volverían a chocar indefinidamente. Al esperar tiempos distintos, uno sale
+            antes y el otro lo encuentra ocupado.</p>
+
+            <div class="aviso">
+                <strong>El detalle se ve la semana que viene</strong>
+                <p>El método concreto de Ethernet se llama <strong>CSMA/CD</strong> y tiene su propio apartado
+                en la <strong>Semana 10</strong>. Allí verás qué significa cada letra, cómo se calcula la
+                espera y por qué la trama mínima son 64 bytes.</p>
+                <p>Por cierto: <strong>CSMA/CD no aparece en el libro de la asignatura</strong> —cero
+                menciones—, así que esa parte vendrá del estándar IEEE 802.3 y así quedará indicado.</p>
+            </div>
+
+            <h3>La variante del aire</h3>
+
+            <p>💡 <strong>Ampliación.</strong> En Wi-Fi no se puede usar el mismo método, y la razón es física:
+            una antena <strong>no puede escuchar mientras transmite</strong>, porque su propia señal tapa
+            cualquier otra. No hay forma de detectar el choque mientras ocurre.</p>
+
+            <p>Por eso Wi-Fi usa <strong>CSMA/CA</strong>, donde la A es de <em>evitar</em>: en vez de detectar
+            colisiones, intenta que no se produzcan, avisando antes de transmitir y esperando confirmación.
+            Es más lento, pero es lo único posible en un medio donde no puedes oírte a ti mismo.</p>
+
+            <div data-checkpoint="1"></div>
+
+            <h2 id="turnos">4. Turnos: el paso de testigo</h2>
+
+            <p>La otra familia elimina las colisiones por diseño: solo transmite quien tiene permiso, y el
+            permiso es un objeto que va circulando.</p>
+
+            <p>El libro lo menciona al hablar de los puentes: «si el puente tiene que inyectar una trama en una
+            LAN que utiliza el <strong>paso de testigo</strong>, deberá esperar su turno para capturar el
+            testigo y transmitir, <strong>sin ningún privilegio</strong> sobre el resto de estaciones».</p>
+
+<pre><code>   El testigo circula por el anillo:
+
+        PC1 ──testigo──▶ PC2
+         ▲                │
+         │                │  PC2 quiere hablar:
+       PC4 ◀──testigo── PC3    coge el testigo,
+                               transmite,
+                               y lo suelta al terminar</code></pre>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Ventaja</th><th>Inconveniente</th></tr></thead>
+                <tbody>
+                    <tr><td>Cero colisiones: es imposible que dos hablen a la vez</td><td>Hay que esperar el turno aunque la red esté vacía</td></tr>
+                    <tr><td>Tiempo máximo de espera <strong>garantizado</strong></td><td>Si se pierde el testigo, la red se para hasta regenerarlo</td></tr>
+                    <tr><td>Rinde bien con mucha carga</td><td>Electrónica más cara y compleja</td></tr>
+                    <tr><td>Reparto justo: nadie acapara</td><td>Un equipo averiado puede romper el anillo</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Dónde sigue vivo</strong>
+                <p>Token Ring desapareció de las oficinas, pero la idea del turno garantizado no: sigue siendo
+                la base de las redes <strong>industriales y de tiempo real</strong>, donde importa más que un
+                mensaje llegue <em>siempre antes de X milisegundos</em> que llegue rápido de media. En una
+                cadena de montaje, una trama impredecible es peor que una trama lenta.</p>
+            </div>
+
+            <h2 id="flujo">5. Control de flujo: que no te ahoguen</h2>
+
+            <p>El otro acuerdo de esta capa resuelve un problema distinto, y el libro lo describe bien:</p>
+
+            <div class="destacado">
+                <strong>Saturación del receptor</strong>
+                <p>«Consiste en que <strong>un emisor rápido pueda saturar a un receptor lento</strong>. En
+                determinadas condiciones, el proceso en el otro extremo necesita un tiempo para procesar la
+                información que le llega. Si ese tiempo es demasiado grande en comparación con la velocidad con
+                la que le llega la información, será posible que <strong>se pierdan datos</strong>.»</p>
+                <p>Y apunta la solución: «que el receptor envíe un mensaje al emisor indicándole que está listo
+                para recibir más datos».</p>
+            </div>
+
+            <p>Fíjate en que aquí <strong>no hay ningún error</strong>. El cable funciona, las tramas llegan
+            perfectas, el FCS cuadra. El problema es que llegan <strong>más deprisa de lo que el receptor
+            puede digerir</strong>, y lo que no cabe en su memoria se pierde.</p>
+
+            <div class="aviso">
+                <strong>No confundir con el control de errores</strong>
+                <table>
+                    <thead><tr><th></th><th>Control de errores</th><th>Control de flujo</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Problema</strong></td><td>La trama llega <em>estropeada</em></td><td>La trama llega <em>perfecta</em>, pero demasiado pronto</td></tr>
+                        <tr><td><strong>Culpa de</strong></td><td>El medio: ruido, interferencias</td><td>El receptor: va más lento que el emisor</td></tr>
+                        <tr><td><strong>Herramienta</strong></td><td>El FCS</td><td>Avisos del receptor al emisor</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Cómo se frena a un emisor</h3>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Mecanismo</th><th>Cómo funciona</th><th>Pega</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Parada y espera</strong></td>
+                        <td>El emisor manda una trama y <strong>no envía otra</strong> hasta que le confirman la anterior</td>
+                        <td>Muy lento: el cable está parado la mayor parte del tiempo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ventana deslizante</strong></td>
+                        <td>El emisor puede llevar <strong>varias tramas en vuelo</strong> sin confirmar; el receptor dice cuántas aguanta</td>
+                        <td>Más complejo, pero es lo que se usa</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="dato">
+                <strong>Dónde reaparece esto</strong>
+                <p>La <strong>ventana deslizante</strong> es la misma idea que usa TCP en la capa 4, y la verás
+                a fondo en el <strong>Mes 10</strong>. Que el mismo problema se resuelva igual en dos capas
+                distintas no es casualidad: es el mismo problema con otros actores.</p>
+                <p>💡 En Ethernet moderno existe además una <strong>trama de pausa</strong> (802.3x): el
+                receptor saturado envía una trama especial pidiendo al emisor que calle durante un tiempo
+                concreto. Está poco usada, porque frena todo el enlace y no solo la conversación problemática.</p>
+            </div>
+
+            <div data-checkpoint="2"></div>
+
+            <h2 id="final">6. Por qué hoy casi no hay colisiones</h2>
+
+            <p>Llega la pregunta del principio: si todo esto es tan importante, ¿por qué en una red moderna no
+            se ve ni una colisión?</p>
+
+            <p>Porque han desaparecido las dos condiciones que las hacían posibles. Lo viste en el Mes 1, y
+            ahora encaja del todo:</p>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Cambio</th><th>Qué elimina</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>El conmutador</strong><br><small>en lugar del concentrador</small></td>
+                        <td>El medio deja de ser compartido: cada puerto es un enlace <strong>punto a punto</strong> con un solo equipo al otro lado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>El full-dúplex</strong><br><small>con par trenzado</small></td>
+                        <td>Hay <strong>un par para cada sentido</strong>, así que emisor y receptor nunca compiten por el mismo hilo</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="destacado">
+                <strong>La conclusión</strong>
+                <p>En un enlace conmutado y full-dúplex <strong>no puede haber colisiones</strong>. No es que
+                sean raras: es que no hay forma física de que ocurran. El método de acceso al medio sigue
+                implementado en la tarjeta, pero no llega a actuar nunca.</p>
+            </div>
+
+            <p>Por eso el contador de colisiones de un equipo moderno marca cero, y por eso cuando no marca
+            cero <strong>es un síntoma</strong>: casi siempre significa que el dúplex se ha negociado mal y un
+            extremo trabaja en half-dúplex mientras el otro cree estar en full. Es una avería clásica, y la
+            buscarás en el laboratorio.</p>
+
+            <div class="aviso">
+                <strong>Entonces, ¿esto ya no sirve para nada?</strong>
+                <p>Sirve, y mucho. El medio compartido sigue existiendo en <strong>Wi-Fi</strong>, donde todos
+                los equipos de un punto de acceso comparten el aire y la contienda está muy viva. También en
+                redes industriales, en enlaces por satélite y en cualquier sitio donde varios transmisores
+                compartan una frecuencia. Lo que desapareció fue el cable compartido, no el problema.</p>
+            </div>
+
+            <h2 id="resumen">7. Resumen y errores frecuentes</h2>
+
+            <div class="dato">
+                <strong>Lo imprescindible</strong>
+                <ul>
+                    <li>Una <strong>colisión</strong> es la mezcla de dos señales simultáneas: se pierden las
+                    dos, no una.</li>
+                    <li>Solo ocurre en <strong>medio compartido</strong>. En un enlace punto a punto, el acceso
+                    es trivial.</li>
+                    <li>Dos familias: <strong>contienda</strong> (escuchar y reintentar) y
+                    <strong>turnos</strong> (testigo).</li>
+                    <li>La contienda va mejor con poca carga; los turnos, con mucha, y garantizan un tiempo
+                    máximo.</li>
+                    <li>La espera tras un choque es <strong>aleatoria</strong>, para no volver a chocar.</li>
+                    <li>Wi-Fi usa <strong>CSMA/CA</strong> porque una antena no puede escuchar mientras
+                    transmite.</li>
+                    <li>El <strong>control de flujo</strong> resuelve que el receptor no dé abasto. No es
+                    control de errores.</li>
+                    <li>La <strong>ventana deslizante</strong> permite varias tramas en vuelo; reaparece en
+                    TCP.</li>
+                    <li>Con <strong>conmutador y full-dúplex</strong> las colisiones son imposibles.</li>
+                </ul>
+            </div>
+
+            <div class="tabla-wrap">
+            <table>
+                <thead><tr><th>Error frecuente</th><th>Lo correcto</th></tr></thead>
+                <tbody>
+                    <tr><td>«En una colisión se pierde una de las dos tramas»</td><td>Se pierden <strong>las dos</strong>: lo que llega es una mezcla</td></tr>
+                    <tr><td>«El control de flujo arregla las tramas corruptas»</td><td>Eso es el control de <strong>errores</strong>. El de flujo regula la velocidad</td></tr>
+                    <tr><td>«Las colisiones son errores del cable»</td><td>Son el <strong>funcionamiento normal</strong> de un medio compartido</td></tr>
+                    <tr><td>«El paso de testigo es más lento siempre»</td><td>Con <strong>mucha carga</strong> rinde mejor, y garantiza un máximo</td></tr>
+                    <tr><td>«Con un conmutador ya no hay colisiones nunca»</td><td>Solo si además hay <strong>full-dúplex</strong>. En half-dúplex todavía puede haberlas</td></tr>
+                    <tr><td>«Wi-Fi usa CSMA/CD»</td><td>Usa <strong>CSMA/CA</strong>: no puede detectar el choque mientras transmite</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 id="repaso">8. Repaso con flashcards</h2>
+
+            <div id="flashcards"></div>
+
+        </div>
+
+        <div class="separador-quiz" id="quiz-inicio">
+            <h2>Quiz del día</h2>
+            <p>14 preguntas · 20 minutos</p>
+        </div>
+
+        <div class="quiz-barra-sup">
+            <span class="temporizador" id="temporizador" role="timer" aria-live="off"></span>
+            <span class="contador-revision" id="contadorRevision"></span>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            <span class="progress-texto" id="progressTexto"></span>
+        </div>
+
+        <div id="quiz"></div>
+
+        <div class="buttons">
+            <button onclick="checkAnswers()">Corregir quiz</button>
+            <button onclick="resetQuiz()">Reiniciar</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>Resultados</h2>
+            <div class="score" id="score">0%</div>
+            <div class="score-details">
+                <p><strong>Respuestas correctas:</strong> <span id="correct">0</span> / <span id="total">0</span></p>
+                <p><strong>Respuestas incorrectas:</strong> <span id="incorrect">0</span></p>
+                <p id="verdict"></p>
+            </div>
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <h3>Resultado por apartado</h3>
+                <div id="breakdownRows"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-footer">
+        <span><a href="../../../web_interactiva/index.html">🏠 Centro de Aprendizaje</a> · <a href="README.md">Plan del día</a></span>
+        <span><a href="../Dia_02/teoria.html">← Día 2</a> · <a href="ejercicios.html">Ejercicios →</a></span>
+    </div>
+
+</div>
+
+<script>
+    const interactivoData = {
+        checkpoints: [
+            {
+                pregunta: 'El libro dice que en un enlace punto a punto «el método de acceso al cable es trivial». Explica por qué.',
+                modelo: 'Porque en un enlace punto a punto solo hay dos equipos y, si además hay un hilo para cada sentido, cada uno tiene su propio camino para transmitir. Nadie compite con nadie: no existe la posibilidad de que dos señales se mezclen, así que no hace falta ponerse de acuerdo en los turnos. El problema del acceso al medio nace de compartir, y aquí no se comparte nada.'
+            },
+            {
+                pregunta: 'Si los dos equipos que acaban de chocar esperasen exactamente el mismo tiempo antes de reintentar, ¿qué pasaría? ¿Por qué la espera es aleatoria?',
+                modelo: 'Volverían a transmitir en el mismo instante y chocarían otra vez, y así indefinidamente: la red se bloquearía en un bucle de colisiones. La espera aleatoria rompe la simetría: cada uno saca un número distinto, uno vuelve antes, encuentra el medio libre y transmite, y el otro al despertar lo encuentra ocupado y espera. Sin azar, el método no funcionaría.'
+            },
+            {
+                pregunta: 'Un servidor potente envía datos a un equipo antiguo. Las tramas llegan perfectas, el FCS cuadra siempre, y aun así se pierden datos. ¿Qué está pasando y cómo se resuelve?',
+                modelo: 'Es un problema de control de flujo, no de errores: el emisor va más rápido de lo que el receptor puede procesar. Las tramas llegan bien, pero el receptor no tiene tiempo de vaciar su memoria antes de que lleguen las siguientes, así que las que no caben se descartan. No hay nada estropeado; hay desbordamiento. Se resuelve con un mecanismo que permita al receptor decir cuándo puede recibir más, ya sea confirmando trama a trama o anunciando cuántas aguanta mediante una ventana.'
+            }
+        ],
+        flashcards: [
+            { frente: '¿Qué es una colisión?', dorso: 'La mezcla de dos señales transmitidas a la vez en el mismo medio. <strong>Se pierden las dos</strong>, no una.' },
+            { frente: '¿Cuándo puede haber colisiones?', dorso: 'Solo en <strong>medio compartido</strong>. En punto a punto el acceso es trivial.' },
+            { frente: 'Las dos familias de métodos de acceso', dorso: '<strong>Contienda</strong>: hablar y resolver el choque. <strong>Turnos</strong>: solo habla quien tiene el testigo.' },
+            { frente: '¿Cuándo gana cada familia?', dorso: 'La contienda con <strong>poca carga</strong>; los turnos con <strong>mucha</strong>, y además garantizan un tiempo máximo.' },
+            { frente: '¿Por qué la espera tras un choque es aleatoria?', dorso: 'Para <strong>romper la simetría</strong>. Si los dos esperaran lo mismo, volverían a chocar siempre.' },
+            { frente: '¿Por qué Wi-Fi no usa CSMA/CD?', dorso: 'Porque una antena <strong>no puede escuchar mientras transmite</strong>: su propia señal tapa el resto. Usa CSMA/CA, que evita en vez de detectar.' },
+            { frente: 'Ventaja del paso de testigo', dorso: 'Cero colisiones y un <strong>tiempo máximo de espera garantizado</strong>. Por eso sigue vivo en redes industriales.' },
+            { frente: 'Inconveniente del paso de testigo', dorso: 'Hay que esperar turno <strong>aunque la red esté vacía</strong>, y si se pierde el testigo la red se para.' },
+            { frente: 'Control de flujo frente a control de errores', dorso: 'Errores: la trama llega <strong>estropeada</strong>. Flujo: llega <strong>perfecta pero demasiado pronto</strong>.' },
+            { frente: 'Parada y espera', dorso: 'Una trama, se espera confirmación, otra trama. Seguro pero muy lento: el cable está parado casi siempre.' },
+            { frente: 'Ventana deslizante', dorso: 'Varias tramas <strong>en vuelo</strong> sin confirmar. El receptor dice cuántas aguanta. Es lo que usa TCP.' },
+            { frente: '¿Por qué hoy no hay colisiones?', dorso: 'Por el <strong>conmutador</strong>, que hace cada puerto punto a punto, y el <strong>full-dúplex</strong>, que da un par a cada sentido.' },
+            { frente: 'Si el contador de colisiones NO es cero…', dorso: 'Suele ser un <strong>dúplex mal negociado</strong>: un extremo en half y otro en full.' }
+        ]
+    };
+
+    const quizData = {
+        titulo: 'Quiz del Día 3 — Acceso al medio y control de flujo',
+        tiempo: '20 minutos',
+        minutos: 20,
+        questions: [
+            {
+                topic: 'La colisión',
+                repaso: '#colision',
+                text: 'Dos estaciones transmiten a la vez en un medio compartido. ¿Qué recibe el destinatario?',
+                options: {
+                    a: 'El primer mensaje, y el segundo se pierde',
+                    b: 'Una mezcla de las dos señales, que no se puede interpretar',
+                    c: 'Los dos mensajes, uno detrás de otro',
+                    d: 'Nada: el medio se bloquea'
+                },
+                answer: 'b',
+                feedback: 'Lo dice el libro: «la señal recogida en los receptores será una mezcla de las dos». <strong>Se pierden las dos</strong>, no una.'
+            },
+            {
+                topic: 'La colisión',
+                repaso: '#colision',
+                text: '¿En cuál de estas situaciones es IMPOSIBLE que haya una colisión?',
+                options: {
+                    a: 'Varios portátiles conectados al mismo punto de acceso Wi-Fi',
+                    b: 'Ocho equipos conectados a un concentrador',
+                    c: 'Un enlace entre dos equipos con un par para cada sentido',
+                    d: 'Un bus coaxial con cuatro estaciones'
+                },
+                answer: 'c',
+                feedback: 'No hay medio compartido: cada sentido tiene su hilo. El libro lo llama acceso «trivial». En los otros tres, el medio se comparte.'
+            },
+            {
+                topic: 'Familias',
+                repaso: '#familias',
+                text: '¿Qué ventaja tiene el acceso por turnos frente al acceso por contienda?',
+                options: {
+                    a: 'Es más barato de implementar',
+                    b: 'Va más rápido cuando la red está vacía',
+                    c: 'Garantiza un tiempo máximo de espera y no produce colisiones',
+                    d: 'Permite más equipos conectados'
+                },
+                answer: 'c',
+                feedback: 'Lo barato y lo rápido con poca carga son justamente las ventajas de la <strong>contienda</strong>, y por eso ganó.'
+            },
+            {
+                topic: 'Familias',
+                repaso: '#familias',
+                text: 'Una red tiene muy pocos equipos y transmiten rara vez. ¿Qué método rinde mejor?',
+                options: {
+                    a: 'La contienda: se transmite enseguida, y los choques son improbables',
+                    b: 'Los turnos: siempre son mejores',
+                    c: 'Da igual: el rendimiento es idéntico',
+                    d: 'Ninguno funciona con pocos equipos'
+                },
+                answer: 'a',
+                feedback: 'Con poca carga, esperar un turno que nadie más quiere es tiempo perdido. La contienda transmite de inmediato.'
+            },
+            {
+                topic: 'Contienda',
+                repaso: '#contienda',
+                text: '¿Por qué el tiempo de espera tras una colisión es aleatorio?',
+                options: {
+                    a: 'Para repartir mejor el ancho de banda',
+                    b: 'Para que los dos equipos no vuelvan a transmitir a la vez y choquen otra vez indefinidamente',
+                    c: 'Porque el reloj de cada equipo va distinto',
+                    d: 'Para dar prioridad al equipo más rápido'
+                },
+                answer: 'b',
+                feedback: 'El azar <strong>rompe la simetría</strong>. Con una espera fija, dos equipos que han chocado chocarían para siempre.'
+            },
+            {
+                topic: 'Contienda',
+                repaso: '#contienda',
+                text: '¿Por qué Wi-Fi no puede usar el mismo método que Ethernet con cable?',
+                options: {
+                    a: 'Porque el aire es más lento',
+                    b: 'Porque en Wi-Fi no hay colisiones',
+                    c: 'Porque la norma 802.11 lo prohíbe',
+                    d: 'Porque una antena no puede escuchar mientras transmite: su propia señal tapa las demás'
+                },
+                answer: 'd',
+                feedback: 'Por eso usa <strong>CSMA/CA</strong>: en lugar de detectar el choque mientras ocurre, intenta evitarlo antes.'
+            },
+            {
+                topic: 'Turnos',
+                repaso: '#turnos',
+                text: 'En una red de paso de testigo, un equipo quiere transmitir y la red está completamente libre. ¿Qué hace?',
+                options: {
+                    a: 'Transmite de inmediato, porque nadie más habla',
+                    b: 'Pide permiso al resto de estaciones',
+                    c: 'Genera un testigo nuevo',
+                    d: 'Espera a que le llegue el testigo'
+                },
+                answer: 'd',
+                feedback: 'Es el precio del método: el turno hay que esperarlo <strong>aunque no haya competencia</strong>. A cambio, nunca hay choques.'
+            },
+            {
+                topic: 'Turnos',
+                repaso: '#turnos',
+                text: '¿Por qué la idea del turno garantizado sigue viva en entornos industriales?',
+                options: {
+                    a: 'Porque el cable industrial es distinto',
+                    b: 'Porque allí importa más que un mensaje llegue siempre antes de un plazo que llegue rápido de media',
+                    c: 'Porque Ethernet no funciona en fábricas',
+                    d: 'Porque son redes muy pequeñas'
+                },
+                answer: 'b',
+                feedback: 'En una cadena de montaje, un mensaje <strong>impredecible</strong> es peor que uno lento: lo que se necesita es un máximo garantizado.'
+            },
+            {
+                topic: 'Control de flujo',
+                repaso: '#flujo',
+                text: 'Un receptor pierde datos aunque todas las tramas llegan con el FCS correcto. ¿Qué ocurre?',
+                options: {
+                    a: 'El cable está defectuoso',
+                    b: 'Hay colisiones en el medio',
+                    c: 'El emisor va más deprisa de lo que el receptor puede procesar: falta control de flujo',
+                    d: 'El FCS está mal calculado'
+                },
+                answer: 'c',
+                feedback: 'Si el FCS cuadra, las tramas están <strong>intactas</strong>. El problema no es el medio, es el ritmo.'
+            },
+            {
+                topic: 'Control de flujo',
+                repaso: '#flujo',
+                text: '¿Cuál es el inconveniente de la parada y espera?',
+                options: {
+                    a: 'Que el cable está parado la mayor parte del tiempo, esperando confirmaciones',
+                    b: 'Que no detecta errores',
+                    c: 'Que necesita direcciones MAC',
+                    d: 'Que solo funciona en fibra'
+                },
+                answer: 'a',
+                feedback: 'Es seguro pero desaprovecha el enlace. Por eso se usa la <strong>ventana deslizante</strong>, que permite varias tramas en vuelo.'
+            },
+            {
+                topic: 'Control de flujo',
+                repaso: '#flujo',
+                text: 'Control de errores y control de flujo resuelven problemas distintos. ¿Cuál es la diferencia?',
+                options: {
+                    a: 'Los errores los causa el medio y el flujo, el ritmo del receptor',
+                    b: 'El de errores es de capa 2 y el de flujo, de capa 3',
+                    c: 'Son lo mismo con dos nombres',
+                    d: 'El de errores solo existe en Wi-Fi'
+                },
+                answer: 'a',
+                feedback: 'En el control de errores la trama llega <strong>estropeada</strong>; en el de flujo llega <strong>perfecta pero demasiado pronto</strong>.'
+            },
+            {
+                topic: 'Hoy',
+                repaso: '#final',
+                text: '¿Qué dos cambios hicieron desaparecer las colisiones en las redes cableadas modernas?',
+                options: {
+                    a: 'La fibra óptica y el aumento de velocidad',
+                    b: 'El conmutador, que hace cada puerto punto a punto, y el full-dúplex, que da un par a cada sentido',
+                    c: 'El protocolo TCP y el control de flujo',
+                    d: 'Las VLAN y el router'
+                },
+                answer: 'b',
+                feedback: 'Desaparecieron las dos condiciones del problema: el medio dejó de compartirse y cada sentido tiene su hilo.'
+            },
+            {
+                topic: 'Hoy',
+                repaso: '#final',
+                text: 'El contador de colisiones de un servidor moderno no está a cero. ¿Qué sospechas?',
+                options: {
+                    a: 'Que el cable es demasiado largo',
+                    b: 'Que hay demasiados equipos en la red',
+                    c: 'Que el dúplex se ha negociado mal y un extremo trabaja en half mientras el otro cree estar en full',
+                    d: 'Que es lo normal: siempre hay algunas'
+                },
+                answer: 'c',
+                feedback: 'En un enlace conmutado y full-dúplex las colisiones son <strong>imposibles</strong>. Si aparecen, algo no está en full-dúplex.'
+            },
+            {
+                topic: 'Integración',
+                repaso: '#final',
+                text: '<strong>Integración.</strong> Si las colisiones ya no existen en el cable, ¿por qué sigue teniendo sentido estudiar el acceso al medio?',
+                options: {
+                    a: 'Por motivos históricos únicamente',
+                    b: 'Porque podría volver a usarse en el futuro',
+                    c: 'Porque los conmutadores lo siguen usando internamente',
+                    d: 'Porque el medio compartido sigue vivo en Wi-Fi, en redes industriales y en cualquier sitio donde varios transmisores compartan una frecuencia'
+                },
+                answer: 'd',
+                feedback: 'Lo que desapareció fue el <strong>cable</strong> compartido, no el problema. En el aire la contienda está más viva que nunca.'
+            }
+        ]
+    };
+</script>
+<script src="../../../assets/interactivo.js"></script>
+<script src="../../../assets/progreso.js"></script>
+<script src="../../../assets/quiz.js"></script>
+</body>
+</html>
