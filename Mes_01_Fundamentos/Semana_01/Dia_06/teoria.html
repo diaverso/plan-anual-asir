@@ -72,26 +72,68 @@
      │ ╱         ╲ │
      C ─────────── D</code></pre>
 
+            <h3>Las dos formas de hacer una malla</h3>
+
+            <p>El dibujo de arriba es una <strong>malla completa</strong>: absolutamente todos los nodos
+            unidos con todos. Es la versión extrema, y en la práctica <strong>casi no se usa</strong>, porque
+            el número de enlaces se dispara en cuanto crece la red. Lo verás con números en el apartado
+            siguiente.</p>
+
+            <p>Lo que sí se usa es la <strong>malla parcial</strong>: no se conecta todo con todo, sino que se
+            añaden enlaces de más <strong>solo donde importa</strong>, para que los puntos críticos tengan al
+            menos dos caminos. Es la malla de verdad, la que está detrás de internet y de cualquier red
+            empresarial seria.</p>
+
+<pre><code>MALLA COMPLETA                      MALLA PARCIAL
+(todos con todos: 6 enlaces)        (solo donde hace falta: 4 enlaces)
+
+     A ─────────── B                     A ─────────── B
+     │ ╲         ╱ │                     │             │
+     │   ╲     ╱   │                     │             │
+     │     ╲ ╱     │                     │             │
+     │     ╱ ╲     │                     │             │
+     │   ╱     ╲   │                     │             │
+     │ ╱         ╲ │                     │             │
+     C ─────────── D                     C ─────────── D
+
+ de A a D hay 3 caminos              de A a D hay 2 caminos:
+ distintos                           por B o por C. Suficiente</code></pre>
+
             <div class="tabla-wrap">
             <table>
-                <thead><tr><th>Tipo</th><th>Descripción</th><th>Uso</th></tr></thead>
+                <thead><tr><th>Tipo</th><th>Cómo se conecta</th><th>Dónde se usa de verdad</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Malla completa</strong></td><td>Cada nodo conectado con <em>todos</em> los demás</td><td>Casi nunca: solo con muy pocos nodos críticos</td></tr>
-                    <tr><td><strong>Malla parcial</strong></td><td>Solo algunos nodos tienen enlaces redundantes</td><td>Backbones, centros de datos, WAN corporativas</td></tr>
+                    <tr><td><strong>Malla completa</strong></td><td>Cada nodo con <em>todos</em> los demás</td><td>Casi nunca: solo entre muy pocos nodos críticos</td></tr>
+                    <tr><td><strong>Malla parcial</strong></td><td>Solo algunos nodos tienen enlaces de más</td><td><strong>La habitual</strong>: backbones, centros de datos, WAN corporativas</td></tr>
                 </tbody>
             </table>
             </div>
 
+            <h3>Qué se gana y qué se paga</h3>
+
+            <p>Las ventajas de abajo son las de <strong>cualquier malla</strong>, completa o parcial: salen de
+            tener más de un camino. Los inconvenientes, en cambio, crecen con el número de enlaces, así que
+            <strong>golpean de lleno a la malla completa y se suavizan mucho en la parcial</strong>. Esa es,
+            justamente, la razón de que se use la segunda.</p>
+
             <div class="tabla-wrap">
             <table>
-                <thead><tr><th>Ventajas</th><th>Desventajas</th></tr></thead>
+                <thead><tr><th>Ventajas · las da tener varios caminos</th><th>Inconvenientes · crecen con cada enlace</th></tr></thead>
                 <tbody>
-                    <tr><td><strong>Máxima tolerancia a fallos</strong>: múltiples caminos</td><td>Coste muy elevado</td></tr>
-                    <tr><td>Sin punto único de fallo</td><td>Cableado complejo</td></tr>
-                    <tr><td>Caminos directos: baja latencia</td><td>Cada nodo necesita muchas interfaces</td></tr>
-                    <tr><td>El tráfico se reparte entre enlaces</td><td>Administración difícil</td></tr>
+                    <tr><td><strong>Máxima tolerancia a fallos</strong>: si cae un enlace, queda otro</td><td>Coste muy elevado: cada enlace se paga</td></tr>
+                    <tr><td><strong>Sin punto único de fallo</strong>: no hay un nodo del que dependa todo</td><td>Cableado complejo de tender y de documentar</td></tr>
+                    <tr><td>Caminos directos, sin intermediarios: <strong>menos latencia</strong></td><td>Cada nodo necesita <strong>muchas interfaces</strong></td></tr>
+                    <tr><td>El tráfico <strong>se reparte</strong> entre varios enlaces</td><td>Administración difícil: más que vigilar y configurar</td></tr>
                 </tbody>
             </table>
+            </div>
+
+            <div class="dato">
+                <strong>La idea que hay que llevarse</strong>
+                <p>La malla no se elige por elegante, sino por <strong>no depender de un solo camino</strong>.
+                Y como cada camino de más cuesta dinero, en la práctica se pone redundancia
+                <strong>donde el fallo sale caro</strong> —el enlace entre sedes, la salida a internet— y no en
+                los puestos de trabajo.</p>
             </div>
 
             <h2 id="calculo">2. Cálculo de enlaces en malla</h2>

@@ -139,6 +139,14 @@
                 capa física.»</p>
             </div>
 
+<figure class="figura">
+    <img src="../../../imagenes/m03_s09_d01_llc_mac.png"
+         width="1400" height="728" loading="lazy"
+         alt="Las tres capas inferiores apiladas. Arriba, la capa de red, que no necesita saber por qué medio viaja
+              todo. En el centro, la capa de enlace partida en dos: la subcapa LLC, igual para cualquier medio, y debajo
+              la subcapa MAC, que cambia según sea Ethernet por cable o Wi-Fi. Abajo, la capa física.">
+    <figcaption>La capa 2 es la única partida en dos: la mitad de abajo cambia con el medio y la de arriba no.</figcaption>
+</figure>
 <pre><code>            ┌─────────────────────────────────────┐
   Capa 3    │        RED  (IP)                    │   no quiere saber si hay
             └─────────────────────────────────────┘   cable, fibra o Wi-Fi
@@ -316,6 +324,15 @@
             que una trama atraviesa un router, las direcciones MAC se <strong>tiran y se escriben otras</strong>.
             Las direcciones IP, en cambio, son las mismas de principio a fin.</p>
 
+<figure class="figura">
+    <img src="../../../imagenes/m03_s09_d01_salto_vs_trayecto.png"
+         width="1400" height="661" loading="lazy"
+         alt="Un paquete viaja de un ordenador a un servidor cruzando un conmutador, un router y otro conmutador. Las
+              direcciones IP de origen y destino son las mismas en los tres tramos, mientras que las direcciones MAC se
+              reescriben en cada salto: del ordenador al router llevan una pareja, y del router al servidor, otra
+              distinta.">
+    <figcaption>La IP dice adónde va; la MAC, a quién se lo doy ahora. Solo una de las dos sobrevive al salto.</figcaption>
+</figure>
 <pre><code>  PC-A ──── SWITCH ──── ROUTER ──── SWITCH ──── SERVIDOR
                            │
    IP origen  : A          │          A            A      ← no cambia nunca

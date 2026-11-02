@@ -76,6 +76,15 @@
                 <strong>IEEE 802.3</strong>.</p>
             </div>
 
+<figure class="figura">
+    <img src="../../../imagenes/m03_s09_d02_trama_campos.png"
+         width="1400" height="434" loading="lazy"
+         alt="Una trama Ethernet dibujada como una barra horizontal dividida en siete campos, con el ancho de cada uno
+              proporcional a su tamaño en bytes: preámbulo de siete, delimitador de uno, dos direcciones de seis,
+              longitud o tipo de dos, datos de cuarenta y seis a mil quinientos, y la secuencia de verificación de
+              cuatro. El campo de datos domina la barra; las cabeceras apenas se ven a su lado.">
+    <figcaption>Los 18 bytes de envoltorio al lado de los 1500 de datos: por eso una trama llena aprovecha el 98,8 %.</figcaption>
+</figure>
 <pre><code> 7          1      6         6        2        46-1500        4
 ┌────────┬──────┬────────┬────────┬────────┬─────────────┬────────┐
 │Preámb. │ SFD  │ MAC    │ MAC    │ Long./ │    Datos    │  FCS   │
